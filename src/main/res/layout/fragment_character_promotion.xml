@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAlpha">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/m_margin"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:cardElevation="@dimen/card_ele">
+
+
+        <LinearLayout
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginEnd="@dimen/s_margin"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:layout_margin="@dimen/s_margin" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/atk"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/atk"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/magic_str"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/magic_str"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/def"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/def"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/magic_def"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/magic_def"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/hp"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/hp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/p_critical"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/p_critical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/dodge"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/dodge"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/m_critical"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/m_critical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/hp_recovery"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/hp_recovery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/tp_recovery"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tp_recovery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/hp_steal"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/life_steal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/hp_recovery_rate"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/hp_recovery_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/tp_recovery_rate"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/energy_recovery_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/tp_reduce_rate"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/energy_reduce_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/accuracy"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/accuracy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    tools:text="10000" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/level"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/level"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:maxLength="3"
+                    android:layout_weight="2"
+                    android:inputType="number"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    android:gravity="end" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/rank"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_gravity="center"
+                    android:gravity="end|center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/rank_reduce"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        android:src="@drawable/reduce" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/rank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/m_margin"
+                        android:layout_marginEnd="@dimen/m_margin"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/rank_add"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        android:src="@drawable/add" />
+                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_title"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="0dp"
+                    android:text="@string/rarity"
+                    android:textAppearance="@style/subTitleWithe" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_gravity="center"
+                    android:gravity="end|center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/rarity_reduce"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        android:src="@drawable/reduce" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/rarity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/m_margin"
+                        android:layout_marginEnd="@dimen/m_margin"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/rarity_add"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        android:src="@drawable/add" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/s_margin"
+                tools:listitem="@layout/item_equipment_promotion" />
+
+        </LinearLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</FrameLayout>

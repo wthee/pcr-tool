@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/m_margin"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorGray"
+    app:cardCornerRadius="@dimen/card_radius">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/character_pic"
+                android:layout_width="@dimen/character_icon_size"
+                android:layout_height="@dimen/character_icon_size"
+                android:adjustViewBounds="true"
+                tools:src="@drawable/error" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/love"
+                android:layout_width="@dimen/small_icon"
+                android:layout_height="@dimen/small_icon"
+                android:layout_gravity="bottom"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_loved_no_bg" />
+        </FrameLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/other"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/character_icon_size"
+
+            android:layout_marginStart="@dimen/s_margin"
+            app:layout_constraintStart_toEndOf="@id/character_pic"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/position_type"
+                android:layout_width="@dimen/small_icon"
+                android:layout_height="@dimen/small_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@drawable/position_0_300" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/weight"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                tools:text="莫妮卡" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/s_margin"
+                app:layout_constraintBottom_toBottomOf="@id/height"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/height"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                tools:text="10" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constraintBottom_toTopOf="@+id/height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                tools:text="50 kg" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weight"
+                tools:text="150 cm" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

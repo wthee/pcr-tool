@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">PCR Tool</string>
+    <string name="birth">%s 月 %s 日</string>
+    <string name="height">%s cm</string>
+    <string name="weight">%s kg</string>
+    <string name="blood">%s 型</string>
+    <string name="equip_count">*%d</string>
+    <string name="character_info">角色详情</string>
+    <string name="character_pic">角色资料</string>
+    <string name="event_list">装备信息</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_filter_by_grow_zone" translation_description="The label for the menu item to filter the displayed plants by grow zone.">Filter by grow zone</string>
+    <string name="menu_item_share_plant" translation_description="The label for the Share menu item">Share</string>
+    <string name="atk">物理攻击力</string>
+    <string name="p_penetrate">物理贯穿</string>
+    <string name="magic_str">魔法攻击力</string>
+    <string name="m_penetrate">魔法贯穿</string>
+    <string name="def">物理防御力</string>
+    <string name="magic_def">魔法防御力</string>
+    <string name="p_critical">物理暴击</string>
+    <string name="dodge">回避</string>
+    <string name="m_critical">魔法暴击</string>
+    <string name="hp_recovery">HP自动回复</string>
+    <string name="tp_recovery">TP自动回复</string>
+    <string name="hp_steal">HP吸收</string>
+    <string name="hp_recovery_rate">回复量上升</string>
+    <string name="tp_recovery_rate">TP上升</string>
+    <string name="tp_reduce_rate">TP消耗减轻</string>
+    <string name="accuracy">命中</string>
+    <string name="level">等级</string>
+    <string name="rank">Rank</string>
+    <string name="rarity">星级</string>
+    <string name="title_quest">什么地方</string>
+    <string name="drop_quest">掉落信息</string>
+    <string name="love_rank_up">羁绊提升</string>
+    <string name="name">名字</string>
+    <string name="age">年龄</string>
+    <string name="limit">限定</string>
+    <string name="title_height">身高</string>
+    <string name="title_weight">体重</string>
+    <string name="title_birth">生日</string>
+    <string name="title_blood">血型</string>
+    <string name="title_race">种族</string>
+    <string name="title_guide">公会</string>
+    <string name="title_fav">兴趣</string>
+    <string name="cv">CV</string>
+    <string name="title_self">介绍</string>
+    <string name="title_position">位置</string>
+    <string name="equip_details">道具详情</string>
+    <string name="tab_sort_type">排序方式：</string>
+    <string name="tab_all">全部</string>
+    <string name="tab_star">收藏</string>
+    <string name="hp">HP</string>
+    <string name="skill_action">技能效果</string>
+</resources>
