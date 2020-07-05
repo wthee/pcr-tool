@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCardBgBinding
 import cn.wthee.pcrtool.utils.Constants.CHARACTER_URL
-import cn.wthee.pcrtool.utils.Constants.WEPB
+import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
 
 
@@ -33,7 +33,7 @@ class CharacterCardBgAdapter :
         fun bind(id: String) {
             with(binding) {
                 //加载网络图片
-                val picUrl = CHARACTER_URL + id + WEPB
+                val picUrl = CHARACTER_URL + id + WEBP
                 GlideUtil.load(picUrl, characterPic, R.drawable.error, null)
             }
         }

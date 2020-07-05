@@ -76,3 +76,11 @@ data class EquipmentIdWithOdd(
     val eid: Int,
     val odd: Int
 )
+
+//合成信息
+data class EquipmentMaterial(
+    var id: Int,
+    var name: String,
+    var count: Int,
+    val dropInfo: List<EquipmentDropInfo>
+)

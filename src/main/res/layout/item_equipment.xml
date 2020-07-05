@@ -14,7 +14,7 @@
         android:layout_height="@dimen/icon_size"
         android:layout_margin="@dimen/m_margin"
         android:adjustViewBounds="true"
-        tools:src="@drawable/notice" />
+        tools:src="@mipmap/ic_launcher_foreground" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/content"

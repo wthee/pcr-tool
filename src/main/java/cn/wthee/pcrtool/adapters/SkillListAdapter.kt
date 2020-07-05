@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterSkillInfo
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
-import cn.wthee.pcrtool.utils.Constants.WEPB
+import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
 
 
@@ -51,7 +51,7 @@ class SkillAdapter :
                     else -> ""
                 }
                 //加载装备图片
-                val picUrl = SKILL_ICON_URL + skill.icon_type + WEPB
+                val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
                 //技能属性
                 val adapter = SkillActionAdapter()

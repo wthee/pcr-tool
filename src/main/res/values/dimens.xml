@@ -8,7 +8,7 @@
     <dimen name="card_height">250dp</dimen>
     <dimen name="mini_icon">10dp</dimen>
     <dimen name="small_icon">16dp</dimen>
-    <dimen name="middle_icon">32dp</dimen>
+    <dimen name="middle_icon">28dp</dimen>
     <dimen name="icon_size">64dp</dimen>
     <dimen name="large_icon">72dp</dimen>
     <dimen name="character_icon_size">64dp</dimen>

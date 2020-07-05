@@ -88,7 +88,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 //加载网络图片
                 val picUrl =
-                    Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEPB
+                    Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEBP
                 GlideUtil.load(picUrl, characterPic, R.drawable.unknow, null)
                 //设置位置
                 positionType.background =

@@ -11,6 +11,9 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     //获取角色Rank所需装备具体属性
     suspend fun getEquipmentDatas(eids: List<Int>) = equipmentDao.getEquipmentDatas(eids)
 
+    //获取装备具体属性
+    suspend fun getEquipmentData(eid: Int) = equipmentDao.getEquipmentData(eid)
+
     //角色所有装备信息
     suspend fun getAllEquipments() = equipmentDao.getAllEquipments()
 

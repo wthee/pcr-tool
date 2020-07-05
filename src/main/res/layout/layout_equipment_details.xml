@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/notice" />
+                tools:src="@mipmap/ic_launcher_foreground" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -76,6 +76,29 @@
             tools:listitem="@layout/item_equipment_attr" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/l_margin"
+        android:layout_marginBottom="@dimen/m_margin"
+        android:text="@string/material"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:layout_margin="@dimen/s_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_equipment_material" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_drop"

@@ -542,7 +542,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
-                android:contentDescription="@string/menu_item_share_plant"
+                android:contentDescription="@string/tab_star"
                 android:src="@drawable/ic_love_no_bg"
                 app:borderWidth="0dp"
                 app:fabSize="mini"

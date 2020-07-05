@@ -2,7 +2,6 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -42,4 +41,10 @@
         <item name="android:windowEnterAnimation">@anim/dialog_slide_up</item>
         <item name="android:windowExitAnimation">@anim/dialog_slide_down</item>
     </style>
+
+    <style name="RippleWhite">
+        <item name="android:colorControlHighlight">#FAFAFA</item>
+        <item name="android:radius">25dp</item>
+    </style>
+
 </resources>

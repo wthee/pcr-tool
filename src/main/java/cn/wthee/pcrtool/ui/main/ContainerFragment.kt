@@ -2,14 +2,12 @@ package cn.wthee.pcrtool.ui.main
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
@@ -17,9 +15,11 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentContainerBinding
+import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.isList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
@@ -43,19 +43,47 @@ class ContainerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentContainerBinding.inflate(inflater, container, false)
-        search = binding.search
-        cListClick = false
-        //toolbar
-        setHasOptionsMenu(false)
-        val toolbar = binding.toolbar
-        requireActivity().setActionBar(toolbar)
         init()
+        setListener()
         prepareTransitions()
+        //设置toolbar
+        setHasOptionsMenu(true)
+        val toolbar = ToolbarUtil(binding.toolbar)
+        toolbar.setLeftIcon(R.drawable.logo)
+        toolbar.rightIcon.setOnClickListener {
+            toolbar.showPopupMenu(
+                requireContext(),
+                R.menu.menu_main,
+                object : ToolbarUtil.ItemClickListener {
+                    override fun onClick(item: MenuItem?) {
+                        when (item?.itemId) {
+                            R.id.settingsFragment -> {
+                                findNavController().navigate(R.id.action_containerFragment_to_settingsContainerFragment)
+                            }
+                        }
+                    }
+                })
+        }
         return binding.root
     }
 
-    //加载viewpager
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        try {
+            //刷新收藏
+            val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
+                MainActivity.currentCharaPosition
+            )?.itemView?.findViewById<AppCompatImageView>(R.id.love)
+            vh?.visibility =
+                if (CharacterBasicInfoFragment.isLoved) View.VISIBLE else View.INVISIBLE
+        } catch (e: java.lang.Exception) {
+        }
+    }
+
     private fun init() {
+        //禁止连续点击
+        cListClick = false
+        search = binding.search
         //viewpager2 配置
         viewPager2 = binding.viewPager
         viewPager2.offscreenPageLimit = 2
@@ -72,16 +100,27 @@ class ContainerFragment : Fragment() {
             viewPager2,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 when (position) {
+                    //角色
                     0 -> {
-                        tab.icon = resources.getDrawable(R.drawable.notice, null)
+                        tab.icon = resources.getDrawable(R.drawable.character, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
                     }
+                    //装备
                     1 -> {
                         tab.icon = resources.getDrawable(R.drawable.equip, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
                     }
+                    //TODO 怪物
+                    2 -> {
+                        tab.icon = resources.getDrawable(R.drawable.enemy, null)
+                        tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
+                    }
                 }
             }).attach()
+
+    }
+
+    private fun setListener() {
         //点击已选择tab， 改变布局
         binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {

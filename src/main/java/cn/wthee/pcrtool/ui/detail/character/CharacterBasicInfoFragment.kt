@@ -80,11 +80,11 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun loadImages() {
         //加载角色ICON
         val picUrl =
-            Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEPB
+            Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEBP
         GlideUtil.load(picUrl, binding.icon1, R.drawable.unknow, parentFragment)
         //加载角色现实图片
         GlideUtil.load(
-            Constants.Reality_CHARACTER_URL + character.getFixedId() + Constants.WEPB,
+            Constants.Reality_CHARACTER_URL + character.getFixedId() + Constants.WEBP,
             binding.characterPic,
             R.drawable.error,
             null

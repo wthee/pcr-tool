@@ -7,18 +7,10 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.EquipmentDropAdapter
 import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsDialogBinding
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.DrawerUtil
-import cn.wthee.pcrtool.utils.GlideUtil
-import cn.wthee.pcrtool.utils.InjectorUtil
 
 
 private const val EQUIP = "equip"
@@ -28,7 +20,6 @@ class EquipmentDetailsDialogFragment : DialogFragment() {
 
     private lateinit var equip: EquipmentData
     private lateinit var binding: FragmentEquipmentDetailsDialogBinding
-    private lateinit var dropsAdapter: EquipmentDropAdapter
 
     companion object {
         fun getInstance(equip: EquipmentData) =
@@ -49,30 +40,10 @@ class EquipmentDetailsDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentDetailsDialogBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
-        binding.info.apply {
-            //图标
-            val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEPB
-            GlideUtil.load(picUrl, itemPic, R.drawable.error, parentFragment)
-            //共享元素
-            itemPic.transitionName = "pic_${equip.equipmentId}"
-            //描述
-            desc.text = equip.getDesc()
-            //掉落地区
-            val lm1 = LinearLayoutManager(MyApplication.getContext())
-            lm1.orientation = LinearLayoutManager.VERTICAL
-            drops.layoutManager = lm1
-            dropsAdapter = EquipmentDropAdapter()
-            drops.adapter = dropsAdapter
-        }
-        //获取掉落信息
-        val viewModel = InjectorUtil.provideEquipmentDetailsViewModelFactory()
-            .create(EquipmentDetailsViewModel::class.java)
-        viewModel.getDropInfos(equip)
-        viewModel.equipDropInfos.observe(viewLifecycleOwner, Observer {
-            dropsAdapter.submitList(it)
-        })
-        DrawerUtil.bindAllViewOnTouchListener(binding.root, this, arrayListOf(binding.info.drops))
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.dialog_container, EquipmentDetailsFragment.getInstance(equip))
+            .commit()
+//        DrawerUtil.bindAllViewOnTouchListener(binding.root, this, arrayListOf(binding.dialogContainer))
         return binding.root
     }
 

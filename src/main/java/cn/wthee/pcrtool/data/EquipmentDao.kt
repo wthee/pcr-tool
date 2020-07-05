@@ -14,6 +14,10 @@ interface EquipmentDao {
     @Query("SELECT * FROM equipment_data WHERE equipment_data.equipment_id IN (:eids) ")
     suspend fun getEquipmentDatas(eids: List<Int>): List<EquipmentData>
 
+    //获取装备具体属性
+    @Query("SELECT * FROM equipment_data WHERE equipment_data.equipment_id =:eid ")
+    suspend fun getEquipmentData(eid: Int): EquipmentData
+
     //角色所有装备信息
     @Query("SELECT * FROM equipment_data WHERE equipment_name NOT LIKE '%（%' AND equipment_name NOT LIKE '%设计图%' AND equipment_name NOT LIKE '%公主之心%' ORDER BY promotion_level DESC")
     suspend fun getAllEquipments(): List<EquipmentData>
@@ -25,6 +29,7 @@ interface EquipmentDao {
     //装备碎片信息
     @Query("SELECT * FROM equipment_craft WHERE equipment_craft.equipment_id = :eid ")
     suspend fun getEquipmentCraft(eid: Int): EquipmentCraft
+
 
     //关卡信息
     @Transaction

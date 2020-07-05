@@ -17,8 +17,8 @@ import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.DatabaseService
 import cn.wthee.pcrtool.database.AppDatabase
+import cn.wthee.pcrtool.database.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import java.io.File
@@ -109,7 +109,7 @@ class DownloadWorker(
         notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(title)
             .setTicker(title)
-            .setSmallIcon(R.drawable.notice)
+            .setSmallIcon(R.drawable.logo)
             .setOngoing(true)
             .setProgress(100, 0, true)
         return ForegroundInfo(1, notification.build())

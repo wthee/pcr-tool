@@ -13,21 +13,18 @@ class EquipmentViewModel internal constructor(
 ) : ViewModel() {
 
     var equipments = MutableLiveData<List<EquipmentData>>()
-    var loading = MutableLiveData<Boolean>()
+    var isLoading = MutableLiveData<Boolean>()
     var refresh = MutableLiveData<Boolean>()
     var isList = MutableLiveData<Boolean>()
 
     //获取装备列表
     fun getEquips() {
+        isLoading.postValue(true)
         viewModelScope.launch {
             val data = equipmentRepository.getAllEquipments()
-            if (data.isEmpty()) {
-                loading.postValue(true)
-            } else {
-                loading.postValue(false)
-                refresh.postValue(false)
-            }
             equipments.postValue(data)
+            isLoading.postValue(false)
+            refresh.postValue(false)
         }
     }
 }

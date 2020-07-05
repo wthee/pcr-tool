@@ -8,11 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
-import cn.wthee.pcrtool.adapters.EquipmentDropAdapter
+import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
@@ -27,7 +28,7 @@ class EquipmentDetailsFragment : Fragment() {
 
     private lateinit var equip: EquipmentData
     private lateinit var binding: FragmentEquipmentDetailsBinding
-    private lateinit var dropsAdapter: EquipmentDropAdapter
+    private lateinit var materialAdapter: EquipmentMaterialAdapter
 
     companion object {
         fun getInstance(equip: EquipmentData) =
@@ -35,6 +36,9 @@ class EquipmentDetailsFragment : Fragment() {
                 arguments = Bundle().apply { putSerializable(EQUIP, equip) }
             }
     }
+
+    private val viewModel = InjectorUtil.provideEquipmentDetailsViewModelFactory()
+        .create(EquipmentDetailsViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +57,13 @@ class EquipmentDetailsFragment : Fragment() {
     ): View? {
         binding = FragmentEquipmentDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        //获取掉落信息
-        val viewModel = InjectorUtil.provideEquipmentDetailsViewModelFactory()
-            .create(EquipmentDetailsViewModel::class.java)
-        viewModel.getDropInfos(equip)
+        init()
+        setObserve()
+        viewModel.getEquipInfos(equip)
+        return binding.root
+    }
+
+    private fun init() {
         binding.apply {
             //toolbar
             toolbar.setNavigationOnClickListener { view ->
@@ -64,34 +71,39 @@ class EquipmentDetailsFragment : Fragment() {
             }
             toolbar.title = equip.equipmentName
             //共享元素
-            info.itemPic.transitionName = "pic_${equip.equipmentId}"
+            itemPic.transitionName = "pic_${equip.equipmentId}"
             //图标
-            val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEPB
-            GlideUtil.load(picUrl, info.itemPic, R.drawable.error, parentFragment)
+            val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
+            GlideUtil.load(picUrl, itemPic, R.drawable.error, parentFragment)
             //描述
-            info.desc.text = equip.getDesc()
+            desc.text = equip.getDesc()
             //属性词条
             val lm = object : LinearLayoutManager(MyApplication.getContext()) {
                 override fun canScrollVertically(): Boolean {
                     return false
                 }
+            }.also {
+                it.orientation = LinearLayoutManager.VERTICAL
+                attrs.layoutManager = it
             }
-            lm.orientation = LinearLayoutManager.VERTICAL
-            info.attrs.layoutManager = lm
             val adapter = EquipmentAttrAdapter()
-            info.attrs.adapter = adapter
+            attrs.adapter = adapter
             adapter.submitList(equip.getAttrs())
-            //掉落地区
-            val lm1 = LinearLayoutManager(MyApplication.getContext())
-            lm1.orientation = LinearLayoutManager.VERTICAL
-            info.drops.layoutManager = lm1
-            dropsAdapter = EquipmentDropAdapter()
-            info.drops.adapter = dropsAdapter
+            //合成素材
+            materialAdapter = EquipmentMaterialAdapter()
+            PagerSnapHelper().attachToRecyclerView(material)
+            material.adapter = materialAdapter
         }
-        viewModel.equipDropInfos.observe(viewLifecycleOwner, Observer {
-            dropsAdapter.submitList(it)
+    }
+
+    private fun setObserve() {
+        viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
+            binding.titleMaterial.text = resources.getString(R.string.material, it.size)
+            materialAdapter.submitList(it)
         })
-        return binding.root
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
+            binding.equipProgressBar.visibility = if (it) View.VISIBLE else View.GONE
+        })
     }
 
 }
