@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.UpdateHelper
 import cn.wthee.pcrtool.utils.ActivityUtil
@@ -26,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
     }
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         }
         //绑定
         ActivityUtil.instance.currentActivity = this
-
     }
 
 }

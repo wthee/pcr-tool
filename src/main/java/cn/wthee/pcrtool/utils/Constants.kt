@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.utils
 
 object Constants {
     //图片格式
-    const val WEPB = ".webp"
+    const val WEBP = ".webp"
 
     //接口地址
     const val API_URL = "https://redive.estertion.win/"

@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_containerFragment_to_equipmentDetailsFragment"
             app:destination="@id/equipmentDetailsFragment" />
+        <action
+            android:id="@+id/action_containerFragment_to_settingsContainerFragment"
+            app:destination="@id/settingsContainerFragment" />
     </fragment>
 
     <fragment
@@ -57,7 +60,20 @@
         android:id="@+id/promotionFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.PromotionFragment"
         android:label="PromotionFragment"
-        tools:layout="@layout/fragment_character_promotion" /><action android:id="@+id/action_global_containerFragment" app:destination="@id/containerFragment"/>
+        tools:layout="@layout/fragment_character_promotion" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="cn.wthee.pcrtool.ui.setting.MainSettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/characterSkillFragment"
+        android:name="cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment"
+        android:label="CharacterSkillFragment" />
+    <fragment
+        android:id="@+id/settingsContainerFragment"
+        android:name="cn.wthee.pcrtool.ui.setting.SettingsContainerFragment"
+        android:label="fragment_settings_container"
+        tools:layout="@layout/fragment_settings_container" />
 
 
 </navigation>

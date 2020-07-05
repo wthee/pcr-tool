@@ -18,8 +18,9 @@ import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
+import javax.inject.Singleton
 
-
+@Singleton
 class EquipmentListFragment : Fragment() {
 
     companion object {
@@ -41,7 +42,7 @@ class EquipmentListFragment : Fragment() {
         //设置监听
         setListener()
         //绑定观察
-        bindObserver()
+        setObserve()
         viewModel.getEquips()
         return binding.root
     }
@@ -66,9 +67,9 @@ class EquipmentListFragment : Fragment() {
         }
     }
 
-    private fun bindObserver(){
+    private fun setObserve(){
         //加载
-        viewModel.loading.observe(viewLifecycleOwner, Observer {
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
             binding.characterProgress.visibility = if (it) View.VISIBLE else View.GONE
         })
         viewModel.isList.observe(viewLifecycleOwner, Observer {

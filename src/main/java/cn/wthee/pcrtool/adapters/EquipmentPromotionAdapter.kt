@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.databinding.ItemEquipmentPromotionBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
-import cn.wthee.pcrtool.utils.Constants.WEPB
+import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
 
 
@@ -57,7 +57,7 @@ class EquipmentPromotionAdapter(private val repeat: MutableMap<Int, Int>) :
                     counts[equip.equipmentId]
                 )
                 //加载装备图片
-                val picUrl = EQUIPMENT_URL + equip.equipmentId + WEPB
+                val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
                 GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
                 //显示星级
                 val stars = arrayOf(star0, star1, star2, star3, star4)
@@ -85,24 +85,10 @@ class EquipmentPromotionAdapter(private val repeat: MutableMap<Int, Int>) :
                 //设置点击跳转
                 root.setOnClickListener {
                     MainActivity.currentEquipPosition = adapterPosition
-//                    val bundle = android.os.Bundle()
-//                    bundle.putSerializable("equip", equip)
                     EquipmentDetailsDialogFragment.getInstance(equip).show(
                         ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
                         "details"
                     )
-//                    binding.apply {
-//                        val extras =
-//                            FragmentNavigatorExtras(
-//                                itemPic to itemPic.transitionName
-//                            )
-//                        root.findNavController().navigate(
-//                            R.id.action_characterPagerFragment_to_equipmentDetailsFragment,
-//                            bundle,
-//                            null,
-//                            extras
-//                        )
-//                    }
                 }
             }
         }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -9,24 +8,19 @@
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/layout_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="enterAlways|scroll|snapMargins">
 
-            <Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                android:background="@color/colorPrimary"
-                android:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:titleTextColor="@color/white"
-                tools:title="PCR TOOL" />
+            <include android:id="@+id/toolbar" layout="@layout/view_toolbar"/>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -60,7 +54,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/m_margin"
         android:backgroundTint="@color/white"
-        android:contentDescription="@string/app_name"
         android:src="@drawable/search"
         app:borderWidth="0dp"
         app:fabSize="mini"

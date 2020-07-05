@@ -14,10 +14,11 @@ class CharacterSkillViewModel internal constructor(
 
     var skills = MutableLiveData<List<CharacterSkillInfo>>()
     var refresh = MutableLiveData<Boolean>()
-    var loading = MutableLiveData<Boolean>()
+    var isLoading = MutableLiveData<Boolean>()
 
     //角色基本资料
     fun getCharacterSkills(id: Int) {
+        isLoading.postValue(true)
         viewModelScope.launch {
             val infos = mutableListOf<CharacterSkillInfo>()
             val data = repository.getCharacterSkill(id)
@@ -28,7 +29,7 @@ class CharacterSkillViewModel internal constructor(
                     .filter { it.description.isNotEmpty() }
                 infos.add(info)
             }
-            loading.postValue(false)
+            isLoading.postValue(false)
             refresh.postValue(false)
             skills.postValue(infos)
         }

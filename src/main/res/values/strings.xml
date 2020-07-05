@@ -4,15 +4,12 @@
     <string name="height">%s cm</string>
     <string name="weight">%s kg</string>
     <string name="blood">%s 型</string>
-    <string name="equip_count">*%d</string>
+    <string name="equip_count"> x %d</string>
     <string name="character_info">角色详情</string>
     <string name="character_pic">角色资料</string>
     <string name="event_list">装备信息</string>
 
-    <string name="action_settings">Settings</string>
-
-    <string name="menu_filter_by_grow_zone" translation_description="The label for the menu item to filter the displayed plants by grow zone.">Filter by grow zone</string>
-    <string name="menu_item_share_plant" translation_description="The label for the Share menu item">Share</string>
+    <string name="hp">HP</string>
     <string name="atk">物理攻击力</string>
     <string name="p_penetrate">物理贯穿</string>
     <string name="magic_str">魔法攻击力</string>
@@ -29,6 +26,7 @@
     <string name="tp_recovery_rate">TP上升</string>
     <string name="tp_reduce_rate">TP消耗减轻</string>
     <string name="accuracy">命中</string>
+
     <string name="level">等级</string>
     <string name="rank">Rank</string>
     <string name="rarity">星级</string>
@@ -48,10 +46,34 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
+
     <string name="equip_details">道具详情</string>
     <string name="tab_sort_type">排序方式：</string>
     <string name="tab_all">全部</string>
     <string name="tab_star">收藏</string>
-    <string name="hp">HP</string>
+
     <string name="skill_action">技能效果</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="back">返回</string>
+    <string name="other">其它</string>
+    <string name="setting">设置</string>
+    <string name="material">装备制作素材 x %d </string>
+    <string name="material_no">装备制作素材</string>
+
+
 </resources>

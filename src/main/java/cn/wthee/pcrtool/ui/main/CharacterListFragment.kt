@@ -1,16 +1,11 @@
 package cn.wthee.pcrtool.ui.main
 
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -28,7 +23,6 @@ import cn.wthee.pcrtool.utils.Constants.COLUMN_COUNT
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_character_promotion.*
 
 
 class CharacterListFragment : Fragment() {
@@ -42,6 +36,7 @@ class CharacterListFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterListBinding
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,10 +48,9 @@ class CharacterListFragment : Fragment() {
         //加载数据
         init()
         //监听数据变化
-        bindObserver()
+        setObserve()
         //控件监听
         setListener()
-        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -80,7 +74,7 @@ class CharacterListFragment : Fragment() {
     }
 
     //绑定observe
-    private fun bindObserver() {
+    private fun setObserve() {
         viewModel.apply {
             //角色
             characters.observe(viewLifecycleOwner, Observer { data ->
