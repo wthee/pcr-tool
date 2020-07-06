@@ -49,7 +49,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/atk"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/magic_str"
@@ -96,7 +96,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/def"
@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/magic_def"
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/hp"
@@ -163,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/p_critical"
@@ -190,7 +190,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/dodge"
@@ -210,7 +210,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/m_critical"
@@ -237,7 +237,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/hp_recovery"
@@ -257,7 +257,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/tp_recovery"
@@ -284,7 +284,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/hp_steal"
@@ -304,7 +304,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/hp_recovery_rate"
@@ -331,7 +331,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/tp_recovery_rate"
@@ -351,7 +351,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/tp_reduce_rate"
@@ -378,7 +378,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/accuracy"
@@ -398,7 +398,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/level"
@@ -427,7 +427,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/rank"
@@ -444,7 +444,7 @@
                         android:id="@+id/rank_reduce"
                         android:layout_width="@dimen/small_icon"
                         android:layout_height="@dimen/small_icon"
-                        android:src="@drawable/reduce" />
+                        android:src="@drawable/ic_reduce" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/rank"
@@ -458,7 +458,7 @@
                         android:id="@+id/rank_add"
                         android:layout_width="@dimen/small_icon"
                         android:layout_height="@dimen/small_icon"
-                        android:src="@drawable/add" />
+                        android:src="@drawable/ic_add" />
                 </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
@@ -466,7 +466,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/s_margin"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/rarity"
@@ -483,7 +483,7 @@
                         android:id="@+id/rarity_reduce"
                         android:layout_width="@dimen/small_icon"
                         android:layout_height="@dimen/small_icon"
-                        android:src="@drawable/reduce" />
+                        android:src="@drawable/ic_reduce" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/rarity"
@@ -497,7 +497,7 @@
                         android:id="@+id/rarity_add"
                         android:layout_width="@dimen/small_icon"
                         android:layout_height="@dimen/small_icon"
-                        android:src="@drawable/add" />
+                        android:src="@drawable/ic_add" />
                 </LinearLayout>
 
             </LinearLayout>

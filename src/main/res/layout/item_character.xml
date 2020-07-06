@@ -51,7 +51,7 @@
                 android:layout_height="@dimen/small_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:background="@drawable/position_0_300" />
+                tools:background="@drawable/ic_position_0_300" />
 
 
             <com.google.android.material.textview.MaterialTextView

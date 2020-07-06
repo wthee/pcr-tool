@@ -49,7 +49,7 @@ class ContainerFragment : Fragment() {
         //设置toolbar
         setHasOptionsMenu(true)
         val toolbar = ToolbarUtil(binding.toolbar)
-        toolbar.setLeftIcon(R.drawable.logo)
+        toolbar.setLeftIcon(R.drawable.ic_logo)
         toolbar.rightIcon.setOnClickListener {
             toolbar.showPopupMenu(
                 requireContext(),
@@ -102,17 +102,17 @@ class ContainerFragment : Fragment() {
                 when (position) {
                     //角色
                     0 -> {
-                        tab.icon = resources.getDrawable(R.drawable.character, null)
+                        tab.icon = resources.getDrawable(R.drawable.ic_character, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
                     }
                     //装备
                     1 -> {
-                        tab.icon = resources.getDrawable(R.drawable.equip, null)
+                        tab.icon = resources.getDrawable(R.drawable.ic_equip, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
                     }
                     //TODO 怪物
                     2 -> {
-                        tab.icon = resources.getDrawable(R.drawable.enemy, null)
+                        tab.icon = resources.getDrawable(R.drawable.ic_enemy, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
                     }
                 }

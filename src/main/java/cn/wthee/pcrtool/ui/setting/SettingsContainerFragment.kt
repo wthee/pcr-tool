@@ -33,6 +33,4 @@ class SettingsContainerFragment : Fragment() {
         return binding.root
     }
 
-
-
 }

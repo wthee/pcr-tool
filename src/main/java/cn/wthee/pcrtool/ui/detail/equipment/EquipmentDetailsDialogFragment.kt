@@ -40,10 +40,9 @@ class EquipmentDetailsDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentDetailsDialogBinding.inflate(inflater, container, false)
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.dialog_container, EquipmentDetailsFragment.getInstance(equip))
+        childFragmentManager.beginTransaction()
+            .replace(R.id.dialog_container, EquipmentDetailsFragment.getInstance(equip, true), "test")
             .commit()
-//        DrawerUtil.bindAllViewOnTouchListener(binding.root, this, arrayListOf(binding.dialogContainer))
         return binding.root
     }
 
@@ -60,7 +59,7 @@ class EquipmentDetailsDialogFragment : DialogFragment() {
             val params = win?.attributes!!
             params.gravity = Gravity.BOTTOM
             params.width = ViewGroup.LayoutParams.MATCH_PARENT
-            params.height = dm.heightPixels / 2
+            params.height = dm.heightPixels / 3 * 2
             win.attributes = params
         } catch (e: Exception) {
             Log.e(LOG_TAG, e.message ?: "")

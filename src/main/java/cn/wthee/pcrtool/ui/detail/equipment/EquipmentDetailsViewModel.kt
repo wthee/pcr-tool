@@ -23,7 +23,6 @@ class EquipmentDetailsViewModel internal constructor(
     fun getEquipInfos(equip: EquipmentData) {
         isLoading.postValue(true)
         viewModelScope.launch {
-            val finalData = arrayListOf<EquipmentDropInfo>()
             if (equip.craftFlg == 0) {
                 materials.add(EquipmentMaterial(0, "", 1, getDropInfos(equip.equipmentId, 0)))
             } else {

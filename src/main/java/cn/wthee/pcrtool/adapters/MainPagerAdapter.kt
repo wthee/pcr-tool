@@ -26,15 +26,6 @@ class MainPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activi
         return mFragments.size()
     }
 
-
-    fun setPageTitle(position: Int, title: String) {
-        if (position >= 0 && position < mFragments.size()) {
-
-            notifyDataSetChanged();
-        }
-    }
-
-
     companion object {
         const val PAGE_CHARACTER = 0
         const val PAGE_EQUIP = 1

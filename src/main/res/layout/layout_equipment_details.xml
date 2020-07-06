@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/m_margin"
-                    android:background="@drawable/bg_title"
+                    android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="@dimen/s_padding"
                     android:text="@string/equip_details"

@@ -2,7 +2,10 @@ package cn.wthee.pcrtool.utils
 
 import okhttp3.MediaType
 import okhttp3.ResponseBody
-import okio.*
+import okio.Buffer
+import okio.BufferedSource
+import okio.ForwardingSource
+import okio.Source
 import java.io.IOException
 
 
@@ -21,7 +24,7 @@ class DownloadResponseBody(
 
     override fun source(): BufferedSource {
         if (bufferedSource == null) {
-            bufferedSource = source(responseBody.source()).buffer()
+            bufferedSource = responseBody.source()
         }
         return bufferedSource!!
     }

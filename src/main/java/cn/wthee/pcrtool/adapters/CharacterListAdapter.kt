@@ -125,6 +125,7 @@ class CharacterAdapter(private val fragment: Fragment) :
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {

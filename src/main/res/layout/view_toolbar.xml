@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_main"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
     android:background="@color/colorPrimary">
@@ -13,8 +14,8 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo"
-        android:theme="@style/RippleWhite"
+        android:src="@drawable/ic_logo"
+        android:theme="@style/Ripple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,7 +42,7 @@
         android:contentDescription="@string/other"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_more"
-        android:theme="@style/RippleWhite"
+        android:theme="@style/Ripple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

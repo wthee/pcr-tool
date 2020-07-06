@@ -1,9 +1,14 @@
 package cn.wthee.pcrtool.ui.detail.equipment
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.core.view.setMargins
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -16,24 +21,27 @@ import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GlideUtil
-import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.*
 
 
 private const val EQUIP = "equip"
+private const val DIALOG = "dialog"
 
 
 class EquipmentDetailsFragment : Fragment() {
 
     private lateinit var equip: EquipmentData
+    private var isDialog: Boolean = false
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var materialAdapter: EquipmentMaterialAdapter
 
     companion object {
-        fun getInstance(equip: EquipmentData) =
+        fun getInstance(equip: EquipmentData, isDialog: Boolean) =
             EquipmentDetailsFragment().apply {
-                arguments = Bundle().apply { putSerializable(EQUIP, equip) }
+                arguments = Bundle().apply {
+                    putSerializable(EQUIP, equip)
+                    putBoolean(DIALOG, isDialog)
+                }
             }
     }
 
@@ -44,11 +52,14 @@ class EquipmentDetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             equip = it.getSerializable(EQUIP) as EquipmentData
+            isDialog = it.getBoolean(DIALOG)
         }
-        sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        sharedElementReturnTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        if (!isDialog) {
+            sharedElementEnterTransition =
+                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+            sharedElementReturnTransition =
+                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        }
     }
 
     override fun onCreateView(
@@ -60,16 +71,49 @@ class EquipmentDetailsFragment : Fragment() {
         init()
         setObserve()
         viewModel.getEquipInfos(equip)
+        //从角色页面打开时
+        if (isDialog) {
+            binding.attrs.visibility = View.GONE
+            val params = binding.layoutCard.layoutParams as FrameLayout.LayoutParams
+            params.setMargins(0)
+            binding.layoutMain.setBackgroundColor(Color.TRANSPARENT)
+            binding.layoutCard.layoutParams = params
+            DrawerUtil.bindAllViewOnTouchListener(
+                binding.root,
+                parentFragment as DialogFragment,
+                arrayListOf(binding.layoutContent)
+            )
+        }
         return binding.root
+    }
+
+    //TODO 返回监听
+    override fun onResume(): Unit {
+        super.onResume()
+        view?.isFocusableInTouchMode = true
+        view?.requestFocus()
+        view?.setOnKeyListener(View.OnKeyListener { view, i, keyEvent ->
+            if (keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK) {
+                goBack()
+                return@OnKeyListener true
+            }
+            false
+        })
     }
 
     private fun init() {
         binding.apply {
             //toolbar
-            toolbar.setNavigationOnClickListener { view ->
-                view.findNavController().navigateUp()
+            val cusToolbar = ToolbarUtil(toolbar)
+            cusToolbar.setLeftIcon(R.drawable.ic_detail_back)
+            cusToolbar.hideRightIcon()
+            cusToolbar.setTitleColor(R.color.colorPrimary)
+            cusToolbar.setBackground(R.color.colorWhite)
+            cusToolbar.setTitleCenter()
+            cusToolbar.leftIcon.setOnClickListener {
+                goBack()
             }
-            toolbar.title = equip.equipmentName
+            cusToolbar.title.text = equip.equipmentName
             //共享元素
             itemPic.transitionName = "pic_${equip.equipmentId}"
             //图标
@@ -78,7 +122,7 @@ class EquipmentDetailsFragment : Fragment() {
             //描述
             desc.text = equip.getDesc()
             //属性词条
-            val lm = object : LinearLayoutManager(MyApplication.getContext()) {
+            object : LinearLayoutManager(MyApplication.getContext()) {
                 override fun canScrollVertically(): Boolean {
                     return false
                 }
@@ -104,6 +148,14 @@ class EquipmentDetailsFragment : Fragment() {
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
             binding.equipProgressBar.visibility = if (it) View.VISIBLE else View.GONE
         })
+    }
+
+    private fun goBack(){
+        if(isDialog){
+            (parentFragment as DialogFragment).dismiss()
+        }else{
+            view?.findNavController()?.navigateUp()
+        }
     }
 
 }

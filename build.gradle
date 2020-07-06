@@ -47,13 +47,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation files('libs/nineoldandroids-2.4.0.jar')
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     //leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
     
     //lifecycle
     def lifecycle_version = "2.2.0"

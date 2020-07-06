@@ -109,7 +109,7 @@ class DownloadWorker(
         notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(title)
             .setTicker(title)
-            .setSmallIcon(R.drawable.logo)
+            .setSmallIcon(R.drawable.ic_logo)
             .setOngoing(true)
             .setProgress(100, 0, true)
         return ForegroundInfo(1, notification.build())

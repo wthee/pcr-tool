@@ -36,7 +36,7 @@ class EquipmentMaterialAdapter :
         fun bind(info: EquipmentMaterial) {
             binding.apply {
                 binding.root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.item_equip_drop)
+                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.item_scale)
                 equipName.text = "${info.name} x ${info.count}"
                 GlideUtil.load(
                     Constants.EQUIPMENT_URL + info.id + Constants.WEBP,

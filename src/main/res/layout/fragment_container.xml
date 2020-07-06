@@ -18,7 +18,9 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="enterAlways|scroll|snapMargins">
 
-            <include android:id="@+id/toolbar" layout="@layout/view_toolbar"/>
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/view_toolbar"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -54,7 +56,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/m_margin"
         android:backgroundTint="@color/white"
-        android:src="@drawable/search"
+        android:src="@drawable/ic_search"
         app:borderWidth="0dp"
         app:fabSize="mini"
         app:tint="@color/colorPrimary" />

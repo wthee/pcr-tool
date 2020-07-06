@@ -22,13 +22,15 @@ object DrawerUtil {
     @SuppressLint("ClickableViewAccessibility")
     fun bindAllViewOnTouchListener(
         rootView: View,
-        df: DialogFragment, notBind: ArrayList<View>?
+        df: DialogFragment?, notBind: ArrayList<View>?
     ) {
         val views = getAllChildViews(rootView)
         views.add(rootView)
         //不绑定
         notBind?.forEach {
-            views.remove(it)
+            getAllChildViews(it).forEach{notBindView ->
+                views.remove(notBindView)
+            }
         }
 
         views.forEach {
@@ -64,7 +66,7 @@ object DrawerUtil {
                                 })
                                 rootView.startAnimation(anim)
                             } else {
-                                df.dismiss()
+                                df?.dismiss()
                             }
                             offsetY = 0
                         }
