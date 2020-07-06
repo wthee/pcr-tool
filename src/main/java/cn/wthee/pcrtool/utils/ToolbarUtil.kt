@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
@@ -14,7 +15,7 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     val leftIcon = toolbar.leftIcon
     val rightIcon = toolbar.rightIcon
     val title = toolbar.title
-    val resources = MyApplication.getContext().resources
+    val resources: Resources = MyApplication.getContext().resources
 
     fun setLeftIcon(resId: Int){
         leftIcon.setImageResource(resId)

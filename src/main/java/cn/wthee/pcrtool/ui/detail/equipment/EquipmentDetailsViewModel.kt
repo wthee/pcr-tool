@@ -18,7 +18,7 @@ class EquipmentDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    var materials = arrayListOf<EquipmentMaterial>()
+    private var materials = arrayListOf<EquipmentMaterial>()
     var isLoading = MutableLiveData<Boolean>()
 
     //获取装备制作材料信息

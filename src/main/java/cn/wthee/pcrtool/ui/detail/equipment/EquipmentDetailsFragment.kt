@@ -91,8 +91,8 @@ class EquipmentDetailsFragment : Fragment() {
         return binding.root
     }
 
-    //TODO 返回监听
-    override fun onResume(): Unit {
+    //返回监听
+    override fun onResume() {
         super.onResume()
         view?.isFocusableInTouchMode = true
         view?.requestFocus()

@@ -15,8 +15,8 @@ class CharacterSkillViewModel @Inject constructor(
 ) : ViewModel() {
 
     var skills = MutableLiveData<List<CharacterSkillInfo>>()
-    var refresh = MutableLiveData<Boolean>()
-    var isLoading = MutableLiveData<Boolean>()
+    private var refresh = MutableLiveData<Boolean>()
+    private var isLoading = MutableLiveData<Boolean>()
 
     //角色基本资料
     fun getCharacterSkills(id: Int) {

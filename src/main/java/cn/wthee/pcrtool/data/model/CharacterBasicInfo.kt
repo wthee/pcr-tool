@@ -97,12 +97,12 @@ data class CharacterBasicInfo(
 
     fun getLoveSelfText(): String {
         val text = serif1 + serif2 + serif3
-        if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
-            return "......\n" +
+        return if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
+            "......\n" +
                     "......\n" +
                     "......\n"
         } else {
-            return text.replace("\\n", "\n")
+            text.replace("\\n", "\n")
         }
     }
 

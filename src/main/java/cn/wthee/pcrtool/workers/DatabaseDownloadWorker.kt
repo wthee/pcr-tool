@@ -137,16 +137,16 @@ class DatabaseDownloadWorker(
             FileUtil.deleteDir(folderPath, dbPath)
         }
         try {
-            input?.let {
+            input?.let { inputStream ->
                 val out = FileOutputStream(db)
                 val byte = ByteArray(1024 * 4)
                 var line: Int
-                while (it.read(byte).also { line = it } > 0) {
+                while (inputStream.read(byte).also { line = it } > 0) {
                     out.write(byte, 0, line)
                 }
                 out.flush()
                 out.close()
-                it.close()
+                inputStream.close()
                 thread(start = true) {
                     //更新数据库
                     AppDatabase.getInstance().close()

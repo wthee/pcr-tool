@@ -38,7 +38,7 @@ class ContainerFragment : Fragment() {
 
     private lateinit var binding: FragmentContainerBinding
     private lateinit var viewPager2: ViewPager2
-    lateinit var search: FloatingActionButton
+    private lateinit var search: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

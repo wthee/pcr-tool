@@ -59,6 +59,7 @@
         android:src="@drawable/ic_search"
         app:borderWidth="0dp"
         app:fabSize="mini"
-        app:tint="@color/colorPrimary" />
+        app:tint="@color/colorPrimary"
+        android:contentDescription="@string/search" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

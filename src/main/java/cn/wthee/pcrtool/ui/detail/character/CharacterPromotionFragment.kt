@@ -51,7 +51,7 @@ class PromotionFragment : Fragment() {
     private var selectRank = 2
     private var selRatity = 1
     private var lv = 85
-    lateinit var viewModel: CharacterPromotionViewModel
+    private lateinit var viewModel: CharacterPromotionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

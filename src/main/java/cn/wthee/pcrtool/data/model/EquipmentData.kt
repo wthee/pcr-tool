@@ -40,12 +40,12 @@ class EquipmentData(
 
     fun getDesc() = description.replace("\\n", "")
 
-    fun calcValue(value: Double): Int {
+    private fun calcValue(value: Double): Int {
         val rate = if (promotionLevel > 1) 2 else 1
-        if (promotionLevel == 3 && value.toInt() % 3 != 0) {
-            return value.toInt() * 2 + 1
+        return if (promotionLevel == 3 && value.toInt() % 3 != 0) {
+            value.toInt() * 2 + 1
         } else {
-            return value.toInt() * rate
+            value.toInt() * rate
         }
     }
 

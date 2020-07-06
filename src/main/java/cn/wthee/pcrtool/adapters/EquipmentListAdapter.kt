@@ -131,6 +131,6 @@ class EquipDiffCallback : DiffUtil.ItemCallback<EquipmentData1>() {
         oldItem: EquipmentData1,
         newItem: EquipmentData1
     ): Boolean {
-        return oldItem.equals(newItem)
+        return oldItem == newItem
     }
 }
