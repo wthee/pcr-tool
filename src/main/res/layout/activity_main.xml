@@ -10,7 +10,7 @@
     android:orientation="vertical"
     tools:openDrawer="start">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

@@ -23,8 +23,10 @@ import cn.wthee.pcrtool.utils.Constants.COLUMN_COUNT
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
+import javax.inject.Singleton
 
 
+@Singleton
 class CharacterListFragment : Fragment() {
 
     companion object {

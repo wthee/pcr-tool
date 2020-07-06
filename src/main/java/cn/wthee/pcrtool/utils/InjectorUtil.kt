@@ -1,12 +1,13 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.data.CharacterRepository
+import cn.wthee.pcrtool.data.EnemyRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.ui.detail.character.CharacterPromotionViewModelFactory
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
 import cn.wthee.pcrtool.ui.main.CharacterViewModelFactory
+import cn.wthee.pcrtool.ui.main.EnemyViewModelFactory
 import cn.wthee.pcrtool.ui.main.EquipmentViewModelFactory
 
 
@@ -20,6 +21,12 @@ object InjectorUtil {
     private fun getEquipmentRepository(): EquipmentRepository {
         return EquipmentRepository(
             AppDatabase.getInstance().getEquipmentDao()
+        )
+    }
+
+    private fun getEnemyRepository(): EnemyRepository {
+        return EnemyRepository(
+            AppDatabase.getInstance().getEnemyDao()
         )
     }
 
@@ -45,20 +52,23 @@ object InjectorUtil {
         )
     }
 
-    fun provideEquipmentDetailsViewModelFactory(
-
-    ): EquipmentDetailsViewModelFactory {
+    fun provideEquipmentDetailsViewModelFactory(): EquipmentDetailsViewModelFactory {
         val repository = getEquipmentRepository()
         return EquipmentDetailsViewModelFactory(
             repository
         )
     }
 
-    fun provideCharacterSkillViewModelFactory(
-
-    ): CharacterSkillViewModelFactory {
+    fun provideCharacterSkillViewModelFactory(): CharacterSkillViewModelFactory {
         val repository = getCharacterRepository()
         return CharacterSkillViewModelFactory(
+            repository
+        )
+    }
+
+    fun provideEnemyViewModelFactory(): EnemyViewModelFactory {
+        val repository = getEnemyRepository()
+        return EnemyViewModelFactory(
             repository
         )
     }

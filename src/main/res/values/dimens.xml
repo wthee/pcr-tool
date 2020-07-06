@@ -24,9 +24,9 @@
     <integer name="item_anim_fast">300</integer>
     <integer name="delay">500</integer>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="spinner_height">20dp</dimen>
-    <dimen name="toolbar_height">42dp</dimen>
-    <dimen name="tab_height">36dp</dimen>
+    <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="tab_height_1">40dp</dimen>
+    <dimen name="tab_height_2">36dp</dimen>
 </resources>

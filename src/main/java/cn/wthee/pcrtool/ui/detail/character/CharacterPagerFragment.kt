@@ -13,8 +13,9 @@ import cn.wthee.pcrtool.adapters.CharacterInfoViewPagerAdapter
 import cn.wthee.pcrtool.adapters.ZoomOutPageTransformer
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
+import javax.inject.Singleton
 
-
+@Singleton
 class CharacterPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPagerBinding

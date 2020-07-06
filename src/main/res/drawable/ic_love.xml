@@ -6,12 +6,6 @@
     android:width="200dp">
 
     <path
-        android:name="circle"
-        android:fillColor="@color/colorAlphaWhite"
-        android:pathData="M16,16m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
-
-
-    <path
         android:fillColor="@color/alphaPrimary"
         android:pathData="M20.5,9.5
         c-1.955,0,-3.83,1.268,-4.5,3

@@ -29,7 +29,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/characterFragment"
+        android:id="@+id/characterListFragment"
         android:name="cn.wthee.pcrtool.ui.main.CharacterListFragment"
         android:label="@string/character_pic"
         tools:layout="@layout/fragment_character_list" />
@@ -37,15 +37,7 @@
         android:id="@+id/characterPagerFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment"
         android:label="CharacterPagerFragment"
-        tools:layout="@layout/fragment_character_basic_info">
-        <action
-            android:id="@+id/action_characterPagerFragment_to_equipmentDetailsFragment"
-            app:destination="@id/equipmentDetailsFragment"
-            app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit"
-            app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
-    </fragment>
+        tools:layout="@layout/fragment_character_basic_info"/>
     <fragment
         android:id="@+id/equipmentDetailsFragment"
         android:name="cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment"

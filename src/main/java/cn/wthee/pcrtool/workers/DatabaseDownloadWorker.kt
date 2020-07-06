@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.worker
+package cn.wthee.pcrtool.workers
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,33 +10,36 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.edit
+import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.AppDatabase
-import cn.wthee.pcrtool.database.DatabaseService
+import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.AppDatabase
+import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import kotlin.concurrent.thread
 
 
-class DownloadWorker(
+class DatabaseDownloadWorker(
     @NonNull context: Context,
     @NonNull parameters: WorkerParameters?
-) : Worker(context, parameters!!) {
+) : CoroutineWorker(context, parameters!!) {
 
-    private val title = "正在更新数据库"
+    private val title = "正在更新数据库..."
     private val notificationManager: NotificationManager =
         context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private val channelId = "1"
+    private val noticeId = 1
     private lateinit var notification: NotificationCompat.Builder
+    //适配低版本数据库路径
     private val folderPath = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
         MyApplication.getContext().dataDir.absolutePath
     else {
@@ -53,51 +56,57 @@ class DownloadWorker(
         const val KEY_VERSION = "KEY_VERSION"
     }
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result = coroutineScope {
         val inputData: Data = inputData
-        val inputUrl = inputData.getString(KEY_INPUT_URL) ?: return Result.failure()
-        val version = inputData.getString(KEY_VERSION) ?: return Result.failure()
+        //下载地址
+        val inputUrl = inputData.getString(KEY_INPUT_URL) ?: return@coroutineScope Result.failure()
+        //版本号
+        val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         setForegroundAsync(createForegroundInfo())
-        download(inputUrl, version)
-        return Result.success()
+        return@coroutineScope download(inputUrl, version)
     }
 
-    @Throws(InterruptedException::class)
-    private fun download(inputUrl: String, version: String) {
-        //创建Retrofit服务
-        val service = ApiHelper.createWithClient(
-            DatabaseService::class.java, inputUrl,
-            ApiHelper.downloadClientBuild(object : DownloadListener {
-                //下载进度
-                override fun onProgress(progress: Int, currSize: Float, totalSize: Float) {
-                    Log.e(Constants.LOG_TAG, progress.toString())
-                    notification.setProgress(100, progress, false)
-                        .setContentTitle(
-                            "$title ${String.format(
-                                "%.1f",
-                                currSize
-                            )}KB / ${String.format("%.1f", totalSize)} KB"
-                        )
-                        .build()
-                    notificationManager.notify(1, notification.build())
-                }
 
-                override fun onFinish() {
-                }
-            })
-        )
+    private fun download(inputUrl: String, version: String): Result {
+        try {
+            //创建Retrofit服务
+            val service = ApiHelper.createWithClient(
+                DatabaseService::class.java, inputUrl,
+                ApiHelper.downloadClientBuild(object : DownloadListener {
+                    //下载进度
+                    override fun onProgress(progress: Int, currSize: Float, totalSize: Float) {
+                        Log.e(Constants.LOG_TAG, progress.toString())
+                        notification.setProgress(100, progress, false)
+                            .setContentTitle(
+                                "$title ${String.format(
+                                    "%.1f",
+                                    currSize
+                                )}KB / ${String.format("%.1f", totalSize)} KB"
+                            )
+                            .build()
+                        notificationManager.notify(noticeId, notification.build())
+                    }
 
-        //下载文件
-        val response = service.getDb(Constants.DATABASE_CN_File_Name).execute()
-        sp.edit {
-            putString(
-                Constants.SP_DATABASE_VERSION,
-                version
+                    override fun onFinish() {
+                    }
+                })
             )
+
+            //下载文件
+            val response = service.getDb(Constants.DATABASE_CN_File_Name).execute()
+            sp.edit {
+                putString(
+                    Constants.SP_DATABASE_VERSION,
+                    version
+                )
+            }
+            val file = response.body()?.byteStream()
+            //保存
+            saveDB(file)
+            return Result.success()
+        }catch (e: Exception){
+            return Result.failure()
         }
-        val file = response.body()?.byteStream()
-        //保存
-        saveDB(file)
     }
 
     private fun createForegroundInfo(): ForegroundInfo {
@@ -112,7 +121,7 @@ class DownloadWorker(
             .setSmallIcon(R.drawable.ic_logo)
             .setOngoing(true)
             .setProgress(100, 0, true)
-        return ForegroundInfo(1, notification.build())
+        return ForegroundInfo(noticeId, notification.build())
     }
 
     //数据库保存

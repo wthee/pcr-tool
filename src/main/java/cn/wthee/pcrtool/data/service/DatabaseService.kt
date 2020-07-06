@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.database
+package cn.wthee.pcrtool.data.service
 
 
 import cn.wthee.pcrtool.data.model.DatabaseVersion

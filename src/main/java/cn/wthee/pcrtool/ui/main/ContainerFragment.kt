@@ -25,8 +25,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
+import javax.inject.Singleton
+import kotlin.collections.set
 
-
+@Singleton
 class ContainerFragment : Fragment() {
 
     companion object {
@@ -110,10 +112,10 @@ class ContainerFragment : Fragment() {
                         tab.icon = resources.getDrawable(R.drawable.ic_equip, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
                     }
-                    //TODO 怪物
+                    //怪物
                     2 -> {
                         tab.icon = resources.getDrawable(R.drawable.ic_enemy, null)
-                        tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
+                        tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
                     }
                 }
             }).attach()

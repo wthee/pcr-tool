@@ -32,7 +32,7 @@
                 android:layout_height="@dimen/small_icon"
                 android:layout_gravity="bottom"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_loved_no_bg" />
+                android:src="@drawable/ic_loved" />
         </FrameLayout>
 
 

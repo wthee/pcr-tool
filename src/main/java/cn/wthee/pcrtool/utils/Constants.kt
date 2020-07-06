@@ -40,6 +40,7 @@ object Constants {
     //数量
     const val SP_COUNT_CHARACTER = "count_character"
     const val SP_COUNT_EQUIP = "count_equip"
+    const val SP_COUNT_ENEMY = "count_enemy"
 
     //默认值
     const val DATABASE_VERSION = "202005141837"

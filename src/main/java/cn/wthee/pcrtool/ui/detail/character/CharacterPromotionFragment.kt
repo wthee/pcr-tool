@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Singleton
 import kotlin.math.round
 
 
@@ -27,7 +28,7 @@ private const val UNIT_ID = "id"
 private const val UNIT_NAME = "name"
 private const val UNIT_COMMENT = "comment"
 
-
+@Singleton
 class PromotionFragment : Fragment() {
 
     companion object {

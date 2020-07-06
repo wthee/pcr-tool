@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.utils
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -54,4 +56,40 @@ object GlideUtil {
             .into(view)
     }
 
+    fun loadWithListener(url: String, view: ImageView, onLoadListener: OnLoadListener) {
+        Glide.with(MyApplication.getContext())
+            .load(url)
+            .error(R.drawable.error)
+            .thumbnail(Glide.with(view).load(R.drawable.load))
+            .listener(object : RequestListener<Drawable?> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    view.setImageResource(R.drawable.error)
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    onLoadListener.onSuccess(resource?.toBitmap()!!)
+                    view.setImageResource(0)
+                    return false
+                }
+            })
+            .apply(options)
+            .into(view)
+    }
+
+}
+
+interface OnLoadListener{
+    fun onSuccess(bitmap: Bitmap)
 }

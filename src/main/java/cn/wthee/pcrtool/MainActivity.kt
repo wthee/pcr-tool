@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.work.WorkManager
-import cn.wthee.pcrtool.database.UpdateHelper
+import cn.wthee.pcrtool.update.DatabaseUpdateHelper
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         //检查更新
         WorkManager.getInstance(this).cancelAllWork()
         CoroutineScope(Dispatchers.IO).launch {
-            UpdateHelper().checkDBVersion(this@MainActivity)
+            DatabaseUpdateHelper().checkDBVersion(this@MainActivity)
         }
         //绑定
         ActivityUtil.instance.currentActivity = this

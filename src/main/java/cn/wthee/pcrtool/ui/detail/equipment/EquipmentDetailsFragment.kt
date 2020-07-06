@@ -22,19 +22,20 @@ import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.*
+import javax.inject.Singleton
 
 
 private const val EQUIP = "equip"
 private const val DIALOG = "dialog"
 
-
+@Singleton
 class EquipmentDetailsFragment : Fragment() {
 
     private lateinit var equip: EquipmentData
     private var isDialog: Boolean = false
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var materialAdapter: EquipmentMaterialAdapter
-
+    private lateinit var cusToolbar: ToolbarUtil
     companion object {
         fun getInstance(equip: EquipmentData, isDialog: Boolean) =
             EquipmentDetailsFragment().apply {
@@ -73,11 +74,14 @@ class EquipmentDetailsFragment : Fragment() {
         viewModel.getEquipInfos(equip)
         //从角色页面打开时
         if (isDialog) {
+            //隐藏装备属性
             binding.attrs.visibility = View.GONE
+            //取消margin
             val params = binding.layoutCard.layoutParams as FrameLayout.LayoutParams
             params.setMargins(0)
-            binding.layoutMain.setBackgroundColor(Color.TRANSPARENT)
             binding.layoutCard.layoutParams = params
+            binding.layoutMain.setBackgroundColor(Color.TRANSPARENT)
+            //滑动
             DrawerUtil.bindAllViewOnTouchListener(
                 binding.root,
                 parentFragment as DialogFragment,
@@ -104,7 +108,7 @@ class EquipmentDetailsFragment : Fragment() {
     private fun init() {
         binding.apply {
             //toolbar
-            val cusToolbar = ToolbarUtil(toolbar)
+            cusToolbar = ToolbarUtil(toolbar)
             cusToolbar.setLeftIcon(R.drawable.ic_detail_back)
             cusToolbar.hideRightIcon()
             cusToolbar.setTitleColor(R.color.colorPrimary)

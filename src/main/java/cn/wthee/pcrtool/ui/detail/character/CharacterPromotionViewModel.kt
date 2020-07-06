@@ -12,9 +12,11 @@ import cn.wthee.pcrtool.data.model.multiply
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class CharacterPromotionViewModel internal constructor(
+@Singleton
+class CharacterPromotionViewModel @Inject constructor(
     private val characterRepository: CharacterRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {

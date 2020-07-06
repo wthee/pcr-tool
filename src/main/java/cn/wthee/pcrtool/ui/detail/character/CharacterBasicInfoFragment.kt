@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,13 +20,16 @@ import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
+import cn.wthee.pcrtool.utils.OnLoadListener
+import cn.wthee.pcrtool.utils.PaletteHelper
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Singleton
 import kotlin.math.abs
 
-
+@Singleton
 class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
@@ -43,8 +48,7 @@ class CharacterBasicInfoFragment : Fragment() {
     private lateinit var binding: FragmentCharacterBasicInfoBinding
     private lateinit var linearLayoutManager: LinearLayoutManager
 
-    private var ic = R.drawable.ic_love
-    private var icFab = R.drawable.ic_love_no_bg
+    private var icFab = R.drawable.ic_love
     private var icFabColor = MyApplication.getContext().resources.getColor(R.color.white, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,11 +87,16 @@ class CharacterBasicInfoFragment : Fragment() {
             Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEBP
         GlideUtil.load(picUrl, binding.icon1, R.drawable.unknow, parentFragment)
         //加载角色现实图片
-        GlideUtil.load(
+        GlideUtil.loadWithListener(
             Constants.Reality_CHARACTER_URL + character.getFixedId() + Constants.WEBP,
-            binding.characterPic,
-            R.drawable.error,
-            null
+            binding.characterPic, object : OnLoadListener {
+                override fun onSuccess(bitmap: Bitmap) {
+                    val color =
+                        PaletteHelper.createPaletteSync(bitmap).darkVibrantSwatch?.bodyTextColor
+                    binding.layoutToolbar.setExpandedTitleColor(color ?: Color.BLACK)
+
+                }
+            }
         )
         parentFragment?.startPostponedEnterTransition()
         //加载角色卡面列表
@@ -113,7 +122,8 @@ class CharacterBasicInfoFragment : Fragment() {
                     R.id.action_love -> {
                         isLoved = !isLoved
                         sp.edit {
-                            putBoolean(character.id.toString(),
+                            putBoolean(
+                                character.id.toString(),
                                 isLoved
                             )
                         }
@@ -131,7 +141,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     //展开
                     verticalOffset == 0 -> shareMenu.icon.alpha = 0
                     abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
-                        shareMenu.setIcon(ic)
+                        shareMenu.setIcon(icFab)
                         shareMenu.icon.alpha = 255
                     }
                     else -> {
@@ -143,7 +153,8 @@ class CharacterBasicInfoFragment : Fragment() {
             fab.setOnClickListener {
                 isLoved = !isLoved
                 sp.edit {
-                    putBoolean(character.id.toString(),
+                    putBoolean(
+                        character.id.toString(),
                         isLoved
                     )
                 }
@@ -156,15 +167,14 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun setLove(isLoved: Boolean) {
         val menu = binding.toolbar.menu
         val shareMenu = menu.getItem(0)
-        ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
-        icFab = if (isLoved) R.drawable.ic_loved_no_bg else R.drawable.ic_love_no_bg
+        icFab = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
         icFabColor = if (isLoved) resources.getColor(
             R.color.blue,
             null
         ) else resources.getColor(R.color.alphaPrimary, null)
         binding.fab.setImageDrawable(resources.getDrawable(icFab, null))
         binding.fab.imageTintList = ColorStateList.valueOf(icFabColor)
-        shareMenu.setIcon(ic)
+        shareMenu.setIcon(icFab)
     }
 
     //初始化角色基本数据

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.database
+package cn.wthee.pcrtool.update
 
 import android.os.Handler
 import android.os.Looper
@@ -7,15 +7,16 @@ import androidx.lifecycle.Observer
 import androidx.work.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.worker.DownloadWorker
+import cn.wthee.pcrtool.workers.DatabaseDownloadWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class UpdateHelper {
+class DatabaseUpdateHelper {
 
     private val mContext = MyApplication.getContext()
 
@@ -37,11 +38,11 @@ class UpdateHelper {
     //获取数据库
     private fun downloadDB(ver: String, lifecycleOwner: LifecycleOwner) {
         //开始下载
-        val uploadWorkRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
+        val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
             .setInputData(
                 Data.Builder()
-                    .putString(DownloadWorker.KEY_INPUT_URL, API_URL)
-                    .putString(DownloadWorker.KEY_VERSION, ver)
+                    .putString(DatabaseDownloadWorker.KEY_INPUT_URL, API_URL)
+                    .putString(DatabaseDownloadWorker.KEY_VERSION, ver)
                     .build()
             )
             .build()
