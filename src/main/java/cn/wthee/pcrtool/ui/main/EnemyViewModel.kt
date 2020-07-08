@@ -20,6 +20,7 @@ class EnemyViewModel @Inject constructor(
 ) : ViewModel() {
 
     var enemies = MutableLiveData<List<EnemyData>>()
+    var enemyCount = MutableLiveData<Int>()
     var refresh = MutableLiveData<Boolean>()
     var loading = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
@@ -29,7 +30,7 @@ class EnemyViewModel @Inject constructor(
     }
 
 
-    //角色基本资料
+    //怪物基本资料
     fun getAllEnemy() {
         viewModelScope.launch {
             val data = repository.getAllEnemy()
@@ -40,6 +41,13 @@ class EnemyViewModel @Inject constructor(
 //                refresh.postValue(false)
 //            }
             enemies.postValue(data)
+        }
+    }
+
+    //怪物数量
+    fun getEnemyCount() {
+        viewModelScope.launch {
+            enemyCount.postValue(repository.getEnemyCount())
         }
     }
 

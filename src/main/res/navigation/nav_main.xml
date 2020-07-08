@@ -7,12 +7,9 @@
 
     <fragment
         android:id="@+id/containerFragment"
-        android:name="cn.wthee.pcrtool.ui.main.ContainerFragment"
+        android:name="cn.wthee.pcrtool.ui.main.MainPagerFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_character_list">
-        <action
-            android:id="@+id/action_containerFragment_self"
-            app:destination="@id/containerFragment" />
         <action
             android:id="@+id/action_containerFragment_to_characterPagerFragment"
             app:destination="@id/characterPagerFragment"
@@ -66,6 +63,9 @@
         android:name="cn.wthee.pcrtool.ui.setting.SettingsContainerFragment"
         android:label="fragment_settings_container"
         tools:layout="@layout/fragment_settings_container" />
+    <action
+        android:id="@+id/action_global_containerFragment"
+        app:destination="@id/containerFragment" />
 
 
 </navigation>

@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,22 +8,15 @@ import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MainActivity.Companion.sp
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterCardBgAdapter
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
-import cn.wthee.pcrtool.utils.OnLoadListener
-import cn.wthee.pcrtool.utils.PaletteHelper
+import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Singleton
 import kotlin.math.abs
 
@@ -46,10 +37,6 @@ class CharacterBasicInfoFragment : Fragment() {
 
     private lateinit var character: CharacterBasicInfo
     private lateinit var binding: FragmentCharacterBasicInfoBinding
-    private lateinit var linearLayoutManager: LinearLayoutManager
-
-    private var icFab = R.drawable.ic_love
-    private var icFabColor = MyApplication.getContext().resources.getColor(R.color.white, null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +56,8 @@ class CharacterBasicInfoFragment : Fragment() {
     ): View? {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //设置共享元素
-        binding.icon1.transitionName = "img_${character.id}"
+        binding.characterPic.transitionName = "img_${character.id}"
+
         //加载图片
         loadImages()
         //点击事件
@@ -82,33 +70,22 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //加载图片
     private fun loadImages() {
-        //加载角色ICON
-        val picUrl =
-            Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEBP
-        GlideUtil.load(picUrl, binding.icon1, R.drawable.unknow, parentFragment)
-        //加载角色现实图片
-        GlideUtil.loadWithListener(
-            Constants.Reality_CHARACTER_URL + character.getFixedId() + Constants.WEBP,
-            binding.characterPic, object : OnLoadListener {
-                override fun onSuccess(bitmap: Bitmap) {
-                    val color =
-                        PaletteHelper.createPaletteSync(bitmap).darkVibrantSwatch?.bodyTextColor
-                    binding.layoutToolbar.setExpandedTitleColor(color ?: Color.BLACK)
-
-                }
-            }
+        //toolbar 背景
+        GlideUtil.load(
+            Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP,
+            binding.characterPic,
+            R.drawable.error,
+            parentFragment
+        )
+        //icon
+        GlideUtil.load(
+            Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEBP,
+            binding.icon1,
+            R.drawable.unknow,
+            null
         )
         parentFragment?.startPostponedEnterTransition()
-        //加载角色卡面列表
-        MainScope().launch {
-            delay(resources.getInteger(R.integer.delay).toLong())
-            val adapter = CharacterCardBgAdapter()
-            binding.recycler.adapter = adapter
-            linearLayoutManager = LinearLayoutManager(MyApplication.getContext())
-            linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-            binding.recycler.layoutManager = linearLayoutManager
-            adapter.submitList(character.getAllStarId())
-        }
+        ObjectAnimatorHelper.alpha(binding.fab, binding.toolbar)
     }
 
     //点击事件
@@ -121,12 +98,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 when (item.itemId) {
                     R.id.action_love -> {
                         isLoved = !isLoved
-                        sp.edit {
-                            putBoolean(
-                                character.id.toString(),
-                                isLoved
-                            )
-                        }
                         setLove(isLoved)
                         true
                     }
@@ -139,25 +110,40 @@ class CharacterBasicInfoFragment : Fragment() {
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 when {
                     //展开
-                    verticalOffset == 0 -> shareMenu.icon.alpha = 0
+                    verticalOffset == 0 -> {
+                        shareMenu.isVisible = false
+                        binding.layoutToolbar.setCollapsedTitleTextColor(
+                            resources.getColor(
+                                R.color.colorAlpha,
+                                null
+                            )
+                        )
+
+                    }
                     abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
-                        shareMenu.setIcon(icFab)
-                        shareMenu.icon.alpha = 255
+                        shareMenu.setIcon(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
+                        shareMenu.isVisible = true
+                        binding.layoutToolbar.setCollapsedTitleTextColor(
+                            resources.getColor(
+                                R.color.colorPrimary,
+                                null
+                            )
+                        )
                     }
                     else -> {
-                        if (shareMenu.icon.alpha != 0) shareMenu.icon.alpha = 0
+                        if (shareMenu.icon.alpha != 0) shareMenu.isVisible = false
+                        binding.layoutToolbar.setCollapsedTitleTextColor(
+                            resources.getColor(
+                                R.color.colorAlpha,
+                                null
+                            )
+                        )
                     }
                 }
             })
             //fab点击监听
             fab.setOnClickListener {
                 isLoved = !isLoved
-                sp.edit {
-                    putBoolean(
-                        character.id.toString(),
-                        isLoved
-                    )
-                }
                 setLove(isLoved)
             }
             setLove(isLoved)
@@ -165,26 +151,35 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     private fun setLove(isLoved: Boolean) {
+        sp.edit {
+            putBoolean(
+                character.id.toString(),
+                isLoved
+            )
+        }
+
+        val ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
         val menu = binding.toolbar.menu
         val shareMenu = menu.getItem(0)
-        icFab = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
-        icFabColor = if (isLoved) resources.getColor(
+        shareMenu.setIcon(ic)
+
+        val icFabColor = if (isLoved) resources.getColor(
             R.color.blue,
             null
         ) else resources.getColor(R.color.alphaPrimary, null)
-        binding.fab.setImageDrawable(resources.getDrawable(icFab, null))
         binding.fab.imageTintList = ColorStateList.valueOf(icFabColor)
-        shareMenu.setIcon(icFab)
+
     }
 
     //初始化角色基本数据
     private fun setData() {
         binding.apply {
-            layoutToolbar.title =
-                if (character.actualName.isEmpty())
-                    character.name
-                else
-                    character.actualName
+//            layoutToolbar.title = character.name
+            toolbar.title = character.name
+//                if (character.actualName.isEmpty())
+//                    character.name
+//                else
+//                    character.actualName
             catah.text = character.catchCopy
             name.text = character.getNameF()
             character.getNameL().apply {

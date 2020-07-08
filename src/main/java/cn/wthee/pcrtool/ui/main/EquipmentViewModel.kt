@@ -24,9 +24,11 @@ class EquipmentViewModel @Inject constructor(
         isLoading.postValue(true)
         viewModelScope.launch {
             val data = equipmentRepository.getAllEquipments()
+            if (data.isNotEmpty()) {
+                isLoading.postValue(false)
+                refresh.postValue(false)
+            }
             equipments.postValue(data)
-            isLoading.postValue(false)
-            refresh.postValue(false)
         }
     }
 }

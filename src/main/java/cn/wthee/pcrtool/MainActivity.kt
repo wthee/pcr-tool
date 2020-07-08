@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.update.DatabaseUpdateHelper
 import cn.wthee.pcrtool.utils.ActivityUtil
@@ -26,8 +25,6 @@ class MainActivity : AppCompatActivity() {
         var sortType = Constants.SORT_TYPE
         var sortAsc = Constants.SORT_ASC
     }
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

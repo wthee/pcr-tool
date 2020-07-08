@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
-import cn.wthee.pcrtool.ui.main.ContainerFragment
+import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
 import com.bumptech.glide.Glide
@@ -58,10 +59,8 @@ class CharacterAdapter(private val fragment: Fragment) :
                 else
                     love.visibility = View.GONE
                 //加载动画
-                characterPic.animation =
-                    AnimationUtils.loadAnimation(fragment.context, R.anim.item_character_pic)
-                other.animation =
-                    AnimationUtils.loadAnimation(fragment.context, R.anim.item_character_list)
+                root.animation =
+                    AnimationUtils.loadAnimation(fragment.context, R.anim.anim_scale)
                 //显示排序数据
                 age.setTextColor(fragment.resources.getColor(R.color.text, null))
                 height.setTextColor(fragment.resources.getColor(R.color.text, null))
@@ -88,13 +87,15 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 //加载网络图片
                 val picUrl =
-                    Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEBP
-                GlideUtil.load(picUrl, characterPic, R.drawable.unknow, null)
+                    Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
+                GlideUtil.load(picUrl, characterPic, R.drawable.error, null)
                 //设置位置
                 positionType.background =
                     fragment.resources.getDrawable(character.getPositionIcon(), null)
                 //基本信息
                 name.text = character.name
+                catah.text = character.catchCopy
+                comment.text = character.getFixedComment()
                 age.text = character.age
                 height.text = fragment.resources.getString(R.string.height, character.height)
                 weight.text = fragment.resources.getString(R.string.weight, character.weight)
@@ -103,11 +104,11 @@ class CharacterAdapter(private val fragment: Fragment) :
                 //item点击事件，查看详情
                 root.setOnClickListener {
                     //避免同时点击两个
-                    if (!ContainerFragment.cListClick) {
-                        ContainerFragment.cListClick = true
+                    if (!MainPagerFragment.cListClick) {
+                        MainPagerFragment.cListClick = true
                         Glide.with(fragment.requireContext()).pauseRequests()
                         MainActivity.currentCharaPosition = adapterPosition
-                        val bundle = android.os.Bundle()
+                        val bundle = Bundle()
                         bundle.putSerializable("character", character)
                         val extras =
                             FragmentNavigatorExtras(
@@ -120,6 +121,11 @@ class CharacterAdapter(private val fragment: Fragment) :
                             extras
                         )
                     }
+                }
+                //长按事件
+                root.setOnLongClickListener {
+
+                    return@setOnLongClickListener true
                 }
             }
         }

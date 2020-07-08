@@ -10,4 +10,7 @@ class EnemyRepository @Inject constructor(private val enemyDao: EnemyDao) {
     //获取怪物信息
     suspend fun getAllEnemy() = enemyDao.getAllEnemy()
 
+    //获取怪物数量
+    suspend fun getEnemyCount() = enemyDao.getEnemyCount()
+
 }

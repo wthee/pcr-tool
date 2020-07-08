@@ -30,7 +30,7 @@ class EnemyFragment : Fragment() {
             MainActivity.sp.edit {
                 putInt(Constants.SP_COUNT_ENEMY, it.size)
             }
-            ContainerFragment.tabLayout.getTabAt(2)?.text = it.size.toString()
+            MainPagerFragment.tabLayout.getTabAt(2)?.text = it.size.toString()
         })
         return binding.root
     }

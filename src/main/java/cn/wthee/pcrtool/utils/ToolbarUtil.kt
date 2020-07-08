@@ -57,7 +57,7 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     }
 
     fun setBackground(resId: Int){
-        toolbar.layoutMain.setBackgroundColor(resources.getColor(resId, null))
+        toolbar.viewToolbar.setBackgroundColor(resources.getColor(resId, null))
     }
 
     fun showPopupMenu(context: Context, menuId: Int, itemClickListener: ItemClickListener) {

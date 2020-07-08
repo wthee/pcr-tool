@@ -3,10 +3,13 @@ package cn.wthee.pcrtool.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
@@ -19,6 +22,7 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.isList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,16 +33,24 @@ import javax.inject.Singleton
 import kotlin.collections.set
 
 @Singleton
-class ContainerFragment : Fragment() {
+class MainPagerFragment : Fragment() {
 
     companion object {
         var cListClick = false
         lateinit var tabLayout: TabLayout
+        lateinit var progress: ProgressBar
     }
 
     private lateinit var binding: FragmentContainerBinding
     private lateinit var viewPager2: ViewPager2
     private lateinit var search: FloatingActionButton
+
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
+    private val sharedEnemyViewModel by activityViewModels<EnemyViewModel> {
+        InjectorUtil.provideEnemyViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,10 +94,16 @@ class ContainerFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.progress.visibility = View.GONE
+    }
+
     private fun init() {
         //禁止连续点击
         cListClick = false
         search = binding.search
+        progress = binding.progress
         //viewpager2 配置
         viewPager2 = binding.viewPager
         viewPager2.offscreenPageLimit = 2
@@ -97,28 +115,33 @@ class ContainerFragment : Fragment() {
             }
         })
         tabLayout = binding.layoutTab
-        TabLayoutMediator(
-            tabLayout,
-            viewPager2,
-            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                when (position) {
-                    //角色
-                    0 -> {
-                        tab.icon = resources.getDrawable(R.drawable.ic_character, null)
-                        tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
+        sharedEnemyViewModel.getEnemyCount()
+        sharedEnemyViewModel.enemyCount.observe(viewLifecycleOwner, Observer {
+            TabLayoutMediator(
+                tabLayout,
+                viewPager2,
+                TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                    when (position) {
+                        //角色
+                        0 -> {
+                            tab.icon = resources.getDrawable(R.drawable.ic_character, null)
+                            tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
+                        }
+                        //装备
+                        1 -> {
+                            tab.icon = resources.getDrawable(R.drawable.ic_equip, null)
+                            tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
+                        }
+                        //怪物
+                        2 -> {
+                            tab.icon = resources.getDrawable(R.drawable.ic_enemy, null)
+//                        tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
+                            tab.text = it.toString()
+                        }
                     }
-                    //装备
-                    1 -> {
-                        tab.icon = resources.getDrawable(R.drawable.ic_equip, null)
-                        tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
-                    }
-                    //怪物
-                    2 -> {
-                        tab.icon = resources.getDrawable(R.drawable.ic_enemy, null)
-                        tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
-                    }
-                }
-            }).attach()
+                }).attach()
+        })
+
 
     }
 
@@ -141,7 +164,7 @@ class ContainerFragment : Fragment() {
         //搜索
         search.setOnClickListener {
             val layout: View = layoutInflater.inflate(R.layout.layout_search, null)
-            val dialog = MaterialAlertDialogBuilder(context)
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setView(layout)
                 .create()
             dialog.window?.setGravity(Gravity.BOTTOM)
@@ -160,7 +183,7 @@ class ContainerFragment : Fragment() {
                     override fun onQueryTextChange(newText: String?): Boolean {
                         //重置
                         if (newText == "" && CharacterListFragment.listAdapter.itemCount < 30) {
-                            CharacterListFragment.viewModel.getCharacters(
+                            sharedCharacterViewModel.getCharacters(
                                 MainActivity.sortType,
                                 MainActivity.sortAsc
                             )
@@ -199,6 +222,7 @@ class ContainerFragment : Fragment() {
                 names: MutableList<String>?,
                 sharedElements: MutableMap<String, View>?
             ) {
+                if (MainActivity.currentCharaPosition != 0) binding.layoutToolbar.setExpanded(false)
                 try {
                     if (names!!.isNotEmpty()) {
                         sharedElements ?: return
@@ -229,6 +253,7 @@ class ContainerFragment : Fragment() {
                     Log.e(LOG_TAG, e.message ?: "")
                 }
             }
+
         })
     }
 

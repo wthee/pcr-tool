@@ -56,10 +56,16 @@ object GlideUtil {
             .into(view)
     }
 
-    fun loadWithListener(url: String, view: ImageView, onLoadListener: OnLoadListener) {
+    fun loadWithListener(
+        url: String,
+        view: ImageView,
+        error: Int,
+        fragment: Fragment?,
+        onLoadListener: OnLoadListener
+    ) {
         Glide.with(MyApplication.getContext())
             .load(url)
-            .error(R.drawable.error)
+            .error(error)
             .thumbnail(Glide.with(view).load(R.drawable.load))
             .listener(object : RequestListener<Drawable?> {
                 override fun onLoadFailed(
@@ -68,7 +74,8 @@ object GlideUtil {
                     target: com.bumptech.glide.request.target.Target<Drawable?>?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    view.setImageResource(R.drawable.error)
+                    fragment?.startPostponedEnterTransition()
+                    view.setImageResource(error)
                     return false
                 }
 
@@ -79,6 +86,7 @@ object GlideUtil {
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
+                    fragment?.startPostponedEnterTransition()
                     onLoadListener.onSuccess(resource?.toBitmap()!!)
                     view.setImageResource(0)
                     return false
@@ -90,6 +98,6 @@ object GlideUtil {
 
 }
 
-interface OnLoadListener{
+interface OnLoadListener {
     fun onSuccess(bitmap: Bitmap)
 }

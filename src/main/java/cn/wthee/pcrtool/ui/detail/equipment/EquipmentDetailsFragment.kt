@@ -1,15 +1,13 @@
 package cn.wthee.pcrtool.ui.detail.equipment
 
-import android.graphics.Color
+import android.app.Dialog
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.setMargins
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +19,12 @@ import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.GlideUtil
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import javax.inject.Singleton
 
 
@@ -29,13 +32,14 @@ private const val EQUIP = "equip"
 private const val DIALOG = "dialog"
 
 @Singleton
-class EquipmentDetailsFragment : Fragment() {
+class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
     private lateinit var equip: EquipmentData
     private var isDialog: Boolean = false
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var materialAdapter: EquipmentMaterialAdapter
     private lateinit var cusToolbar: ToolbarUtil
+
     companion object {
         fun getInstance(equip: EquipmentData, isDialog: Boolean) =
             EquipmentDetailsFragment().apply {
@@ -74,21 +78,24 @@ class EquipmentDetailsFragment : Fragment() {
         viewModel.getEquipInfos(equip)
         //从角色页面打开时
         if (isDialog) {
-            //隐藏装备属性
-            binding.attrs.visibility = View.GONE
             //取消margin
-            val params = binding.layoutCard.layoutParams as FrameLayout.LayoutParams
+            val params = binding.layoutCard.layoutParams as CoordinatorLayout.LayoutParams
             params.setMargins(0)
             binding.layoutCard.layoutParams = params
-            binding.layoutMain.setBackgroundColor(Color.TRANSPARENT)
-            //滑动
-            DrawerUtil.bindAllViewOnTouchListener(
-                binding.root,
-                parentFragment as DialogFragment,
-                arrayListOf(binding.layoutContent)
-            )
+//            binding.viewToolbar.setBackgroundColor(Color.TRANSPARENT)
         }
         return binding.root
+    }
+
+    override fun setupDialog(dialog: Dialog, style: Int) {
+        val v: View =
+            LayoutInflater.from(activity).inflate(R.layout.fragment_equipment_details, null)
+        dialog.setContentView(v)
+
+        val params = (v.parent as View).layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = params.behavior as BottomSheetBehavior<View>
+        behavior.peekHeight = 700
+        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     //返回监听
@@ -154,10 +161,10 @@ class EquipmentDetailsFragment : Fragment() {
         })
     }
 
-    private fun goBack(){
-        if(isDialog){
-            (parentFragment as DialogFragment).dismiss()
-        }else{
+    private fun goBack() {
+        if (isDialog) {
+            dialog?.dismiss()
+        } else {
             view?.findNavController()?.navigateUp()
         }
     }

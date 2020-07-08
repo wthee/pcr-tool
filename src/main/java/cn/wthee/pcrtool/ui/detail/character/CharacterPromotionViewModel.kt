@@ -10,8 +10,8 @@ import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.data.model.add
 import cn.wthee.pcrtool.data.model.multiply
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,16 +36,18 @@ class CharacterPromotionViewModel @Inject constructor(
             val info = CharacterAttrInfo.setValue(rankData)
                 .add(CharacterAttrInfo.setValue(rarityData))
                 .add(CharacterAttrInfo.setGrowthValue(rarityData).multiply(lv + rank))
-            //重复装备数
-            CharacterViewModel.repeat.clear()
+            val eqs = arrayListOf<EquipmentData>()
             ids.forEach {
-                CharacterViewModel.repeat[it] = Collections.frequency(ids, it)
+                if (it == UNKNOW_EQUIP_ID)
+                    eqs.add(EquipmentData.unknow())
+                else
+                    eqs.add(equipmentRepository.getEquipmentData(it))
             }
-            val eqs = equipmentRepository.getEquipmentDatas(ids)
             //rank装备信息
             equipments.postValue(eqs)
             //计算穿戴装备后属性
             eqs.forEach { eq ->
+                if (eq.equipmentId == UNKNOW_EQUIP_ID) return@forEach
                 val mult = when (eq.promotionLevel) {
                     1 -> 0
                     2 -> 1
@@ -56,6 +58,7 @@ class CharacterPromotionViewModel @Inject constructor(
                 val count = CharacterViewModel.repeat[eq.equipmentId] ?: 0
                 //获取装备信息及其提升
                 val eqInfo = CharacterAttrInfo.setValue(eq)
+
                 val eh =
                     CharacterAttrInfo.setValue(equipmentRepository.getEquipmentEnhanceData(eq.equipmentId))
                 for (i in 0..count) {

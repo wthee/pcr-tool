@@ -5,7 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.work.*
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.utils.ApiHelper
@@ -22,6 +21,7 @@ class DatabaseUpdateHelper {
 
     //检查是否需要更新
     fun checkDBVersion(lifecycleOwner: LifecycleOwner) {
+
         val service = ApiHelper.create(
             DatabaseService::class.java,
             API_URL
@@ -29,9 +29,9 @@ class DatabaseUpdateHelper {
         CoroutineScope(IO).launch {
             val version = service.getDbVersion()
             //更新判断 文件大小小于1MB or 版本不是最新
-            if (MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
+//            if (MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
                 downloadDB(version.TruthVersion, lifecycleOwner)
-            }
+//            }
         }
     }
 
@@ -54,7 +54,7 @@ class DatabaseUpdateHelper {
                 .observe(lifecycleOwner,
                     Observer<WorkInfo?> { workInfo ->
                         if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-                            ToastUtil.short("数据库更新完成！")
+                            ToastUtil.short("数据库更新完成~")
                         }
                     })
 

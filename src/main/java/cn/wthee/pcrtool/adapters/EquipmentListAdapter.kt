@@ -8,21 +8,20 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
-import cn.wthee.pcrtool.data.model.EquipmentData as EquipmentData1
 
 
 class EquipmentAdapter(private val isList: Boolean) :
-    ListAdapter<EquipmentData1, EquipmentAdapter.ViewHolder>(EquipDiffCallback()), Filterable {
+    ListAdapter<EquipmentData, EquipmentAdapter.ViewHolder>(EquipDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemEquipmentBinding.inflate(
@@ -46,7 +45,7 @@ class EquipmentAdapter(private val isList: Boolean) :
                     //没有过滤的内容，则使用源数据
                     currentList
                 } else {
-                    val filteredList = arrayListOf<EquipmentData1>()
+                    val filteredList = arrayListOf<EquipmentData>()
                     try {
                         currentList.forEachIndexed { _, it ->
                             if (it.equipmentName.contains(charString)) {
@@ -66,25 +65,26 @@ class EquipmentAdapter(private val isList: Boolean) :
 
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                submitList(results?.values as List<EquipmentData1>)
+                submitList(results?.values as List<EquipmentData>)
             }
         }
     }
 
-    class ViewHolder(private val binding: ItemEquipmentBinding) :
+    inner class ViewHolder(private val binding: ItemEquipmentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(equip: EquipmentData1, isList: Boolean) {
+        fun bind(equip: EquipmentData, isList: Boolean) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.getContext()
-                content.visibility = if (isList) View.VISIBLE else {
-                    itemPic.animation =
-                        AnimationUtils.loadAnimation(ctx, R.anim.item_scale)
-                    View.GONE
-                }
+                content.visibility = if (isList) View.VISIBLE else View.GONE
                 //加载动画
                 content.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.item_equip_list)
+                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale_alpha)
+                itemPic.animation =
+                    AnimationUtils.loadAnimation(
+                        ctx,
+                        if (isList) R.anim.anim_translate else R.anim.anim_scale
+                    )
                 //装备名称
                 name.text = equip.equipmentName
                 desc.text = equip.getDesc()
@@ -114,23 +114,5 @@ class EquipmentAdapter(private val isList: Boolean) :
                 }
             }
         }
-    }
-
-}
-
-class EquipDiffCallback : DiffUtil.ItemCallback<EquipmentData1>() {
-
-    override fun areItemsTheSame(
-        oldItem: EquipmentData1,
-        newItem: EquipmentData1
-    ): Boolean {
-        return oldItem.equipmentId == newItem.equipmentId
-    }
-
-    override fun areContentsTheSame(
-        oldItem: EquipmentData1,
-        newItem: EquipmentData1
-    ): Boolean {
-        return oldItem == newItem
     }
 }

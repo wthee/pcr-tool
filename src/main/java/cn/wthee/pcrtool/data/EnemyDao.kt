@@ -9,4 +9,7 @@ interface EnemyDao {
 
     @Query("SELECT * FROM enemy_parameter")
     suspend fun getAllEnemy(): List<EnemyData>
+
+    @Query("SELECT COUNT(*) FROM enemy_parameter")
+    suspend fun getEnemyCount(): Int
 }

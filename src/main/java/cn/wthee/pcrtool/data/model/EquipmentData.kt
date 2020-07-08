@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
 @Entity(tableName = "equipment_data")
@@ -37,6 +38,39 @@ class EquipmentData(
     @ColumnInfo(name = "enable_donation") val enableDonation: Int,
     @ColumnInfo(name = "accuracy") val accuracy: Double
 ) : Serializable {
+
+    companion object {
+        fun unknow() =
+            EquipmentData(
+                UNKNOW_EQUIP_ID,
+                "？？？",
+                "",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0,
+                0.0
+            )
+
+    }
 
     fun getDesc() = description.replace("\\n", "")
 

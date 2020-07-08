@@ -39,6 +39,7 @@ class DatabaseDownloadWorker(
     private val channelId = "1"
     private val noticeId = 1
     private lateinit var notification: NotificationCompat.Builder
+
     //适配低版本数据库路径
     private val folderPath = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
         MyApplication.getContext().dataDir.absolutePath
@@ -124,6 +125,12 @@ class DatabaseDownloadWorker(
         return ForegroundInfo(noticeId, notification.build())
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createChannel() {
+        val channel = NotificationChannel(channelId, "数据更新", NotificationManager.IMPORTANCE_MAX)
+        notificationManager.createNotificationChannel(channel)
+    }
+
     //数据库保存
     private fun saveDB(input: InputStream?) {
         //创建数据库文件夹
@@ -152,7 +159,7 @@ class DatabaseDownloadWorker(
                     AppDatabase.getInstance().close()
                     synchronized(AppDatabase::class.java) {
                         UnzippedUtil.deCompress(db, true)
-                        //更新完成后，重新加载数据
+                        //TODO 更新完成后，重新加载数据
                         CharacterListFragment.viewModel.reload.postValue(true)
                     }
                 }
@@ -161,12 +168,6 @@ class DatabaseDownloadWorker(
             ToastUtil.short(e.message)
         }
 
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel() {
-        val channel = NotificationChannel(channelId, "数据更新", NotificationManager.IMPORTANCE_MIN)
-        notificationManager.createNotificationChannel(channel)
     }
 
 }

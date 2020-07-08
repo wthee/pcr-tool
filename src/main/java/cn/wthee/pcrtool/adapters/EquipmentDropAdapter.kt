@@ -33,7 +33,7 @@ class EquipmentDropAdapter :
         fun bind(info: EquipmentDropInfo) {
             binding.apply {
                 binding.root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.item_equip_drop)
+                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
                 quest.text = info.getName()
                 questNum.text = info.getNum()
                 odd.text = info.odds.find { it.eid == info.eid }?.odd.toString() + "%"

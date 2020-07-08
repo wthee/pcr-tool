@@ -8,13 +8,10 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentPromotionAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPromotionBinding
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.MainScope
@@ -75,9 +72,6 @@ class PromotionFragment : Fragment() {
             name.text = unitName
             comment.text = unitComment
             level.text = SpannableStringBuilder("85")
-            val linearLayoutManager = LinearLayoutManager(MyApplication.getContext())
-            linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-            recycler.layoutManager = linearLayoutManager
             //改变等级
             level.addTextChangedListener {
                 val str = it?.toString() ?: "85"
@@ -147,7 +141,7 @@ class PromotionFragment : Fragment() {
         //角色装备
         viewModel.equipments.observe(viewLifecycleOwner, Observer {
             binding.apply {
-                adapter = EquipmentPromotionAdapter(CharacterViewModel.repeat)
+                adapter = EquipmentPromotionAdapter()
                 recycler.adapter = adapter
             }
             adapter.submitList(it)

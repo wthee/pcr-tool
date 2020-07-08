@@ -61,11 +61,9 @@ data class CharacterBasicInfo(
 
     fun getSelf() =
         if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
-            "......\n" +
-                    "......\n" +
-                    "......\n"
+            "......"
         } else {
-            this.selfText.replace("\\n", "\n")
+            this.selfText.replace("\\n", "")
         }
 
     fun getNameF(): String {
@@ -98,11 +96,9 @@ data class CharacterBasicInfo(
     fun getLoveSelfText(): String {
         val text = serif1 + serif2 + serif3
         return if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
-            "......\n" +
-                    "......\n" +
-                    "......\n"
+            "......"
         } else {
-            text.replace("\\n", "\n")
+            text.replace("\\n", "")
         }
     }
 

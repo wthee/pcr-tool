@@ -10,12 +10,10 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterInfoViewPagerAdapter
-import cn.wthee.pcrtool.adapters.ZoomOutPageTransformer
+import cn.wthee.pcrtool.adapters.DepthPageTransformer
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
-import javax.inject.Singleton
 
-@Singleton
 class CharacterPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPagerBinding
@@ -47,7 +45,7 @@ class CharacterPagerFragment : Fragment() {
                 character!!
             )
         viewPager.offscreenPageLimit = 3
-        viewPager.setPageTransformer(ZoomOutPageTransformer())
+        viewPager.setPageTransformer(DepthPageTransformer())
         //???
         if (MainActivity.sp.getBoolean("106001", false)) {
             viewPager.setBackgroundResource(R.drawable.viewpager_bg)

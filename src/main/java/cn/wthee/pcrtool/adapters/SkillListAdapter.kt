@@ -40,7 +40,7 @@ class SkillAdapter :
                 val ctx = MyApplication.getContext()
                 //加载动画
                 content.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.item_equip_drop)
+                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //装备名称
                 name.text = skill.name
                 desc.text = skill.desc

@@ -8,8 +8,8 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/left_icon"
-        android:layout_width="@dimen/middle_icon"
-        android:layout_height="@dimen/middle_icon"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
         android:layout_marginStart="@dimen/m_margin"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
@@ -35,8 +35,8 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/right_icon"
-        android:layout_width="@dimen/middle_icon"
-        android:layout_height="@dimen/middle_icon"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
         android:layout_marginEnd="@dimen/m_margin"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/other"

@@ -23,6 +23,9 @@ object Constants {
     //角色图标接口
     const val CHARACTER_ICON_URL = API_URL + "icon/unit/"
 
+    //角色界面接口
+    const val CHARACTER_PLATE_URL = API_URL + "icon/plate/"
+
     //技能图标接口
     const val SKILL_ICON_URL = API_URL + "icon/skill/"
 
@@ -46,9 +49,10 @@ object Constants {
     const val DATABASE_VERSION = "202005141837"
     const val SORT_TYPE = 0
     const val SORT_ASC = true
+    const val UNKNOW_EQUIP_ID = 999999
 
     //列表列数
-    const val COLUMN_COUNT = 2
+    const val COLUMN_COUNT = 1
     const val COLUMN_COUNT_EQUIP = 4
 
     //排序

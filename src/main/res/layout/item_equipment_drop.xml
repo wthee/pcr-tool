@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/mini_margin"
+    android:layout_margin="@dimen/xs_margin"
     android:animateLayoutChanges="true"
     android:orientation="horizontal">
 

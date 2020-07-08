@@ -20,7 +20,7 @@ class SettingsContainerFragment : Fragment() {
     ): View? {
         val binding = FragmentSettingsContainerBinding.inflate(inflater, container, false)
         val toolbar = ToolbarUtil(binding.toolbar)
-        toolbar.setLeftIcon(R.drawable.ic_detail_back_no_bg)
+        toolbar.setLeftIcon(R.drawable.ic_detail_back)
         toolbar.hideRightIcon()
         toolbar.leftIcon.setOnClickListener {
             requireActivity().onBackPressed()

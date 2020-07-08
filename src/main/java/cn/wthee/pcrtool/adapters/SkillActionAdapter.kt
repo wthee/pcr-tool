@@ -33,7 +33,7 @@ class SkillActionAdapter :
         fun bind(act: SkillAction) {
             binding.apply {
                 action.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.item_scale)
+                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
                 action.text = act.getFixedDesc()
             }
         }
