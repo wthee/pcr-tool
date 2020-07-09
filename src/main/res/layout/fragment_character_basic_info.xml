@@ -55,111 +55,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/s_padding">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <include
+                android:id="@+id/content"
+                layout="@layout/layout_basic_info" />
+
+            <LinearLayout
+                android:id="@+id/basic_info"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/m_margin">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/catah"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorPrimary"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="your best friend" />
-
-                <FrameLayout
-                    android:id="@+id/icons"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/character_icon_size"
-                    android:layout_marginTop="@dimen/l_margin"
-                    app:layout_constraintEnd_toStartOf="@+id/layout_name"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_weight="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/catah">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/icon1"
-                        android:layout_width="@dimen/character_icon_size"
-                        android:layout_height="@dimen/character_icon_size"
-                        android:layout_gravity="center_vertical"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitCenter" />
-                </FrameLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/layout_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_weight="1"
-                    app:layout_constraintStart_toEndOf="@+id/icons"
-                    app:layout_constraintTop_toBottomOf="@+id/catah"
-                    app:layout_constraintTop_toTopOf="@id/icons">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/name"
-                        android:textAppearance="@style/subTitleWithe" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        tools:text="nnk" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_age"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@id/line1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_weight="1"
-                    app:layout_constraintStart_toEndOf="@+id/icons"
-                    app:layout_constraintTop_toBottomOf="@+id/layout_name">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_age"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/age"
-                        android:textAppearance="@style/subTitleWithe" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/age"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        tools:text="20" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/line_ex"
@@ -167,8 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/s_margin"
                     android:orientation="horizontal"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/icons">
+                    android:visibility="gone">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title_last"
@@ -191,67 +98,6 @@
                         tools:text="新春" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/line1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/line_ex"
-                    tools:layout_editor_absoluteX="6dp">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_height"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_height"
-                        android:textAppearance="@style/subTitleWithe" />
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="@dimen/s_padding">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/height"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                            tools:text="150 cm" />
-                    </FrameLayout>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_weight"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_weight"
-                        android:textAppearance="@style/subTitleWithe" />
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/weight"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                            tools:text="50 kg" />
-                    </FrameLayout>
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/line2"
@@ -300,11 +146,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="end"
+                        tools:text="test"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/line3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/m_margin"
@@ -326,7 +172,28 @@
                         android:id="@+id/race"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
+                        android:layout_weight="2"
+                        android:paddingEnd="@dimen/s_padding"
+                        android:gravity="end"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        tools:text="test" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/title_cv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/title_background"
+                        android:paddingStart="@dimen/s_padding"
+                        android:paddingEnd="0dp"
+                        android:text="@string/cv"
+                        android:textAppearance="@style/subTitleWithe" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/cv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
                         android:gravity="end"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                         tools:text="test" />
@@ -398,25 +265,7 @@
                     android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@id/line5">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_cv"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/cv"
-                        android:textAppearance="@style/subTitleWithe" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/cv"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        tools:text="test" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -441,45 +290,12 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_weight="5"
                         android:gravity="end"
                         android:text=""
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_position"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_position"
-                        android:textAppearance="@style/subTitleWithe" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="end"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/position"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="@dimen/s_margin"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                            tools:text="222" />
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/position_type"
-                            android:layout_width="@dimen/m_icon"
-                            android:layout_height="@dimen/m_icon"
-                            android:layout_gravity="center_vertical|end"
-                            tools:background="@drawable/ic_position_0_300" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
@@ -515,7 +331,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title_love_self"
                     tools:text="test" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

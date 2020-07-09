@@ -55,9 +55,13 @@ class CharacterBasicInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
+        binding.content.love.visibility = View.GONE
         //设置共享元素
         binding.characterPic.transitionName = "img_${character.id}"
-
+        binding.content.info.transitionName = "content_${character.id}"
+        //开始动画
+        ObjectAnimatorHelper.alpha(binding.fab, binding.toolbar)
+        ObjectAnimatorHelper.enter(binding.basicInfo)
         //加载图片
         loadImages()
         //点击事件
@@ -68,6 +72,7 @@ class CharacterBasicInfoFragment : Fragment() {
         return binding.root
     }
 
+
     //加载图片
     private fun loadImages() {
         //toolbar 背景
@@ -77,15 +82,8 @@ class CharacterBasicInfoFragment : Fragment() {
             R.drawable.error,
             parentFragment
         )
-        //icon
-        GlideUtil.load(
-            Constants.CHARACTER_ICON_URL + character.getAllStarId()[0] + Constants.WEBP,
-            binding.icon1,
-            R.drawable.unknow,
-            null
-        )
-        parentFragment?.startPostponedEnterTransition()
-        ObjectAnimatorHelper.alpha(binding.fab, binding.toolbar)
+
+//        parentFragment?.startPostponedEnterTransition()
     }
 
     //点击事件
@@ -120,7 +118,7 @@ class CharacterBasicInfoFragment : Fragment() {
                         )
 
                     }
-                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
+                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange - 10 -> {
                         shareMenu.setIcon(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
                         shareMenu.isVisible = true
                         binding.layoutToolbar.setCollapsedTitleTextColor(
@@ -174,14 +172,13 @@ class CharacterBasicInfoFragment : Fragment() {
     //初始化角色基本数据
     private fun setData() {
         binding.apply {
-//            layoutToolbar.title = character.name
-            toolbar.title = character.name
-//                if (character.actualName.isEmpty())
-//                    character.name
-//                else
-//                    character.actualName
-            catah.text = character.catchCopy
-            name.text = character.getNameF()
+            toolbar.title =
+                if (character.actualName.isEmpty())
+                    character.name
+                else
+                    character.actualName
+            content.catah.text = character.catchCopy
+            content.name.text = character.getNameF()
             character.getNameL().apply {
                 if (this.isNotEmpty()) {
                     lastName.text = this
@@ -189,11 +186,13 @@ class CharacterBasicInfoFragment : Fragment() {
                     lineEx.visibility = View.GONE
                 }
             }
-            age.text = character.age
-            height.text =
-                requireActivity().resources.getString(R.string.height, character.height)
-            weight.text =
-                requireActivity().resources.getString(R.string.weight, character.weight)
+
+            content.three.text = requireActivity().resources.getString(
+                R.string.three,
+                character.age,
+                character.height,
+                character.weight
+            )
             birth.text = requireActivity().resources.getString(
                 R.string.birth,
                 character.birthMonth,
@@ -206,8 +205,8 @@ class CharacterBasicInfoFragment : Fragment() {
             favorite.text = character.favorite
             cv.text = character.voice
             self.text = character.getSelf()
-            position.text = character.position.toString()
-            positionType.background =
+//            position.text = character.position.toString()
+            content.positionType.background =
                 resources.getDrawable(
                     character.getPositionIcon(),
                     null

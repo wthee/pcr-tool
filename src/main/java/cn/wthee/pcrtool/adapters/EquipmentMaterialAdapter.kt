@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
@@ -37,7 +36,8 @@ class EquipmentMaterialAdapter :
             binding.apply {
                 binding.root.animation =
                     AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
-                equipName.text = "${info.name} x ${info.count}"
+                equipName.text = "${info.name}"
+                equipCount.text = "x ${info.count}"
                 GlideUtil.load(
                     Constants.EQUIPMENT_URL + info.id + Constants.WEBP,
                     equipIcon,
@@ -46,13 +46,13 @@ class EquipmentMaterialAdapter :
                 )
 
                 //掉落地区
-                LinearLayoutManager(MyApplication.getContext()).also {
-                    it.orientation = LinearLayoutManager.VERTICAL
-                    drops.layoutManager = it
-                }
-                val dropsAdapter = EquipmentDropAdapter()
-                drops.adapter = dropsAdapter
-                dropsAdapter.submitList(info.dropInfo)
+//                LinearLayoutManager(MyApplication.getContext()).also {
+//                    it.orientation = LinearLayoutManager.VERTICAL
+//                    drops.layoutManager = it
+//                }
+//                val dropsAdapter = EquipmentDropAdapter()
+//                drops.adapter = dropsAdapter
+//                dropsAdapter.submitList(info.dropInfo)
             }
         }
     }

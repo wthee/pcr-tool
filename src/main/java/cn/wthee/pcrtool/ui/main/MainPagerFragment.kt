@@ -6,7 +6,9 @@ import android.view.*
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.SharedElementCallback
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -28,7 +30,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.android.material.textview.MaterialTextView
 import javax.inject.Singleton
 import kotlin.collections.set
 
@@ -59,6 +60,7 @@ class MainPagerFragment : Fragment() {
         binding = FragmentContainerBinding.inflate(inflater, container, false)
         init()
         setListener()
+        checkAppUpdate()
         prepareTransitions()
         //设置toolbar
         setHasOptionsMenu(true)
@@ -78,6 +80,10 @@ class MainPagerFragment : Fragment() {
                     }
                 })
         }
+//        BadgeUtils.attachBadgeDrawable(
+//            BadgeDrawable.create(requireContext()),
+//            binding.layoutToolbar,
+//            null)
         return binding.root
     }
 
@@ -115,33 +121,36 @@ class MainPagerFragment : Fragment() {
             }
         })
         tabLayout = binding.layoutTab
+        //TODO other count
         sharedEnemyViewModel.getEnemyCount()
         sharedEnemyViewModel.enemyCount.observe(viewLifecycleOwner, Observer {
-            TabLayoutMediator(
-                tabLayout,
-                viewPager2,
-                TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                    when (position) {
-                        //角色
-                        0 -> {
-                            tab.icon = resources.getDrawable(R.drawable.ic_character, null)
-                            tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
-                        }
-                        //装备
-                        1 -> {
-                            tab.icon = resources.getDrawable(R.drawable.ic_equip, null)
-                            tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
-                        }
-                        //怪物
-                        2 -> {
-                            tab.icon = resources.getDrawable(R.drawable.ic_enemy, null)
-//                        tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
-                            tab.text = it.toString()
-                        }
-                    }
-                }).attach()
+            sp.edit {
+                putInt(Constants.SP_COUNT_ENEMY, it)
+            }
+            tabLayout.getTabAt(2)?.text = it.toString()
         })
-
+        TabLayoutMediator(
+            tabLayout,
+            viewPager2,
+            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                when (position) {
+                    //角色
+                    0 -> {
+                        tab.icon = resources.getDrawable(R.drawable.ic_character, null)
+                        tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
+                    }
+                    //装备
+                    1 -> {
+                        tab.icon = resources.getDrawable(R.drawable.ic_equip, null)
+                        tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
+                    }
+                    //怪物
+                    2 -> {
+                        tab.icon = resources.getDrawable(R.drawable.ic_enemy, null)
+                        tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
+                    }
+                }
+            }).attach()
 
     }
 
@@ -232,21 +241,21 @@ class MainPagerFragment : Fragment() {
                                 CharacterListFragment.characterList.findViewHolderForAdapterPosition(
                                     MainActivity.currentCharaPosition
                                 ) ?: return
-                            val v1 =
+                            val v0 =
                                 vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
-                            sharedElements[names[0]] = v1
+                            val v1 =
+                                vh.itemView.findViewById<ConstraintLayout>(R.id.content)
+                            sharedElements[names[0]] = v0
+                            sharedElements[names[1]] = v1
                         } else {
                             //装备列表
                             val euqipView =
                                 EquipmentListFragment.list.findViewHolderForAdapterPosition(
                                     MainActivity.currentEquipPosition
                                 ) ?: return
-                            val ev1 =
+                            val ev0 =
                                 euqipView.itemView.findViewById<AppCompatImageView>(R.id.item_pic)
-                            val ev2 =
-                                euqipView.itemView.findViewById<MaterialTextView>(R.id.name)
-                            sharedElements[names[0]] = ev1
-                            sharedElements[names[1]] = ev2
+                            sharedElements[names[0]] = ev0
                         }
                     }
                 } catch (e: Exception) {
@@ -257,4 +266,11 @@ class MainPagerFragment : Fragment() {
         })
     }
 
+    private fun checkAppUpdate() {
+//        BadgeUtils.attachBadgeDrawable(
+//            BadgeDrawable.create(requireContext()),
+//            binding.toolbar.leftIcon,
+//            null
+//        )
+    }
 }

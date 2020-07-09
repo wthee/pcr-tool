@@ -15,6 +15,11 @@ android {
         versionName "0.0.3-beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -51,6 +56,10 @@ dependencies {
 
     //leakcanary
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+
+    //Bugly
+    implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
+    implementation 'com.tencent.bugly:nativecrashreport:3.7.3'
 
     //navigation
     def nav_version = "2.3.0"

@@ -9,134 +9,118 @@
     android:background="@color/colorBg">
 
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/layout_card"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/m_margin"
-        app:cardCornerRadius="@dimen/card_radius"
-        app:cardElevation="@dimen/elevation_card">
+        android:orientation="vertical">
+
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/view_toolbar" />
+
 
         <LinearLayout
+            android:id="@+id/layout_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/view_toolbar" />
-
-            <LinearLayout
-                android:id="@+id/layout_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/m_margin"
+                android:layout_marginEnd="@dimen/m_margin">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
+                    android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/m_margin"
-                    android:layout_marginEnd="@dimen/m_margin">
+                    android:layout_marginTop="@dimen/m_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/item_pic"
+                        android:layout_width="@dimen/xxl_icon"
+                        android:layout_height="@dimen/xxl_icon"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@mipmap/ic_launcher_foreground" />
 
                     <LinearLayout
-                        android:id="@+id/content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/m_margin"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:orientation="vertical">
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/item_pic"
-                            android:layout_width="@dimen/xxl_icon"
-                            android:layout_height="@dimen/xxl_icon"
-                            android:layout_gravity="center"
-                            android:adjustViewBounds="true"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:src="@mipmap/ic_launcher_foreground" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/title_des"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/m_margin"
+                            android:background="@drawable/title_background"
+                            android:paddingStart="@dimen/s_padding"
+                            android:paddingEnd="@dimen/s_padding"
+                            android:text="@string/equip_details"
+                            android:textAppearance="@style/subTitleWithe"
+                            app:layout_constraintStart_toEndOf="@id/item_pic"
+                            app:layout_constraintTop_toTopOf="@id/item_pic" />
 
-                        <LinearLayout
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/title_des"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/m_margin"
-                                android:background="@drawable/title_background"
-                                android:paddingStart="@dimen/s_padding"
-                                android:paddingEnd="@dimen/s_padding"
-                                android:text="@string/equip_details"
-                                android:textAppearance="@style/subTitleWithe"
-                                app:layout_constraintStart_toEndOf="@id/item_pic"
-                                app:layout_constraintTop_toTopOf="@id/item_pic" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                android:id="@+id/desc"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/m_margin"
-                                android:layout_marginTop="@dimen/s_margin"
-                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/item_pic"
-                                app:layout_constraintTop_toBottomOf="@id/title_des"
-                                tools:text="道具详情道具详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
-
-                        </LinearLayout>
+                            android:layout_marginStart="@dimen/m_margin"
+                            android:layout_marginTop="@dimen/s_margin"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/item_pic"
+                            app:layout_constraintTop_toBottomOf="@id/title_des"
+                            tools:text="道具详情道具详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/attrs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/s_margin"
-                        android:isScrollContainer="false"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/content"
-                        tools:itemCount="5"
-                        tools:listitem="@layout/item_equipment_attr" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_material"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/l_margin"
-                    android:layout_marginBottom="@dimen/s_margin"
-                    android:text="@string/material_no"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorPrimary" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/material"
+                    android:id="@+id/attrs"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/s_margin"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/item_equipment_material" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/s_margin"
+                    android:isScrollContainer="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/content"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_equipment_attr" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_material"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/l_margin"
+                android:layout_marginBottom="@dimen/s_margin"
+                android:text="@string/material_no"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/colorPrimary" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/material"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/s_margin"
+                android:orientation="vertical"
+                app:spanCount="2"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/item_equipment_material" />
 
         </LinearLayout>
 
-
-        <ProgressBar
-            android:id="@+id/equip_progress_bar"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
-            android:layout_gravity="center" />
-
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

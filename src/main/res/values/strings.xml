@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">PCR Tool</string>
     <string name="birth">%s 月 %s 日</string>
-    <string name="height">%s cm</string>
-    <string name="weight">%s kg</string>
+    <string name="three">%s / %s / %s</string>
     <string name="blood">%s 型</string>
     <string name="character_info">角色详情</string>
     <string name="character_pic">角色资料</string>

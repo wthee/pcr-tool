@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/s_margin"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/character_pic">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/position_type"
+        android:layout_width="@dimen/m_icon"
+        android:layout_height="@dimen/m_icon"
+        app:layout_constraintBottom_toBottomOf="@id/name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/name"
+        tools:background="@drawable/ic_position_0_300" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
+        android:layout_marginTop="@dimen/m_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        app:layout_constraintStart_toEndOf="@id/position_type"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="莫妮卡" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/catah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        tools:text="your best friend" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:layout_constraintBottom_toBottomOf="@id/name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/name"
+        tools:text="10 / 110 / 56" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/love"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_loved"
+        app:layout_constraintBottom_toBottomOf="@id/catah"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/catah" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

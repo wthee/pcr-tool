@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.setMargins
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -72,29 +70,21 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentDetailsBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
         init()
         setObserve()
         viewModel.getEquipInfos(equip)
-        //从角色页面打开时
-        if (isDialog) {
-            //取消margin
-            val params = binding.layoutCard.layoutParams as CoordinatorLayout.LayoutParams
-            params.setMargins(0)
-            binding.layoutCard.layoutParams = params
-//            binding.viewToolbar.setBackgroundColor(Color.TRANSPARENT)
-        }
         return binding.root
     }
+
 
     override fun setupDialog(dialog: Dialog, style: Int) {
         val v: View =
             LayoutInflater.from(activity).inflate(R.layout.fragment_equipment_details, null)
         dialog.setContentView(v)
 
-        val params = (v.parent as View).layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior as BottomSheetBehavior<View>
-        behavior.peekHeight = 700
+        val layoutParams = (v.parent as View).layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = layoutParams.behavior as BottomSheetBehavior<View>
+//        behavior.peekHeight = 350
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -119,7 +109,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
             cusToolbar.setLeftIcon(R.drawable.ic_detail_back)
             cusToolbar.hideRightIcon()
             cusToolbar.setTitleColor(R.color.colorPrimary)
-            cusToolbar.setBackground(R.color.colorWhite)
+            cusToolbar.setBackground(R.color.colorBg)
             cusToolbar.setTitleCenter()
             cusToolbar.leftIcon.setOnClickListener {
                 goBack()
@@ -146,18 +136,17 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
             adapter.submitList(equip.getAttrs())
             //合成素材
             materialAdapter = EquipmentMaterialAdapter()
-            PagerSnapHelper().attachToRecyclerView(material)
+//            PagerSnapHelper().attachToRecyclerView(material)
             material.adapter = materialAdapter
         }
     }
 
     private fun setObserve() {
         viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
-            binding.titleMaterial.text = resources.getString(R.string.material, it.size)
             materialAdapter.submitList(it)
         })
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            binding.equipProgressBar.visibility = if (it) View.VISIBLE else View.GONE
+//            binding.equipProgressBar.visibility = if (it) View.VISIBLE else View.GONE
         })
     }
 

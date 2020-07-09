@@ -73,6 +73,7 @@ class CharacterListFragment : Fragment() {
         }
     }
 
+
     //绑定observe
     private fun setObserve() {
         viewModel.apply {
@@ -161,7 +162,6 @@ class CharacterListFragment : Fragment() {
                     binding.characterList.smoothScrollToPosition(0)
                 }
             })
-
         }
     }
 }

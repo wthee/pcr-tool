@@ -24,7 +24,7 @@
     <!--    integer-->
     <integer name="slide">400</integer>
     <integer name="item_anim">600</integer>
-    <integer name="item_anim_fast">300</integer>
+    <integer name="item_anim_fast">250</integer>
     <integer name="delay">500</integer>
 
     <dimen name="fab_margin">16dp</dimen>

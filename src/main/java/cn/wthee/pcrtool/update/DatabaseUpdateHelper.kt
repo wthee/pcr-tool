@@ -5,6 +5,7 @@ import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.work.*
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.utils.ApiHelper
@@ -29,9 +30,9 @@ class DatabaseUpdateHelper {
         CoroutineScope(IO).launch {
             val version = service.getDbVersion()
             //更新判断 文件大小小于1MB or 版本不是最新
-//            if (MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
+            if (MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
                 downloadDB(version.TruthVersion, lifecycleOwner)
-//            }
+            }
         }
     }
 
