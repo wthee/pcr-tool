@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.adapters
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -21,6 +23,7 @@ import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
+import cn.wthee.pcrtool.utils.OnLoadListener
 import com.bumptech.glide.Glide
 
 
@@ -63,7 +66,18 @@ class CharacterAdapter(private val fragment: Fragment) :
                 //加载网络图片
                 val picUrl =
                     Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
-                GlideUtil.load(picUrl, characterPic, R.drawable.error, null)
+                GlideUtil.loadWithListener(
+                    picUrl,
+                    characterPic,
+                    R.drawable.error,
+                    null,
+                    object : OnLoadListener {
+                        override fun onSuccess(bitmap: Bitmap) {
+                            sp.edit {
+                                putBoolean("first_click_${character.id}", false)
+                            }
+                        }
+                    })
                 //设置位置
                 content.positionType.background =
                     fragment.resources.getDrawable(character.getPositionIcon(), null)

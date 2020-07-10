@@ -13,14 +13,14 @@
         android:duration="50" />
     <scale
         android:fromXScale="1"
-        android:toXScale="1.15"
+        android:toXScale="0.9"
         android:fromYScale="1"
-        android:toYScale="1.15"
+        android:toYScale="0.9"
         android:pivotX="50%"
         android:pivotY="50%"
         android:fillEnabled="true"
         android:fillBefore="true"
         android:fillAfter="true"
         android:interpolator="@anim/fragment_fast_out_extra_slow_in"
-        android:duration="300" />
+        android:duration="@integer/item_anim_fast" />
 </set>

@@ -9,7 +9,6 @@ import cn.wthee.pcrtool.data.model.CharacterAttrInfo
 import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.data.model.add
 import cn.wthee.pcrtool.data.model.multiply
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,16 +54,12 @@ class CharacterPromotionViewModel @Inject constructor(
                     4, 5 -> 5
                     else -> 0
                 }
-                val count = CharacterViewModel.repeat[eq.equipmentId] ?: 0
                 //获取装备信息及其提升
                 val eqInfo = CharacterAttrInfo.setValue(eq)
-
                 val eh =
                     CharacterAttrInfo.setValue(equipmentRepository.getEquipmentEnhanceData(eq.equipmentId))
-                for (i in 0..count) {
-                    info.add(eh.multiply(mult))
-                        .add(eqInfo)
-                }
+                info.add(eh.multiply(mult))
+                    .add(eqInfo)
             }
             sumInfo.postValue(info)
         }

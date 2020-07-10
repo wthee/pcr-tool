@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.utils
+package cn.wthee.pcrtool.database
 
 import androidx.room.Database
 import androidx.room.Room
@@ -30,7 +30,8 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         SkillAction::class,
         SkillData::class,
         WaveGroupData::class,
-        EnemyData::class
+        EnemyData::class,
+        CharacterAttackPattern::class
     ],
     version = 1,
     exportSchema = false
@@ -60,7 +61,7 @@ abstract class AppDatabase : RoomDatabase() {
                 MyApplication.getContext(),
                 AppDatabase::class.java,
                 DATABASE_CN_Name
-            ).build()
+            ).fallbackToDestructiveMigration().build()
         }
     }
 

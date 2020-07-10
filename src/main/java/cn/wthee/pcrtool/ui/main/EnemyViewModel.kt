@@ -3,6 +3,9 @@ package cn.wthee.pcrtool.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.EnemyRepository
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.EnemyData
@@ -19,29 +22,40 @@ class EnemyViewModel @Inject constructor(
     private val repository: EnemyRepository
 ) : ViewModel() {
 
-    var enemies = MutableLiveData<List<EnemyData>>()
+    var enemies = MutableLiveData<PagingData<EnemyData>>()
     var enemyCount = MutableLiveData<Int>()
     var refresh = MutableLiveData<Boolean>()
-    var loading = MutableLiveData<Boolean>()
-    var reload = MutableLiveData<Boolean>()
+    var isLoading = MutableLiveData<Boolean>()
 
-    companion object {
-        var repeat = mutableMapOf<Int, Int>()
-    }
-
+    val data = Pager(
+        PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = true,
+            maxSize = 60
+        )
+    ) {
+        repository.getAllEnemy()
+    }.flow
 
     //怪物基本资料
-    fun getAllEnemy() {
-        viewModelScope.launch {
-            val data = repository.getAllEnemy()
-//            if (data.isEmpty()) {
-//                loading.postValue(true)
-//            } else {
-//                loading.postValue(false)
-//                refresh.postValue(false)
-//            }
-            enemies.postValue(data)
-        }
+    suspend fun getAllEnemy() {
+        val data = Pager(
+            PagingConfig(
+                pageSize = 60,
+                enablePlaceholders = true,
+                maxSize = 100
+            )
+        ) {
+            repository.getAllEnemy()
+        }.flow
+
+//        if (data.count() == 0) {
+//            refresh.postValue(true)
+//        } else {
+//            refresh.postValue(false)
+//            refresh.postValue(false)
+//        }
+//        enemies.postValue(data.asLiveData().value)
     }
 
     //怪物数量

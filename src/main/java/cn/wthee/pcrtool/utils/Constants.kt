@@ -8,8 +8,9 @@ object Constants {
     const val API_URL = "https://redive.estertion.win/"
 
     //数据库中版
-    const val DATABASE_CN_File_Name = "redive_cn.db.br"
+    const val DATABASE_CN_DOWNLOAD_File_Name = "redive_cn.db.br"
     const val DATABASE_CN_Name = "redive_cn.db"
+    const val DATABASE_CN_WAL = "redive_cn.db-wal"
 
     //角色卡片接口
     const val CHARACTER_URL = API_URL + "card/profile/"
@@ -20,8 +21,8 @@ object Constants {
     //装备图标接口
     const val EQUIPMENT_URL = API_URL + "icon/equipment/"
 
-    //角色图标接口
-    const val CHARACTER_ICON_URL = API_URL + "icon/unit/"
+    //图标接口
+    const val UNIT_ICON_URL = API_URL + "icon/unit/"
 
     //角色界面接口
     const val CHARACTER_PLATE_URL = API_URL + "icon/plate/"
@@ -50,6 +51,8 @@ object Constants {
     const val SORT_TYPE = 0
     const val SORT_ASC = true
     const val UNKNOW_EQUIP_ID = 999999
+    const val NOTICE_TITLE = "正在更新数据库..."
+    const val NOTICE_TOAST_TITLE = "正在更新数据库\n下载进度请查看通知栏~"
 
     //列表列数
     const val COLUMN_COUNT = 1

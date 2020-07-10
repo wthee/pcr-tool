@@ -12,11 +12,9 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.WorkManager
-import cn.wthee.pcrtool.update.DatabaseUpdateHelper
+import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.PrivateData
-import com.tencent.bugly.Bugly
 import com.tencent.bugly.beta.Beta
 import com.tencent.bugly.beta.UpgradeInfo
 import com.tencent.bugly.beta.ui.UILifecycleListener
@@ -112,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //初始化
-        Bugly.init(applicationContext, PrivateData.APP_ID, false)
+//        Bugly.init(applicationContext, PrivateData.APP_ID, false)
     }
 
 }

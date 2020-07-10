@@ -23,11 +23,6 @@ class CharacterViewModel @Inject constructor(
     var isLoading = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
 
-    companion object {
-        var repeat = mutableMapOf<Int, Int>()
-    }
-
-
     //角色基本资料
     fun getCharacters(sortType: Int, asc: Boolean) {
         isLoading.postValue(true)

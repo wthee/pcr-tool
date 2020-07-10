@@ -36,9 +36,6 @@ class CharacterListFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterListBinding
 
-//    private val viewModel by activityViewModels<CharacterViewModel> {
-//        InjectorUtil.provideCharacterViewModelFactory()
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -104,12 +101,6 @@ class CharacterListFragment : Fragment() {
                 try {
                     findNavController().popBackStack(R.id.containerFragment, true);
                     findNavController().navigate(R.id.containerFragment);
-//                    findNavController().navigate(
-//                        R.id.action_global_containerFragment,
-//                        null,
-//                        NavOptions.Builder().setPopUpTo(R.id.action_global_containerFragment, false)
-//                            .build()
-//                    )
                 } catch (e: Exception) {
                     Log.e(LOG_TAG, e.message.toString())
                 }

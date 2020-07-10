@@ -8,10 +8,9 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.SharedElementCallback
-import androidx.core.content.edit
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
@@ -19,7 +18,7 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
-import cn.wthee.pcrtool.databinding.FragmentContainerBinding
+import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.isList
 import cn.wthee.pcrtool.utils.Constants
@@ -30,10 +29,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import javax.inject.Singleton
 import kotlin.collections.set
 
-@Singleton
+
 class MainPagerFragment : Fragment() {
 
     companion object {
@@ -42,22 +40,19 @@ class MainPagerFragment : Fragment() {
         lateinit var progress: ProgressBar
     }
 
-    private lateinit var binding: FragmentContainerBinding
+    private lateinit var binding: FragmentMainPagerBinding
     private lateinit var viewPager2: ViewPager2
     private lateinit var search: FloatingActionButton
 
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
-    private val sharedEnemyViewModel by activityViewModels<EnemyViewModel> {
-        InjectorUtil.provideEnemyViewModelFactory()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentContainerBinding.inflate(inflater, container, false)
+        binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         setListener()
         checkAppUpdate()
@@ -121,14 +116,6 @@ class MainPagerFragment : Fragment() {
             }
         })
         tabLayout = binding.layoutTab
-        //TODO other count
-        sharedEnemyViewModel.getEnemyCount()
-        sharedEnemyViewModel.enemyCount.observe(viewLifecycleOwner, Observer {
-            sp.edit {
-                putInt(Constants.SP_COUNT_ENEMY, it)
-            }
-            tabLayout.getTabAt(2)?.text = it.toString()
-        })
         TabLayoutMediator(
             tabLayout,
             viewPager2,
@@ -136,17 +123,18 @@ class MainPagerFragment : Fragment() {
                 when (position) {
                     //角色
                     0 -> {
-                        tab.icon = resources.getDrawable(R.drawable.ic_character, null)
+                        tab.icon =
+                            ResourcesCompat.getDrawable(resources, R.drawable.ic_character, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
                     }
                     //装备
                     1 -> {
-                        tab.icon = resources.getDrawable(R.drawable.ic_equip, null)
+                        tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_equip, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
                     }
                     //怪物
                     2 -> {
-                        tab.icon = resources.getDrawable(R.drawable.ic_enemy, null)
+                        tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_enemy, null)
                         tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
                     }
                 }

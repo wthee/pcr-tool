@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.workers
+package cn.wthee.pcrtool.database
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -15,12 +15,10 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MainActivity.Companion.sp
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.AppDatabase
 import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.io.FileOutputStream
@@ -33,7 +31,7 @@ class DatabaseDownloadWorker(
     @NonNull parameters: WorkerParameters?
 ) : CoroutineWorker(context, parameters!!) {
 
-    private val title = "正在更新数据库..."
+
     private val notificationManager: NotificationManager =
         context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private val channelId = "1"
@@ -41,16 +39,9 @@ class DatabaseDownloadWorker(
     private lateinit var notification: NotificationCompat.Builder
 
     //适配低版本数据库路径
-    private val folderPath = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-        MyApplication.getContext().dataDir.absolutePath
-    else {
-        val path = MyApplication.getContext().filesDir.absolutePath
-        path.substring(0, path.length - 6)
-    } + "/databases"
+    private val folderPath = FileUtil.getDatabaseDir()
 
-    private val dbPath =
-        MyApplication.getContext().getDatabasePath(Constants.DATABASE_CN_File_Name).absolutePath
-
+    private val dbZipPath = FileUtil.getDatabaseZipPath()
 
     companion object {
         const val KEY_INPUT_URL = "KEY_INPUT_URL"
@@ -79,7 +70,7 @@ class DatabaseDownloadWorker(
                         Log.e(Constants.LOG_TAG, progress.toString())
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
-                                "$title ${String.format(
+                                "${Constants.NOTICE_TITLE} ${String.format(
                                     "%.1f",
                                     currSize
                                 )}KB / ${String.format("%.1f", totalSize)} KB"
@@ -94,7 +85,7 @@ class DatabaseDownloadWorker(
             )
 
             //下载文件
-            val response = service.getDb(Constants.DATABASE_CN_File_Name).execute()
+            val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
             sp.edit {
                 putString(
                     Constants.SP_DATABASE_VERSION,
@@ -117,8 +108,8 @@ class DatabaseDownloadWorker(
             createChannel()
         }
         notification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle(title)
-            .setTicker(title)
+            .setContentTitle(Constants.NOTICE_TITLE)
+            .setTicker(Constants.NOTICE_TITLE)
             .setSmallIcon(R.drawable.ic_logo)
             .setOngoing(true)
             .setProgress(100, 0, true)
@@ -127,7 +118,7 @@ class DatabaseDownloadWorker(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
-        val channel = NotificationChannel(channelId, "数据更新", NotificationManager.IMPORTANCE_MAX)
+        val channel = NotificationChannel(channelId, "数据更新", NotificationManager.IMPORTANCE_LOW)
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -139,9 +130,9 @@ class DatabaseDownloadWorker(
             file.mkdir()
         }
         //删除已有数据库文件
-        val db = File(dbPath)
+        val db = File(dbZipPath)
         if (db.exists()) {
-            FileUtil.deleteDir(folderPath, dbPath)
+            FileUtil.deleteDir(folderPath, dbZipPath)
         }
         try {
             input?.let { inputStream ->

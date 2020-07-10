@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
+import cn.wthee.pcrtool.utils.OnLoadListener
 import com.google.android.material.appbar.AppBarLayout
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -76,14 +78,22 @@ class CharacterBasicInfoFragment : Fragment() {
     //加载图片
     private fun loadImages() {
         //toolbar 背景
-        GlideUtil.load(
+        GlideUtil.loadWithListener(
             Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP,
             binding.characterPic,
             R.drawable.error,
-            parentFragment
+            parentFragment,
+            object : OnLoadListener {
+                override fun onSuccess(bitmap: Bitmap) {
+                    sp.edit {
+                        putBoolean("first_click_${character.id}", false)
+                    }
+                }
+            }
         )
-
-//        parentFragment?.startPostponedEnterTransition()
+        if (sp.getBoolean("first_click_${character.id}", true)) {
+            parentFragment?.startPostponedEnterTransition()
+        }
     }
 
     //点击事件

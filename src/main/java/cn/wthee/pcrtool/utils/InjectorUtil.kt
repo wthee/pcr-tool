@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.utils
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EnemyRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
+import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.ui.detail.character.CharacterPromotionViewModelFactory
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.update
+package cn.wthee.pcrtool.database
 
 import android.os.Handler
 import android.os.Looper
@@ -9,9 +9,10 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.utils.ApiHelper
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
+import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.workers.DatabaseDownloadWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -29,9 +30,12 @@ class DatabaseUpdateHelper {
         )
         CoroutineScope(IO).launch {
             val version = service.getDbVersion()
-            //更新判断 文件大小小于1MB or 版本不是最新
-            if (MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
+            //更新判断
+            if (FileUtil.needUpadateDb() || MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
                 downloadDB(version.TruthVersion, lifecycleOwner)
+                Looper.prepare()
+                ToastUtil.long(Constants.NOTICE_TOAST_TITLE)
+                Looper.loop()
             }
         }
     }
