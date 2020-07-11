@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.CharacterDao
+import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
@@ -28,15 +29,18 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         QuestData::class,
         SkillAction::class,
         SkillData::class,
-        WaveGroupData::class
+        WaveGroupData::class,
+        EnemyData::class,
+        CharacterAttackPattern::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCharacterDao(): CharacterDao
     abstract fun getEquipmentDao(): EquipmentDao
+    abstract fun getEnemyDao(): EnemyDao
 
     companion object {
 
@@ -46,7 +50,8 @@ abstract class AppDatabase : RoomDatabase() {
         fun getInstance(): AppDatabase {
             return instance ?: synchronized(this) {
                 instance
-                    ?: buildDatabase().also { instance = it }
+                    ?: buildDatabase()
+                        .also { instance = it }
             }
         }
 
@@ -56,8 +61,7 @@ abstract class AppDatabase : RoomDatabase() {
                 MyApplication.getContext(),
                 AppDatabase::class.java,
                 DATABASE_CN_Name
-            )
-                .build()
+            ).fallbackToDestructiveMigration().build()
         }
     }
 

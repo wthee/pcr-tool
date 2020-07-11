@@ -62,28 +62,34 @@ class EquipmentListFragment : Fragment() {
                 recycler.layoutManager = gridLayoutManager
             }
             adapter = EquipmentAdapter(isList)
-            recycler.adapter =
-                adapter
+            recycler.adapter = adapter
+            recycler.setItemViewCacheSize(100)
         }
     }
 
     private fun setObserve(){
         //加载
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            binding.characterProgress.visibility = if (it) View.VISIBLE else View.GONE
+            MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
         })
         viewModel.isList.observe(viewLifecycleOwner, Observer {
             init(it)
             viewModel.getEquips()
         })
         //获取信息
-        viewModel.equipments.observe(viewLifecycleOwner, Observer {data ->
-            adapter.submitList(data)
-            MainActivity.sp.edit {
-                putInt(Constants.SP_COUNT_EQUIP, data.size)
-            }
-            ContainerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
+        viewModel.equipments.observe(viewLifecycleOwner, Observer { data ->
+            if (data != null && data.isNotEmpty()) {
+                binding.noDataTip.visibility = View.GONE
+                adapter.submitList(data)
+                MainActivity.sp.edit {
+                    putInt(Constants.SP_COUNT_EQUIP, data.size)
+                }
+                MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
 //            adapter.notifyDataSetChanged()
+            } else {
+                binding.noDataTip.visibility = View.VISIBLE
+            }
+
         })
         //刷新
         viewModel.refresh.observe(viewLifecycleOwner, Observer {

@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin"
+    android:layout_marginTop="@dimen/m_margin"
+    android:layout_marginEnd="@dimen/m_margin"
     android:gravity="center"
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_margin="@dimen/m_margin"
+        android:layout_width="@dimen/xxl_icon"
+        android:layout_height="@dimen/xxl_icon"
+        android:layout_margin="@dimen/s_margin"
         android:adjustViewBounds="true"
         tools:src="@mipmap/ic_launcher_foreground" />
 
@@ -22,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
         android:layout_marginBottom="@dimen/s_margin"
-        android:elevation="@dimen/card_ele"
+        android:layout_marginStart="@dimen/s_margin"
+        app:cardElevation="@dimen/elevation_card"
         app:cardCornerRadius="@dimen/card_radius">
 
         <LinearLayout

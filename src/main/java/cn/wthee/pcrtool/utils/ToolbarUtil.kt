@@ -1,9 +1,9 @@
 package cn.wthee.pcrtool.utils
 
-import android.content.Context
-import android.view.MenuItem
+import android.content.res.Resources
 import android.view.View
-import androidx.appcompat.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.databinding.ViewToolbarBinding
 
 
@@ -12,6 +12,7 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     val leftIcon = toolbar.leftIcon
     val rightIcon = toolbar.rightIcon
     val title = toolbar.title
+    val resources: Resources = MyApplication.getContext().resources
 
     fun setLeftIcon(resId: Int){
         leftIcon.setImageResource(resId)
@@ -36,21 +37,23 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     fun showRightIcon(){
         rightIcon.visibility = View.VISIBLE
     }
+
     fun setTitle(text: String){
         title.text = text
     }
 
-    fun showPopupMenu(context: Context, menuId: Int, itemClickListener: ItemClickListener) {
-        val popupMenu = PopupMenu(context, toolbar.rightIcon)
-        popupMenu.menuInflater.inflate(menuId, popupMenu.menu)
-        popupMenu.show()
-        popupMenu.setOnMenuItemClickListener { item ->
-            itemClickListener.onClick(item)
-            true
-        }
+    fun setTitleCenter(){
+        val params = title.layoutParams as ConstraintLayout.LayoutParams
+        params.startToStart = 0
+        params.endToEnd = 0
+        title.layoutParams = params
     }
 
-    interface ItemClickListener{
-        fun onClick(item: MenuItem?)
+    fun setTitleColor(resId: Int){
+        title.setTextColor(resources.getColor(resId, null))
+    }
+
+    fun setBackground(resId: Int){
+        toolbar.viewToolbar.setBackgroundColor(resources.getColor(resId, null))
     }
 }

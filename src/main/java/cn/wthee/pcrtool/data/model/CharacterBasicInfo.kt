@@ -61,11 +61,9 @@ data class CharacterBasicInfo(
 
     fun getSelf() =
         if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
-            "......\n" +
-                    "......\n" +
-                    "......\n"
+            "......"
         } else {
-            this.selfText.replace("\\n", "\n")
+            this.selfText.replace("\\n", "")
         }
 
     fun getNameF(): String {
@@ -89,20 +87,18 @@ data class CharacterBasicInfo(
     }
 
     fun getPositionIcon() = when (this.position) {
-        in 0..300 -> R.drawable.position_0_300
-        in 301..600 -> R.drawable.position_301_600
-        in 601..9999 -> R.drawable.position_600
-        else -> R.drawable.position_unknow
+        in 0..300 -> R.drawable.ic_position_0_300
+        in 301..600 -> R.drawable.ic_position_301_600
+        in 601..9999 -> R.drawable.ic_position_600
+        else -> R.drawable.ic_position_600
     }
 
     fun getLoveSelfText(): String {
         val text = serif1 + serif2 + serif3
-        if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
-            return "......\n" +
-                    "......\n" +
-                    "......\n"
+        return if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
+            "......"
         } else {
-            return text.replace("\\n", "\n")
+            text.replace("\\n", "")
         }
     }
 

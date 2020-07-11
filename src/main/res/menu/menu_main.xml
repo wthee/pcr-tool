@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings"
         android:title="@string/setting"
-        android:icon="@drawable/ic_detail_share_no_bg"/>
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:showAsAction="always" />
 
 </menu>

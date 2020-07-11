@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAlphtBlack"
+    android:fitsSystemWindows="true"
+    android:gravity="center">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/l_margin"
+        app:cardCornerRadius="@dimen/card_radius">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/s_padding">
+
+            <!-- 通过id设置的控件 -->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageview"
+                android:layout_width="@dimen/xl_icon"
+                android:layout_height="@dimen/xl_icon"
+                android:src="@drawable/ic_logo_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- 【必设】升级标题控件tag：beta_title-->
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/s_margin"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:tag="beta_title"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toTopOf="@+id/textView"
+                app:layout_constraintStart_toEndOf="@id/imageview"
+                app:layout_constraintTop_toTopOf="@id/imageview"
+                tools:text="title" />
+
+            <!--通过tag设置的控件 -->
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/s_margin"
+                android:tag="info"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/text"
+                app:layout_constraintBottom_toBottomOf="@+id/imageview"
+                app:layout_constraintStart_toEndOf="@+id/imageview"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
+            <ScrollView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/m_margin"
+                android:padding="@dimen/s_padding"
+                app:layout_constraintTop_toBottomOf="@id/imageview">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- 【必设】升级信息控件tag：beta_upgrade_info-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/s_padding"
+                        android:paddingEnd="@dimen/s_padding"
+                        android:tag="beta_upgrade_info"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                        android:textColor="@color/text"
+                        android:visibility="gone"
+                        tools:text="info" />
+
+                    <TextView
+                        android:id="@+id/label_feature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/s_margin"
+                        android:tag="label_feature"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textColor="@color/colorPrimary"
+                        tools:text="更新内容" />
+
+                    <!-- 【必设】更新属性控件tag：beta_upgrade_feature-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/m_margin"
+                        android:lineSpacingExtra="5dp"
+                        android:paddingStart="@dimen/s_padding"
+                        android:paddingEnd="@dimen/s_padding"
+                        android:tag="beta_upgrade_feature"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="@color/text"
+                        tools:text="feature" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- 【必设】取消按钮tag：beta_cancel_button-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:padding="@dimen/m_padding"
+                android:tag="beta_cancel_button"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@color/text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/content"
+                tools:text="cancel" />
+            <!-- 【必设】确认按钮tag：beta_confirm_button-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:padding="@dimen/m_padding"
+                android:tag="beta_confirm_button"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="confirm" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

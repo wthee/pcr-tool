@@ -1,15 +1,9 @@
 <!-- height:width=viewportHeight:viewportWidth -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:height="256dp"
+    android:height="200dp"
     android:viewportHeight="32"
     android:viewportWidth="32"
-    android:width="256dp">
-
-    <path
-        android:name="circle"
-        android:fillColor="@color/colorAlphaWhite"
-        android:pathData="M16,16m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
-
+    android:width="200dp">
 
     <path
         android:fillColor="@color/alphaPrimary"

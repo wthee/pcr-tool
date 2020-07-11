@@ -6,9 +6,6 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
@@ -16,6 +13,8 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
@@ -37,6 +36,7 @@ class EquipmentAdapter(private val isList: Boolean) :
         holder.bind(getItem(position), isList)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
@@ -70,20 +70,21 @@ class EquipmentAdapter(private val isList: Boolean) :
         }
     }
 
-    class ViewHolder(private val binding: ItemEquipmentBinding) :
+    inner class ViewHolder(private val binding: ItemEquipmentBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(equip: EquipmentData, isList: Boolean) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.getContext()
-                content.visibility = if (isList) View.VISIBLE else {
-                    itemPic.animation =
-                        AnimationUtils.loadAnimation(ctx, R.anim.item_scale)
-                    View.GONE
-                }
+                content.visibility = if (isList) View.VISIBLE else View.GONE
                 //加载动画
                 content.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.item_equip_list)
+                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale_alpha)
+                itemPic.animation =
+                    AnimationUtils.loadAnimation(
+                        ctx,
+                        if (isList) R.anim.anim_translate else R.anim.anim_scale
+                    )
                 //装备名称
                 name.text = equip.equipmentName
                 desc.text = equip.getDesc()
@@ -96,39 +97,12 @@ class EquipmentAdapter(private val isList: Boolean) :
                 //设置点击跳转
                 root.setOnClickListener {
                     MainActivity.currentEquipPosition = adapterPosition
-                    val bundle = android.os.Bundle()
-                    bundle.putSerializable("equip", equip)
-                    val extras =
-                        FragmentNavigatorExtras(
-                            itemPic to itemPic.transitionName,
-                            name to name.transitionName
-                        )
-                    root.findNavController().navigate(
-                        R.id.action_containerFragment_to_equipmentDetailsFragment,
-                        bundle,
-                        null,
-                        extras
+                    EquipmentDetailsFragment.getInstance(equip, true).show(
+                        ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
+                        "details"
                     )
                 }
             }
         }
-    }
-
-}
-
-class EquipDiffCallback : DiffUtil.ItemCallback<EquipmentData>() {
-
-    override fun areItemsTheSame(
-        oldItem: EquipmentData,
-        newItem: EquipmentData
-    ): Boolean {
-        return oldItem.equipmentId == newItem.equipmentId
-    }
-
-    override fun areContentsTheSame(
-        oldItem: EquipmentData,
-        newItem: EquipmentData
-    ): Boolean {
-        return oldItem.equals(newItem)
     }
 }

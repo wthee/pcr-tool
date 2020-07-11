@@ -5,10 +5,10 @@ import java.io.*
 
 object UnzippedUtil {
     /**缓冲字节 */
-    const val BUFFER = 1024
+    private const val BUFFER = 1024
 
     /**后缀名 */
-    const val EXT = ".br"
+    private const val EXT = ".br"
 
     /**
      * 文件解压缩

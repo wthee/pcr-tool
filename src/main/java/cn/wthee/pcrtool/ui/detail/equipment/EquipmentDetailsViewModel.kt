@@ -9,21 +9,22 @@ import cn.wthee.pcrtool.data.model.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class EquipmentDetailsViewModel internal constructor(
+@Singleton
+class EquipmentDetailsViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    var materials = arrayListOf<EquipmentMaterial>()
+    private var materials = arrayListOf<EquipmentMaterial>()
     var isLoading = MutableLiveData<Boolean>()
 
     //获取装备制作材料信息
     fun getEquipInfos(equip: EquipmentData) {
         isLoading.postValue(true)
         viewModelScope.launch {
-            val finalData = arrayListOf<EquipmentDropInfo>()
             if (equip.craftFlg == 0) {
                 materials.add(EquipmentMaterial(0, "", 1, getDropInfos(equip.equipmentId, 0)))
             } else {

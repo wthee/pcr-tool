@@ -21,7 +21,7 @@ class DownloadResponseBody(
 
     override fun source(): BufferedSource {
         if (bufferedSource == null) {
-            bufferedSource = source(responseBody.source()).buffer()
+            bufferedSource = Okio.buffer(source(responseBody.source()))
         }
         return bufferedSource!!
     }
@@ -31,17 +31,13 @@ class DownloadResponseBody(
             var totalBytesRead = 0L
 
             @Throws(IOException::class)
-            override fun read(sink: Buffer, byteCount: Long): Long {
+            override fun read(sink: Buffer?, byteCount: Long): Long {
                 val bytesRead = super.read(sink, byteCount)
                 if (null != downloadListener && bytesRead != -1L && totalBytesRead < responseBody.contentLength()) {
-                    totalBytesRead += bytesRead
+                    totalBytesRead +=  bytesRead
                     val progress = (totalBytesRead * 100.0 / responseBody.contentLength()).toInt()
-                    downloadListener.onProgress(
-                        progress,
-                        totalBytesRead / 1024f,
-                        responseBody.contentLength() / 1024f
-                    )
-                    if (progress == 100) {
+                    downloadListener.onProgress(progress, totalBytesRead / 1024f, responseBody.contentLength() / 1024f)
+                    if(progress == 100){
                         downloadListener.onFinish()
                     }
                 }
@@ -53,7 +49,7 @@ class DownloadResponseBody(
 }
 
 
-interface DownloadListener {
+interface DownloadListener{
     fun onProgress(progress: Int, currSize: Float, totalSize: Float)
     fun onFinish()
 }

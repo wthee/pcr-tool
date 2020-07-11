@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
 @Entity(tableName = "equipment_data")
@@ -38,14 +39,47 @@ class EquipmentData(
     @ColumnInfo(name = "accuracy") val accuracy: Double
 ) : Serializable {
 
+    companion object {
+        fun unknow() =
+            EquipmentData(
+                UNKNOW_EQUIP_ID,
+                "？？？",
+                "",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0,
+                0.0
+            )
+
+    }
+
     fun getDesc() = description.replace("\\n", "")
 
-    fun calcValue(value: Double): Int {
+    private fun calcValue(value: Double): Int {
         val rate = if (promotionLevel > 1) 2 else 1
-        if (promotionLevel == 3 && value.toInt() % 3 != 0) {
-            return value.toInt() * 2 + 1
+        return if (promotionLevel == 3 && value.toInt() % 3 != 0) {
+            value.toInt() * 2 + 1
         } else {
-            return value.toInt() * rate
+            value.toInt() * rate
         }
     }
 

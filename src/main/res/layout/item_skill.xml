@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/m_margin"
-            android:background="@drawable/bg_title"
+            android:background="@drawable/title_background"
             android:paddingStart="@dimen/s_padding"
             android:paddingEnd="@dimen/s_padding"
             android:textAppearance="@style/subTitleWithe"
@@ -45,8 +45,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/item_pic"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
+                android:layout_width="@dimen/xxl_icon"
+                android:layout_height="@dimen/xxl_icon"
                 android:adjustViewBounds="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/m_margin"
-            android:background="@drawable/bg_title"
+            android:background="@drawable/title_background"
             android:paddingStart="@dimen/s_padding"
             android:paddingEnd="@dimen/s_padding"
             android:text="@string/skill_action"

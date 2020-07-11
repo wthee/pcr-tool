@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">PCR Tool</string>
     <string name="birth">%s 月 %s 日</string>
-    <string name="height">%s cm</string>
-    <string name="weight">%s kg</string>
+    <string name="three">%s / %s / %s</string>
     <string name="blood">%s 型</string>
-    <string name="equip_count"> x %d</string>
     <string name="character_info">角色详情</string>
     <string name="character_pic">角色资料</string>
     <string name="event_list">装备信息</string>
@@ -54,26 +52,35 @@
 
     <string name="skill_action">技能效果</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="back">返回</string>
     <string name="other">其它</string>
     <string name="setting">设置</string>
     <string name="material">装备制作素材 x %d </string>
     <string name="material_no">装备制作素材</string>
-
+    <string name="search">搜索</string>
+    <string name="function">功能</string>
+    <string name="data_null_character">角色数据获取失败~</string>
+    <string name="data_null_equip">装备数据获取失败~</string>
+    <string name="data_null_enemy">怪物数据获取失败~</string>
+    <string name="database_version">数据库版本</string>
+    <string name="update_db">检查数据库更新</string>
+    <string name="auto_update_db">自动更新数据库</string>
+    <string name="off_auto_db">已取消自动更新功能</string>
+    <string name="on_auto_db">打开应用时，自动检查数据库版本</string>
+    <string name="database_info">数据信息</string>
+    <string name="data">数据</string>
+    <string name="open_source">开源信息</string>
+    <string name="app_sourcce">项目地址</string>
+    <string name="thanks">感谢</string>
+    <string name="coolapk">酷安主页</string>
+    <string name="data_from">干炸里脊资源</string>
+    <string name="data_from_hint">感谢大佬无私提供数据接口</string>
+    <string name="shizuru_note">静流笔记</string>
+    <string name="dev_tip">用过此应用后，决定开发 PCR Tool</string>
+    <string name="check_app_update">检查应用更新</string>
+    <string name="auto_update_app">自动更新应用</string>
+    <string name="off_auto_app">已取消自动更新功能</string>
+    <string name="on_auto_app">打开应用时，自动检查应用版本</string>
 
 </resources>

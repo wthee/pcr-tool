@@ -20,24 +20,16 @@ class CharacterViewModel @Inject constructor(
 
     var characters = MutableLiveData<List<CharacterBasicInfo>>()
     var refresh = MutableLiveData<Boolean>()
-    var loading = MutableLiveData<Boolean>()
+    var isLoading = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
-
-    companion object {
-        var repeat = mutableMapOf<Int, Int>()
-    }
-
 
     //角色基本资料
     fun getCharacters(sortType: Int, asc: Boolean) {
+        isLoading.postValue(true)
         viewModelScope.launch {
             val data = repository.getInfoAndData().sortedWith(getSort(sortType, asc))
-            if (data.isEmpty()) {
-                loading.postValue(true)
-            } else {
-                loading.postValue(false)
-                refresh.postValue(false)
-            }
+            isLoading.postValue(false)
+            refresh.postValue(false)
             characters.postValue(data)
         }
     }

@@ -1,28 +1,96 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/data">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="force_update_db"
+            app:summary="0"
+            app:title="@string/update_db" />
 
         <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="auto_update_db"
+            app:summaryOff="@string/off_auto_db"
+            app:summaryOn="@string/on_auto_db"
+            app:title="@string/auto_update_db" />
 
     </PreferenceCategory>
 
 
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="应用信息">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="force_update_app"
+            app:summary="0.0.3-beta"
+            app:title="@string/check_app_update" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="auto_update_app"
+            app:summaryOff="@string/off_auto_app"
+            app:summaryOn="@string/on_auto_app"
+            app:title="@string/auto_update_app" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="clean_data"
+            app:summary="若可正常使用应用，不建议清理图片缓存"
+            app:title="清除缓存" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/other">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="wthee"
+            app:title="@string/coolapk">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.coolapk.com/u/1975843" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="https://github.com/wthee/pcr-tool"
+            app:title="@string/app_sourcce">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/wthee/pcr-tool" />
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/thanks">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/data_from_hint"
+            app:title="@string/data_from">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://redive.estertion.win/" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/dev_tip"
+            app:title="@string/shizuru_note">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/MalitsPlus/ShizuruNotes" />
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

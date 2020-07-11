@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="horizontal">
+            android:background="@color/colorWhite"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/filter_tab"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/tab_height"
+                android:layout_height="@dimen/tab_height_2"
                 app:tabIndicatorHeight="0dp">
 
                 <com.google.android.material.tabs.TabItem
@@ -41,17 +46,17 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@color/colorWhite"
                 android:gravity="center"
-                android:text="@string/tab_sort_type"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="@dimen/s_padding"
-                android:background="@color/colorWhite"
+                android:text="@string/tab_sort_type"
                 android:textColor="@color/colorBlack" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/sort_tab"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/tab_height"
+                android:layout_height="@dimen/tab_height_2"
                 app:tabIndicatorHeight="0dp"
                 app:tabMode="scrollable">
 
@@ -78,36 +83,43 @@
 
         </LinearLayout>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/no_data_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/l_margin"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/data_null_character"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/layout_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/character_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/item_character" />
+
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/character_progress"
-        android:layout_width="@dimen/middle_icon"
-        android:layout_height="@dimen/middle_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="card_radius">8dp</dimen>
-    <dimen name="mini_margin">3dp</dimen>
+    <dimen name="card_radius">4dp</dimen>
+    <dimen name="card_height">250dp</dimen>
+    <dimen name="card_ele">5dp</dimen>
+    <dimen name="title_width">32dp</dimen>
+    <!-- icon-->
+    <dimen name="s_icon">10dp</dimen>
+    <dimen name="m_icon">16dp</dimen>
+    <dimen name="l_icon">28dp</dimen>
+    <dimen name="xl_icon">48dp</dimen>
+    <dimen name="xxl_icon">64dp</dimen>
+    <dimen name="xxxl_icon">72dp</dimen>
+    <dimen name="character_icon_size">64dp</dimen>
+    <!-- magrin & padding-->
+    <dimen name="xs_margin">3dp</dimen>
     <dimen name="s_margin">6dp</dimen>
     <dimen name="m_margin">12dp</dimen>
     <dimen name="l_margin">25dp</dimen>
-    <dimen name="card_height">250dp</dimen>
-    <dimen name="mini_icon">10dp</dimen>
-    <dimen name="small_icon">16dp</dimen>
-    <dimen name="middle_icon">28dp</dimen>
-    <dimen name="icon_size">64dp</dimen>
-    <dimen name="large_icon">72dp</dimen>
-    <dimen name="character_icon_size">64dp</dimen>
     <dimen name="border_size">2dp</dimen>
     <dimen name="s_padding">5dp</dimen>
+    <dimen name="m_padding">15dp</dimen>
     <dimen name="l_padding">25dp</dimen>
-    <dimen name="title_width">32dp</dimen>
-    <dimen name="card_ele">5dp</dimen>
 
     <!--    integer-->
     <integer name="slide">400</integer>
-    <integer name="item_anim">500</integer>
-    <integer name="item_anim_fast">300</integer>
+    <integer name="item_anim">600</integer>
+    <integer name="item_anim_fast">250</integer>
     <integer name="delay">500</integer>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="spinner_height">20dp</dimen>
-    <dimen name="toolbar_height">42dp</dimen>
-    <dimen name="tab_height">36dp</dimen>
+    <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="tab_height_1">40dp</dimen>
+    <dimen name="tab_height_2">36dp</dimen>
+
+    <!--  Component elevation values
+1. Nav drawer: 16dp
+2. App bar: 4dp
+3. Card: 1dp to 8dp
+4. FAB: 6dp
+5. Button: 2dp to 8dp
+6. Dialog: 24dp-->
+    <dimen name="elevation_drawer">64dp</dimen>
+    <dimen name="elevation_toolbar">4dp</dimen>
+    <dimen name="elevation_card">4dp</dimen>
+    <dimen name="elevation_fab">64dp</dimen>
+    <dimen name="elevation_button">4dp</dimen>
+    <dimen name="elevation_dialog">24dp</dimen>
 </resources>

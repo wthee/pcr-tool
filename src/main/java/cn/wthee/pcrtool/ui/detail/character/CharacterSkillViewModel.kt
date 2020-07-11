@@ -6,15 +6,17 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.model.CharacterSkillInfo
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class CharacterSkillViewModel internal constructor(
+@Singleton
+class CharacterSkillViewModel @Inject constructor(
     private val repository: CharacterRepository
 ) : ViewModel() {
 
     var skills = MutableLiveData<List<CharacterSkillInfo>>()
-    var refresh = MutableLiveData<Boolean>()
-    var isLoading = MutableLiveData<Boolean>()
+    private var refresh = MutableLiveData<Boolean>()
+    private var isLoading = MutableLiveData<Boolean>()
 
     //角色基本资料
     fun getCharacterSkills(id: Int) {
