@@ -5,6 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.EquipmentListFragment">
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/no_data_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/l_margin"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/data_null_equip"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/layout_refresh"
         android:layout_width="match_parent"
@@ -16,6 +28,7 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             tools:listitem="@layout/item_equipment" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

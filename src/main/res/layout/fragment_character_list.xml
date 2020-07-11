@@ -13,17 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        android:orientation="vertical"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="horizontal">
+            android:background="@color/colorWhite"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/filter_tab"
@@ -46,11 +46,11 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@color/colorWhite"
                 android:gravity="center"
-                android:text="@string/tab_sort_type"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="@dimen/s_padding"
-                android:background="@color/colorWhite"
+                android:text="@string/tab_sort_type"
                 android:textColor="@color/colorBlack" />
 
             <com.google.android.material.tabs.TabLayout
@@ -83,6 +83,17 @@
 
         </LinearLayout>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/no_data_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/l_margin"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/data_null_character"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/layout_refresh"
@@ -95,13 +106,14 @@
                 android:id="@+id/character_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:scrollbars="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/item_character" />
+
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

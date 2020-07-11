@@ -34,6 +34,8 @@ class EnemyViewModel @Inject constructor(
             maxSize = 60
         )
     ) {
+        isLoading.postValue(false)
+        refresh.postValue(false)
         repository.getAllEnemy()
     }.flow
 

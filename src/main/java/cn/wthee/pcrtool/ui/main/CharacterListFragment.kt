@@ -57,7 +57,6 @@ class CharacterListFragment : Fragment() {
     //加载数据
     private fun init() {
         viewModel.getCharacters(sortType, sortAsc)
-
         listAdapter = CharacterAdapter(this@CharacterListFragment)
         characterList = binding.characterList
         binding.characterList.apply {
@@ -76,7 +75,8 @@ class CharacterListFragment : Fragment() {
         viewModel.apply {
             //角色
             characters.observe(viewLifecycleOwner, Observer { data ->
-                if (data != null) {
+                if (data != null && data.isNotEmpty()) {
+                    binding.noDataTip.visibility = View.GONE
                     listAdapter.submitList(data) {
                         if (filterFlag.toString() != "0") {
                             listAdapter.filter.filter(filterFlag.toString())
@@ -86,6 +86,8 @@ class CharacterListFragment : Fragment() {
                         }
                         MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
                     }
+                } else {
+                    binding.noDataTip.visibility = View.VISIBLE
                 }
             })
             //刷新

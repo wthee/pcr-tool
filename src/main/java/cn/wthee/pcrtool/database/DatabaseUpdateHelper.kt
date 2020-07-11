@@ -1,47 +1,64 @@
 package cn.wthee.pcrtool.database
 
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKED
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TIMEOUT
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DatabaseUpdateHelper {
 
     private val mContext = MyApplication.getContext()
 
-    //检查是否需要更新
-    fun checkDBVersion(lifecycleOwner: LifecycleOwner) {
+    companion object {
+        var downloading = true
+    }
 
+    //检查是否需要更新
+    fun checkDBVersion() {
+        //开始
+        ToastUtil.short(NOTICE_TOAST_CHECKING)
         val service = ApiHelper.create(
             DatabaseService::class.java,
             API_URL
         )
-        CoroutineScope(IO).launch {
-            val version = service.getDbVersion()
-            //更新判断
-            if (FileUtil.needUpadateDb() || MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
-                downloadDB(version.TruthVersion, lifecycleOwner)
-                Looper.prepare()
-                ToastUtil.long(Constants.NOTICE_TOAST_TITLE)
-                Looper.loop()
+        service.getDbVersion().enqueue(object : Callback<DatabaseVersion> {
+            override fun onFailure(call: Call<DatabaseVersion>, t: Throwable) {
+                ToastUtil.short(NOTICE_TOAST_TIMEOUT)
             }
-        }
+
+            override fun onResponse(
+                call: Call<DatabaseVersion>,
+                response: Response<DatabaseVersion>
+            ) {
+                //更新判断
+                val version = response.body()!!
+                if (FileUtil.needUpadateDb() || MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
+                    downloadDB(version.TruthVersion)
+                    ToastUtil.long(Constants.NOTICE_TOAST_TITLE)
+                } else {
+                    ToastUtil.short(NOTICE_TOAST_CHECKED)
+                }
+            }
+        })
     }
 
     //获取数据库
-    private fun downloadDB(ver: String, lifecycleOwner: LifecycleOwner) {
+    private fun downloadDB(ver: String) {
         //开始下载
         val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
             .setInputData(
@@ -54,16 +71,6 @@ class DatabaseUpdateHelper {
         WorkManager.getInstance(mContext)
             .enqueueUniqueWork("updateDatabase", ExistingWorkPolicy.REPLACE, uploadWorkRequest)
 
-        Handler(Looper.getMainLooper()).post {
-            WorkManager.getInstance(mContext).getWorkInfoByIdLiveData(uploadWorkRequest.id)
-                .observe(lifecycleOwner,
-                    Observer<WorkInfo?> { workInfo ->
-                        if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
-                            ToastUtil.short("数据库更新完成~")
-                        }
-                    })
-
-        }
     }
 
 }

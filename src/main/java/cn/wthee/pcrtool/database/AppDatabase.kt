@@ -33,7 +33,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         EnemyData::class,
         CharacterAttackPattern::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

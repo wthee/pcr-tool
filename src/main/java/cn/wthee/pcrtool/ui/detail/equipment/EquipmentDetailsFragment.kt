@@ -106,7 +106,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         binding.apply {
             //toolbar
             cusToolbar = ToolbarUtil(toolbar)
-            cusToolbar.setLeftIcon(R.drawable.ic_detail_back)
+            cusToolbar.setLeftIcon(R.drawable.ic_back)
             cusToolbar.hideRightIcon()
             cusToolbar.setTitleColor(R.color.colorPrimary)
             cusToolbar.setBackground(R.color.colorBg)

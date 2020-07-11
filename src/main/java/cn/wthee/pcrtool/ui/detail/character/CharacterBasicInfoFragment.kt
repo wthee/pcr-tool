@@ -128,7 +128,7 @@ class CharacterBasicInfoFragment : Fragment() {
                         )
 
                     }
-                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange - 10 -> {
+                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange - 5 -> {
                         shareMenu.setIcon(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
                         shareMenu.isVisible = true
                         binding.layoutToolbar.setCollapsedTitleTextColor(
@@ -172,7 +172,7 @@ class CharacterBasicInfoFragment : Fragment() {
         shareMenu.setIcon(ic)
 
         val icFabColor = if (isLoved) resources.getColor(
-            R.color.blue,
+            R.color.colorPrimary,
             null
         ) else resources.getColor(R.color.alphaPrimary, null)
         binding.fab.imageTintList = ColorStateList.valueOf(icFabColor)

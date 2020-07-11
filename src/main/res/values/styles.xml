@@ -15,10 +15,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 
     <style name="CollapsedTitle">
         <item name="android:textSize">20sp</item>
@@ -34,16 +30,7 @@
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
-    <!-- 带动画的底部弹出dialog-->
-    <style name="BottomDialog" parent="android:Animation">
-        <item name="android:windowAnimationStyle">@style/BottomDialogAnimation</item>
-    </style>
-
-    <style name="BottomDialogAnimation">
-        <item name="android:windowEnterAnimation">@anim/dialog_slide_up</item>
-        <item name="android:windowExitAnimation">@anim/dialog_slide_down</item>
-    </style>
-
+    <!-- 点击波浪-->
     <style name="Ripple">
         <item name="android:colorControlHighlight">#C5C4C4</item>
         <item name="android:radius">18dp</item>

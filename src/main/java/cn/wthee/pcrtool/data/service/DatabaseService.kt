@@ -14,5 +14,5 @@ interface DatabaseService {
 
     //获取数据库版本https://redive.estertion.win/last_version_cn.json
     @GET("last_version_cn.json")
-    suspend fun getDbVersion(): DatabaseVersion
+    fun getDbVersion(): Call<DatabaseVersion>
 }

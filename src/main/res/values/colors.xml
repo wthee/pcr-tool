@@ -2,9 +2,9 @@
 <resources>
     <color name="colorPrimary">#6097f2</color>
     <color name="colorPrimaryDark">#4585EF</color>
-    <color name="colorAccent">#0091EA</color>
+    <color name="colorAccent">#91bef0</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="colorAlphaWhite">#BFFFFFFF</color>
+    <color name="colorAlphaWhite">#49FFFFFF</color>
     <color name="colorAlpha">#00FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="text">#454545</color>
@@ -14,6 +14,4 @@
     <color name="colorAlphtBlack">#B3000000</color>
     <color name="background">#F9F9F9</color>
     <color name="alphaPrimary">#8E9CB1</color>
-    <color name="blue">#4585EF</color>
-    <color name="white">#FFFFFF</color>
 </resources>

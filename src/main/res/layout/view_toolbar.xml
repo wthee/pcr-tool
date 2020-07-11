@@ -4,6 +4,7 @@
     android:id="@+id/view_toolbar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
+    android:fitsSystemWindows="true"
     android:background="@color/colorPrimary">
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -41,7 +42,7 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/other"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_more"
+        android:src="@drawable/ic_settings"
         android:theme="@style/Ripple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

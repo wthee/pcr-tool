@@ -77,13 +77,19 @@ class EquipmentListFragment : Fragment() {
             viewModel.getEquips()
         })
         //获取信息
-        viewModel.equipments.observe(viewLifecycleOwner, Observer {data ->
-            adapter.submitList(data)
-            MainActivity.sp.edit {
-                putInt(Constants.SP_COUNT_EQUIP, data.size)
-            }
-            MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
+        viewModel.equipments.observe(viewLifecycleOwner, Observer { data ->
+            if (data != null && data.isNotEmpty()) {
+                binding.noDataTip.visibility = View.GONE
+                adapter.submitList(data)
+                MainActivity.sp.edit {
+                    putInt(Constants.SP_COUNT_EQUIP, data.size)
+                }
+                MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
 //            adapter.notifyDataSetChanged()
+            } else {
+                binding.noDataTip.visibility = View.VISIBLE
+            }
+
         })
         //刷新
         viewModel.refresh.observe(viewLifecycleOwner, Observer {

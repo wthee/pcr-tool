@@ -72,6 +72,7 @@ class EnemyListFragment : Fragment() {
                 putInt(Constants.SP_COUNT_ENEMY, it)
             }
             MainPagerFragment.tabLayout.getTabAt(2)?.text = it.toString()
+            binding.noDataTip.visibility = if (it != 0) View.GONE else View.VISIBLE
         })
 
         //刷新

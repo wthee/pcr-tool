@@ -99,7 +99,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     if (!MainPagerFragment.cListClick) {
                         MainPagerFragment.cListClick = true
                         Glide.with(fragment.requireContext()).pauseRequests()
-                        MainActivity.currentCharaPosition = adapterPosition
+                        MainActivity.currentCharaPosition = bindingAdapterPosition
                         val bundle = Bundle()
                         bundle.putSerializable("character", character)
                         val extras =
@@ -116,9 +116,9 @@ class CharacterAdapter(private val fragment: Fragment) :
                     }
                 }
                 //长按事件
-                root.setOnLongClickListener {
-                    return@setOnLongClickListener true
-                }
+//                root.setOnLongClickListener {
+//                    return@setOnLongClickListener true
+//                }
             }
         }
     }

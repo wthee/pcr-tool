@@ -28,10 +28,8 @@ class CharacterViewModel @Inject constructor(
         isLoading.postValue(true)
         viewModelScope.launch {
             val data = repository.getInfoAndData().sortedWith(getSort(sortType, asc))
-            if (data.isNotEmpty()) {
-                isLoading.postValue(false)
-                refresh.postValue(false)
-            }
+            isLoading.postValue(false)
+            refresh.postValue(false)
             characters.postValue(data)
         }
     }

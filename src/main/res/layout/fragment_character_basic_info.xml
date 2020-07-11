@@ -43,7 +43,7 @@
                 app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
                 app:menu="@menu/menu_basic_info"
-                app:navigationIcon="@drawable/ic_detail_back" />
+                app:navigationIcon="@drawable/ic_back" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -341,7 +341,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/colorWhite"
         android:src="@drawable/ic_love"
         app:borderWidth="0dp"
         app:fabSize="mini"

@@ -17,6 +17,7 @@ import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.service.DatabaseService
+import cn.wthee.pcrtool.database.DatabaseUpdateHelper.Companion.downloading
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.coroutineScope
@@ -61,6 +62,7 @@ class DatabaseDownloadWorker(
 
     private fun download(inputUrl: String, version: String): Result {
         try {
+
             //创建Retrofit服务
             val service = ApiHelper.createWithClient(
                 DatabaseService::class.java, inputUrl,
@@ -80,12 +82,14 @@ class DatabaseDownloadWorker(
                     }
 
                     override fun onFinish() {
+                        downloading = false
                     }
                 })
             )
 
             //下载文件
             val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
+            downloading = false
             sp.edit {
                 putString(
                     Constants.SP_DATABASE_VERSION,
@@ -150,7 +154,7 @@ class DatabaseDownloadWorker(
                     AppDatabase.getInstance().close()
                     synchronized(AppDatabase::class.java) {
                         UnzippedUtil.deCompress(db, true)
-                        //TODO 更新完成后，重新加载数据
+                        ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                         CharacterListFragment.viewModel.reload.postValue(true)
                     }
                 }

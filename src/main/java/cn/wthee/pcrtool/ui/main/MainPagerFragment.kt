@@ -24,9 +24,9 @@ import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.isList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.PopupMenuUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlin.collections.set
@@ -42,7 +42,6 @@ class MainPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentMainPagerBinding
     private lateinit var viewPager2: ViewPager2
-    private lateinit var search: FloatingActionButton
 
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
@@ -55,30 +54,11 @@ class MainPagerFragment : Fragment() {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         setListener()
-        checkAppUpdate()
         prepareTransitions()
         //设置toolbar
         setHasOptionsMenu(true)
         val toolbar = ToolbarUtil(binding.toolbar)
         toolbar.setLeftIcon(R.drawable.ic_logo)
-        toolbar.rightIcon.setOnClickListener {
-            toolbar.showPopupMenu(
-                requireContext(),
-                R.menu.menu_main,
-                object : ToolbarUtil.ItemClickListener {
-                    override fun onClick(item: MenuItem?) {
-                        when (item?.itemId) {
-                            R.id.settingsFragment -> {
-                                findNavController().navigate(R.id.action_containerFragment_to_settingsContainerFragment)
-                            }
-                        }
-                    }
-                })
-        }
-//        BadgeUtils.attachBadgeDrawable(
-//            BadgeDrawable.create(requireContext()),
-//            binding.layoutToolbar,
-//            null)
         return binding.root
     }
 
@@ -103,7 +83,6 @@ class MainPagerFragment : Fragment() {
     private fun init() {
         //禁止连续点击
         cListClick = false
-        search = binding.search
         progress = binding.progress
         //viewpager2 配置
         viewPager2 = binding.viewPager
@@ -115,6 +94,7 @@ class MainPagerFragment : Fragment() {
                 MainActivity.currentMainPage = position
             }
         })
+        //tab 初始化
         tabLayout = binding.layoutTab
         TabLayoutMediator(
             tabLayout,
@@ -158,53 +138,72 @@ class MainPagerFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
             }
         })
-        //搜索
-        search.setOnClickListener {
-            val layout: View = layoutInflater.inflate(R.layout.layout_search, null)
-            val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setView(layout)
-                .create()
-            dialog.window?.setGravity(Gravity.BOTTOM)
-            dialog.show()
-            val searchView = layout.findViewById<SearchView>(R.id.search_input)
-            searchView.onActionViewExpanded()
-            searchView.isSubmitButtonEnabled = true
-            if (MainActivity.currentMainPage == 0) {
-                searchView.queryHint = "角色名"
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        CharacterListFragment.listAdapter.filter.filter(query)
-                        return false
-                    }
+        //功能模块
+        MainActivity.fab.setOnClickListener {
+            PopupMenuUtil.showPopupMenu(
+                requireContext(),
+                R.menu.menu_main,
+                it,
+                object : PopupMenuUtil.ItemClickListener {
+                    override fun onClick(item: MenuItem?) {
+                        when (item?.itemId) {
+                            R.id.settingsFragment -> {
+                                findNavController().navigate(R.id.action_containerFragment_to_settingsFragment)
+                            }
+                            R.id.search -> {
+                                val layout: View =
+                                    layoutInflater.inflate(R.layout.layout_search, null)
+                                val dialog = MaterialAlertDialogBuilder(requireContext())
+                                    .setView(layout)
+                                    .create()
+                                dialog.window?.setGravity(Gravity.BOTTOM)
+                                dialog.show()
+                                val searchView = layout.findViewById<SearchView>(R.id.search_input)
+                                searchView.onActionViewExpanded()
+                                searchView.isSubmitButtonEnabled = true
+                                if (MainActivity.currentMainPage == 0) {
+                                    searchView.queryHint = "角色名"
+                                    searchView.setOnQueryTextListener(object :
+                                        SearchView.OnQueryTextListener {
+                                        override fun onQueryTextSubmit(query: String?): Boolean {
+                                            CharacterListFragment.listAdapter.filter.filter(query)
+                                            return false
+                                        }
 
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        //重置
-                        if (newText == "" && CharacterListFragment.listAdapter.itemCount < 30) {
-                            sharedCharacterViewModel.getCharacters(
-                                MainActivity.sortType,
-                                MainActivity.sortAsc
-                            )
+                                        override fun onQueryTextChange(newText: String?): Boolean {
+                                            //重置
+                                            if (newText == "" && CharacterListFragment.listAdapter.itemCount < 30) {
+                                                sharedCharacterViewModel.getCharacters(
+                                                    MainActivity.sortType,
+                                                    MainActivity.sortAsc
+                                                )
+                                            }
+                                            return false
+                                        }
+                                    })
+                                } else {
+                                    searchView.queryHint = "装备名"
+                                    searchView.setOnQueryTextListener(object :
+                                        SearchView.OnQueryTextListener {
+                                        override fun onQueryTextSubmit(query: String?): Boolean {
+                                            EquipmentListFragment.adapter.filter.filter(query)
+                                            return false
+                                        }
+
+                                        override fun onQueryTextChange(newText: String?): Boolean {
+                                            //重置
+                                            if (newText == "" && EquipmentListFragment.adapter.itemCount < 50) {
+                                                EquipmentListFragment.viewModel.getEquips()
+                                            }
+                                            return false
+                                        }
+                                    })
+                                }
+                            }
+
                         }
-                        return false
                     }
                 })
-            } else {
-                searchView.queryHint = "装备名"
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        EquipmentListFragment.adapter.filter.filter(query)
-                        return false
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        //重置
-                        if (newText == "" && EquipmentListFragment.adapter.itemCount < 50) {
-                            EquipmentListFragment.viewModel.getEquips()
-                        }
-                        return false
-                    }
-                })
-            }
         }
     }
 
@@ -252,13 +251,5 @@ class MainPagerFragment : Fragment() {
             }
 
         })
-    }
-
-    private fun checkAppUpdate() {
-//        BadgeUtils.attachBadgeDrawable(
-//            BadgeDrawable.create(requireContext()),
-//            binding.toolbar.leftIcon,
-//            null
-//        )
     }
 }

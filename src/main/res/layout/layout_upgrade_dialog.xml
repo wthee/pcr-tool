@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAlphtBlack"
+    android:fitsSystemWindows="true"
     android:gravity="center">
 
     <androidx.cardview.widget.CardView
@@ -114,11 +115,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/l_margin"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:padding="@dimen/s_padding"
+                android:padding="@dimen/m_padding"
                 android:tag="beta_cancel_button"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:textColor="@color/text"
@@ -130,11 +130,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/l_margin"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:padding="@dimen/s_padding"
+                android:padding="@dimen/m_padding"
                 android:tag="beta_confirm_button"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:textColor="@color/colorPrimary"

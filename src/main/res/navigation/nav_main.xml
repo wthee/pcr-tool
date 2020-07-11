@@ -20,15 +20,14 @@
             android:id="@+id/action_containerFragment_to_equipmentDetailsFragment"
             app:destination="@id/equipmentDetailsFragment" />
         <action
-            android:id="@+id/action_containerFragment_to_settingsContainerFragment"
-            app:destination="@id/settingsContainerFragment" />
+            android:id="@+id/action_containerFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
 
-    <fragment
-        android:id="@+id/characterListFragment"
-        android:name="cn.wthee.pcrtool.ui.main.CharacterListFragment"
-        android:label="@string/character_pic"
-        tools:layout="@layout/fragment_character_list" />
     <fragment
         android:id="@+id/characterPagerFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment"
@@ -40,28 +39,9 @@
         android:label="fragment_equipment_details"
         tools:layout="@layout/fragment_equipment_details" />
     <fragment
-        android:id="@+id/equipmentListFragment"
-        android:name="cn.wthee.pcrtool.ui.main.EquipmentListFragment"
-        android:label="fragment_equipment_list"
-        tools:layout="@layout/fragment_equipment_list" />
-    <fragment
-        android:id="@+id/promotionFragment"
-        android:name="cn.wthee.pcrtool.ui.detail.character.PromotionFragment"
-        android:label="PromotionFragment"
-        tools:layout="@layout/fragment_character_promotion" />
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="cn.wthee.pcrtool.ui.setting.MainSettingsFragment"
         android:label="SettingsFragment" />
-    <fragment
-        android:id="@+id/characterSkillFragment"
-        android:name="cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment"
-        android:label="CharacterSkillFragment" />
-    <fragment
-        android:id="@+id/settingsContainerFragment"
-        android:name="cn.wthee.pcrtool.ui.setting.SettingsContainerFragment"
-        android:label="fragment_settings_container"
-        tools:layout="@layout/fragment_settings_container" />
     <action
         android:id="@+id/action_global_containerFragment"
         app:destination="@id/containerFragment" />

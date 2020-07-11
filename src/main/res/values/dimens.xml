@@ -19,6 +19,7 @@
     <dimen name="l_margin">25dp</dimen>
     <dimen name="border_size">2dp</dimen>
     <dimen name="s_padding">5dp</dimen>
+    <dimen name="m_padding">15dp</dimen>
     <dimen name="l_padding">25dp</dimen>
 
     <!--    integer-->
