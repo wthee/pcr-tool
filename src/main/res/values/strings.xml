@@ -48,7 +48,7 @@
     <string name="equip_details">道具详情</string>
     <string name="tab_sort_type">排序方式：</string>
     <string name="tab_all">全部</string>
-    <string name="tab_star">收藏</string>
+    <string name="tab_love">收藏</string>
 
     <string name="skill_action">技能效果</string>
 
@@ -82,5 +82,15 @@
     <string name="auto_update_app">自动更新应用</string>
     <string name="off_auto_app">已取消自动更新功能</string>
     <string name="on_auto_app">打开应用时，自动检查应用版本</string>
+    <string name="filter">筛选</string>
+    <string name="sort">排序</string>
+    <string name="screen">界面</string>
+    <string name="equip_off">只显示装备图标</string>
+    <string name="equip_on">显示装备名称、描述</string>
+    <string name="equip_list">装备列表内容</string>
+    <string name="fab_setting">展开悬浮按钮</string>
+    <string name="fab_on">显示图标和文字</string>
+    <string name="fab_off">只显示图标</string>
+    <string name="next">确认</string>
 
 </resources>

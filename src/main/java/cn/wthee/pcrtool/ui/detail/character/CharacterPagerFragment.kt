@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.detail.character
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import cn.wthee.pcrtool.adapters.CharacterInfoViewPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
+import cn.wthee.pcrtool.utils.FabHelper
 
 class CharacterPagerFragment : Fragment() {
 
@@ -36,6 +38,29 @@ class CharacterPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
+        //添加返回fab
+        FabHelper.addBackFab(this)
+        init()
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+        }
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        view?.isFocusableInTouchMode = true
+        view?.requestFocus()
+        view?.setOnKeyListener(View.OnKeyListener { view, i, keyEvent ->
+            if (keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK) {
+                FabHelper.goBack(this)
+                return@OnKeyListener true
+            }
+            false
+        })
+    }
+
+    private fun init() {
         //加载列表
         viewPager = binding.root
         viewPager.adapter =
@@ -52,10 +77,6 @@ class CharacterPagerFragment : Fragment() {
         } else {
             viewPager.background = null
         }
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
-        }
-        return binding.root
     }
 
 }

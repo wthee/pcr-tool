@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.transition.TransitionInflater
+import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
@@ -19,6 +21,8 @@ import cn.wthee.pcrtool.utils.GlideUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import cn.wthee.pcrtool.utils.OnLoadListener
 import com.google.android.material.appbar.AppBarLayout
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Singleton
 import kotlin.math.abs
 
@@ -62,7 +66,7 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.characterPic.transitionName = "img_${character.id}"
         binding.content.info.transitionName = "content_${character.id}"
         //开始动画
-        ObjectAnimatorHelper.alpha(binding.fab, binding.toolbar)
+        ObjectAnimatorHelper.alpha(binding.fab)
         ObjectAnimatorHelper.enter(binding.basicInfo)
         //加载图片
         loadImages()
@@ -87,12 +91,21 @@ class CharacterBasicInfoFragment : Fragment() {
                 override fun onSuccess(bitmap: Bitmap) {
                     sp.edit {
                         putBoolean("first_click_${character.id}", false)
+                        lifecycleScope.launch {
+                            delay(resources.getInteger(R.integer.item_anim_fast).toLong())
+                            canBack = true
+                        }
+
                     }
                 }
             }
         )
         if (sp.getBoolean("first_click_${character.id}", true)) {
             parentFragment?.startPostponedEnterTransition()
+            lifecycleScope.launch {
+                delay(resources.getInteger(R.integer.item_anim_fast).toLong())
+                canBack = true
+            }
         }
     }
 

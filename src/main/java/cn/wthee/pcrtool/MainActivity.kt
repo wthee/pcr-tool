@@ -3,6 +3,7 @@ package cn.wthee.pcrtool
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
@@ -11,7 +12,7 @@ import cn.wthee.pcrtool.databinding.ActivityMainBinding
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.BuglyHelper
 import cn.wthee.pcrtool.utils.Constants
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,9 +31,10 @@ class MainActivity : AppCompatActivity() {
         lateinit var spSetting: SharedPreferences
         var sortType = Constants.SORT_TYPE
         var sortAsc = Constants.SORT_ASC
+        var canBack = true
 
         //fab 默认隐藏
-        lateinit var fab: FloatingActionButton
+        lateinit var fab: ExtendedFloatingActionButton
     }
 
 
@@ -40,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        fab = binding.fab
         //取消其它任务
         WorkManager.getInstance(this).cancelAllWork()
         //获取版本名
@@ -62,13 +63,24 @@ class MainActivity : AppCompatActivity() {
                 DatabaseUpdateHelper().checkDBVersion()
             }
         }
-
+        //悬浮按钮状态
+        fab = binding.fab
+        val fabExtend = spSetting.getBoolean("fab_status", false)
+        if (fabExtend) fab.extend() else fab.shrink()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
-
         // Bugly 初始设置
         BuglyHelper.init(this)
 
     }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        return if (!canBack && event.keyCode == KeyEvent.KEYCODE_BACK) {
+            true
+        } else {
+            super.dispatchKeyEvent(event)
+        }
+    }
+
 
 }

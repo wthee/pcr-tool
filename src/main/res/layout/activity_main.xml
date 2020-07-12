@@ -22,16 +22,16 @@
         app:navGraph="@navigation/nav_main" />
 
     <!--  特殊需要-->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/m_margin"
+        android:layout_margin="@dimen/l_margin"
         android:backgroundTint="@color/colorWhite"
+        app:iconTint="@color/colorPrimary"
         android:contentDescription="@string/function"
-        android:src="@drawable/ic_function"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
-        app:tint="@color/colorPrimary" />
+        app:icon="@drawable/ic_function"
+        android:text="@string/function"
+        android:textColor="@color/colorPrimary" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

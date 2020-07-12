@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
@@ -16,26 +15,28 @@ import cn.wthee.pcrtool.databinding.FragmentEnemyListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
 @Singleton
 class EnemyListFragment : Fragment() {
 
 
-    private lateinit var binding: FragmentEnemyListBinding
-    private lateinit var adapter: EnemyListAdapter
+    companion object {
+        lateinit var viewModel: EnemyViewModel
+        var filterFlag = 0
+        lateinit var listAdapter: EnemyListAdapter
+    }
 
-    private val viewModel =
-        InjectorUtil.provideEnemyViewModelFactory().create(EnemyViewModel::class.java)
+    private lateinit var binding: FragmentEnemyListBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEnemyListBinding.inflate(inflater, container, false)
+        viewModel =
+            InjectorUtil.provideEnemyViewModelFactory().create(EnemyViewModel::class.java)
         init()
         //设置监听
         setListener()
@@ -48,37 +49,59 @@ class EnemyListFragment : Fragment() {
     private fun init() {
         binding.apply {
             layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
-            adapter = EnemyListAdapter()
-            recycler.adapter = adapter
+            listAdapter = EnemyListAdapter()
+            recycler.adapter = listAdapter
         }
+        viewModel.getAllEnemy()
     }
 
     private fun setObserve() {
-        //加载
-        if (!viewModel.isLoading.hasObservers()) {
-            viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-                MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
-            })
-        }
-        //获取信息
-        lifecycleScope.launch {
-            @OptIn(ExperimentalCoroutinesApi::class)
-            viewModel.data.collectLatest {
-                adapter.submitData(it)
+        viewModel.apply {
+            //加载
+            if (!isLoading.hasObservers()) {
+                isLoading.observe(viewLifecycleOwner, Observer {
+                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
+                })
             }
-        }
-        viewModel.enemyCount.observe(viewLifecycleOwner, Observer {
-            MainActivity.sp.edit {
-                putInt(Constants.SP_COUNT_ENEMY, it)
+            //获取信息
+            if (!enemies.hasObservers()) {
+                viewModel.enemies.observe(viewLifecycleOwner, Observer {
+                    if (it != null && it.isNotEmpty()) {
+                        binding.noDataTip.visibility = View.GONE
+                        listAdapter.submitList(it) {
+                            if (filterFlag.toString() != "0") {
+                                listAdapter.filter.filter(
+                                    filterFlag.toString()
+                                )
+                            }
+                            MainActivity.sp.edit {
+                                putInt(Constants.SP_COUNT_ENEMY, it.size)
+                            }
+                            MainPagerFragment.tabLayout.getTabAt(2)?.text = it.size.toString()
+                        }
+                    } else {
+                        binding.noDataTip.visibility = View.VISIBLE
+                    }
+                })
             }
-            MainPagerFragment.tabLayout.getTabAt(2)?.text = it.toString()
-            binding.noDataTip.visibility = if (it != 0) View.GONE else View.VISIBLE
-        })
+            //数量
+            if (!enemyCount.hasObservers()) {
+                enemyCount.observe(viewLifecycleOwner, Observer {
+                    MainActivity.sp.edit {
+                        putInt(Constants.SP_COUNT_ENEMY, it)
+                    }
+                    MainPagerFragment.tabLayout.getTabAt(2)?.text = it.toString()
+                    binding.noDataTip.visibility = if (it != 0) View.GONE else View.VISIBLE
+                })
+            }
 
-        //刷新
-        viewModel.refresh.observe(viewLifecycleOwner, Observer {
-            binding.layoutRefresh.isRefreshing = it
-        })
+            //刷新
+            if (!refresh.hasObservers()) {
+                refresh.observe(viewLifecycleOwner, Observer {
+                    binding.layoutRefresh.isRefreshing = it
+                })
+            }
+        }
     }
 
     private fun setListener() {
@@ -95,7 +118,7 @@ class EnemyListFragment : Fragment() {
             })
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
-//                viewModel.getAllEnemy()
+                viewModel.getAllEnemy()
             }
 
         }

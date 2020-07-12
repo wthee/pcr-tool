@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.spSetting
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAdapter
@@ -25,11 +26,12 @@ class EquipmentListFragment : Fragment() {
 
     companion object {
         lateinit var list: RecyclerView
-        lateinit var adapter: EquipmentAdapter
-        var isList = true
+        lateinit var listAdapter: EquipmentAdapter
+        var isList = spSetting.getBoolean("equip_is_list", true)
         lateinit var viewModel: EquipmentViewModel
     }
     private lateinit var binding: FragmentEquipmentListBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,40 +63,49 @@ class EquipmentListFragment : Fragment() {
                 gridLayoutManager.orientation = GridLayoutManager.VERTICAL
                 recycler.layoutManager = gridLayoutManager
             }
-            adapter = EquipmentAdapter(isList)
-            recycler.adapter = adapter
+            listAdapter = EquipmentAdapter(isList)
+            recycler.adapter = listAdapter
             recycler.setItemViewCacheSize(100)
         }
     }
 
-    private fun setObserve(){
-        //加载
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
-        })
-        viewModel.isList.observe(viewLifecycleOwner, Observer {
-            init(it)
-            viewModel.getEquips()
-        })
-        //获取信息
-        viewModel.equipments.observe(viewLifecycleOwner, Observer { data ->
-            if (data != null && data.isNotEmpty()) {
-                binding.noDataTip.visibility = View.GONE
-                adapter.submitList(data)
-                MainActivity.sp.edit {
-                    putInt(Constants.SP_COUNT_EQUIP, data.size)
-                }
-                MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
-//            adapter.notifyDataSetChanged()
-            } else {
-                binding.noDataTip.visibility = View.VISIBLE
+    private fun setObserve() {
+        viewModel.apply {
+            //加载
+            if (!isLoading.hasObservers()) {
+                isLoading.observe(viewLifecycleOwner, Observer {
+                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
+                })
             }
+            if (!isList.hasObservers()) {
+                isList.observe(viewLifecycleOwner, Observer {
+                    init(it)
+                    getEquips()
+                })
+            }
+            //获取信息
+            if (!equipments.hasObservers()) {
+                equipments.observe(viewLifecycleOwner, Observer { data ->
+                    if (data != null && data.isNotEmpty()) {
+                        binding.noDataTip.visibility = View.GONE
+                        listAdapter.submitList(data)
+                        MainActivity.sp.edit {
+                            putInt(Constants.SP_COUNT_EQUIP, data.size)
+                        }
+                        MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
+                    } else {
+                        binding.noDataTip.visibility = View.VISIBLE
+                    }
 
-        })
-        //刷新
-        viewModel.refresh.observe(viewLifecycleOwner, Observer {
-            binding.layoutRefresh.isRefreshing = it
-        })
+                })
+            }
+            //刷新
+            if (!refresh.hasObservers()) {
+                refresh.observe(viewLifecycleOwner, Observer {
+                    binding.layoutRefresh.isRefreshing = it
+                })
+            }
+        }
     }
 
     private fun setListener() {

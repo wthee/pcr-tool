@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayout
 import javax.inject.Singleton
 
 
@@ -30,7 +29,7 @@ class CharacterListFragment : Fragment() {
     companion object {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterAdapter
-        var filterFlag = 0
+        var filterParams = "0"
         lateinit var viewModel: CharacterViewModel
     }
 
@@ -51,12 +50,12 @@ class CharacterListFragment : Fragment() {
         setObserve()
         //控件监听
         setListener()
+        viewModel.getCharacters(sortType, sortAsc, "", mapOf())
         return binding.root
     }
 
     //加载数据
     private fun init() {
-        viewModel.getCharacters(sortType, sortAsc)
         listAdapter = CharacterAdapter(this@CharacterListFragment)
         characterList = binding.characterList
         binding.characterList.apply {
@@ -74,39 +73,45 @@ class CharacterListFragment : Fragment() {
     private fun setObserve() {
         viewModel.apply {
             //角色
-            characters.observe(viewLifecycleOwner, Observer { data ->
-                if (data != null && data.isNotEmpty()) {
-                    binding.noDataTip.visibility = View.GONE
-                    listAdapter.submitList(data) {
-                        if (filterFlag.toString() != "0") {
-                            listAdapter.filter.filter(filterFlag.toString())
+            if (!characters.hasObservers()) {
+                characters.observe(viewLifecycleOwner, Observer { data ->
+                    if (data != null && data.isNotEmpty()) {
+                        binding.noDataTip.visibility = View.GONE
+                        listAdapter.submitList(data) {
+                            listAdapter.filter.filter(filterParams)
+                            sp.edit {
+                                putInt(Constants.SP_COUNT_CHARACTER, data.size)
+                            }
+                            MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
                         }
-                        sp.edit {
-                            putInt(Constants.SP_COUNT_CHARACTER, data.size)
-                        }
-                        MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
+                    } else {
+                        binding.noDataTip.visibility = View.VISIBLE
                     }
-                } else {
-                    binding.noDataTip.visibility = View.VISIBLE
-                }
-            })
+                })
+            }
             //刷新
-            refresh.observe(viewLifecycleOwner, Observer {
-                binding.layoutRefresh.isRefreshing = it
-            })
+            if (!refresh.hasObservers()) {
+                refresh.observe(viewLifecycleOwner, Observer {
+                    binding.layoutRefresh.isRefreshing = it
+                })
+            }
             //加载
-            isLoading.observe(viewLifecycleOwner, Observer {
-                MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
-            })
+            if (!isLoading.hasObservers()) {
+                isLoading.observe(viewLifecycleOwner, Observer {
+                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
+                })
+            }
             //重新加载
-            reload.observe(viewLifecycleOwner, Observer {
-                try {
-                    findNavController().popBackStack(R.id.containerFragment, true);
-                    findNavController().navigate(R.id.containerFragment);
-                } catch (e: Exception) {
-                    Log.e(LOG_TAG, e.message.toString())
-                }
-            })
+            if (!reload.hasObservers()) {
+                reload.observe(viewLifecycleOwner, Observer {
+                    try {
+                        findNavController().popBackStack(R.id.containerFragment, true);
+                        findNavController().navigate(R.id.containerFragment);
+                    } catch (e: Exception) {
+                        Log.e(LOG_TAG, e.message.toString())
+                    }
+                })
+            }
         }
     }
 
@@ -115,7 +120,8 @@ class CharacterListFragment : Fragment() {
         binding.apply {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
-                viewModel.getCharacters(sortType, sortAsc)
+                filterParams = "0"
+                viewModel.getCharacters(sortType, sortAsc, "", mapOf())
             }
 
             //滑动时暂停glide加载
@@ -128,33 +134,21 @@ class CharacterListFragment : Fragment() {
                     }
                 }
             })
-            //筛选
-            filterTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-                }
 
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                }
-
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    filterFlag = tab?.position ?: 0
-                    viewModel.getCharacters(sortType, sortAsc)
-                }
-            })
-            //排序
-            sortTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                }
-
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    sortType = tab?.position ?: 0
-                    viewModel.getCharacters(sortType, sortAsc)
-                    binding.characterList.smoothScrollToPosition(0)
-                }
-            })
+//            //排序
+//            sortTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+//                override fun onTabReselected(tab: TabLayout.Tab?) {
+//                }
+//
+//                override fun onTabUnselected(tab: TabLayout.Tab?) {
+//                }
+//
+//                override fun onTabSelected(tab: TabLayout.Tab?) {
+//                    sortType = tab?.position ?: 0
+//                    viewModel.getCharacters(sortType, sortAsc)
+//                    binding.characterList.smoothScrollToPosition(0)
+//                }
+//            })
         }
     }
 }

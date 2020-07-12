@@ -1,16 +1,20 @@
 package cn.wthee.pcrtool.ui.main
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
@@ -20,13 +24,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
-import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.isList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.PopupMenuUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlin.collections.set
@@ -42,10 +43,6 @@ class MainPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentMainPagerBinding
     private lateinit var viewPager2: ViewPager2
-
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +68,7 @@ class MainPagerFragment : Fragment() {
             )?.itemView?.findViewById<AppCompatImageView>(R.id.love)
             vh?.visibility =
                 if (CharacterBasicInfoFragment.isLoved) View.VISIBLE else View.INVISIBLE
+            CharacterListFragment.characterList.scrollToPosition(MainActivity.currentCharaPosition)
         } catch (e: java.lang.Exception) {
         }
     }
@@ -78,6 +76,7 @@ class MainPagerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         binding.progress.visibility = View.GONE
+        MainActivity.fab.visibility = View.VISIBLE
     }
 
     private fun init() {
@@ -123,87 +122,154 @@ class MainPagerFragment : Fragment() {
     }
 
     private fun setListener() {
-        //点击已选择tab， 改变布局
-        binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                if (tab == binding.layoutTab.getTabAt(1)) {
-                    isList = !isList
-                    EquipmentListFragment.viewModel.isList.postValue(isList)
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-            }
-        })
         //功能模块
         MainActivity.fab.setOnClickListener {
-            PopupMenuUtil.showPopupMenu(
-                requireContext(),
-                R.menu.menu_main,
-                it,
-                object : PopupMenuUtil.ItemClickListener {
-                    override fun onClick(item: MenuItem?) {
-                        when (item?.itemId) {
-                            R.id.settingsFragment -> {
-                                findNavController().navigate(R.id.action_containerFragment_to_settingsFragment)
-                            }
-                            R.id.search -> {
-                                val layout: View =
-                                    layoutInflater.inflate(R.layout.layout_search, null)
-                                val dialog = MaterialAlertDialogBuilder(requireContext())
-                                    .setView(layout)
-                                    .create()
-                                dialog.window?.setGravity(Gravity.BOTTOM)
-                                dialog.show()
-                                val searchView = layout.findViewById<SearchView>(R.id.search_input)
-                                searchView.onActionViewExpanded()
-                                searchView.isSubmitButtonEnabled = true
-                                if (MainActivity.currentMainPage == 0) {
-                                    searchView.queryHint = "角色名"
-                                    searchView.setOnQueryTextListener(object :
-                                        SearchView.OnQueryTextListener {
-                                        override fun onQueryTextSubmit(query: String?): Boolean {
-                                            CharacterListFragment.listAdapter.filter.filter(query)
-                                            return false
-                                        }
-
-                                        override fun onQueryTextChange(newText: String?): Boolean {
-                                            //重置
-                                            if (newText == "" && CharacterListFragment.listAdapter.itemCount < 30) {
-                                                sharedCharacterViewModel.getCharacters(
-                                                    MainActivity.sortType,
-                                                    MainActivity.sortAsc
-                                                )
-                                            }
-                                            return false
-                                        }
-                                    })
-                                } else {
-                                    searchView.queryHint = "装备名"
-                                    searchView.setOnQueryTextListener(object :
-                                        SearchView.OnQueryTextListener {
-                                        override fun onQueryTextSubmit(query: String?): Boolean {
-                                            EquipmentListFragment.adapter.filter.filter(query)
-                                            return false
-                                        }
-
-                                        override fun onQueryTextChange(newText: String?): Boolean {
-                                            //重置
-                                            if (newText == "" && EquipmentListFragment.adapter.itemCount < 50) {
-                                                EquipmentListFragment.viewModel.getEquips()
-                                            }
-                                            return false
-                                        }
-                                    })
-                                }
-                            }
-
-                        }
-                    }
-                })
+            val view: View =
+                LayoutInflater.from(context).inflate(R.layout.layout_function_list, null)
+            val popupWindow = PopupWindow(
+                view,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            popupWindow.isOutsideTouchable = true
+            popupWindow.isFocusable = true
+            popupWindow.animationStyle = R.style.PopUpAnimation
+            popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+            popupWindow.showAtLocation(it, Gravity.END or Gravity.BOTTOM, 0, 0)
+            val setting = view.findViewById<MaterialButton>(R.id.setting)
+            setting.setOnClickListener {
+                findNavController().navigate(R.id.action_containerFragment_to_settingsFragment)
+                popupWindow.dismiss()
+            }
+//            PopupMenuUtil.showPopupMenu(
+//                requireContext(),
+//                R.menu.menu_main,
+//                it,
+//                filterParams == "1",
+//                object : PopupMenuUtil.ItemClickListener {
+//                    override fun onClick(item: MenuItem?) {
+//                        when (item?.itemId) {
+//                            R.id.settingsFragment -> {
+//                                findNavController().navigate(R.id.action_containerFragment_to_settingsFragment)
+//                            }
+//                            R.id.love -> {
+//                                filterParams = if (filterParams == "1") {
+//                                    ToastUtil.short("显示全部")
+//                                    "0"
+//                                } else {
+//                                    ToastUtil.short("仅显示收藏")
+//                                    "1"
+//                                }
+//                                when (MainActivity.currentMainPage) {
+//                                    0 -> {
+//                                        CharacterListFragment.viewModel.getCharacters(
+//                                            sortType,
+//                                            sortAsc, "", mapOf()
+//                                        )
+//                                        CharacterListFragment.listAdapter.notifyDataSetChanged()
+//                                    }
+//                                    1 -> {
+//                                        CharacterListFragment.listAdapter.notifyDataSetChanged()
+//                                    }
+//                                    2 -> {
+//                                        CharacterListFragment.listAdapter.notifyDataSetChanged()
+//                                    }
+//                                }
+//
+//
+//                            }
+//                            R.id.search -> {
+//                                //显示搜索布局
+//                                val layout = layoutInflater.inflate(R.layout.layout_search, null)
+//                                val dialog = MaterialAlertDialogBuilder(requireContext())
+//                                    .setView(layout)
+//                                    .create()
+//                                dialog.window?.setGravity(Gravity.BOTTOM)
+//                                dialog.show()
+//                                //搜索框
+//                                val searchView = layout.findViewById<SearchView>(R.id.search_input)
+//                                searchView.onActionViewExpanded()
+//                                searchView.isSubmitButtonEnabled = true
+//                                when (MainActivity.currentMainPage) {
+//                                    0 -> searchView.queryHint = "角色名"
+//                                    1 -> searchView.queryHint = "装备名"
+//                                    2 -> searchView.queryHint = "怪物名"
+//                                }
+//                                searchView.setOnQueryTextListener(object :
+//                                    SearchView.OnQueryTextListener {
+//                                    override fun onQueryTextSubmit(query: String?): Boolean {
+//                                        when (MainActivity.currentMainPage) {
+//                                            0 -> {
+//                                                //角色名字
+//                                                CharacterListFragment.viewModel.getCharacters(
+//                                                    sortType,
+//                                                    sortAsc, query ?: "", mapOf()
+//                                                )
+//                                            }
+//                                            1 -> EquipmentListFragment.listAdapter.filter.filter(
+//                                                query
+//                                            )
+//                                            2 -> EnemyListFragment.listAdapter.filter.filter(
+//                                                query
+//                                            )
+//                                        }
+//
+//                                        return false
+//                                    }
+//
+//                                    override fun onQueryTextChange(newText: String?): Boolean {
+//                                        //重置
+//                                        if (newText == "") {
+//                                            when (MainActivity.currentMainPage) {
+//                                                0 -> CharacterListFragment.viewModel.getCharacters(
+//                                                    sortType,
+//                                                    sortAsc, "", mapOf()
+//                                                )
+//                                                1 -> EquipmentListFragment.viewModel.getEquips()
+//                                                2 -> EnemyListFragment.viewModel.getAllEnemy()
+//                                            }
+//                                        }
+//
+//                                        return false
+//                                    }
+//                                })
+//                            }
+//                            R.id.filter -> {
+//                                val layout = layoutInflater.inflate(R.layout.layout_filter, null)
+//                                val dialog = MaterialAlertDialogBuilder(requireContext())
+//                                    .setView(layout)
+//                                    .create()
+//                                dialog.window?.setGravity(Gravity.BOTTOM)
+//                                dialog.show()
+//                                //位置筛选
+//                                val checkChara1 =
+//                                    layout.findViewById<MaterialCheckBox>(R.id.checkbox_chara_1)
+//                                val checkChara2 =
+//                                    layout.findViewById<MaterialCheckBox>(R.id.checkbox_chara_2)
+//                                val checkChara3 =
+//                                    layout.findViewById<MaterialCheckBox>(R.id.checkbox_chara_3)
+//                                val next = layout.findViewById<MaterialButton>(R.id.next)
+//                                //初始值
+//                                val ps = filterParams.split(":")
+//                                if (ps.isNotEmpty() && ps.size == 5) {
+//                                    checkChara1.isChecked = ps[1] == "1"
+//                                    checkChara2.isChecked = ps[2] == "1"
+//                                    checkChara3.isChecked = ps[3] == "1"
+//                                }
+//                                next.setOnClickListener {
+//                                    dialog.dismiss()
+//                                    filterParams = "position:"
+//                                    filterParams += if (checkChara1.isChecked) "1:" else "0:"
+//                                    filterParams += if (checkChara2.isChecked) "1:" else "0:"
+//                                    filterParams += if (checkChara3.isChecked) "1:" else "0:"
+//                                    CharacterListFragment.viewModel.getCharacters(
+//                                        sortType,
+//                                        sortAsc, "", mapOf()
+//                                    )
+//                                }
+//                            }
+//                        }
+//                    }
+//                })
         }
     }
 
@@ -218,7 +284,8 @@ class MainPagerFragment : Fragment() {
                 names: MutableList<String>?,
                 sharedElements: MutableMap<String, View>?
             ) {
-                if (MainActivity.currentCharaPosition != 0) binding.layoutToolbar.setExpanded(false)
+                //返回时隐藏toolbar
+                binding.layoutToolbar.setExpanded(false)
                 try {
                     if (names!!.isNotEmpty()) {
                         sharedElements ?: return

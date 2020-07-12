@@ -8,7 +8,8 @@ import javax.inject.Singleton
 class CharacterRepository @Inject constructor(private val characterDao: CharacterDao) {
 
     //获取角色个人资料
-    suspend fun getInfoAndData() = characterDao.getInfoAndData()
+    suspend fun getInfoAndData(name: String, filter: Map<String, Int>) =
+        characterDao.getInfoAndData(name)
 
     //获取角色Rank所需装备id
     suspend fun getEquipmentIds(unitId: Int, rank: Int) =

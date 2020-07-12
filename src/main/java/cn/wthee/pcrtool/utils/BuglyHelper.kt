@@ -64,6 +64,6 @@ object BuglyHelper {
         }
         //初始化
         Beta.initDelay = 5000
-        Bugly.init(applicationContext, PrivateData.APP_ID, false)
+        Bugly.init(applicationContext, PrivateData.APP_ID, true)
     }
 }

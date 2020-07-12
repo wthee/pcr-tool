@@ -3,6 +3,28 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/screen">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="equip_is_list"
+            app:summaryOff="@string/equip_off"
+            app:summaryOn="@string/equip_on"
+            app:title="@string/equip_list" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="fab_status"
+            app:summaryOff="@string/fab_off"
+            app:summaryOn="@string/fab_on"
+            app:title="@string/fab_setting" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/data">
 
         <Preference

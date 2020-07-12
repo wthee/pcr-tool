@@ -10,11 +10,11 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
 
+    <style name="PopUpAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
 
     <style name="CollapsedTitle">
         <item name="android:textSize">20sp</item>

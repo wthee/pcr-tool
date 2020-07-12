@@ -60,7 +60,7 @@ data class CharacterBasicInfo(
     }
 
     fun getSelf() =
-        if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
+        if (this.selfText.contains("test")) {
             "......"
         } else {
             this.selfText.replace("\\n", "")
@@ -95,11 +95,7 @@ data class CharacterBasicInfo(
 
     fun getLoveSelfText(): String {
         val text = serif1 + serif2 + serif3
-        return if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
-            "......"
-        } else {
-            text.replace("\\n", "")
-        }
+        return text.replace("\\n", "")
     }
 
     fun getFixedComment() = comment.replace("\\n", "")

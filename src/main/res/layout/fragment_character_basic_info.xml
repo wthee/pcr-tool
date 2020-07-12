@@ -40,10 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
                 android:background="@android:color/transparent"
-                app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
-                app:menu="@menu/menu_basic_info"
-                app:navigationIcon="@drawable/ic_back" />
+                app:menu="@menu/menu_basic_info" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

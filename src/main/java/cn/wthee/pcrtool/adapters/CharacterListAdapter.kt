@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
@@ -98,8 +99,9 @@ class CharacterAdapter(private val fragment: Fragment) :
                     //避免同时点击两个
                     if (!MainPagerFragment.cListClick) {
                         MainPagerFragment.cListClick = true
+                        canBack = false
                         Glide.with(fragment.requireContext()).pauseRequests()
-                        MainActivity.currentCharaPosition = bindingAdapterPosition
+                        MainActivity.currentCharaPosition = adapterPosition
                         val bundle = Bundle()
                         bundle.putSerializable("character", character)
                         val extras =
@@ -127,23 +129,35 @@ class CharacterAdapter(private val fragment: Fragment) :
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charString = constraint.toString()
-                val filterDatas = if (charString.isEmpty()) {
+                val param = constraint.toString()
+                val filterDatas = if (param.isEmpty()) {
                     //没有过滤的内容，则使用源数据
                     currentList
                 } else {
                     val filteredList = arrayListOf<CharacterBasicInfo>()
                     try {
                         currentList.forEachIndexed { _, it ->
-                            if (charString == "1" && sp.getBoolean(it.id.toString(), false)) {
-                                //筛选已收藏
+                            val c0 = param == "1" && sp.getBoolean(it.id.toString(), false)//已收藏
+                            if (c0) {
                                 filteredList.add(it)
-                            } else if (charString == "0") {
-                                //全部
+                            } else if (param == "0") {
                                 filteredList.add(it)
-                            } else if (it.name.contains(charString)) {
-                                //搜索
-                                filteredList.add(it)
+                            } else {
+                                val ps = param.split(":")
+                                if (ps.isNotEmpty() && ps.size == 5) {
+                                    if (ps[1] == "1" && it.position in 0..300) {
+                                        filteredList.add(it)
+                                        return@forEachIndexed
+                                    }
+                                    if (ps[2] == "1" && it.position in 301..600) {
+                                        filteredList.add(it)
+                                        return@forEachIndexed
+                                    }
+                                    if (ps[3] == "1" && it.position >= 601) {
+                                        filteredList.add(it)
+                                        return@forEachIndexed
+                                    }
+                                }
                             }
                         }
                     } catch (e: Exception) {
@@ -153,12 +167,17 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 val filterResults = FilterResults()
                 filterResults.values = filterDatas
+                filterResults.count = filterDatas.size
                 return filterResults
             }
 
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 submitList(results?.values as List<CharacterBasicInfo>)
+                sp.edit {
+                    putInt(Constants.SP_COUNT_CHARACTER, results.count)
+                }
+                MainPagerFragment.tabLayout.getTabAt(0)?.text = results.count.toString()
             }
         }
     }

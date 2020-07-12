@@ -7,6 +7,6 @@
         android:id="@+id/action_love"
         android:icon="@drawable/ic_love"
         app:showAsAction="ifRoom"
-        android:title="@string/tab_star" />
+        android:title="@string/tab_love" />
 
 </menu>

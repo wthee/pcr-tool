@@ -3,8 +3,10 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.paging.PagingDataAdapter
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
@@ -17,7 +19,7 @@ import cn.wthee.pcrtool.utils.GlideUtil
 
 
 class EnemyListAdapter() :
-    PagingDataAdapter<EnemyData, EnemyListAdapter.ViewHolder>(EnemyDiffCallback()) {
+    ListAdapter<EnemyData, EnemyListAdapter.ViewHolder>(EnemyDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemEnemyBinding.inflate(
@@ -33,38 +35,38 @@ class EnemyListAdapter() :
     }
 
     @Suppress("UNCHECKED_CAST")
-//    override fun getFilter(): Filter {
-//        return object : Filter() {
-//            override fun performFiltering(constraint: CharSequence?): FilterResults {
-//                val charString = constraint.toString()
-//                val filterDatas = if (charString.isEmpty()) {
-//                    //没有过滤的内容，则使用源数据
-//
-//                } else {
-//                    val filteredList = arrayListOf<EnemyData>()
-//                    try {
-//                        currentList?.forEachIndexed { _, it ->
-//                            if (it.name.contains(charString)) {
-//                                //搜索
-//                                filteredList.add(it)
-//                            }
-//                        }
-//                    } catch (e: Exception) {
-//                        e.message
-//                    }
-//                    filteredList
-//                }
-//                val filterResults = FilterResults()
-//                filterResults.values = filterDatas
-//                return filterResults
-//            }
-//
-//
-//            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-//                submitList(results?.values as PagedList<EnemyData>)
-//            }
-//        }
-//    }
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charString = constraint.toString()
+                val filterDatas = if (charString.isEmpty()) {
+                    //没有过滤的内容，则使用源数据
+                    currentList
+                } else {
+                    val filteredList = arrayListOf<EnemyData>()
+                    try {
+                        currentList?.forEachIndexed { _, it ->
+                            if (it.unit_name.contains(charString)) {
+                                //搜索
+                                filteredList.add(it)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.message
+                    }
+                    filteredList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filterDatas
+                return filterResults
+            }
+
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                submitList(results?.values as List<EnemyData>)
+            }
+        }
+    }
 
     inner class ViewHolder(private val binding: ItemEnemyBinding) :
         RecyclerView.ViewHolder(binding.root) {

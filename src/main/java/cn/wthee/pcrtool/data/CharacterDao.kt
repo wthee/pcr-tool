@@ -40,9 +40,9 @@ interface CharacterDao {
                 "LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id " +
                 "LEFT JOIN actual_unit_background ON (unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31) " +
                 "LEFT JOIN character_love_rankup_text ON character_love_rankup_text.chara_id = unit_data.unit_id / 100 " +
-                "WHERE unit_profile.unit_id <> 110201"
+                "WHERE unit_profile.unit_name like '%' || :unitName || '%'"
     )
-    suspend fun getInfoAndData(): List<CharacterBasicInfo>
+    suspend fun getInfoAndData(unitName: String): List<CharacterBasicInfo>
 
     //角色Rank所需装备id
     @Query("SELECT * FROM unit_promotion WHERE unit_promotion.unit_id = :unitId AND unit_promotion.promotion_level = :rank ")
