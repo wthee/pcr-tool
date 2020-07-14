@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment
 import cn.wthee.pcrtool.ui.detail.character.PromotionFragment
+import kotlin.math.abs
 
 class CharacterInfoViewPagerAdapter(
     fragmentManager: FragmentManager,
@@ -82,7 +83,7 @@ class DepthPageTransformer : ViewPager2.PageTransformer {
                     translationZ = -1f
 
                     // Scale the page down (between MIN_SCALE and 1)
-                    val scaleFactor = (MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position)))
+                    val scaleFactor = (MIN_SCALE + (1 - MIN_SCALE) * (1 - abs(position)))
                     scaleX = scaleFactor
                     scaleY = scaleFactor
                 }

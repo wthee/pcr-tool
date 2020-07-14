@@ -19,9 +19,8 @@ import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
-import javax.inject.Singleton
 
-@Singleton
+
 class EquipmentListFragment : Fragment() {
 
     companion object {

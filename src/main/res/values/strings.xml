@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PCR Tool</string>
     <string name="birth">%s 月 %s 日</string>
-    <string name="three">%s / %s / %s</string>
+    <string name="character_detail">%s / %s / %s / %d</string>
     <string name="blood">%s 型</string>
     <string name="character_info">角色详情</string>
     <string name="character_pic">角色资料</string>
@@ -63,11 +63,12 @@
     <string name="data_null_character">角色数据获取失败~</string>
     <string name="data_null_equip">装备数据获取失败~</string>
     <string name="data_null_enemy">怪物数据获取失败~</string>
-    <string name="database_version">数据库版本</string>
-    <string name="update_db">检查数据库更新</string>
+
+    <!-- 设置页面   -->
+    <string name="update_db">数据库版本</string>
     <string name="auto_update_db">自动更新数据库</string>
-    <string name="off_auto_db">已取消自动更新功能</string>
-    <string name="on_auto_db">打开应用时，自动检查数据库版本</string>
+    <string name="off_auto_db">已取消自动更新</string>
+    <string name="on_auto_db">打开应用时，自动更新数据库</string>
     <string name="database_info">数据信息</string>
     <string name="data">数据</string>
     <string name="open_source">开源信息</string>
@@ -78,17 +79,17 @@
     <string name="data_from_hint">感谢大佬无私提供数据接口</string>
     <string name="shizuru_note">静流笔记</string>
     <string name="dev_tip">用过此应用后，决定开发 PCR Tool</string>
-    <string name="check_app_update">检查应用更新</string>
+    <string name="check_app_update">应用版本</string>
     <string name="auto_update_app">自动更新应用</string>
-    <string name="off_auto_app">已取消自动更新功能</string>
-    <string name="on_auto_app">打开应用时，自动检查应用版本</string>
+    <string name="off_auto_app">已取消自动更新</string>
+    <string name="on_auto_app">打开应用时，自动更新应用</string>
     <string name="filter">筛选</string>
     <string name="sort">排序</string>
     <string name="screen">界面</string>
     <string name="equip_off">只显示装备图标</string>
     <string name="equip_on">显示装备名称、描述</string>
-    <string name="equip_list">装备列表内容</string>
-    <string name="fab_setting">展开悬浮按钮</string>
+    <string name="equip_list">装备列表</string>
+    <string name="fab_setting">悬浮按钮</string>
     <string name="fab_on">显示图标和文字</string>
     <string name="fab_off">只显示图标</string>
     <string name="next">确认</string>

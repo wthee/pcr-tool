@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.core.content.edit
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -81,15 +82,20 @@ class CharacterAdapter(private val fragment: Fragment) :
                     })
                 //设置位置
                 content.positionType.background =
-                    fragment.resources.getDrawable(character.getPositionIcon(), null)
+                    ResourcesCompat.getDrawable(
+                        fragment.resources,
+                        character.getPositionIcon(),
+                        null
+                    )
                 //基本信息
                 content.name.text = character.name
                 content.catah.text = character.catchCopy
                 content.three.text = fragment.resources.getString(
-                    R.string.three,
+                    R.string.character_detail,
                     character.age,
                     character.height,
-                    character.weight
+                    character.weight,
+                    character.position
                 )
                 //设置共享元素名称
                 characterPic.transitionName = "img_${character.id}"
@@ -130,6 +136,7 @@ class CharacterAdapter(private val fragment: Fragment) :
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val param = constraint.toString()
+                val ps = param.split(":")
                 val filterDatas = if (param.isEmpty()) {
                     //没有过滤的内容，则使用源数据
                     currentList
@@ -137,13 +144,12 @@ class CharacterAdapter(private val fragment: Fragment) :
                     val filteredList = arrayListOf<CharacterBasicInfo>()
                     try {
                         currentList.forEachIndexed { _, it ->
-                            val c0 = param == "1" && sp.getBoolean(it.id.toString(), false)//已收藏
+                            val c0 = ps[0] == "1" && sp.getBoolean(it.id.toString(), false)//已收藏
                             if (c0) {
                                 filteredList.add(it)
                             } else if (param == "0") {
                                 filteredList.add(it)
                             } else {
-                                val ps = param.split(":")
                                 if (ps.isNotEmpty() && ps.size == 5) {
                                     if (ps[1] == "1" && it.position in 0..300) {
                                         filteredList.add(it)

@@ -23,13 +23,12 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import javax.inject.Singleton
 
 
 private const val EQUIP = "equip"
 private const val DIALOG = "dialog"
 
-@Singleton
+
 class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
     private lateinit var equip: EquipmentData

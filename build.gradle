@@ -55,11 +55,6 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
     implementation 'com.tencent.bugly:nativecrashreport:3.7.3'
 
-    //Dagger2
-    def dagger_version = "2.28.1"
-    api "com.google.dagger:dagger:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-
     //Glide
     def glide_version = "4.11.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"

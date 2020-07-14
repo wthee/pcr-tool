@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
 
 
-class EquipmentPromotionAdapter() :
+class EquipmentPromotionAdapter :
     ListAdapter<EquipmentData, EquipmentPromotionAdapter.ViewHolder>(EquipDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

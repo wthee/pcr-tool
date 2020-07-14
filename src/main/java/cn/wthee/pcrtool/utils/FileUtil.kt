@@ -17,8 +17,8 @@ object FileUtil {
     } + "/databases"
 
     //数据库路径
-    fun getDatabasePath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_Name
-    fun getDatabaseWalPath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_WAL
+    private fun getDatabasePath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_Name
+    private fun getDatabaseWalPath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_WAL
     fun getDatabaseZipPath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_DOWNLOAD_File_Name
 
     //数据库判断

@@ -11,11 +11,9 @@ import cn.wthee.pcrtool.data.model.add
 import cn.wthee.pcrtool.data.model.multiply
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CharacterPromotionViewModel @Inject constructor(
+
+class CharacterPromotionViewModel(
     private val characterRepository: CharacterRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {

@@ -6,11 +6,9 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.model.CharacterSkillInfo
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CharacterSkillViewModel @Inject constructor(
+
+class CharacterSkillViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
 

@@ -15,9 +15,8 @@ import cn.wthee.pcrtool.databinding.FragmentEnemyListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
-import javax.inject.Singleton
 
-@Singleton
+
 class EnemyListFragment : Fragment() {
 
 

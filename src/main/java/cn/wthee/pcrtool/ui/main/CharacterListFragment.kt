@@ -1,12 +1,14 @@
 package cn.wthee.pcrtool.ui.main
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -20,21 +22,23 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
-import javax.inject.Singleton
 
 
-@Singleton
+
+
 class CharacterListFragment : Fragment() {
 
     companion object {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterAdapter
         var filterParams = "0"
-        lateinit var viewModel: CharacterViewModel
+        lateinit var handler: Handler
     }
 
     private lateinit var binding: FragmentCharacterListBinding
-
+    private val viewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +46,6 @@ class CharacterListFragment : Fragment() {
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         binding.layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
-        viewModel =
-            InjectorUtil.provideCharacterViewModelFactory().create(CharacterViewModel::class.java)
         //加载数据
         init()
         //监听数据变化
@@ -51,6 +53,10 @@ class CharacterListFragment : Fragment() {
         //控件监听
         setListener()
         viewModel.getCharacters(sortType, sortAsc, "", mapOf())
+        handler = Handler(Handler.Callback {
+            viewModel.reload.postValue(true)
+            return@Callback true
+        })
         return binding.root
     }
 
@@ -105,8 +111,8 @@ class CharacterListFragment : Fragment() {
             if (!reload.hasObservers()) {
                 reload.observe(viewLifecycleOwner, Observer {
                     try {
-                        findNavController().popBackStack(R.id.containerFragment, true);
-                        findNavController().navigate(R.id.containerFragment);
+                        findNavController().popBackStack(R.id.containerFragment, true)
+                        findNavController().navigate(R.id.containerFragment)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())
                     }

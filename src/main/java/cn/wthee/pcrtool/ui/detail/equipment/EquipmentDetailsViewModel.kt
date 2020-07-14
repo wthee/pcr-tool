@@ -9,11 +9,9 @@ import cn.wthee.pcrtool.data.model.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class EquipmentDetailsViewModel @Inject constructor(
+
+class EquipmentDetailsViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 

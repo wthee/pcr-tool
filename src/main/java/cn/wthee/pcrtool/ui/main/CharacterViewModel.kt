@@ -10,11 +10,9 @@ import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
 import cn.wthee.pcrtool.utils.Constants.SORT_POSITION
 import cn.wthee.pcrtool.utils.Constants.SORT_WEIGHT
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CharacterViewModel @Inject constructor(
+
+class CharacterViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
 

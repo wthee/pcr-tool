@@ -10,12 +10,12 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
+import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.tencent.bugly.beta.Beta
-import javax.inject.Singleton
 
-@Singleton
+
 class MainSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -39,7 +39,21 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         fabStatus?.setOnPreferenceChangeListener { _, newValue ->
             val value = newValue as Boolean
-            if (value) MainActivity.fab.extend() else MainActivity.fab.shrink()
+            if (value) {
+                MainActivity.fab.extend()
+                MainPagerFragment.fabSetting.extend()
+                MainPagerFragment.fabLove.extend()
+                MainPagerFragment.fabSearch.extend()
+                MainPagerFragment.fabFilter.extend()
+                MainPagerFragment.fabSort.extend()
+            } else {
+                MainActivity.fab.shrink()
+                MainPagerFragment.fabSetting.shrink()
+                MainPagerFragment.fabLove.shrink()
+                MainPagerFragment.fabSearch.shrink()
+                MainPagerFragment.fabFilter.shrink()
+                MainPagerFragment.fabSort.shrink()
+            }
             return@setOnPreferenceChangeListener true
         }
         forceUpdateDb?.setOnPreferenceClickListener {

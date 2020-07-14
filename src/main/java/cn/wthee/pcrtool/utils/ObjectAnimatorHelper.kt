@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 object ObjectAnimatorHelper {
 
-    private val drt = 500L
+    private const val drt = 500L
 
     fun enter(vararg view: View) {
         val holder1 = PropertyValuesHolder.ofFloat("translationY", 50f, 0f)

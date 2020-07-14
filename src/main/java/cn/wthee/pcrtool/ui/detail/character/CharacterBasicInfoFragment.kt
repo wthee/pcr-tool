@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -23,10 +24,10 @@ import cn.wthee.pcrtool.utils.OnLoadListener
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Singleton
+
 import kotlin.math.abs
 
-@Singleton
+
 class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
@@ -171,6 +172,7 @@ class CharacterBasicInfoFragment : Fragment() {
         }
     }
 
+    //设置收藏
     private fun setLove(isLoved: Boolean) {
         sp.edit {
             putBoolean(
@@ -211,10 +213,11 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             content.three.text = requireActivity().resources.getString(
-                R.string.three,
+                R.string.character_detail,
                 character.age,
                 character.height,
-                character.weight
+                character.weight,
+                character.position
             )
             birth.text = requireActivity().resources.getString(
                 R.string.birth,
@@ -230,7 +233,8 @@ class CharacterBasicInfoFragment : Fragment() {
             self.text = character.getSelf()
 //            position.text = character.position.toString()
             content.positionType.background =
-                resources.getDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
                     character.getPositionIcon(),
                     null
                 )

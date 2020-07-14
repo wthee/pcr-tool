@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
 
 
-class EnemyListAdapter() :
+class EnemyListAdapter :
     ListAdapter<EnemyData, EnemyListAdapter.ViewHolder>(EnemyDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -45,7 +45,7 @@ class EnemyListAdapter() :
                 } else {
                     val filteredList = arrayListOf<EnemyData>()
                     try {
-                        currentList?.forEachIndexed { _, it ->
+                        currentList.forEachIndexed { _, it ->
                             if (it.unit_name.contains(charString)) {
                                 //搜索
                                 filteredList.add(it)

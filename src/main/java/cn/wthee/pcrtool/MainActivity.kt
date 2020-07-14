@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         //fab 默认隐藏
         lateinit var fab: ExtendedFloatingActionButton
+
     }
 
 
