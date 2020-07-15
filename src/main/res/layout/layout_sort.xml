@@ -3,50 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/s_padding">
-
+    android:fitsSystemWindows="true"
+    android:paddingStart="@dimen/m_padding"
+    android:paddingEnd="@dimen/m_padding"
+    android:paddingTop="@dimen/s_padding">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/sort_age"
+        android:id="@+id/filter_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/age"
-        app:layout_constraintBottom_toTopOf="@+id/sort_height"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_margin="@dimen/s_margin"
+        android:text="@string/title_sort"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/sort_height"
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner_sort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_height"
-        app:layout_constraintBottom_toTopOf="@+id/sort_weight"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="@dimen/s_margin"
+        android:layout_marginTop="@dimen/m_margin"
+        app:layout_constraintTop_toBottomOf="@id/filter_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sort_age" />
+        android:spinnerMode="dialog"
+        android:entries="@array/sort_type_character" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/sort_weight"
+    <RadioGroup
+        android:id="@+id/radio_sort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_weight"
-        app:layout_constraintBottom_toTopOf="@+id/sort_position"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sort_height" />
+        android:orientation="horizontal"
+        android:checkedButton="@id/sort_asc"
+        app:layout_constraintStart_toEndOf="@id/spinner_sort"
+        app:layout_constraintTop_toTopOf="@id/spinner_sort"
+        app:layout_constraintBottom_toBottomOf="@id/spinner_sort">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/sort_position"
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/sort_asc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="升序" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/sort_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="降序" />
+
+    </RadioGroup>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/next"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_position"
+        android:text="@string/next"
+        app:icon="@drawable/ic_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sort_weight" />
+        app:layout_constraintTop_toBottomOf="@id/spinner_sort" />
 </androidx.constraintlayout.widget.ConstraintLayout>

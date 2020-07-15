@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.utils
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.R
 
 object FabHelper {
@@ -23,9 +24,11 @@ object FabHelper {
     }
 
     fun goBack(fragment: Fragment) {
-        setIcon(R.drawable.ic_function)
-        fragment.findNavController().navigateUp()
-        MainActivity.fab.text = fragment.getString(R.string.function)
+        if (canBack) {
+            setIcon(R.drawable.ic_function)
+            fragment.findNavController().navigateUp()
+            MainActivity.fab.text = fragment.getString(R.string.function)
+        }
     }
 
 }

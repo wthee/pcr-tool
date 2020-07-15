@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         BuglyHelper.init(this)
 
     }
-
+    //动画执行完之前，禁止直接返回
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         return if (!canBack && event.keyCode == KeyEvent.KEYCODE_BACK) {
             true
@@ -82,6 +82,4 @@ class MainActivity : AppCompatActivity() {
             super.dispatchKeyEvent(event)
         }
     }
-
-
 }

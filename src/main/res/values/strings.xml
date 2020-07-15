@@ -85,6 +85,7 @@
     <string name="on_auto_app">打开应用时，自动更新应用</string>
     <string name="filter">筛选</string>
     <string name="sort">排序</string>
+    <string name="title_sort">排序设置</string>
     <string name="screen">界面</string>
     <string name="equip_off">只显示装备图标</string>
     <string name="equip_on">显示装备名称、描述</string>
@@ -93,5 +94,6 @@
     <string name="fab_on">显示图标和文字</string>
     <string name="fab_off">只显示图标</string>
     <string name="next">确认</string>
+    <string name="title_tip">信息提示</string>
 
 </resources>

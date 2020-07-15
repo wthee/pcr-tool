@@ -231,7 +231,6 @@ class CharacterBasicInfoFragment : Fragment() {
             favorite.text = character.favorite
             cv.text = character.voice
             self.text = character.getSelf()
-//            position.text = character.position.toString()
             content.positionType.background =
                 ResourcesCompat.getDrawable(
                     resources,

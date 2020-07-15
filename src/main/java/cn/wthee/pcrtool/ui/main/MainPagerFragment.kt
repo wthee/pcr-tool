@@ -26,14 +26,11 @@ import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
-import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
+import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.filterParams
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -48,7 +45,7 @@ class MainPagerFragment : Fragment() {
         lateinit var progress: ProgressBar
 
         //弹出fab
-        lateinit var popView: View
+        lateinit var popView: LayoutFunctionListBinding
         lateinit var fabSetting: ExtendedFloatingActionButton
         lateinit var fabLove: ExtendedFloatingActionButton
         lateinit var fabSearch: ExtendedFloatingActionButton
@@ -138,13 +135,12 @@ class MainPagerFragment : Fragment() {
             }).attach()
 
         //popupWindow fabs
-        popView =
-            LayoutInflater.from(context).inflate(R.layout.layout_function_list, null)
-        fabSetting = popView.findViewById(R.id.setting)
-        fabLove = popView.findViewById(R.id.love)
-        fabSearch = popView.findViewById(R.id.search)
-        fabFilter = popView.findViewById(R.id.filter)
-        fabSort = popView.findViewById(R.id.sort)
+        popView = LayoutFunctionListBinding.inflate(layoutInflater)
+        fabSetting = popView.setting
+        fabLove = popView.love
+        fabSearch = popView.search
+        fabFilter = popView.filter
+        fabSort = popView.sort
         if (MainActivity.spSetting.getBoolean("fab_status", false)) {
             fabSetting.extend()
             fabLove.extend()
@@ -165,7 +161,7 @@ class MainPagerFragment : Fragment() {
         MainActivity.fab.setOnClickListener {
             //弹出功能列表
             val popupWindow = PopupWindow(
-                popView,
+                popView.root,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
             )
             popupWindow.isOutsideTouchable = true
@@ -177,7 +173,7 @@ class MainPagerFragment : Fragment() {
             popupWindow.setOnDismissListener {
                 ScreenUtil.setAlpha(1f)
             }
-            popView.setOnClickListener {
+            popView.root.setOnClickListener {
                 popupWindow.dismiss()
             }
             //设置
@@ -188,12 +184,12 @@ class MainPagerFragment : Fragment() {
             //收藏
             fabLove.setOnClickListener {
                 popupWindow.dismiss()
-                filterParams = if (filterParams == "1") {
-                    ToastUtil.short("显示全部")
-                    "0"
-                } else {
+                filterParams.all = if (filterParams.all) {
                     ToastUtil.short("仅显示收藏")
-                    "1"
+                    false
+                } else {
+                    ToastUtil.short("显示全部")
+                    true
                 }
                 when (MainActivity.currentMainPage) {
                     0 -> {
@@ -215,14 +211,11 @@ class MainPagerFragment : Fragment() {
             fabSearch.setOnClickListener {
                 popupWindow.dismiss()
                 //显示搜索布局
-                val layout = layoutInflater.inflate(R.layout.layout_search, null)
-                val dialog = MaterialAlertDialogBuilder(requireContext())
-                    .setView(layout)
-                    .create()
-                dialog.window?.setGravity(Gravity.BOTTOM)
+                val layout = LayoutSearchBinding.inflate(layoutInflater)
+                val dialog = DialogUtil.create(requireContext(), layout.root)
                 dialog.show()
                 //搜索框
-                val searchView = layout.findViewById<SearchView>(R.id.search_input)
+                val searchView = layout.searchInput
                 searchView.onActionViewExpanded()
                 searchView.isSubmitButtonEnabled = true
                 when (MainActivity.currentMainPage) {
@@ -273,27 +266,23 @@ class MainPagerFragment : Fragment() {
             fabFilter.setOnClickListener {
                 popupWindow.dismiss()
                 //筛选
-                val layout = layoutInflater.inflate(R.layout.layout_filter, null)
-                val dialog = MaterialAlertDialogBuilder(requireContext())
-                    .setView(layout)
-                    .create()
-                dialog.window?.setGravity(Gravity.BOTTOM)
+                val layout = LayoutFilterBinding.inflate(layoutInflater)
+                val dialog = DialogUtil.create(requireContext(), layout.root)
                 dialog.show()
                 //位置筛选
-                val checkChara1 =
-                    layout.findViewById<MaterialCheckBox>(R.id.checkbox_chara_1)
-                val checkChara2 =
-                    layout.findViewById<MaterialCheckBox>(R.id.checkbox_chara_2)
-                val checkChara3 =
-                    layout.findViewById<MaterialCheckBox>(R.id.checkbox_chara_3)
+                val checkChara1 = layout.checkboxChara1
+                val checkChara2 = layout.checkboxChara2
+                val checkChara3 = layout.checkboxChara3
                 //传入筛选条件
-                val next = layout.findViewById<MaterialButton>(R.id.next)
-                next.setOnClickListener {
+                checkChara1.isChecked = filterParams.positon1
+                checkChara2.isChecked = filterParams.positon2
+                checkChara3.isChecked = filterParams.positon3
+                layout.next.setOnClickListener {
                     dialog.dismiss()
-                    filterParams += ":position"
-                    filterParams += if (checkChara1.isChecked) "1:" else "0:"
-                    filterParams += if (checkChara2.isChecked) "1:" else "0:"
-                    filterParams += if (checkChara3.isChecked) "1:" else "0:"
+                    //筛选选项
+                    filterParams.positon1 = checkChara1.isChecked
+                    filterParams.positon2 = checkChara2.isChecked
+                    filterParams.positon3 = checkChara3.isChecked
                     sharedCharacterViewModel.getCharacters(
                         sortType,
                         sortAsc, "", mapOf()
@@ -304,12 +293,19 @@ class MainPagerFragment : Fragment() {
             fabSort.setOnClickListener {
                 popupWindow.dismiss()
                 //显示排序布局
-                val layout = layoutInflater.inflate(R.layout.layout_sort, null)
-                val dialog = MaterialAlertDialogBuilder(requireContext())
-                    .setView(layout)
-                    .create()
-                dialog.window?.setGravity(Gravity.BOTTOM)
+                val layout = LayoutSortBinding.inflate(layoutInflater)
+                val dialog = DialogUtil.create(requireContext(), layout.root)
                 dialog.show()
+                layout.next.setOnClickListener {
+                    dialog.dismiss()
+                    //筛选选项
+                    sortType = layout.spinnerSort.selectedItemPosition
+                    sortAsc = layout.radioSort.checkedRadioButtonId == R.id.sort_asc
+                    sharedCharacterViewModel.getCharacters(
+                        sortType,
+                        sortAsc, "", mapOf()
+                    )
+                }
             }
         }
     }

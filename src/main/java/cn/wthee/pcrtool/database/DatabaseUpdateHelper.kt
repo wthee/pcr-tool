@@ -8,12 +8,12 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.service.DatabaseService
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKED
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
-import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TIMEOUT
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import retrofit2.Call
@@ -38,7 +38,7 @@ class DatabaseUpdateHelper {
         )
         service.getDbVersion().enqueue(object : Callback<DatabaseVersion> {
             override fun onFailure(call: Call<DatabaseVersion>, t: Throwable) {
-                ToastUtil.short(NOTICE_TOAST_TIMEOUT)
+                CharacterListFragment.handler.sendEmptyMessage(0)
             }
 
             override fun onResponse(

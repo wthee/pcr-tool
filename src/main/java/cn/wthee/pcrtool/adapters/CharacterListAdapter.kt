@@ -21,12 +21,15 @@ import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.FilterDataCharacter
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
 import cn.wthee.pcrtool.utils.OnLoadListener
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class CharacterAdapter(private val fragment: Fragment) :
@@ -135,31 +138,36 @@ class CharacterAdapter(private val fragment: Fragment) :
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val param = constraint.toString()
-                val ps = param.split(":")
-                val filterDatas = if (param.isEmpty()) {
+                val param: FilterDataCharacter = Gson().fromJson(
+                    constraint.toString(),
+                    object : TypeToken<FilterDataCharacter>() {}.type
+                )
+                val filterDatas = if (constraint == null) {
                     //没有过滤的内容，则使用源数据
                     currentList
                 } else {
                     val filteredList = arrayListOf<CharacterBasicInfo>()
                     try {
                         currentList.forEachIndexed { _, it ->
-                            val c0 = ps[0] == "1" && sp.getBoolean(it.id.toString(), false)//已收藏
+                            val c0 = !param.all && sp.getBoolean(it.id.toString(), false)//已收藏
                             if (c0) {
+                                //显示收藏角色
                                 filteredList.add(it)
-                            } else if (param == "0") {
+                            } else if (param.all && !param.hasFilter()) {
+                                //无筛选条件
                                 filteredList.add(it)
                             } else {
-                                if (ps.isNotEmpty() && ps.size == 5) {
-                                    if (ps[1] == "1" && it.position in 0..300) {
+                                //位置筛选
+                                if (param.hasPositionFilter()) {
+                                    if (param.positon1 && it.position in 0..300) {
                                         filteredList.add(it)
                                         return@forEachIndexed
                                     }
-                                    if (ps[2] == "1" && it.position in 301..600) {
+                                    if (param.positon2 && it.position in 301..600) {
                                         filteredList.add(it)
                                         return@forEachIndexed
                                     }
-                                    if (ps[3] == "1" && it.position >= 601) {
+                                    if (param.positon3 && it.position >= 601) {
                                         filteredList.add(it)
                                         return@forEachIndexed
                                     }

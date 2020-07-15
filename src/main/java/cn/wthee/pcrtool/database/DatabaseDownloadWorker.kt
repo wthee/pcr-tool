@@ -155,9 +155,9 @@ class DatabaseDownloadWorker(
                     AppDatabase.getInstance().close()
                     synchronized(AppDatabase::class.java) {
                         UnzippedUtil.deCompress(db, true)
-                        ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                         //通知更新数据
                         Looper.prepare()
+                        ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                         CharacterListFragment.handler.sendEmptyMessage(1)
                         Looper.loop()
                     }

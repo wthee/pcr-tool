@@ -25,6 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
+
 private const val EQUIP = "equip"
 private const val DIALOG = "dialog"
 
@@ -77,13 +78,11 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
 
     override fun setupDialog(dialog: Dialog, style: Int) {
-        val v: View =
-            LayoutInflater.from(activity).inflate(R.layout.fragment_equipment_details, null)
+        val v: View = FragmentEquipmentDetailsBinding.inflate(layoutInflater).root
         dialog.setContentView(v)
 
         val layoutParams = (v.parent as View).layoutParams as CoordinatorLayout.LayoutParams
         val behavior = layoutParams.behavior as BottomSheetBehavior<View>
-//        behavior.peekHeight = 350
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 

@@ -56,7 +56,7 @@ object Constants {
 
     const val NOTICE_TOAST_SUCCESS = "数据更新完成"
     const val NOTICE_TOAST_TITLE = "数据更新中\n详情查看通知栏"
-    const val NOTICE_TOAST_TIMEOUT = "数据库信息无法访问\n请尝试切换上网方式"
+    const val NOTICE_TOAST_TIMEOUT = "数据库信息无法访问，请尝试切换上网方式"
     const val NOTICE_TOAST_CHECKING = "正在检测数据库版本"
     const val NOTICE_TOAST_CHECKED = "数据库已是最新版本"
 

@@ -17,13 +17,14 @@ import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAdapter
+import cn.wthee.pcrtool.data.model.FilterDataCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
+import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
+import cn.wthee.pcrtool.utils.DialogUtil
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.bumptech.glide.Glide
-
-
 
 
 class CharacterListFragment : Fragment() {
@@ -31,7 +32,7 @@ class CharacterListFragment : Fragment() {
     companion object {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterAdapter
-        var filterParams = "0"
+        var filterParams = FilterDataCharacter(true, true, true, true)
         lateinit var handler: Handler
     }
 
@@ -54,7 +55,19 @@ class CharacterListFragment : Fragment() {
         setListener()
         viewModel.getCharacters(sortType, sortAsc, "", mapOf())
         handler = Handler(Handler.Callback {
-            viewModel.reload.postValue(true)
+            when (it.what) {
+                0 -> {
+                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    DialogUtil.create(
+                        requireContext(),
+                        layout,
+                        "访问出错",
+                        Constants.NOTICE_TOAST_TIMEOUT
+                    ).show()
+                }
+                1 -> viewModel.reload.postValue(true)
+            }
+
             return@Callback true
         })
         return binding.root
@@ -84,7 +97,7 @@ class CharacterListFragment : Fragment() {
                     if (data != null && data.isNotEmpty()) {
                         binding.noDataTip.visibility = View.GONE
                         listAdapter.submitList(data) {
-                            listAdapter.filter.filter(filterParams)
+                            listAdapter.filter.filter(filterParams.toJsonString())
                             sp.edit {
                                 putInt(Constants.SP_COUNT_CHARACTER, data.size)
                             }
@@ -126,7 +139,7 @@ class CharacterListFragment : Fragment() {
         binding.apply {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
-                filterParams = "0"
+                filterParams.initData()
                 viewModel.getCharacters(sortType, sortAsc, "", mapOf())
             }
 
