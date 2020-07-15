@@ -158,6 +158,13 @@ class MainPagerFragment : Fragment() {
 
     private fun setListener() {
         //功能模块
+        //长按回到顶部
+        MainActivity.fab.setOnLongClickListener {
+            when (MainActivity.currentMainPage) {
+                0 -> CharacterListFragment.characterList.smoothScrollToPosition(0)
+            }
+            return@setOnLongClickListener true
+        }
         MainActivity.fab.setOnClickListener {
             //弹出功能列表
             val popupWindow = PopupWindow(
@@ -169,13 +176,16 @@ class MainPagerFragment : Fragment() {
             popupWindow.animationStyle = R.style.PopUpAnimation
             popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             popupWindow.showAtLocation(it, Gravity.END or Gravity.BOTTOM, 0, 0)
+            //半透明遮罩
             ScreenUtil.setAlpha(0.5f)
             popupWindow.setOnDismissListener {
                 ScreenUtil.setAlpha(1f)
             }
+            //点击关闭
             popView.root.setOnClickListener {
                 popupWindow.dismiss()
             }
+
             //设置
             fabSetting.setOnClickListener {
                 popupWindow.dismiss()
