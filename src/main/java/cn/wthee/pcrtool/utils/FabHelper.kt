@@ -1,33 +1,28 @@
 package cn.wthee.pcrtool.utils
 
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.findNavController
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
+import cn.wthee.pcrtool.MainActivity.Companion.isHome
 import cn.wthee.pcrtool.R
 
 object FabHelper {
 
-    fun addBackFab(fragment: Fragment) {
-        //添加返回按钮
+    fun addBackFab() {
+        //添加返回
         setIcon(R.drawable.ic_back)
-        MainActivity.fab.apply {
-            setOnClickListener {
-                goBack(fragment)
-            }
-            text = fragment.getString(R.string.back)
-        }
+        isHome = false
     }
 
     private fun setIcon(resId: Int) {
-        MainActivity.fab.setIconResource(resId)
+        MainActivity.fab.setImageResource(resId)
     }
 
-    fun goBack(fragment: Fragment) {
+    fun goBack() {
         if (canBack) {
+            val activity = ActivityUtil.instance.currentActivity
             setIcon(R.drawable.ic_function)
-            fragment.findNavController().navigateUp()
-            MainActivity.fab.text = fragment.getString(R.string.function)
+            activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
         }
     }
 

@@ -67,7 +67,7 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.characterPic.transitionName = "img_${character.id}"
         binding.content.info.transitionName = "content_${character.id}"
         //开始动画
-        ObjectAnimatorHelper.alpha(binding.fab)
+        ObjectAnimatorHelper.alpha(binding.fabLoveCbi)
         ObjectAnimatorHelper.enter(binding.basicInfo)
         //加载图片
         loadImages()
@@ -164,7 +164,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 }
             })
             //fab点击监听
-            fab.setOnClickListener {
+            fabLoveCbi.setOnClickListener {
                 isLoved = !isLoved
                 setLove(isLoved)
             }
@@ -190,7 +190,7 @@ class CharacterBasicInfoFragment : Fragment() {
             R.color.colorPrimary,
             null
         ) else resources.getColor(R.color.alphaPrimary, null)
-        binding.fab.imageTintList = ColorStateList.valueOf(icFabColor)
+        binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
 
     }
 

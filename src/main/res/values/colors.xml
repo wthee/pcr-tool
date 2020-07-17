@@ -11,7 +11,7 @@
     <color name="colorGray">#FCFCFC</color>
     <color name="colorBg">#F6F6F6</color>
     <color name="colorGrayBlack">#E4000000</color>
-    <color name="colorAlphtBlack">#B3000000</color>
+    <color name="colorAlphtBlack">#93000000</color>
     <color name="background">#F9F9F9</color>
     <color name="alphaPrimary">#8E9CB1</color>
 </resources>

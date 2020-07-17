@@ -48,4 +48,5 @@
     <dimen name="elevation_fab">64dp</dimen>
     <dimen name="elevation_button">4dp</dimen>
     <dimen name="elevation_dialog">24dp</dimen>
+    <dimen name="fab_circle_radius">150dp</dimen>
 </resources>

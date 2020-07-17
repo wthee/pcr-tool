@@ -90,10 +90,13 @@
     <string name="equip_off">只显示装备图标</string>
     <string name="equip_on">显示装备名称、描述</string>
     <string name="equip_list">装备列表</string>
-    <string name="fab_setting">悬浮按钮</string>
-    <string name="fab_on">显示图标和文字</string>
-    <string name="fab_off">只显示图标</string>
     <string name="next">确认</string>
     <string name="title_tip">信息提示</string>
+    <string name="position_3">后卫</string>
+    <string name="position_2">中卫</string>
+    <string name="position_1">前卫</string>
+    <string name="atk_type">攻击类型</string>
+    <string name="physical">物理</string>
+    <string name="magic">魔法</string>
 
 </resources>

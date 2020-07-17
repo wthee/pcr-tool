@@ -24,6 +24,7 @@ class EnemyListFragment : Fragment() {
         lateinit var viewModel: EnemyViewModel
         var filterFlag = 0
         lateinit var listAdapter: EnemyListAdapter
+        lateinit var list: RecyclerView
     }
 
     private lateinit var binding: FragmentEnemyListBinding
@@ -47,9 +48,10 @@ class EnemyListFragment : Fragment() {
 
     private fun init() {
         binding.apply {
+            list = recycler
             layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
             listAdapter = EnemyListAdapter()
-            recycler.adapter = listAdapter
+            list.adapter = listAdapter
         }
         viewModel.getAllEnemy()
     }
@@ -106,7 +108,7 @@ class EnemyListFragment : Fragment() {
     private fun setListener() {
         binding.apply {
             //滑动时暂停glide加载
-            recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         Glide.with(root.context).resumeRequests()

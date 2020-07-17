@@ -39,7 +39,7 @@ class CharacterPagerFragment : Fragment() {
     ): View? {
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         //添加返回fab
-        FabHelper.addBackFab(this)
+        FabHelper.addBackFab()
         init()
         if (savedInstanceState == null) {
             postponeEnterTransition()
@@ -53,7 +53,7 @@ class CharacterPagerFragment : Fragment() {
         view?.requestFocus()
         view?.setOnKeyListener(View.OnKeyListener { view, i, keyEvent ->
             if (keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK) {
-                FabHelper.goBack(this)
+                FabHelper.goBack()
                 return@OnKeyListener true
             }
             false
