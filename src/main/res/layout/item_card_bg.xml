@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:animateLayoutChanges="true"
-    android:layout_margin="@dimen/s_margin"
     tools:layout_height="@dimen/card_height">
 
     <androidx.appcompat.widget.AppCompatImageView

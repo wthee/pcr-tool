@@ -32,7 +32,10 @@ class CharacterListFragment : Fragment() {
     companion object {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterAdapter
-        var filterParams = FilterDataCharacter(true, true, true, true)
+        var filterParams = FilterDataCharacter(
+            true, true, true, true,
+            true, true
+        )
         lateinit var handler: Handler
     }
 
@@ -54,6 +57,7 @@ class CharacterListFragment : Fragment() {
         //控件监听
         setListener()
         viewModel.getCharacters(sortType, sortAsc, "", mapOf())
+        //接收消息
         handler = Handler(Handler.Callback {
             when (it.what) {
                 0 -> {
@@ -61,7 +65,7 @@ class CharacterListFragment : Fragment() {
                     DialogUtil.create(
                         requireContext(),
                         layout,
-                        "访问出错",
+                        Constants.NOTICE_TITLE_ERROR,
                         Constants.NOTICE_TOAST_TIMEOUT
                     ).show()
                 }
@@ -117,7 +121,7 @@ class CharacterListFragment : Fragment() {
             //加载
             if (!isLoading.hasObservers()) {
                 isLoading.observe(viewLifecycleOwner, Observer {
-                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
+                    binding.progress.visibility = if (it) View.VISIBLE else View.GONE
                 })
             }
             //重新加载

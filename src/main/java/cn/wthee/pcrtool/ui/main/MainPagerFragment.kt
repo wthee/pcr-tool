@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.SharedElementCallback
@@ -32,8 +31,7 @@ class MainPagerFragment : Fragment() {
     companion object {
         var cListClick = false
         lateinit var tabLayout: TabLayout
-        lateinit var progress: ProgressBar
-
+        private var count = 0
     }
 
     private lateinit var binding: FragmentMainPagerBinding
@@ -48,8 +46,19 @@ class MainPagerFragment : Fragment() {
         prepareTransitions()
         //设置toolbar
         setHasOptionsMenu(true)
-        val toolbar = ToolbarUtil(binding.toolbar)
+        val toolbar =
+            ToolbarUtil(binding.toolbar)
         toolbar.setLeftIcon(R.drawable.ic_logo)
+        toolbar.leftIcon.setOnClickListener {
+            count++
+            if (count % 2 == 0) {
+                toolbar.setLeftIcon(R.drawable.ic_logo)
+                toolbar.setTitleColor(R.color.colorWhite)
+            } else {
+                toolbar.setLeftIcon(R.drawable.ic_logo_color)
+                toolbar.setTitleColor(R.color.colorAccent)
+            }
+        }
         return binding.root
     }
 
@@ -70,13 +79,11 @@ class MainPagerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.progress.visibility = View.GONE
     }
 
     private fun init() {
         //禁止连续点击
         cListClick = false
-        progress = binding.progress
         //viewpager2 配置
         viewPager2 = binding.viewPager
         viewPager2.offscreenPageLimit = 2

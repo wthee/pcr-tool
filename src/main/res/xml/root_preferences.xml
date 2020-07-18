@@ -57,8 +57,8 @@
         <Preference
             app:iconSpaceReserved="false"
             app:key="clean_data"
-            app:summary="若可正常使用应用，不建议清理图片缓存"
-            app:title="清除缓存" />
+            app:summary="@string/clean_cache_tip"
+            app:title="@string/clean_cache" />
 
     </PreferenceCategory>
 

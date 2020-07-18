@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.character
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterInfoViewPagerAdapter
+import cn.wthee.pcrtool.adapters.CharacterViewPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
@@ -24,7 +23,7 @@ class CharacterPagerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        requireArguments().let {
             character = it.getSerializable("character") as CharacterBasicInfo?
         }
         sharedElementEnterTransition =
@@ -47,24 +46,11 @@ class CharacterPagerFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        view?.isFocusableInTouchMode = true
-        view?.requestFocus()
-        view?.setOnKeyListener(View.OnKeyListener { view, i, keyEvent ->
-            if (keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK) {
-                FabHelper.goBack()
-                return@OnKeyListener true
-            }
-            false
-        })
-    }
-
     private fun init() {
         //加载列表
         viewPager = binding.root
         viewPager.adapter =
-            CharacterInfoViewPagerAdapter(
+            CharacterViewPagerAdapter(
                 childFragmentManager,
                 lifecycle,
                 character!!

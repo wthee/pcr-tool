@@ -16,7 +16,7 @@ class CharacterSkillViewModel(
     private var refresh = MutableLiveData<Boolean>()
     private var isLoading = MutableLiveData<Boolean>()
 
-    //角色基本资料
+    //角色技能信息
     fun getCharacterSkills(id: Int) {
         isLoading.postValue(true)
         viewModelScope.launch {

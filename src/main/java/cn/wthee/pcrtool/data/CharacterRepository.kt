@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data
 
 
-
 //角色数据Repository
 
 class CharacterRepository(private val characterDao: CharacterDao) {
@@ -29,11 +28,14 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     //角色技能
     suspend fun getCharacterSkill(id: Int) = characterDao.getCharacterSkill(id)
 
-    //角色技能
+    //技能数据
     suspend fun getSkillData(sid: Int) = characterDao.getSkillData(sid)
 
     //角色技能详情
     suspend fun getSkillActions(aids: List<Int>) = characterDao.getSkillActions(aids)
+
+    //角色最大等级
+    suspend fun getMaxLevel() = characterDao.getMaxLevel()
 
     companion object {
 

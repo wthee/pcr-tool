@@ -61,7 +61,7 @@ class EnemyListFragment : Fragment() {
             //加载
             if (!isLoading.hasObservers()) {
                 isLoading.observe(viewLifecycleOwner, Observer {
-                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
+//                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
                 })
             }
             //获取信息

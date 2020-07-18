@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EnemyListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         return if (!canBack && event.keyCode == KeyEvent.KEYCODE_BACK) {
             true
         } else {
+            fab.setImageResource(R.drawable.ic_function)
             super.dispatchKeyEvent(event)
         }
     }
@@ -122,9 +124,9 @@ class MainActivity : AppCompatActivity() {
         //长按回到顶部
         fab.setOnLongClickListener {
             when (currentMainPage) {
-                0 -> CharacterListFragment.characterList.smoothScrollToPosition(0)
-                1 -> EquipmentListFragment.list.smoothScrollToPosition(0)
-                2 -> EnemyListFragment.list.smoothScrollToPosition(0)
+                0 -> CharacterListFragment.characterList.scrollToPosition(0)
+                1 -> EquipmentListFragment.list.scrollToPosition(0)
+                2 -> EnemyListFragment.list.scrollToPosition(0)
             }
             return@setOnLongClickListener true
         }
@@ -149,16 +151,16 @@ class MainActivity : AppCompatActivity() {
         //收藏
         fabLove.setOnClickListener {
             closeFab()
-            CharacterListFragment.filterParams.all =
-                if (CharacterListFragment.filterParams.all) {
-                    ToastUtil.short("仅显示收藏")
-                    false
-                } else {
-                    ToastUtil.short("显示全部")
-                    true
-                }
             when (currentMainPage) {
                 0 -> {
+                    CharacterListFragment.filterParams.all =
+                        if (CharacterListFragment.filterParams.all) {
+                            ToastUtil.short("仅显示收藏")
+                            false
+                        } else {
+                            ToastUtil.short("显示全部")
+                            true
+                        }
                     sharedCharacterViewModel.getCharacters(
                         sortType,
                         sortAsc, "", mapOf()
@@ -166,10 +168,10 @@ class MainActivity : AppCompatActivity() {
                     CharacterListFragment.listAdapter.notifyDataSetChanged()
                 }
                 1 -> {
-                    CharacterListFragment.listAdapter.notifyDataSetChanged()
+                    ToastUtil.short(NOTICE_TOAST_TODO)
                 }
                 2 -> {
-                    CharacterListFragment.listAdapter.notifyDataSetChanged()
+                    ToastUtil.short(NOTICE_TOAST_TODO)
                 }
             }
         }
@@ -231,46 +233,74 @@ class MainActivity : AppCompatActivity() {
         //筛选
         fabFilter.setOnClickListener {
             closeFab()
-            //筛选
-            val layout = LayoutFilterBinding.inflate(layoutInflater)
-            val dialog = DialogUtil.create(this, layout.root)
-            dialog.show()
-            //位置筛选
-            val positionChip1 = layout.positionChip1
-            val positionChip2 = layout.positionChip2
-            val positionChip3 = layout.positionChip3
-            //传入筛选条件
-            positionChip1.isChecked = CharacterListFragment.filterParams.positon1
-            positionChip2.isChecked = CharacterListFragment.filterParams.positon2
-            positionChip3.isChecked = CharacterListFragment.filterParams.positon3
-            layout.next.setOnClickListener {
-                dialog.dismiss()
-                //筛选选项
-                CharacterListFragment.filterParams.positon1 = positionChip1.isChecked
-                CharacterListFragment.filterParams.positon2 = positionChip2.isChecked
-                CharacterListFragment.filterParams.positon3 = positionChip3.isChecked
-                sharedCharacterViewModel.getCharacters(
-                    sortType,
-                    sortAsc, "", mapOf()
-                )
+            when (currentMainPage) {
+                0 -> {
+                    //筛选
+                    val layout = LayoutFilterBinding.inflate(layoutInflater)
+                    val dialog = DialogUtil.create(this, layout.root)
+                    dialog.show()
+                    //位置筛选
+                    val positionChip1 = layout.positionChip1
+                    val positionChip2 = layout.positionChip2
+                    val positionChip3 = layout.positionChip3
+                    //传入筛选条件
+                    positionChip1.isChecked = CharacterListFragment.filterParams.positon1
+                    positionChip2.isChecked = CharacterListFragment.filterParams.positon2
+                    positionChip3.isChecked = CharacterListFragment.filterParams.positon3
+                    //攻击类型筛选
+                    val atk1 = layout.atkChip1
+                    val atk2 = layout.atkChip2
+                    //传入筛选条件
+                    atk1.isChecked = CharacterListFragment.filterParams.atkPhysical
+                    atk2.isChecked = CharacterListFragment.filterParams.atkMagic
+                    layout.next.setOnClickListener {
+                        dialog.dismiss()
+                        //筛选选项
+                        CharacterListFragment.filterParams.positon1 = positionChip1.isChecked
+                        CharacterListFragment.filterParams.positon2 = positionChip2.isChecked
+                        CharacterListFragment.filterParams.positon3 = positionChip3.isChecked
+                        CharacterListFragment.filterParams.atkPhysical = atk1.isChecked
+                        CharacterListFragment.filterParams.atkMagic = atk2.isChecked
+                        sharedCharacterViewModel.getCharacters(
+                            sortType,
+                            sortAsc, "", mapOf()
+                        )
+                    }
+                }
+                1 -> {
+                    ToastUtil.short(NOTICE_TOAST_TODO)
+                }
+                2 -> {
+                    ToastUtil.short(NOTICE_TOAST_TODO)
+                }
             }
         }
         //排序
         fabSort.setOnClickListener {
             closeFab()
-            //显示排序布局
-            val layout = LayoutSortBinding.inflate(layoutInflater)
-            val dialog = DialogUtil.create(this, layout.root)
-            dialog.show()
-            layout.next.setOnClickListener {
-                dialog.dismiss()
-                //筛选选项
-                sortType = layout.spinnerSort.selectedItemPosition
-                sortAsc = layout.radioSort.checkedRadioButtonId == R.id.sort_asc
-                sharedCharacterViewModel.getCharacters(
-                    sortType,
-                    sortAsc, "", mapOf()
-                )
+            when (currentMainPage) {
+                0 -> {
+                    //显示排序布局
+                    val layout = LayoutSortBinding.inflate(layoutInflater)
+                    val dialog = DialogUtil.create(this, layout.root)
+                    dialog.show()
+                    layout.next.setOnClickListener {
+                        dialog.dismiss()
+                        //筛选选项
+                        sortType = layout.spinnerSort.selectedItemPosition
+                        sortAsc = layout.radioSort.checkedRadioButtonId == R.id.sort_asc
+                        sharedCharacterViewModel.getCharacters(
+                            sortType,
+                            sortAsc, "", mapOf()
+                        )
+                    }
+                }
+                1 -> {
+                    ToastUtil.short(NOTICE_TOAST_TODO)
+                }
+                2 -> {
+                    ToastUtil.short(NOTICE_TOAST_TODO)
+                }
             }
         }
     }

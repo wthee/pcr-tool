@@ -10,11 +10,13 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.ItemEquipmentMaterialBinding
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDropDialogFragment
+import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
 
 
-class EquipmentMaterialAdapter :
+class EquipmentMaterialAdapter() :
     ListAdapter<EquipmentMaterial, EquipmentMaterialAdapter.ViewHolder>(MaterialDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -34,7 +36,7 @@ class EquipmentMaterialAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(info: EquipmentMaterial) {
             binding.apply {
-                binding.root.animation =
+                root.animation =
                     AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
                 equipName.text = "${info.name}"
                 equipCount.text = "x ${info.count}"
@@ -44,15 +46,14 @@ class EquipmentMaterialAdapter :
                     R.drawable.error,
                     null
                 )
-
-                //掉落地区
-//                LinearLayoutManager(MyApplication.getContext()).also {
-//                    it.orientation = LinearLayoutManager.VERTICAL
-//                    drops.layoutManager = it
-//                }
-//                val dropsAdapter = EquipmentDropAdapter()
-//                drops.adapter = dropsAdapter
-//                dropsAdapter.submitList(info.dropInfo)
+                //点击查看掉落地区
+                root.setOnClickListener {
+                    EquipmentDropDialogFragment.getInstance(info.id)
+                        .show(
+                            ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
+                            "drop"
+                        )
+                }
             }
         }
     }

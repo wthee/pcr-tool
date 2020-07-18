@@ -32,7 +32,7 @@ class CharacterSkillFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        requireArguments().let {
             unitId = it.getInt("id")
         }
     }

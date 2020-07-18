@@ -49,4 +49,6 @@
     <dimen name="elevation_button">4dp</dimen>
     <dimen name="elevation_dialog">24dp</dimen>
     <dimen name="fab_circle_radius">150dp</dimen>
+    <dimen name="list_height">300dp</dimen>
+    <dimen name="hr_height">8dp</dimen>
 </resources>

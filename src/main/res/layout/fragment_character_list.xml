@@ -29,6 +29,14 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:layout_marginTop="@dimen/m_margin"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/layout_refresh"
             android:layout_width="match_parent"

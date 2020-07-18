@@ -19,7 +19,7 @@ object FabHelper {
     }
 
     fun goBack() {
-        if (canBack) {
+        if (canBack && !isHome) {
             val activity = ActivityUtil.instance.currentActivity
             setIcon(R.drawable.ic_function)
             activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()

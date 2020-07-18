@@ -146,36 +146,29 @@ class CharacterAdapter(private val fragment: Fragment) :
                     //没有过滤的内容，则使用源数据
                     currentList
                 } else {
-                    val filteredList = arrayListOf<CharacterBasicInfo>()
-                    try {
-                        currentList.forEachIndexed { _, it ->
-                            val c0 = !param.all && sp.getBoolean(it.id.toString(), false)//已收藏
-                            if (c0) {
-                                //显示收藏角色
-                                filteredList.add(it)
-                            } else if (param.all && !param.hasFilter()) {
-                                //无筛选条件
-                                filteredList.add(it)
-                            } else {
-                                //位置筛选
-                                if (param.hasPositionFilter()) {
-                                    if (param.positon1 && it.position in 0..300) {
-                                        filteredList.add(it)
-                                        return@forEachIndexed
-                                    }
-                                    if (param.positon2 && it.position in 301..600) {
-                                        filteredList.add(it)
-                                        return@forEachIndexed
-                                    }
-                                    if (param.positon3 && it.position >= 601) {
-                                        filteredList.add(it)
-                                        return@forEachIndexed
-                                    }
-                                }
+                    val filteredList = currentList.toMutableList()
+                    filteredList.toHashSet().forEachIndexed { index, data ->
+                        if (!param.all) {
+                            //过滤非收藏角色
+                            if (!sp.getBoolean(data.id.toString(), false)) {
+                                filteredList.remove(data)
                             }
                         }
-                    } catch (e: Exception) {
-                        e.message
+                        //位置筛选
+                        if (param.hasPositionFilter()) {
+                            if ((!param.positon1 && data.position in 0..300)
+                                || (!param.positon2 && data.position in 301..600)
+                                || (!param.positon3 && data.position >= 601)
+                            ) {
+                                filteredList.remove(data)
+                            }
+                        }
+                        //攻击类型筛选
+                        if (param.hasAtkFilter()) {
+                            if ((!param.atkPhysical && data.atkType == 1) || (!param.atkMagic && data.atkType == 2)) {
+                                filteredList.remove(data)
+                            }
+                        }
                     }
                     filteredList
                 }

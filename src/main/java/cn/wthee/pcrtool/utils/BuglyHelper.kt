@@ -39,7 +39,6 @@ object BuglyHelper {
                     labelFeature.text =
                         SimpleDateFormat("yyyy-MM-dd").format(upgradeInfo.publishTime)
                 }
-
             }
 
             override fun onStart(context: Context?, view: View?, upgradeInfo: UpgradeInfo?) {
@@ -64,6 +63,6 @@ object BuglyHelper {
         }
         //初始化
         Beta.initDelay = 5000
-        Bugly.init(applicationContext, PrivateData.APP_ID, true)
+        Bugly.init(applicationContext, PrivateData.APP_ID, false)
     }
 }
