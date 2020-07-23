@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MyApplication
@@ -23,13 +24,13 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import javax.inject.Singleton
+
 
 
 private const val EQUIP = "equip"
 private const val DIALOG = "dialog"
 
-@Singleton
+
 class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
     private lateinit var equip: EquipmentData
@@ -53,7 +54,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        requireArguments().let {
             equip = it.getSerializable(EQUIP) as EquipmentData
             isDialog = it.getBoolean(DIALOG)
         }
@@ -78,13 +79,11 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
 
     override fun setupDialog(dialog: Dialog, style: Int) {
-        val v: View =
-            LayoutInflater.from(activity).inflate(R.layout.fragment_equipment_details, null)
+        val v: View = FragmentEquipmentDetailsBinding.inflate(layoutInflater).root
         dialog.setContentView(v)
 
         val layoutParams = (v.parent as View).layoutParams as CoordinatorLayout.LayoutParams
         val behavior = layoutParams.behavior as BottomSheetBehavior<View>
-//        behavior.peekHeight = 350
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -106,15 +105,17 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         binding.apply {
             //toolbar
             cusToolbar = ToolbarUtil(toolbar)
-            cusToolbar.setLeftIcon(R.drawable.ic_back)
-            cusToolbar.hideRightIcon()
-            cusToolbar.setTitleColor(R.color.colorPrimary)
-            cusToolbar.setBackground(R.color.colorBg)
-            cusToolbar.setTitleCenter()
-            cusToolbar.leftIcon.setOnClickListener {
-                goBack()
+            cusToolbar.apply {
+                setLeftIcon(R.drawable.ic_back)
+                hideRightIcon()
+                setTitleColor(R.color.colorPrimary)
+                setBackground(R.color.colorBg)
+                setTitleCenter()
+                title.text = equip.equipmentName
+                leftIcon.setOnClickListener {
+                    goBack()
+                }
             }
-            cusToolbar.title.text = equip.equipmentName
             //共享元素
             itemPic.transitionName = "pic_${equip.equipmentId}"
             //图标
@@ -134,15 +135,18 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
             val adapter = EquipmentAttrAdapter()
             attrs.adapter = adapter
             adapter.submitList(equip.getAttrs())
-            //合成素材
-            materialAdapter = EquipmentMaterialAdapter()
-//            PagerSnapHelper().attachToRecyclerView(material)
-            material.adapter = materialAdapter
         }
     }
 
     private fun setObserve() {
         viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
+            //合成素材
+            materialAdapter = EquipmentMaterialAdapter()
+            binding.material.layoutManager =
+                GridLayoutManager(requireContext(), if (it.size == 1) 1 else 2).apply {
+                    orientation = LinearLayoutManager.VERTICAL
+                }
+            binding.material.adapter = materialAdapter
             materialAdapter.submitList(it)
         })
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {

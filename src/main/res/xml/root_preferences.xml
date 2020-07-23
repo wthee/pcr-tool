@@ -3,6 +3,20 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/screen">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="equip_is_list"
+            app:summaryOff="@string/equip_off"
+            app:summaryOn="@string/equip_on"
+            app:title="@string/equip_list" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/data">
 
         <Preference
@@ -43,8 +57,8 @@
         <Preference
             app:iconSpaceReserved="false"
             app:key="clean_data"
-            app:summary="若可正常使用应用，不建议清理图片缓存"
-            app:title="清除缓存" />
+            app:summary="@string/clean_cache_tip"
+            app:title="@string/clean_cache" />
 
     </PreferenceCategory>
 

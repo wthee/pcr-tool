@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
+            app:spanCount="3"
             tools:listitem="@layout/item_enemy" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

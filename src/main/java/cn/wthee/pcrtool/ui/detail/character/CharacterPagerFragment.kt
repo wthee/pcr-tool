@@ -9,10 +9,11 @@ import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterInfoViewPagerAdapter
+import cn.wthee.pcrtool.adapters.CharacterViewPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
+import cn.wthee.pcrtool.utils.FabHelper
 
 class CharacterPagerFragment : Fragment() {
 
@@ -22,7 +23,7 @@ class CharacterPagerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        requireArguments().let {
             character = it.getSerializable("character") as CharacterBasicInfo?
         }
         sharedElementEnterTransition =
@@ -36,10 +37,20 @@ class CharacterPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
+        //添加返回fab
+        FabHelper.addBackFab()
+        init()
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+        }
+        return binding.root
+    }
+
+    private fun init() {
         //加载列表
         viewPager = binding.root
         viewPager.adapter =
-            CharacterInfoViewPagerAdapter(
+            CharacterViewPagerAdapter(
                 childFragmentManager,
                 lifecycle,
                 character!!
@@ -52,10 +63,6 @@ class CharacterPagerFragment : Fragment() {
         } else {
             viewPager.background = null
         }
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
-        }
-        return binding.root
     }
 
 }

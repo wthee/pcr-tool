@@ -81,6 +81,5 @@ data class EquipmentIdWithOdd(
 data class EquipmentMaterial(
     var id: Int,
     var name: String,
-    var count: Int,
-    val dropInfo: List<EquipmentDropInfo>
+    var count: Int
 )

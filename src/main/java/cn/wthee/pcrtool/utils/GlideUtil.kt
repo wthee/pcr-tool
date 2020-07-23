@@ -21,6 +21,7 @@ object GlideUtil {
         .placeholder(R.drawable.load)
         .skipMemoryCache(false)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .encodeQuality(60)
         .timeout(30000)
 
     fun load(url: String, view: ImageView, error: Int, fragment: Fragment?) {

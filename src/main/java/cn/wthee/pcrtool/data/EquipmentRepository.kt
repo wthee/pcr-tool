@@ -1,11 +1,10 @@
 package cn.wthee.pcrtool.data
 
-import javax.inject.Inject
-import javax.inject.Singleton
+
 
 //角色数据Repository
-@Singleton
-class EquipmentRepository @Inject constructor(private val equipmentDao: EquipmentDao) {
+
+class EquipmentRepository(private val equipmentDao: EquipmentDao) {
 
 
     //获取角色Rank所需装备具体属性
@@ -41,4 +40,14 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     //装备碎片信息
     suspend fun getEquipmentCraft(eid: Int) = equipmentDao.getEquipmentCraft(eid)
 
+    companion object {
+
+        @Volatile
+        private var instance: EquipmentRepository? = null
+
+        fun getInstance(equipmentDao: EquipmentDao) =
+            instance ?: synchronized(this) {
+                instance ?: EquipmentRepository(equipmentDao).also { instance = it }
+            }
+    }
 }

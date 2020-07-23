@@ -11,18 +11,16 @@ import cn.wthee.pcrtool.data.model.add
 import cn.wthee.pcrtool.data.model.multiply
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CharacterPromotionViewModel @Inject constructor(
+
+class CharacterPromotionViewModel(
     private val characterRepository: CharacterRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
     var equipments = MutableLiveData<List<EquipmentData>>()
     var sumInfo = MutableLiveData<CharacterAttrInfo>()
-    var maxRankAndRarity = MutableLiveData<List<Int>>()
+    var maxData = MutableLiveData<List<Int>>()
 
     //获取角色属性信息
     fun getCharacterInfo(unitId: Int, rank: Int, rarity: Int, lv: Int) {
@@ -55,11 +53,11 @@ class CharacterPromotionViewModel @Inject constructor(
                     else -> 0
                 }
                 //获取装备信息及其提升
-                val eqInfo = CharacterAttrInfo.setValue(eq)
+                val eqData = CharacterAttrInfo.setValue(eq)
                 val eh =
                     CharacterAttrInfo.setValue(equipmentRepository.getEquipmentEnhanceData(eq.equipmentId))
                 info.add(eh.multiply(mult))
-                    .add(eqInfo)
+                    .add(eqData)
             }
             sumInfo.postValue(info)
         }
@@ -71,7 +69,8 @@ class CharacterPromotionViewModel @Inject constructor(
         viewModelScope.launch {
             val rank = characterRepository.getMaxRank(id)
             val rarity = characterRepository.getMaxRarity(id)
-            maxRankAndRarity.postValue(listOf(rank, rarity))
+            val level = characterRepository.getMaxLevel()
+            maxData.postValue(listOf(rank, rarity, level))
         }
     }
 

@@ -1,14 +1,13 @@
 package cn.wthee.pcrtool.data
 
-import javax.inject.Inject
-import javax.inject.Singleton
 
 //角色数据Repository
-@Singleton
-class CharacterRepository @Inject constructor(private val characterDao: CharacterDao) {
+
+class CharacterRepository(private val characterDao: CharacterDao) {
 
     //获取角色个人资料
-    suspend fun getInfoAndData() = characterDao.getInfoAndData()
+    suspend fun getInfoAndData(name: String, filter: Map<String, Int>) =
+        characterDao.getInfoAndData(name)
 
     //获取角色Rank所需装备id
     suspend fun getEquipmentIds(unitId: Int, rank: Int) =
@@ -29,10 +28,23 @@ class CharacterRepository @Inject constructor(private val characterDao: Characte
     //角色技能
     suspend fun getCharacterSkill(id: Int) = characterDao.getCharacterSkill(id)
 
-    //角色技能
+    //技能数据
     suspend fun getSkillData(sid: Int) = characterDao.getSkillData(sid)
 
     //角色技能详情
     suspend fun getSkillActions(aids: List<Int>) = characterDao.getSkillActions(aids)
 
+    //角色最大等级
+    suspend fun getMaxLevel() = characterDao.getMaxLevel()
+
+    companion object {
+
+        @Volatile
+        private var instance: CharacterRepository? = null
+
+        fun getInstance(characterDao: CharacterDao) =
+            instance ?: synchronized(this) {
+                instance ?: CharacterRepository(characterDao).also { instance = it }
+            }
+    }
 }

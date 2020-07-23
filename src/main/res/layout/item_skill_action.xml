@@ -17,7 +17,7 @@
         android:paddingEnd="@dimen/s_padding"
         tools:text="@string/atk"
         android:textColor="@color/colorBlack"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
 
 </LinearLayout>

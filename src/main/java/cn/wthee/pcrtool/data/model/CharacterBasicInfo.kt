@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.model
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
 
 
@@ -27,6 +28,7 @@ data class CharacterBasicInfo(
     @ColumnInfo(name = "serif_3") val serif3: String,
     @ColumnInfo(name = "search_area_width") val position: Int,
     @ColumnInfo(name = "comment") val comment: String,
+    @ColumnInfo(name = "atk_type") val atkType: Int,
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int
 ) : Serializable {
 
@@ -45,7 +47,16 @@ data class CharacterBasicInfo(
         return list
     }
 
+    fun getAllUrl(): ArrayList<String> {
+        val list = arrayListOf<String>()
+        list.add(Constants.Reality_CHARACTER_URL + getStarId(3) + Constants.WEBP)
+        getAllStarId().forEach {
+            list.add(Constants.CHARACTER_URL + it + Constants.WEBP)
+        }
+        return list
+    }
 
+    //去除无效id
     fun getFixedId(): Int {
         val errorIds = arrayListOf(
             101301, 105401, 101501,
@@ -59,13 +70,15 @@ data class CharacterBasicInfo(
         }
     }
 
-    fun getSelf() =
-        if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
-            "......"
-        } else {
-            this.selfText.replace("\\n", "")
-        }
+    //角色自我介绍
+    fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {
+        "......"
+    } else {
+        this.selfText.replace("\\n", "")
+    }
 
+
+    //获取名字，去除限定类型
     fun getNameF(): String {
         val index = this.name.indexOf("（")
         return if (index == -1) {
@@ -76,6 +89,7 @@ data class CharacterBasicInfo(
         }
     }
 
+    //获取限定类型
     fun getNameL(): String {
         val index = this.name.indexOf("（")
         return if (index == -1) {
@@ -86,6 +100,7 @@ data class CharacterBasicInfo(
         }
     }
 
+    //位置
     fun getPositionIcon() = when (this.position) {
         in 0..300 -> R.drawable.ic_position_0_300
         in 301..600 -> R.drawable.ic_position_301_600
@@ -93,9 +108,10 @@ data class CharacterBasicInfo(
         else -> R.drawable.ic_position_600
     }
 
+    //羁绊提升文本
     fun getLoveSelfText(): String {
         val text = serif1 + serif2 + serif3
-        return if (this.selfText.contains("？") || this.selfText.contains("?") || this.selfText.contains("test") || this.selfText.isEmpty()) {
+        return if (text.contains("test") || text.isBlank()) {
             "......"
         } else {
             text.replace("\\n", "")

@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
@@ -154,8 +155,11 @@ class DatabaseDownloadWorker(
                     AppDatabase.getInstance().close()
                     synchronized(AppDatabase::class.java) {
                         UnzippedUtil.deCompress(db, true)
+                        //通知更新数据
+                        Looper.prepare()
                         ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                        CharacterListFragment.viewModel.reload.postValue(true)
+                        CharacterListFragment.handler.sendEmptyMessage(1)
+                        Looper.loop()
                     }
                 }
             }

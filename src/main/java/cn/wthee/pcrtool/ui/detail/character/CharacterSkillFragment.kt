@@ -11,9 +11,8 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.adapters.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.InjectorUtil
-import javax.inject.Singleton
 
-@Singleton
+
 class CharacterSkillFragment : Fragment() {
 
     companion object {
@@ -33,7 +32,7 @@ class CharacterSkillFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        requireArguments().let {
             unitId = it.getInt("id")
         }
     }

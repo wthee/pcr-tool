@@ -41,7 +41,7 @@
                 android:maxLines="1"
                 android:tag="beta_title"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
                 app:layout_constraintBottom_toTopOf="@+id/textView"
                 app:layout_constraintStart_toEndOf="@id/imageview"
                 app:layout_constraintTop_toTopOf="@id/imageview"
@@ -93,7 +93,7 @@
                         android:layout_marginTop="@dimen/s_margin"
                         android:tag="label_feature"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/colorAccent"
                         tools:text="更新内容" />
 
                     <!-- 【必设】更新属性控件tag：beta_upgrade_feature-->
@@ -136,7 +136,7 @@
                 android:padding="@dimen/m_padding"
                 android:tag="beta_confirm_button"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="confirm" />

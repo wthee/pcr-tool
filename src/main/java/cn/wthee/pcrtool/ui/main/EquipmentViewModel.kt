@@ -6,11 +6,9 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.model.EquipmentData
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class EquipmentViewModel @Inject constructor(
+
+class EquipmentViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 

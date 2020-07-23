@@ -10,11 +10,9 @@ import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
 import cn.wthee.pcrtool.utils.Constants.SORT_POSITION
 import cn.wthee.pcrtool.utils.Constants.SORT_WEIGHT
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CharacterViewModel @Inject constructor(
+
+class CharacterViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
 
@@ -24,10 +22,10 @@ class CharacterViewModel @Inject constructor(
     var reload = MutableLiveData<Boolean>()
 
     //角色基本资料
-    fun getCharacters(sortType: Int, asc: Boolean) {
+    fun getCharacters(sortType: Int, asc: Boolean, name: String, filter: Map<String, Int>) {
         isLoading.postValue(true)
         viewModelScope.launch {
-            val data = repository.getInfoAndData().sortedWith(getSort(sortType, asc))
+            val data = repository.getInfoAndData(name, filter).sortedWith(getSort(sortType, asc))
             isLoading.postValue(false)
             refresh.postValue(false)
             characters.postValue(data)

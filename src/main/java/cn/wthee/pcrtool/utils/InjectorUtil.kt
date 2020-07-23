@@ -14,19 +14,19 @@ import cn.wthee.pcrtool.ui.main.EquipmentViewModelFactory
 
 object InjectorUtil {
     private fun getCharacterRepository(): CharacterRepository {
-        return CharacterRepository(
+        return CharacterRepository.getInstance(
             AppDatabase.getInstance().getCharacterDao()
         )
     }
 
     private fun getEquipmentRepository(): EquipmentRepository {
-        return EquipmentRepository(
+        return EquipmentRepository.getInstance(
             AppDatabase.getInstance().getEquipmentDao()
         )
     }
 
     private fun getEnemyRepository(): EnemyRepository {
-        return EnemyRepository(
+        return EnemyRepository.getInstance(
             AppDatabase.getInstance().getEnemyDao()
         )
     }

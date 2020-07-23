@@ -53,12 +53,13 @@ object Constants {
     const val UNKNOW_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在更新数据..."
     const val NOTICE_TITLE_PRE = "PCR Tool\n"
-
+    const val NOTICE_TITLE_ERROR = "访问出错"
     const val NOTICE_TOAST_SUCCESS = "数据更新完成"
     const val NOTICE_TOAST_TITLE = "数据更新中\n详情查看通知栏"
-    const val NOTICE_TOAST_TIMEOUT = "数据库信息无法访问\n请尝试切换上网方式"
+    const val NOTICE_TOAST_TIMEOUT = "数据库信息无法访问，请尝试切换上网方式"
     const val NOTICE_TOAST_CHECKING = "正在检测数据库版本"
     const val NOTICE_TOAST_CHECKED = "数据库已是最新版本"
+    const val NOTICE_TOAST_TODO = "功能暂未实装"
 
     //列表列数
     const val COLUMN_COUNT = 1
@@ -69,5 +70,6 @@ object Constants {
     const val SORT_HEIGHT = 1
     const val SORT_WEIGHT = 2
     const val SORT_POSITION = 3
+
 
 }

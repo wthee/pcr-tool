@@ -17,6 +17,7 @@
     <dimen name="s_margin">6dp</dimen>
     <dimen name="m_margin">12dp</dimen>
     <dimen name="l_margin">25dp</dimen>
+    <dimen name="xl_margin">65dp</dimen>
     <dimen name="border_size">2dp</dimen>
     <dimen name="s_padding">5dp</dimen>
     <dimen name="m_padding">15dp</dimen>
@@ -25,7 +26,7 @@
     <!--    integer-->
     <integer name="slide">400</integer>
     <integer name="item_anim">600</integer>
-    <integer name="item_anim_fast">250</integer>
+    <integer name="item_anim_fast">300</integer>
     <integer name="delay">500</integer>
 
     <dimen name="fab_margin">16dp</dimen>
@@ -47,4 +48,7 @@
     <dimen name="elevation_fab">64dp</dimen>
     <dimen name="elevation_button">4dp</dimen>
     <dimen name="elevation_dialog">24dp</dimen>
+    <dimen name="fab_circle_radius">150dp</dimen>
+    <dimen name="list_height">300dp</dimen>
+    <dimen name="hr_height">8dp</dimen>
 </resources>

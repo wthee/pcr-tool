@@ -11,9 +11,9 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment
-import cn.wthee.pcrtool.ui.detail.character.PromotionFragment
+import kotlin.math.abs
 
-class CharacterInfoViewPagerAdapter(
+class CharacterViewPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
     characterInfo: CharacterBasicInfo
@@ -23,14 +23,6 @@ class CharacterInfoViewPagerAdapter(
 
     init {
         mFragments.put(PAGE_BASIC, CharacterBasicInfoFragment.getInstance(characterInfo))
-        mFragments.put(
-            PAGE_BATTLE,
-            PromotionFragment.getInstance(
-                characterInfo.id,
-                characterInfo.name,
-                characterInfo.getFixedComment()
-            )
-        )
         mFragments.put(PAGE_SKILL, CharacterSkillFragment.getInstance(characterInfo.id))
     }
 
@@ -45,8 +37,7 @@ class CharacterInfoViewPagerAdapter(
     companion object {
 
         const val PAGE_BASIC = 0
-        const val PAGE_BATTLE = 1
-        const val PAGE_SKILL = 2
+        const val PAGE_SKILL = 1
 
     }
 }
@@ -82,7 +73,7 @@ class DepthPageTransformer : ViewPager2.PageTransformer {
                     translationZ = -1f
 
                     // Scale the page down (between MIN_SCALE and 1)
-                    val scaleFactor = (MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position)))
+                    val scaleFactor = (MIN_SCALE + (1 - MIN_SCALE) * (1 - abs(position)))
                     scaleX = scaleFactor
                     scaleY = scaleFactor
                 }

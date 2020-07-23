@@ -6,12 +6,30 @@
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
         android:title="@string/setting"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/love"
+        android:icon="@drawable/ic_love_hollow"
+        android:title="@string/tab_love"
+        app:showAsAction="ifRoom" />
+
 
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search"
         android:title="@string/search"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/filter"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/filter"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/sort"
+        android:icon="@drawable/ic_sort"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom" />
 </menu>

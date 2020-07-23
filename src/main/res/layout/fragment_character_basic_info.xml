@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBg">
+    android:background="@color/colorWhite">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp">
+        app:elevation="@dimen/elevation_card">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/layout_toolbar"
@@ -40,10 +40,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
                 android:background="@android:color/transparent"
-                app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
                 app:menu="@menu/menu_basic_info"
-                app:navigationIcon="@drawable/ic_back" />
+                app:navigationIcon="@color/colorAlpha" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -55,12 +54,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/s_padding">
+            android:orientation="vertical">
 
             <include
                 android:id="@+id/content"
                 layout="@layout/layout_basic_info" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hr_height"
+                android:layout_gravity="center"
+                android:background="@color/colorBg" />
 
             <LinearLayout
                 android:id="@+id/basic_info"
@@ -68,6 +72,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/s_padding"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
                 <LinearLayout
                     android:id="@+id/line_ex"
@@ -103,9 +113,8 @@
                     android:id="@+id/line2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/line1">
+                    android:layout_margin="@dimen/s_margin"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title_birth"
@@ -146,16 +155,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="end"
-                        tools:text="test"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        tools:text="test" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/line2">
+                    android:layout_margin="@dimen/s_margin"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title_race"
@@ -173,7 +181,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:paddingEnd="@dimen/s_padding"
                         android:gravity="end"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                         tools:text="test" />
@@ -203,9 +210,8 @@
                     android:id="@+id/line4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/line3">
+                    android:layout_margin="@dimen/s_margin"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title_guide"
@@ -232,9 +238,8 @@
                     android:id="@+id/line5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/line4">
+                    android:layout_margin="@dimen/s_margin"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title_favorite"
@@ -258,23 +263,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/line6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/line5">
-
-
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/line7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/line6">
+                    android:layout_margin="@dimen/s_margin"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/title_self"
@@ -305,14 +298,13 @@
                     android:layout_margin="@dimen/m_margin"
                     android:gravity="start"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    app:layout_constraintTop_toBottomOf="@id/line7"
                     tools:text="test" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/title_love_self"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
+                    android:layout_margin="@dimen/s_margin"
                     android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="@dimen/s_padding"
@@ -328,9 +320,11 @@
                     android:layout_margin="@dimen/m_margin"
                     android:gravity="start"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_love_self"
                     tools:text="test" />
+
+                <include
+                    layout="@layout/layout_character_promotion"
+                    android:id="@+id/promotion" />
 
             </LinearLayout>
 
@@ -338,10 +332,11 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_love_cbi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/tab_love"
         android:src="@drawable/ic_love"
         app:borderWidth="0dp"
         app:fabSize="mini"

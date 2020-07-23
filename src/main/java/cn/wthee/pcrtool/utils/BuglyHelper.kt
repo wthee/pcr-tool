@@ -39,7 +39,6 @@ object BuglyHelper {
                     labelFeature.text =
                         SimpleDateFormat("yyyy-MM-dd").format(upgradeInfo.publishTime)
                 }
-
             }
 
             override fun onStart(context: Context?, view: View?, upgradeInfo: UpgradeInfo?) {

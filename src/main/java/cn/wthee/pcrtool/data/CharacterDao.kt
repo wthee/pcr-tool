@@ -29,6 +29,7 @@ interface CharacterDao {
                 "unit_profile.self_text, " +
                 "unit_data.search_area_width, " +
                 "unit_data.comment, " +
+                "unit_data.atk_type, " +
                 "rarity_6_quest_data.rarity_6_quest_id, " +
                 "coalesce(actual_unit_background.unit_name, \"\") as actual_name, " +
                 "coalesce(character_love_rankup_text.serif_1, \"\") as serif_1, " +
@@ -40,9 +41,9 @@ interface CharacterDao {
                 "LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id " +
                 "LEFT JOIN actual_unit_background ON (unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31) " +
                 "LEFT JOIN character_love_rankup_text ON character_love_rankup_text.chara_id = unit_data.unit_id / 100 " +
-                "WHERE unit_profile.unit_id <> 110201"
+                "WHERE unit_profile.unit_name like '%' || :unitName || '%'"
     )
-    suspend fun getInfoAndData(): List<CharacterBasicInfo>
+    suspend fun getInfoAndData(unitName: String): List<CharacterBasicInfo>
 
     //角色Rank所需装备id
     @Query("SELECT * FROM unit_promotion WHERE unit_promotion.unit_id = :unitId AND unit_promotion.promotion_level = :rank ")
@@ -68,11 +69,15 @@ interface CharacterDao {
     @Query("SELECT * FROM unit_skill_data  WHERE unit_id = :id")
     suspend fun getCharacterSkill(id: Int): CharacterSkillData
 
-    //角色技能
+    //技能数据
     @Query("SELECT * FROM skill_data  WHERE skill_id = :sid")
     suspend fun getSkillData(sid: Int): SkillData
 
     //角色技能详情
     @Query("SELECT * FROM skill_action  WHERE action_id IN (:aid)")
     suspend fun getSkillActions(aid: List<Int>): List<SkillAction>
+
+    //角色最大等级
+    @Query("SELECT MAX( unit_level ) FROM experience_unit")
+    suspend fun getMaxLevel(): Int
 }
