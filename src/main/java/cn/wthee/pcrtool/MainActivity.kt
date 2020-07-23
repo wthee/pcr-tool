@@ -12,13 +12,11 @@ import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.ActivityMainBinding
-import cn.wthee.pcrtool.databinding.LayoutFilterBinding
+import cn.wthee.pcrtool.databinding.LayoutFilterCharacterBinding
+import cn.wthee.pcrtool.databinding.LayoutFilterEquipmentBinding
 import cn.wthee.pcrtool.databinding.LayoutSearchBinding
-import cn.wthee.pcrtool.databinding.LayoutSortBinding
-import cn.wthee.pcrtool.ui.main.CharacterListFragment
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.ui.main.EnemyListFragment
-import cn.wthee.pcrtool.ui.main.EquipmentListFragment
+import cn.wthee.pcrtool.ui.main.*
+import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         var databaseVersion: String? = Constants.DATABASE_VERSION
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
+        lateinit var spFirstClick: SharedPreferences
         lateinit var spSetting: SharedPreferences
         var sortType = Constants.SORT_TYPE
         var sortAsc = Constants.SORT_ASC
@@ -49,12 +48,14 @@ class MainActivity : AppCompatActivity() {
         lateinit var fabLove: FloatingActionButton
         lateinit var fabSearch: FloatingActionButton
         lateinit var fabFilter: FloatingActionButton
-        lateinit var fabSort: FloatingActionButton
     }
 
     private lateinit var binding: ActivityMainBinding
     private val sharedCharacterViewModel by viewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
+    }
+    private val sharedEquipViewModel by viewModels<EquipmentViewModel> {
+        InjectorUtil.provideEquipmentViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUpdate(autoUpdateDb: Boolean) {
-        if (autoUpdateDb) {
+        if (FileUtil.needUpadateDb() || autoUpdateDb) {
             CoroutineScope(Dispatchers.Main).launch {
                 DatabaseUpdateHelper().checkDBVersion()
             }
@@ -104,6 +105,8 @@ class MainActivity : AppCompatActivity() {
         ).versionName
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
+        spFirstClick = getSharedPreferences("firstClick", Context.MODE_PRIVATE)
+
         databaseVersion = sp.getString(Constants.SP_DATABASE_VERSION, Constants.DATABASE_VERSION)
         sortType = sp.getInt(Constants.SP_SORT_TYPE, Constants.SORT_TYPE)
         sortAsc = sp.getBoolean(Constants.SP_SORT_ASC, Constants.SORT_ASC)
@@ -117,7 +120,6 @@ class MainActivity : AppCompatActivity() {
         fabLove = binding.love
         fabSearch = binding.search
         fabFilter = binding.filter
-        fabSort = binding.sort
     }
 
     private fun setListener() {
@@ -153,8 +155,8 @@ class MainActivity : AppCompatActivity() {
             closeFab()
             when (currentMainPage) {
                 0 -> {
-                    CharacterListFragment.filterParams.all =
-                        if (CharacterListFragment.filterParams.all) {
+                    CharacterListFragment.characterfilterParams.all =
+                        if (CharacterListFragment.characterfilterParams.all) {
                             ToastUtil.short("仅显示收藏")
                             false
                         } else {
@@ -163,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     sharedCharacterViewModel.getCharacters(
                         sortType,
-                        sortAsc, "", mapOf()
+                        sortAsc, ""
                     )
                     CharacterListFragment.listAdapter.notifyDataSetChanged()
                 }
@@ -199,12 +201,12 @@ class MainActivity : AppCompatActivity() {
                             //角色名字
                             sharedCharacterViewModel.getCharacters(
                                 sortType,
-                                sortAsc, query ?: "", mapOf()
+                                sortAsc, query ?: ""
                             )
                         }
-                        1 -> EquipmentListFragment.listAdapter.filter.filter(
-                            query
-                        )
+                        1 -> {
+                            sharedEquipViewModel.getEquips(asc, query ?: "")
+                        }
                         2 -> EnemyListFragment.listAdapter.filter.filter(
                             query
                         )
@@ -219,9 +221,9 @@ class MainActivity : AppCompatActivity() {
                         when (currentMainPage) {
                             0 -> sharedCharacterViewModel.getCharacters(
                                 sortType,
-                                sortAsc, "", mapOf()
+                                sortAsc, ""
                             )
-                            1 -> EquipmentListFragment.viewModel.getEquips()
+                            1 -> sharedEquipViewModel.getEquips(asc, "")
                             2 -> EnemyListFragment.viewModel.getAllEnemy()
                         }
                     }
@@ -236,67 +238,80 @@ class MainActivity : AppCompatActivity() {
             when (currentMainPage) {
                 0 -> {
                     //筛选
-                    val layout = LayoutFilterBinding.inflate(layoutInflater)
+                    val layout = LayoutFilterCharacterBinding.inflate(layoutInflater)
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
+                    //排序类型
+                    when (sortType) {
+                        0 -> layout.sortChip0.isChecked = true
+                        1 -> layout.sortChip1.isChecked = true
+                        2 -> layout.sortChip2.isChecked = true
+                        3 -> layout.sortChip3.isChecked = true
+                    }
+                    //排序规则
+                    if (sortAsc) layout.asc.isChecked = true else layout.desc.isChecked = true
                     //位置筛选
                     val positionChip1 = layout.positionChip1
                     val positionChip2 = layout.positionChip2
                     val positionChip3 = layout.positionChip3
                     //传入筛选条件
-                    positionChip1.isChecked = CharacterListFragment.filterParams.positon1
-                    positionChip2.isChecked = CharacterListFragment.filterParams.positon2
-                    positionChip3.isChecked = CharacterListFragment.filterParams.positon3
+                    positionChip1.isChecked = CharacterListFragment.characterfilterParams.positon1
+                    positionChip2.isChecked = CharacterListFragment.characterfilterParams.positon2
+                    positionChip3.isChecked = CharacterListFragment.characterfilterParams.positon3
                     //攻击类型筛选
                     val atk1 = layout.atkChip1
                     val atk2 = layout.atkChip2
                     //传入筛选条件
-                    atk1.isChecked = CharacterListFragment.filterParams.atkPhysical
-                    atk2.isChecked = CharacterListFragment.filterParams.atkMagic
+                    atk1.isChecked = CharacterListFragment.characterfilterParams.atkPhysical
+                    atk2.isChecked = CharacterListFragment.characterfilterParams.atkMagic
                     layout.next.setOnClickListener {
                         dialog.dismiss()
+                        //排序选项
+                        sortType = when (layout.sortTypeChips.checkedChipId) {
+                            R.id.sort_chip_0 -> 0
+                            R.id.sort_chip_1 -> 1
+                            R.id.sort_chip_2 -> 2
+                            R.id.sort_chip_3 -> 3
+                            else -> 0
+                        }
+                        sortAsc = layout.ascChips.checkedChipId == R.id.asc
                         //筛选选项
-                        CharacterListFragment.filterParams.positon1 = positionChip1.isChecked
-                        CharacterListFragment.filterParams.positon2 = positionChip2.isChecked
-                        CharacterListFragment.filterParams.positon3 = positionChip3.isChecked
-                        CharacterListFragment.filterParams.atkPhysical = atk1.isChecked
-                        CharacterListFragment.filterParams.atkMagic = atk2.isChecked
+                        CharacterListFragment.characterfilterParams.positon1 =
+                            positionChip1.isChecked
+                        CharacterListFragment.characterfilterParams.positon2 =
+                            positionChip2.isChecked
+                        CharacterListFragment.characterfilterParams.positon3 =
+                            positionChip3.isChecked
+                        CharacterListFragment.characterfilterParams.atkPhysical = atk1.isChecked
+                        CharacterListFragment.characterfilterParams.atkMagic = atk2.isChecked
                         sharedCharacterViewModel.getCharacters(
                             sortType,
-                            sortAsc, "", mapOf()
+                            sortAsc, ""
                         )
+                    }
+                    layout.reset.setOnClickListener {
+                        dialog.dismiss()
+                        MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(0))
                     }
                 }
                 1 -> {
-                    ToastUtil.short(NOTICE_TOAST_TODO)
-                }
-                2 -> {
-                    ToastUtil.short(NOTICE_TOAST_TODO)
-                }
-            }
-        }
-        //排序
-        fabSort.setOnClickListener {
-            closeFab()
-            when (currentMainPage) {
-                0 -> {
-                    //显示排序布局
-                    val layout = LayoutSortBinding.inflate(layoutInflater)
+                    //筛选
+                    val layout = LayoutFilterEquipmentBinding.inflate(layoutInflater)
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
+                    //类型筛选
+                    val craft0 = layout.craftChip0
+                    val craft1 = layout.craftChip1
+                    //传入筛选条件
+                    craft0.isChecked = EquipmentListFragment.equipfilterParams.craft0
+                    craft1.isChecked = EquipmentListFragment.equipfilterParams.craft1
                     layout.next.setOnClickListener {
                         dialog.dismiss()
                         //筛选选项
-                        sortType = layout.spinnerSort.selectedItemPosition
-                        sortAsc = layout.radioSort.checkedRadioButtonId == R.id.sort_asc
-                        sharedCharacterViewModel.getCharacters(
-                            sortType,
-                            sortAsc, "", mapOf()
-                        )
+                        EquipmentListFragment.equipfilterParams.craft0 = craft0.isChecked
+                        EquipmentListFragment.equipfilterParams.craft1 = craft1.isChecked
+                        sharedEquipViewModel.getEquips(asc, "")
                     }
-                }
-                1 -> {
-                    ToastUtil.short(NOTICE_TOAST_TODO)
                 }
                 2 -> {
                     ToastUtil.short(NOTICE_TOAST_TODO)

@@ -1,16 +1,15 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.model.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-//装备提升
-@Entity(tableName = "equipment_enhance_rate")
-data class EquipmentEnhanceRate(
-    @PrimaryKey
-    @ColumnInfo(name = "equipment_id") val equipmentId: Int,
-    @ColumnInfo(name = "equipment_name") val equipmentName: String,
-    @ColumnInfo(name = "description") val description: String,
+//角色属性状态
+@Entity(
+    tableName = "unit_promotion_status",
+    primaryKeys = ["unit_id", "promotion_level"]
+)
+data class CharacterPromotionStatus(
+    @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "promotion_level") val promotionLevel: Int,
     @ColumnInfo(name = "hp") val hp: Double,
     @ColumnInfo(name = "atk") val atk: Double,

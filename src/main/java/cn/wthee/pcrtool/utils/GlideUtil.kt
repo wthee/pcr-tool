@@ -21,8 +21,7 @@ object GlideUtil {
         .placeholder(R.drawable.load)
         .skipMemoryCache(false)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .encodeQuality(60)
-        .timeout(30000)
+        .timeout(10 * 60 * 1000)
 
     fun load(url: String, view: ImageView, error: Int, fragment: Fragment?) {
         Glide.with(MyApplication.getContext())
@@ -57,6 +56,38 @@ object GlideUtil {
             .into(view)
     }
 
+    fun loadReturnBitmap(url: String, view: ImageView, error: Int, onBitmap: OnBitmap) {
+        Glide.with(MyApplication.getContext())
+            .load(url)
+            .error(error)
+            .thumbnail(Glide.with(view).load(R.drawable.load))
+            .apply(options)
+            .listener(object : RequestListener<Drawable?> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    view.setImageResource(error)
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    onBitmap.returnBitmap(resource?.toBitmap()!!)
+                    view.setImageResource(0)
+                    return false
+                }
+            })
+            .into(view)
+    }
+
     fun loadWithListener(
         url: String,
         view: ImageView,
@@ -88,7 +119,7 @@ object GlideUtil {
                     isFirstResource: Boolean
                 ): Boolean {
                     fragment?.startPostponedEnterTransition()
-                    onLoadListener.onSuccess(resource?.toBitmap()!!)
+                    onLoadListener.onSuccess()
                     view.setImageResource(0)
                     return false
                 }
@@ -100,5 +131,9 @@ object GlideUtil {
 }
 
 interface OnLoadListener {
-    fun onSuccess(bitmap: Bitmap)
+    fun onSuccess()
+}
+
+interface OnBitmap {
+    fun returnBitmap(bitmap: Bitmap)
 }

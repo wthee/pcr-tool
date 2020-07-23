@@ -1,10 +1,11 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.model.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.EquipmentAttr
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
@@ -87,15 +88,32 @@ class EquipmentData(
         val attrs = arrayListOf<EquipmentAttr>()
         val res = MyApplication.getContext().resources
 
-        if (hp != 0.0) attrs.add(EquipmentAttr("HP", calcValue(hp)))
-        if (atk != 0.0) attrs.add(EquipmentAttr(res.getString(R.string.atk), calcValue(atk)))
+        if (hp != 0.0) attrs.add(
+            EquipmentAttr(
+                "HP",
+                calcValue(hp)
+            )
+        )
+        if (atk != 0.0) attrs.add(
+            EquipmentAttr(
+                res.getString(
+                    R.string.atk
+                ), calcValue(atk)
+            )
+        )
         if (magicStr != 0.0) attrs.add(
             EquipmentAttr(
                 res.getString(R.string.magic_str),
                 calcValue(magicStr)
             )
         )
-        if (def != 0.0) attrs.add(EquipmentAttr(res.getString(R.string.def), calcValue(def)))
+        if (def != 0.0) attrs.add(
+            EquipmentAttr(
+                res.getString(
+                    R.string.def
+                ), calcValue(def)
+            )
+        )
         if (magicDef != 0.0) attrs.add(
             EquipmentAttr(
                 res.getString(R.string.magic_def),
@@ -126,7 +144,13 @@ class EquipmentData(
                 calcValue(waveEnergyRecovery)
             )
         )
-        if (dodge != 0.0) attrs.add(EquipmentAttr(res.getString(R.string.dodge), calcValue(dodge)))
+        if (dodge != 0.0) attrs.add(
+            EquipmentAttr(
+                res.getString(
+                    R.string.dodge
+                ), calcValue(dodge)
+            )
+        )
         if (physicalPenetrate != 0.0) attrs.add(
             EquipmentAttr(
                 res.getString(R.string.p_penetrate),

@@ -13,74 +13,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
-        android:text="@string/title_position"
+        android:text="装备类型"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/position_chips"
+        android:id="@+id/craft_chips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         app:layout_constraintTop_toBottomOf="@id/filter_position">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/position_chip_1"
+            android:id="@+id/craft_chip_0"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/position_1" />
+            android:text="@string/craft0" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/position_chip_2"
+            android:id="@+id/craft_chip_1"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/position_2" />
+            android:text="@string/craft1" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/position_chip_3"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/position_3" />
     </com.google.android.material.chip.ChipGroup>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/filter_atk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/l_margin"
-        android:text="@string/atk_type"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/position_chips" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/atk_chips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
-        app:layout_constraintTop_toBottomOf="@id/filter_atk">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/atk_chip_1"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/physical" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/atk_chip_2"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/magic" />
-
-    </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/next"
@@ -90,5 +51,5 @@
         android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/atk_chips" />
+        app:layout_constraintTop_toBottomOf="@id/craft_chips" />
 </androidx.constraintlayout.widget.ConstraintLayout>

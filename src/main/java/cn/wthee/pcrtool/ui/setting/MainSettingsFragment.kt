@@ -1,20 +1,28 @@
 package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
+import androidx.core.content.edit
+import androidx.fragment.app.activityViewModels
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
-import cn.wthee.pcrtool.ui.main.EquipmentListFragment
+import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.CacheUtil
 import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
+import com.bumptech.glide.Glide
 import com.tencent.bugly.beta.Beta
 
 
 class MainSettingsFragment : PreferenceFragmentCompat() {
+
+    private val viewModel by activityViewModels<EquipmentViewModel> {
+        InjectorUtil.provideEquipmentViewModelFactory()
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -33,7 +41,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //设置监听
         isList?.setOnPreferenceChangeListener { _, newValue ->
             val value = newValue as Boolean
-            EquipmentListFragment.viewModel.isList.postValue(value)
+            viewModel.isList.postValue(value)
             return@setOnPreferenceChangeListener true
         }
         forceUpdateDb?.setOnPreferenceClickListener {
@@ -46,6 +54,17 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         cleanData?.setOnPreferenceClickListener {
             CacheUtil.clearAllCache(requireContext())
+            cleanData.title =
+                cleanData.title.toString().split(" ")[0] + "  " + CacheUtil.getTotalCacheSize(
+                    requireContext()
+                )
+            Thread {
+                Glide.get(requireContext()).clearDiskCache()
+            }.start()
+            Glide.get(requireContext()).clearMemory()
+            MainActivity.spFirstClick.edit {
+                clear()
+            }
             ToastUtil.short("图片缓存已清理~")
             return@setOnPreferenceClickListener true
         }

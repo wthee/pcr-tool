@@ -40,6 +40,7 @@ class EquipmentMaterialAdapter() :
                     AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
                 equipName.text = "${info.name}"
                 equipCount.text = "x ${info.count}"
+
                 GlideUtil.load(
                     Constants.EQUIPMENT_URL + info.id + Constants.WEBP,
                     equipIcon,

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.databinding.ItemEquipmentPromotionBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.utils.ActivityUtil

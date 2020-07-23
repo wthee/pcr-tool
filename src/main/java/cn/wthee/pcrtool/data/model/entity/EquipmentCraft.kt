@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.model.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -32,16 +32,66 @@ data class EquipmentCraft(
 ) {
     fun getAllMaterialId(): ArrayList<EquipmentCondition> {
         val list = arrayListOf<EquipmentCondition>()
-        if (cid1 != 0 && count1 != 0) list.add(EquipmentCondition(cid1, count1))
-        if (cid2 != 0 && count2 != 0) list.add(EquipmentCondition(cid2, count2))
-        if (cid3 != 0 && count3 != 0) list.add(EquipmentCondition(cid3, count3))
-        if (cid4 != 0 && count4 != 0) list.add(EquipmentCondition(cid4, count4))
-        if (cid5 != 0 && count5 != 0) list.add(EquipmentCondition(cid5, count5))
-        if (cid6 != 0 && count6 != 0) list.add(EquipmentCondition(cid6, count6))
-        if (cid7 != 0 && count7 != 0) list.add(EquipmentCondition(cid7, count7))
-        if (cid8 != 0 && count8 != 0) list.add(EquipmentCondition(cid8, count8))
-        if (cid9 != 0 && count9 != 0) list.add(EquipmentCondition(cid9, count9))
-        if (cid10 != 0 && count10 != 0) list.add(EquipmentCondition(cid10, count10))
+        if (cid1 != 0 && count1 != 0) list.add(
+            EquipmentCondition(
+                cid1,
+                count1
+            )
+        )
+        if (cid2 != 0 && count2 != 0) list.add(
+            EquipmentCondition(
+                cid2,
+                count2
+            )
+        )
+        if (cid3 != 0 && count3 != 0) list.add(
+            EquipmentCondition(
+                cid3,
+                count3
+            )
+        )
+        if (cid4 != 0 && count4 != 0) list.add(
+            EquipmentCondition(
+                cid4,
+                count4
+            )
+        )
+        if (cid5 != 0 && count5 != 0) list.add(
+            EquipmentCondition(
+                cid5,
+                count5
+            )
+        )
+        if (cid6 != 0 && count6 != 0) list.add(
+            EquipmentCondition(
+                cid6,
+                count6
+            )
+        )
+        if (cid7 != 0 && count7 != 0) list.add(
+            EquipmentCondition(
+                cid7,
+                count7
+            )
+        )
+        if (cid8 != 0 && count8 != 0) list.add(
+            EquipmentCondition(
+                cid8,
+                count8
+            )
+        )
+        if (cid9 != 0 && count9 != 0) list.add(
+            EquipmentCondition(
+                cid9,
+                count9
+            )
+        )
+        if (cid10 != 0 && count10 != 0) list.add(
+            EquipmentCondition(
+                cid10,
+                count10
+            )
+        )
         return list
     }
 }

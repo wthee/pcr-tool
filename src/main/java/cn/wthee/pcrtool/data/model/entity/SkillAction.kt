@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.model.entity
 
 import android.content.res.Configuration
 import android.text.SpannableStringBuilder

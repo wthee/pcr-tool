@@ -3,7 +3,12 @@ package cn.wthee.pcrtool.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.model.*
+import cn.wthee.pcrtool.data.model.EquipmentDropOdd
+import cn.wthee.pcrtool.data.model.EquipmentDropRewardID
+import cn.wthee.pcrtool.data.model.EquipmentDropWaveID
+import cn.wthee.pcrtool.data.model.entity.EquipmentCraft
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentEnhanceRate
 
 
 //角色数据DAO
@@ -19,8 +24,8 @@ interface EquipmentDao {
     suspend fun getEquipmentData(eid: Int): EquipmentData
 
     //角色所有装备信息
-    @Query("SELECT * FROM equipment_data WHERE equipment_name NOT LIKE '%（%' AND equipment_name NOT LIKE '%设计图%' AND equipment_name NOT LIKE '%公主之心%' ORDER BY promotion_level DESC")
-    suspend fun getAllEquipments(): List<EquipmentData>
+    @Query("SELECT * FROM equipment_data WHERE equipment_data.equipment_name like '%' || :name || '%' AND equipment_name NOT LIKE '%公主之心%' ORDER BY promotion_level ASC")
+    suspend fun getAllEquipments(name: String): List<EquipmentData>
 
     //装备提升属性
     @Query("SELECT * FROM equipment_enhance_rate WHERE equipment_enhance_rate.equipment_id = :eid ")

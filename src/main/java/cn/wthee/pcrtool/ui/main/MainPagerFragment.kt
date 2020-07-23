@@ -10,16 +10,22 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
+import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
+import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
+import cn.wthee.pcrtool.utils.Constants.SORT_AGE
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -36,6 +42,15 @@ class MainPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentMainPagerBinding
     private lateinit var viewPager2: ViewPager2
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
+    private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
+        InjectorUtil.provideEquipmentViewModelFactory()
+    }
+    private val sharedEnemyViewModel by activityViewModels<EnemyViewModel> {
+        InjectorUtil.provideEnemyViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,10 +92,6 @@ class MainPagerFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     private fun init() {
         //禁止连续点击
         cListClick = false
@@ -96,6 +107,36 @@ class MainPagerFragment : Fragment() {
         })
         //tab 初始化
         tabLayout = binding.layoutTab
+        //重复点击刷新
+        binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                when (tab) {
+                    binding.layoutTab.getTabAt(0) -> {
+                        CharacterListFragment.characterfilterParams.initData()
+                        sortType = SORT_AGE
+                        sortAsc = true
+                        sharedCharacterViewModel.getCharacters(
+                            sortType,
+                            sortAsc, ""
+                        )
+                    }
+                    binding.layoutTab.getTabAt(1) -> {
+                        EquipmentListFragment.equipfilterParams.initData()
+                        asc = true
+                        sharedEquipViewModel.getEquips(asc, "")
+                    }
+                    binding.layoutTab.getTabAt(2) -> {
+                        sharedEnemyViewModel.getAllEnemy()
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+            }
+        })
         TabLayoutMediator(
             tabLayout,
             viewPager2,

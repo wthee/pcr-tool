@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import androidx.navigation.findNavController
 import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
+import cn.wthee.pcrtool.MainActivity.Companion.spFirstClick
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentPromotionAdapter
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
@@ -109,12 +109,16 @@ class CharacterBasicInfoFragment : Fragment() {
             R.drawable.error,
             parentFragment,
             object : OnLoadListener {
-                override fun onSuccess(bitmap: Bitmap) {
-                    sp.edit {
+                override fun onSuccess() {
+                    spFirstClick.edit {
                         putBoolean("first_click_${character.id}", false)
                         lifecycleScope.launch {
-                            delay(resources.getInteger(R.integer.item_anim_fast).toLong())
-                            canBack = true
+                            try {
+                                delay(resources.getInteger(R.integer.item_anim_fast).toLong())
+                                canBack = true
+                            } catch (e: Exception) {
+
+                            }
                         }
 
                     }
@@ -122,7 +126,8 @@ class CharacterBasicInfoFragment : Fragment() {
             }
         )
 
-        if (sp.getBoolean("first_click_${character.id}", true)) {
+        val first = spFirstClick.getBoolean("first_click_${character.id}", true)
+        if (first) {
             parentFragment?.startPostponedEnterTransition()
             lifecycleScope.launch {
                 delay(resources.getInteger(R.integer.item_anim_fast).toLong())
@@ -333,7 +338,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 else
                     character.actualName
             content.catah.text = character.catchCopy
-            content.name.text = character.getNameF()
+            content.name.text = character.name
             character.getNameL().apply {
                 if (this.isNotEmpty()) {
                     lastName.text = this

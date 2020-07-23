@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.SkillAction
+import cn.wthee.pcrtool.data.model.entity.SkillAction
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
 
 

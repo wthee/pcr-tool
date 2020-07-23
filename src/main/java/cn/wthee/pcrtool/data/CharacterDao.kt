@@ -3,7 +3,8 @@ package cn.wthee.pcrtool.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.model.*
+import cn.wthee.pcrtool.data.model.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.*
 
 
 //角色数据DAO
@@ -28,7 +29,7 @@ interface CharacterDao {
                 "unit_profile.catch_copy, " +
                 "unit_profile.self_text, " +
                 "unit_data.search_area_width, " +
-                "unit_data.comment, " +
+                "coalesce(unit_data.comment, \"\") as comment, " +
                 "unit_data.atk_type, " +
                 "rarity_6_quest_data.rarity_6_quest_id, " +
                 "coalesce(actual_unit_background.unit_name, \"\") as actual_name, " +
@@ -36,12 +37,12 @@ interface CharacterDao {
                 "coalesce(character_love_rankup_text.serif_2, \"\") as serif_2, " +
                 "coalesce(character_love_rankup_text.serif_3, \"\") as serif_3 " +
                 "FROM " +
-                "unit_data " +
-                "INNER JOIN unit_profile ON unit_data.unit_id = unit_profile.unit_id " +
+                "unit_profile " +
+                "LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id " +
                 "LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id " +
                 "LEFT JOIN actual_unit_background ON (unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31) " +
                 "LEFT JOIN character_love_rankup_text ON character_love_rankup_text.chara_id = unit_data.unit_id / 100 " +
-                "WHERE unit_profile.unit_name like '%' || :unitName || '%'"
+                "WHERE unit_profile.unit_name like '%' || :unitName || '%' AND unit_profile.unit_id <> 106801"
     )
     suspend fun getInfoAndData(unitName: String): List<CharacterBasicInfo>
 
@@ -80,4 +81,9 @@ interface CharacterDao {
     //角色最大等级
     @Query("SELECT MAX( unit_level ) FROM experience_unit")
     suspend fun getMaxLevel(): Int
+
+    //角色动作循环
+    @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
+    suspend fun getAttackPattern(unitId: Int): AttackPattern
+
 }

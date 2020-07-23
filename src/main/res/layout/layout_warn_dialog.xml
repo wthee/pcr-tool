@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,10 +13,11 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginTop="@dimen/m_margin"
         android:tag="label_feature"
+        android:gravity="center"
         android:text="@string/title_tip"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textColor="@color/colorAccent" />
 
     <TextView
@@ -29,7 +29,7 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:tag="beta_upgrade_feature"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/text"
         tools:text="feature" />
 
@@ -39,7 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next"
-        app:icon="@drawable/ic_next"
         android:layout_gravity="end" />
 
 </LinearLayout>

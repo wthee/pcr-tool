@@ -90,21 +90,6 @@
             app:tint="@color/colorPrimary" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/sort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/sort"
-            android:src="@drawable/ic_sort"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

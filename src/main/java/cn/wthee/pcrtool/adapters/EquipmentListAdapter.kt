@@ -6,18 +6,24 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.core.content.edit
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.EquipmentData
+import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class EquipmentAdapter(private val isList: Boolean) :
@@ -40,32 +46,46 @@ class EquipmentAdapter(private val isList: Boolean) :
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charString = constraint.toString()
-                val filterDatas = if (charString.isEmpty()) {
+                val param: FilterEquipment = Gson().fromJson(
+                    constraint.toString(),
+                    object : TypeToken<FilterEquipment>() {}.type
+                )
+                val filterDatas = if (constraint == null) {
                     //没有过滤的内容，则使用源数据
                     currentList
                 } else {
-                    val filteredList = arrayListOf<EquipmentData>()
-                    try {
-                        currentList.forEachIndexed { _, it ->
-                            if (it.equipmentName.contains(charString)) {
-                                //搜索
-                                filteredList.add(it)
+                    val filteredList = currentList.toMutableList()
+                    filteredList.toHashSet().forEachIndexed { index, data ->
+                        if (!param.all) {
+                            //过滤非收藏角色
+                            if (!MainActivity.sp.getBoolean(data.equipmentId.toString(), false)) {
+                                filteredList.remove(data)
                             }
                         }
-                    } catch (e: Exception) {
-                        e.message
+                        //位置筛选
+                        if (param.hasCraftFilter()) {
+                            if ((!param.craft0 && data.craftFlg == 0)
+                                || (!param.craft1 && data.craftFlg == 1)
+                            ) {
+                                filteredList.remove(data)
+                            }
+                        }
                     }
                     filteredList
                 }
                 val filterResults = FilterResults()
                 filterResults.values = filterDatas
+                filterResults.count = filterDatas.size
                 return filterResults
             }
 
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 submitList(results?.values as List<EquipmentData>)
+                MainActivity.sp.edit {
+                    putInt(Constants.SP_COUNT_EQUIP, results.count)
+                }
+                MainPagerFragment.tabLayout.getTabAt(1)?.text = results.count.toString()
             }
         }
     }

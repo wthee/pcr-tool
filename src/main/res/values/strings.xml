@@ -100,5 +100,8 @@
     <string name="magic">魔法</string>
     <string name="clean_cache">清除缓存</string>
     <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
+    <string name="reset">重置</string>
+    <string name="craft0">不可合成装备（碎片、设计图等）</string>
+    <string name="craft1">可合成装备</string>
 
 </resources>

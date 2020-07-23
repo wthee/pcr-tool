@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.model.CharacterAttrInfo
-import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.data.model.add
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.data.model.multiply
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch

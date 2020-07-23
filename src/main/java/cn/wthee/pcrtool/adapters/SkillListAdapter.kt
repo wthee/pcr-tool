@@ -44,13 +44,16 @@ class SkillAdapter :
                 //装备名称
                 name.text = skill.name
                 desc.text = skill.desc
-                type.text = when (skill.icon_type / 1000) {
+                type.text = when (skill.skillId % 1000) {
                     1 -> "连结爆发"
-                    2 -> "技能"
-                    3 -> "EX技能"
+                    2 -> "技能1"
+                    12 -> "技能1+"
+                    3 -> "技能2"
+                    501 -> "EX技能"
+                    511 -> "EX技能+"
                     else -> ""
                 }
-                //加载装备图片
+                //加载图片
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
                 //技能属性

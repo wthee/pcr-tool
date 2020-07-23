@@ -16,14 +16,14 @@
             android:id="@+id/layout_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorBg"
+            android:background="@color/colorWhite"
             android:fitsSystemWindows="true"
             app:collapsedTitleGravity="center"
             app:collapsedTitleTextAppearance="@style/CollapsedTitle"
-            app:contentScrim="@color/colorBg"
+            app:contentScrim="@color/colorWhite"
             app:expandedTitleTextAppearance="@style/ExpandedTitle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/colorBg"
+            app:statusBarScrim="@color/colorWhite"
             app:toolbarId="@id/toolbar">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -76,6 +76,7 @@
                     android:id="@+id/comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/s_margin"
                     android:padding="@dimen/s_padding"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 

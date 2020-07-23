@@ -6,7 +6,7 @@ package cn.wthee.pcrtool.data
 class CharacterRepository(private val characterDao: CharacterDao) {
 
     //获取角色个人资料
-    suspend fun getInfoAndData(name: String, filter: Map<String, Int>) =
+    suspend fun getInfoAndData(name: String) =
         characterDao.getInfoAndData(name)
 
     //获取角色Rank所需装备id
@@ -36,6 +36,9 @@ class CharacterRepository(private val characterDao: CharacterDao) {
 
     //角色最大等级
     suspend fun getMaxLevel() = characterDao.getMaxLevel()
+
+    //角色动作循环
+    suspend fun getAttackPattern(unitId: Int) = characterDao.getAttackPattern(unitId)
 
     companion object {
 

@@ -14,7 +14,7 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     suspend fun getEquipmentData(eid: Int) = equipmentDao.getEquipmentData(eid)
 
     //角色所有装备信息
-    suspend fun getAllEquipments() = equipmentDao.getAllEquipments()
+    suspend fun getAllEquipments(name: String) = equipmentDao.getAllEquipments(name)
 
     //装备提升信息
     suspend fun getEquipmentEnhanceData(eid: Int) = equipmentDao.getEquipmentEnhanceData(eid)

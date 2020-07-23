@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data
 
 import androidx.room.Dao
 import androidx.room.Query
-import cn.wthee.pcrtool.data.model.EnemyData
+import cn.wthee.pcrtool.data.model.entity.EnemyData
 
 @Dao
 interface EnemyDao {

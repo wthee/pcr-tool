@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.model.EquipmentData
 import cn.wthee.pcrtool.data.model.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import kotlinx.coroutines.launch
 
 
@@ -25,7 +25,7 @@ class EquipmentDetailsViewModel(
         isLoading.postValue(true)
         viewModelScope.launch {
             if (equip.craftFlg == 0) {
-                materials.add(EquipmentMaterial(0, "", 1))
+                materials.add(EquipmentMaterial(equip.equipmentId, equip.equipmentName, 1))
             } else {
                 getAllMaterial(equip.equipmentId, equip.equipmentName, 1, 1)
             }

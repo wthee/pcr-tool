@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.adapters
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +20,11 @@ import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
-import cn.wthee.pcrtool.data.model.FilterDataCharacter
+import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
-import cn.wthee.pcrtool.utils.OnLoadListener
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -71,18 +69,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                 //加载网络图片
                 val picUrl =
                     Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
-                GlideUtil.loadWithListener(
-                    picUrl,
-                    characterPic,
-                    R.drawable.error,
-                    null,
-                    object : OnLoadListener {
-                        override fun onSuccess(bitmap: Bitmap) {
-                            sp.edit {
-                                putBoolean("first_click_${character.id}", false)
-                            }
-                        }
-                    })
+                GlideUtil.load(picUrl, characterPic, R.drawable.error, null)
                 //设置位置
                 content.positionType.background =
                     ResourcesCompat.getDrawable(
@@ -138,9 +125,9 @@ class CharacterAdapter(private val fragment: Fragment) :
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val param: FilterDataCharacter = Gson().fromJson(
+                val param: FilterCharacter = Gson().fromJson(
                     constraint.toString(),
-                    object : TypeToken<FilterDataCharacter>() {}.type
+                    object : TypeToken<FilterCharacter>() {}.type
                 )
                 val filterDatas = if (constraint == null) {
                     //没有过滤的内容，则使用源数据

@@ -1,5 +1,10 @@
 package cn.wthee.pcrtool.data.model
 
+import cn.wthee.pcrtool.data.model.entity.CharacterPromotionStatus
+import cn.wthee.pcrtool.data.model.entity.CharacterRarity
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentEnhanceRate
+
 //角色属性
 data class CharacterAttrInfo(
     var hp: Double,

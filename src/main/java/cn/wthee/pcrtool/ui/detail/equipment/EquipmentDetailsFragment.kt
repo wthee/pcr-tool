@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
-import cn.wthee.pcrtool.data.model.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
@@ -141,13 +141,18 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     private fun setObserve() {
         viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
             //合成素材
-            materialAdapter = EquipmentMaterialAdapter()
-            binding.material.layoutManager =
-                GridLayoutManager(requireContext(), if (it.size == 1) 1 else 2).apply {
-                    orientation = LinearLayoutManager.VERTICAL
-                }
-            binding.material.adapter = materialAdapter
-            materialAdapter.submitList(it)
+            if (it.isNotEmpty()) {
+                materialAdapter = EquipmentMaterialAdapter()
+                binding.material.layoutManager =
+                    GridLayoutManager(requireContext(), if (it.size == 1) 1 else 2).apply {
+                        orientation = LinearLayoutManager.VERTICAL
+                    }
+                binding.material.adapter = materialAdapter
+                materialAdapter.submitList(it)
+            } else {
+                binding.titleMaterial.visibility = View.GONE
+                binding.material.visibility = View.GONE
+            }
         })
         viewModel.isLoading.observe(viewLifecycleOwner, Observer {
 //            binding.equipProgressBar.visibility = if (it) View.VISIBLE else View.GONE

@@ -12,12 +12,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAdapter
-import cn.wthee.pcrtool.data.model.FilterDataCharacter
+import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.utils.Constants
@@ -32,7 +33,7 @@ class CharacterListFragment : Fragment() {
     companion object {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterAdapter
-        var filterParams = FilterDataCharacter(
+        var characterfilterParams = FilterCharacter(
             true, true, true, true,
             true, true
         )
@@ -56,7 +57,7 @@ class CharacterListFragment : Fragment() {
         setObserve()
         //控件监听
         setListener()
-        viewModel.getCharacters(sortType, sortAsc, "", mapOf())
+        viewModel.getCharacters(sortType, sortAsc, "")
         //接收消息
         handler = Handler(Handler.Callback {
             when (it.what) {
@@ -101,10 +102,11 @@ class CharacterListFragment : Fragment() {
                     if (data != null && data.isNotEmpty()) {
                         binding.noDataTip.visibility = View.GONE
                         listAdapter.submitList(data) {
-                            listAdapter.filter.filter(filterParams.toJsonString())
+                            listAdapter.filter.filter(characterfilterParams.toJsonString())
                             sp.edit {
                                 putInt(Constants.SP_COUNT_CHARACTER, data.size)
                             }
+                            characterList.scrollToPosition(0)
                             MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
                         }
                     } else {
@@ -130,6 +132,8 @@ class CharacterListFragment : Fragment() {
                     try {
                         findNavController().popBackStack(R.id.containerFragment, true)
                         findNavController().navigate(R.id.containerFragment)
+                        MainActivity.isHome = true
+                        MainActivity.fab.setImageResource(R.drawable.ic_function)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())
                     }
@@ -143,8 +147,8 @@ class CharacterListFragment : Fragment() {
         binding.apply {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
-                filterParams.initData()
-                viewModel.getCharacters(sortType, sortAsc, "", mapOf())
+                characterfilterParams.initData()
+                viewModel.getCharacters(sortType, sortAsc, "")
             }
 
             //滑动时暂停glide加载
@@ -157,21 +161,6 @@ class CharacterListFragment : Fragment() {
                     }
                 }
             })
-
-//            //排序
-//            sortTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//                override fun onTabReselected(tab: TabLayout.Tab?) {
-//                }
-//
-//                override fun onTabUnselected(tab: TabLayout.Tab?) {
-//                }
-//
-//                override fun onTabSelected(tab: TabLayout.Tab?) {
-//                    sortType = tab?.position ?: 0
-//                    viewModel.getCharacters(sortType, sortAsc)
-//                    binding.characterList.smoothScrollToPosition(0)
-//                }
-//            })
         }
     }
 }

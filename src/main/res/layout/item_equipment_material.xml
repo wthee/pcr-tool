@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
+    android:padding="@dimen/s_padding"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -40,16 +41,5 @@
         app:layout_constraintBottom_toBottomOf="@id/equip_icon"
         app:layout_constraintStart_toEndOf="@id/equip_icon"
         tools:text=" x 20" />
-
-    <View
-        android:id="@+id/hr"
-        android:layout_width="20dp"
-        android:layout_height="1dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/m_margin"
-        android:background="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/equip_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

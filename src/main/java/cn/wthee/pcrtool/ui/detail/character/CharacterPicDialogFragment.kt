@@ -42,7 +42,7 @@ class CharacterPicDialogFragment : DialogFragment() {
         PagerSnapHelper().attachToRecyclerView(binding.pics)
         binding.pics.adapter = adapter
         adapter.submitList(character.getAllUrl())
-        binding.pics.scrollToPosition(1)
+        binding.pics.scrollToPosition(2)
         return binding.root
     }
 

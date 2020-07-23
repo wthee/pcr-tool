@@ -488,7 +488,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginBottom="@dimen/s_margin"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
+        tools:itemCount="3"
         tools:listitem="@layout/item_equipment_promotion" />
 </LinearLayout>

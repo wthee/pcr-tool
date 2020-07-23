@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.spSetting
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAdapter
+import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -27,24 +29,26 @@ class EquipmentListFragment : Fragment() {
         lateinit var list: RecyclerView
         lateinit var listAdapter: EquipmentAdapter
         var isList = spSetting.getBoolean("equip_is_list", true)
-        lateinit var viewModel: EquipmentViewModel
+        var equipfilterParams = FilterEquipment(true, true, true)
+        var asc = false
     }
-    private lateinit var binding: FragmentEquipmentListBinding
 
+    private lateinit var binding: FragmentEquipmentListBinding
+    private val viewModel by activityViewModels<EquipmentViewModel> {
+        InjectorUtil.provideEquipmentViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
-        viewModel = InjectorUtil.provideEquipmentViewModelFactory()
-            .create(EquipmentViewModel::class.java)
         init(isList)
         //设置监听
         setListener()
         //绑定观察
         setObserve()
-        viewModel.getEquips()
+        loadData()
         return binding.root
     }
 
@@ -79,7 +83,7 @@ class EquipmentListFragment : Fragment() {
             if (!isList.hasObservers()) {
                 isList.observe(viewLifecycleOwner, Observer {
                     init(it)
-                    getEquips()
+                    loadData()
                 })
             }
             //获取信息
@@ -87,11 +91,13 @@ class EquipmentListFragment : Fragment() {
                 equipments.observe(viewLifecycleOwner, Observer { data ->
                     if (data != null && data.isNotEmpty()) {
                         binding.noDataTip.visibility = View.GONE
-                        listAdapter.submitList(data)
-                        MainActivity.sp.edit {
-                            putInt(Constants.SP_COUNT_EQUIP, data.size)
+                        listAdapter.submitList(data) {
+                            listAdapter.filter.filter(equipfilterParams.toJsonString())
+                            MainActivity.sp.edit {
+                                putInt(Constants.SP_COUNT_EQUIP, data.size)
+                            }
+                            MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
                         }
-                        MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
                     } else {
                         binding.noDataTip.visibility = View.VISIBLE
                     }
@@ -121,9 +127,14 @@ class EquipmentListFragment : Fragment() {
             })
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
-                viewModel.getEquips()
+                equipfilterParams.initData()
+                loadData()
             }
 
         }
+    }
+
+    private fun loadData() {
+        viewModel.getEquips(asc, "")
     }
 }

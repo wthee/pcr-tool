@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.data.model
 
 import com.google.gson.Gson
 
-class FilterDataCharacter(
+class FilterCharacter(
     var all: Boolean,
     var positon1: Boolean,
     var positon2: Boolean,

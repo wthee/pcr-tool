@@ -22,10 +22,11 @@ class CharacterViewModel(
     var reload = MutableLiveData<Boolean>()
 
     //角色基本资料
-    fun getCharacters(sortType: Int, asc: Boolean, name: String, filter: Map<String, Int>) {
+    fun getCharacters(sortType: Int, asc: Boolean, name: String) {
         isLoading.postValue(true)
         viewModelScope.launch {
-            val data = repository.getInfoAndData(name, filter).sortedWith(getSort(sortType, asc))
+            val data = repository.getInfoAndData(name)
+                .sortedWith(getSort(sortType, asc))
             isLoading.postValue(false)
             refresh.postValue(false)
             characters.postValue(data)
