@@ -49,7 +49,7 @@ data class CharacterBasicInfo(
 
     fun getAllUrl(): ArrayList<String> {
         val list = arrayListOf<String>()
-        list.add(Constants.Reality_CHARACTER_URL + getStarId(3) + Constants.WEBP)
+        list.add(Constants.Reality_CHARACTER_URL + getFixedId() + Constants.WEBP)
         getAllStarId().forEach {
             list.add(Constants.CHARACTER_URL + it + Constants.WEBP)
         }

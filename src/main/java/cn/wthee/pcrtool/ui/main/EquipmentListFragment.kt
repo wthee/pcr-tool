@@ -28,7 +28,7 @@ class EquipmentListFragment : Fragment() {
     companion object {
         lateinit var list: RecyclerView
         lateinit var listAdapter: EquipmentAdapter
-        var isList = spSetting.getBoolean("equip_is_list", true)
+        var isList = true
         var equipfilterParams = FilterEquipment(true, true, true)
         var asc = false
     }
@@ -43,6 +43,7 @@ class EquipmentListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
+        isList = spSetting.getBoolean("equip_is_list", true)
         init(isList)
         //设置监听
         setListener()

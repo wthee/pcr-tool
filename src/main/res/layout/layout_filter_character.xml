@@ -62,7 +62,6 @@
         android:id="@+id/asc_chips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
         app:checkedChip="@id/asc"
         app:layout_constraintTop_toBottomOf="@id/sort_type_chips"
         app:selectionRequired="true"
@@ -85,22 +84,23 @@
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/filter_position"
+        android:id="@+id/filter_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
-        android:text="@string/title_position"
+        android:layout_marginTop="@dimen/l_margin"
+        android:text="筛选"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/asc_chips" />
 
+
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/craft_chips"
+        android:id="@+id/chips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
-        app:layout_constraintTop_toBottomOf="@id/filter_position">
+        app:layout_constraintTop_toBottomOf="@id/filter_title">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/position_chip_1"
@@ -122,25 +122,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/position_3" />
-    </com.google.android.material.chip.ChipGroup>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/filter_atk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/l_margin"
-        android:text="@string/atk_type"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/craft_chips" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/atk_chips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
-        app:layout_constraintTop_toBottomOf="@id/filter_atk">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/atk_chip_1"
@@ -155,8 +136,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/magic" />
-
     </com.google.android.material.chip.ChipGroup>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/reset"
@@ -167,7 +148,7 @@
         android:textColor="@color/text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/atk_chips" />
+        app:layout_constraintTop_toBottomOf="@id/chips" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/next"
@@ -177,5 +158,5 @@
         android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/atk_chips" />
+        app:layout_constraintTop_toBottomOf="@id/chips" />
 </androidx.constraintlayout.widget.ConstraintLayout>

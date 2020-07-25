@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.adapters
 
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -14,6 +16,8 @@ import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
+import cn.wthee.pcrtool.utils.OnBitmap
+import cn.wthee.pcrtool.utils.PaletteHelper
 
 
 class SkillAdapter :
@@ -55,7 +59,19 @@ class SkillAdapter :
                 }
                 //加载图片
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
-                GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
+                GlideUtil.loadReturnBitmap(
+                    picUrl,
+                    itemPic,
+                    R.drawable.error,
+                    object : OnBitmap {
+                        override fun returnBitmap(bitmap: Bitmap) {
+                            //字体颜色
+                            name.setTextColor(
+                                PaletteHelper.createPaletteSync(bitmap)
+                                    .getLightVibrantColor(Color.BLACK)
+                            )
+                        }
+                    })
                 //技能属性
                 val adapter = SkillActionAdapter()
                 actions.adapter = adapter

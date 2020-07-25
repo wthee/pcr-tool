@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var isHome = true
+        var notToast = false
+        var autoUpdateDb = true
 
         //fab 默认隐藏
         lateinit var fab: FloatingActionButton
@@ -67,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         //初始化
         init()
         //检查数据库更新
-        val autoUpdateDb = spSetting.getBoolean("auto_update_db", true)
+        autoUpdateDb = spSetting.getBoolean("auto_update_db", autoUpdateDb)
         checkUpdate(autoUpdateDb)
         //悬浮按钮
         setFab()
@@ -92,7 +94,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkUpdate(autoUpdateDb: Boolean) {
         if (FileUtil.needUpadateDb() || autoUpdateDb) {
             CoroutineScope(Dispatchers.Main).launch {
-                DatabaseUpdateHelper().checkDBVersion()
+                DatabaseUpdateHelper().checkDBVersion(notToast)
             }
         }
     }
@@ -106,12 +108,11 @@ class MainActivity : AppCompatActivity() {
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
         spFirstClick = getSharedPreferences("firstClick", Context.MODE_PRIVATE)
-
         databaseVersion = sp.getString(Constants.SP_DATABASE_VERSION, Constants.DATABASE_VERSION)
-        sortType = sp.getInt(Constants.SP_SORT_TYPE, Constants.SORT_TYPE)
-        sortAsc = sp.getBoolean(Constants.SP_SORT_ASC, Constants.SORT_ASC)
+
         //设置信息
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
+        notToast = spSetting.getBoolean("not_toast", notToast)
     }
 
     private fun setFab() {

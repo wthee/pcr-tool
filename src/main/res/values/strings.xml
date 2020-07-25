@@ -85,7 +85,7 @@
     <string name="on_auto_app">打开应用时，自动更新应用</string>
     <string name="filter">筛选</string>
     <string name="sort">排序</string>
-    <string name="title_sort">排序设置</string>
+    <string name="title_sort">排序</string>
     <string name="screen">界面</string>
     <string name="equip_off">只显示装备图标</string>
     <string name="equip_on">显示装备名称、描述</string>
@@ -96,12 +96,15 @@
     <string name="position_2">中卫</string>
     <string name="position_1">前卫</string>
     <string name="atk_type">攻击类型</string>
-    <string name="physical">物理</string>
-    <string name="magic">魔法</string>
+    <string name="physical">物理攻击</string>
+    <string name="magic">魔法攻击</string>
     <string name="clean_cache">清除缓存</string>
     <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
     <string name="reset">重置</string>
     <string name="craft0">不可合成装备（碎片、设计图等）</string>
     <string name="craft1">可合成装备</string>
+    <string name="toast_on">检查数据库版本时，显示提示消息</string>
+    <string name="toast_off">检查数据库版本时，不提示消息</string>
+    <string name="not_toast">自动更新时取消提示</string>
 
 </resources>

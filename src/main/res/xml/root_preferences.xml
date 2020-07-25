@@ -33,6 +33,15 @@
             app:summaryOn="@string/on_auto_db"
             app:title="@string/auto_update_db" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            android:enabled="true"
+            app:iconSpaceReserved="false"
+            app:key="not_toast"
+            app:summaryOff="@string/toast_on"
+            app:summaryOn="@string/toast_off"
+            app:title="@string/not_toast" />
+
     </PreferenceCategory>
 
 

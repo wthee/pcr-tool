@@ -31,8 +31,11 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //获取控件
         val isList = findPreference<SwitchPreferenceCompat>("equip_is_list")
         val forceUpdateDb = findPreference<Preference>("force_update_db")
+        val autoUpdateDb = findPreference<Preference>("auto_update_db")
         val appUpdate = findPreference<Preference>("force_update_app")
         val cleanData = findPreference<Preference>("clean_data")
+        val notToast = findPreference<Preference>("not_toast")
+        notToast?.isEnabled = MainActivity.spSetting.getBoolean("auto_update_db", true)
         //摘要替换
         forceUpdateDb?.summary = MainActivity.databaseVersion
         appUpdate?.summary = MainActivity.nowVersionName
@@ -44,8 +47,18 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             viewModel.isList.postValue(value)
             return@setOnPreferenceChangeListener true
         }
+        autoUpdateDb?.setOnPreferenceChangeListener { _, newValue ->
+            val value = newValue as Boolean
+            notToast?.isEnabled = value
+            return@setOnPreferenceChangeListener true
+        }
+        notToast?.setOnPreferenceChangeListener { _, newValue ->
+            val value = newValue as Boolean
+            MainActivity.notToast = value
+            return@setOnPreferenceChangeListener true
+        }
         forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdateHelper().checkDBVersion()
+            DatabaseUpdateHelper().checkDBVersion(false)
             return@setOnPreferenceClickListener true
         }
         appUpdate?.setOnPreferenceClickListener {

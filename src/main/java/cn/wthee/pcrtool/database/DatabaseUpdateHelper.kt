@@ -29,9 +29,11 @@ class DatabaseUpdateHelper {
     }
 
     //检查是否需要更新
-    fun checkDBVersion() {
+    fun checkDBVersion(notToast: Boolean) {
         //开始
-        ToastUtil.short(NOTICE_TOAST_CHECKING)
+        if (!notToast) {
+            ToastUtil.short(NOTICE_TOAST_CHECKING)
+        }
         val service = ApiHelper.create(
             DatabaseService::class.java,
             API_URL
@@ -49,9 +51,13 @@ class DatabaseUpdateHelper {
                 val version = response.body()!!
                 if (FileUtil.needUpadateDb() || MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
                     downloadDB(version.TruthVersion)
-                    ToastUtil.long(Constants.NOTICE_TOAST_TITLE)
+                    if (!notToast) {
+                        ToastUtil.long(Constants.NOTICE_TOAST_TITLE)
+                    }
                 } else {
-                    ToastUtil.short(NOTICE_TOAST_CHECKED)
+                    if (!notToast) {
+                        ToastUtil.short(NOTICE_TOAST_CHECKED)
+                    }
                 }
             }
         })

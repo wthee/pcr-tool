@@ -44,20 +44,21 @@ class SkillLoopAdapter() :
             binding.apply {
                 val ctx = MyApplication.getContext()
                 //加载动画
-                root.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
+                root.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //加载图片
                 if (atkId == 1) {
                     skillNo.visibility = View.VISIBLE
                 } else {
                     skillNo.visibility = View.GONE
+                    //技能图标
                     val iconType = if (atkId == 1001) {
-                        skillOrder.text = 1.toString()
+                        skillOrder.text = "技能1"
                         iconType1
                     } else {
-                        skillOrder.text = 2.toString()
+                        skillOrder.text = "技能2"
                         iconType2
                     }
+                    //图标地址
                     val picUrl =
                         SKILL_ICON_URL + iconType + WEBP
                     GlideUtil.loadReturnBitmap(
@@ -69,14 +70,11 @@ class SkillLoopAdapter() :
                                 //字体颜色
                                 skillOrder.setTextColor(
                                     PaletteHelper.createPaletteSync(bitmap)
-                                        .getVibrantColor(Color.WHITE)
+                                        .getLightVibrantColor(Color.BLACK)
                                 )
                             }
                         })
-
                 }
-
-
             }
         }
     }
