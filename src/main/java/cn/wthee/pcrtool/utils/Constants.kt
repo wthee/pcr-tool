@@ -71,5 +71,23 @@ object Constants {
     const val SORT_WEIGHT = 2
     const val SORT_POSITION = 3
 
-
+    val ATTR = arrayListOf(
+        "HP",
+        "物理攻击力",
+        "物理贯穿",
+        "魔法攻击力",
+        "魔法贯穿",
+        "物理防御力",
+        "魔法防御力",
+        "物理暴击",
+        "回避",
+        "魔法暴击",
+        "HP自动回复",
+        "TP自动回复",
+        "HP吸收",
+        "回复量上升",
+        "TP上升",
+        "TP消耗减轻",
+        "命中"
+    )
 }

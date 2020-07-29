@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/m_margin"
-    android:elevation="@dimen/elevation_card"
     android:background="@color/colorWhite"
-    android:padding="@dimen/m_padding"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:elevation="@dimen/elevation_card"
+    android:padding="@dimen/m_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
@@ -23,14 +23,14 @@
         android:id="@+id/type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:layout_marginStart="@dimen/m_margin"
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:textAppearance="@style/subTitleWithe"
-        android:layout_gravity="end"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="必杀技" />
 
     <LinearLayout

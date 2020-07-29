@@ -30,7 +30,7 @@
     <string name="rarity">星级</string>
     <string name="title_quest">什么地方</string>
     <string name="drop_quest">掉落信息</string>
-    <string name="love_rank_up">羁绊提升</string>
+    <string name="love_rank_up">羁绊</string>
     <string name="name">名字</string>
     <string name="age">年龄</string>
     <string name="limit">限定</string>
@@ -106,5 +106,8 @@
     <string name="toast_on">检查数据库版本时，显示提示消息</string>
     <string name="toast_off">检查数据库版本时，不提示消息</string>
     <string name="not_toast">自动更新时取消提示</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="sorry_ue">对不起，优衣~ 下面已经没有了！</string>
 
 </resources>

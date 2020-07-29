@@ -11,6 +11,7 @@ import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
@@ -73,6 +74,9 @@ class MainPagerFragment : Fragment() {
                 toolbar.setLeftIcon(R.drawable.ic_logo_color)
                 toolbar.setTitleColor(R.color.colorAccent)
             }
+        }
+        toolbar.rightIcon.setOnClickListener {
+             findNavController().navigate(R.id.action_containerFragment_to_toolsFragment)
         }
         return binding.root
     }

@@ -18,8 +18,10 @@ import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.MainActivity.Companion.spFirstClick
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentPromotionAdapter
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.databinding.LayoutSearchBinding
 import cn.wthee.pcrtool.utils.*
@@ -49,6 +51,7 @@ class CharacterBasicInfoFragment : Fragment() {
     private lateinit var binding: FragmentCharacterBasicInfoBinding
     private lateinit var viewModel: CharacterPromotionViewModel
     private lateinit var adapter: EquipmentPromotionAdapter
+    private lateinit var attrAdapter: CharacterAttrAdapter
     private var selectRank = 2
     private var selRatity = 1
     private var lv = 85
@@ -75,8 +78,11 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.characterPic.transitionName = "img_${character.id}"
         binding.content.info.transitionName = "content_${character.id}"
         //开始动画
-        ObjectAnimatorHelper.alpha(binding.fabLoveCbi)
-        ObjectAnimatorHelper.enter(binding.basicInfo)
+        ObjectAnimatorHelper.alpha(binding.fabLoveCbi, binding.comment)
+        ObjectAnimatorHelper.enter(binding.basicInfo, binding.promotion.root)
+        //列表适配器
+        attrAdapter = CharacterAttrAdapter()
+        binding.promotion.attrs.adapter = attrAdapter
         //加载图片
         loadImages()
         //点击事件
@@ -87,15 +93,12 @@ class CharacterBasicInfoFragment : Fragment() {
         //获取viewModel
         viewModel = InjectorUtil.providePromotionViewModelFactory()
             .create(CharacterPromotionViewModel::class.java)
-        //延迟加载
-        MainScope().launch {
-            delay(resources.getInteger(R.integer.delay).toLong())
-            viewModel.getMaxRankAndRarity(character.id)
-        }
+
         //数据监听
         setObserve()
         //初始收藏
         setLove(isLoved)
+        viewModel.getMaxRankAndRarity(character.id)
         return binding.root
     }
 
@@ -295,35 +298,15 @@ class CharacterBasicInfoFragment : Fragment() {
         })
         //角色装备
         viewModel.equipments.observe(viewLifecycleOwner, Observer {
-            binding.apply {
-                adapter = EquipmentPromotionAdapter()
-                promotion.recycler.adapter = adapter
-            }
+            adapter = EquipmentPromotionAdapter()
+            binding.promotion.recycler.adapter = adapter
             adapter.submitList(it)
         })
         //角色属性
         viewModel.sumInfo.observe(viewLifecycleOwner, Observer {
-            binding.promotion.apply {
-                hp.text = getStr(it.hp)
-                atk.text = getStr(it.atk)
-                magicStr.text = getStr(it.magicStr)
-                def.text = getStr(it.def)
-                magicDef.text = getStr(it.magicDef)
-                pCritical.text = getStr(it.physicalCritical)
-                dodge.text = getStr(it.dodge)
-                mCritical.text = getStr(it.magicCritical)
-                hpRecovery.text = getStr(it.waveHpRecovery)
-                tpRecovery.text = getStr(it.waveEnergyRecovery)
-                lifeSteal.text = getStr(it.lifeSteal)
-                hpRecoveryRate.text = getStr(it.hpRecoveryRate)
-                energyRecoveryRate.text = getStr(it.energyRecoveryRate)
-                energyReduceRate.text = getStr(it.energyReduceRate)
-                accuracy.text = getStr(it.accuracy)
-            }
+            attrAdapter.submitList(it.getList())
         })
     }
-
-    private fun getStr(d: Double): String = round(d).toInt().toString()
 
     private fun loadData() {
         viewModel.getCharacterInfo(character.id, selectRank, selRatity, lv)
@@ -339,13 +322,13 @@ class CharacterBasicInfoFragment : Fragment() {
                     character.actualName
             content.catah.text = character.catchCopy
             content.name.text = character.name
-            character.getNameL().apply {
-                if (this.isNotEmpty()) {
-                    lastName.text = this
-                } else {
-                    lineEx.visibility = View.GONE
-                }
-            }
+//            character.getNameL().apply {
+//                if (this.isNotEmpty()) {
+//                    lastName.text = this
+//                } else {
+//                    lineEx.visibility = View.GONE
+//                }
+//            }
 
             content.three.text = requireActivity().resources.getString(
                 R.string.character_detail,

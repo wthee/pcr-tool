@@ -87,20 +87,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
-    //返回监听
-    override fun onResume() {
-        super.onResume()
-        view?.isFocusableInTouchMode = true
-        view?.requestFocus()
-        view?.setOnKeyListener(View.OnKeyListener { view, i, keyEvent ->
-            if (keyEvent.action == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_BACK) {
-                goBack()
-                return@OnKeyListener true
-            }
-            false
-        })
-    }
-
     private fun init() {
         binding.apply {
             //toolbar
@@ -109,7 +95,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 setLeftIcon(R.drawable.ic_back)
                 hideRightIcon()
                 setTitleColor(R.color.colorPrimary)
-                setBackground(R.color.colorBg)
+                setBackground(R.color.colorWhite)
                 setTitleCenter()
                 title.text = equip.equipmentName
                 leftIcon.setOnClickListener {

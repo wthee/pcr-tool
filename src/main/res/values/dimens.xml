@@ -6,7 +6,7 @@
     <!-- icon-->
     <dimen name="s_icon">10dp</dimen>
     <dimen name="m_icon">16dp</dimen>
-    <dimen name="l_icon">28dp</dimen>
+    <dimen name="l_icon">24dp</dimen>
     <dimen name="xl_icon">48dp</dimen>
     <dimen name="xxl_icon">64dp</dimen>
     <dimen name="xxxl_icon">72dp</dimen>
@@ -14,11 +14,12 @@
     <!-- magrin & padding-->
     <dimen name="xs_margin">3dp</dimen>
     <dimen name="s_margin">6dp</dimen>
-    <dimen name="m_margin">12dp</dimen>
+    <dimen name="m_margin">9dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
     <dimen name="border_size">2dp</dimen>
-    <dimen name="s_padding">5dp</dimen>
+    <dimen name="xs_padding">3dp</dimen>
+    <dimen name="s_padding">6dp</dimen>
     <dimen name="m_padding">15dp</dimen>
     <dimen name="l_padding">25dp</dimen>
 
@@ -36,7 +37,7 @@
 
     <dimen name="elevation_drawer">64dp</dimen>
     <dimen name="elevation_toolbar">4dp</dimen>
-    <dimen name="elevation_card">3dp</dimen>
+    <dimen name="elevation_card">2dp</dimen>
     <dimen name="elevation_fab">64dp</dimen>
     <dimen name="elevation_button">4dp</dimen>
     <dimen name="elevation_dialog">24dp</dimen>

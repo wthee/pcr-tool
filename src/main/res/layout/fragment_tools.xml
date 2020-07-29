@@ -1,0 +1,34 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="4"
+    android:orientation="horizontal"
+    android:rowCount="2"
+    android:useDefaultMargins="true">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnWeight="1"
+        android:text="@string/app_name"
+        android:background="@drawable/title_background"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_row="0"
+        android:layout_column="1"
+        android:layout_columnWeight="1"
+        android:text="@string/app_name"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_row="0"
+        android:layout_column="2"
+        android:layout_columnWeight="1"
+        android:text="@string/app_name"
+        android:background="@drawable/title_background"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_row="0"
+        android:layout_column="3"
+        android:layout_columnWeight="1"
+        android:text="@string/app_name"/>
+</GridLayout>

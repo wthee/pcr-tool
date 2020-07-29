@@ -27,6 +27,13 @@
             app:exitAnim="@anim/fragment_exit"
             app:popEnterAnim="@anim/fragment_popenter"
             app:popExitAnim="@anim/fragment_popexit" />
+        <action
+            android:id="@+id/action_containerFragment_to_toolsFragment"
+            app:destination="@id/toolsFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
 
     <fragment
@@ -71,6 +78,11 @@
         android:name="cn.wthee.pcrtool.ui.main.EquipmentListFragment"
         android:label="fragment_enemy_list"
         tools:layout="@layout/fragment_enemy_list" />
+    <fragment
+        android:id="@+id/toolsFragment"
+        android:name="cn.wthee.pcrtool.ToolsFragment"
+        android:label="fragment_tools"
+        tools:layout="@layout/fragment_tools" />
 
 
 </navigation>

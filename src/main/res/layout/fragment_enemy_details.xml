@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/m_padding"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/view_toolbar" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_pic"
+            android:layout_width="@dimen/xxl_icon"
+            android:layout_height="@dimen/xxl_icon"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@mipmap/ic_launcher_foreground" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/s_margin"
+            android:padding="@dimen/m_padding"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            tools:text="道具详情道具详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/m_margin"
+            android:paddingStart="@dimen/m_padding"
+            android:paddingEnd="@dimen/m_padding"
+            android:animateLayoutChanges="true">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:background="@drawable/title_background"
+                android:text="攻击时间间隔"
+                android:textAppearance="@style/subTitleWithe" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/atk_time"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:gravity="end"
+                tools:text="780" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/m_margin"
+            android:paddingStart="@dimen/m_padding"
+            android:paddingEnd="@dimen/m_padding"
+            android:animateLayoutChanges="true">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:background="@drawable/title_background"
+                android:text="攻击距离"
+                android:textAppearance="@style/subTitleWithe" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/atk_area"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:gravity="end"
+                tools:text="780" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

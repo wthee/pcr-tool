@@ -18,10 +18,7 @@ object BuglyHelper {
 
     fun init(applicationContext: Context) {
         Beta.upgradeDialogLayoutId = R.layout.layout_upgrade_dialog
-        //自动检查应用更新
-        Beta.autoCheckUpgrade = MainActivity.spSetting.getBoolean("auto_update_app", true)
-        Beta.smallIconId = R.drawable.ic_logo
-        Beta.largeIconId = R.mipmap.ic_launcher
+         Beta.largeIconId = R.mipmap.ic_launcher
         Beta.upgradeDialogLifecycleListener = object : UILifecycleListener<UpgradeInfo?> {
             @SuppressLint("RestrictedApi")
             override fun onCreate(context: Context?, view: View, upgradeInfo: UpgradeInfo?) {

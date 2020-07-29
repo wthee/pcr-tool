@@ -13,8 +13,8 @@ object ObjectAnimatorHelper {
     private const val drt = 500L
 
     fun enter(vararg view: View) {
-        val holder1 = PropertyValuesHolder.ofFloat("translationY", 50f, 0f)
-        val holder2 = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
+        val holder1 = PropertyValuesHolder.ofFloat("translationY", 60f, 0f)
+        val holder2 = PropertyValuesHolder.ofFloat("alpha", 1f, 1f)
         view.forEach {
             start(it, holder1, holder2)
         }
