@@ -4,9 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.model.EquipmentDropInfo
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
-import cn.wthee.pcrtool.data.model.EquipmentMaterial
+import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import kotlinx.coroutines.launch
 
@@ -67,18 +65,22 @@ class EquipmentDetailsViewModel(
                 equipmentRepository.getEquipmentCraft(equipmentId).cid1
             } else
                 equipmentId
+            //获取装备掉落信息
             val infos = equipmentRepository.getDropWaveID(fixedId)
             infos.forEach { info ->
+
                 val each3Wave = arrayListOf<Int>()
                 val odds = arrayListOf<EquipmentIdWithOdd>()
+                //掉落地点
                 equipmentRepository.getDropRewardID(info.getWaveIds()).forEach {
                     each3Wave.addAll(it.getRewardIds())
                 }
+                //掉落概率
                 equipmentRepository.getOdds(each3Wave).forEach {
                     odds.addAll(it.getOdds())
                 }
-                odds.sortBy { it.odd }
-                finalData.add(EquipmentDropInfo(info.questId, fixedId, info.questName, odds))
+                odds.sortByDescending { it.odd }
+                finalData.add(EquipmentDropInfo(info.questId, info.areaId, fixedId, info.questName, odds))
             }
             finalData.sortWith(getSort(fixedId))
             equipDropInfos.postValue(finalData)

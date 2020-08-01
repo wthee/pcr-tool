@@ -5,7 +5,8 @@ import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.model.EquipmentDropOdd
 import cn.wthee.pcrtool.data.model.EquipmentDropRewardID
-import cn.wthee.pcrtool.data.model.EquipmentDropWaveID
+import cn.wthee.pcrtool.data.model.EquipmentDropWaveInfo
+import cn.wthee.pcrtool.data.model.entity.EnemyRewardData
 import cn.wthee.pcrtool.data.model.entity.EquipmentCraft
 import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.data.model.entity.EquipmentEnhanceRate
@@ -41,6 +42,7 @@ interface EquipmentDao {
     @Query(
         "SELECT DISTINCT " +
                 "quest_data.quest_id, " +
+                "quest_data.area_id, " +
                 "quest_data.quest_name, " +
                 "quest_data.wave_group_id_1, " +
                 "quest_data.wave_group_id_2, " +
@@ -68,7 +70,7 @@ interface EquipmentDao {
                 "quest_data.quest_name ASC, " +
                 "quest_data.quest_name ASC "
     )
-    suspend fun getDropWaveID(eid: Int): List<EquipmentDropWaveID>
+    suspend fun getDropWaveID(eid: Int): List<EquipmentDropWaveInfo>
 
     //查找关卡掉落奖励id
     @Query(
@@ -105,4 +107,7 @@ interface EquipmentDao {
                 "AND reward_id_1 > 100000"
     )
     suspend fun getOdds(rids: List<Int>): List<EquipmentDropOdd>
+
+    @Query("SELECT * FROM enemy_reward_data WHERE drop_reward_id IN (:rids) AND reward_id_1 > 100000")
+    suspend fun getRewardDatas(rids: List<Int>): List<EnemyRewardData>
 }

@@ -78,7 +78,7 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.characterPic.transitionName = "img_${character.id}"
         binding.content.info.transitionName = "content_${character.id}"
         //开始动画
-        ObjectAnimatorHelper.alpha(binding.fabLoveCbi, binding.comment)
+        ObjectAnimatorHelper.alpha(binding.fabLoveCbi)
         ObjectAnimatorHelper.enter(binding.basicInfo, binding.promotion.root)
         //列表适配器
         attrAdapter = CharacterAttrAdapter()
@@ -338,6 +338,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 character.position
             )
             comment.text = character.getFixedComment()
+            if(comment.text.isEmpty()) comment.visibility = View.GONE
             birth.text = requireActivity().resources.getString(
                 R.string.birth,
                 character.birthMonth,

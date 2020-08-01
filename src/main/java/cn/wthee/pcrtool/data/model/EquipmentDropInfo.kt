@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 //最终信息
 data class EquipmentDropInfo(
     val questId: Int,
+    val areaId: Int,
     val eid: Int,
     val questName: String,
     val odds: List<EquipmentIdWithOdd>
@@ -16,8 +17,9 @@ data class EquipmentDropInfo(
 }
 
 //装备掉落关卡信息
-data class EquipmentDropWaveID(
+data class EquipmentDropWaveInfo(
     @ColumnInfo(name = "quest_id") val questId: Int,
+    @ColumnInfo(name = "area_id") val areaId: Int,
     @ColumnInfo(name = "quest_name") val questName: String,
     @ColumnInfo(name = "wave_group_id_1") val wave_group_id_1: Int,
     @ColumnInfo(name = "wave_group_id_2") val wave_group_id_2: Int,

@@ -128,18 +128,6 @@ data class SkillAction(
                     MyApplication.getContext().getColor(R.color.colorPrimary)
                 ), start, end + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-            if (mode == Configuration.UI_MODE_NIGHT_YES) {
-                spannable.setSpan(
-                    ForegroundColorSpan(
-                        MyApplication.getContext().getColor(R.color.colorWhite)
-                    ), 0, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                spannable.setSpan(
-                    ForegroundColorSpan(
-                        MyApplication.getContext().getColor(R.color.colorWhite)
-                    ), end, fixed.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-            }
         }
         return spannable
     }

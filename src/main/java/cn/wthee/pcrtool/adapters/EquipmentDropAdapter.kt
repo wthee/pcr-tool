@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.EquipmentDropInfo
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropBinding
+import com.bumptech.glide.Glide
 
 
 class EquipmentDropAdapter :
@@ -32,11 +34,36 @@ class EquipmentDropAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(info: EquipmentDropInfo) {
             binding.apply {
-                binding.root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
                 quest.text = info.getName()
-                questNum.text = info.getNum()
-                odd.text = info.odds.find { it.eid == info.eid }?.odd.toString() + "%"
+                //地图难度
+                questNum.text =  when(info.areaId / 1000){
+                    11 -> "N"
+                    12 -> "H"
+                    13 -> "VH"
+                    else-> ""
+                } + "-" +  info.getNum()
+                //颜色
+                val color = when(info.areaId / 1000){
+                    11 -> R.color.color_map_n
+                    12 ->  R.color.color_map_h
+                    13 ->  R.color.color_map_vh
+                    else-> R.color.color_map_n
+                }
+                questNum.setTextColor(ResourcesCompat.getColor(MyApplication.getContext().resources, color, null))
+                val adapter = EquipmentDropDetailAdapter(info.eid)
+                drops.adapter = adapter
+                adapter.submitList(info.odds)
+                drops.setItemViewCacheSize(20)
+                //滑动时暂停glide加载
+                drops.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            Glide.with(root.context).resumeRequests()
+                        } else {
+                            Glide.with(root.context).pauseRequests()
+                        }
+                    }
+                })
             }
         }
     }

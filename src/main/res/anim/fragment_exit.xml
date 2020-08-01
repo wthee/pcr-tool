@@ -4,7 +4,7 @@
 
 
     <alpha
-        android:fromAlpha="0.4"
+        android:fromAlpha="0"
         android:toAlpha="0" />
 
 </set>

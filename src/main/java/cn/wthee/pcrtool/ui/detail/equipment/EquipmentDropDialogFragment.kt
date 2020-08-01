@@ -1,5 +1,8 @@
 package cn.wthee.pcrtool.ui.detail.equipment
 
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +12,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentDropAdapter
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDropListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ScreenUtil
 
 class EquipmentDropDialogFragment : DialogFragment() {
 
@@ -29,10 +34,9 @@ class EquipmentDropDialogFragment : DialogFragment() {
     }
 
     private lateinit var binding: FragmentEquipmentDropListBinding
+    private lateinit var dropsAdapter: EquipmentDropAdapter
     private var equipId: Int = Constants.UNKNOW_EQUIP_ID
-    private val viewModel by activityViewModels<EquipmentDetailsViewModel> {
-        InjectorUtil.provideEquipmentDetailsViewModelFactory()
-    }
+    private val viewModel = InjectorUtil.provideEquipmentDetailsViewModelFactory().create(EquipmentDetailsViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +54,11 @@ class EquipmentDropDialogFragment : DialogFragment() {
             it.orientation = LinearLayoutManager.VERTICAL
             binding.drops.layoutManager = it
         }
-        val dropsAdapter = EquipmentDropAdapter()
+        dropsAdapter = EquipmentDropAdapter()
         binding.drops.adapter = dropsAdapter
+        binding.back.setOnClickListener {
+            dialog?.dismiss()
+        }
         //掉落地区
         viewModel.getDropInfos(equipId)
         viewModel.equipDropInfos.observe(viewLifecycleOwner, Observer {
@@ -63,9 +70,12 @@ class EquipmentDropDialogFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         val window = dialog?.window
+//        window?.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT))
 
         val params = window?.attributes
-        params?.width = ViewGroup.LayoutParams.MATCH_PARENT
+        params?.width = ScreenUtil.getWidth()  - 50
+        params?.windowAnimations = R.style.PopUpAnimation
         window?.attributes = params
     }
+
 }

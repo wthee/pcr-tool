@@ -13,10 +13,13 @@ object ObjectAnimatorHelper {
     private const val drt = 500L
 
     fun enter(vararg view: View) {
-        val holder1 = PropertyValuesHolder.ofFloat("translationY", 60f, 0f)
-        val holder2 = PropertyValuesHolder.ofFloat("alpha", 1f, 1f)
+        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.9f, 1f)
+        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.9f, 1f)
+        val holder3 = PropertyValuesHolder.ofFloat("alpha", 0.8f, 1f)
+        val holder4 = PropertyValuesHolder.ofFloat("translationY", 50f, 0f)
+
         view.forEach {
-            start(it, holder1, holder2)
+            start(it, holder1, holder2, holder3, holder4)
         }
     }
 
@@ -30,7 +33,7 @@ object ObjectAnimatorHelper {
     private fun start(view: View, vararg holders: PropertyValuesHolder) {
         view.visibility = View.INVISIBLE
         MainScope().launch {
-            delay(300L)
+            delay(200L)
             ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
                 duration = 300L
                 addListener(object : Animator.AnimatorListener {

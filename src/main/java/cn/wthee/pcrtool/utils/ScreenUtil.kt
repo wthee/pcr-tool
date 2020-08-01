@@ -15,6 +15,11 @@ object ScreenUtil {
         return outMetrics.widthPixels
     }
 
+    fun getHeight(): Int {
+        manager?.defaultDisplay?.getMetrics(outMetrics)
+        return outMetrics.heightPixels
+    }
+
     fun setAlpha(alpha: Float) {
         val lp: WindowManager.LayoutParams? =
             window?.attributes
