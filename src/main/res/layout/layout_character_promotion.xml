@@ -7,6 +7,127 @@
     android:background="@color/colorWhite"
     android:orientation="vertical">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/big_icon"
+            android:layout_height="@dimen/big_icon"
+            android:layout_margin="@dimen/m_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/unknow" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m_margin"
+            android:paddingStart="@dimen/s_padding"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="@+id/icon"
+            tools:text="99999" />
+
+        <LinearLayout
+            android:id="@+id/line_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/level"
+            app:layout_constraintStart_toEndOf="@+id/level"
+            app:layout_constraintTop_toTopOf="@+id/level">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rank_reduce"
+                android:layout_width="@dimen/m_icon"
+                android:layout_height="@dimen/m_icon"
+                android:layout_marginStart="@dimen/m_margin"
+                android:src="@drawable/ic_reduce" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/rank_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/m_margin"
+                android:layout_marginEnd="@dimen/s_margin"
+                android:layout_weight="1"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:text="@string/rank"
+                android:textAppearance="@style/subTitleWithe"
+                android:textColor="@color/colorPrimary" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/m_margin"
+                android:text="9"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rank_add"
+                android:layout_width="@dimen/m_icon"
+                android:layout_height="@dimen/m_icon"
+                android:src="@drawable/ic_add" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m_margin"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/icon"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toBottomOf="@+id/level">
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rarity_reduce"
+                android:layout_width="@dimen/m_icon"
+                android:layout_height="@dimen/m_icon"
+                android:src="@drawable/ic_reduce" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/rarity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/m_margin"
+                android:layout_marginEnd="@dimen/m_margin"
+                android:text="5"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/rarity_add"
+                android:layout_width="@dimen/m_icon"
+                android:layout_height="@dimen/m_icon"
+                android:src="@drawable/ic_add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/starts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/icon"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toEndOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/level">
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/attrs"
         android:layout_width="match_parent"
@@ -17,98 +138,6 @@
         app:spanCount="2"
         tools:itemCount="3"
         tools:listitem="@layout/item_equipment_attr" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/m_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="@dimen/s_padding"
-            android:text="@string/level"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="@color/colorAccent"
-            tools:text="99" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_marginEnd="@dimen/s_margin"
-            android:layout_weight="1"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="@dimen/s_padding"
-            android:text="@string/rank"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/rank_reduce"
-            android:layout_width="@dimen/m_icon"
-            android:layout_height="@dimen/m_icon"
-            android:src="@drawable/ic_reduce" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/rank_add"
-            android:layout_width="@dimen/m_icon"
-            android:layout_height="@dimen/m_icon"
-            android:src="@drawable/ic_add" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_marginEnd="@dimen/s_margin"
-            android:layout_weight="1"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="@dimen/s_padding"
-            android:text="@string/rarity"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/rarity_reduce"
-            android:layout_width="@dimen/m_icon"
-            android:layout_height="@dimen/m_icon"
-            android:src="@drawable/ic_reduce" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/rarity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/rarity_add"
-            android:layout_width="@dimen/m_icon"
-            android:layout_height="@dimen/m_icon"
-            android:src="@drawable/ic_add" />
-
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"

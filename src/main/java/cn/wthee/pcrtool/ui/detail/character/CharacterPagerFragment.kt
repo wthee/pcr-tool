@@ -55,8 +55,8 @@ class CharacterPagerFragment : Fragment() {
                 lifecycle,
                 character!!
             )
-        viewPager.offscreenPageLimit = 3
         viewPager.setPageTransformer(DepthPageTransformer())
+        viewPager.offscreenPageLimit = 2
         //???
         if (MainActivity.sp.getBoolean("106001", false)) {
             viewPager.setBackgroundResource(R.drawable.viewpager_bg)

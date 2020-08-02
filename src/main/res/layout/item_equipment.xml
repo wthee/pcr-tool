@@ -11,8 +11,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
-        android:layout_width="@dimen/xxxl_icon"
-        android:layout_height="@dimen/xxxl_icon"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
         android:layout_margin="@dimen/s_margin"
         android:adjustViewBounds="true"
         tools:src="@mipmap/ic_launcher_foreground" />

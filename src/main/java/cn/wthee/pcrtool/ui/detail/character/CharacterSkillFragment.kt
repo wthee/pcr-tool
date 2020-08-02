@@ -6,10 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.SkillAdapter
 import cn.wthee.pcrtool.adapters.SkillLoopAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.InjectorUtil
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class CharacterSkillFragment : Fragment() {
@@ -22,9 +26,10 @@ class CharacterSkillFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+
+        lateinit var viewModel: CharacterSkillViewModel
     }
 
-    private lateinit var viewModel: CharacterSkillViewModel
     private lateinit var binding: FragmentCharacterSkillBinding
     private lateinit var adapter: SkillAdapter
     private lateinit var loopAdapter: SkillLoopAdapter
@@ -45,6 +50,7 @@ class CharacterSkillFragment : Fragment() {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
         viewModel = InjectorUtil.provideCharacterSkillViewModelFactory()
             .create(CharacterSkillViewModel::class.java)
+
         binding.apply {
             //循环开始信息
             beforeLoopadapter = SkillLoopAdapter()
@@ -56,7 +62,7 @@ class CharacterSkillFragment : Fragment() {
             adapter = SkillAdapter()
             recycler.adapter = adapter
         }
-        viewModel.getCharacterSkills(unitId)
+
         viewModel.skills.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
@@ -64,6 +70,11 @@ class CharacterSkillFragment : Fragment() {
             beforeLoopadapter.submitList(it.getBefore())
             loopAdapter.submitList(it.getLoop())
         })
+
+        MainScope().launch {
+            delay(1000L)
+        }
+
         return binding.root
     }
 

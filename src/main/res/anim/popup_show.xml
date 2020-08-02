@@ -3,14 +3,10 @@
     android:duration="@integer/item_anim">
 
     <scale
-        android:fromXScale="0"
-        android:fromYScale="0"
+        android:fromXScale="0.5"
+        android:fromYScale="0.5"
         android:pivotX="50%"
         android:pivotY="50%"
         android:toXScale="1"
         android:toYScale="1" />
-    <alpha
-        android:fromAlpha="0"
-        android:toAlpha="1" />
-
 </set>

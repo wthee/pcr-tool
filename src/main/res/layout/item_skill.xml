@@ -43,8 +43,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_pic"
-            android:layout_width="@dimen/xxl_icon"
-            android:layout_height="@dimen/xxl_icon"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/normal_icon"
             android:adjustViewBounds="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

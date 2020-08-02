@@ -20,63 +20,23 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
-        android:layout_width="@dimen/xxxl_icon"
-        android:layout_height="@dimen/xxxl_icon"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
         android:adjustViewBounds="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/ic_launcher_foreground" />
 
+    <LinearLayout
+        android:id="@+id/starts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/s_padding"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/item_pic"
+        app:layout_constraintEnd_toEndOf="@+id/item_pic"
+        app:layout_constraintStart_toStartOf="@+id/item_pic">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/star0"
-        android:layout_width="@dimen/s_icon"
-        android:layout_height="@dimen/s_icon"
-        android:layout_margin="@dimen/s_margin"
-        android:background="@drawable/ic_star"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/item_pic"
-        app:layout_constraintStart_toStartOf="@id/item_pic" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/star1"
-        android:layout_width="@dimen/s_icon"
-        android:layout_height="@dimen/s_icon"
-        android:layout_marginBottom="@dimen/s_margin"
-        android:background="@drawable/ic_star"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/item_pic"
-        app:layout_constraintStart_toEndOf="@id/star0" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/star2"
-        android:layout_width="@dimen/s_icon"
-        android:layout_height="@dimen/s_icon"
-        android:layout_marginBottom="@dimen/s_margin"
-        android:background="@drawable/ic_star"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/item_pic"
-        app:layout_constraintStart_toEndOf="@id/star1" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/star3"
-        android:layout_width="@dimen/s_icon"
-        android:layout_height="@dimen/s_icon"
-        android:layout_marginBottom="@dimen/s_margin"
-        android:background="@drawable/ic_star"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/item_pic"
-        app:layout_constraintStart_toEndOf="@id/star2" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/star4"
-        android:layout_width="@dimen/s_icon"
-        android:layout_height="@dimen/s_icon"
-        android:layout_marginBottom="@dimen/s_margin"
-        android:background="@drawable/ic_star"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/item_pic"
-        app:layout_constraintStart_toEndOf="@id/star3" />
-
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

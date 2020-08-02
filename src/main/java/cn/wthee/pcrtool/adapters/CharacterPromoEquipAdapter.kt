@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.GlideUtil
+import cn.wthee.pcrtool.utils.StarUtil
 
 
 class EquipmentPromotionAdapter :
@@ -46,20 +47,13 @@ class EquipmentPromotionAdapter :
                 val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
                 GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
                 //显示星级
-                val stars = arrayOf(star0, star1, star2, star3, star4)
-                when (equip.promotionLevel) {
-                    2 -> stars[0].visibility = View.VISIBLE
-                    3 -> {
-                        stars[0].visibility = View.VISIBLE
-                        stars[1].visibility = View.VISIBLE
-                        stars[2].visibility = View.VISIBLE
-                    }
-                    4, 5 -> {
-                        stars.forEach {
-                            it.visibility = View.VISIBLE
-                        }
-                    }
+                val num = when (equip.promotionLevel) {
+                    2 -> 1
+                    3 -> 3
+                    4, 5 -> 5
+                    else -> 0
                 }
+                StarUtil.show(binding.root.context, starts, num,20)
                 itemPic.transitionName = "pic1_${equip.equipmentId}"
                 //设置点击跳转
                 root.setOnClickListener {

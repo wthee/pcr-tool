@@ -26,11 +26,9 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.databinding.LayoutSearchBinding
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
-import kotlin.math.round
 
 
 class CharacterBasicInfoFragment : Fragment() {
@@ -52,8 +50,9 @@ class CharacterBasicInfoFragment : Fragment() {
     private lateinit var viewModel: CharacterPromotionViewModel
     private lateinit var adapter: EquipmentPromotionAdapter
     private lateinit var attrAdapter: CharacterAttrAdapter
-    private var selectRank = 2
+    private var selRank = 2
     private var selRatity = 1
+    private var maxStar = 5
     private var lv = 85
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +78,21 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.content.info.transitionName = "content_${character.id}"
         //开始动画
         ObjectAnimatorHelper.alpha(binding.fabLoveCbi)
-        ObjectAnimatorHelper.enter(binding.basicInfo, binding.promotion.root)
+        ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
+            override fun prev(view: View) {
+                view.visibility = View.GONE
+            }
+
+            override fun start(view: View) {
+                view.visibility = View.VISIBLE
+            }
+
+            override fun end(view: View) {
+                viewModel.getMaxRankAndRarity(character.id)
+                CharacterSkillFragment.viewModel.getCharacterSkills(character.id)
+            }
+        }, binding.basicInfo, binding.promotion.root)
+
         //列表适配器
         attrAdapter = CharacterAttrAdapter()
         binding.promotion.attrs.adapter = attrAdapter
@@ -98,7 +111,6 @@ class CharacterBasicInfoFragment : Fragment() {
         setObserve()
         //初始收藏
         setLove(isLoved)
-        viewModel.getMaxRankAndRarity(character.id)
         return binding.root
     }
 
@@ -257,40 +269,27 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun setObserve() {
         //角色最大Rank
         viewModel.maxData.observe(viewLifecycleOwner, Observer { r ->
-            selectRank = r[0]
+            selRank = r[0]
             selRatity = r[1]
+            maxStar = r[1]
             lv = r[2]
             binding.promotion.level.text = lv.toString()
             loadData()
 
             binding.apply {
-                promotion.rank.text = selectRank.toString()
-                promotion.rarity.text = selRatity.toString()
+                setRank(selRank)
+                setRatity(selRatity)
                 promotion.rankAdd.setOnClickListener {
-                    if (selectRank != r[0]) {
-                        selectRank++
-                        promotion.rank.text = selectRank.toString()
+                    if (selRank != r[0]) {
+                        selRank++
+                        setRank(selRank)
                         loadData()
                     }
                 }
                 promotion.rankReduce.setOnClickListener {
-                    if (selectRank != Constants.CHARACTER_MIN_RANK) {
-                        selectRank--
-                        promotion.rank.text = selectRank.toString()
-                        loadData()
-                    }
-                }
-                promotion.rarityAdd.setOnClickListener {
-                    if (selRatity != r[1]) {
-                        selRatity++
-                        promotion.rarity.text = selRatity.toString()
-                        loadData()
-                    }
-                }
-                promotion.rarityReduce.setOnClickListener {
-                    if (selRatity != 1) {
-                        selRatity--
-                        promotion.rarity.text = selRatity.toString()
+                    if (selRank != Constants.CHARACTER_MIN_RANK) {
+                        selRank--
+                        setRank(selRank)
                         loadData()
                     }
                 }
@@ -309,7 +308,7 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     private fun loadData() {
-        viewModel.getCharacterInfo(character.id, selectRank, selRatity, lv)
+        viewModel.getCharacterInfo(character.id, selRank, selRatity, lv)
     }
 
     //初始化角色基本数据
@@ -338,7 +337,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 character.position
             )
             comment.text = character.getFixedComment()
-            if(comment.text.isEmpty()) comment.visibility = View.GONE
+            if (comment.text.isEmpty()) comment.visibility = View.GONE
             birth.text = requireActivity().resources.getString(
                 R.string.birth,
                 character.birthMonth,
@@ -358,7 +357,42 @@ class CharacterBasicInfoFragment : Fragment() {
                     null
                 )
             loveSelfText.text = character.getLoveSelfText()
-        }
 
+            val iconUrl = Constants.UNIT_ICON_URL + character.getFixedId() + Constants.WEBP
+            GlideUtil.load(iconUrl,promotion.icon,R.drawable.unknow,null)
+        }
+    }
+
+    //设置rank
+    private fun setRank(num: Int){
+        binding.promotion.apply {
+            rank.text = num.toString()
+            rank.setTextColor(getRankColor(num))
+            rankTitle.setTextColor(getRankColor(num))
+        }
+    }
+
+    //设置星级
+    private fun setRatity(num: Int){
+        StarUtil.show(binding.root.context, binding.promotion.starts, num, maxStar, 40, object : StarUtil.OnSelect{
+            override fun select(index: Int) {
+                selRatity = index + 1
+                loadData()
+            }
+        })
+    }
+
+    //rank 颜色
+    private fun getRankColor(rank: Int): Int {
+        val color = when(rank){
+            in 2 .. 3 -> R.color.color_rank_2_3
+            in 4 .. 6 -> R.color.color_rank_4_6
+            in 7 .. 10 -> R.color.color_rank_7_10
+            in 11 .. 99 -> R.color.color_rank_11
+            else ->{
+                R.color.color_rank_2_3
+            }
+        }
+        return ResourcesCompat.getColor(resources, color, null)
     }
 }
