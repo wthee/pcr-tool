@@ -6,8 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.model.CharacterAttr
-import cn.wthee.pcrtool.data.model.CharacterAttrInfo
-import cn.wthee.pcrtool.databinding.ItemEquipmentAttrBinding
+import cn.wthee.pcrtool.databinding.ItemCharacterAttrBinding
 import kotlin.math.round
 
 
@@ -15,7 +14,7 @@ class CharacterAttrAdapter :
     ListAdapter<CharacterAttr, CharacterAttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemEquipmentAttrBinding.inflate(
+            ItemCharacterAttrBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -27,7 +26,7 @@ class CharacterAttrAdapter :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemEquipmentAttrBinding) :
+    class ViewHolder(private val binding: ItemCharacterAttrBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: CharacterAttr) {
             binding.apply {

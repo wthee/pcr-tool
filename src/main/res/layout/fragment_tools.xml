@@ -4,6 +4,7 @@
     android:columnCount="4"
     android:orientation="horizontal"
     android:rowCount="2"
+    android:animateLayoutChanges="true"
     android:useDefaultMargins="true">
 
     <com.google.android.material.textview.MaterialTextView

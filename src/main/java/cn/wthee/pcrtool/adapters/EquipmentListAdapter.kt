@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.core.content.edit
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
@@ -124,5 +125,22 @@ class EquipmentAdapter(private val isList: Boolean) :
                 }
             }
         }
+    }
+}
+
+class EquipDiffCallback : DiffUtil.ItemCallback<EquipmentData>() {
+
+    override fun areItemsTheSame(
+        oldItem: EquipmentData,
+        newItem: EquipmentData
+    ): Boolean {
+        return oldItem.equipmentId == newItem.equipmentId
+    }
+
+    override fun areContentsTheSame(
+        oldItem: EquipmentData,
+        newItem: EquipmentData
+    ): Boolean {
+        return oldItem.equipmentId == newItem.equipmentId
     }
 }

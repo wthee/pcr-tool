@@ -3,9 +3,7 @@ package cn.wthee.pcrtool.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.model.EquipmentDropOdd
-import cn.wthee.pcrtool.data.model.EquipmentDropRewardID
-import cn.wthee.pcrtool.data.model.EquipmentDropWaveInfo
+import cn.wthee.pcrtool.data.model.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.entity.EnemyRewardData
 import cn.wthee.pcrtool.data.model.entity.EquipmentCraft
 import cn.wthee.pcrtool.data.model.entity.EquipmentData
@@ -36,78 +34,46 @@ interface EquipmentDao {
     @Query("SELECT * FROM equipment_craft WHERE equipment_craft.equipment_id = :eid ")
     suspend fun getEquipmentCraft(eid: Int): EquipmentCraft
 
-
-    //关卡信息
-    @Transaction
-    @Query(
-        "SELECT DISTINCT " +
-                "quest_data.quest_id, " +
-                "quest_data.area_id, " +
-                "quest_data.quest_name, " +
-                "quest_data.wave_group_id_1, " +
-                "quest_data.wave_group_id_2, " +
-                "quest_data.wave_group_id_3 " +
-                "FROM " +
-                "equipment_data " +
-                "INNER JOIN wave_group_data ON enemy_reward_data.drop_reward_id = wave_group_data.drop_reward_id_1  " +
-                "OR enemy_reward_data.drop_reward_id = wave_group_data.drop_reward_id_2  " +
-                "OR enemy_reward_data.drop_reward_id = wave_group_data.drop_reward_id_3  " +
-                "OR enemy_reward_data.drop_reward_id = wave_group_data.drop_reward_id_4  " +
-                "OR enemy_reward_data.drop_reward_id = wave_group_data.drop_reward_id_5 " +
-                "INNER JOIN quest_data ON wave_group_data.wave_group_id = quest_data.wave_group_id_1  " +
-                "OR wave_group_data.wave_group_id = quest_data.wave_group_id_2  " +
-                "OR wave_group_data.wave_group_id = quest_data.wave_group_id_3 " +
-                "INNER JOIN enemy_reward_data ON equipment_data.equipment_id = enemy_reward_data.reward_id_1  " +
-                "OR equipment_data.equipment_id = enemy_reward_data.reward_id_2  " +
-                "OR equipment_data.equipment_id = enemy_reward_data.reward_id_3  " +
-                "OR equipment_data.equipment_id = enemy_reward_data.reward_id_4  " +
-                "OR equipment_data.equipment_id = enemy_reward_data.reward_id_5  " +
-                "WHERE " +
-                "equipment_data.equipment_id = :eid  " +
-                "AND quest_data.quest_id < 18000000  " +
-                "ORDER BY " +
-                "quest_id ASC, " +
-                "quest_data.quest_name ASC, " +
-                "quest_data.quest_name ASC "
-    )
-    suspend fun getDropWaveID(eid: Int): List<EquipmentDropWaveInfo>
-
-    //查找关卡掉落奖励id
-    @Query(
-        "SELECT " +
-                "wave_group_data.drop_reward_id_1, " +
-                "wave_group_data.drop_reward_id_2, " +
-                "wave_group_data.drop_reward_id_3, " +
-                "wave_group_data.drop_reward_id_4, " +
-                "wave_group_data.drop_reward_id_5  " +
-                "FROM " +
-                "wave_group_data  " +
-                "WHERE " +
-                "wave_group_data.wave_group_id IN (:waveIds)"
-    )
-    suspend fun getDropRewardID(waveIds: List<Int>): List<EquipmentDropRewardID>
-
-    //关卡道具掉落率
-    @Query(
-        "SELECT " +
-                "enemy_reward_data.reward_id_1, " +
-                "enemy_reward_data.odds_1, " +
-                "enemy_reward_data.reward_id_2, " +
-                "enemy_reward_data.odds_2, " +
-                "enemy_reward_data.reward_id_3, " +
-                "enemy_reward_data.odds_3, " +
-                "enemy_reward_data.reward_id_4, " +
-                "enemy_reward_data.odds_4, " +
-                "enemy_reward_data.reward_id_5, " +
-                "enemy_reward_data.odds_5  " +
-                "FROM " +
-                "enemy_reward_data  " +
-                "WHERE " +
-                "drop_reward_id IN (:rids)  " +
-                "AND reward_id_1 > 100000"
-    )
-    suspend fun getOdds(rids: List<Int>): List<EquipmentDropOdd>
-
     @Query("SELECT * FROM enemy_reward_data WHERE drop_reward_id IN (:rids) AND reward_id_1 > 100000")
     suspend fun getRewardDatas(rids: List<Int>): List<EnemyRewardData>
+
+    @Transaction
+    @Query(
+        "SELECT " +
+                "quest_id, " +
+                "quest_name, " +
+                ":eid as eid, " +
+                "reward_1 || '-' || reward_2 || '-' || reward_3 || '-' || reward_4 || '-' || reward_5 AS rewards, " +
+                "odd_1 || '-' || odd_2 || '-' || odd_3 || '-' || odd_4 || '-' || odd_5 AS odds  " +
+                "FROM " +
+                "(SELECT DISTINCT " +
+                "a.quest_id, " +
+                "a.quest_name, " +
+                "GROUP_CONCAT( c.reward_id_1, '-' ) AS reward_1, " +
+                "GROUP_CONCAT( c.odds_1, '-' ) AS odd_1, " +
+                "GROUP_CONCAT( c.reward_id_2, '-' ) AS reward_2, " +
+                "GROUP_CONCAT( c.odds_2, '-' ) AS odd_2, " +
+                "GROUP_CONCAT( c.reward_id_3, '-' ) AS reward_3, " +
+                "GROUP_CONCAT( c.odds_3, '-' ) AS odd_3, " +
+                "GROUP_CONCAT( c.reward_id_4, '-' ) AS reward_4, " +
+                "GROUP_CONCAT( c.odds_4, '-' ) AS odd_4, " +
+                "GROUP_CONCAT( c.reward_id_5, '-' ) AS reward_5, " +
+                "GROUP_CONCAT( c.odds_5, '-' ) AS odd_5  " +
+                "FROM " +
+                "quest_data a " +
+                "LEFT JOIN wave_group_data b ON b.wave_group_id IN ( a.wave_group_id_1, a.wave_group_id_2, a.wave_group_id_3 ) " +
+                "LEFT JOIN enemy_reward_data c ON c.drop_reward_id IN ( b.drop_reward_id_1, b.drop_reward_id_2, b.drop_reward_id_3, b.drop_reward_id_4, b.drop_reward_id_5 )  " +
+                "AND c.reward_id_1 > 100000  " +
+                "WHERE " +
+                "a.quest_id < 18000000  " +
+                "GROUP BY " +
+                "a.quest_id  " +
+                "ORDER BY " +
+                "a.quest_id ASC, " +
+                "a.quest_name ASC )  " +
+                "WHERE " +
+                "rewards LIKE '%' || :eid || '%'"
+    )
+    suspend fun getEquipDropAreas(eid: Int): List<EquipmentDropInfo>
+
 }

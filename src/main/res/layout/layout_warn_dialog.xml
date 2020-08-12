@@ -6,6 +6,7 @@
     android:paddingStart="@dimen/m_padding"
     android:paddingEnd="@dimen/m_padding"
     android:paddingTop="@dimen/s_padding"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
 

@@ -57,7 +57,7 @@
     <string name="other">其它</string>
     <string name="setting">设置</string>
     <string name="material">装备制作素材 x %d </string>
-    <string name="material_no">装备制作素材</string>
+    <string name="material_no">装备素材</string>
     <string name="search">搜索</string>
     <string name="function">功能</string>
     <string name="data_null_character">未找到角色信息~</string>
@@ -109,5 +109,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="sorry_ue">对不起，优衣~ 下面已经没有了！</string>
+    <string name="reduce">-</string>
+    <string name="add">+</string>
 
 </resources>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic6"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
+        android:layout_margin="@dimen/l_margin"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toEndOf="@+id/pic5"
+        app:layout_constraintStart_toEndOf="@+id/pic5"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@mipmap/ic_launcher_foreground" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic3"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
+        android:layout_margin="@dimen/l_margin"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/pic2"
+        app:layout_constraintStart_toStartOf="@+id/pic2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@mipmap/ic_launcher_foreground" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic5"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
+        android:layout_margin="@dimen/l_margin"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/rank_add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pic6"
+        tools:src="@mipmap/ic_launcher_foreground" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic2"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
+        android:layout_margin="@dimen/l_margin"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/rank_reduce"
+        app:layout_constraintTop_toBottomOf="@+id/pic3"
+        tools:src="@mipmap/ic_launcher_foreground" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic4"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
+        android:layout_margin="@dimen/l_margin"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toEndOf="@+id/pic5"
+        app:layout_constraintStart_toEndOf="@+id/pic5"
+        app:layout_constraintTop_toBottomOf="@+id/pic5"
+        tools:src="@mipmap/ic_launcher_foreground" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic1"
+        android:layout_width="@dimen/big_icon"
+        android:layout_height="@dimen/big_icon"
+        android:layout_margin="@dimen/l_margin"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/pic2"
+        app:layout_constraintStart_toStartOf="@+id/pic2"
+        app:layout_constraintTop_toBottomOf="@id/pic2"
+        tools:src="@mipmap/ic_launcher_foreground" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/rank_add"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="@dimen/xl_icon"
+        android:layout_height="@dimen/xl_icon"
+        android:padding="0dp"
+        android:text="@string/add"
+        android:layout_margin="@dimen/s_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:layout_constraintBottom_toBottomOf="@+id/pic5"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintTop_toTopOf="@+id/pic5" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/rank_reduce"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="@dimen/xl_icon"
+        android:layout_height="@dimen/xl_icon"
+        android:gravity="center"
+        android:padding="0dp"
+        android:layout_margin="@dimen/s_margin"
+        android:text="@string/reduce"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:layout_constraintBottom_toBottomOf="@+id/pic2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="@+id/pic2" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/m_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/rank_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rank_add">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/rank_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rank"
+            android:textAppearance="@style/subTitleWithe"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_margin"
+            android:text="9"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

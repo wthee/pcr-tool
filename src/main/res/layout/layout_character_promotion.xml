@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,8 +16,8 @@
             android:id="@+id/icon"
             android:layout_width="@dimen/big_icon"
             android:layout_height="@dimen/big_icon"
-            android:layout_margin="@dimen/m_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="@dimen/s_margin"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:background="@drawable/unknow" />
@@ -26,103 +27,22 @@
             android:id="@+id/level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/m_margin"
             android:paddingStart="@dimen/s_padding"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:textColor="@color/colorAccent"
-            app:layout_constraintStart_toEndOf="@+id/icon"
-            app:layout_constraintTop_toTopOf="@+id/icon"
-            tools:text="99999" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icon"
+            tools:text="99" />
 
-        <LinearLayout
-            android:id="@+id/line_rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/level"
-            app:layout_constraintStart_toEndOf="@+id/level"
-            app:layout_constraintTop_toTopOf="@+id/level">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rank_reduce"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:layout_marginStart="@dimen/m_margin"
-                android:src="@drawable/ic_reduce" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/rank_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/m_margin"
-                android:layout_marginEnd="@dimen/s_margin"
-                android:layout_weight="1"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="@dimen/s_padding"
-                android:text="@string/rank"
-                android:textAppearance="@style/subTitleWithe"
-                android:textColor="@color/colorPrimary" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/rank"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/m_margin"
-                android:text="9"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rank_add"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:src="@drawable/ic_add" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/m_margin"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/icon"
-            app:layout_constraintStart_toEndOf="@+id/icon"
-            app:layout_constraintTop_toBottomOf="@+id/level">
-
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rarity_reduce"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:src="@drawable/ic_reduce" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/rarity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/m_margin"
-                android:layout_marginEnd="@dimen/m_margin"
-                android:text="5"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rarity_add"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:src="@drawable/ic_add" />
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/starts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/icon"
             android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/level">
 
         </LinearLayout>
@@ -132,23 +52,16 @@
         android:id="@+id/attrs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/s_padding"
         android:nestedScrollingEnabled="false"
+        android:padding="@dimen/s_padding"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:itemCount="3"
         tools:listitem="@layout/item_equipment_attr" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:nestedScrollingEnabled="false"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        tools:itemCount="3"
-        tools:listitem="@layout/item_equipment_promotion" />
+    <include
+        android:id="@+id/rank_equip"
+        layout="@layout/layout_rank_equip" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"

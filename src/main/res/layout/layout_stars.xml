@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:animateLayoutChanges="true"
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -11,7 +12,7 @@
         android:layout_height="@dimen/s_icon"
         android:background="@drawable/ic_star"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/star1"
@@ -19,7 +20,7 @@
         android:layout_height="@dimen/s_icon"
         android:background="@drawable/ic_star"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/star2"
@@ -27,20 +28,20 @@
         android:layout_height="@dimen/s_icon"
         android:background="@drawable/ic_star"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/star3"
         android:layout_width="@dimen/s_icon"
         android:layout_height="@dimen/s_icon"
         android:background="@drawable/ic_star"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/star4"
         android:layout_width="@dimen/s_icon"
         android:layout_height="@dimen/s_icon"
         android:background="@drawable/ic_star"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -19,103 +19,120 @@
 
 
         <LinearLayout
-            android:id="@+id/layout_content"
+            android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/s_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/item_pic"
+                android:layout_width="@dimen/big_icon"
+                android:layout_height="@dimen/big_icon"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@mipmap/ic_launcher_foreground" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/m_margin"
-                android:layout_marginEnd="@dimen/m_margin">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/content"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/title_des"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/m_margin"
+                    android:background="@drawable/title_background"
+                    android:paddingStart="@dimen/s_padding"
+                    android:paddingEnd="@dimen/s_padding"
+                    android:text="@string/equip_details"
+                    android:textAppearance="@style/subTitleWithe"
+                    app:layout_constraintStart_toEndOf="@id/item_pic"
+                    app:layout_constraintTop_toTopOf="@id/item_pic" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/item_pic"
-                        android:layout_width="@dimen/big_icon"
-                        android:layout_height="@dimen/big_icon"
-                        android:layout_gravity="center"
-                        android:adjustViewBounds="true"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@mipmap/ic_launcher_foreground" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/title_des"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/m_margin"
-                            android:background="@drawable/title_background"
-                            android:paddingStart="@dimen/s_padding"
-                            android:paddingEnd="@dimen/s_padding"
-                            android:text="@string/equip_details"
-                            android:textAppearance="@style/subTitleWithe"
-                            app:layout_constraintStart_toEndOf="@id/item_pic"
-                            app:layout_constraintTop_toTopOf="@id/item_pic" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/desc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/m_margin"
-                            android:layout_marginTop="@dimen/s_margin"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/item_pic"
-                            app:layout_constraintTop_toBottomOf="@id/title_des"
-                            tools:text="道具详情道具详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/attrs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/m_margin"
                     android:layout_marginTop="@dimen/s_margin"
-                    android:nestedScrollingEnabled="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/content"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/item_equipment_attr" />
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/item_pic"
+                    app:layout_constraintTop_toBottomOf="@id/title_des"
+                    tools:text="道具详情道具详情道具详情道道具道具详情道具详情道具详情" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title_material"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/l_margin"
-                android:layout_marginBottom="@dimen/s_margin"
-                android:text="@string/material_no"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/material"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/s_margin"
-                tools:listitem="@layout/item_equipment_material" />
+            </LinearLayout>
 
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/attrs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/s_margin"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintTop_toBottomOf="@id/content"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_equipment_attr" />
+
+        <View
+            android:id="@+id/hr1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hr_height"
+            android:layout_marginTop="@dimen/s_margin"
+            android:layout_marginBottom="@dimen/s_margin"
+            android:background="@color/colorGray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/attrs" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/material"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/hr1"
+            app:spanCount="3"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_equipment_material" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hr_height"
+            android:background="@color/colorGray" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/drops"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_equipment_drop" />
+
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/back"
+            android:layout_width="@dimen/xl_icon"
+            android:layout_height="@dimen/xl_icon"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/m_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_back"
+            android:theme="@style/Ripple"
+            android:visibility="gone" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/colorBg">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -19,8 +20,8 @@
             android:background="@color/colorWhite"
             android:fitsSystemWindows="true"
             app:collapsedTitleGravity="center"
-            app:collapsedTitleTextAppearance="@style/CollapsedTitle"
             app:contentScrim="@color/colorWhite"
+            app:expandedTitleGravity="center"
             app:expandedTitleTextAppearance="@style/ExpandedTitle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/colorWhite"
@@ -40,9 +41,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
                 android:background="@android:color/transparent"
+                app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
                 app:menu="@menu/menu_basic_info"
                 app:navigationIcon="@color/colorAlpha" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -75,10 +78,10 @@
                 android:id="@+id/basic_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                android:orientation="vertical"
                 android:layout_marginBottom="@dimen/m_margin"
-                android:elevation="@dimen/elevation_card">
+                android:background="@color/colorWhite"
+                android:elevation="@dimen/elevation_card"
+                android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/comment"

@@ -19,11 +19,11 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.MainActivity.Companion.spFirstClick
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
-import cn.wthee.pcrtool.adapters.EquipmentPromotionAdapter
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.databinding.LayoutSearchBinding
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.delay
@@ -48,7 +48,6 @@ class CharacterBasicInfoFragment : Fragment() {
     private lateinit var character: CharacterBasicInfo
     private lateinit var binding: FragmentCharacterBasicInfoBinding
     private lateinit var viewModel: CharacterPromotionViewModel
-    private lateinit var adapter: EquipmentPromotionAdapter
     private lateinit var attrAdapter: CharacterAttrAdapter
     private var selRank = 2
     private var selRatity = 1
@@ -207,6 +206,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     }
                 }
             })
+
             //fab点击监听
             fabLoveCbi.setOnClickListener {
                 isLoved = !isLoved
@@ -214,6 +214,9 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             //等级点击事件
+            binding.promotion.icon.setOnClickListener {
+                binding.promotion.level.callOnClick()
+            }
             binding.promotion.level.setOnClickListener {
                 val layout = LayoutSearchBinding.inflate(layoutInflater)
                 DialogUtil.create(requireContext(), layout.root).show()
@@ -237,8 +240,6 @@ class CharacterBasicInfoFragment : Fragment() {
                         }
                         return false
                     }
-
-
                 })
             }
         }
@@ -279,14 +280,14 @@ class CharacterBasicInfoFragment : Fragment() {
             binding.apply {
                 setRank(selRank)
                 setRatity(selRatity)
-                promotion.rankAdd.setOnClickListener {
+                promotion.rankEquip.rankAdd.setOnClickListener {
                     if (selRank != r[0]) {
                         selRank++
                         setRank(selRank)
                         loadData()
                     }
                 }
-                promotion.rankReduce.setOnClickListener {
+                promotion.rankEquip.rankReduce.setOnClickListener {
                     if (selRank != Constants.CHARACTER_MIN_RANK) {
                         selRank--
                         setRank(selRank)
@@ -296,10 +297,33 @@ class CharacterBasicInfoFragment : Fragment() {
             }
         })
         //角色装备
+        val equipPics = arrayListOf(
+            binding.promotion.rankEquip.pic6,
+            binding.promotion.rankEquip.pic5,
+            binding.promotion.rankEquip.pic4,
+            binding.promotion.rankEquip.pic3,
+            binding.promotion.rankEquip.pic2,
+            binding.promotion.rankEquip.pic1
+        )
+
         viewModel.equipments.observe(viewLifecycleOwner, Observer {
-            adapter = EquipmentPromotionAdapter()
-            binding.promotion.recycler.adapter = adapter
-            adapter.submitList(it)
+            it.forEachIndexed { index, equip ->
+                equipPics[index].apply {
+                    //加载图片
+                    //加载装备图片
+                    val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
+                    GlideUtil.load(picUrl, this, R.drawable.error, null)
+                    //点击跳转
+                    setOnClickListener {
+                        if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
+                            EquipmentDetailsFragment.getInstance(equip, true).show(
+                                ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
+                                "details"
+                            )
+                        }
+                    }
+                }
+            }
         })
         //角色属性
         viewModel.sumInfo.observe(viewLifecycleOwner, Observer {
@@ -365,7 +389,7 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //设置rank
     private fun setRank(num: Int){
-        binding.promotion.apply {
+        binding.promotion.rankEquip.apply {
             rank.text = num.toString()
             rank.setTextColor(getRankColor(num))
             rankTitle.setTextColor(getRankColor(num))

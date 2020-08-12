@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorAlphtBlack"
     android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     android:gravity="center">
 
     <androidx.cardview.widget.CardView

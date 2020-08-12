@@ -28,14 +28,8 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
 //    //关卡信息
 //    suspend fun getQuestDataDatas(waveIds: List<Int>) = equipmentDao.getEnemyRewardDatas(waveIds)
 //
-    //装备对应关卡信息
-    suspend fun getDropWaveID(eid: Int) = equipmentDao.getDropWaveID(eid)
 
-    //查找关卡掉落奖励id
-    suspend fun getDropRewardID(waveIds: List<Int>) = equipmentDao.getDropRewardID(waveIds)
-
-    //关卡道具掉落率
-    suspend fun getOdds(rids: List<Int>) = equipmentDao.getOdds(rids)
+    suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)
 
     //装备碎片信息
     suspend fun getEquipmentCraft(eid: Int) = equipmentDao.getEquipmentCraft(eid)

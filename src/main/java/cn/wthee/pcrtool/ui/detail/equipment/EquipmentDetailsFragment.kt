@@ -1,17 +1,13 @@
 package cn.wthee.pcrtool.ui.detail.equipment
 
 import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MyApplication
@@ -34,12 +30,6 @@ private const val DIALOG = "dialog"
 
 class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
-    private lateinit var equip: EquipmentData
-    private var isDialog: Boolean = false
-    private lateinit var binding: FragmentEquipmentDetailsBinding
-    private lateinit var materialAdapter: EquipmentMaterialAdapter
-    private lateinit var cusToolbar: ToolbarUtil
-
     companion object {
         fun getInstance(equip: EquipmentData, isDialog: Boolean) =
             EquipmentDetailsFragment().apply {
@@ -48,10 +38,16 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                     putBoolean(DIALOG, isDialog)
                 }
             }
+
+        lateinit var viewModel: EquipmentDetailsViewModel
+        lateinit var materialAdapter: EquipmentMaterialAdapter
     }
 
-    private val viewModel = InjectorUtil.provideEquipmentDetailsViewModelFactory()
-        .create(EquipmentDetailsViewModel::class.java)
+    private lateinit var equip: EquipmentData
+    private var isDialog: Boolean = false
+    private lateinit var binding: FragmentEquipmentDetailsBinding
+    private lateinit var cusToolbar: ToolbarUtil
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +68,8 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentDetailsBinding.inflate(inflater, container, false)
+        viewModel = InjectorUtil.provideEquipmentDetailsViewModelFactory()
+            .create(EquipmentDetailsViewModel::class.java)
         init()
         setObserve()
         viewModel.getEquipInfos(equip)
@@ -129,15 +127,10 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
             //合成素材
             if (it.isNotEmpty()) {
-                materialAdapter = EquipmentMaterialAdapter()
-                binding.material.layoutManager =
-                    GridLayoutManager(requireContext(), if (it.size == 1) 1 else 2).apply {
-                        orientation = LinearLayoutManager.VERTICAL
-                    }
+                materialAdapter = EquipmentMaterialAdapter(binding)
                 binding.material.adapter = materialAdapter
                 materialAdapter.submitList(it)
             } else {
-                binding.titleMaterial.visibility = View.GONE
                 binding.material.visibility = View.GONE
             }
         })

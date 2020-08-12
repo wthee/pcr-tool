@@ -9,14 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.EquipmentMaterial
+import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemEquipmentMaterialBinding
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDropDialogFragment
-import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GlideUtil
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
-class EquipmentMaterialAdapter() :
+class EquipmentMaterialAdapter(private val partentBinding: FragmentEquipmentDetailsBinding) :
     ListAdapter<EquipmentMaterial, EquipmentMaterialAdapter.ViewHolder>(MaterialDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -29,12 +32,12 @@ class EquipmentMaterialAdapter() :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), partentBinding)
     }
 
     class ViewHolder(private val binding: ItemEquipmentMaterialBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(info: EquipmentMaterial) {
+        fun bind(info: EquipmentMaterial, partentBinding: FragmentEquipmentDetailsBinding) {
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
@@ -49,11 +52,28 @@ class EquipmentMaterialAdapter() :
                 )
                 //点击查看掉落地区
                 root.setOnClickListener {
-                    EquipmentDropDialogFragment.getInstance(info.id)
-                        .show(
-                            ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                            "drop"
-                        )
+                    //掉落地区
+                    MainScope().launch {
+                        val data = EquipmentDetailsFragment.viewModel.getDropInfos(info.id)
+                        val adapter = EquipmentDropAdapter()
+                        partentBinding.drops.adapter = adapter
+                        adapter.submitList(data)
+                        partentBinding.drops.setItemViewCacheSize(50)
+                        //滑动时暂停glide加载
+                        partentBinding.drops.addOnScrollListener(object :
+                            RecyclerView.OnScrollListener() {
+                            override fun onScrollStateChanged(
+                                recyclerView: RecyclerView,
+                                newState: Int
+                            ) {
+                                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                                    Glide.with(root.context).resumeRequests()
+                                } else {
+                                    Glide.with(root.context).pauseRequests()
+                                }
+                            }
+                        })
+                    }
                 }
             }
         }
