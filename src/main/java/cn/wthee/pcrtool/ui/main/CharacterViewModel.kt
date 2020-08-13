@@ -27,8 +27,6 @@ class CharacterViewModel(
         viewModelScope.launch {
             val data = repository.getInfoAndData(name)
                 .sortedWith(getSort(sortType, asc))
-            isLoading.postValue(false)
-            refresh.postValue(false)
             characters.postValue(data)
         }
     }

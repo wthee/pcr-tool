@@ -101,6 +101,8 @@ class CharacterListFragment : Fragment() {
                 characters.observe(viewLifecycleOwner, Observer { data ->
                     if (data != null && data.isNotEmpty()) {
                         binding.noDataTip.visibility = View.GONE
+                        isLoading.postValue(false)
+                        refresh.postValue(false)
                         listAdapter.submitList(data) {
                             listAdapter.filter.filter(characterfilterParams.toJsonString())
                             sp.edit {
@@ -111,6 +113,7 @@ class CharacterListFragment : Fragment() {
                         }
                     } else {
                         binding.noDataTip.visibility = View.VISIBLE
+                        isLoading.postValue(true)
                     }
                 })
             }

@@ -30,10 +30,10 @@
         <action
             android:id="@+id/action_containerFragment_to_toolsFragment"
             app:destination="@id/toolsFragment"
-            app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit"
-            app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
+            app:enterAnim="@anim/fragment_enter_slide"
+            app:exitAnim="@anim/fragment_exit_slide"
+            app:popEnterAnim="@anim/fragment_popenter_slide"
+            app:popExitAnim="@anim/fragment_popexit_slide" />
     </fragment>
 
     <fragment
@@ -80,7 +80,7 @@
         tools:layout="@layout/fragment_enemy_list" />
     <fragment
         android:id="@+id/toolsFragment"
-        android:name="cn.wthee.pcrtool.ToolsFragment"
+        android:name="cn.wthee.pcrtool.ui.setting.ToolsFragment"
         android:label="fragment_tools"
         tools:layout="@layout/fragment_tools" />
 

@@ -109,7 +109,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="sorry_ue">对不起，优衣~ 下面已经没有了！</string>
-    <string name="reduce">-</string>
-    <string name="add">+</string>
+    <string name="reduce">⇣</string>
+    <string name="add">⇡</string>
 
 </resources>

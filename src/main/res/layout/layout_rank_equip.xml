@@ -74,13 +74,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rank_add"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="@dimen/xl_icon"
         android:layout_height="@dimen/xl_icon"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:enabled="false"
         android:padding="0dp"
-        android:text="@string/add"
-        android:layout_margin="@dimen/s_margin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:icon="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="@+id/pic5"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintHorizontal_bias="0.5"
@@ -88,14 +89,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rank_reduce"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="@dimen/xl_icon"
         android:layout_height="@dimen/xl_icon"
-        android:gravity="center"
+        android:layout_marginStart="@dimen/m_margin"
         android:padding="0dp"
-        android:layout_margin="@dimen/s_margin"
-        android:text="@string/reduce"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:icon="@drawable/ic_next"
         app:layout_constraintBottom_toBottomOf="@+id/pic2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -105,8 +104,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="@dimen/m_margin"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/rank_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -118,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rank"
-            android:textAppearance="@style/subTitleWithe"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -132,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/s_margin"
             android:text="9"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

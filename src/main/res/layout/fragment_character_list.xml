@@ -26,8 +26,7 @@
         android:layout_width="@dimen/l_icon"
         android:layout_height="@dimen/l_icon"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/m_margin"
-        android:visibility="gone" />
+        android:layout_marginTop="@dimen/m_margin" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/layout_refresh"

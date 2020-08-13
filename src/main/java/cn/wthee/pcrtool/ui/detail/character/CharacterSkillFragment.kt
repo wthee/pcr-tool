@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import cn.wthee.pcrtool.R
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapters.SkillAdapter
 import cn.wthee.pcrtool.adapters.SkillLoopAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.InjectorUtil
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -71,7 +70,7 @@ class CharacterSkillFragment : Fragment() {
             loopAdapter.submitList(it.getLoop())
         })
 
-        MainScope().launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             delay(1000L)
         }
 

@@ -43,5 +43,5 @@
     <dimen name="elevation_dialog">24dp</dimen>
     <dimen name="fab_circle_radius">120dp</dimen>
     <dimen name="list_height">300dp</dimen>
-    <dimen name="hr_height">12dp</dimen>
+    <dimen name="hr_height">8dp</dimen>
 </resources>

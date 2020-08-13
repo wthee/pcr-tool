@@ -228,16 +228,20 @@ class CharacterBasicInfoFragment : Fragment() {
                 searchView.inputType = InputType.TYPE_CLASS_NUMBER
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        binding.promotion.level.text = query
-                        lv = query?.toInt() ?: lv
+                        var value = query?.toInt() ?: lv
+                        lv = if (value > 999) {
+                            binding.promotion.level.text = "999"
+                            999
+                        } else {
+                            binding.promotion.level.text = query
+                            value
+                        }
+
                         loadData()
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        if (newText?.length!! > 3) {
-                            searchView.setQuery(newText.substring(0, 3), false)
-                        }
                         return false
                     }
                 })
@@ -283,6 +287,11 @@ class CharacterBasicInfoFragment : Fragment() {
                 promotion.rankEquip.rankAdd.setOnClickListener {
                     if (selRank != r[0]) {
                         selRank++
+                        if (selRank == r[0]) {
+                            it.isEnabled = false
+                        } else {
+                            promotion.rankEquip.rankReduce.isEnabled = true
+                        }
                         setRank(selRank)
                         loadData()
                     }
@@ -290,6 +299,11 @@ class CharacterBasicInfoFragment : Fragment() {
                 promotion.rankEquip.rankReduce.setOnClickListener {
                     if (selRank != Constants.CHARACTER_MIN_RANK) {
                         selRank--
+                        if (selRank == 2) {
+                            it.isEnabled = false
+                        } else {
+                            promotion.rankEquip.rankAdd.isEnabled = true
+                        }
                         setRank(selRank)
                         loadData()
                     }
@@ -398,12 +412,18 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //设置星级
     private fun setRatity(num: Int){
-        StarUtil.show(binding.root.context, binding.promotion.starts, num, maxStar, 40, object : StarUtil.OnSelect{
-            override fun select(index: Int) {
-                selRatity = index + 1
-                loadData()
-            }
-        })
+        StarUtil.show(
+            binding.root.context,
+            binding.promotion.starts,
+            num,
+            maxStar,
+            50,
+            object : StarUtil.OnSelect {
+                override fun select(index: Int) {
+                    selRatity = index + 1
+                    loadData()
+                }
+            })
     }
 
     //rank 颜色
