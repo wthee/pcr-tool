@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.adapters
 
-import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,21 +11,20 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.databinding.ItemAttackPatternBinding
+import cn.wthee.pcrtool.databinding.ItemSkillLoopBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModel.Companion.iconType1
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModel.Companion.iconType2
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.GlideUtil
-import cn.wthee.pcrtool.utils.OnBitmap
 import cn.wthee.pcrtool.utils.PaletteHelper
+import coil.api.load
 
 
 class SkillLoopAdapter() :
     ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoopDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemAttackPatternBinding.inflate(
+            ItemSkillLoopBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -37,7 +36,7 @@ class SkillLoopAdapter() :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemAttackPatternBinding) :
+    class ViewHolder(private val binding: ItemSkillLoopBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(atkId: Int) {
             //设置数据
@@ -61,19 +60,19 @@ class SkillLoopAdapter() :
                     //图标地址
                     val picUrl =
                         SKILL_ICON_URL + iconType + WEBP
-                    GlideUtil.loadReturnBitmap(
-                        picUrl,
-                        skillIcon,
-                        R.drawable.error,
-                        object : OnBitmap {
-                            override fun returnBitmap(bitmap: Bitmap) {
-                                //字体颜色
-                                skillOrder.setTextColor(
-                                    PaletteHelper.createPaletteSync(bitmap)
-                                        .getLightVibrantColor(Color.BLACK)
-                                )
-                            }
-                        })
+                    skillIcon.load(picUrl) {
+                        error(R.drawable.error)
+                        placeholder(R.drawable.load_mini)
+                        target {
+                            val bitmap = (it as BitmapDrawable).bitmap
+                            //字体颜色
+                            skillOrder.setTextColor(
+                                PaletteHelper.createPaletteSync(bitmap)
+                                    .getLightVibrantColor(Color.BLACK)
+                            )
+                            skillIcon.background = BitmapDrawable(bitmap)
+                        }
+                    }
                 }
             }
         }

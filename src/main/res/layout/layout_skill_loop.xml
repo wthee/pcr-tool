@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="5"
-        tools:listitem="@layout/item_attack_pattern" />
+        tools:listitem="@layout/item_skill_loop" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_looping"
@@ -41,6 +41,6 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="5"
         tools:itemCount="7"
-        tools:listitem="@layout/item_attack_pattern" />
+        tools:listitem="@layout/item_skill_loop" />
 
 </LinearLayout>

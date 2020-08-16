@@ -1,12 +1,12 @@
 package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
-import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.utils.CacheUtil
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import com.bumptech.glide.Glide
+import coil.Coil
 import com.tencent.bugly.beta.Beta
 
 
@@ -71,14 +71,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                 cleanData.title.toString().split(" ")[0] + "  " + CacheUtil.getTotalCacheSize(
                     requireContext()
                 )
-            Thread {
-                Glide.get(requireContext()).clearDiskCache()
-            }.start()
-            Glide.get(requireContext()).clearMemory()
-            MainActivity.spFirstClick.edit {
-                clear()
-            }
-            ToastUtil.short("图片缓存已清理~")
+            Coil.imageLoader(MyApplication.getContext()).clearMemory()
+            ToastUtil.short("图片缓存已清理")
             return@setOnPreferenceClickListener true
         }
     }

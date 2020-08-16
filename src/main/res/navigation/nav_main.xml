@@ -30,10 +30,10 @@
         <action
             android:id="@+id/action_containerFragment_to_toolsFragment"
             app:destination="@id/toolsFragment"
-            app:enterAnim="@anim/fragment_enter_slide"
-            app:exitAnim="@anim/fragment_exit_slide"
-            app:popEnterAnim="@anim/fragment_popenter_slide"
-            app:popExitAnim="@anim/fragment_popexit_slide" />
+            app:enterAnim="@anim/fragment_enter_tool"
+            app:exitAnim="@anim/fragment_exit_tool"
+            app:popEnterAnim="@anim/fragment_popenter_tool"
+            app:popExitAnim="@anim/fragment_popexit_tool" />
     </fragment>
 
     <fragment

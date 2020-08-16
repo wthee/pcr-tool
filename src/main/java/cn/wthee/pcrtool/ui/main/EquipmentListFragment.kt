@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
-import com.bumptech.glide.Glide
 
 
 class EquipmentListFragment : Fragment() {
@@ -91,7 +90,7 @@ class EquipmentListFragment : Fragment() {
             if (!equipments.hasObservers()) {
                 equipments.observe(viewLifecycleOwner, Observer { data ->
                     if (data != null && data.isNotEmpty()) {
-                        binding.noDataTip.visibility = View.GONE
+                        MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(data) {
                             listAdapter.filter.filter(equipfilterParams.toJsonString())
                             MainActivity.sp.edit {
@@ -100,7 +99,7 @@ class EquipmentListFragment : Fragment() {
                             MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
                         }
                     } else {
-                        binding.noDataTip.visibility = View.VISIBLE
+                        MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
 
                 })
@@ -116,16 +115,6 @@ class EquipmentListFragment : Fragment() {
 
     private fun setListener() {
         binding.apply {
-            //滑动时暂停glide加载
-            recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Glide.with(root.context).resumeRequests()
-                    } else {
-                        Glide.with(root.context).pauseRequests()
-                    }
-                }
-            })
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
                 equipfilterParams.initData()

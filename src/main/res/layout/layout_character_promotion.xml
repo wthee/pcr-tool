@@ -17,10 +17,12 @@
             android:layout_width="@dimen/big_icon"
             android:layout_height="@dimen/big_icon"
             android:layout_margin="@dimen/s_margin"
+            android:scaleType="fitCenter"
+            android:foreground="?android:attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:background="@drawable/unknow" />
+            tools:src="@drawable/load" />
 
         <LinearLayout
             android:id="@+id/starts"

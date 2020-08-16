@@ -3,8 +3,8 @@
     android:duration="@integer/item_anim">
 
     <scale
-        android:fromXScale="0.9"
-        android:fromYScale="0.9"
+        android:fromXScale="0.92"
+        android:fromYScale="0.92"
         android:toXScale="1"
         android:toYScale="1"
         android:pivotX="50%"

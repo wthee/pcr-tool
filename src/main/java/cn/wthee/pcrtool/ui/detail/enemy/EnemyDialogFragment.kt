@@ -10,8 +10,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.entity.EnemyData
 import cn.wthee.pcrtool.databinding.FragmentEnemyDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GlideUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
+import coil.api.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -49,8 +49,15 @@ class EnemyDialogFragment : BottomSheetDialogFragment() {
             atkTime.text = enemy.normal_atk_cast_time.toString()
             atkArea.text = enemy.search_area_width.toString()
             //图标
-            val picUrl = Constants.UNIT_ICON_URL + enemy.unit_id + Constants.WEBP
-            GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
+            //加载图片
+            val picUrl = if (enemy.unit_id < 600101) {
+                Constants.UNIT_ICON_URL + enemy.prefab_id
+            } else {
+                Constants.UNIT_ICON_SHADOW_URL + enemy.getTruePrefabId()
+            } + Constants.WEBP
+            itemPic.load(picUrl) {
+                error(R.drawable.error)
+            }
             //toolbar
             val cusToolbar = ToolbarUtil(toolbar)
             cusToolbar.apply {

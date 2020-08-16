@@ -22,7 +22,8 @@ import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.GlideUtil
+
+import coil.api.load
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -111,7 +112,10 @@ class EquipmentAdapter(private val isList: Boolean) :
                 desc.text = equip.getDesc()
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
-                GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
+                itemPic.load(picUrl) {
+                    error(R.drawable.error)
+                    placeholder(R.drawable.load_mini)
+                }
                 //设置共享元素
                 itemPic.transitionName = "pic_${equip.equipmentId}"
                 name.transitionName = "ename_${equip.equipmentId}"

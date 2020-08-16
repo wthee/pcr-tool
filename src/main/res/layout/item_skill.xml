@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="毁灭之眼" />
@@ -45,7 +46,7 @@
             android:id="@+id/item_pic"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/normal_icon"
-            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/unknow" />

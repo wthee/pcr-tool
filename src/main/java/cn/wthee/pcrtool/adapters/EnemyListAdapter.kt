@@ -15,20 +15,22 @@ import cn.wthee.pcrtool.data.model.entity.EnemyData
 import cn.wthee.pcrtool.databinding.ItemEnemyBinding
 import cn.wthee.pcrtool.ui.detail.enemy.EnemyDialogFragment
 import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_SHADOW_URL
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.GlideUtil
+
+import coil.api.load
 
 
 class EnemyListAdapter :
-        ListAdapter<EnemyData, EnemyListAdapter.ViewHolder>(EnemyDiffCallback()), Filterable {
+    ListAdapter<EnemyData, EnemyListAdapter.ViewHolder>(EnemyDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                ItemEnemyBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                )
+            ItemEnemyBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
@@ -71,25 +73,32 @@ class EnemyListAdapter :
     }
 
     inner class ViewHolder(private val binding: ItemEnemyBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(enemyData: EnemyData) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.getContext()
                 //加载动画
                 root.animation =
-                        AnimationUtils.loadAnimation(ctx, R.anim.anim_scale_alpha)
+                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale_alpha)
                 //名称
                 name.text = enemyData.unit_name
                 //加载图片
-                val picUrl = UNIT_ICON_URL + enemyData.unit_id + WEBP
-                GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
+                val picUrl = if (enemyData.unit_id < 600101) {
+                    UNIT_ICON_URL + enemyData.prefab_id
+                } else {
+                    UNIT_ICON_SHADOW_URL + enemyData.getTruePrefabId()
+                } + WEBP
+                itemPic.load(picUrl) {
+                    error(R.drawable.error)
+                    placeholder(R.drawable.load_mini)
+                }
                 //设置点击跳转
                 root.setOnClickListener {
                     MainActivity.currentEquipPosition = adapterPosition
                     EnemyDialogFragment.getInstance(enemyData).show(
-                            ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                            "enemy"
+                        ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
+                        "enemy"
                     )
                 }
             }
@@ -100,15 +109,15 @@ class EnemyListAdapter :
 private class EnemyDiffCallback : DiffUtil.ItemCallback<EnemyData>() {
 
     override fun areItemsTheSame(
-            oldItem: EnemyData,
-            newItem: EnemyData
+        oldItem: EnemyData,
+        newItem: EnemyData
     ): Boolean {
         return oldItem.unit_id == newItem.unit_id
     }
 
     override fun areContentsTheSame(
-            oldItem: EnemyData,
-            newItem: EnemyData
+        oldItem: EnemyData,
+        newItem: EnemyData
     ): Boolean {
         return oldItem.unit_id == newItem.unit_id
     }

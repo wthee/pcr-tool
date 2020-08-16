@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textview.MaterialTextView
 import kotlin.collections.set
 
 
@@ -39,6 +40,7 @@ class MainPagerFragment : Fragment() {
         var cListClick = false
         lateinit var tabLayout: TabLayout
         private var count = 0
+        lateinit var tipText: MaterialTextView
     }
 
     private lateinit var binding: FragmentMainPagerBinding
@@ -75,8 +77,9 @@ class MainPagerFragment : Fragment() {
                 toolbar.setTitleColor(R.color.colorAccent)
             }
         }
+        //工具
         toolbar.rightIcon.setOnClickListener {
-             findNavController().navigate(R.id.action_containerFragment_to_toolsFragment)
+            findNavController().navigate(R.id.action_containerFragment_to_toolsFragment)
         }
         return binding.root
     }
@@ -97,6 +100,7 @@ class MainPagerFragment : Fragment() {
     }
 
     private fun init() {
+        tipText = binding.noDataTip
         //禁止连续点击
         cListClick = false
         //viewpager2 配置
@@ -107,6 +111,11 @@ class MainPagerFragment : Fragment() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 MainActivity.currentMainPage = position
+                when (position) {
+                    0 -> tipText.text = getString(R.string.data_null_character)
+                    1 -> tipText.text = getString(R.string.data_null_equip)
+                    2 -> tipText.text = getString(R.string.data_null_enemy)
+                }
             }
         })
         //tab 初始化

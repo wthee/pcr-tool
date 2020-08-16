@@ -2,19 +2,16 @@ package cn.wthee.pcrtool.adapters
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropDetailBinding
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.GlideUtil
+import coil.api.load
 
 
 class EquipmentDropDetailAdapter(private val eid: Int) :
@@ -42,7 +39,10 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
                 odd.text = equip.odd.toString() + "%"
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.eid + WEBP
-                GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
+                itemPic.load(picUrl) {
+                    error(R.drawable.error)
+                    placeholder(R.drawable.load_mini)
+                }
                 if (eid == equip.eid) {
                     odd.setTextColor(Color.RED)
                 }

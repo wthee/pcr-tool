@@ -23,6 +23,7 @@ object Constants {
 
     //图标接口
     const val UNIT_ICON_URL = API_URL + "icon/unit/"
+    const val UNIT_ICON_SHADOW_URL = API_URL + "icon/unit_shadow/"
 
     //角色界面接口
     const val CHARACTER_PLATE_URL = API_URL + "icon/plate/"

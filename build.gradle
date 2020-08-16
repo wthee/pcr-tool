@@ -55,6 +55,10 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
     implementation 'com.tencent.bugly:nativecrashreport:3.7.3'
 
+    //coil
+    implementation "io.coil-kt:coil:0.11.0"
+    implementation "io.coil-kt:coil-gif:0.11.0"
+
     //Glide
     def glide_version = "4.11.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"

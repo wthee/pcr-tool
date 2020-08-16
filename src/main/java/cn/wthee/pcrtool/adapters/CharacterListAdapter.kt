@@ -22,10 +22,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GlideUtil
-import com.bumptech.glide.Glide
+import coil.api.load
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -33,7 +33,6 @@ import com.google.gson.reflect.TypeToken
 class CharacterAdapter(private val fragment: Fragment) :
     ListAdapter<CharacterBasicInfo, CharacterAdapter.ViewHolder>(CharacterDiffCallback()),
     Filterable {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -48,7 +47,6 @@ class CharacterAdapter(private val fragment: Fragment) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), fragment)
     }
-
 
     class ViewHolder(private val binding: ItemCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -67,9 +65,10 @@ class CharacterAdapter(private val fragment: Fragment) :
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_scale)
                 //加载网络图片
-                val picUrl =
-                    Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
-                GlideUtil.load(picUrl, characterPic, R.drawable.error, null)
+                val picUrl = Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
+                characterPic.load(picUrl) {
+                    error(R.drawable.error)
+                }
                 //设置位置
                 content.positionType.background =
                     ResourcesCompat.getDrawable(
@@ -90,13 +89,14 @@ class CharacterAdapter(private val fragment: Fragment) :
                 //设置共享元素名称
                 characterPic.transitionName = "img_${character.id}"
                 content.info.transitionName = "content_${character.id}"
-                //item点击事件，查看详情
+            }
+            //item点击事件，查看详情
+            binding.apply {
                 root.setOnClickListener {
                     //避免同时点击两个
                     if (!MainPagerFragment.cListClick) {
                         MainPagerFragment.cListClick = true
                         canBack = false
-                        Glide.with(fragment.requireContext()).pauseRequests()
                         MainActivity.currentCharaPosition = adapterPosition
                         val bundle = Bundle()
                         bundle.putSerializable("character", character)
@@ -114,10 +114,20 @@ class CharacterAdapter(private val fragment: Fragment) :
                     }
                 }
                 //长按事件
-//                root.setOnLongClickListener {
-//                    return@setOnLongClickListener true
-//                }
+                binding.root.setOnLongClickListener {
+//                    OnTouchUtil.addEffect(root)
+                    val isLoved = sp.getBoolean(character.id.toString(), false)
+                    sp.edit {
+                        putBoolean(
+                            character.id.toString(),
+                            !isLoved
+                        )
+                    }
+                    CharacterListFragment.characterList.adapter?.notifyItemChanged(adapterPosition)
+                    return@setOnLongClickListener true
+                }
             }
+
         }
     }
 

@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.DialogUtil
 import cn.wthee.pcrtool.utils.InjectorUtil
-import com.bumptech.glide.Glide
 
 
 class CharacterListFragment : Fragment() {
@@ -100,9 +99,7 @@ class CharacterListFragment : Fragment() {
             if (!characters.hasObservers()) {
                 characters.observe(viewLifecycleOwner, Observer { data ->
                     if (data != null && data.isNotEmpty()) {
-                        binding.noDataTip.visibility = View.GONE
-                        isLoading.postValue(false)
-                        refresh.postValue(false)
+                        MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(data) {
                             listAdapter.filter.filter(characterfilterParams.toJsonString())
                             sp.edit {
@@ -112,9 +109,10 @@ class CharacterListFragment : Fragment() {
                             MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
                         }
                     } else {
-                        binding.noDataTip.visibility = View.VISIBLE
-                        isLoading.postValue(true)
+                        MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
+                    isLoading.postValue(false)
+                    refresh.postValue(false)
                 })
             }
             //刷新
@@ -136,7 +134,7 @@ class CharacterListFragment : Fragment() {
                         findNavController().popBackStack(R.id.containerFragment, true)
                         findNavController().navigate(R.id.containerFragment)
                         MainActivity.isHome = true
-                        MainActivity.fab.setImageResource(R.drawable.ic_function)
+                        MainActivity.fabMain.setImageResource(R.drawable.ic_function)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())
                     }
@@ -153,17 +151,6 @@ class CharacterListFragment : Fragment() {
                 characterfilterParams.initData()
                 viewModel.getCharacters(sortType, sortAsc, "")
             }
-
-            //滑动时暂停glide加载
-            characterList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Glide.with(root.context).resumeRequests()
-                    } else {
-                        Glide.with(root.context).pauseRequests()
-                    }
-                }
-            })
         }
     }
 }

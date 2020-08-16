@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.adapters.EnemyListAdapter
 import cn.wthee.pcrtool.databinding.FragmentEnemyListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
-import com.bumptech.glide.Glide
 
 
 class EnemyListFragment : Fragment() {
@@ -68,7 +67,7 @@ class EnemyListFragment : Fragment() {
             if (!enemies.hasObservers()) {
                 viewModel.enemies.observe(viewLifecycleOwner, Observer {
                     if (it != null && it.isNotEmpty()) {
-                        binding.noDataTip.visibility = View.GONE
+                        MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(it) {
                             if (filterFlag.toString() != "0") {
                                 listAdapter.filter.filter(
@@ -81,7 +80,7 @@ class EnemyListFragment : Fragment() {
                             MainPagerFragment.tabLayout.getTabAt(2)?.text = it.size.toString()
                         }
                     } else {
-                        binding.noDataTip.visibility = View.VISIBLE
+                        MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
                 })
             }
@@ -92,7 +91,7 @@ class EnemyListFragment : Fragment() {
                         putInt(Constants.SP_COUNT_ENEMY, it)
                     }
                     MainPagerFragment.tabLayout.getTabAt(2)?.text = it.toString()
-                    binding.noDataTip.visibility = if (it != 0) View.GONE else View.VISIBLE
+                    MainPagerFragment.tipText.visibility = if (it != 0) View.GONE else View.VISIBLE
                 })
             }
 
@@ -107,16 +106,6 @@ class EnemyListFragment : Fragment() {
 
     private fun setListener() {
         binding.apply {
-            //滑动时暂停glide加载
-            list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Glide.with(root.context).resumeRequests()
-                    } else {
-                        Glide.with(root.context).pauseRequests()
-                    }
-                }
-            })
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
                 viewModel.getAllEnemy()

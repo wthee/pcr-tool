@@ -23,7 +23,7 @@
 
             <include
                 android:id="@+id/attact_pattern"
-                layout="@layout/layout_attack_pattern"
+                layout="@layout/layout_skill_loop"
                 app:layout_collapseMode="none" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

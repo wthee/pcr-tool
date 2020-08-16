@@ -17,9 +17,9 @@ import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GlideUtil
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
+import coil.api.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -47,6 +47,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     private var isDialog: Boolean = false
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var cusToolbar: ToolbarUtil
+    private lateinit var behavior: BottomSheetBehavior<View>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,12 +83,13 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         dialog.setContentView(v)
 
         val layoutParams = (v.parent as View).layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = layoutParams.behavior as BottomSheetBehavior<View>
+        behavior = layoutParams.behavior as BottomSheetBehavior<View>
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private fun init() {
         binding.apply {
+            progressBar1.visibility = View.VISIBLE
             //toolbar
             cusToolbar = ToolbarUtil(toolbar)
             cusToolbar.apply {
@@ -105,7 +107,9 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
             itemPic.transitionName = "pic_${equip.equipmentId}"
             //图标
             val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
-            GlideUtil.load(picUrl, itemPic, R.drawable.error, parentFragment)
+            itemPic.load(picUrl) {
+                error(R.drawable.error)
+            }
             //描述
             desc.text = equip.getDesc()
             //属性词条
@@ -127,15 +131,14 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
             //合成素材
             if (it.isNotEmpty()) {
-                materialAdapter = EquipmentMaterialAdapter(binding)
+                materialAdapter = EquipmentMaterialAdapter(binding, behavior)
                 binding.material.adapter = materialAdapter
-                materialAdapter.submitList(it)
+                materialAdapter.submitList(it) {
+                    binding.progressBar1.visibility = View.INVISIBLE
+                }
             } else {
                 binding.material.visibility = View.GONE
             }
-        })
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-//            binding.equipProgressBar.visibility = if (it) View.VISIBLE else View.GONE
         })
     }
 

@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
+import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -20,6 +22,7 @@ import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         var databaseVersion: String? = Constants.DATABASE_VERSION
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
-        lateinit var spFirstClick: SharedPreferences
         lateinit var spSetting: SharedPreferences
         var sortType = Constants.SORT_TYPE
         var sortAsc = Constants.SORT_ASC
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         var autoUpdateDb = true
 
         //fab 默认隐藏
-        lateinit var fab: FloatingActionButton
+        lateinit var fabMain: FloatingActionButton
         lateinit var fabSetting: FloatingActionButton
         lateinit var fabLove: FloatingActionButton
         lateinit var fabSearch: FloatingActionButton
@@ -107,16 +109,14 @@ class MainActivity : AppCompatActivity() {
         ).versionName
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-        spFirstClick = getSharedPreferences("firstClick", Context.MODE_PRIVATE)
         databaseVersion = sp.getString(Constants.SP_DATABASE_VERSION, Constants.DATABASE_VERSION)
-
         //设置信息
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
         notToast = spSetting.getBoolean("not_toast", notToast)
     }
 
     private fun setFab() {
-        fab = binding.fab
+        fabMain = binding.fab
         fabSetting = binding.setting
         fabLove = binding.love
         fabSearch = binding.search
@@ -194,44 +194,51 @@ class MainActivity : AppCompatActivity() {
                 1 -> searchView.queryHint = "装备名"
                 2 -> searchView.queryHint = "怪物名"
             }
+            //搜索监听
             searchView.setOnQueryTextListener(object :
                 SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     when (currentMainPage) {
-                        0 -> {
-                            //角色名字
-                            sharedCharacterViewModel.getCharacters(
-                                sortType,
-                                sortAsc, query ?: ""
-                            )
+                        0 -> query?.let {
+                            sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
                         }
-                        1 -> {
+                        1 -> query?.let {
                             sharedEquipViewModel.getEquips(asc, query ?: "")
                         }
-                        2 -> EnemyListFragment.listAdapter.filter.filter(
-                            query
-                        )
+                        2 -> query?.let {
+                            sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
+                        }
                     }
 
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    //重置
-                    if (newText == "") {
-                        when (currentMainPage) {
-                            0 -> sharedCharacterViewModel.getCharacters(
-                                sortType,
-                                sortAsc, ""
-                            )
-                            1 -> sharedEquipViewModel.getEquips(asc, "")
-                            2 -> EnemyListFragment.viewModel.getAllEnemy()
-                        }
-                    }
-
                     return false
                 }
+
             })
+            //清空监听
+            val closeBtn =
+                searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+            closeBtn.setOnClickListener {
+                when (currentMainPage) {
+                    0 -> sharedCharacterViewModel.getCharacters(
+                        sortType,
+                        sortAsc, ""
+                    )
+                    1 -> sharedEquipViewModel.getEquips(asc, "")
+                    2 -> EnemyListFragment.viewModel.getAllEnemy()
+                }
+                searchView.setQuery("", false)
+            }
+            //关闭搜索监听
+            dialog.setOnDismissListener {
+                try {
+                    MainPagerFragment.tipText.visibility = View.GONE
+                } catch (e: Exception) {
+                }
+            }
         }
         //筛选
         fabFilter.setOnClickListener {

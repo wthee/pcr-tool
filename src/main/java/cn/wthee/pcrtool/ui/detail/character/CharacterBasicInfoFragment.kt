@@ -13,10 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
-import cn.wthee.pcrtool.MainActivity.Companion.spFirstClick
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.data.model.CharacterBasicInfo
@@ -25,9 +23,11 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.databinding.LayoutSearchBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.utils.*
+import coil.api.load
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.HttpUrl
 import kotlin.math.abs
 
 
@@ -60,10 +60,6 @@ class CharacterBasicInfoFragment : Fragment() {
             character = it.getSerializable("character") as CharacterBasicInfo
         }
         isLoved = sp.getBoolean(character.id.toString(), false)
-        sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        sharedElementReturnTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
@@ -91,10 +87,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 CharacterSkillFragment.viewModel.getCharacterSkills(character.id)
             }
         }, binding.basicInfo, binding.promotion.root)
-
-        //列表适配器
-        attrAdapter = CharacterAttrAdapter()
-        binding.promotion.attrs.adapter = attrAdapter
         //加载图片
         loadImages()
         //点击事件
@@ -117,36 +109,16 @@ class CharacterBasicInfoFragment : Fragment() {
     //加载图片
     private fun loadImages() {
         //toolbar 背景
-        GlideUtil.loadWithListener(
-            Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP,
-            binding.characterPic,
-            R.drawable.error,
-            parentFragment,
-            object : OnLoadListener {
-                override fun onSuccess() {
-                    spFirstClick.edit {
-                        putBoolean("first_click_${character.id}", false)
-                        lifecycleScope.launch {
-                            try {
-                                delay(resources.getInteger(R.integer.item_anim_fast).toLong())
-                                canBack = true
-                            } catch (e: Exception) {
-
-                            }
-                        }
-
-                    }
-                }
-            }
-        )
-
-        val first = spFirstClick.getBoolean("first_click_${character.id}", true)
-        if (first) {
-            parentFragment?.startPostponedEnterTransition()
-            lifecycleScope.launch {
-                delay(resources.getInteger(R.integer.item_anim_fast).toLong())
-                canBack = true
-            }
+        val picUrl =
+            HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
+        binding.characterPic.load(picUrl) {
+            error(R.drawable.error)
+        }
+        //未加载完图片时，使用加载中图片进行过渡
+        parentFragment?.startPostponedEnterTransition()
+        lifecycleScope.launch {
+            delay(resources.getInteger(R.integer.item_anim_fast).toLong())
+            canBack = true
         }
     }
 
@@ -228,7 +200,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 searchView.inputType = InputType.TYPE_CLASS_NUMBER
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        var value = query?.toInt() ?: lv
+                        val value = query?.toInt() ?: lv
                         lv = if (value > 999) {
                             binding.promotion.level.text = "999"
                             999
@@ -323,10 +295,12 @@ class CharacterBasicInfoFragment : Fragment() {
         viewModel.equipments.observe(viewLifecycleOwner, Observer {
             it.forEachIndexed { index, equip ->
                 equipPics[index].apply {
-                    //加载图片
                     //加载装备图片
                     val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
-                    GlideUtil.load(picUrl, this, R.drawable.error, null)
+                    this.load(picUrl) {
+                        error(R.drawable.error)
+                        placeholder(R.drawable.load_mini)
+                    }
                     //点击跳转
                     setOnClickListener {
                         if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
@@ -341,6 +315,9 @@ class CharacterBasicInfoFragment : Fragment() {
         })
         //角色属性
         viewModel.sumInfo.observe(viewLifecycleOwner, Observer {
+            //列表适配器
+            attrAdapter = CharacterAttrAdapter()
+            binding.promotion.attrs.adapter = attrAdapter
             attrAdapter.submitList(it.getList())
         })
     }
@@ -395,14 +372,17 @@ class CharacterBasicInfoFragment : Fragment() {
                     null
                 )
             loveSelfText.text = character.getLoveSelfText()
-
+            //头像
             val iconUrl = Constants.UNIT_ICON_URL + character.getFixedId() + Constants.WEBP
-            GlideUtil.load(iconUrl,promotion.icon,R.drawable.unknow,null)
+            promotion.icon.load(iconUrl) {
+                error(R.drawable.unknow)
+                placeholder(R.drawable.load_mini)
+            }
         }
     }
 
     //设置rank
-    private fun setRank(num: Int){
+    private fun setRank(num: Int) {
         binding.promotion.rankEquip.apply {
             rank.text = num.toString()
             rank.setTextColor(getRankColor(num))
@@ -411,7 +391,7 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     //设置星级
-    private fun setRatity(num: Int){
+    private fun setRatity(num: Int) {
         StarUtil.show(
             binding.root.context,
             binding.promotion.starts,
@@ -428,12 +408,12 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //rank 颜色
     private fun getRankColor(rank: Int): Int {
-        val color = when(rank){
-            in 2 .. 3 -> R.color.color_rank_2_3
-            in 4 .. 6 -> R.color.color_rank_4_6
-            in 7 .. 10 -> R.color.color_rank_7_10
-            in 11 .. 99 -> R.color.color_rank_11
-            else ->{
+        val color = when (rank) {
+            in 2..3 -> R.color.color_rank_2_3
+            in 4..6 -> R.color.color_rank_4_6
+            in 7..10 -> R.color.color_rank_7_10
+            in 11..99 -> R.color.color_rank_11
+            else -> {
                 R.color.color_rank_2_3
             }
         }
