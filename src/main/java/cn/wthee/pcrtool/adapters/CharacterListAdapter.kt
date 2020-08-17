@@ -19,8 +19,8 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
@@ -152,17 +152,23 @@ class CharacterAdapter(private val fragment: Fragment) :
                             }
                         }
                         //位置筛选
-                        if (param.hasPositionFilter()) {
-                            if ((!param.positon1 && data.position in 0..300)
-                                || (!param.positon2 && data.position in 301..600)
-                                || (!param.positon3 && data.position >= 601)
-                            ) {
+                        if (param.positon != 0) {
+                            val notInPositon = param.positon == 1 && data.position in 301..999
+                                    || param.positon == 2 && (data.position in 0..300 || data.position in 601..9999)
+                                    || param.positon == 3 && data.position in 0..600
+                            if (notInPositon) {
                                 filteredList.remove(data)
                             }
                         }
                         //攻击类型筛选
-                        if (param.hasAtkFilter()) {
-                            if ((!param.atkPhysical && data.atkType == 1) || (!param.atkMagic && data.atkType == 2)) {
+                        if (param.atk != 0) {
+                            if (param.atk != data.atkType) {
+                                filteredList.remove(data)
+                            }
+                        }
+                        //公会筛
+                        if (param.guild != "全部") {
+                            if (param.guild != data.guild) {
                                 filteredList.remove(data)
                             }
                         }

@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.model.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.entity.*
 
 
@@ -86,4 +85,7 @@ interface CharacterDao {
     @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
     suspend fun getAttackPattern(unitId: Int): AttackPattern
 
+    //公会信息
+    @Query("SELECT * FROM guild")
+    suspend fun getGuilds(): List<GuildData>
 }

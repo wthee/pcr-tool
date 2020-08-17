@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.model.entity
 
 import androidx.room.ColumnInfo
 
@@ -21,7 +21,12 @@ data class EquipmentDropInfo(
         val result = arrayListOf<EquipmentIdWithOdd>()
         list1.forEachIndexed { index, s ->
             if (s != "0") {
-                result.add(EquipmentIdWithOdd(s.toInt(), list2[index].toInt()))
+                result.add(
+                    EquipmentIdWithOdd(
+                        s.toInt(),
+                        list2[index].toInt()
+                    )
+                )
             }
         }
         result.sortByDescending { it.odd }

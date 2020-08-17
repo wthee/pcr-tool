@@ -32,9 +32,10 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         WaveGroupData::class,
         EnemyData::class,
         CharacterExperience::class,
-        AttackPattern::class
+        AttackPattern::class,
+        GuildData::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

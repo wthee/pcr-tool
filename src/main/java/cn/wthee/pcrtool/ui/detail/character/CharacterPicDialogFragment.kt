@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.PagerSnapHelper
 import cn.wthee.pcrtool.adapters.CharacterCardBgAdapter
-import cn.wthee.pcrtool.data.model.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 
 class CharacterPicDialogFragment : DialogFragment() {

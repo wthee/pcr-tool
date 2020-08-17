@@ -4,7 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
-import cn.wthee.pcrtool.data.model.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.GuildData
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
 import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
 import cn.wthee.pcrtool.utils.Constants.SORT_POSITION
@@ -17,6 +18,7 @@ class CharacterViewModel(
 ) : ViewModel() {
 
     var characters = MutableLiveData<List<CharacterBasicInfo>>()
+    var guilds = MutableLiveData<List<GuildData>>()
     var refresh = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
@@ -31,6 +33,8 @@ class CharacterViewModel(
         }
     }
 
+    //公会信息
+    suspend fun getGuilds() = repository.getGuilds()
 
     private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterBasicInfo> {
         return Comparator { o1: CharacterBasicInfo, o2: CharacterBasicInfo ->

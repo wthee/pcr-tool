@@ -4,28 +4,18 @@ import com.google.gson.Gson
 
 class FilterCharacter(
     var all: Boolean,
-    var positon1: Boolean,
-    var positon2: Boolean,
-    var positon3: Boolean,
-    var atkPhysical: Boolean,
-    var atkMagic: Boolean
+    var positon: Int,
+    var atk: Int,
+    var guild: String
 ) {
     fun initData() {
         this.all = true
-        this.positon1 = true
-        this.positon2 = true
-        this.positon3 = true
-        this.atkPhysical = true
-        this.atkMagic = true
+        this.positon = 0
+        this.atk = 0
+        this.guild = "全部"
     }
 
     //转化为 json 字符串
     fun toJsonString(): String = Gson().toJson(this)
 
-    //是否有筛选项
-    fun hasFilter() = hasPositionFilter() || hasAtkFilter()
-
-    fun hasPositionFilter() = !(positon1 && positon2 && positon3)
-
-    fun hasAtkFilter() = !(atkPhysical && atkMagic)
 }

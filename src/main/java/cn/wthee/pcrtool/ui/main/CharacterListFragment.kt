@@ -10,6 +10,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
@@ -25,6 +26,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.DialogUtil
 import cn.wthee.pcrtool.utils.InjectorUtil
+import kotlinx.coroutines.launch
 
 
 class CharacterListFragment : Fragment() {
@@ -33,10 +35,10 @@ class CharacterListFragment : Fragment() {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterAdapter
         var characterfilterParams = FilterCharacter(
-            true, true, true, true,
-            true, true
+            true, 0, 0, "全部"
         )
         lateinit var handler: Handler
+        lateinit var guilds: ArrayList<String>
     }
 
     private lateinit var binding: FragmentCharacterListBinding
@@ -50,6 +52,15 @@ class CharacterListFragment : Fragment() {
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         binding.layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
+        //公会列表
+        guilds = arrayListOf()
+        viewLifecycleOwner.lifecycleScope.launch {
+            guilds.add("全部")
+            viewModel.getGuilds().forEach {
+                guilds.add(it.guild_name)
+            }
+            guilds.add("？？？")
+        }
         //加载数据
         init()
         //监听数据变化

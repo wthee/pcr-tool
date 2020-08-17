@@ -40,6 +40,9 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     //角色动作循环
     suspend fun getAttackPattern(unitId: Int) = characterDao.getAttackPattern(unitId)
 
+    //公会信息
+    suspend fun getGuilds() = characterDao.getGuilds()
+
     companion object {
 
         @Volatile

@@ -9,22 +9,23 @@ import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.forEachIndexed
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
-import cn.wthee.pcrtool.databinding.ActivityMainBinding
-import cn.wthee.pcrtool.databinding.LayoutFilterCharacterBinding
-import cn.wthee.pcrtool.databinding.LayoutFilterEquipmentBinding
-import cn.wthee.pcrtool.databinding.LayoutSearchBinding
+import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.main.*
+import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.guilds
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
+import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
@@ -247,6 +248,20 @@ class MainActivity : AppCompatActivity() {
                 0 -> {
                     //筛选
                     val layout = LayoutFilterCharacterBinding.inflate(layoutInflater)
+                    val chips = layout.chipsGuild
+                    //添加公会信息
+                    MainScope().launch {
+                        guilds.forEachIndexed { index, guild ->
+                            val chip = LayoutChipBinding.inflate(layoutInflater).root
+                            chip.text = guild
+                            chip.isCheckable = true
+                            chip.isClickable = true
+                            chips.addView(chip)
+                            if (CharacterListFragment.characterfilterParams.guild == guild) {
+                                chip.isChecked = true
+                            }
+                        }
+                    }
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
                     //排序类型
@@ -259,19 +274,16 @@ class MainActivity : AppCompatActivity() {
                     //排序规则
                     if (sortAsc) layout.asc.isChecked = true else layout.desc.isChecked = true
                     //位置筛选
-                    val positionChip1 = layout.positionChip1
-                    val positionChip2 = layout.positionChip2
-                    val positionChip3 = layout.positionChip3
-                    //传入筛选条件
-                    positionChip1.isChecked = CharacterListFragment.characterfilterParams.positon1
-                    positionChip2.isChecked = CharacterListFragment.characterfilterParams.positon2
-                    positionChip3.isChecked = CharacterListFragment.characterfilterParams.positon3
+                    layout.chipsPosition.forEachIndexed { index, view ->
+                        val chip = view as Chip
+                        chip.isChecked =
+                            CharacterListFragment.characterfilterParams.positon == index
+                    }
                     //攻击类型筛选
-                    val atk1 = layout.atkChip1
-                    val atk2 = layout.atkChip2
-                    //传入筛选条件
-                    atk1.isChecked = CharacterListFragment.characterfilterParams.atkPhysical
-                    atk2.isChecked = CharacterListFragment.characterfilterParams.atkMagic
+                    layout.chipsAtk.forEachIndexed { index, view ->
+                        val chip = view as Chip
+                        chip.isChecked = CharacterListFragment.characterfilterParams.atk == index
+                    }
                     layout.next.setOnClickListener {
                         dialog.dismiss()
                         //排序选项
@@ -284,14 +296,25 @@ class MainActivity : AppCompatActivity() {
                         }
                         sortAsc = layout.ascChips.checkedChipId == R.id.asc
                         //筛选选项
-                        CharacterListFragment.characterfilterParams.positon1 =
-                            positionChip1.isChecked
-                        CharacterListFragment.characterfilterParams.positon2 =
-                            positionChip2.isChecked
-                        CharacterListFragment.characterfilterParams.positon3 =
-                            positionChip3.isChecked
-                        CharacterListFragment.characterfilterParams.atkPhysical = atk1.isChecked
-                        CharacterListFragment.characterfilterParams.atkMagic = atk2.isChecked
+                        CharacterListFragment.characterfilterParams.positon =
+                            when (layout.chipsPosition.checkedChipId) {
+                                R.id.position_chip_1 -> 1
+                                R.id.position_chip_2 -> 2
+                                R.id.position_chip_3 -> 3
+                                else -> 0
+                            }
+                        CharacterListFragment.characterfilterParams.atk =
+                            when (layout.chipsAtk.checkedChipId) {
+                                R.id.atk_chip_1 -> 1
+                                R.id.atk_chip_2 -> 2
+                                else -> 0
+                            }
+                        //公会筛选
+                        layout.chipsGuild.checkedChipIds.forEach {
+                            val chip = layout.root.findViewById<Chip>(it)
+                            CharacterListFragment.characterfilterParams.guild = chip.text.toString()
+                        }
+
                         sharedCharacterViewModel.getCharacters(
                             sortType,
                             sortAsc, ""
