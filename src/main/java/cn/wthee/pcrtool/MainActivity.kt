@@ -169,7 +169,6 @@ class MainActivity : AppCompatActivity() {
                         sortType,
                         sortAsc, ""
                     )
-                    CharacterListFragment.listAdapter.notifyDataSetChanged()
                 }
                 1 -> {
                     ToastUtil.short(NOTICE_TOAST_TODO)
@@ -245,6 +244,7 @@ class MainActivity : AppCompatActivity() {
         fabFilter.setOnClickListener {
             closeFab()
             when (currentMainPage) {
+                //角色筛选
                 0 -> {
                     //筛选
                     val layout = LayoutFilterCharacterBinding.inflate(layoutInflater)
@@ -273,13 +273,13 @@ class MainActivity : AppCompatActivity() {
                     }
                     //排序规则
                     if (sortAsc) layout.asc.isChecked = true else layout.desc.isChecked = true
-                    //位置筛选
+                    //位置初始
                     layout.chipsPosition.forEachIndexed { index, view ->
                         val chip = view as Chip
                         chip.isChecked =
                             CharacterListFragment.characterfilterParams.positon == index
                     }
-                    //攻击类型筛选
+                    //攻击类型初始
                     layout.chipsAtk.forEachIndexed { index, view ->
                         val chip = view as Chip
                         chip.isChecked = CharacterListFragment.characterfilterParams.atk == index
@@ -295,7 +295,7 @@ class MainActivity : AppCompatActivity() {
                             else -> 0
                         }
                         sortAsc = layout.ascChips.checkedChipId == R.id.asc
-                        //筛选选项
+                        //位置
                         CharacterListFragment.characterfilterParams.positon =
                             when (layout.chipsPosition.checkedChipId) {
                                 R.id.position_chip_1 -> 1
@@ -303,6 +303,7 @@ class MainActivity : AppCompatActivity() {
                                 R.id.position_chip_3 -> 3
                                 else -> 0
                             }
+                        //攻击类型
                         CharacterListFragment.characterfilterParams.atk =
                             when (layout.chipsAtk.checkedChipId) {
                                 R.id.atk_chip_1 -> 1
@@ -310,11 +311,9 @@ class MainActivity : AppCompatActivity() {
                                 else -> 0
                             }
                         //公会筛选
-                        layout.chipsGuild.checkedChipIds.forEach {
-                            val chip = layout.root.findViewById<Chip>(it)
-                            CharacterListFragment.characterfilterParams.guild = chip.text.toString()
-                        }
-
+                        val chip = layout.root.findViewById<Chip>(layout.chipsGuild.checkedChipId)
+                        CharacterListFragment.characterfilterParams.guild = chip.text.toString()
+                        //筛选
                         sharedCharacterViewModel.getCharacters(
                             sortType,
                             sortAsc, ""
@@ -325,23 +324,31 @@ class MainActivity : AppCompatActivity() {
                         MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(0))
                     }
                 }
+                //装备筛选
                 1 -> {
                     //筛选
                     val layout = LayoutFilterEquipmentBinding.inflate(layoutInflater)
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
                     //类型筛选
-                    val craft0 = layout.craftChip0
-                    val craft1 = layout.craftChip1
-                    //传入筛选条件
-                    craft0.isChecked = EquipmentListFragment.equipfilterParams.craft0
-                    craft1.isChecked = EquipmentListFragment.equipfilterParams.craft1
+                    layout.craftChips.forEachIndexed { index, view ->
+                        val chip = view as Chip
+                        chip.isChecked = EquipmentListFragment.equipfilterParams.craft == index
+                    }
                     layout.next.setOnClickListener {
                         dialog.dismiss()
                         //筛选选项
-                        EquipmentListFragment.equipfilterParams.craft0 = craft0.isChecked
-                        EquipmentListFragment.equipfilterParams.craft1 = craft1.isChecked
+                        EquipmentListFragment.equipfilterParams.craft =
+                            when (layout.craftChips.checkedChipId) {
+                                R.id.craft_chip_1 -> 1
+                                R.id.craft_chip_2 -> 2
+                                else -> 0
+                            }
                         sharedEquipViewModel.getEquips(asc, "")
+                    }
+                    layout.reset.setOnClickListener {
+                        dialog.dismiss()
+                        MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(1))
                     }
                 }
                 2 -> {

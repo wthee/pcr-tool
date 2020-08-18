@@ -9,47 +9,25 @@
     android:padding="@dimen/l_padding"
     android:useDefaultMargins="true">
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
         android:layout_row="0"
         android:layout_column="0"
         android:layout_columnWeight="1"
-        android:background="@color/alphaPrimary"
         android:gravity="center"
-        android:orientation="vertical">
+        android:drawableTop="@drawable/ic_logo"
+        style="@style/Widget.MaterialComponents.Button"
+        android:text="Rank 对比"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:orientation="vertical" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/icon_level_calc"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/ic_logo_color" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/s_margin"
-            android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
         android:layout_row="0"
         android:layout_column="1"
         android:layout_columnWeight="1"
         android:gravity="center"
-        android:background="@color/colorAccent"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/icon_test"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/ic_logo_color" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/s_margin"
-            android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
-    </LinearLayout>
+        android:drawableTop="@drawable/ic_logo"
+        style="@style/Widget.MaterialComponents.Button"
+        android:text="等级一览"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:orientation="vertical" />
 </GridLayout>

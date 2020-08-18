@@ -18,7 +18,6 @@ import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.service.DatabaseService
-import cn.wthee.pcrtool.database.DatabaseUpdateHelper.Companion.downloading
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.coroutineScope
@@ -73,33 +72,34 @@ class DatabaseDownloadWorker(
                         Log.e(Constants.LOG_TAG, progress.toString())
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
-                                "${Constants.NOTICE_TITLE} ${String.format(
-                                    "%.1f",
-                                    currSize
-                                )}KB / ${String.format("%.1f", totalSize)} KB"
+                                "${Constants.NOTICE_TITLE} ${
+                                    String.format(
+                                        "%.1f",
+                                        currSize
+                                    )
+                                }KB / ${String.format("%.1f", totalSize)} KB"
                             )
                             .build()
                         notificationManager.notify(noticeId, notification.build())
                     }
 
                     override fun onFinish() {
-                        downloading = false
+
                     }
                 })
             )
 
             //下载文件
             val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
-            downloading = false
+            val file = response.body()?.byteStream()
+            //保存
+            saveDB(file)
             sp.edit {
                 putString(
                     Constants.SP_DATABASE_VERSION,
                     version
                 )
             }
-            val file = response.body()?.byteStream()
-            //保存
-            saveDB(file)
             return Result.success()
         }catch (e: Exception){
             return Result.failure()

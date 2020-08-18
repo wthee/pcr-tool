@@ -90,7 +90,6 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="@dimen/xl_icon"
         android:layout_height="@dimen/xl_icon"
-        android:layout_marginEnd="@dimen/m_margin"
         android:enabled="false"
         android:padding="0dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
@@ -105,7 +104,6 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="@dimen/xl_icon"
         android:layout_height="@dimen/xl_icon"
-        android:layout_marginStart="@dimen/m_margin"
         android:padding="0dp"
         app:icon="@drawable/ic_next"
         app:layout_constraintBottom_toBottomOf="@+id/pic2"
@@ -115,9 +113,10 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/m_margin"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/rank_add"
         app:layout_constraintEnd_toEndOf="parent"
@@ -143,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/s_margin"
-            android:text="9"
+            android:text="09"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
     </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@integer/item_anim_fast">
+    android:duration="@integer/item_anim">
 
     <scale
         android:fromXScale="0"
@@ -8,5 +8,9 @@
         android:toXScale="1"
         android:toYScale="1"
         android:pivotX="100%"
-        android:pivotY="0" />
+        android:pivotY="20" />
+
+    <alpha
+        android:fromAlpha="0"
+        android:toAlpha="1" />
 </set>

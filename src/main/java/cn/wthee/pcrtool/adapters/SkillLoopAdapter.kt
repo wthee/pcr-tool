@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.adapters
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
@@ -46,9 +45,9 @@ class SkillLoopAdapter() :
                 root.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //加载图片
                 if (atkId == 1) {
-                    skillNo.visibility = View.VISIBLE
+                    skillOrder.text = "普攻"
+                    skillIcon.setBackgroundResource(R.drawable.skill_0)
                 } else {
-                    skillNo.visibility = View.GONE
                     //技能图标
                     val iconType = if (atkId == 1001) {
                         skillOrder.text = "技能1"
@@ -60,9 +59,9 @@ class SkillLoopAdapter() :
                     //图标地址
                     val picUrl =
                         SKILL_ICON_URL + iconType + WEBP
+
                     skillIcon.load(picUrl) {
-                        error(R.drawable.error)
-                        placeholder(R.drawable.load_mini)
+                        error(R.drawable.unknow)
                         target {
                             val bitmap = (it as BitmapDrawable).bitmap
                             //字体颜色
@@ -70,7 +69,7 @@ class SkillLoopAdapter() :
                                 PaletteHelper.createPaletteSync(bitmap)
                                     .getLightVibrantColor(Color.BLACK)
                             )
-                            skillIcon.background = BitmapDrawable(bitmap)
+                            skillIcon.background = it
                         }
                     }
                 }

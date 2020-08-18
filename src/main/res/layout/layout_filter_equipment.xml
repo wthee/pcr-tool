@@ -25,6 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
+        app:selectionRequired="true"
+        app:singleSelection="true"
+        app:checkedChip="@id/craft_chip_0"
         app:layout_constraintTop_toBottomOf="@id/filter_position">
 
         <com.google.android.material.chip.Chip
@@ -32,10 +35,17 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/craft0" />
+            android:text="@string/tab_all" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/craft_chip_1"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/craft0" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/craft_chip_2"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,6 +53,16 @@
 
     </com.google.android.material.chip.ChipGroup>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/reset"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset"
+        android:textColor="@color/text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/craft_chips" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/next"

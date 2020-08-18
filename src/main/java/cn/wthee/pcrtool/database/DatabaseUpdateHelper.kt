@@ -24,9 +24,6 @@ class DatabaseUpdateHelper {
 
     private val mContext = MyApplication.getContext()
 
-    companion object {
-        var downloading = true
-    }
 
     //检查是否需要更新
     fun checkDBVersion(notToast: Boolean) {

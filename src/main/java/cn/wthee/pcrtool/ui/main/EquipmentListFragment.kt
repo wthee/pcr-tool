@@ -28,7 +28,7 @@ class EquipmentListFragment : Fragment() {
         lateinit var list: RecyclerView
         lateinit var listAdapter: EquipmentAdapter
         var isList = true
-        var equipfilterParams = FilterEquipment(true, true, true)
+        var equipfilterParams = FilterEquipment(true, 0)
         var asc = false
     }
 

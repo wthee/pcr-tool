@@ -65,10 +65,9 @@ class EquipmentAdapter(private val isList: Boolean) :
                             }
                         }
                         //位置筛选
-                        if (param.hasCraftFilter()) {
-                            if ((!param.craft0 && data.craftFlg == 0)
-                                || (!param.craft1 && data.craftFlg == 1)
-                            ) {
+                        if (param.craft != 0) {
+                            val isRemove = param.craft != data.craftFlg + 1
+                            if (isRemove) {
                                 filteredList.remove(data)
                             }
                         }

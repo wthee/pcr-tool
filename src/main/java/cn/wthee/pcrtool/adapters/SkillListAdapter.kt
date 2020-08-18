@@ -59,7 +59,7 @@ class SkillAdapter :
                 //加载图片
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.error)
+                    error(R.drawable.unknow)
                     placeholder(R.drawable.load_mini)
                     target {
                         val bitmap = (it as BitmapDrawable).bitmap
@@ -68,7 +68,7 @@ class SkillAdapter :
                             PaletteHelper.createPaletteSync(bitmap)
                                 .getLightVibrantColor(Color.BLACK)
                         )
-                        itemPic.background = BitmapDrawable(bitmap)
+                        itemPic.background = it
                     }
                 }
                 //技能属性

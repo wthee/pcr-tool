@@ -10,29 +10,18 @@
         android:id="@+id/skill_icon"
         android:layout_width="@dimen/xl_icon"
         android:layout_height="@dimen/xl_icon"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/skill_0" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/skill_no"
-        android:layout_width="@dimen/xl_icon"
-        android:layout_height="@dimen/xl_icon"
-        android:gravity="center"
-        android:text="普攻"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/skill_icon"
-        app:layout_constraintEnd_toEndOf="@+id/skill_icon"
-        app:layout_constraintStart_toStartOf="@+id/skill_icon"
-        app:layout_constraintTop_toTopOf="@+id/skill_icon" />
+        tools:src="@drawable/skill_0" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/skill_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/colorBlack"
+        android:textColor="@color/colorPrimary"
         android:layout_marginTop="@dimen/s_margin"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

@@ -10,10 +10,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
-import cn.wthee.pcrtool.utils.CacheUtil
-import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.*
 import coil.Coil
 import com.tencent.bugly.beta.Beta
 
@@ -37,7 +34,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val notToast = findPreference<Preference>("not_toast")
         notToast?.isEnabled = MainActivity.spSetting.getBoolean("auto_update_db", true)
         //摘要替换
-        forceUpdateDb?.summary = MainActivity.databaseVersion
+        forceUpdateDb?.summary = MainActivity.sp.getString(Constants.SP_DATABASE_VERSION, "0")
         appUpdate?.summary = MainActivity.nowVersionName
         cleanData?.title =
             cleanData?.title.toString() + "  " + CacheUtil.getTotalCacheSize(requireContext())
