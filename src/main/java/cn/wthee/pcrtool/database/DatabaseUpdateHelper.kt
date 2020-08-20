@@ -24,7 +24,6 @@ class DatabaseUpdateHelper {
 
     private val mContext = MyApplication.getContext()
 
-
     //检查是否需要更新
     fun checkDBVersion(notToast: Boolean) {
         //开始
@@ -46,7 +45,14 @@ class DatabaseUpdateHelper {
             ) {
                 //更新判断
                 val version = response.body()!!
-                if (FileUtil.needUpadateDb() || MainActivity.databaseVersion == null || version.TruthVersion > MainActivity.databaseVersion!!) {
+                val databaseVersion = MainActivity.sp.getString(
+                    Constants.SP_DATABASE_VERSION,
+                    Constants.DATABASE_VERSION
+                ) ?: Constants.DATABASE_VERSION
+                if (FileUtil.needUpadateDb()
+                    || databaseVersion == Constants.DATABASE_VERSION
+                    || version.TruthVersion > databaseVersion
+                ) {
                     downloadDB(version.TruthVersion)
                     if (!notToast) {
                         ToastUtil.long(Constants.NOTICE_TOAST_TITLE)

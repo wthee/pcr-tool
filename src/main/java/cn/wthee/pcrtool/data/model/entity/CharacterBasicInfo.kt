@@ -57,18 +57,7 @@ data class CharacterBasicInfo(
     }
 
     //去除无效id
-    fun getFixedId(): Int {
-        val errorIds = arrayListOf(
-            101301, 105401, 101501,
-            101001, 102201, 102801,
-            103801, 104501, 104601
-        )
-        return if (errorIds.contains(id)) {
-            id + 31
-        } else {
-            id + 30
-        }
-    }
+    fun getFixedId() = id + 30
 
     //角色自我介绍
     fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {

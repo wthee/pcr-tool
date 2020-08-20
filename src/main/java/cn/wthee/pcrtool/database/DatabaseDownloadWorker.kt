@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
-import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
@@ -20,11 +19,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import kotlin.concurrent.thread
 
 
 class DatabaseDownloadWorker(
@@ -62,7 +62,6 @@ class DatabaseDownloadWorker(
 
     private fun download(inputUrl: String, version: String): Result {
         try {
-
             //创建Retrofit服务
             val service = ApiHelper.createWithClient(
                 DatabaseService::class.java, inputUrl,
@@ -74,10 +73,10 @@ class DatabaseDownloadWorker(
                             .setContentTitle(
                                 "${Constants.NOTICE_TITLE} ${
                                     String.format(
-                                        "%.1f",
+                                        "%.0f",
                                         currSize
                                     )
-                                }KB / ${String.format("%.1f", totalSize)} KB"
+                                }KB / ${String.format("%.0f", totalSize)} KB"
                             )
                             .build()
                         notificationManager.notify(noticeId, notification.build())
@@ -150,17 +149,13 @@ class DatabaseDownloadWorker(
                 out.flush()
                 out.close()
                 inputStream.close()
-                thread(start = true) {
+                MainScope().launch {
                     //更新数据库
                     AppDatabase.getInstance().close()
-                    synchronized(AppDatabase::class.java) {
-                        UnzippedUtil.deCompress(db, true)
-                        //通知更新数据
-                        Looper.prepare()
-                        ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                        CharacterListFragment.handler.sendEmptyMessage(1)
-                        Looper.loop()
-                    }
+                    UnzippedUtil.deCompress(db, true)
+                    //通知更新数据
+                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
+                    CharacterListFragment.handler.sendEmptyMessage(1)
                 }
             }
         } catch (e: Exception) {

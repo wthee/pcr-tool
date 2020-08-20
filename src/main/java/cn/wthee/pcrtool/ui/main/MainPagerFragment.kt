@@ -11,7 +11,6 @@ import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
@@ -61,26 +60,11 @@ class MainPagerFragment : Fragment() {
     ): View? {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
+        setListener()
         prepareTransitions()
         //设置toolbar
         setHasOptionsMenu(true)
-        val toolbar =
-            ToolbarUtil(binding.toolbar)
-        toolbar.setLeftIcon(R.drawable.ic_logo)
-        toolbar.leftIcon.setOnClickListener {
-            count++
-            if (count % 2 == 0) {
-                toolbar.setLeftIcon(R.drawable.ic_logo)
-                toolbar.setTitleColor(R.color.colorWhite)
-            } else {
-                toolbar.setLeftIcon(R.drawable.ic_logo_color)
-                toolbar.setTitleColor(R.color.colorAccent)
-            }
-        }
-        //工具
-        toolbar.rightIcon.setOnClickListener {
-            findNavController().navigate(R.id.action_containerFragment_to_toolsFragment)
-        }
+
         return binding.root
     }
 
@@ -120,6 +104,53 @@ class MainPagerFragment : Fragment() {
         })
         //tab 初始化
         tabLayout = binding.layoutTab
+        //绑定tablayout
+        TabLayoutMediator(
+            tabLayout,
+            viewPager2
+        ) { tab, position ->
+            when (position) {
+                //角色
+                0 -> {
+                    tab.icon =
+                        ResourcesCompat.getDrawable(resources, R.drawable.ic_character, null)
+                    tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
+                }
+                //装备
+                1 -> {
+                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_equip, null)
+                    tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
+                }
+                //怪物
+                2 -> {
+                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_enemy, null)
+                    tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
+                }
+            }
+        }.attach()
+    }
+
+    private fun setListener() {
+        val toolbar =
+            ToolbarUtil(binding.toolbar)
+        toolbar.setLeftIcon(R.drawable.ic_logo)
+        toolbar.leftIcon.setOnClickListener {
+            count++
+            if (count % 2 == 0) {
+                toolbar.setLeftIcon(R.drawable.ic_logo)
+                toolbar.setTitleColor(R.color.colorWhite)
+            } else {
+                toolbar.setLeftIcon(R.drawable.ic_logo_color)
+                toolbar.setTitleColor(R.color.colorAccent)
+            }
+        }
+        //工具
+        toolbar.rightIcon.visibility = View.GONE
+        toolbar.rightIcon.setOnClickListener {
+//            val layout = FragmentToolsBinding.inflate(layoutInflater)
+//            val dialog = DialogUtil.create(requireContext(), layout.root, Gravity.CENTER)
+//            dialog.show()
+        }
         //重复点击刷新
         binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -150,35 +181,9 @@ class MainPagerFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
             }
         })
-        TabLayoutMediator(
-            tabLayout,
-            viewPager2,
-            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                when (position) {
-                    //角色
-                    0 -> {
-                        tab.icon =
-                            ResourcesCompat.getDrawable(resources, R.drawable.ic_character, null)
-                        tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
-                    }
-                    //装备
-                    1 -> {
-                        tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_equip, null)
-                        tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
-                    }
-                    //怪物
-                    2 -> {
-                        tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_enemy, null)
-                        tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
-                    }
-                }
-            }).attach()
     }
-
-
     //配置共享元素动画
     private fun prepareTransitions() {
-
         sharedElementReturnTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 

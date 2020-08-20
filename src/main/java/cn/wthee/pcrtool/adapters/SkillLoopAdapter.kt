@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.adapters
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
@@ -47,6 +48,7 @@ class SkillLoopAdapter() :
                 if (atkId == 1) {
                     skillOrder.text = "普攻"
                     skillIcon.setBackgroundResource(R.drawable.skill_0)
+                    skillIconX.visibility = View.VISIBLE
                 } else {
                     //技能图标
                     val iconType = if (atkId == 1001) {

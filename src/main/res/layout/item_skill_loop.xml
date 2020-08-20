@@ -16,6 +16,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/skill_0" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/skill_icon_x"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_cancel"
+        app:layout_constraintBottom_toBottomOf="@+id/skill_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/skill_order"
         android:layout_width="wrap_content"

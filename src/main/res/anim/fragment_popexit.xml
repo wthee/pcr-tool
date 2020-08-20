@@ -3,10 +3,7 @@
     android:duration="@integer/item_anim_fast">
 
     <alpha
-        android:fromAlpha="1"
+        android:fromAlpha="0"
         android:toAlpha="0" />
 
-    <translate
-        android:fromYDelta="0"
-        android:toYDelta="100"/>
 </set>

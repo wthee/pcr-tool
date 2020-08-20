@@ -98,7 +98,7 @@
     <ScrollView
         android:id="@+id/filter"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_height"
+        android:layout_height="300dp"
         android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filter_title">

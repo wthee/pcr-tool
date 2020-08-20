@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.adapters
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Filter
@@ -57,10 +56,13 @@ class CharacterAdapter(private val fragment: Fragment) :
             binding.apply {
                 //是否收藏
                 val isLoved = sp.getBoolean(character.id.toString(), false)
-                if (isLoved)
-                    content.love.visibility = View.VISIBLE
-                else
-                    content.love.visibility = View.GONE
+                content.name.setTextColor(
+                    ResourcesCompat.getColor(
+                        fragment.resources,
+                        if (isLoved) R.color.colorPrimary else R.color.text,
+                        null
+                    )
+                )
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_scale)
@@ -78,7 +80,6 @@ class CharacterAdapter(private val fragment: Fragment) :
                     )
                 //基本信息
                 content.name.text = character.name
-                content.catah.text = character.catchCopy
                 content.three.text = fragment.resources.getString(
                     R.string.character_detail,
                     character.age,

@@ -67,7 +67,6 @@ class CharacterBasicInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
-        binding.content.love.visibility = View.GONE
         //设置共享元素
         binding.characterPic.transitionName = "img_${character.id}"
         binding.content.info.transitionName = "content_${character.id}"
@@ -128,28 +127,20 @@ class CharacterBasicInfoFragment : Fragment() {
             toolbar.setNavigationOnClickListener { view ->
                 view.findNavController().navigateUp()
             }
-            toolbar.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.action_love -> {
-                        isLoved = !isLoved
-                        setLove(isLoved)
-                        true
-                    }
-                    else -> false
-                }
+            rightIcon.setOnClickListener {
+                isLoved = !isLoved
+                setLove(isLoved)
             }
             characterPic.setOnClickListener {
                 CharacterPicDialogFragment.getInstance(character).show(parentFragmentManager, "pic")
             }
             //toolbar 展开折叠监听
-            val menu = toolbar.menu
-            val shareMenu = menu.getItem(0)
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 when {
                     //展开
                     verticalOffset == 0 -> {
-                        shareMenu.isVisible = false
-                        binding.layoutToolbar.setCollapsedTitleTextColor(
+                        rightIcon.visibility = View.GONE
+                        binding.toolTitle.setTextColor(
                             resources.getColor(
                                 R.color.colorAlpha,
                                 null
@@ -157,10 +148,10 @@ class CharacterBasicInfoFragment : Fragment() {
                         )
 
                     }
-                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange - 5 -> {
-                        shareMenu.setIcon(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
-                        shareMenu.isVisible = true
-                        binding.layoutToolbar.setCollapsedTitleTextColor(
+                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange - 2 -> {
+                        rightIcon.setBackgroundResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
+                        rightIcon.visibility = View.VISIBLE
+                        binding.toolTitle.setTextColor(
                             resources.getColor(
                                 R.color.colorPrimary,
                                 null
@@ -168,8 +159,8 @@ class CharacterBasicInfoFragment : Fragment() {
                         )
                     }
                     else -> {
-                        if (shareMenu.icon.alpha != 0) shareMenu.isVisible = false
-                        binding.layoutToolbar.setCollapsedTitleTextColor(
+                        if (rightIcon.visibility == View.VISIBLE) rightIcon.visibility = View.GONE
+                        binding.toolTitle.setTextColor(
                             resources.getColor(
                                 R.color.colorAlpha,
                                 null
@@ -231,14 +222,19 @@ class CharacterBasicInfoFragment : Fragment() {
         }
 
         val ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
-        val menu = binding.toolbar.menu
-        val shareMenu = menu.getItem(0)
-        shareMenu.setIcon(ic)
+        binding.rightIcon.setBackgroundResource(ic)
 
-        val icFabColor = if (isLoved) resources.getColor(
-            R.color.colorPrimary,
-            null
-        ) else resources.getColor(R.color.alphaPrimary, null)
+        val icFabColor =
+            resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
+
+        binding.content.name.setTextColor(
+            ResourcesCompat.getColor(
+                resources,
+                if (isLoved) R.color.colorPrimary else R.color.text,
+                null
+            )
+        )
+
         binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
 
     }
@@ -329,12 +325,12 @@ class CharacterBasicInfoFragment : Fragment() {
     //初始化角色基本数据
     private fun setData() {
         binding.apply {
-            toolbar.title =
+            toolTitle.text =
                 if (character.actualName.isEmpty())
                     character.name
                 else
                     character.actualName
-            content.catah.text = character.catchCopy
+            catah.text = character.catchCopy
             content.name.text = character.name
 //            character.getNameL().apply {
 //                if (this.isNotEmpty()) {

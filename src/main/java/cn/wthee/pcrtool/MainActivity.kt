@@ -23,10 +23,7 @@ import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         var currentCharaPosition: Int = 0
         var currentEquipPosition: Int = 0
         var currentMainPage: Int = 0
-        var databaseVersion: String? = Constants.DATABASE_VERSION
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
         lateinit var spSetting: SharedPreferences
@@ -110,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         ).versionName
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-        databaseVersion = sp.getString(Constants.SP_DATABASE_VERSION, Constants.DATABASE_VERSION)
         //设置信息
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
         notToast = spSetting.getBoolean("not_toast", notToast)
@@ -160,9 +155,17 @@ class MainActivity : AppCompatActivity() {
                     CharacterListFragment.characterfilterParams.all =
                         if (CharacterListFragment.characterfilterParams.all) {
                             ToastUtil.short("仅显示收藏")
+                            MainScope().launch {
+                                delay(300L)
+                                fabLove.setImageResource(R.drawable.ic_loved)
+                            }
                             false
                         } else {
                             ToastUtil.short("显示全部")
+                            MainScope().launch {
+                                delay(300L)
+                                fabLove.setImageResource(R.drawable.ic_love_hollow)
+                            }
                             true
                         }
                     sharedCharacterViewModel.getCharacters(
@@ -360,10 +363,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun closeFab() {
         binding.motionLayout.apply {
-            transitionToStart()
-            setBackgroundColor(getColor(R.color.colorAlpha))
-            isClickable = false
-            isFocusable = false
+            MainScope().launch {
+                transitionToStart()
+                setBackgroundColor(getColor(R.color.colorAlpha))
+                isClickable = false
+                isFocusable = false
+            }
         }
     }
 

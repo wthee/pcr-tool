@@ -1,33 +1,29 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorWhite"
-    android:columnCount="2"
-    android:orientation="horizontal"
-    android:rowCount="4"
-    android:padding="@dimen/l_padding"
+    android:orientation="vertical"
     android:useDefaultMargins="true">
 
     <com.google.android.material.button.MaterialButton
-        android:layout_row="0"
-        android:layout_column="0"
-        android:layout_columnWeight="1"
-        android:gravity="center"
-        android:drawableTop="@drawable/ic_logo"
         style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_logo"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="0dp"
         android:text="Rank 对比"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        android:orientation="vertical" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
     <com.google.android.material.button.MaterialButton
-        android:layout_row="0"
-        android:layout_column="1"
-        android:layout_columnWeight="1"
-        android:gravity="center"
-        android:drawableTop="@drawable/ic_logo"
         style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_logo"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="0dp"
         android:text="等级一览"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        android:orientation="vertical" />
-</GridLayout>
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+</LinearLayout>
