@@ -6,6 +6,7 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
@@ -22,8 +24,10 @@ import cn.wthee.pcrtool.data.model.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.databinding.LayoutSearchBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
-import coil.api.load
+import coil.load
+import coil.metadata
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -110,11 +114,17 @@ class CharacterBasicInfoFragment : Fragment() {
         //toolbar 背景
         val picUrl =
             HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
+        //角色列表
+        val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
+            MainActivity.currentCharaPosition
+        ) ?: return
+        val v0 = vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
+
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
+            placeholderMemoryCacheKey(v0.metadata?.memoryCacheKey)
+            listener(onStart = { parentFragment?.startPostponedEnterTransition() })
         }
-        //未加载完图片时，使用加载中图片进行过渡
-        parentFragment?.startPostponedEnterTransition()
         lifecycleScope.launch {
             delay(resources.getInteger(R.integer.item_anim_fast).toLong())
             canBack = true

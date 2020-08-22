@@ -30,6 +30,7 @@ class CharacterPagerFragment : Fragment() {
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         sharedElementReturnTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        requireActivity().supportPostponeEnterTransition()
     }
 
     override fun onCreateView(

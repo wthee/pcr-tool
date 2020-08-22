@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModel.Companion.ic
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteHelper
-import coil.api.load
+import coil.load
 
 
 class SkillLoopAdapter() :

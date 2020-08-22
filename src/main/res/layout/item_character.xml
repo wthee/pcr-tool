@@ -14,13 +14,11 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/character_pic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_height="@dimen/card_height"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_height="200dp"
             tools:src="@drawable/load" />
 
         <include

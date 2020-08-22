@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
@@ -24,7 +25,9 @@ import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
-import coil.api.load
+import coil.Coil
+import coil.load
+import coil.metadata
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -67,9 +70,16 @@ class CharacterAdapter(private val fragment: Fragment) :
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_scale)
                 //加载网络图片
+                val imageLoader = Coil.imageLoader(MyApplication.getContext())
                 val picUrl = Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
+                val key = characterPic.metadata?.memoryCacheKey
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
+//                    listener(
+//                        onSuccess = { request, metadata ->
+//                            imageLoader.memoryCache[key!!] = (it as BitmapDrawable).bitmap
+//                        }
+//                    )
                 }
                 //设置位置
                 content.positionType.background =

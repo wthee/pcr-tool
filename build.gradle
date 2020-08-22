@@ -23,6 +23,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = ["-Xjvm-default=all"]
         freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
     buildFeatures {
@@ -45,8 +46,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha01'
-    implementation 'androidx.core:core-ktx:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta8'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
@@ -56,8 +57,9 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:3.7.3'
 
     //coil
-    implementation "io.coil-kt:coil:0.11.0"
-    implementation "io.coil-kt:coil-gif:0.11.0"
+    def coil_version = "1.0.0-rc1"
+    implementation "io.coil-kt:coil:$coil_version"
+    implementation "io.coil-kt:coil-gif:$coil_version"
 
     //Glide
     def glide_version = "4.11.0"

@@ -19,7 +19,7 @@ import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_SHADOW_URL
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 
-import coil.api.load
+import coil.load
 
 
 class EnemyListAdapter :

@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemEquipmentMaterialBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.utils.Constants
-import coil.api.load
+import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

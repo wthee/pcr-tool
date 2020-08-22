@@ -5,10 +5,10 @@
     android:id="@+id/info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/s_margin"
     android:animateLayoutChanges="true"
-    android:elevation="0dp"
     android:background="@color/colorWhite"
+    android:elevation="0dp"
+    android:padding="@dimen/s_margin"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/character_pic">
 
@@ -39,8 +39,8 @@
         android:id="@+id/three"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_margin"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
         tools:text="10 / 110 / 56" />

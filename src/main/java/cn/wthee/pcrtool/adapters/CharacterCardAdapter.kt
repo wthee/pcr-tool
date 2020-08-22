@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCardBgBinding
-import coil.api.load
+import coil.load
 
 
 class CharacterCardBgAdapter :

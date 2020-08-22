@@ -198,27 +198,15 @@ class MainPagerFragment : Fragment() {
                     if (names!!.isNotEmpty()) {
                         sharedElements ?: return
                         //角色列表
-                        if (names.size > 0 && names[0].contains("img")) {
-                            val vh =
-                                CharacterListFragment.characterList.findViewHolderForAdapterPosition(
-                                    MainActivity.currentCharaPosition
-                                ) ?: return
-                            val v0 =
-                                vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
-                            val v1 =
-                                vh.itemView.findViewById<ConstraintLayout>(R.id.content)
-                            sharedElements[names[0]] = v0
-                            sharedElements[names[1]] = v1
-                        } else {
-                            //装备列表
-                            val euqipView =
-                                EquipmentListFragment.list.findViewHolderForAdapterPosition(
-                                    MainActivity.currentEquipPosition
-                                ) ?: return
-                            val ev0 =
-                                euqipView.itemView.findViewById<AppCompatImageView>(R.id.item_pic)
-                            sharedElements[names[0]] = ev0
-                        }
+                        val vh =
+                            CharacterListFragment.characterList.findViewHolderForAdapterPosition(
+                                MainActivity.currentCharaPosition
+                            ) ?: return
+                        val v0 =
+                            vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
+                        val v1 = vh.itemView.findViewById<ConstraintLayout>(R.id.content)
+                        sharedElements[names[0]] = v0
+                        sharedElements[names[1]] = v1
                     }
                 } catch (e: Exception) {
                     Log.e(LOG_TAG, e.message ?: "")

@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 
-import coil.api.load
+import coil.load
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
