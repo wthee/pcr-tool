@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        android:textColor="@color/colorPrimary"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         tools:text="牛头人" />

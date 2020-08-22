@@ -33,6 +33,7 @@ class CharacterCardBgAdapter :
                 //加载网络图片
                 characterPic.load(url) {
                     error(R.drawable.error)
+                    placeholder(R.drawable.load)
                 }
             }
         }

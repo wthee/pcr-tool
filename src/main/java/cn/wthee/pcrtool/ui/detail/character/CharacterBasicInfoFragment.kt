@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
@@ -39,7 +40,6 @@ class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
         var isLoved = false
-
         fun getInstance(characterInfo: CharacterBasicInfo): CharacterBasicInfoFragment {
             val fragment = CharacterBasicInfoFragment()
             val bundle = Bundle()
@@ -64,6 +64,10 @@ class CharacterBasicInfoFragment : Fragment() {
             character = it.getSerializable("character") as CharacterBasicInfo
         }
         isLoved = sp.getBoolean(character.id.toString(), false)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        sharedElementReturnTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
@@ -73,9 +77,8 @@ class CharacterBasicInfoFragment : Fragment() {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //设置共享元素
         binding.characterPic.transitionName = "img_${character.id}"
-        binding.content.info.transitionName = "content_${character.id}"
         //开始动画
-        ObjectAnimatorHelper.alpha(binding.fabLoveCbi)
+        ObjectAnimatorHelper.alpha(binding.fullScreen)
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
             override fun prev(view: View) {
                 view.visibility = View.GONE
@@ -89,7 +92,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 viewModel.getMaxRankAndRarity(character.id)
                 CharacterSkillFragment.viewModel.getCharacterSkills(character.id)
             }
-        }, binding.basicInfo, binding.promotion.root)
+        }, binding.fabLoveCbi, binding.basicInfo, binding.promotion.root)
         //加载图片
         loadImages()
         //点击事件
@@ -114,16 +117,27 @@ class CharacterBasicInfoFragment : Fragment() {
         //toolbar 背景
         val picUrl =
             HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
-        //角色列表
+        //角色图片高度
+        val param = binding.characterPic.layoutParams
+        param.height = (ScreenUtil.getWidth() * 682f / 1024f).toInt()
+        binding.characterPic.layoutParams = param
+        //角色图片
         val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
             MainActivity.currentCharaPosition
         ) ?: return
         val v0 = vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
-
+        val key = v0.metadata?.memoryCacheKey
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
-            placeholderMemoryCacheKey(v0.metadata?.memoryCacheKey)
-            listener(onStart = { parentFragment?.startPostponedEnterTransition() })
+            placeholderMemoryCacheKey(key)
+            listener(
+                onSuccess = { _, _ ->
+                    parentFragment?.startPostponedEnterTransition()
+                },
+                onStart = {
+
+                }
+            )
         }
         lifecycleScope.launch {
             delay(resources.getInteger(R.integer.item_anim_fast).toLong())
@@ -141,8 +155,11 @@ class CharacterBasicInfoFragment : Fragment() {
                 isLoved = !isLoved
                 setLove(isLoved)
             }
-            characterPic.setOnClickListener {
+            fullScreen.setOnClickListener {
                 CharacterPicDialogFragment.getInstance(character).show(parentFragmentManager, "pic")
+            }
+            characterPic.setOnClickListener {
+                fullScreen.callOnClick()
             }
             //toolbar 展开折叠监听
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -156,9 +173,8 @@ class CharacterBasicInfoFragment : Fragment() {
                                 null
                             )
                         )
-
                     }
-                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange - 2 -> {
+                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
                         rightIcon.setBackgroundResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
                         rightIcon.visibility = View.VISIBLE
                         binding.toolTitle.setTextColor(
@@ -342,6 +358,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     character.actualName
             catah.text = character.catchCopy
             content.name.text = character.name
+            content.name.textSize = 24f
 //            character.getNameL().apply {
 //                if (this.isNotEmpty()) {
 //                    lastName.text = this
@@ -357,6 +374,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 character.weight,
                 character.position
             )
+            content.three.textSize = 18f
             comment.text = character.getFixedComment()
             if (comment.text.isEmpty()) comment.visibility = View.GONE
             birth.text = requireActivity().resources.getString(

@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/pics"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/m_margin"
-    android:orientation="horizontal"
-    android:scrollbars="horizontal"
-    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/pic_index"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textColor="@color/colorPrimary"
+        tools:text="1 / 3" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pics"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/m_margin"
+        android:background="@color/colorAlpha"
+        android:orientation="horizontal"
+        android:scrollbars="horizontal"
+        android:scrollbarStyle="outsideOverlay"
+        android:fadeScrollbars="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_card_bg" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/back_cbi"
+        android:layout_width="@dimen/fab_icon"
+        android:layout_height="@dimen/fab_icon"
+        android:layout_margin="@dimen/m_margin"
+        android:layout_gravity="center_horizontal|bottom"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_cancel" />
+</FrameLayout>

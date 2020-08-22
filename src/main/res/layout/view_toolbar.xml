@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/m_margin"
         android:text="@string/app_name"
+        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"

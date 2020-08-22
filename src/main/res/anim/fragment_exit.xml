@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@integer/item_anim_fast">
-
+    android:duration="@integer/item_anim">
 
     <alpha
         android:fromAlpha="0"

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -184,6 +183,8 @@ class MainPagerFragment : Fragment() {
     }
     //配置共享元素动画
     private fun prepareTransitions() {
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         sharedElementReturnTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
@@ -204,9 +205,7 @@ class MainPagerFragment : Fragment() {
                             ) ?: return
                         val v0 =
                             vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
-                        val v1 = vh.itemView.findViewById<ConstraintLayout>(R.id.content)
                         sharedElements[names[0]] = v0
-                        sharedElements[names[1]] = v1
                     }
                 } catch (e: Exception) {
                     Log.e(LOG_TAG, e.message ?: "")

@@ -30,7 +30,7 @@
         android:layout_marginStart="@dimen/s_margin"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:layout_constraintStart_toEndOf="@id/position_type"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="莫妮卡" />
@@ -39,8 +39,10 @@
         android:id="@+id/three"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_margin"
         android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name"
         tools:text="10 / 110 / 56" />

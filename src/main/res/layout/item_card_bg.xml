@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:animateLayoutChanges="true"
-    android:gravity="center"
-    tools:layout_height="@dimen/card_height">
+    android:background="@color/colorAlpha"
+    android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/character_pic"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/error" />
 
 </LinearLayout>

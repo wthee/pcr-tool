@@ -8,7 +8,7 @@
     <dimen name="m_icon">16dp</dimen>
     <dimen name="l_icon">24dp</dimen>
     <dimen name="xl_icon">38dp</dimen>
-    <dimen name="fab_icon">28dp</dimen>
+    <dimen name="fab_icon">24dp</dimen>
     <dimen name="normal_icon">48dp</dimen>
     <dimen name="big_icon">64dp</dimen>
     <dimen name="character_icon_size">64dp</dimen>

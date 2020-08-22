@@ -5,5 +5,5 @@
     <color name="colorWhite">#353535</color>
     <color name="colorBlack">#C1C1C1</color>
     <color name="colorAlphaWhite">#96353535</color>
-
+    <color name="text">#E6E6E6</color>
 </resources>

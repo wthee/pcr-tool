@@ -25,9 +25,8 @@ import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
-import coil.Coil
+import cn.wthee.pcrtool.utils.ScreenUtil
 import coil.load
-import coil.metadata
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -68,18 +67,18 @@ class CharacterAdapter(private val fragment: Fragment) :
                 )
                 //加载动画
                 root.animation =
-                    AnimationUtils.loadAnimation(fragment.context, R.anim.anim_scale)
+                    AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
+                //ImageView 高度计算
+                val param = binding.characterPic.layoutParams
+                param.height = ((ScreenUtil.getWidth() - ScreenUtil.dip2px(
+                    MyApplication.getContext(),
+                    24f
+                )) / 2f * 682f / 1024f).toInt()
+                binding.characterPic.layoutParams = param
                 //加载网络图片
-                val imageLoader = Coil.imageLoader(MyApplication.getContext())
                 val picUrl = Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
-                val key = characterPic.metadata?.memoryCacheKey
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
-//                    listener(
-//                        onSuccess = { request, metadata ->
-//                            imageLoader.memoryCache[key!!] = (it as BitmapDrawable).bitmap
-//                        }
-//                    )
                 }
                 //设置位置
                 content.positionType.background =
@@ -99,7 +98,6 @@ class CharacterAdapter(private val fragment: Fragment) :
                 )
                 //设置共享元素名称
                 characterPic.transitionName = "img_${character.id}"
-                content.info.transitionName = "content_${character.id}"
             }
             //item点击事件，查看详情
             binding.apply {
@@ -113,8 +111,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                         bundle.putSerializable("character", character)
                         val extras =
                             FragmentNavigatorExtras(
-                                characterPic to characterPic.transitionName,
-                                content.info to content.info.transitionName
+                                characterPic to characterPic.transitionName
                             )
                         root.findNavController().navigate(
                             R.id.action_containerFragment_to_characterPagerFragment,
