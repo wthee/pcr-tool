@@ -15,6 +15,12 @@ data class EquipmentDropInfo(
 
     fun getName() = questName.split(" ")[0]
 
+    fun getOddOfEquip(eid: String): String {
+        val list1 = rewards.split('-')
+        val list2 = odds.split('-')
+        return list2[list1.indexOf(eid)]
+    }
+
     fun getAllOdd(): ArrayList<EquipmentIdWithOdd> {
         val list1 = rewards.split('-') as MutableList
         val list2 = odds.split('-') as MutableList

@@ -9,7 +9,6 @@ class FilterCharacter(
     var guild: String
 ) {
     fun initData() {
-        this.all = true
         this.positon = 0
         this.atk = 0
         this.guild = "全部"

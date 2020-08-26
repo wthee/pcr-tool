@@ -7,6 +7,7 @@
     <string name="character_pic">角色原画</string>
     <string name="event_list">装备信息</string>
 
+     <!--属性    -->
     <string name="hp">HP</string>
     <string name="atk">物理攻击力</string>
     <string name="p_penetrate">物理贯穿</string>
@@ -25,6 +26,7 @@
     <string name="tp_reduce_rate">TP消耗减轻</string>
     <string name="accuracy">命中</string>
 
+    <!-- 角色 & 装备  -->
     <string name="level">等级</string>
     <string name="rank">RANK</string>
     <string name="rarity">星级</string>
@@ -46,7 +48,6 @@
     <string name="title_position">位置</string>
 
     <string name="equip_details">道具详情</string>
-    <string name="tab_sort_type">排序方式：</string>
     <string name="tab_all">全部</string>
     <string name="tab_love">收藏</string>
 
@@ -83,6 +84,13 @@
     <string name="auto_update_app">自动更新应用</string>
     <string name="off_auto_app">已取消自动更新</string>
     <string name="on_auto_app">打开应用时，自动更新应用</string>
+    <string name="clean_cache">清除图片缓存</string>
+    <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
+    <string name="toast_on">检查数据库版本时，显示提示消息</string>
+    <string name="toast_off">检查数据库版本时，不提示消息</string>
+    <string name="not_toast">自动更新时取消提示</string>
+
+    <!--筛选  -->
     <string name="filter">筛选</string>
     <string name="sort">排序</string>
     <string name="title_sort">排序</string>
@@ -91,6 +99,9 @@
     <string name="equip_on">显示装备名称、描述</string>
     <string name="equip_list">装备列表</string>
     <string name="next">确认</string>
+    <string name="reset">重置</string>
+    <string name="craft0">不可合成装备（碎片、设计图等）</string>
+    <string name="craft1">可合成装备</string>
     <string name="title_tip">信息提示</string>
     <string name="position_3">后卫</string>
     <string name="position_2">中卫</string>
@@ -98,16 +109,8 @@
     <string name="atk_type">攻击类型</string>
     <string name="physical">物理攻击</string>
     <string name="magic">魔法攻击</string>
-    <string name="clean_cache">清除缓存</string>
-    <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
-    <string name="reset">重置</string>
-    <string name="craft0">不可合成装备（碎片、设计图等）</string>
-    <string name="craft1">可合成装备</string>
-    <string name="toast_on">检查数据库版本时，显示提示消息</string>
-    <string name="toast_off">检查数据库版本时，不提示消息</string>
-    <string name="not_toast">自动更新时取消提示</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
     <string name="sorry_ue">对不起，优衣~ 下面已经没有了！</string>
     <string name="reduce">⇣</string>
     <string name="add">⇡</string>

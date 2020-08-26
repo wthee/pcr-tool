@@ -8,6 +8,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -26,7 +27,9 @@ import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ScreenUtil
+import coil.Coil
 import coil.load
+import coil.metadata
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -56,6 +59,10 @@ class CharacterAdapter(private val fragment: Fragment) :
             fragment: Fragment
         ) {
             binding.apply {
+                (binding.root.parent as? ViewGroup)?.doOnPreDraw {
+                    // Parent has been drawn. Start transitioning!
+                    fragment.startPostponedEnterTransition()
+                }
                 //是否收藏
                 val isLoved = sp.getBoolean(character.id.toString(), false)
                 content.name.setTextColor(
@@ -79,8 +86,9 @@ class CharacterAdapter(private val fragment: Fragment) :
                 val picUrl = Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
+                    placeholder(R.drawable.load_mini)
                 }
-                //设置位置
+                //角色位置
                 content.positionType.background =
                     ResourcesCompat.getDrawable(
                         fragment.resources,
@@ -98,9 +106,6 @@ class CharacterAdapter(private val fragment: Fragment) :
                 )
                 //设置共享元素名称
                 characterPic.transitionName = "img_${character.id}"
-            }
-            //item点击事件，查看详情
-            binding.apply {
                 root.setOnClickListener {
                     //避免同时点击两个
                     if (!MainPagerFragment.cListClick) {
@@ -109,6 +114,13 @@ class CharacterAdapter(private val fragment: Fragment) :
                         MainActivity.currentCharaPosition = adapterPosition
                         val bundle = Bundle()
                         bundle.putSerializable("character", character)
+                        //共享元素过渡
+                        val imageLoader = Coil.imageLoader(MyApplication.getContext())
+                        val key = characterPic.metadata?.memoryCacheKey
+                        val toStart = key != null && imageLoader.memoryCache[key] != null
+                        if (toStart) {
+                            fragment.startPostponedEnterTransition()
+                        }
                         val extras =
                             FragmentNavigatorExtras(
                                 characterPic to characterPic.transitionName
@@ -135,7 +147,6 @@ class CharacterAdapter(private val fragment: Fragment) :
                     return@setOnLongClickListener true
                 }
             }
-
         }
     }
 

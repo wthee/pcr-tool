@@ -32,7 +32,7 @@ data class CharacterBasicInfo(
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int
 ) : Serializable {
 
-    private fun getStarId(star: Int): String {
+    fun getStarId(star: Int): String {
         val idStr = id.toString()
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
     }
@@ -59,7 +59,18 @@ data class CharacterBasicInfo(
     }
 
     //去除无效id
-    fun getFixedId() = id + 30
+    fun getFixedId(): Int {
+        val errorIds = arrayListOf(
+            101301, 105401, 101501,
+            101001, 102201, 102801,
+            103801, 104501, 104601
+        )
+        return if (errorIds.contains(id)) {
+            id + 31
+        } else {
+            id + 30
+        }
+    }
 
     //角色自我介绍
     fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {

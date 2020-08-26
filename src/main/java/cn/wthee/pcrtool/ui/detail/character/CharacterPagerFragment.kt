@@ -30,8 +30,8 @@ class CharacterPagerFragment : Fragment() {
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         sharedElementReturnTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        requireActivity().supportPostponeEnterTransition()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,9 +41,7 @@ class CharacterPagerFragment : Fragment() {
         //添加返回fab
         FabHelper.addBackFab()
         init()
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
-        }
+        postponeEnterTransition()
         return binding.root
     }
 

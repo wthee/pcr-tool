@@ -75,14 +75,15 @@ class EquipmentDetailsViewModel(
             equipmentId
         //获取装备掉落信息
         val infos = equipmentRepository.getEquipDropAreas(fixedId)
-        return infos
+        return infos.sortedWith(getSort(equipmentId))
     }
 
-//    private fun getSort(eid: Int): java.util.Comparator<EquipmentDropInfo> {
-//        return Comparator { o1: EquipmentDropInfo, o2: EquipmentDropInfo ->
-//            val a = o1.odds.first { it.eid == eid }.odd
-//            val b = o2.odds.first { it.eid == eid }.odd
-//            b.compareTo(a)
-//        }
-//    }
+    private fun getSort(eid: Int): java.util.Comparator<EquipmentDropInfo> {
+        val str = eid.toString()
+        return Comparator { o1: EquipmentDropInfo, o2: EquipmentDropInfo ->
+            val a = o1.getOddOfEquip(str)
+            val b = o2.getOddOfEquip(str)
+            b.compareTo(a)
+        }
+    }
 }

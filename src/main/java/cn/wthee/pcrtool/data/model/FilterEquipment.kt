@@ -7,7 +7,6 @@ class FilterEquipment(
     var craft: Int
 ) {
     fun initData() {
-        this.all = true
         this.craft = 0
     }
 

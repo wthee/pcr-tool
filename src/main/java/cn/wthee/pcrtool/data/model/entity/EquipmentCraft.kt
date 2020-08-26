@@ -30,75 +30,78 @@ data class EquipmentCraft(
     @ColumnInfo(name = "condition_equipment_id_10") val cid10: Int,
     @ColumnInfo(name = "consume_num_10") val count10: Int
 ) {
-    fun getAllMaterialId(): ArrayList<EquipmentCondition> {
-        val list = arrayListOf<EquipmentCondition>()
+    fun getAllMaterialId(): ArrayList<EquipmentMaterial> {
+        val list = arrayListOf<EquipmentMaterial>()
         if (cid1 != 0 && count1 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid1,
+                "",
                 count1
             )
         )
         if (cid2 != 0 && count2 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid2,
+                "",
                 count2
             )
         )
         if (cid3 != 0 && count3 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid3,
+                "",
                 count3
             )
         )
         if (cid4 != 0 && count4 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid4,
+                "",
                 count4
             )
         )
         if (cid5 != 0 && count5 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid5,
+                "",
                 count5
             )
         )
         if (cid6 != 0 && count6 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid6,
+                "",
                 count6
             )
         )
         if (cid7 != 0 && count7 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid7,
+                "",
                 count7
             )
         )
         if (cid8 != 0 && count8 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid8,
+                "",
                 count8
             )
         )
         if (cid9 != 0 && count9 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid9,
+                "",
                 count9
             )
         )
         if (cid10 != 0 && count10 != 0) list.add(
-            EquipmentCondition(
+            EquipmentMaterial(
                 cid10,
+                "",
                 count10
             )
         )
         return list
     }
 }
-
-
-
-data class EquipmentCondition(
-    val id: Int,
-    val count: Int
-)

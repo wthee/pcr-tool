@@ -28,11 +28,12 @@ class MyApplication : Application(), ImageLoaderFactory {
                     add(GifDecoder())
                 }
             }
-            .crossfade(false)
+            .crossfade(true)
             .allowHardware(false)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .networkCachePolicy(CachePolicy.ENABLED)
+            .availableMemoryPercentage(0.75)
             .okHttpClient {
                 OkHttpClient.Builder()
                     .cache(CoilUtils.createDefaultCache(context))

@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 
@@ -85,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         return if (!canBack && event.keyCode == KeyEvent.KEYCODE_BACK) {
             true
         } else {
-            fab.setImageResource(R.drawable.ic_function)
+            binding.fab.setImageResource(R.drawable.ic_function)
             super.dispatchKeyEvent(event)
         }
     }
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setListener() {
         //长按回到顶部
-        fab.setOnLongClickListener {
+        fabMain.setOnLongClickListener {
             when (currentMainPage) {
                 0 -> CharacterListFragment.characterList.scrollToPosition(0)
                 1 -> EquipmentListFragment.list.scrollToPosition(0)
@@ -131,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         }
         //点击展开
         val motion = binding.motionLayout
-        fab.setOnClickListener {
+        fabMain.setOnClickListener {
             if (!isHome) {
                 FabHelper.goBack()
             } else {

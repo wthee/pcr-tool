@@ -88,4 +88,8 @@ interface CharacterDao {
     //公会信息
     @Query("SELECT * FROM guild")
     suspend fun getGuilds(): List<GuildData>
+
+    //角色升级经验列表
+    @Query("SELECT * FROM experience_unit")
+    suspend fun getLevelExp(): List<CharacterExperience>
 }

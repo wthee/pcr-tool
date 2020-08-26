@@ -121,7 +121,7 @@ class EquipmentAdapter(private val isList: Boolean) :
                 //设置点击跳转
                 root.setOnClickListener {
                     MainActivity.currentEquipPosition = adapterPosition
-                    EquipmentDetailsFragment.getInstance(equip, true).show(
+                    EquipmentDetailsFragment.getInstance(equip).show(
                         ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
                         "details"
                     )

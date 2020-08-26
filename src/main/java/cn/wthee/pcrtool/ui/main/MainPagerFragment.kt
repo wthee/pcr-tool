@@ -10,7 +10,6 @@ import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
@@ -21,6 +20,7 @@ import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
+import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
@@ -144,18 +144,17 @@ class MainPagerFragment : Fragment() {
             }
         }
         //工具
-        toolbar.rightIcon.visibility = View.GONE
         toolbar.rightIcon.setOnClickListener {
-//            val layout = FragmentToolsBinding.inflate(layoutInflater)
-//            val dialog = DialogUtil.create(requireContext(), layout.root, Gravity.CENTER)
-//            dialog.show()
+            ToolsDialogFragment.newInstance().show(parentFragmentManager, "tools")
         }
         //重复点击刷新
         binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
+                MainActivity.fabLove.setImageResource(R.drawable.ic_love_hollow)
                 when (tab) {
                     binding.layoutTab.getTabAt(0) -> {
                         CharacterListFragment.characterfilterParams.initData()
+                        CharacterListFragment.characterfilterParams.all = true
                         sortType = SORT_AGE
                         sortAsc = true
                         sharedCharacterViewModel.getCharacters(
@@ -183,10 +182,6 @@ class MainPagerFragment : Fragment() {
     }
     //配置共享元素动画
     private fun prepareTransitions() {
-        sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        sharedElementReturnTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
         setExitSharedElementCallback(object : SharedElementCallback() {
             override fun onMapSharedElements(
@@ -211,7 +206,6 @@ class MainPagerFragment : Fragment() {
                     Log.e(LOG_TAG, e.message ?: "")
                 }
             }
-
         })
     }
 }

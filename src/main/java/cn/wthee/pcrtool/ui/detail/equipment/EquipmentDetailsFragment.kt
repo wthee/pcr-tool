@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.TransitionInflater
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
@@ -24,18 +22,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-private const val EQUIP = "equip"
-private const val DIALOG = "dialog"
-
-
 class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
+    private val EQUIP = "equip"
+
     companion object {
-        fun getInstance(equip: EquipmentData, isDialog: Boolean) =
+        fun getInstance(equip: EquipmentData) =
             EquipmentDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(EQUIP, equip)
-                    putBoolean(DIALOG, isDialog)
                 }
             }
 
@@ -44,7 +39,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     }
 
     private lateinit var equip: EquipmentData
-    private var isDialog: Boolean = false
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var cusToolbar: ToolbarUtil
     private lateinit var behavior: BottomSheetBehavior<View>
@@ -54,13 +48,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         super.onCreate(savedInstanceState)
         requireArguments().let {
             equip = it.getSerializable(EQUIP) as EquipmentData
-            isDialog = it.getBoolean(DIALOG)
-        }
-        if (!isDialog) {
-            sharedElementEnterTransition =
-                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-            sharedElementReturnTransition =
-                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         }
     }
 
@@ -143,11 +130,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     }
 
     private fun goBack() {
-        if (isDialog) {
-            dialog?.dismiss()
-        } else {
-            view?.findNavController()?.navigateUp()
-        }
+        dialog?.dismiss()
     }
 
 }

@@ -94,11 +94,7 @@ class CharacterListFragment : Fragment() {
         characterList = binding.characterList
         binding.characterList.apply {
             adapter = listAdapter
-            postponeEnterTransition()
-            viewTreeObserver.addOnPreDrawListener {
-                startPostponedEnterTransition()
-                true
-            }
+
         }
     }
 
@@ -161,6 +157,8 @@ class CharacterListFragment : Fragment() {
             layoutRefresh.setOnRefreshListener {
                 characterfilterParams.initData()
                 viewModel.getCharacters(sortType, sortAsc, "")
+                listAdapter.notifyDataSetChanged()
+                layoutRefresh.isRefreshing = false
             }
         }
     }

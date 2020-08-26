@@ -27,6 +27,7 @@ import cn.wthee.pcrtool.databinding.LayoutSearchBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
+import coil.Coil
 import coil.load
 import coil.metadata
 import com.google.android.material.appbar.AppBarLayout
@@ -70,6 +71,11 @@ class CharacterBasicInfoFragment : Fragment() {
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireActivity().supportPostponeEnterTransition()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,7 +84,6 @@ class CharacterBasicInfoFragment : Fragment() {
         //设置共享元素
         binding.characterPic.transitionName = "img_${character.id}"
         //开始动画
-        ObjectAnimatorHelper.alpha(binding.fullScreen)
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
             override fun prev(view: View) {
                 view.visibility = View.GONE
@@ -117,25 +122,27 @@ class CharacterBasicInfoFragment : Fragment() {
         //toolbar 背景
         val picUrl =
             HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
-        //角色图片高度
-        val param = binding.characterPic.layoutParams
-        param.height = (ScreenUtil.getWidth() * 682f / 1024f).toInt()
-        binding.characterPic.layoutParams = param
         //角色图片
         val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
             MainActivity.currentCharaPosition
         ) ?: return
         val v0 = vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
         val key = v0.metadata?.memoryCacheKey
+        val imageLoader = Coil.imageLoader(requireContext())
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
             placeholderMemoryCacheKey(key)
+            placeholder(R.drawable.load)
             listener(
                 onSuccess = { _, _ ->
                     parentFragment?.startPostponedEnterTransition()
                 },
                 onStart = {
-
+                    requireActivity().supportStartPostponedEnterTransition()
+                    val toStart = key == null || imageLoader.memoryCache[key!!] == null
+                    if (toStart) {
+                        parentFragment?.startPostponedEnterTransition()
+                    }
                 }
             )
         }
@@ -155,11 +162,8 @@ class CharacterBasicInfoFragment : Fragment() {
                 isLoved = !isLoved
                 setLove(isLoved)
             }
-            fullScreen.setOnClickListener {
-                CharacterPicDialogFragment.getInstance(character).show(parentFragmentManager, "pic")
-            }
             characterPic.setOnClickListener {
-                fullScreen.callOnClick()
+                CharacterPicDialogFragment.getInstance(character).show(parentFragmentManager, "pic")
             }
             //toolbar 展开折叠监听
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -175,7 +179,7 @@ class CharacterBasicInfoFragment : Fragment() {
                         )
                     }
                     abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
-                        rightIcon.setBackgroundResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
+                        rightIcon.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
                         rightIcon.visibility = View.VISIBLE
                         binding.toolTitle.setTextColor(
                             resources.getColor(
@@ -248,7 +252,7 @@ class CharacterBasicInfoFragment : Fragment() {
         }
 
         val ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
-        binding.rightIcon.setBackgroundResource(ic)
+        binding.rightIcon.setImageResource(ic)
 
         val icFabColor =
             resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
@@ -326,7 +330,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     //点击跳转
                     setOnClickListener {
                         if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
-                            EquipmentDetailsFragment.getInstance(equip, true).show(
+                            EquipmentDetailsFragment.getInstance(equip).show(
                                 ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
                                 "details"
                             )
@@ -397,7 +401,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 )
             loveSelfText.text = character.getLoveSelfText()
             //头像
-            val iconUrl = Constants.UNIT_ICON_URL + character.getFixedId() + Constants.WEBP
+            val iconUrl = Constants.UNIT_ICON_URL + character.getStarId(3) + Constants.WEBP
             promotion.icon.load(iconUrl) {
                 error(R.drawable.unknow)
                 placeholder(R.drawable.load_mini)

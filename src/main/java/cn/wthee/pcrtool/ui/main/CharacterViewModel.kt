@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.CharacterExperience
 import cn.wthee.pcrtool.data.model.entity.GuildData
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
 import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
@@ -22,6 +23,7 @@ class CharacterViewModel(
     var refresh = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
+    var levelList = MutableLiveData<List<CharacterExperience>>()
 
     //角色基本资料
     fun getCharacters(sortType: Int, asc: Boolean, name: String) {
@@ -36,6 +38,14 @@ class CharacterViewModel(
     //公会信息
     suspend fun getGuilds() = repository.getGuilds()
 
+    //升级经验列表
+    fun getLevelExp() {
+        viewModelScope.launch {
+            levelList.postValue(repository.getLevelExp())
+        }
+    }
+
+    //角色排序
     private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterBasicInfo> {
         return Comparator { o1: CharacterBasicInfo, o2: CharacterBasicInfo ->
             val a: Int
