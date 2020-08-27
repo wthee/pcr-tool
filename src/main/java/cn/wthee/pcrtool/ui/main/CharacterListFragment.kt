@@ -26,6 +26,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.DialogUtil
 import cn.wthee.pcrtool.utils.InjectorUtil
+import com.google.android.material.transition.Hold
 import kotlinx.coroutines.launch
 
 
@@ -44,6 +45,11 @@ class CharacterListFragment : Fragment() {
     private lateinit var binding: FragmentCharacterListBinding
     private val viewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = Hold()
     }
 
     override fun onCreateView(

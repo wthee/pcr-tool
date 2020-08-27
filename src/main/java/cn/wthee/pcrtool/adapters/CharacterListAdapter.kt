@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
@@ -26,10 +25,7 @@ import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ScreenUtil
-import coil.Coil
 import coil.load
-import coil.metadata
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -75,18 +71,11 @@ class CharacterAdapter(private val fragment: Fragment) :
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
-                //ImageView 高度计算
-                val param = binding.characterPic.layoutParams
-                param.height = ((ScreenUtil.getWidth() - ScreenUtil.dip2px(
-                    MyApplication.getContext(),
-                    24f
-                )) / 2f * 682f / 1024f).toInt()
-                binding.characterPic.layoutParams = param
                 //加载网络图片
                 val picUrl = Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
-                    placeholder(R.drawable.load_mini)
+                    placeholder(R.drawable.load)
                 }
                 //角色位置
                 content.positionType.background =
@@ -114,13 +103,13 @@ class CharacterAdapter(private val fragment: Fragment) :
                         MainActivity.currentCharaPosition = adapterPosition
                         val bundle = Bundle()
                         bundle.putSerializable("character", character)
-                        //共享元素过渡
-                        val imageLoader = Coil.imageLoader(MyApplication.getContext())
-                        val key = characterPic.metadata?.memoryCacheKey
-                        val toStart = key != null && imageLoader.memoryCache[key] != null
-                        if (toStart) {
-                            fragment.startPostponedEnterTransition()
-                        }
+//                        //共享元素过渡
+//                        val imageLoader = Coil.imageLoader(MyApplication.getContext())
+//                        val key = characterPic.metadata?.memoryCacheKey
+//                        val toStart = key != null && imageLoader.memoryCache[key] != null
+//                        if (toStart) {
+//                            fragment.startPostponedEnterTransition()
+//                        }
                         val extras =
                             FragmentNavigatorExtras(
                                 characterPic to characterPic.transitionName

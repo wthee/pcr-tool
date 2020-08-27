@@ -15,10 +15,11 @@
             android:id="@+id/character_pic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/load_mini" />
+            tools:src="@drawable/load" />
 
         <include
             android:id="@+id/content"
