@@ -63,7 +63,6 @@ class SkillLoopAdapter() :
                         SKILL_ICON_URL + iconType + WEBP
 
                     skillIcon.load(picUrl) {
-                        error(R.drawable.unknow)
                         target {
                             val bitmap = (it as BitmapDrawable).bitmap
                             //字体颜色

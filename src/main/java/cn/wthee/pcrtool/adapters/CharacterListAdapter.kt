@@ -61,7 +61,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 //是否收藏
                 val isLoved = sp.getBoolean(character.id.toString(), false)
-                content.name.setTextColor(
+                name.setTextColor(
                     ResourcesCompat.getColor(
                         fragment.resources,
                         if (isLoved) R.color.colorPrimary else R.color.text,
@@ -78,15 +78,15 @@ class CharacterAdapter(private val fragment: Fragment) :
                     placeholder(R.drawable.load)
                 }
                 //角色位置
-                content.positionType.background =
+                positionType.background =
                     ResourcesCompat.getDrawable(
                         fragment.resources,
                         character.getPositionIcon(),
                         null
                     )
                 //基本信息
-                content.name.text = character.name
-                content.three.text = fragment.resources.getString(
+                name.text = character.name
+                three.text = fragment.resources.getString(
                     R.string.character_detail,
                     character.age,
                     character.height,
@@ -94,7 +94,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     character.position
                 )
                 //设置共享元素名称
-                characterPic.transitionName = "img_${character.id}"
+                itemCharacter.transitionName = "item_${character.id}"
                 root.setOnClickListener {
                     //避免同时点击两个
                     if (!MainPagerFragment.cListClick) {
@@ -105,7 +105,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                         bundle.putSerializable("character", character)
                         val extras =
                             FragmentNavigatorExtras(
-                                characterPic to characterPic.transitionName
+                                itemCharacter to itemCharacter.transitionName
                             )
                         root.findNavController().navigate(
                             R.id.action_containerFragment_to_characterPagerFragment,

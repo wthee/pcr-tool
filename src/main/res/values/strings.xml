@@ -114,5 +114,7 @@
     <string name="sorry_ue">对不起，优衣~ 下面已经没有了！</string>
     <string name="reduce">⇣</string>
     <string name="add">⇡</string>
+    <string name="before_loop">入场动作</string>
+    <string name="looping">循环动作</string>
 
 </resources>

@@ -13,10 +13,7 @@
         <action
             android:id="@+id/action_containerFragment_to_characterPagerFragment"
             app:destination="@id/characterPagerFragment"
-            app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit"
-            app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
+            app:exitAnim="@anim/fragment_exit" />
         <action
             android:id="@+id/action_containerFragment_to_equipmentDetailsFragment"
             app:destination="@id/equipmentDetailsFragment" />

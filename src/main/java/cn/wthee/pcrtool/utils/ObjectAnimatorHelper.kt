@@ -30,9 +30,9 @@ object ObjectAnimatorHelper {
     private fun start(view: View, onAnimatorListener: OnAnimatorListener?, vararg holders: PropertyValuesHolder) {
         onAnimatorListener?.prev(view)
         MainScope().launch {
-            delay(200L)
+            delay(300L)
             ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
-                duration = 300L
+                duration = 600L
                 addListener(object : Animator.AnimatorListener {
                     override fun onAnimationEnd(animation: Animator?) {
                         onAnimatorListener?.end(view)
@@ -58,7 +58,7 @@ object ObjectAnimatorHelper {
     private fun start(view: View, vararg holders: PropertyValuesHolder) {
         view.visibility = View.GONE
         MainScope().launch {
-            delay(200L)
+            delay(300L)
             ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
                 duration = 300L
                 addListener(object : Animator.AnimatorListener {

@@ -26,6 +26,7 @@ import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
@@ -199,7 +200,7 @@ class MainPagerFragment : Fragment() {
                                 MainActivity.currentCharaPosition
                             ) ?: return
                         val v0 =
-                            vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
+                            vh.itemView.findViewById<MaterialCardView>(R.id.item_character)
                         sharedElements[names[0]] = v0
                     }
                 } catch (e: Exception) {

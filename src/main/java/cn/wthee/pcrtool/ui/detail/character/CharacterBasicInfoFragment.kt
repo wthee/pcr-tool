@@ -70,7 +70,7 @@ class CharacterBasicInfoFragment : Fragment() {
     ): View? {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //设置共享元素
-        binding.characterPic.transitionName = "img_${character.id}"
+        binding.root.transitionName = "item_${character.id}"
         //开始动画
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
             override fun prev(view: View) {
@@ -86,6 +86,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 CharacterSkillFragment.viewModel.getCharacterSkills(character.id)
             }
         }, binding.fabLoveCbi, binding.basicInfo, binding.promotion.root)
+
         //加载图片
         loadImages()
         //点击事件
@@ -235,7 +236,7 @@ class CharacterBasicInfoFragment : Fragment() {
         val icFabColor =
             resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
 
-        binding.content.name.setTextColor(
+        binding.name.setTextColor(
             ResourcesCompat.getColor(
                 resources,
                 if (isLoved) R.color.colorPrimary else R.color.text,
@@ -341,8 +342,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 else
                     character.actualName
             catah.text = character.catchCopy
-            content.name.text = character.name
-            content.name.textSize = 24f
+            name.text = character.name
 //            character.getNameL().apply {
 //                if (this.isNotEmpty()) {
 //                    lastName.text = this
@@ -351,14 +351,13 @@ class CharacterBasicInfoFragment : Fragment() {
 //                }
 //            }
 
-            content.three.text = requireActivity().resources.getString(
+            three.text = requireActivity().resources.getString(
                 R.string.character_detail,
                 character.age,
                 character.height,
                 character.weight,
                 character.position
             )
-            content.three.textSize = 18f
             comment.text = character.getFixedComment()
             if (comment.text.isEmpty()) comment.visibility = View.GONE
             birth.text = requireActivity().resources.getString(
@@ -373,7 +372,7 @@ class CharacterBasicInfoFragment : Fragment() {
             favorite.text = character.favorite
             cv.text = character.voice
             self.text = character.getSelf()
-            content.positionType.background =
+            positionType.background =
                 ResourcesCompat.getDrawable(
                     resources,
                     character.getPositionIcon(),

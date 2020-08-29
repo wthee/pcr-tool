@@ -50,28 +50,32 @@ class CharacterSkillFragment : Fragment() {
         viewModel = InjectorUtil.provideCharacterSkillViewModelFactory()
             .create(CharacterSkillViewModel::class.java)
 
-        binding.apply {
-            //循环开始信息
-            beforeLoopadapter = SkillLoopAdapter()
-            attactPattern.beforeLoop.adapter = beforeLoopadapter
-            //循环信息
-            loopAdapter = SkillLoopAdapter()
-            attactPattern.looping.adapter = loopAdapter
-            //技能信息
-            adapter = SkillAdapter()
-            recycler.adapter = adapter
-        }
-
-        viewModel.skills.observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-        })
-        viewModel.acttackPattern.observe(viewLifecycleOwner, Observer {
-            beforeLoopadapter.submitList(it.getBefore())
-            loopAdapter.submitList(it.getLoop())
-        })
-
         viewLifecycleOwner.lifecycleScope.launch {
             delay(1000L)
+            binding.apply {
+                //循环开始信息
+                beforeLoopadapter = SkillLoopAdapter()
+                attactPattern.beforeLoop.adapter = beforeLoopadapter
+                //循环信息
+                loopAdapter = SkillLoopAdapter()
+                attactPattern.looping.adapter = loopAdapter
+                //技能信息
+                adapter = SkillAdapter()
+                recycler.adapter = adapter
+
+                attactPattern.apply {
+                    titleBeforeLoop.visibility = View.VISIBLE
+                    titleLooping.visibility = View.VISIBLE
+                }
+            }
+
+            viewModel.skills.observe(viewLifecycleOwner, Observer {
+                adapter.submitList(it)
+            })
+            viewModel.acttackPattern.observe(viewLifecycleOwner, Observer {
+                beforeLoopadapter.submitList(it.getBefore())
+                loopAdapter.submitList(it.getLoop())
+            })
         }
 
         return binding.root
