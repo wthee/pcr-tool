@@ -103,13 +103,6 @@ class CharacterAdapter(private val fragment: Fragment) :
                         MainActivity.currentCharaPosition = adapterPosition
                         val bundle = Bundle()
                         bundle.putSerializable("character", character)
-//                        //共享元素过渡
-//                        val imageLoader = Coil.imageLoader(MyApplication.getContext())
-//                        val key = characterPic.metadata?.memoryCacheKey
-//                        val toStart = key != null && imageLoader.memoryCache[key] != null
-//                        if (toStart) {
-//                            fragment.startPostponedEnterTransition()
-//                        }
                         val extras =
                             FragmentNavigatorExtras(
                                 characterPic to characterPic.transitionName

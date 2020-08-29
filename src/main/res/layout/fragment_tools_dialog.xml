@@ -14,7 +14,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:orientation="vertical"
         android:paddingTop="@dimen/list_item_spacing_half"
@@ -24,4 +24,12 @@
         tools:context=".ui.setting.ToolsDialogFragment"
         tools:itemCount="5"
         tools:listitem="@layout/item_tool" />
+
+    <LinearLayout
+        android:id="@+id/tool_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
 </LinearLayout>

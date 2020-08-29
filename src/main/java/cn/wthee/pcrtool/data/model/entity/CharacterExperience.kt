@@ -9,5 +9,5 @@ import androidx.room.PrimaryKey
 data class CharacterExperience(
     @PrimaryKey
     @ColumnInfo(name = "unit_level") val level: Int,
-    @ColumnInfo(name = "total_exp") val name: Int
+    @ColumnInfo(name = "total_exp") val exp: Int
 )

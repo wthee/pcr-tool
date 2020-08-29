@@ -4,17 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.Item
 import cn.wthee.pcrtool.adapters.ToolListAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolsDialogBinding
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class ToolsDialogFragment : BottomSheetDialogFragment() {
 
+
     private lateinit var binding: FragmentToolsDialogBinding
+
+    private val sharedViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +45,7 @@ class ToolsDialogFragment : BottomSheetDialogFragment() {
             Item("RANK对比", R.drawable.ic_equip),
             Item("即将更新", R.drawable.ic_enemy)
         )
-        val adapter = ToolListAdapter()
+        val adapter = ToolListAdapter(this, binding, sharedViewModel)
         binding.list.adapter = adapter
         adapter.submitList(items)
 

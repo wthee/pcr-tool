@@ -39,11 +39,7 @@ class CharacterViewModel(
     suspend fun getGuilds() = repository.getGuilds()
 
     //升级经验列表
-    fun getLevelExp() {
-        viewModelScope.launch {
-            levelList.postValue(repository.getLevelExp())
-        }
-    }
+    suspend fun getLevelExp() = repository.getLevelExp()
 
     //角色排序
     private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterBasicInfo> {

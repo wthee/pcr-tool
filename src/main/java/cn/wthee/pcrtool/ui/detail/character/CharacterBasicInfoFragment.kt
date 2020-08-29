@@ -2,12 +2,10 @@ package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.SearchView
 import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -22,7 +20,6 @@ import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
-import cn.wthee.pcrtool.databinding.LayoutSearchBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
@@ -30,6 +27,7 @@ import coil.Coil
 import coil.load
 import coil.metadata
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.slider.Slider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
@@ -197,38 +195,28 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             //等级点击事件
-            binding.promotion.icon.setOnClickListener {
-                binding.promotion.level.callOnClick()
-            }
             binding.promotion.level.setOnClickListener {
-                val layout = LayoutSearchBinding.inflate(layoutInflater)
-                DialogUtil.create(requireContext(), layout.root).show()
-                //搜索框
-                val searchView = layout.searchInput
-                searchView.onActionViewExpanded()
-                searchView.isSubmitButtonEnabled = true
-                searchView.queryHint = "请输入等级"
-                searchView.inputType = InputType.TYPE_CLASS_NUMBER
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        val value = query?.toInt() ?: lv
-                        lv = if (value > 999) {
-                            binding.promotion.level.text = "999"
-                            999
-                        } else {
-                            binding.promotion.level.text = query
-                            value
-                        }
-
-                        loadData()
-                        return false
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        return false
-                    }
-                })
+                binding.promotion.levelSeekBar.also {
+                    if (it.visibility == View.VISIBLE)
+                        it.visibility = View.GONE
+                    else
+                        ObjectAnimatorHelper.alpha(it)
+                }
             }
+            binding.promotion.levelSeekBar.addOnSliderTouchListener(object :
+                Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: Slider) {
+                    lv = slider.value.toInt()
+                }
+
+                override fun onStopTrackingTouch(slider: Slider) {
+                    lv = slider.value.toInt()
+                    binding.promotion.level.text = slider.value.toInt().toString()
+                    loadData()
+                }
+
+
+            })
         }
     }
 
@@ -267,6 +255,8 @@ class CharacterBasicInfoFragment : Fragment() {
             maxStar = r[1]
             lv = r[2]
             binding.promotion.level.text = lv.toString()
+            binding.promotion.levelSeekBar.valueTo = lv.toFloat()
+            binding.promotion.levelSeekBar.value = lv.toFloat()
             loadData()
 
             binding.apply {
