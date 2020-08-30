@@ -50,7 +50,7 @@ object Constants {
     //默认值
     const val DATABASE_VERSION = "202005141837"
     const val SORT_TYPE = 0
-    const val SORT_ASC = true
+    const val SORT_ASC = false
     const val UNKNOW_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在更新数据..."
     const val NOTICE_TITLE_PRE = "PCR Tool\n"
@@ -67,10 +67,11 @@ object Constants {
     const val COLUMN_COUNT_EQUIP = 4
 
     //排序
-    const val SORT_AGE = 0
-    const val SORT_HEIGHT = 1
-    const val SORT_WEIGHT = 2
-    const val SORT_POSITION = 3
+    const val SORT_DATE = 0
+    const val SORT_AGE = 1
+    const val SORT_HEIGHT = 2
+    const val SORT_WEIGHT = 3
+    const val SORT_POSITION = 4
 
     val ATTR = arrayListOf(
         "HP",

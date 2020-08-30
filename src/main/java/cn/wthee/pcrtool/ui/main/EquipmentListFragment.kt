@@ -118,7 +118,7 @@ class EquipmentListFragment : Fragment() {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
                 equipfilterParams.initData()
-                listAdapter.notifyDataSetChanged()
+                loadData()
                 layoutRefresh.isRefreshing = false
             }
 

@@ -13,17 +13,20 @@
         <action
             android:id="@+id/action_containerFragment_to_characterPagerFragment"
             app:destination="@id/characterPagerFragment"
-            app:exitAnim="@anim/fragment_exit" />
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
         <action
             android:id="@+id/action_containerFragment_to_equipmentDetailsFragment"
             app:destination="@id/equipmentDetailsFragment" />
         <action
             android:id="@+id/action_containerFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit"
-            app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
 
     </fragment>
 

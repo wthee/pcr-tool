@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
-import cn.wthee.pcrtool.data.model.entity.CharacterExperience
-import cn.wthee.pcrtool.data.model.entity.GuildData
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
+import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
 import cn.wthee.pcrtool.utils.Constants.SORT_POSITION
 import cn.wthee.pcrtool.utils.Constants.SORT_WEIGHT
@@ -19,11 +18,9 @@ class CharacterViewModel(
 ) : ViewModel() {
 
     var characters = MutableLiveData<List<CharacterBasicInfo>>()
-    var guilds = MutableLiveData<List<GuildData>>()
     var refresh = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
-    var levelList = MutableLiveData<List<CharacterExperience>>()
 
     //角色基本资料
     fun getCharacters(sortType: Int, asc: Boolean, name: String) {
@@ -47,6 +44,10 @@ class CharacterViewModel(
             val a: Int
             val b: Int
             when (sortType) {
+                SORT_DATE -> {
+                    a = o1.startTime.toInt()
+                    b = o2.startTime.toInt()
+                }
                 SORT_AGE -> {
                     a = if (o1.age.contains("?")) 999 else o1.age.toInt()
                     b = if (o2.age.contains("?")) 999 else o2.age.toInt()

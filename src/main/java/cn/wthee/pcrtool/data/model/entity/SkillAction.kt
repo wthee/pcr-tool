@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data.model.entity
 
-import android.content.res.Configuration
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -42,18 +41,18 @@ data class SkillAction(
             //伤害, 每秒恢复
             1, 37, 48 -> "<$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力>"
             //位置变动
-//            2 -> "移动至最近敌人前$action_value_1，移动速度$action_value_2"
+            2 -> "移动至最近敌人前$action_value_1，移动速度$action_value_2"
             //击退/击飞/拉近
-//            3 -> {
-//                if (action_value_4 != 0.toDouble()) {
-//                    "击飞距离$action_value_1"
-//                } else {
-//                    if (action_value_1 > 0)
-//                        "击退距离$action_value_1"
-//                    else
-//                        "拉近距离$action_value_1"
-//                }
-//            }
+            3 -> {
+                if (action_value_4 != 0.toDouble()) {
+                    "击飞距离<$action_value_1>"
+                } else {
+                    if (action_value_1 > 0)
+                        "击退距离<$action_value_1>"
+                    else
+                        "拉近距离<$action_value_1>"
+                }
+            }
             //恢复
             4 -> "<$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力>"
             //护盾，持续伤害
@@ -80,9 +79,16 @@ data class SkillAction(
             //持续伤害
             11, 12 -> "，持续$action_value_1 秒，" + if (action_value_3 == 100.toDouble()) "成功率100%" else "成功率<1 + $action_value_3 * 技能等级 %>"
             //TP变化
+            14 -> {
+                if (action_value_1 != 0.toDouble()) {
+                    "每秒降低TP <$action_value_1>"
+                } else {
+                    ""
+                }
+            }
             16 -> {
                 if (action_value_2 == 0.toDouble()) {
-                    "$action_value_1"
+                    "<$action_value_1>"
                 } else {
                     "<$action_value_1 + $action_value_2 * 技能等级>"
                 }
@@ -119,8 +125,6 @@ data class SkillAction(
         val spannable = SpannableStringBuilder(fixed)
         val start = fixed.indexOf("<")
         val end = fixed.indexOf(">")
-        val mode =
-            MyApplication.getContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
         if (start != -1 && end != -1) {
             spannable.setSpan(

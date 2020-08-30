@@ -116,4 +116,17 @@
                 android:data="https://github.com/MalitsPlus/ShizuruNotes" />
         </Preference>
     </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="egg"
+        app:iconSpaceReserved="false"
+        app:title="@string/app_name">
+
+        <Preference
+            app:key="kl"
+            app:icon="@drawable/ic_hide"
+            app:summary="@string/egg_summary"
+            app:title="@string/egg_text"></Preference>
+
+    </PreferenceCategory>
 </PreferenceScreen>

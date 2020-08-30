@@ -1,25 +1,27 @@
 package cn.wthee.pcrtool.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.databinding.FragmentToolsDialogBinding
 import cn.wthee.pcrtool.databinding.ItemToolBinding
-import cn.wthee.pcrtool.databinding.LayoutLevelExpBinding
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment.Companion.toolPosition
+import cn.wthee.pcrtool.utils.ToastUtil
+import coil.load
+import com.google.android.material.transition.MaterialArcMotion
+import com.google.android.material.transition.MaterialContainerTransform
 
 
 class ToolListAdapter(
-    private val fragment: ToolsDialogFragment,
-    private val parent: FragmentToolsDialogBinding,
-    private val characterViewModel: CharacterViewModel
+    private val parent: FragmentToolsDialogBinding
 ) :
     ListAdapter<Item, ToolListAdapter.ViewHolder>(ItemDiffCallback()) {
 
@@ -34,36 +36,48 @@ class ToolListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), fragment, parent, characterViewModel)
+        holder.bind(getItem(position), parent)
     }
 
     class ViewHolder(private val binding: ItemToolBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
             data: Item,
-            fragment: ToolsDialogFragment,
-            parent: FragmentToolsDialogBinding,
-            characterViewModel: CharacterViewModel
+            parent: FragmentToolsDialogBinding
         ) {
             binding.apply {
-                item.text = data.name
+                toolName.text = data.name
                 val drawable = ResourcesCompat.getDrawable(
                     MyApplication.getContext().resources,
                     data.resInt, null
                 )
-                drawable?.setBounds(0, 0, 100, 100)
-                item.setCompoundDrawables(drawable, null, null, null)
-                item.setOnClickListener {
+                toolIcon.load(drawable)
+                root.setOnClickListener {
                     when (adapterPosition) {
                         0 -> {
-                            val toolContent = LayoutLevelExpBinding.inflate(fragment.layoutInflater)
-                            MainScope().launch {
-                                val list = characterViewModel.getLevelExp()
-                                val adapter = CharacterLevelExpAdapter()
-                                toolContent.listLevel.adapter = adapter
-                                adapter.submitList(list)
+                            toolPosition = 0
+                            //过渡动画
+                            val transform = MaterialContainerTransform().apply {
+                                startView = it
+                                endView = parent.toolHead.root
+                                addTarget(endView!!)
+                                setPathMotion(MaterialArcMotion())
+                                scrimColor = Color.TRANSPARENT
                             }
-                            parent.toolContent.addView(toolContent.root)
+                            TransitionManager.beginDelayedTransition(parent.root, transform)
+                            //布局显示/隐藏
+                            parent.toolContent.visibility = View.VISIBLE
+                            parent.list.visibility = View.GONE
+                            //工具详情头部
+                            parent.toolHead.toolIcon.load(drawable)
+                            parent.toolHead.toolName.text = data.name
+
+                            ToolsDialogFragment.isShownDetail = true
+                        }
+                        1 -> {
+                            toolPosition = 1
+                            //过渡动画
+                            ToastUtil.short("更多功能，将在后续更新中实装~")
                         }
                     }
                     parent.list.isNestedScrollingEnabled = false

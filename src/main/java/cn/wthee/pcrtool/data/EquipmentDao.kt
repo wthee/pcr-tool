@@ -18,8 +18,8 @@ interface EquipmentDao {
     @Query("SELECT * FROM equipment_data WHERE equipment_data.equipment_id =:eid ")
     suspend fun getEquipmentData(eid: Int): EquipmentData
 
-    //角色所有装备信息
-    @Query("SELECT * FROM equipment_data WHERE equipment_data.equipment_name like '%' || :name || '%' AND equipment_name NOT LIKE '%公主之心%' ORDER BY promotion_level ASC")
+    //所有装备信息
+    @Query("SELECT * FROM equipment_data WHERE equipment_data.equipment_name like '%' || :name || '%' AND equipment_name NOT LIKE '%公主之心%' ORDER BY promotion_level DESC, equipment_id DESC")
     suspend fun getAllEquipments(name: String): List<EquipmentData>
 
     //装备提升属性

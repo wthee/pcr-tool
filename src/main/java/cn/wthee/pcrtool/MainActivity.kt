@@ -272,6 +272,7 @@ class MainActivity : AppCompatActivity() {
                         1 -> layout.sortChip1.isChecked = true
                         2 -> layout.sortChip2.isChecked = true
                         3 -> layout.sortChip3.isChecked = true
+                        4 -> layout.sortChip4.isChecked = true
                     }
                     //排序规则
                     if (sortAsc) layout.asc.isChecked = true else layout.desc.isChecked = true
@@ -294,6 +295,7 @@ class MainActivity : AppCompatActivity() {
                             R.id.sort_chip_1 -> 1
                             R.id.sort_chip_2 -> 2
                             R.id.sort_chip_3 -> 3
+                            R.id.sort_chip_4 -> 4
                             else -> 0
                         }
                         sortAsc = layout.ascChips.checkedChipId == R.id.asc

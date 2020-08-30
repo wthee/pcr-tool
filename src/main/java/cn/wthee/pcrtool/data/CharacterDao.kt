@@ -31,6 +31,8 @@ interface CharacterDao {
                 "coalesce(unit_data.comment, \"\") as comment, " +
                 "unit_data.atk_type, " +
                 "rarity_6_quest_data.rarity_6_quest_id, " +
+                "unit_data.rarity, " +
+                "CAST(SUBSTR(unit_data.start_time, 0, 4 ) || SUBSTR(unit_data.start_time, 6, 2 ) || SUBSTR(unit_data.start_time, 9, 2 ) AS INTEGER) AS start_time , " +
                 "coalesce(actual_unit_background.unit_name, \"\") as actual_name, " +
                 "coalesce(character_love_rankup_text.serif_1, \"\") as serif_1, " +
                 "coalesce(character_love_rankup_text.serif_2, \"\") as serif_2, " +
@@ -90,6 +92,19 @@ interface CharacterDao {
     suspend fun getGuilds(): List<GuildData>
 
     //角色升级经验列表
-    @Query("SELECT * FROM experience_unit")
-    suspend fun getLevelExp(): List<CharacterExperience>
+    @Transaction
+    @Query(
+        "SELECT " +
+                " a.team_level AS level, " +
+                " a.total_exp AS exp_team, " +
+                " coalesce((a.total_exp - c.total_exp), 0) AS exp_team_abs, " +
+                " b.total_exp AS exp_unit, " +
+                " coalesce((b.total_exp - d.total_exp) , 0) AS exp_unit_abs " +
+                " FROM " +
+                " experience_team AS a " +
+                " LEFT JOIN ( SELECT team_level + 1 AS team_level, total_exp FROM experience_team ) AS c ON a.team_level = c.team_level " +
+                " LEFT JOIN experience_unit AS b ON a.team_level = b.unit_level " +
+                " LEFT JOIN ( SELECT unit_level + 1 AS unit_level, total_exp FROM experience_unit ) AS d ON b.unit_level = d.unit_level"
+    )
+    suspend fun getLevelExp(): List<CharacterExperienceAll>
 }

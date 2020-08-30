@@ -29,7 +29,9 @@ data class CharacterBasicInfo(
     @ColumnInfo(name = "search_area_width") val position: Int,
     @ColumnInfo(name = "comment") val comment: String,
     @ColumnInfo(name = "atk_type") val atkType: Int,
-    @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int
+    @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
+    @ColumnInfo(name = "start_time") val startTime: Int,
+    @ColumnInfo(name = "rarity") val rarity: Int
 ) : Serializable {
 
     fun getStarId(star: Int): String {

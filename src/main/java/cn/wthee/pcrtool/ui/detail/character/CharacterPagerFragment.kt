@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterViewPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
@@ -29,6 +28,8 @@ class CharacterPagerFragment : Fragment() {
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
+            duration = resources.getInteger(R.integer.fragment_anim).toLong()
+            setAllContainerColors(Color.TRANSPARENT)
         }
     }
 
@@ -58,12 +59,6 @@ class CharacterPagerFragment : Fragment() {
             )
         viewPager.setPageTransformer(DepthPageTransformer())
         viewPager.offscreenPageLimit = 2
-        //???
-        if (MainActivity.sp.getBoolean("106001", false)) {
-            viewPager.setBackgroundResource(R.drawable.viewpager_bg)
-        } else {
-            viewPager.background = null
-        }
     }
 
 }

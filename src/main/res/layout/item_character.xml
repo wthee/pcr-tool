@@ -52,6 +52,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginTop="@dimen/s_margin"
             android:paddingBottom="@dimen/s_padding"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="@color/colorAccent"

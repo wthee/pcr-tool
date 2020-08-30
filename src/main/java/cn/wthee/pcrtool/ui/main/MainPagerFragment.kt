@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -75,9 +74,12 @@ class MainPagerFragment : Fragment() {
             //刷新收藏
             val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
                 MainActivity.currentCharaPosition
-            )?.itemView?.findViewById<AppCompatImageView>(R.id.love)
-            vh?.visibility =
-                if (CharacterBasicInfoFragment.isLoved) View.VISIBLE else View.INVISIBLE
+            )?.itemView?.findViewById<MaterialTextView>(R.id.name)
+            val color = if (CharacterBasicInfoFragment.isLoved)
+                ResourcesCompat.getColor(resources, R.color.colorPrimary, null)
+            else
+                ResourcesCompat.getColor(resources, R.color.text, null)
+            vh?.setTextColor(color)
             CharacterListFragment.characterList.scrollToPosition(MainActivity.currentCharaPosition)
         } catch (e: java.lang.Exception) {
         }
@@ -146,7 +148,7 @@ class MainPagerFragment : Fragment() {
         }
         //工具
         toolbar.rightIcon.setOnClickListener {
-            ToolsDialogFragment.newInstance().show(parentFragmentManager, "tools")
+            ToolsDialogFragment().show(parentFragmentManager, "tools")
         }
         //重复点击刷新
         binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

@@ -13,7 +13,7 @@ object ObjectAnimatorHelper {
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
         val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.85f, 1f)
         val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.85f, 1f)
-        val holder3 = PropertyValuesHolder.ofFloat("translationY", 150f, 0f)
+        val holder3 = PropertyValuesHolder.ofFloat("translationY", 100f, 0f)
 
         view.forEach {
             start(it, onAnimatorListener,  holder1, holder2, holder3)
@@ -30,7 +30,7 @@ object ObjectAnimatorHelper {
     private fun start(view: View, onAnimatorListener: OnAnimatorListener?, vararg holders: PropertyValuesHolder) {
         onAnimatorListener?.prev(view)
         MainScope().launch {
-            delay(300L)
+            delay(200L)
             ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
                 duration = 600L
                 addListener(object : Animator.AnimatorListener {

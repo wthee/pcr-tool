@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="精灵树之弓" />
@@ -50,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/colorAlphtBlack"
                 android:layout_marginTop="@dimen/s_margin"
                 android:layout_marginBottom="@dimen/s_margin"
                 tools:text="道具详情道具\n详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />

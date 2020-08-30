@@ -162,8 +162,8 @@ class CharacterListFragment : Fragment() {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
                 characterfilterParams.initData()
+                characterfilterParams.all = true
                 viewModel.getCharacters(sortType, sortAsc, "")
-                listAdapter.notifyDataSetChanged()
                 layoutRefresh.isRefreshing = false
             }
         }

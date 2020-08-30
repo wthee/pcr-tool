@@ -33,7 +33,8 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         EnemyData::class,
         CharacterExperience::class,
         AttackPattern::class,
-        GuildData::class
+        GuildData::class,
+        CharacterExperienceTeam::class
     ],
     version = 5,
     exportSchema = false

@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.entity.CharacterExperience
+import cn.wthee.pcrtool.data.model.entity.CharacterExperienceAll
 import cn.wthee.pcrtool.databinding.ItemLevelExpBinding
 
 
-class CharacterLevelExpAdapter :
-    ListAdapter<CharacterExperience, CharacterLevelExpAdapter.ViewHolder>(LevelDiffCallback()) {
+class CharacterLevelExpAdapter() :
+    ListAdapter<CharacterExperienceAll, CharacterLevelExpAdapter.ViewHolder>(LevelDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemLevelExpBinding.inflate(
@@ -30,30 +30,34 @@ class CharacterLevelExpAdapter :
 
     class ViewHolder(private val binding: ItemLevelExpBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: CharacterExperience) {
+        fun bind(data: CharacterExperienceAll) {
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
-                level.text = "Lv ${data.level.toString()}"
-                exp.text = data.exp.toString()
+                    AnimationUtils.loadAnimation(
+                        MyApplication.getContext(),
+                        R.anim.anim_translate_y
+                    )
+                level.text = data.level.toString()
+                expAbs.text = data.expUnitAbs.toString()
+                expTeamAbs.text = data.expTeamAbs.toString()
             }
         }
     }
 
 }
 
-private class LevelDiffCallback : DiffUtil.ItemCallback<CharacterExperience>() {
+private class LevelDiffCallback : DiffUtil.ItemCallback<CharacterExperienceAll>() {
 
     override fun areItemsTheSame(
-        oldItem: CharacterExperience,
-        newItem: CharacterExperience
+        oldItem: CharacterExperienceAll,
+        newItem: CharacterExperienceAll
     ): Boolean {
         return oldItem == newItem
     }
 
     override fun areContentsTheSame(
-        oldItem: CharacterExperience,
-        newItem: CharacterExperience
+        oldItem: CharacterExperienceAll,
+        newItem: CharacterExperienceAll
     ): Boolean {
         return oldItem.level == newItem.level
     }

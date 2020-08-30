@@ -16,6 +16,7 @@
         android:layout_marginTop="@dimen/m_margin"
         android:text="@string/title_sort"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textStyle="bold"
         android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,36 +36,57 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/age" />
+            android:text="@string/sort_date" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/sort_chip_1"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_height" />
+            android:text="@string/age" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/sort_chip_2"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_weight" />
+            android:text="@string/title_height" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/sort_chip_3"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/title_weight" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sort_chip_4"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/title_position" />
     </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_sort_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m_margin"
+        android:text="@string/sort_type"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sort_type_chips" />
+
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/asc_chips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m_margin"
         app:checkedChip="@id/asc"
-        app:layout_constraintTop_toBottomOf="@id/sort_type_chips"
+        app:layout_constraintTop_toBottomOf="@id/title_sort_type"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -73,14 +95,14 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="升序" />
+            android:text="@string/sort_asc" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/desc"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="降序" />
+            android:text="@string/sort_desc" />
 
     </com.google.android.material.chip.ChipGroup>
 
@@ -89,16 +111,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/l_margin"
-        android:text="筛选"
-        app:layout_constraintTop_toBottomOf="@id/asc_chips"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/filter"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary" />
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/asc_chips" />
 
     <ScrollView
         android:id="@+id/filter"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="200dp"
         android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filter_title">
@@ -106,28 +129,28 @@
         <LinearLayout
             android:id="@+id/chips"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/s_margin"
-            android:layout_marginTop="@dimen/s_margin">
+            android:layout_marginTop="@dimen/s_margin"
+            android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_position"
-                app:layout_constraintTop_toBottomOf="@id/asc_chips"
-                app:layout_constraintStart_toStartOf="parent"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/asc_chips" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chips_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
                 app:checkedChip="@id/position_chip_1"
                 app:selectionRequired="true"
-                app:singleSelection="true"
-                android:layout_marginTop="@dimen/m_margin">
+                app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/position_chip_0"
@@ -162,8 +185,8 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/atk_type"
                 android:layout_marginTop="@dimen/s_margin"
+                android:text="@string/atk_type"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/colorPrimary" />
 
@@ -171,10 +194,10 @@
                 android:id="@+id/chips_atk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:selectionRequired="true"
-                app:singleSelection="true"
+                android:layout_marginTop="@dimen/m_margin"
                 app:checkedChip="@id/atk_chip_1"
-                android:layout_marginTop="@dimen/m_margin">
+                app:selectionRequired="true"
+                app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/atk_chip_0"
@@ -201,8 +224,8 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/title_guide"
                 android:layout_marginTop="@dimen/s_margin"
+                android:text="@string/title_guide"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/colorPrimary" />
 
@@ -210,9 +233,9 @@
                 android:id="@+id/chips_guild"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
                 app:selectionRequired="true"
-                app:singleSelection="true"
-                android:layout_marginTop="@dimen/m_margin">
+                app:singleSelection="true">
 
             </com.google.android.material.chip.ChipGroup>
 
