@@ -4,8 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
-import cn.wthee.pcrtool.data.model.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
+import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
 import cn.wthee.pcrtool.utils.Constants.SORT_POSITION
 import cn.wthee.pcrtool.utils.Constants.SORT_WEIGHT
@@ -22,22 +23,31 @@ class CharacterViewModel(
     var reload = MutableLiveData<Boolean>()
 
     //角色基本资料
-    fun getCharacters(sortType: Int, asc: Boolean, name: String, filter: Map<String, Int>) {
+    fun getCharacters(sortType: Int, asc: Boolean, name: String) {
         isLoading.postValue(true)
         viewModelScope.launch {
-            val data = repository.getInfoAndData(name, filter).sortedWith(getSort(sortType, asc))
-            isLoading.postValue(false)
-            refresh.postValue(false)
+            val data = repository.getInfoAndData(name)
+                .sortedWith(getSort(sortType, asc))
             characters.postValue(data)
         }
     }
 
+    //公会信息
+    suspend fun getGuilds() = repository.getGuilds()
 
+    //升级经验列表
+    suspend fun getLevelExp() = repository.getLevelExp()
+
+    //角色排序
     private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterBasicInfo> {
         return Comparator { o1: CharacterBasicInfo, o2: CharacterBasicInfo ->
             val a: Int
             val b: Int
             when (sortType) {
+                SORT_DATE -> {
+                    a = o1.startTime.toInt()
+                    b = o2.startTime.toInt()
+                }
                 SORT_AGE -> {
                     a = if (o1.age.contains("?")) 999 else o1.age.toInt()
                     b = if (o2.age.contains("?")) 999 else o2.age.toInt()

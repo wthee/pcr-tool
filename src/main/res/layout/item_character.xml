@@ -1,26 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_character"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/m_margin"
-    android:layout_marginBottom="@dimen/s_margin"
-    android:elevation="@dimen/elevation_card"
-    android:background="@color/colorWhite">
+    android:layout_margin="@dimen/s_margin">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/character_pic"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/error" />
+        android:background="@color/colorWhite">
 
-    <include
-        android:id="@+id/content"
-        layout="@layout/layout_basic_info" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/character_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/load" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_margin"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginTop="@dimen/s_margin"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            app:layout_constraintStart_toEndOf="@id/position_type"
+            app:layout_constraintTop_toBottomOf="@id/character_pic"
+            tools:text="莫妮卡" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/position_type"
+            android:layout_width="@dimen/m_icon"
+            android:layout_height="@dimen/m_icon"
+            android:layout_marginStart="@dimen/s_margin"
+            app:layout_constraintBottom_toBottomOf="@id/name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name"
+            tools:background="@drawable/ic_position_0_300" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginTop="@dimen/s_margin"
+            android:paddingBottom="@dimen/s_padding"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="10 / 110 / 56" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

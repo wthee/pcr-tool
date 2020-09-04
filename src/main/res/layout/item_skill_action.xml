@@ -8,10 +8,20 @@
     android:animateLayoutChanges="true">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/action"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_marginTop="@dimen/s_margin"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
+        android:text="✦"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"

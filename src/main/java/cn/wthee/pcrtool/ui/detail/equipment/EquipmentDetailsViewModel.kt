@@ -4,10 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.model.EquipmentData
-import cn.wthee.pcrtool.data.model.EquipmentDropInfo
-import cn.wthee.pcrtool.data.model.EquipmentIdWithOdd
-import cn.wthee.pcrtool.data.model.EquipmentMaterial
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentDropInfo
+import cn.wthee.pcrtool.data.model.entity.EquipmentMaterial
 import kotlinx.coroutines.launch
 
 
@@ -17,7 +16,6 @@ class EquipmentDetailsViewModel(
 
     private var materials = arrayListOf<EquipmentMaterial>()
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    var equipDropInfos = MutableLiveData<List<EquipmentDropInfo>>()
     var isLoading = MutableLiveData<Boolean>()
 
     //获取装备制作材料信息
@@ -25,7 +23,13 @@ class EquipmentDetailsViewModel(
         isLoading.postValue(true)
         viewModelScope.launch {
             if (equip.craftFlg == 0) {
-                materials.add(EquipmentMaterial(0, "", 1))
+                materials.add(
+                    EquipmentMaterial(
+                        equip.equipmentId,
+                        equip.equipmentName,
+                        1
+                    )
+                )
             } else {
                 getAllMaterial(equip.equipmentId, equip.equipmentName, 1, 1)
             }
@@ -43,7 +47,11 @@ class EquipmentDetailsViewModel(
             }
         } else {
             val material =
-                EquipmentMaterial(equipmentId, name, count)
+                EquipmentMaterial(
+                    equipmentId,
+                    name,
+                    count
+                )
             var flag = -1
             materials.forEachIndexed { index, equipmentMaterial ->
                 if (equipmentMaterial.id == material.id) {
@@ -58,37 +66,23 @@ class EquipmentDetailsViewModel(
         }
     }
 
-    //获取装备掉落关卡信息 TODO 优化查询逻辑
-    fun getDropInfos(equipmentId: Int) {
-        val finalData = arrayListOf<EquipmentDropInfo>()
-        viewModelScope.launch {
-            val equip = equipmentRepository.getEquipmentData(equipmentId)
-            val fixedId = if (equip.craftFlg == 1) {
-                equipmentRepository.getEquipmentCraft(equipmentId).cid1
-            } else
-                equipmentId
-            val infos = equipmentRepository.getDropWaveID(fixedId)
-            infos.forEach { info ->
-                val each3Wave = arrayListOf<Int>()
-                val odds = arrayListOf<EquipmentIdWithOdd>()
-                equipmentRepository.getDropRewardID(info.getWaveIds()).forEach {
-                    each3Wave.addAll(it.getRewardIds())
-                }
-                equipmentRepository.getOdds(each3Wave).forEach {
-                    odds.addAll(it.getOdds())
-                }
-                odds.sortBy { it.odd }
-                finalData.add(EquipmentDropInfo(info.questId, fixedId, info.questName, odds))
-            }
-            finalData.sortWith(getSort(fixedId))
-            equipDropInfos.postValue(finalData)
-        }
+    //获取装备掉落关卡信息
+    suspend fun getDropInfos(equipmentId: Int): List<EquipmentDropInfo> {
+        val equip = equipmentRepository.getEquipmentData(equipmentId)
+        val fixedId = if (equip.craftFlg == 1) {
+            equipmentRepository.getEquipmentCraft(equipmentId).cid1
+        } else
+            equipmentId
+        //获取装备掉落信息
+        val infos = equipmentRepository.getEquipDropAreas(fixedId)
+        return infos.sortedWith(getSort(equipmentId))
     }
 
     private fun getSort(eid: Int): java.util.Comparator<EquipmentDropInfo> {
+        val str = eid.toString()
         return Comparator { o1: EquipmentDropInfo, o2: EquipmentDropInfo ->
-            val a = o1.odds.first { it.eid == eid }.odd
-            val b = o2.odds.first { it.eid == eid }.odd
+            val a = o1.getOddOfEquip(str)
+            val b = o2.getOddOfEquip(str)
             b.compareTo(a)
         }
     }

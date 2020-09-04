@@ -23,9 +23,7 @@ object FileUtil {
 
     //数据库判断
     fun needUpadateDb() =
-        !File(getDatabasePath()).exists() || File(getDatabasePath()).length() < 1 * 1024 * 1024 || File(
-            getDatabaseWalPath()
-        ).length() < 1 * 1024
+        !File(getDatabasePath()).exists() || File(getDatabasePath()).length() < 1 * 1024 * 1024
 
     //迭代删除文件夹里的内容(不包括文件夹)
     fun deleteDir(dirPath: String, notDel: String) {

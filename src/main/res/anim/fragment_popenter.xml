@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@integer/item_anim_fast">
+    android:duration="@integer/fragment_anim">
 
     <scale
-        android:fromXScale="1.2"
-        android:fromYScale="1.2"
+        android:fromXScale="1.05"
+        android:fromYScale="1.05"
         android:pivotX="50%"
         android:pivotY="50%"
         android:toXScale="1"
         android:toYScale="1" />
 
     <alpha
-        android:fromAlpha="0"
+        android:fromAlpha="1"
         android:toAlpha="1" />
 
 </set>

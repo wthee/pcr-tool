@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -11,8 +10,8 @@ android {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 3
-        versionName "0.0.3-beta"
+        versionCode 5
+        versionName "0.0.5-beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -23,6 +22,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = ["-Xjvm-default=all"]
         freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
     buildFeatures {
@@ -45,8 +45,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha01'
-    implementation 'androidx.core:core-ktx:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta8'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
@@ -54,6 +54,12 @@ dependencies {
     //Bugly
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
     implementation 'com.tencent.bugly:nativecrashreport:3.7.3'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    //coil
+    def coil_version = "1.0.0-rc1"
+    implementation "io.coil-kt:coil:$coil_version"
+    implementation "io.coil-kt:coil-gif:$coil_version"
 
     //Glide
     def glide_version = "4.11.0"
@@ -67,7 +73,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     //Material
-    implementation 'com.google.android.material:material:1.3.0-alpha01'
+    implementation 'com.google.android.material:material:1.3.0-alpha02'
 
     //Navigation
     def nav_version = "2.3.0"
@@ -81,7 +87,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
     //Room
-    def room_version = "2.3.0-alpha01"
+    def room_version = "2.3.0-alpha02"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -95,8 +101,11 @@ dependencies {
     //Palette
     implementation "androidx.palette:palette-ktx:1.0.0"
 
+    //PhotoView
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
     //Work
-    def work_version = "2.3.4"
+    def work_version = "2.4.0"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     //Viewpager2

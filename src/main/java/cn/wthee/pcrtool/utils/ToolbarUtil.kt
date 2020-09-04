@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ViewToolbarBinding
 
 
@@ -49,11 +50,18 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         title.layoutParams = params
     }
 
-    fun setTitleColor(resId: Int){
+    fun setTitleColor(resId: Int) {
         title.setTextColor(resources.getColor(resId, null))
     }
 
-    fun setBackground(resId: Int){
+    fun setBackground(resId: Int) {
         toolbar.viewToolbar.setBackgroundColor(resources.getColor(resId, null))
+    }
+
+    fun setCenterStyle() {
+        setTitleCenter()
+        setTitleColor(R.color.colorPrimary)
+        setLeftIcon(R.drawable.ic_back)
+        setBackground(R.color.colorWhite)
     }
 }

@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">PCR Tool</string>
     <string name="birth">%s 月 %s 日</string>
-    <string name="character_detail">%s / %s / %s / %d</string>
+    <string name="character_detail">%s / %sCM / %sKG / %d</string>
     <string name="blood">%s 型</string>
     <string name="character_info">角色属性</string>
     <string name="character_pic">角色原画</string>
     <string name="event_list">装备信息</string>
 
+     <!--属性    -->
     <string name="hp">HP</string>
     <string name="atk">物理攻击力</string>
     <string name="p_penetrate">物理贯穿</string>
@@ -25,12 +26,13 @@
     <string name="tp_reduce_rate">TP消耗减轻</string>
     <string name="accuracy">命中</string>
 
+    <!-- 角色 & 装备  -->
     <string name="level">等级</string>
-    <string name="rank">Rank</string>
+    <string name="rank">RANK</string>
     <string name="rarity">星级</string>
     <string name="title_quest">什么地方</string>
     <string name="drop_quest">掉落信息</string>
-    <string name="love_rank_up">羁绊提升</string>
+    <string name="love_rank_up">羁绊</string>
     <string name="name">名字</string>
     <string name="age">年龄</string>
     <string name="limit">限定</string>
@@ -46,7 +48,6 @@
     <string name="title_position">位置</string>
 
     <string name="equip_details">道具详情</string>
-    <string name="tab_sort_type">排序方式：</string>
     <string name="tab_all">全部</string>
     <string name="tab_love">收藏</string>
 
@@ -57,7 +58,7 @@
     <string name="other">其它</string>
     <string name="setting">设置</string>
     <string name="material">装备制作素材 x %d </string>
-    <string name="material_no">装备制作素材</string>
+    <string name="material_no">装备素材</string>
     <string name="search">搜索</string>
     <string name="function">功能</string>
     <string name="data_null_character">未找到角色信息~</string>
@@ -83,22 +84,43 @@
     <string name="auto_update_app">自动更新应用</string>
     <string name="off_auto_app">已取消自动更新</string>
     <string name="on_auto_app">打开应用时，自动更新应用</string>
+    <string name="clean_cache">清除图片缓存</string>
+    <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
+    <string name="toast_on">检查数据库版本时，显示提示消息</string>
+    <string name="toast_off">检查数据库版本时，不提示消息</string>
+    <string name="not_toast">自动更新时取消提示</string>
+
+    <!--筛选  -->
     <string name="filter">筛选</string>
     <string name="sort">排序</string>
-    <string name="title_sort">排序设置</string>
+    <string name="title_sort">排序类型</string>
     <string name="screen">界面</string>
     <string name="equip_off">只显示装备图标</string>
     <string name="equip_on">显示装备名称、描述</string>
     <string name="equip_list">装备列表</string>
     <string name="next">确认</string>
+    <string name="reset">重置</string>
+    <string name="craft0">不可合成装备（碎片、设计图等）</string>
+    <string name="craft1">可合成装备</string>
     <string name="title_tip">信息提示</string>
     <string name="position_3">后卫</string>
     <string name="position_2">中卫</string>
     <string name="position_1">前卫</string>
     <string name="atk_type">攻击类型</string>
-    <string name="physical">物理</string>
-    <string name="magic">魔法</string>
-    <string name="clean_cache">清除缓存</string>
-    <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
+    <string name="physical">物理攻击</string>
+    <string name="magic">魔法攻击</string>
+
+
+    <string name="sorry_ue">对不起，优衣~ 下面已经没有了！</string>
+    <string name="reduce">⇣</string>
+    <string name="add">⇡</string>
+    <string name="before_loop">入场动作</string>
+    <string name="looping">循环动作</string>
+    <string name="egg_text">我啊，很幸福哦</string>
+    <string name="egg_summary">...还...还是被发现了</string>
+    <string name="sort_date">登场日期</string>
+    <string name="sort_type">排序方式</string>
+    <string name="sort_desc">降序</string>
+    <string name="sort_asc">升序</string>
 
 </resources>

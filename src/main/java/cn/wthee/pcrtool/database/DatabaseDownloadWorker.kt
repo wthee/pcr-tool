@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
-import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
@@ -18,14 +17,14 @@ import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.service.DatabaseService
-import cn.wthee.pcrtool.database.DatabaseUpdateHelper.Companion.downloading
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import kotlin.concurrent.thread
 
 
 class DatabaseDownloadWorker(
@@ -63,7 +62,6 @@ class DatabaseDownloadWorker(
 
     private fun download(inputUrl: String, version: String): Result {
         try {
-
             //创建Retrofit服务
             val service = ApiHelper.createWithClient(
                 DatabaseService::class.java, inputUrl,
@@ -73,33 +71,34 @@ class DatabaseDownloadWorker(
                         Log.e(Constants.LOG_TAG, progress.toString())
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
-                                "${Constants.NOTICE_TITLE} ${String.format(
-                                    "%.1f",
-                                    currSize
-                                )}KB / ${String.format("%.1f", totalSize)} KB"
+                                "${Constants.NOTICE_TITLE} ${
+                                    String.format(
+                                        "%.0f",
+                                        currSize
+                                    )
+                                }KB / ${String.format("%.0f", totalSize)} KB"
                             )
                             .build()
                         notificationManager.notify(noticeId, notification.build())
                     }
 
                     override fun onFinish() {
-                        downloading = false
+
                     }
                 })
             )
 
             //下载文件
             val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
-            downloading = false
+            val file = response.body()?.byteStream()
+            //保存
+            saveDB(file)
             sp.edit {
                 putString(
                     Constants.SP_DATABASE_VERSION,
                     version
                 )
             }
-            val file = response.body()?.byteStream()
-            //保存
-            saveDB(file)
             return Result.success()
         }catch (e: Exception){
             return Result.failure()
@@ -150,17 +149,13 @@ class DatabaseDownloadWorker(
                 out.flush()
                 out.close()
                 inputStream.close()
-                thread(start = true) {
+                MainScope().launch {
                     //更新数据库
                     AppDatabase.getInstance().close()
-                    synchronized(AppDatabase::class.java) {
-                        UnzippedUtil.deCompress(db, true)
-                        //通知更新数据
-                        Looper.prepare()
-                        ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                        CharacterListFragment.handler.sendEmptyMessage(1)
-                        Looper.loop()
-                    }
+                    UnzippedUtil.deCompress(db, true)
+                    //通知更新数据
+                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
+                    CharacterListFragment.handler.sendEmptyMessage(1)
                 }
             }
         } catch (e: Exception) {

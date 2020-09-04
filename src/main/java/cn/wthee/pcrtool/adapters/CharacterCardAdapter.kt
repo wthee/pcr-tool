@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCardBgBinding
-import cn.wthee.pcrtool.utils.GlideUtil
+import coil.load
 
 
 class CharacterCardBgAdapter :
@@ -31,7 +31,10 @@ class CharacterCardBgAdapter :
         fun bind(url: String) {
             with(binding) {
                 //加载网络图片
-                GlideUtil.load(url, characterPic, R.drawable.error, null)
+                characterPic.load(url) {
+                    error(R.drawable.error)
+                    placeholder(R.drawable.load)
+                }
             }
         }
     }

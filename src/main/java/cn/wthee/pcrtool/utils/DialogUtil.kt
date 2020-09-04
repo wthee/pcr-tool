@@ -17,6 +17,15 @@ object DialogUtil {
         return dialog
     }
 
+    //创建 dialog
+    fun create(context: Context, layout: View, gravity: Int): AlertDialog {
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setView(layout)
+            .create()
+        dialog.window?.setGravity(gravity)
+        return dialog
+    }
+
     fun create(
         context: Context,
         layout: LayoutWarnDialogBinding,

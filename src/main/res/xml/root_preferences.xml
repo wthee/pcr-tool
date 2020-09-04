@@ -33,6 +33,15 @@
             app:summaryOn="@string/on_auto_db"
             app:title="@string/auto_update_db" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            android:enabled="true"
+            app:iconSpaceReserved="false"
+            app:key="not_toast"
+            app:summaryOff="@string/toast_on"
+            app:summaryOn="@string/toast_off"
+            app:title="@string/not_toast" />
+
     </PreferenceCategory>
 
 
@@ -106,5 +115,18 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/MalitsPlus/ShizuruNotes" />
         </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="egg"
+        app:iconSpaceReserved="false"
+        app:title="@string/app_name">
+
+        <Preference
+            app:key="kl"
+            app:icon="@drawable/ic_hide"
+            app:summary="@string/egg_summary"
+            app:title="@string/egg_text"></Preference>
+
     </PreferenceCategory>
 </PreferenceScreen>

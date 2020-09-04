@@ -8,20 +8,21 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
-        android:layout_width="@dimen/xxl_icon"
-        android:layout_height="@dimen/xxl_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_gravity="center_horizontal"
-        tools:src="@mipmap/ic_launcher_foreground" />
+        tools:src="@drawable/load" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
         tools:text="牛头人" />
 
 </LinearLayout>

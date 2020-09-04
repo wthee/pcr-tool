@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.CharacterDao
 import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
-import cn.wthee.pcrtool.data.model.*
+import cn.wthee.pcrtool.data.model.entity.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
 
 
@@ -31,10 +31,12 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         SkillData::class,
         WaveGroupData::class,
         EnemyData::class,
-        CharacterAttackPattern::class,
-        CharacterExperience::class
+        CharacterExperience::class,
+        AttackPattern::class,
+        GuildData::class,
+        CharacterExperienceTeam::class
     ],
-    version = 3,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

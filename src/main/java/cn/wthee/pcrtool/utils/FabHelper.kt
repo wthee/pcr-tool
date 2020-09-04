@@ -15,7 +15,7 @@ object FabHelper {
     }
 
     private fun setIcon(resId: Int) {
-        MainActivity.fab.setImageResource(resId)
+        MainActivity.fabMain.setImageResource(resId)
     }
 
     fun goBack() {

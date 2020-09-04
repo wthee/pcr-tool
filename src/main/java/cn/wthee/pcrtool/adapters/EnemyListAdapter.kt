@@ -11,11 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.EnemyData
+import cn.wthee.pcrtool.data.model.entity.EnemyData
 import cn.wthee.pcrtool.databinding.ItemEnemyBinding
+import cn.wthee.pcrtool.ui.detail.enemy.EnemyDialogFragment
+import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_SHADOW_URL
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.GlideUtil
+
+import coil.load
 
 
 class EnemyListAdapter :
@@ -80,15 +84,22 @@ class EnemyListAdapter :
                 //名称
                 name.text = enemyData.unit_name
                 //加载图片
-                val picUrl = UNIT_ICON_URL + enemyData.unit_id + WEBP
-                GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
+                val picUrl = if (enemyData.unit_id < 600101) {
+                    UNIT_ICON_URL + enemyData.prefab_id
+                } else {
+                    UNIT_ICON_SHADOW_URL + enemyData.getTruePrefabId()
+                } + WEBP
+                itemPic.load(picUrl) {
+                    error(R.drawable.error)
+                    placeholder(R.drawable.load_mini)
+                }
                 //设置点击跳转
                 root.setOnClickListener {
                     MainActivity.currentEquipPosition = adapterPosition
-//                    EquipmentDetailsFragment.getInstance(enemyData, true).show(
-//                        ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-//                        "details"
-//                    )
+                    EnemyDialogFragment.getInstance(enemyData).show(
+                        ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
+                        "enemy"
+                    )
                 }
             }
         }

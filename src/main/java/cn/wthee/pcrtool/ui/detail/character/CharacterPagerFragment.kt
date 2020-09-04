@@ -1,19 +1,19 @@
 package cn.wthee.pcrtool.ui.detail.character
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.transition.TransitionInflater
 import androidx.viewpager2.widget.ViewPager2
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterViewPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
-import cn.wthee.pcrtool.data.model.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.utils.FabHelper
+import com.google.android.material.transition.MaterialContainerTransform
 
 class CharacterPagerFragment : Fragment() {
 
@@ -26,11 +26,13 @@ class CharacterPagerFragment : Fragment() {
         requireArguments().let {
             character = it.getSerializable("character") as CharacterBasicInfo?
         }
-        sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-        sharedElementReturnTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            scrimColor = Color.TRANSPARENT
+            duration = resources.getInteger(R.integer.fragment_anim).toLong()
+            setAllContainerColors(Color.TRANSPARENT)
+        }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,14 +57,8 @@ class CharacterPagerFragment : Fragment() {
                 lifecycle,
                 character!!
             )
-        viewPager.offscreenPageLimit = 3
         viewPager.setPageTransformer(DepthPageTransformer())
-        //???
-        if (MainActivity.sp.getBoolean("106001", false)) {
-            viewPager.setBackgroundResource(R.drawable.viewpager_bg)
-        } else {
-            viewPager.background = null
-        }
+        viewPager.offscreenPageLimit = 2
     }
 
 }

@@ -10,21 +10,24 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAdapter
-import cn.wthee.pcrtool.data.model.FilterDataCharacter
+import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.DialogUtil
 import cn.wthee.pcrtool.utils.InjectorUtil
-import com.bumptech.glide.Glide
+import com.google.android.material.transition.Hold
+import kotlinx.coroutines.launch
 
 
 class CharacterListFragment : Fragment() {
@@ -32,16 +35,21 @@ class CharacterListFragment : Fragment() {
     companion object {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterAdapter
-        var filterParams = FilterDataCharacter(
-            true, true, true, true,
-            true, true
+        var characterfilterParams = FilterCharacter(
+            true, 0, 0, "全部"
         )
         lateinit var handler: Handler
+        lateinit var guilds: ArrayList<String>
     }
 
     private lateinit var binding: FragmentCharacterListBinding
     private val viewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -50,13 +58,22 @@ class CharacterListFragment : Fragment() {
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         binding.layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
+        //公会列表
+        guilds = arrayListOf()
+        viewLifecycleOwner.lifecycleScope.launch {
+            guilds.add("全部")
+            viewModel.getGuilds().forEach {
+                guilds.add(it.guild_name)
+            }
+            guilds.add("？？？")
+        }
         //加载数据
         init()
         //监听数据变化
         setObserve()
         //控件监听
         setListener()
-        viewModel.getCharacters(sortType, sortAsc, "", mapOf())
+        viewModel.getCharacters(sortType, sortAsc, "")
         //接收消息
         handler = Handler(Handler.Callback {
             when (it.what) {
@@ -83,11 +100,7 @@ class CharacterListFragment : Fragment() {
         characterList = binding.characterList
         binding.characterList.apply {
             adapter = listAdapter
-            postponeEnterTransition()
-            viewTreeObserver.addOnPreDrawListener {
-                startPostponedEnterTransition()
-                true
-            }
+
         }
     }
 
@@ -99,17 +112,20 @@ class CharacterListFragment : Fragment() {
             if (!characters.hasObservers()) {
                 characters.observe(viewLifecycleOwner, Observer { data ->
                     if (data != null && data.isNotEmpty()) {
-                        binding.noDataTip.visibility = View.GONE
+                        MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(data) {
-                            listAdapter.filter.filter(filterParams.toJsonString())
+                            listAdapter.filter.filter(characterfilterParams.toJsonString())
                             sp.edit {
                                 putInt(Constants.SP_COUNT_CHARACTER, data.size)
                             }
+                            characterList.scrollToPosition(0)
                             MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
                         }
                     } else {
-                        binding.noDataTip.visibility = View.VISIBLE
+                        MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
+                    isLoading.postValue(false)
+                    refresh.postValue(false)
                 })
             }
             //刷新
@@ -130,6 +146,8 @@ class CharacterListFragment : Fragment() {
                     try {
                         findNavController().popBackStack(R.id.containerFragment, true)
                         findNavController().navigate(R.id.containerFragment)
+                        MainActivity.isHome = true
+                        MainActivity.fabMain.setImageResource(R.drawable.ic_function)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())
                     }
@@ -143,35 +161,11 @@ class CharacterListFragment : Fragment() {
         binding.apply {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
-                filterParams.initData()
-                viewModel.getCharacters(sortType, sortAsc, "", mapOf())
+                characterfilterParams.initData()
+                characterfilterParams.all = true
+                viewModel.getCharacters(sortType, sortAsc, "")
+                layoutRefresh.isRefreshing = false
             }
-
-            //滑动时暂停glide加载
-            characterList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        Glide.with(root.context).resumeRequests()
-                    } else {
-                        Glide.with(root.context).pauseRequests()
-                    }
-                }
-            })
-
-//            //排序
-//            sortTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//                override fun onTabReselected(tab: TabLayout.Tab?) {
-//                }
-//
-//                override fun onTabUnselected(tab: TabLayout.Tab?) {
-//                }
-//
-//                override fun onTabSelected(tab: TabLayout.Tab?) {
-//                    sortType = tab?.position ?: 0
-//                    viewModel.getCharacters(sortType, sortAsc)
-//                    binding.characterList.smoothScrollToPosition(0)
-//                }
-//            })
         }
     }
 }

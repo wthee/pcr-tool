@@ -10,13 +10,13 @@ import kotlinx.coroutines.launch
 
 object ObjectAnimatorHelper {
 
-    private const val drt = 500L
+    fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
+        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.85f, 1f)
+        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.85f, 1f)
+        val holder3 = PropertyValuesHolder.ofFloat("translationY", 100f, 0f)
 
-    fun enter(vararg view: View) {
-        val holder1 = PropertyValuesHolder.ofFloat("translationY", 50f, 0f)
-        val holder2 = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
         view.forEach {
-            start(it, holder1, holder2)
+            start(it, onAnimatorListener,  holder1, holder2, holder3)
         }
     }
 
@@ -27,8 +27,36 @@ object ObjectAnimatorHelper {
         }
     }
 
+    private fun start(view: View, onAnimatorListener: OnAnimatorListener?, vararg holders: PropertyValuesHolder) {
+        onAnimatorListener?.prev(view)
+        MainScope().launch {
+            delay(200L)
+            ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
+                duration = 600L
+                addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationEnd(animation: Animator?) {
+                        onAnimatorListener?.end(view)
+                    }
+
+                    override fun onAnimationRepeat(animation: Animator?) {
+
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                        onAnimatorListener?.start(view)
+                    }
+                })
+                start()
+            }
+        }
+    }
+
     private fun start(view: View, vararg holders: PropertyValuesHolder) {
-        view.visibility = View.INVISIBLE
+        view.visibility = View.GONE
         MainScope().launch {
             delay(300L)
             ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
@@ -55,25 +83,9 @@ object ObjectAnimatorHelper {
         }
     }
 
-
-    fun scaleX(vararg view: View) {
-        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 1f, 1.2f)
-        view.forEach {
-            ObjectAnimator.ofPropertyValuesHolder(it, holder1).apply {
-                duration = drt
-                start()
-            }
-        }
+    interface OnAnimatorListener {
+        fun prev(view: View)
+        fun start(view: View)
+        fun end(view: View)
     }
-
-    fun scaleY(vararg view: View) {
-        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 1f, 1.2f)
-        view.forEach {
-            ObjectAnimator.ofPropertyValuesHolder(it, holder2).apply {
-                duration = drt
-                start()
-            }
-        }
-    }
-
 }

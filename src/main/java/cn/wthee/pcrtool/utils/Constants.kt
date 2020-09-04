@@ -23,6 +23,7 @@ object Constants {
 
     //图标接口
     const val UNIT_ICON_URL = API_URL + "icon/unit/"
+    const val UNIT_ICON_SHADOW_URL = API_URL + "icon/unit_shadow/"
 
     //角色界面接口
     const val CHARACTER_PLATE_URL = API_URL + "icon/plate/"
@@ -49,7 +50,7 @@ object Constants {
     //默认值
     const val DATABASE_VERSION = "202005141837"
     const val SORT_TYPE = 0
-    const val SORT_ASC = true
+    const val SORT_ASC = false
     const val UNKNOW_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在更新数据..."
     const val NOTICE_TITLE_PRE = "PCR Tool\n"
@@ -66,10 +67,29 @@ object Constants {
     const val COLUMN_COUNT_EQUIP = 4
 
     //排序
-    const val SORT_AGE = 0
-    const val SORT_HEIGHT = 1
-    const val SORT_WEIGHT = 2
-    const val SORT_POSITION = 3
+    const val SORT_DATE = 0
+    const val SORT_AGE = 1
+    const val SORT_HEIGHT = 2
+    const val SORT_WEIGHT = 3
+    const val SORT_POSITION = 4
 
-
+    val ATTR = arrayListOf(
+        "HP",
+        "物理攻击力",
+        "物理贯穿",
+        "魔法攻击力",
+        "魔法贯穿",
+        "物理防御力",
+        "魔法防御力",
+        "物理暴击",
+        "回避",
+        "魔法暴击",
+        "HP自动回复",
+        "TP自动回复",
+        "HP吸收",
+        "回复量上升",
+        "TP上升",
+        "TP消耗减轻",
+        "命中"
+    )
 }

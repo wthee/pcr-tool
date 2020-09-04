@@ -4,491 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <View
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/hr_height"
-        android:layout_gravity="center"
-        android:background="@color/colorBg" />
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/s_margin"
-        android:text="@string/character_info"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/big_icon"
+            android:layout_height="@dimen/big_icon"
+            android:layout_margin="@dimen/s_margin"
+            android:scaleType="fitCenter"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/load" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/starts"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/atk"
-            android:textAppearance="@style/subTitleWithe" />
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/s_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icon">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/atk"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/magic_str"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/magic_str"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/def"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/def"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/magic_def"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/magic_def"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/hp"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/hp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/p_critical"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/p_critical"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/dodge"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/dodge"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/m_critical"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/m_critical"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/hp_recovery"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/hp_recovery"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/tp_recovery"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tp_recovery"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/hp_steal"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/life_steal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/hp_recovery_rate"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/hp_recovery_rate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/tp_recovery_rate"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/energy_recovery_rate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/tp_reduce_rate"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/energy_reduce_rate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/accuracy"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/accuracy"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="10000" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="2"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/level"
-            android:textAppearance="@style/subTitleWithe" />
+        </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/level"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="@color/colorAccent"
-            tools:text="99" />
+            android:layout_marginTop="@dimen/s_margin"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/starts"
+            app:layout_constraintEnd_toEndOf="@+id/icon"
+            app:layout_constraintStart_toStartOf="@+id/icon"
+            tools:text="999" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
+        <com.google.android.material.slider.Slider
+            android:id="@+id/level_seek_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/rank"
-            android:textAppearance="@style/subTitleWithe" />
+            android:layout_marginStart="@dimen/l_margin"
+            android:layout_marginEnd="@dimen/l_margin"
+            android:valueFrom="1"
+            android:stepSize="1"
+            app:layout_constraintTop_toBottomOf="@id/level"
+            app:layout_constraintEnd_toEndOf="@+id/icon"
+            app:layout_constraintStart_toStartOf="@+id/icon"
+            android:visibility="gone" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="2"
-            android:gravity="end|center_vertical">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rank_reduce"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:src="@drawable/ic_reduce" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/rank"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/m_margin"
-                android:layout_marginEnd="@dimen/m_margin"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rank_add"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:src="@drawable/ic_add" />
-        </LinearLayout>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_weight="1"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="0dp"
-            android:text="@string/rarity"
-            android:textAppearance="@style/subTitleWithe" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="2"
-            android:gravity="end|center_vertical">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rarity_reduce"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:src="@drawable/ic_reduce" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/rarity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/m_margin"
-                android:layout_marginEnd="@dimen/m_margin"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rarity_add"
-                android:layout_width="@dimen/m_icon"
-                android:layout_height="@dimen/m_icon"
-                android:src="@drawable/ic_add" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+        android:id="@+id/attrs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
+        android:minHeight="@dimen/card_height"
+        android:nestedScrollingEnabled="false"
+        android:padding="@dimen/s_padding"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
-        tools:listitem="@layout/item_equipment_promotion" />
+        tools:itemCount="3"
+        tools:listitem="@layout/item_character_attr" />
+
+    <include
+        android:id="@+id/rank_equip"
+        layout="@layout/layout_rank_equip" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/sorry_ue"
+        android:textColor="@color/colorAlphaWhite"
+        android:textIsSelectable="true" />
 </LinearLayout>

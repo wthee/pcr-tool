@@ -1,67 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:clipChildren="false"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/m_margin"
+        android:visibility="gone" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/layout_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
+        android:layout_height="wrap_content"
         android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="vertical">
+        android:clipToPadding="false">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/no_data_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/l_margin"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/data_null_character"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:textColor="@color/colorPrimary"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
-            android:layout_marginTop="@dimen/m_margin"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/layout_refresh"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/character_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/character_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:scrollbars="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/item_character" />
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_character" />
 
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-    </LinearLayout>
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
 

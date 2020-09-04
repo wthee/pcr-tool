@@ -1,5 +1,11 @@
 package cn.wthee.pcrtool.data.model
 
+import cn.wthee.pcrtool.data.model.entity.CharacterPromotionStatus
+import cn.wthee.pcrtool.data.model.entity.CharacterRarity
+import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentEnhanceRate
+import cn.wthee.pcrtool.utils.Constants
+
 //角色属性
 data class CharacterAttrInfo(
     var hp: Double,
@@ -136,6 +142,11 @@ data class CharacterAttrInfo(
 
 }
 
+data class CharacterAttr(
+    var type: String,
+    var value: Double
+)
+
 fun CharacterAttrInfo.add(other: CharacterAttrInfo): CharacterAttrInfo {
     this.hp += other.hp
     this.atk += other.atk
@@ -177,3 +188,32 @@ fun CharacterAttrInfo.multiply(mult: Int): CharacterAttrInfo {
     this.accuracy *= mult
     return this
 }
+
+fun CharacterAttrInfo.getList(): List<CharacterAttr> {
+    var attrs = arrayListOf<CharacterAttr>()
+    for (i in 0 .. 16){
+        val value = when (i) {
+            0 -> this.hp
+            1 -> this.atk
+            2 -> this.magicStr
+            3 -> this.def
+            4 -> this.magicDef
+            5 -> this.physicalCritical
+            6 -> this.magicCritical
+            7 -> this.waveHpRecovery
+            8 -> this.waveEnergyRecovery
+            9 -> this.dodge
+            10 -> this.physicalPenetrate
+            11 -> this.magicPenetrate
+            12 -> this.lifeSteal
+            13 -> this.hpRecoveryRate
+            14 -> this.energyRecoveryRate
+            15 -> this.energyReduceRate
+            16 -> this.accuracy
+            else -> 0.0
+        }
+        attrs.add(CharacterAttr(Constants.ATTR[i], value))
+    }
+    return attrs
+}
+

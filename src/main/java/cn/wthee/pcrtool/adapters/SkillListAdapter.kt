@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.adapters
 
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -13,7 +15,8 @@ import cn.wthee.pcrtool.data.model.CharacterSkillInfo
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.GlideUtil
+import cn.wthee.pcrtool.utils.PaletteHelper
+import coil.load
 
 
 class SkillAdapter :
@@ -44,15 +47,28 @@ class SkillAdapter :
                 //装备名称
                 name.text = skill.name
                 desc.text = skill.desc
-                type.text = when (skill.icon_type / 1000) {
+                type.text = when (skill.skillId % 1000) {
                     1 -> "连结爆发"
-                    2 -> "技能"
-                    3 -> "EX技能"
+                    2 -> "技能1"
+                    12 -> "技能1+"
+                    3 -> "技能2"
+                    501 -> "EX技能"
+                    511 -> "EX技能+"
                     else -> ""
                 }
-                //加载装备图片
+                //加载图片
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
-                GlideUtil.load(picUrl, itemPic, R.drawable.error, null)
+                itemPic.load(picUrl) {
+                    target {
+                        val bitmap = (it as BitmapDrawable).bitmap
+                        //字体颜色
+                        name.setTextColor(
+                            PaletteHelper.createPaletteSync(bitmap)
+                                .getLightVibrantColor(Color.BLACK)
+                        )
+                        itemPic.background = it
+                    }
+                }
                 //技能属性
                 val adapter = SkillActionAdapter()
                 actions.adapter = adapter
