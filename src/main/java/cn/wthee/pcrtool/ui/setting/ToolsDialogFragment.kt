@@ -47,6 +47,7 @@ class ToolsDialogFragment : BottomSheetDialogFragment() {
         toolbar.hideRightIcon()
         toolbar.leftIcon.setOnClickListener {
             if (isShownDetail) {
+                isShownDetail = false
                 //过渡动画
                 val transform = MaterialContainerTransform().apply {
                     startView = binding.toolHead.root

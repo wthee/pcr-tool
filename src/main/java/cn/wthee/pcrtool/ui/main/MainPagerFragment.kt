@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.Constants.SORT_AGE
+import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.card.MaterialCardView
@@ -158,8 +158,8 @@ class MainPagerFragment : Fragment() {
                     binding.layoutTab.getTabAt(0) -> {
                         CharacterListFragment.characterfilterParams.initData()
                         CharacterListFragment.characterfilterParams.all = true
-                        sortType = SORT_AGE
-                        sortAsc = true
+                        sortType = SORT_DATE
+                        sortAsc = false
                         sharedCharacterViewModel.getCharacters(
                             sortType,
                             sortAsc, ""

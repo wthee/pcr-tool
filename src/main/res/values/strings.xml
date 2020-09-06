@@ -122,5 +122,6 @@
     <string name="sort_type">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
+    <string name="equip_type">装备类型</string>
 
 </resources>
