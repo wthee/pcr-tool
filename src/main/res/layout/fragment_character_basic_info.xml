@@ -120,7 +120,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/name"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/name"
-                    tools:background="@drawable/ic_position_0_300" />
+                    tools:background="@drawable/ic_position_front" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/three"

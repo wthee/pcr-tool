@@ -106,10 +106,10 @@ data class CharacterBasicInfo(
 
     //位置
     fun getPositionIcon() = when (this.position) {
-        in 0..300 -> R.drawable.ic_position_0_300
-        in 301..600 -> R.drawable.ic_position_301_600
-        in 601..9999 -> R.drawable.ic_position_600
-        else -> R.drawable.ic_position_600
+        in 0..299 -> R.drawable.ic_position_front
+        in 300..599 -> R.drawable.ic_position_middle
+        in 600..9999 -> R.drawable.ic_position_after
+        else -> R.drawable.ic_position_after
     }
 
     //羁绊提升文本
