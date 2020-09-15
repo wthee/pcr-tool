@@ -17,68 +17,10 @@
             android:id="@+id/toolbar"
             layout="@layout/view_toolbar" />
 
+        <include
+            android:id="@+id/detail"
+            layout="@layout/layout_equip_detail" />
 
-        <LinearLayout
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/s_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/item_pic"
-                android:layout_width="@dimen/big_icon"
-                android:layout_height="@dimen/big_icon"
-                android:layout_gravity="center"
-                android:scaleType="fitCenter"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/load" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_des"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/m_margin"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="@dimen/s_padding"
-                    android:text="@string/equip_details"
-                    android:textAppearance="@style/subTitleWithe"
-                    app:layout_constraintStart_toEndOf="@id/item_pic"
-                    app:layout_constraintTop_toTopOf="@id/item_pic" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/m_margin"
-                    android:layout_marginTop="@dimen/s_margin"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/item_pic"
-                    app:layout_constraintTop_toBottomOf="@id/title_des"
-                    tools:text="道具详情道具详情道具详情道道具道具详情道具详情道具详情" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/attrs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/s_margin"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/content"
-            tools:itemCount="2"
-            tools:listitem="@layout/item_equipment_attr" />
 
         <View
             android:id="@+id/hr1"
