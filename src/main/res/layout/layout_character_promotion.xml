@@ -76,6 +76,10 @@
         tools:listitem="@layout/item_character_attr" />
 
     <include
+        android:id="@+id/unique_equip"
+        layout="@layout/layout_unique_equip" />
+
+    <include
         android:id="@+id/rank_equip"
         layout="@layout/layout_rank_equip" />
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
 import kotlinx.coroutines.launch
 
 
@@ -12,7 +13,7 @@ class EquipmentViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    var equipments = MutableLiveData<List<EquipmentData>>()
+    var equipments = MutableLiveData<List<EquipmentMaxData>>()
     var isLoading = MutableLiveData<Boolean>()
     var refresh = MutableLiveData<Boolean>()
     var isList = MutableLiveData<Boolean>()

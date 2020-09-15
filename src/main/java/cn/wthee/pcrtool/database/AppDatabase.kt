@@ -23,9 +23,11 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         CharacterRarity::class,
         CharacterSkillData::class,
         EnemyRewardData::class,
-        EquipmentData::class,
         EquipmentCraft::class,
+        EquipmentData::class,
         EquipmentEnhanceRate::class,
+        EquipmentEnhanceData::class,
+        UniqueEquipmentData::class,
         QuestData::class,
         SkillAction::class,
         SkillData::class,
@@ -36,7 +38,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         GuildData::class,
         CharacterExperienceTeam::class
     ],
-    version = 5,
+    version = 11,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

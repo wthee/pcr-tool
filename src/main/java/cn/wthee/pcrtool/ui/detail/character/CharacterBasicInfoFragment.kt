@@ -17,6 +17,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
+import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
@@ -322,7 +323,6 @@ class CharacterBasicInfoFragment : Fragment() {
         })
         //角色属性
         viewModel.sumInfo.observe(viewLifecycleOwner, Observer {
-            //列表适配器
             attrAdapter = CharacterAttrAdapter()
             binding.promotion.attrs.adapter = attrAdapter
             attrAdapter.submitList(it.getList())
@@ -385,6 +385,20 @@ class CharacterBasicInfoFragment : Fragment() {
                 error(R.drawable.unknow)
                 placeholder(R.drawable.load_mini)
             }
+            //TODO 专武
+//            promotion.uniqueEquip.detail.apply {
+//                //TODO 专武信息获取
+//                val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
+//                itemPic.load(picUrl) {
+//                    error(R.drawable.error)
+//                }
+//                //描述
+//                desc.text = equip.getDesc()
+//                //属性词条
+//                val adapter = EquipmentAttrAdapter()
+//                attrs.adapter = adapter
+//                adapter.submitList(equip.getAttrs())
+//            }
         }
     }
 

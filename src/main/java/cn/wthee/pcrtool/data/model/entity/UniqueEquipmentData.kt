@@ -9,8 +9,8 @@ import cn.wthee.pcrtool.data.model.EquipmentAttr
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
-@Entity(tableName = "equipment_data")
-class EquipmentData(
+@Entity(tableName = "unique_equipment_data")
+class UniqueEquipmentData(
     @PrimaryKey
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,
@@ -38,10 +38,6 @@ class EquipmentData(
     @ColumnInfo(name = "energy_reduce_rate") val energyReduceRate: Double,
     @ColumnInfo(name = "enable_donation") val enableDonation: Int,
     @ColumnInfo(name = "accuracy") val accuracy: Double
-) : Serializable {
-
-    fun getDesc() = description.replace("\\n", "")
-
-}
+) : Serializable
 
 
