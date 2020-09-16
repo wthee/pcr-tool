@@ -1,12 +1,18 @@
 package cn.wthee.pcrtool.ui.main
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -20,12 +26,11 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.DialogUtil
-import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.transition.Hold
 import kotlinx.coroutines.launch
 
@@ -79,11 +84,37 @@ class CharacterListFragment : Fragment() {
             when (it.what) {
                 0 -> {
                     val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
+                    //内容颜色
+                    val content = SpannableString(Constants.NOTICE_TOAST_TIMEOUT)
+                    val start = Constants.NOTICE_TOAST_TIMEOUT.indexOf(Constants.BTN_OPERATE_FORCE_UPDATE_DB)
+                    val end = start + Constants.BTN_OPERATE_FORCE_UPDATE_DB.length
+                    content.setSpan(
+                        ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.color_map_h, null)),
+                        start,
+                        end,
+                        Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
+
                     DialogUtil.create(
                         requireContext(),
                         layout,
                         Constants.NOTICE_TITLE_ERROR,
-                        Constants.NOTICE_TOAST_TIMEOUT
+                        content,
+                        Constants.BTN_OPERATE_FORCE_UPDATE_DB,
+                        Constants.BTN_CLOSE,
+                        object : DialogListener {
+                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                                //强制更新数据库
+                                DatabaseUpdateHelper.forceUpdate()
+                                ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
+                                dialog.dismiss()
+                            }
+
+                            override fun onButtonOkClick(dialog: AlertDialog) {
+                                dialog.dismiss()
+                            }
+                        }
                     ).show()
                 }
                 1 -> viewModel.reload.postValue(true)

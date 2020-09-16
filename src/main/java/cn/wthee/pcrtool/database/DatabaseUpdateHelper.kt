@@ -20,7 +20,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DatabaseUpdateHelper {
+object DatabaseUpdateHelper {
 
     private val mContext = MyApplication.getContext()
 
@@ -49,13 +49,14 @@ class DatabaseUpdateHelper {
                     Constants.SP_DATABASE_VERSION,
                     Constants.DATABASE_VERSION
                 ) ?: Constants.DATABASE_VERSION
+                //数据库文件不存在或有新版本更新时，下载最新数据库文件
                 if (FileUtil.needUpadateDb()
                     || databaseVersion == Constants.DATABASE_VERSION
-                    || version.TruthVersion > databaseVersion
+                    || databaseVersion < version.TruthVersion
                 ) {
                     downloadDB(version.TruthVersion)
                     if (!notToast) {
-                        ToastUtil.long(Constants.NOTICE_TOAST_TITLE)
+                        ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
                     }
                 } else {
                     if (!notToast) {
@@ -64,6 +65,11 @@ class DatabaseUpdateHelper {
                 }
             }
         })
+    }
+
+    //不校验版本，直接下载最新数据库
+    fun forceUpdate() {
+        downloadDB("0")
     }
 
     //获取数据库

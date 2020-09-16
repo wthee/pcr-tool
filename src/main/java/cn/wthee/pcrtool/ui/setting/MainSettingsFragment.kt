@@ -66,7 +66,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         //强制更新数据库
         forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdateHelper().checkDBVersion(false)
+            DatabaseUpdateHelper.checkDBVersion(false)
             return@setOnPreferenceClickListener true
         }
         //应用更新

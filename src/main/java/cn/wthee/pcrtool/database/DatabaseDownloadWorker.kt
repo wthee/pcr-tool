@@ -19,6 +19,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -32,7 +34,7 @@ class DatabaseDownloadWorker(
     @NonNull parameters: WorkerParameters?
 ) : CoroutineWorker(context, parameters!!) {
 
-
+    //通知栏
     private val notificationManager: NotificationManager =
         context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private val channelId = "1"
@@ -41,7 +43,7 @@ class DatabaseDownloadWorker(
 
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
-
+    //br压缩包路径
     private val dbZipPath = FileUtil.getDatabaseZipPath()
 
     companion object {
@@ -68,7 +70,7 @@ class DatabaseDownloadWorker(
                 ApiHelper.downloadClientBuild(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Float, totalSize: Float) {
-                        Log.e(Constants.LOG_TAG, progress.toString())
+                        //更新下载进度
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
                                 "${Constants.NOTICE_TITLE} ${
@@ -83,7 +85,10 @@ class DatabaseDownloadWorker(
                     }
 
                     override fun onFinish() {
-
+                        //下载完成
+                        notification.setProgress(100, 100, false)
+                            .setContentTitle("${Constants.NOTICE_TOAST_SUCCESS} ").build()
+                        notificationManager.notify(noticeId, notification.build())
                     }
                 })
             )
@@ -92,12 +97,9 @@ class DatabaseDownloadWorker(
             val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
             val file = response.body()?.byteStream()
             //保存
-            saveDB(file)
-            sp.edit {
-                putString(
-                    Constants.SP_DATABASE_VERSION,
-                    version
-                )
+            CoroutineScope(IO).launch {
+                notificationManager.cancelAll()
+                saveDB(file, version)
             }
             return Result.success()
         }catch (e: Exception){
@@ -105,6 +107,7 @@ class DatabaseDownloadWorker(
         }
     }
 
+    //前台通知
     private fun createForegroundInfo(): ForegroundInfo {
         val context: Context = applicationContext
 
@@ -127,7 +130,7 @@ class DatabaseDownloadWorker(
     }
 
     //数据库保存
-    private fun saveDB(input: InputStream?) {
+    private fun saveDB(input: InputStream?, version: String) {
         //创建数据库文件夹
         val file = File(folderPath)
         if (!file.exists()) {
@@ -153,6 +156,13 @@ class DatabaseDownloadWorker(
                     //更新数据库
                     AppDatabase.getInstance().close()
                     UnzippedUtil.deCompress(db, true)
+                    //更新数据库版本号
+                    sp.edit {
+                        putString(
+                            Constants.SP_DATABASE_VERSION,
+                            version
+                        )
+                    }
                     //通知更新数据
                     ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                     CharacterListFragment.handler.sendEmptyMessage(1)

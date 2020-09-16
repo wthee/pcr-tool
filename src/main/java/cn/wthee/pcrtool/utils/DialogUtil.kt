@@ -1,6 +1,10 @@
 package cn.wthee.pcrtool.utils
 
 import android.content.Context
+import android.graphics.Color
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -30,20 +34,36 @@ object DialogUtil {
         context: Context,
         layout: LayoutWarnDialogBinding,
         title: String?,
-        content: String?
+        content: SpannableString?,
+        btn1: String,
+        btn2: String,
+        listener: DialogListener
     ): AlertDialog {
         val dialog = MaterialAlertDialogBuilder(context)
             .setView(layout.root)
             .create()
-        val mTitle = layout.title
-        val mMessage = layout.message
-        val mNext = layout.dialogNext
-        mTitle.text = title
-        mMessage.text = content
-        mNext.setOnClickListener {
-            dialog.dismiss()
+        //内容设置
+        layout.title.text = title
+        layout.message.text = content
+        layout.dialogOperate.text = btn1
+        layout.dialogNext.text = btn2
+
+        //按钮监听
+        layout.dialogOperate.setOnClickListener {
+            listener.onButtonOperateClick(dialog)
+        }
+        layout.dialogNext.setOnClickListener {
+            listener.onButtonOkClick(dialog)
         }
         dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.setCancelable(false)
         return dialog
     }
+}
+
+interface DialogListener{
+
+    fun onButtonOperateClick(dialog: AlertDialog)
+
+    fun onButtonOkClick(dialog: AlertDialog)
 }

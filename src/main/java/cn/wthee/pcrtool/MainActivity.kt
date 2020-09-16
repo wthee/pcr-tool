@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkUpdate(autoUpdateDb: Boolean) {
         if (FileUtil.needUpadateDb() || autoUpdateDb) {
             CoroutineScope(Dispatchers.Main).launch {
-                DatabaseUpdateHelper().checkDBVersion(notToast)
+                DatabaseUpdateHelper.checkDBVersion(notToast)
             }
         }
     }
