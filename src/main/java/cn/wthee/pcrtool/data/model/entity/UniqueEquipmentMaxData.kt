@@ -7,13 +7,13 @@ import cn.wthee.pcrtool.data.model.AttrData
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
-data class EquipmentMaxData(
+data class UniqueEquipmentMaxData(
+    @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,
-    @ColumnInfo(name = "type") val type: String,
     @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "craft_flg") val craftFlg: Int,
-    @ColumnInfo(name = "promotion_level") val promotionLevel: Int,
+    @ColumnInfo(name = "max_level") val maxLevel: Int,
+    @ColumnInfo(name = "rank") val rank: Int,
     @ColumnInfo(name = "hp") val hp: Double,
     @ColumnInfo(name = "atk") val atk: Double,
     @ColumnInfo(name = "magic_str") val magicStr: Double,
@@ -37,10 +37,10 @@ data class EquipmentMaxData(
 
     companion object {
         fun unknow() =
-            EquipmentMaxData(
+            UniqueEquipmentMaxData(
+                0,
                 UNKNOW_EQUIP_ID,
                 "？？？",
-                "",
                 "",
                 0,
                 0,

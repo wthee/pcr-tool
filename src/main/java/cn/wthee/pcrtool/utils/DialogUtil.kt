@@ -1,10 +1,6 @@
 package cn.wthee.pcrtool.utils
 
 import android.content.Context
-import android.graphics.Color
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -34,7 +30,7 @@ object DialogUtil {
         context: Context,
         layout: LayoutWarnDialogBinding,
         title: String?,
-        content: SpannableString?,
+        content: String,
         btn1: String,
         btn2: String,
         listener: DialogListener

@@ -22,7 +22,9 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -91,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkUpdate(autoUpdateDb: Boolean) {
         if (FileUtil.needUpadateDb() || autoUpdateDb) {
-            CoroutineScope(Dispatchers.Main).launch {
+            MainScope().launch {
                 DatabaseUpdateHelper.checkDBVersion(notToast)
             }
         }
@@ -205,7 +207,7 @@ class MainActivity : AppCompatActivity() {
                             sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
                         }
                         1 -> query?.let {
-                            sharedEquipViewModel.getEquips(asc, query ?: "")
+                            sharedEquipViewModel.getEquips(asc, query)
                         }
                         2 -> query?.let {
                             sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)

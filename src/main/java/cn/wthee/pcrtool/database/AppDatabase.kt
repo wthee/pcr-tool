@@ -28,6 +28,8 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         EquipmentEnhanceRate::class,
         EquipmentEnhanceData::class,
         UniqueEquipmentData::class,
+        UniqueEquipmentEnhanceData::class,
+        UniqueEquipmentEnhanceRate::class,
         QuestData::class,
         SkillAction::class,
         SkillData::class,

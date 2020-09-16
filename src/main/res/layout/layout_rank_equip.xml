@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/elevation_card"
+    android:layout_marginTop="@dimen/m_margin"
+    android:layout_marginBottom="@dimen/m_margin">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic6"
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
-        android:layout_margin="@dimen/l_margin"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackground"
@@ -22,7 +24,6 @@
         android:id="@+id/pic3"
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
-        android:layout_margin="@dimen/l_margin"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackground"
@@ -146,4 +147,5 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

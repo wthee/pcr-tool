@@ -27,10 +27,9 @@ object ApiHelper {
     //创建服务
     fun <T> create(serviceClass: Class<T>, url: String): T {
         val client = OkHttpClient.Builder()
-//            .retryOnConnectionFailure(true)
-            .connectTimeout(6, TimeUnit.SECONDS)
-            .writeTimeout(6, TimeUnit.SECONDS)
-            .readTimeout(6, TimeUnit.SECONDS)
+            .connectTimeout(3, TimeUnit.SECONDS)
+            .writeTimeout(3, TimeUnit.SECONDS)
+            .readTimeout(3, TimeUnit.SECONDS)
             .build()
 
         val builder = Retrofit.Builder()

@@ -1,18 +1,13 @@
 package cn.wthee.pcrtool.ui.main
 
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -85,24 +80,13 @@ class CharacterListFragment : Fragment() {
                 0 -> {
                     val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
                     //弹窗
-                    //内容颜色
-                    val content = SpannableString(Constants.NOTICE_TOAST_TIMEOUT)
-                    val start = Constants.NOTICE_TOAST_TIMEOUT.indexOf(Constants.BTN_OPERATE_FORCE_UPDATE_DB)
-                    val end = start + Constants.BTN_OPERATE_FORCE_UPDATE_DB.length
-                    content.setSpan(
-                        ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.color_map_h, null)),
-                        start,
-                        end,
-                        Spanned.SPAN_INCLUSIVE_EXCLUSIVE
-                    )
-
                     DialogUtil.create(
                         requireContext(),
                         layout,
                         Constants.NOTICE_TITLE_ERROR,
-                        content,
+                        Constants.NOTICE_TOAST_TIMEOUT,
                         Constants.BTN_OPERATE_FORCE_UPDATE_DB,
-                        Constants.BTN_CLOSE,
+                        Constants.BTN_NOT_UPDATE_DB,
                         object : DialogListener {
                             override fun onButtonOperateClick(dialog: AlertDialog) {
                                 //强制更新数据库

@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
+import cn.wthee.pcrtool.data.model.entity.UniqueEquipmentMaxData
 import kotlinx.coroutines.launch
 
 
@@ -14,6 +14,7 @@ class EquipmentViewModel(
 ) : ViewModel() {
 
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
+    var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
     var isLoading = MutableLiveData<Boolean>()
     var refresh = MutableLiveData<Boolean>()
     var isList = MutableLiveData<Boolean>()
@@ -31,6 +32,14 @@ class EquipmentViewModel(
                 data.sortedByDescending { it.promotionLevel }
             }
             equipments.postValue(data)
+        }
+    }
+
+    //专武信息
+    fun getUniqueEquipInfos(uid: Int) {
+        viewModelScope.launch {
+            val data = equipmentRepository.getUniqueEquipInfos(uid)
+            uniqueEquip.postValue(data)
         }
     }
 }

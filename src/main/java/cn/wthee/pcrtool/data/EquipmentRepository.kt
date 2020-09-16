@@ -16,20 +16,13 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     //所有装备信息
     suspend fun getAllEquipments(name: String) = equipmentDao.getAllEquipments(name)
 
-    //    //装备掉落信息
-//    suspend fun getEnemyRewardDatas(eid: Int) = equipmentDao.getEnemyRewardDatas(eid)
-//
-//    //装备掉落对应关卡信息
-//    suspend fun getWaveGroupDatas(dropIds: List<Int>) = equipmentDao.getEnemyRewardDatas(dropIds)
-//
-//    //关卡信息
-//    suspend fun getQuestDataDatas(waveIds: List<Int>) = equipmentDao.getEnemyRewardDatas(waveIds)
-//
-
     suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)
 
     //装备碎片信息
     suspend fun getEquipmentCraft(eid: Int) = equipmentDao.getEquipmentCraft(eid)
+
+    //专武信息
+    suspend fun getUniqueEquipInfos(uid: Int) = equipmentDao.getUniqueEquipInfos(uid)
 
     companion object {
 

@@ -3,19 +3,15 @@ package cn.wthee.pcrtool.data.model.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
-@Entity(tableName = "unique_equipment_data")
-class UniqueEquipmentData(
+//专武装备提升
+@Entity(tableName = "unique_equipment_enhance_rate")
+data class UniqueEquipmentEnhanceRate(
     @PrimaryKey
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "promotion_level") val promotionLevel: Int,
-    @ColumnInfo(name = "craft_flg") val craftFlg: Int,
-    @ColumnInfo(name = "equipment_enhance_point") val equipmentEnhancePoint: Int,
-    @ColumnInfo(name = "sale_price") val salePrice: Int,
-    @ColumnInfo(name = "require_level") val requireLevel: Int,
     @ColumnInfo(name = "hp") val hp: Double,
     @ColumnInfo(name = "atk") val atk: Double,
     @ColumnInfo(name = "magic_str") val magicStr: Double,
@@ -32,8 +28,5 @@ class UniqueEquipmentData(
     @ColumnInfo(name = "hp_recovery_rate") val hpRecoveryRate: Double,
     @ColumnInfo(name = "energy_recovery_rate") val energyRecoveryRate: Double,
     @ColumnInfo(name = "energy_reduce_rate") val energyReduceRate: Double,
-    @ColumnInfo(name = "enable_donation") val enableDonation: Int,
     @ColumnInfo(name = "accuracy") val accuracy: Double
-) : Serializable
-
-
+)

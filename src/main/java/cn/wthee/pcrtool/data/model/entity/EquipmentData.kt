@@ -3,10 +3,6 @@ package cn.wthee.pcrtool.data.model.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.EquipmentAttr
-import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
 @Entity(tableName = "equipment_data")

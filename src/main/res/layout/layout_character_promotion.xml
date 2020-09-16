@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
     android:animateLayoutChanges="true"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,8 +17,8 @@
             android:layout_width="@dimen/big_icon"
             android:layout_height="@dimen/big_icon"
             android:layout_margin="@dimen/s_margin"
-            android:scaleType="fitCenter"
             android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,8 +28,8 @@
             android:id="@+id/starts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="@dimen/s_margin"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/icon">
@@ -43,9 +43,9 @@
             android:layout_marginTop="@dimen/s_margin"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@id/starts"
             app:layout_constraintEnd_toEndOf="@+id/icon"
             app:layout_constraintStart_toStartOf="@+id/icon"
+            app:layout_constraintTop_toBottomOf="@id/starts"
             tools:text="999" />
 
         <com.google.android.material.slider.Slider
@@ -54,39 +54,47 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/l_margin"
             android:layout_marginEnd="@dimen/l_margin"
-            android:valueFrom="1"
             android:stepSize="1"
-            app:layout_constraintTop_toBottomOf="@id/level"
+            android:valueFrom="1"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/icon"
             app:layout_constraintStart_toStartOf="@+id/icon"
-            android:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@id/level" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/attrs"
+        android:id="@+id/charcter_attrs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/card_height"
         android:nestedScrollingEnabled="false"
         android:padding="@dimen/s_padding"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
-        tools:itemCount="3"
+        tools:itemCount="5"
         tools:listitem="@layout/item_character_attr" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/elevation_card">
+
+        <include
+            android:id="@+id/rank_equip"
+            layout="@layout/layout_rank_equip" />
+
+    </LinearLayout>
 
     <include
         android:id="@+id/unique_equip"
-        layout="@layout/layout_unique_equip" />
-
-    <include
-        android:id="@+id/rank_equip"
-        layout="@layout/layout_rank_equip" />
+        layout="@layout/layout_equip_detail" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_margin"
         android:gravity="center"
+        android:paddingTop="@dimen/l_padding"
         android:text="@string/sorry_ue"
         android:textColor="@color/colorAlphaWhite"
         android:textIsSelectable="true" />

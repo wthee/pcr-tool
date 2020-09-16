@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
-import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -19,14 +18,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
+import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 
 
 class DatabaseDownloadWorker(
@@ -95,12 +93,9 @@ class DatabaseDownloadWorker(
 
             //下载文件
             val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
-            val file = response.body()?.byteStream()
             //保存
-            CoroutineScope(IO).launch {
-                notificationManager.cancelAll()
-                saveDB(file, version)
-            }
+            notificationManager.cancelAll()
+            saveDB(response, version)
             return Result.success()
         }catch (e: Exception){
             return Result.failure()
@@ -130,7 +125,7 @@ class DatabaseDownloadWorker(
     }
 
     //数据库保存
-    private fun saveDB(input: InputStream?, version: String) {
+    private fun saveDB(response: Response<ResponseBody>, version: String) {
         //创建数据库文件夹
         val file = File(folderPath)
         if (!file.exists()) {
@@ -142,7 +137,8 @@ class DatabaseDownloadWorker(
             FileUtil.deleteDir(folderPath, dbZipPath)
         }
         try {
-            input?.let { inputStream ->
+            val input = response.body()!!.byteStream()
+            input.let { inputStream ->
                 val out = FileOutputStream(db)
                 val byte = ByteArray(1024 * 4)
                 var line: Int
@@ -169,9 +165,10 @@ class DatabaseDownloadWorker(
                 }
             }
         } catch (e: Exception) {
-            ToastUtil.short(e.message)
+            MainScope().launch {
+                ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
+            }
         }
-
     }
 
 }

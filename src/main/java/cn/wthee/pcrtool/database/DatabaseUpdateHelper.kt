@@ -44,24 +44,28 @@ object DatabaseUpdateHelper {
                 response: Response<DatabaseVersion>
             ) {
                 //更新判断
-                val version = response.body()!!
-                val databaseVersion = MainActivity.sp.getString(
-                    Constants.SP_DATABASE_VERSION,
-                    Constants.DATABASE_VERSION
-                ) ?: Constants.DATABASE_VERSION
-                //数据库文件不存在或有新版本更新时，下载最新数据库文件
-                if (FileUtil.needUpadateDb()
-                    || databaseVersion == Constants.DATABASE_VERSION
-                    || databaseVersion < version.TruthVersion
-                ) {
-                    downloadDB(version.TruthVersion)
-                    if (!notToast) {
-                        ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
+                try {
+                    val version = response.body()!!
+                    val databaseVersion = MainActivity.sp.getString(
+                        Constants.SP_DATABASE_VERSION,
+                        Constants.DATABASE_VERSION
+                    ) ?: Constants.DATABASE_VERSION
+                    //数据库文件不存在或有新版本更新时，下载最新数据库文件
+                    if (FileUtil.needUpadateDb()
+                        || databaseVersion == Constants.DATABASE_VERSION
+                        || databaseVersion < version.TruthVersion
+                    ) {
+                        downloadDB(version.TruthVersion)
+                        if (!notToast) {
+                            ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
+                        }
+                    } else {
+                        if (!notToast) {
+                            ToastUtil.short(NOTICE_TOAST_CHECKED)
+                        }
                     }
-                } else {
-                    if (!notToast) {
-                        ToastUtil.short(NOTICE_TOAST_CHECKED)
-                    }
+                } catch (e: Exception) {
+                    CharacterListFragment.handler.sendEmptyMessage(0)
                 }
             }
         })

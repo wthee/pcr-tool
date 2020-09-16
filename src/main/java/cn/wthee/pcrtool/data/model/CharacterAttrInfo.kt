@@ -69,6 +69,28 @@ data class CharacterAttrInfo(
             )
         }
 
+        fun setValue(equip: UniqueEquipmentMaxData): CharacterAttrInfo {
+            return CharacterAttrInfo(
+                equip.hp,
+                equip.atk,
+                equip.magicStr,
+                equip.def,
+                equip.magicDef,
+                equip.physicalCritical,
+                equip.magicCritical,
+                equip.waveHpRecovery,
+                equip.waveEnergyRecovery,
+                equip.dodge,
+                equip.physicalPenetrate,
+                equip.magicPenetrate,
+                equip.lifeSteal,
+                equip.hpRecoveryRate,
+                equip.energyRecoveryRate,
+                equip.energyReduceRate,
+                equip.accuracy
+            )
+        }
+
         fun setValue(rarity: CharacterRarity): CharacterAttrInfo {
             return CharacterAttrInfo(
                 rarity.hp,
@@ -139,10 +161,6 @@ data class CharacterAttrInfo(
 
 }
 
-data class CharacterAttr(
-    var type: String,
-    var value: Double
-)
 
 fun CharacterAttrInfo.add(other: CharacterAttrInfo): CharacterAttrInfo {
     this.hp += other.hp
@@ -186,9 +204,9 @@ fun CharacterAttrInfo.multiply(mult: Int): CharacterAttrInfo {
     return this
 }
 
-fun CharacterAttrInfo.getList(): List<CharacterAttr> {
-    var attrs = arrayListOf<CharacterAttr>()
-    for (i in 0 .. 16){
+fun CharacterAttrInfo.getList(): List<AttrData> {
+    val attrs = arrayListOf<AttrData>()
+    for (i in 0..16) {
         val value = when (i) {
             0 -> this.hp
             1 -> this.atk
@@ -209,7 +227,7 @@ fun CharacterAttrInfo.getList(): List<CharacterAttr> {
             16 -> this.accuracy
             else -> 0.0
         }
-        attrs.add(CharacterAttr(Constants.ATTR[i], value))
+        attrs.add(AttrData(Constants.ATTR[i], value))
     }
     return attrs
 }

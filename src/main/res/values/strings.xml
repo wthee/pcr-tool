@@ -69,7 +69,7 @@
     <string name="update_db">数据库版本</string>
     <string name="auto_update_db">自动更新数据库</string>
     <string name="off_auto_db">已取消自动更新</string>
-    <string name="on_auto_db">打开应用时，自动更新数据库</string>
+    <string name="on_auto_db">打开应用时，自动检查更新数据库</string>
     <string name="database_info">数据信息</string>
     <string name="data">数据</string>
     <string name="open_source">开源信息</string>
@@ -83,7 +83,7 @@
     <string name="check_app_update">应用版本</string>
     <string name="auto_update_app">自动更新应用</string>
     <string name="off_auto_app">已取消自动更新</string>
-    <string name="on_auto_app">打开应用时，自动更新应用</string>
+    <string name="on_auto_app">打开应用时，自动检查更新应用</string>
     <string name="clean_cache">清除图片缓存</string>
     <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
     <string name="toast_on">检查数据库版本时，显示提示消息</string>
@@ -111,7 +111,7 @@
     <string name="magic">魔法攻击</string>
 
 
-    <string name="sorry_ue">对不起，优衣~ 下面已经没有了！</string>
+    <string name="sorry_ue">优衣，对不起~ </string>
     <string name="reduce">⇣</string>
     <string name="add">⇡</string>
     <string name="before_loop">入场动作</string>

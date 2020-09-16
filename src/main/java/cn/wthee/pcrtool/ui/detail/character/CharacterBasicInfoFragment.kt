@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
@@ -22,11 +21,9 @@ import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.data.model.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
-import cn.wthee.pcrtool.ui.main.CharacterListFragment
+import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
-import coil.Coil
 import coil.load
-import coil.metadata
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.delay
@@ -56,6 +53,9 @@ class CharacterBasicInfoFragment : Fragment() {
     private var selRatity = 1
     private var maxStar = 5
     private var lv = 85
+    private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
+        InjectorUtil.provideEquipmentViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +98,6 @@ class CharacterBasicInfoFragment : Fragment() {
         //获取viewModel
         viewModel = InjectorUtil.providePromotionViewModelFactory()
             .create(CharacterPromotionViewModel::class.java)
-
         //数据监听
         setObserve()
         //初始收藏
@@ -113,26 +112,18 @@ class CharacterBasicInfoFragment : Fragment() {
         val picUrl =
             HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
         //角色图片
-        val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
-            MainActivity.currentCharaPosition
-        ) ?: return
-        val v0 = vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
-        val key = v0.metadata?.memoryCacheKey
-        val imageLoader = Coil.imageLoader(requireContext())
+//        val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
+//            MainActivity.currentCharaPosition
+//        ) ?: return
+//        val v0 = vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
+//        val key = v0.metadata?.memoryCacheKey
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
-            placeholderMemoryCacheKey(key)
+//            placeholderMemoryCacheKey(key)
             placeholder(R.drawable.load)
             listener(
-                onSuccess = { _, _ ->
-                    parentFragment?.startPostponedEnterTransition()
-                },
                 onStart = {
-                    requireActivity().supportStartPostponedEnterTransition()
-                    val toStart = key == null || imageLoader.memoryCache[key!!] == null
-                    if (toStart) {
-                        parentFragment?.startPostponedEnterTransition()
-                    }
+                    parentFragment?.startPostponedEnterTransition()
                 }
             )
         }
@@ -299,7 +290,30 @@ class CharacterBasicInfoFragment : Fragment() {
             binding.promotion.rankEquip.pic2,
             binding.promotion.rankEquip.pic1
         )
+        //专武
+        sharedEquipViewModel.getUniqueEquipInfos(character.id)
+        sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner, Observer {
+            binding.promotion.uniqueEquip.apply {
+                if (it != null) {
+                    binding.promotion.uniqueEquip.root.visibility = View.VISIBLE
+                    val picUrl = Constants.EQUIPMENT_URL + it.equipmentId + Constants.WEBP
+                    itemPic.load(picUrl) {
+                        placeholder(R.drawable.load_mini)
+                        error(R.drawable.error)
+                    }
+                    //描述
+                    titleDes.text = it.equipmentName
+                    desc.text = it.getDesc()
+                    //属性词条
+                    val adapter = EquipmentAttrAdapter()
+                    attrs.adapter = adapter
+                    adapter.submitList(it.getAttrs())
+                } else {
+                    binding.promotion.uniqueEquip.root.visibility = View.GONE
+                }
 
+            }
+        })
         viewModel.equipments.observe(viewLifecycleOwner, Observer {
             it.forEachIndexed { index, equip ->
                 equipPics[index].apply {
@@ -324,7 +338,7 @@ class CharacterBasicInfoFragment : Fragment() {
         //角色属性
         viewModel.sumInfo.observe(viewLifecycleOwner, Observer {
             attrAdapter = CharacterAttrAdapter()
-            binding.promotion.attrs.adapter = attrAdapter
+            binding.promotion.charcterAttrs.adapter = attrAdapter
             attrAdapter.submitList(it.getList())
         })
     }
@@ -385,20 +399,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 error(R.drawable.unknow)
                 placeholder(R.drawable.load_mini)
             }
-            //TODO 专武
-//            promotion.uniqueEquip.detail.apply {
-//                //TODO 专武信息获取
-//                val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
-//                itemPic.load(picUrl) {
-//                    error(R.drawable.error)
-//                }
-//                //描述
-//                desc.text = equip.getDesc()
-//                //属性词条
-//                val adapter = EquipmentAttrAdapter()
-//                attrs.adapter = adapter
-//                adapter.submitList(equip.getAttrs())
-//            }
         }
     }
 

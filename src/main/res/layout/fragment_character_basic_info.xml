@@ -367,7 +367,6 @@
                 </GridLayout>
             </LinearLayout>
 
-
             <include
                 android:id="@+id/promotion"
                 layout="@layout/layout_character_promotion" />

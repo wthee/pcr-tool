@@ -7,7 +7,6 @@ import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.model.CharacterAttrInfo
 import cn.wthee.pcrtool.data.model.add
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
 import cn.wthee.pcrtool.data.model.multiply
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
@@ -47,6 +46,11 @@ class CharacterPromotionViewModel(
             eqs.forEach { eq ->
                 if (eq.equipmentId == UNKNOW_EQUIP_ID) return@forEach
                 info.add(CharacterAttrInfo.setValue(eq))
+            }
+            //专武
+            val uniqueEquip = equipmentRepository.getUniqueEquipInfos(unitId)
+            if (uniqueEquip != null) {
+                info.add(CharacterAttrInfo.setValue(uniqueEquip))
             }
             sumInfo.postValue(info)
         }
