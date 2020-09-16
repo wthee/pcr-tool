@@ -62,7 +62,7 @@ object Constants {
     const val NOTICE_TITLE_ERROR = "访问出错"
     const val NOTICE_TOAST_SUCCESS = "数据更新完成"
     const val NOTICE_TOAST_TITLE_DB_DOWNLOAD = "数据更新中\n详情查看通知栏"
-    const val NOTICE_TOAST_TIMEOUT = "数据库版本信息获取失败。若内容未正常显示，点击${BTN_OPERATE_FORCE_UPDATE_DB}，将更新至最新数据库"
+    const val NOTICE_TOAST_TIMEOUT = "数据库版本信息获取失败。若主页内容未正常显示，点击${BTN_OPERATE_FORCE_UPDATE_DB}，将下载最新数据库"
     const val NOTICE_TOAST_CHECKING = "正在检测数据库版本"
     const val NOTICE_TOAST_CHECKED = "数据库已是最新版本"
     const val NOTICE_TOAST_TODO = "功能暂未实装"
