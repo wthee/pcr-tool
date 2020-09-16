@@ -5,6 +5,11 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 30
 
+    packagingOptions {
+        exclude 'classes.dex'
+        exclude '**.**'
+    }
+
     defaultConfig {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
