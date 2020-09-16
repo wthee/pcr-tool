@@ -107,7 +107,8 @@ interface CharacterDao {
             experience_team AS a 
          LEFT JOIN ( SELECT team_level + 1 AS team_level, total_exp FROM experience_team ) AS c ON a.team_level = c.team_level 
          LEFT JOIN experience_unit AS b ON a.team_level = b.unit_level 
-         LEFT JOIN ( SELECT unit_level + 1 AS unit_level, total_exp FROM experience_unit ) AS d ON b.unit_level = d.unit_level"""
+         LEFT JOIN ( SELECT unit_level + 1 AS unit_level, total_exp FROM experience_unit ) AS d ON b.unit_level = d.unit_level
+         ORDER BY level DESC"""
     )
     suspend fun getLevelExp(): List<CharacterExperienceAll>
 }

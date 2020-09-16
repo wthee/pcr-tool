@@ -19,7 +19,7 @@
         android:gravity="center"
         android:tag="label_feature"
         android:text="@string/title_tip"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorAccent" />
 
     <TextView
@@ -43,6 +43,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_operate"
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:textColor="@color/color_map_h"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,6 +54,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dialog_next"
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
