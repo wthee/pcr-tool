@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.setting
+package cn.wthee.pcrtool.ui.tool
 
 import android.graphics.Color
 import android.os.Bundle
@@ -65,6 +65,7 @@ class ToolsDialogFragment : BottomSheetDialogFragment() {
                 dismiss()
             }
         }
+        //角色经验
         MainScope().launch {
             val list = sharedViewModel.getLevelExp() as MutableList
             val adapter = CharacterLevelExpAdapter()

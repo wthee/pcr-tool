@@ -12,8 +12,8 @@ import androidx.transition.TransitionManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.databinding.FragmentToolsDialogBinding
 import cn.wthee.pcrtool.databinding.ItemToolBinding
-import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment
-import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment.Companion.toolPosition
+import cn.wthee.pcrtool.ui.tool.ToolsDialogFragment
+import cn.wthee.pcrtool.ui.tool.ToolsDialogFragment.Companion.toolPosition
 import cn.wthee.pcrtool.utils.ToastUtil
 import coil.load
 import com.google.android.material.transition.MaterialArcMotion

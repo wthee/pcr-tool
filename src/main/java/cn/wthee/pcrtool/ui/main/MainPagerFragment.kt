@@ -19,7 +19,7 @@ import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
-import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment
+import cn.wthee.pcrtool.ui.tool.ToolsDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
