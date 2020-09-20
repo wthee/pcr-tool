@@ -101,7 +101,9 @@ class CharacterListFragment : Fragment() {
                         }
                     ).show()
                 }
-                1 -> viewModel.reload.postValue(true)
+                1 -> {
+                    viewModel.reload.postValue(true)
+                }
             }
 
             return@Callback true

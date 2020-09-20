@@ -89,6 +89,10 @@
     <string name="toast_on">检查数据库版本时，显示提示消息</string>
     <string name="toast_off">检查数据库版本时，不提示消息</string>
     <string name="not_toast">自动更新时取消提示</string>
+    <string name="db_cn">国服</string>
+    <string name="db_jp">日服</string>
+    <string name="db_cn_value">1</string>
+    <string name="db_jp_value">2</string>
 
     <!--筛选  -->
     <string name="filter">筛选</string>

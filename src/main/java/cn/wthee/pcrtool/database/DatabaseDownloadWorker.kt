@@ -41,12 +41,11 @@ class DatabaseDownloadWorker(
 
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
-    //br压缩包路径
-    private val dbZipPath = FileUtil.getDatabaseZipPath()
 
     companion object {
         const val KEY_INPUT_URL = "KEY_INPUT_URL"
         const val KEY_VERSION = "KEY_VERSION"
+        const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -55,12 +54,13 @@ class DatabaseDownloadWorker(
         val inputUrl = inputData.getString(KEY_INPUT_URL) ?: return@coroutineScope Result.failure()
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
+        val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         setForegroundAsync(createForegroundInfo())
-        return@coroutineScope download(inputUrl, version)
+        return@coroutineScope download(inputUrl, version, type)
     }
 
 
-    private fun download(inputUrl: String, version: String): Result {
+    private fun download(inputUrl: String, version: String, type: Int): Result {
         try {
             //创建Retrofit服务
             val service = ApiHelper.createWithClient(
@@ -92,10 +92,12 @@ class DatabaseDownloadWorker(
             )
 
             //下载文件
-            val response = service.getDb(Constants.DATABASE_DOWNLOAD_File_Name).execute()
+            val response =
+                service.getDb(if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP)
+                    .execute()
             //保存
             notificationManager.cancelAll()
-            saveDB(response, version)
+            saveDB(response, version, type)
             return Result.success()
         }catch (e: Exception){
             return Result.failure()
@@ -125,13 +127,15 @@ class DatabaseDownloadWorker(
     }
 
     //数据库保存
-    private fun saveDB(response: Response<ResponseBody>, version: String) {
+    private fun saveDB(response: Response<ResponseBody>, version: String, type: Int) {
         //创建数据库文件夹
         val file = File(folderPath)
         if (!file.exists()) {
             file.mkdir()
         }
         //删除已有数据库文件
+        //br压缩包路径
+        val dbZipPath = FileUtil.getDatabaseZipPath(type)
         val db = File(dbZipPath)
         if (db.exists()) {
             FileUtil.deleteDir(folderPath, dbZipPath)
@@ -151,6 +155,7 @@ class DatabaseDownloadWorker(
                 MainScope().launch {
                     //更新数据库
                     AppDatabase.getInstance().close()
+                    AppDatabaseJP.getInstance().close()
                     UnzippedUtil.deCompress(db, true)
                     //更新数据库版本号
                     sp.edit {

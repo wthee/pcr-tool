@@ -7,7 +7,7 @@ import java.io.Serializable
 
 //角色属性
 @Entity(tableName = "unit_data")
-data class CharacterData(
+data class CharacterDataJP(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val dataId: Int,
     @ColumnInfo(name = "unit_name") val name: String,
@@ -28,6 +28,10 @@ data class CharacterData(
     @ColumnInfo(name = "only_disp_owned") val onlyDispOwned: Int,
     @ColumnInfo(name = "start_time") val startTime: String,
     @ColumnInfo(name = "end_time") val endTime: String,
+    //jp
+    @ColumnInfo(name = "is_limited") val isLimited: Int,
+    @ColumnInfo(name = "cutin1_star6") val cutin1Star6: Int,
+    @ColumnInfo(name = "cutin2_star6") val cutin2Star6: Int
 ) : Serializable {
     fun getFixedId() = dataId + 30
 }

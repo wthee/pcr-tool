@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity(tableName = "equipment_data")
-class EquipmentData(
+class EquipmentDataJP(
     @PrimaryKey
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,
@@ -34,6 +34,9 @@ class EquipmentData(
     @ColumnInfo(name = "energy_reduce_rate") val energyReduceRate: Double,
     @ColumnInfo(name = "enable_donation") val enableDonation: Int,
     @ColumnInfo(name = "accuracy") val accuracy: Double,
+    //jp
+    @ColumnInfo(name = "display_item") val displayItem: Int,
+    @ColumnInfo(name = "item_type") val itemType: Int,
 ) : Serializable {
 
     fun getDesc() = description.replace("\\n", "")

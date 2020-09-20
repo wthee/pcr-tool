@@ -9,9 +9,15 @@ object Constants {
     const val API_URL_PVP = "http://wthee.xyz:8848/api/pvp/"
 
     //数据库中版
-    const val DATABASE_DOWNLOAD_File_Name = "redive_jp.db.br"
-    const val DATABASE_Name = "redive_jp.db"
-    const val DATABASE_WAL = "redive_jp.db-wal"
+    const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
+    const val DATABASE_Name_JP = "redive_jp.db"
+    const val DATABASE_WAL_JP = "redive_jp.db-wal"
+    const val DATABASE_VERSION_URL_JP = "last_version_jp.json"
+
+    const val DATABASE_DOWNLOAD_File_Name = "redive_cn.db.br"
+    const val DATABASE_Name = "redive_cn.db"
+    const val DATABASE_WAL = "redive_cn.db-wal"
+    const val DATABASE_VERSION_URL = "last_version_cn.json"
 
     //角色卡片接口
     const val CHARACTER_URL = API_URL + "card/profile/"

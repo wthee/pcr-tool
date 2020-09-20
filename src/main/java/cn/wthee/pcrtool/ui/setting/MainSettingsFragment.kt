@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.ui.setting
 import android.os.Bundle
 import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -39,6 +36,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val appUpdate = findPreference<Preference>("force_update_app")
         val cleanData = findPreference<Preference>("clean_data")
         val notToast = findPreference<Preference>("not_toast")
+        val changeDbType = findPreference<ListPreference>("change_database")
+        changeDbType?.title = "游戏版本 - " + if (changeDbType?.value == "1") "国服" else "日服"
         notToast?.isEnabled = MainActivity.spSetting.getBoolean("auto_update_db", true)
         //摘要替换
         forceUpdateDb?.summary = MainActivity.sp.getString(Constants.SP_DATABASE_VERSION, "0")
@@ -66,8 +65,15 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         //强制更新数据库
         forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdateHelper.checkDBVersion(false)
+            DatabaseUpdateHelper.checkDBVersion(false, false)
             return@setOnPreferenceClickListener true
+        }
+        //切换数据库版本
+        changeDbType?.setOnPreferenceChangeListener { preference, newValue ->
+            val list = preference as ListPreference
+            changeDbType?.title = "游戏版本 - " + if (newValue as String == "1") "国服" else "日服"
+            DatabaseUpdateHelper.checkDBVersion(false, true)
+            return@setOnPreferenceChangeListener true
         }
         //应用更新
         appUpdate?.setOnPreferenceClickListener {

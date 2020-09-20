@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var fabLove: FloatingActionButton
         lateinit var fabSearch: FloatingActionButton
         lateinit var fabFilter: FloatingActionButton
+        var dataBaseType = 2
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -92,9 +93,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUpdate(autoUpdateDb: Boolean) {
-        if (FileUtil.needUpadateDb() || autoUpdateDb) {
+        val type = PreferenceManager.getDefaultSharedPreferences(this)
+            .getString("change_database", "1")?.toInt() ?: 1
+        if (FileUtil.needUpadateDb(type) || autoUpdateDb) {
             MainScope().launch {
-                DatabaseUpdateHelper.checkDBVersion(notToast)
+                DatabaseUpdateHelper.checkDBVersion(notToast, false)
             }
         }
     }

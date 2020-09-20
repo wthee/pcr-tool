@@ -7,7 +7,7 @@ import java.io.Serializable
 
 //角色属性状态
 @Entity(tableName = "unit_enemy_data")
-data class EnemyData(
+data class EnemyDataJP(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val unit_id: Int,
     @ColumnInfo(name = "unit_name") val unit_name: String,
@@ -21,7 +21,9 @@ data class EnemyData(
     @ColumnInfo(name = "cutin") val cutin: Int,
     @ColumnInfo(name = "visual_change_flag") val visual_change_flag: Int,
     @ColumnInfo(name = "comment") val comment: String,
-): Serializable{
+    //jp
+    @ColumnInfo(name = "cutin_star6") val cutinStar6: Int,
+) : Serializable {
     fun getFixedComment() = comment.replace("\\n", "，")
 
     fun getTruePrefabId(): Int {

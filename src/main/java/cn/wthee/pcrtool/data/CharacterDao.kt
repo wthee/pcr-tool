@@ -16,7 +16,7 @@ interface CharacterDao {
         SELECT 
             unit_profile.unit_id, 
             unit_profile.unit_name, 
-            unit_data.kana, 
+            coalesce(unit_data.kana, "") as kana, 
             unit_profile.age, 
             unit_profile.guild, 
             unit_profile.race, 

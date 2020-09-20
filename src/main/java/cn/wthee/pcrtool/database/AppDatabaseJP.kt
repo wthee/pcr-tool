@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.data.CharacterDao
 import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
 import cn.wthee.pcrtool.data.model.entity.*
-import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
+import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
 
 
 @Database(
@@ -16,34 +16,34 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         Character::class,
         Character6Star::class,
         CharacterActualData::class,
-        CharacterData::class,
+        CharacterDataJP::class,
         CharacterLoveRank::class,
         CharacterPromotion::class,
         CharacterPromotionStatus::class,
         CharacterRarity::class,
-        CharacterSkillData::class,
+        CharacterSkillDataJP::class,
         EnemyRewardData::class,
         EquipmentCraft::class,
-        EquipmentData::class,
+        EquipmentDataJP::class,
         EquipmentEnhanceRate::class,
         EquipmentEnhanceData::class,
         UniqueEquipmentData::class,
         UniqueEquipmentEnhanceData::class,
         UniqueEquipmentEnhanceRate::class,
-        QuestData::class,
+        QuestDataJP::class,
         SkillAction::class,
         SkillData::class,
         WaveGroupData::class,
-        EnemyData::class,
+        EnemyDataJP::class,
         CharacterExperience::class,
         AttackPattern::class,
         GuildData::class,
         CharacterExperienceTeam::class,
     ],
-    version = 11,
+    version = 12,
     exportSchema = false
 )
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabaseJP : RoomDatabase() {
 
     abstract fun getCharacterDao(): CharacterDao
     abstract fun getEquipmentDao(): EquipmentDao
@@ -52,9 +52,9 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
 
         @Volatile
-        private var instance: AppDatabase? = null
+        private var instance: AppDatabaseJP? = null
 
-        fun getInstance(): AppDatabase {
+        fun getInstance(): AppDatabaseJP {
             return instance ?: synchronized(this) {
                 instance
                     ?: buildDatabase()
@@ -63,11 +63,11 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
 
-        private fun buildDatabase(): AppDatabase {
+        private fun buildDatabase(): AppDatabaseJP {
             return Room.databaseBuilder(
                 MyApplication.getContext(),
-                AppDatabase::class.java,
-                DATABASE_Name
+                AppDatabaseJP::class.java,
+                DATABASE_Name_JP
             ).fallbackToDestructiveMigration().build()
         }
     }
