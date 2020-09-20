@@ -11,6 +11,10 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     suspend fun getInfoAndData(name: String) =
         characterDao.getInfoAndData(name)
 
+    //根据位置获取角色
+    suspend fun getCharacterByPosition(start: Int, end: Int) =
+        characterDao.getCharacterByPosition(start, end)
+
     //获取角色Rank所需装备id
     suspend fun getEquipmentIds(unitId: Int, rank: Int) =
         characterDao.getRankEquipment(unitId, rank)

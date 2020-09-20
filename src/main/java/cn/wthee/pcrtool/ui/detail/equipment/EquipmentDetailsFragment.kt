@@ -7,13 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
+import cn.wthee.pcrtool.data.model.entity.getList
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -95,14 +93,14 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 //图标
                 val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.error)
+                    error(R.drawable.unknow_gray)
                 }
                 //描述
                 desc.text = equip.getDesc()
                 //属性词条
                 val adapter = EquipmentAttrAdapter()
                 attrs.adapter = adapter
-                adapter.submitList(equip.getAttrs())
+                adapter.submitList(equip.getList())
             }
         }
     }

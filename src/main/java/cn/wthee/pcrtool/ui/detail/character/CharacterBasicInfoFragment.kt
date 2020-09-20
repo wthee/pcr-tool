@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.getList
 import cn.wthee.pcrtool.data.model.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
@@ -112,14 +113,8 @@ class CharacterBasicInfoFragment : Fragment() {
         val picUrl =
             HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
         //角色图片
-//        val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
-//            MainActivity.currentCharaPosition
-//        ) ?: return
-//        val v0 = vh.itemView.findViewById<AppCompatImageView>(R.id.character_pic)
-//        val key = v0.metadata?.memoryCacheKey
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
-//            placeholderMemoryCacheKey(key)
             placeholder(R.drawable.load)
             listener(
                 onStart = {
@@ -299,7 +294,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     val picUrl = Constants.EQUIPMENT_URL + it.equipmentId + Constants.WEBP
                     itemPic.load(picUrl) {
                         placeholder(R.drawable.load_mini)
-                        error(R.drawable.error)
+                        error(R.drawable.unknow_gray)
                     }
                     //描述
                     titleDes.text = it.equipmentName
@@ -307,7 +302,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     //属性词条
                     val adapter = EquipmentAttrAdapter()
                     attrs.adapter = adapter
-                    adapter.submitList(it.getAttrs())
+                    adapter.submitList(it.getList())
                 } else {
                     binding.promotion.uniqueEquip.root.visibility = View.GONE
                 }
@@ -320,7 +315,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     //加载装备图片
                     val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
                     this.load(picUrl) {
-                        error(R.drawable.error)
+                        error(R.drawable.unknow_gray)
                         placeholder(R.drawable.load_mini)
                     }
                     //点击跳转
@@ -396,7 +391,7 @@ class CharacterBasicInfoFragment : Fragment() {
             //头像
             val iconUrl = Constants.UNIT_ICON_URL + character.getStarId(3) + Constants.WEBP
             promotion.icon.load(iconUrl) {
-                error(R.drawable.unknow)
+                error(R.drawable.unknow_gray)
                 placeholder(R.drawable.load_mini)
             }
         }

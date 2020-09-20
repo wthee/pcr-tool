@@ -3,7 +3,6 @@ package cn.wthee.pcrtool
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -14,8 +13,6 @@ import androidx.core.view.forEachIndexed
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
-import cn.wthee.pcrtool.data.model.PVPData
-import cn.wthee.pcrtool.data.service.PVPService
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.main.*
@@ -28,9 +25,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -84,27 +78,6 @@ class MainActivity : AppCompatActivity() {
         ActivityUtil.instance.currentActivity = this
         // Bugly 初始设置
         BuglyHelper.init(this)
-        //TODO move
-        MainScope().launch {
-            val service = ApiHelper.create(PVPService::class.java, Constants.API_URL_PVP)
-            service.getData(1, "103401,100201,101001,105201,105801")
-                .enqueue(object : Callback<PVPData> {
-                    override fun onResponse(call: Call<PVPData>, response: Response<PVPData>) {
-                        val body = response.body()
-                        if (body == null || body.code != 0) {
-                            ToastUtil.short("查询失败，请稍后重试~")
-                        } else {
-                            val data = body.message
-                            Log.e("todo", data)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<PVPData>, t: Throwable) {
-                        ToastUtil.short("查询失败，请稍后重试~")
-                    }
-                }
-                )
-        }
 
     }
 

@@ -56,7 +56,7 @@ class EnemyDialogFragment : BottomSheetDialogFragment() {
                 Constants.UNIT_ICON_SHADOW_URL + enemy.getTruePrefabId()
             } + Constants.WEBP
             itemPic.load(picUrl) {
-                error(R.drawable.error)
+                error(R.drawable.unknow_gray)
             }
             //toolbar
             val cusToolbar = ToolbarUtil(toolbar)

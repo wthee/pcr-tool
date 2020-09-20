@@ -92,7 +92,7 @@ class DatabaseDownloadWorker(
             )
 
             //下载文件
-            val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
+            val response = service.getDb(Constants.DATABASE_DOWNLOAD_File_Name).execute()
             //保存
             notificationManager.cancelAll()
             saveDB(response, version)

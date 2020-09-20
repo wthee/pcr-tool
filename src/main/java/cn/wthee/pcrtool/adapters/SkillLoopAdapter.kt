@@ -47,7 +47,7 @@ class SkillLoopAdapter() :
                 //加载图片
                 if (atkId == 1) {
                     skillOrder.text = "普攻"
-                    skillIcon.setBackgroundResource(R.drawable.skill_0)
+                    skillIcon.setBackgroundResource(R.drawable.unknow_gray)
                     skillIconX.visibility = View.VISIBLE
                 } else {
                     //技能图标

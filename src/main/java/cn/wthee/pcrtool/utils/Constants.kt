@@ -9,9 +9,9 @@ object Constants {
     const val API_URL_PVP = "http://wthee.xyz:8848/api/pvp/"
 
     //数据库中版
-    const val DATABASE_CN_DOWNLOAD_File_Name = "redive_cn.db.br"
-    const val DATABASE_CN_Name = "redive_cn.db"
-    const val DATABASE_CN_WAL = "redive_cn.db-wal"
+    const val DATABASE_DOWNLOAD_File_Name = "redive_jp.db.br"
+    const val DATABASE_Name = "redive_jp.db"
+    const val DATABASE_WAL = "redive_jp.db-wal"
 
     //角色卡片接口
     const val CHARACTER_URL = API_URL + "card/profile/"
@@ -84,21 +84,21 @@ object Constants {
 
     val ATTR = arrayListOf(
         "HP",
+        "HP吸收",
         "物理攻击力",
-        "物理贯穿",
         "魔法攻击力",
-        "魔法贯穿",
         "物理防御力",
         "魔法防御力",
         "物理暴击",
-        "回避",
         "魔法暴击",
+        "物理贯穿",
+        "魔法贯穿",
+        "命中",
+        "回避",
         "HP自动回复",
-        "TP自动回复",
-        "HP吸收",
         "回复量上升",
+        "TP自动回复",
         "TP上升",
         "TP消耗减轻",
-        "命中"
     )
 }

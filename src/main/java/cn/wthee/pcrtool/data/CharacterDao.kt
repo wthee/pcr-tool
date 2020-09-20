@@ -16,6 +16,7 @@ interface CharacterDao {
         SELECT 
             unit_profile.unit_id, 
             unit_profile.unit_name, 
+            unit_data.kana, 
             unit_profile.age, 
             unit_profile.guild, 
             unit_profile.race, 
@@ -31,7 +32,7 @@ interface CharacterDao {
             unit_data.search_area_width, 
             coalesce(unit_data.comment, "") as comment, 
             unit_data.atk_type, 
-            rarity_6_quest_data.rarity_6_quest_id, 
+            coalesce(rarity_6_quest_data.rarity_6_quest_id, 0) as rarity_6_quest_id, 
             unit_data.rarity, 
             CAST(SUBSTR(unit_data.start_time, 0, 4 ) || SUBSTR(unit_data.start_time, 6, 2 ) || SUBSTR(unit_data.start_time, 9, 2 ) AS INTEGER) AS start_time , 
             coalesce(actual_unit_background.unit_name, "") as actual_name, 
@@ -45,9 +46,12 @@ interface CharacterDao {
         LEFT JOIN actual_unit_background ON (unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31) 
         LEFT JOIN character_love_rankup_text ON character_love_rankup_text.chara_id = unit_data.unit_id / 100 
         WHERE 
-            unit_profile.unit_name like '%' || :unitName || '%' AND unit_profile.unit_id <> 106801"""
+            unit_profile.unit_name like '%' || :unitName || '%' """
     )
     suspend fun getInfoAndData(unitName: String): List<CharacterBasicInfo>
+
+    @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
+    suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
 
     //角色Rank所需装备id
     @Query("SELECT * FROM unit_promotion WHERE unit_promotion.unit_id = :unitId AND unit_promotion.promotion_level = :rank ")

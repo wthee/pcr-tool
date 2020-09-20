@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.data.model.entity.getDefault
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
@@ -30,6 +31,14 @@ class CharacterViewModel(
                 .sortedWith(getSort(sortType, asc))
             characters.postValue(data)
         }
+    }
+
+    //角色基本资料
+    suspend fun getCharacterByPosition(positionType: Int) = when (positionType) {
+        1 -> repository.getCharacterByPosition(0, 299)
+        2 -> repository.getCharacterByPosition(300, 599)
+        3 -> repository.getCharacterByPosition(600, 999)
+        else -> getDefault()
     }
 
     //公会信息

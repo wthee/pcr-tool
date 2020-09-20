@@ -20,7 +20,9 @@ data class EnemyData(
     @ColumnInfo(name = "normal_atk_cast_time") val normal_atk_cast_time: Double,
     @ColumnInfo(name = "cutin") val cutin: Int,
     @ColumnInfo(name = "visual_change_flag") val visual_change_flag: Int,
-    @ColumnInfo(name = "comment") val comment: String
+    @ColumnInfo(name = "comment") val comment: String,
+    //jp
+    @ColumnInfo(name = "cutin_star6") val cutinStar6: Int,
 ): Serializable{
     fun getFixedComment() = comment.replace("\\n", "，")
 

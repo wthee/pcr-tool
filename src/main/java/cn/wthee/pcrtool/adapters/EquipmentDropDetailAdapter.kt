@@ -40,7 +40,7 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.eid + WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.error)
+                    error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
                 if (eid == equip.eid) {

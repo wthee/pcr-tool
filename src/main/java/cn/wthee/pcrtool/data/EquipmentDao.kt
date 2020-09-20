@@ -14,6 +14,7 @@ const val viewEquipmentMaxData = """
 	a.promotion_level,
 	a.description,
 	a.craft_flg,
+	a.require_level,
 	COALESCE(( a.hp + b.hp * COALESCE( d.equipment_enhance_level, 0 )), 0 ) AS hp,
 	COALESCE(( a.atk + b.atk * COALESCE( d.equipment_enhance_level, 0 )), 0 ) AS atk,
 	COALESCE(( a.magic_str + b.magic_str * COALESCE( d.equipment_enhance_level, 0 )), 0 ) AS magic_str,
@@ -47,7 +48,7 @@ interface EquipmentDao {
     suspend fun getEquipmentDatas(eids: List<Int>): List<EquipmentData>
 
     //所有装备信息
-    @Query(viewEquipmentMaxData + "WHERE a.equipment_name like '%' || :name || '%' AND a.equipment_name NOT LIKE '%公主之心%' ORDER BY a.promotion_level DESC, a.equipment_id DESC")
+    @Query(viewEquipmentMaxData + "WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
     suspend fun getAllEquipments(name: String): List<EquipmentMaxData>
 
     //装备提升属性

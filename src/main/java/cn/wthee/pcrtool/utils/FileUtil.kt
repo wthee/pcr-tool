@@ -17,13 +17,15 @@ object FileUtil {
     } + "/databases"
 
     //数据库路径
-    private fun getDatabasePath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_Name
-    private fun getDatabaseWalPath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_WAL
-    fun getDatabaseZipPath() = getDatabaseDir() + "/" + Constants.DATABASE_CN_DOWNLOAD_File_Name
+    private fun getDatabasePath() = getDatabaseDir() + "/" + Constants.DATABASE_Name
+    private fun getDatabaseWalPath() = getDatabaseDir() + "/" + Constants.DATABASE_WAL
+    fun getDatabaseZipPath() = getDatabaseDir() + "/" + Constants.DATABASE_DOWNLOAD_File_Name
 
     //数据库判断
     fun needUpadateDb() =
-        !File(getDatabasePath()).exists() || File(getDatabasePath()).length() < 1 * 1024 * 1024
+        !File(getDatabasePath()).exists()
+                || File(getDatabasePath()).length() < 1 * 1024 * 1024
+                || File(getDatabaseWalPath()).length() < 1 * 1024
 
     //迭代删除文件夹里的内容(不包括文件夹)
     fun deleteDir(dirPath: String, notDel: String) {

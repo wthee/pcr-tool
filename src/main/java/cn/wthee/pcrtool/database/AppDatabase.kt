@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.data.CharacterDao
 import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
 import cn.wthee.pcrtool.data.model.entity.*
-import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
+import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
 
 
 @Database(
@@ -38,9 +38,9 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_CN_Name
         CharacterExperience::class,
         AttackPattern::class,
         GuildData::class,
-        CharacterExperienceTeam::class
+        CharacterExperienceTeam::class,
     ],
-    version = 11,
+    version = 12,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -67,7 +67,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 MyApplication.getContext(),
                 AppDatabase::class.java,
-                DATABASE_CN_Name
+                DATABASE_Name
             ).fallbackToDestructiveMigration().build()
         }
     }

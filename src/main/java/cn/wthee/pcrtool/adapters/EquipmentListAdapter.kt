@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
@@ -23,7 +22,6 @@ import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-
 import coil.load
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -113,7 +111,7 @@ class EquipmentAdapter(private val isList: Boolean) :
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.error)
+                    error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
                 //设置共享元素

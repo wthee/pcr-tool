@@ -209,22 +209,22 @@ fun CharacterAttrInfo.getList(): List<AttrData> {
     for (i in 0..16) {
         val value = when (i) {
             0 -> this.hp
-            1 -> this.atk
-            2 -> this.magicStr
-            3 -> this.def
-            4 -> this.magicDef
-            5 -> this.physicalCritical
-            6 -> this.magicCritical
-            7 -> this.waveHpRecovery
-            8 -> this.waveEnergyRecovery
-            9 -> this.dodge
-            10 -> this.physicalPenetrate
-            11 -> this.magicPenetrate
-            12 -> this.lifeSteal
+            1 -> this.lifeSteal
+            2 -> this.atk
+            3 -> this.magicStr
+            4 -> this.def
+            5 -> this.magicDef
+            6 -> this.physicalCritical
+            7 -> this.magicCritical
+            8 -> this.physicalPenetrate
+            9 -> this.magicPenetrate
+            10 -> this.accuracy
+            11 -> this.dodge
+            12 -> this.waveHpRecovery
             13 -> this.hpRecoveryRate
-            14 -> this.energyRecoveryRate
-            15 -> this.energyReduceRate
-            16 -> this.accuracy
+            14 -> this.waveEnergyRecovery
+            15 -> this.energyRecoveryRate
+            16 -> this.energyReduceRate
             else -> 0.0
         }
         attrs.add(AttrData(Constants.ATTR[i], value))

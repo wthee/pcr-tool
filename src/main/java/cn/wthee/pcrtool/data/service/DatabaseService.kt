@@ -13,6 +13,6 @@ interface DatabaseService {
     fun getDb(@Path("file") file: String): Call<ResponseBody>
 
     //获取数据库版本https://redive.estertion.win/last_version_cn.json
-    @GET("last_version_cn.json")
+    @GET("last_version_jp.json")
     fun getDbVersion(): Call<DatabaseVersion>
 }

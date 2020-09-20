@@ -7,7 +7,7 @@
     <string name="character_pic">角色原画</string>
     <string name="event_list">装备信息</string>
 
-     <!--属性    -->
+    <!--属性    -->
     <string name="hp">HP</string>
     <string name="atk">物理攻击力</string>
     <string name="p_penetrate">物理贯穿</string>
@@ -123,5 +123,15 @@
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
     <string name="equip_type">装备类型</string>
+
+    <!--  工具  -->
+    <string name="tool_level">等级经验</string>
+    <string name="tool_pvp">竞技场查询</string>
+    <string name="ys">佑树</string>
+    <string name="character">角色</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pvp_search">开始查询</string>
+    <string name="pvp_select_tip">请选择防守方角色</string>
 
 </resources>

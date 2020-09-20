@@ -36,7 +36,10 @@ data class CharacterSkillData(
     @ColumnInfo(name = "sp_skill_5") val sp_skill_5: Int,
     @ColumnInfo(name = "union_burst_evolution") val union_burst_evolution: Int,
     @ColumnInfo(name = "main_skill_evolution_1") val main_skill_evolution_1: Int,
-    @ColumnInfo(name = "main_skill_evolution_2") val main_skill_evolution_2: Int
+    @ColumnInfo(name = "main_skill_evolution_2") val main_skill_evolution_2: Int,
+    //jp
+    @ColumnInfo(name = "sp_skill_evolution_1") val sp_skill_evolution_1: Int,
+    @ColumnInfo(name = "sp_skill_evolution_2") val sp_skill_evolution_2: Int
 ) {
     fun getAllSkillId(): ArrayList<Int> {
         val list = arrayListOf<Int>()

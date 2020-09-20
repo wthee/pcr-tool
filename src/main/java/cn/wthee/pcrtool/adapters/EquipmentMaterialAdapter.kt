@@ -53,7 +53,7 @@ class EquipmentMaterialAdapter(
                 equipCount.text = "x ${info.count}"
 
                 equipIcon.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
-                    error(R.drawable.error)
+                    error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
                 //点击查看掉落地区

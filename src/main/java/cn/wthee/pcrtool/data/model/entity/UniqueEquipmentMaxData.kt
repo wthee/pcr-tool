@@ -1,9 +1,8 @@
 package cn.wthee.pcrtool.data.model.entity
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AttrData
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
@@ -65,117 +64,35 @@ data class UniqueEquipmentMaxData(
 
     }
 
-    fun getAttrs(): ArrayList<AttrData> {
-        val attrs = arrayListOf<AttrData>()
-        val res = MyApplication.getContext().resources
-
-        if (hp != 0.0) attrs.add(
-            AttrData(
-                "HP",
-                hp
-            )
-        )
-        if (atk != 0.0) attrs.add(
-            AttrData(
-                res.getString(
-                    R.string.atk
-                ), atk
-            )
-        )
-        if (magicStr != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.magic_str),
-                magicStr
-            )
-        )
-        if (def != 0.0) attrs.add(
-            AttrData(
-                res.getString(
-                    R.string.def
-                ), def
-            )
-        )
-        if (magicDef != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.magic_def),
-                magicDef
-            )
-        )
-        if (physicalCritical != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.p_critical),
-                physicalCritical
-            )
-        )
-        if (magicCritical != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.m_critical),
-                magicCritical
-            )
-        )
-        if (waveHpRecovery != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.hp_recovery),
-                waveHpRecovery
-            )
-        )
-        if (waveEnergyRecovery != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.tp_recovery),
-                waveEnergyRecovery
-            )
-        )
-        if (dodge != 0.0) attrs.add(
-            AttrData(
-                res.getString(
-                    R.string.dodge
-                ), dodge
-            )
-        )
-        if (physicalPenetrate != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.p_penetrate),
-                physicalPenetrate
-            )
-        )
-        if (magicPenetrate != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.m_penetrate),
-                magicPenetrate
-            )
-        )
-        if (lifeSteal != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.hp_steal),
-                lifeSteal
-            )
-        )
-        if (hpRecoveryRate != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.hp_recovery_rate),
-                hpRecoveryRate
-            )
-        )
-        if (energyRecoveryRate != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.tp_recovery_rate),
-                energyRecoveryRate
-            )
-        )
-        if (energyReduceRate != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.tp_reduce_rate),
-                energyReduceRate
-            )
-        )
-        if (accuracy != 0.0) attrs.add(
-            AttrData(
-                res.getString(R.string.accuracy),
-                accuracy
-            )
-        )
-        return attrs
-    }
 }
 
+fun UniqueEquipmentMaxData.getList(): List<AttrData> {
+    val attrs = arrayListOf<AttrData>()
+    for (i in 0..16) {
+        val value = when (i) {
+            0 -> this.hp
+            1 -> this.lifeSteal
+            2 -> this.atk
+            3 -> this.magicStr
+            4 -> this.def
+            5 -> this.magicDef
+            6 -> this.physicalCritical
+            7 -> this.magicCritical
+            8 -> this.physicalPenetrate
+            9 -> this.magicPenetrate
+            10 -> this.accuracy
+            11 -> this.dodge
+            12 -> this.waveHpRecovery
+            13 -> this.hpRecoveryRate
+            14 -> this.waveEnergyRecovery
+            15 -> this.energyRecoveryRate
+            16 -> this.energyReduceRate
+            else -> 0.0
+        }
+        if (value > 0) {
+            attrs.add(AttrData(Constants.ATTR[i], value))
+        }
+    }
+    return attrs
+}
 

@@ -90,7 +90,7 @@ class EnemyListAdapter :
                     UNIT_ICON_SHADOW_URL + enemyData.getTruePrefabId()
                 } + WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.error)
+                    error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
                 //设置点击跳转

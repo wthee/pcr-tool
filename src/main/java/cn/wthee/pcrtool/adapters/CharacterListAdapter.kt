@@ -85,7 +85,8 @@ class CharacterAdapter(private val fragment: Fragment) :
                         null
                     )
                 //基本信息
-                name.text = character.name
+                name.text = character.getNameF()
+                nameExtra.text = character.getNameL()
                 three.text = fragment.resources.getString(
                     R.string.character_detail,
                     character.age,

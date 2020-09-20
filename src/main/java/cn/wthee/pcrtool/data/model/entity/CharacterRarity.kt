@@ -38,7 +38,6 @@ data class CharacterRarity(
     @ColumnInfo(name = "energy_recovery_rate") val energyRecoveryRate: Double,
     @ColumnInfo(name = "energy_reduce_rate") val energyReduceRate: Double,
     @ColumnInfo(name = "accuracy") val accuracy: Double,
-
     @ColumnInfo(name = "hp_growth") val hpGrowth: Double,
     @ColumnInfo(name = "atk_growth") val atkGrowth: Double,
     @ColumnInfo(name = "magic_str_growth") val magicStrGrowth: Double,

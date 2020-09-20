@@ -27,6 +27,20 @@
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit" />
+        <action
+            android:id="@+id/action_containerFragment_to_toolLevelFragment"
+            app:destination="@id/toolLevelFragment"
+            app:enterAnim="@anim/fragment_enter_tool"
+            app:exitAnim="@anim/fragment_exit_tool"
+            app:popEnterAnim="@anim/fragment_popenter_tool"
+            app:popExitAnim="@anim/fragment_popexit_tool" />
+        <action
+            android:id="@+id/action_containerFragment_to_toolPvpFragment"
+            app:destination="@id/toolPvpFragment"
+            app:enterAnim="@anim/fragment_enter_tool"
+            app:exitAnim="@anim/fragment_exit_tool"
+            app:popEnterAnim="@anim/fragment_popenter_tool"
+            app:popExitAnim="@anim/fragment_popexit_tool" />
 
     </fragment>
 
@@ -34,7 +48,7 @@
         android:id="@+id/characterPagerFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment"
         android:label="CharacterPagerFragment"
-        tools:layout="@layout/fragment_character_basic_info"/>
+        tools:layout="@layout/fragment_character_basic_info" />
     <fragment
         android:id="@+id/equipmentDetailsFragment"
         android:name="cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment"
@@ -67,5 +81,15 @@
         android:name="cn.wthee.pcrtool.ui.main.EquipmentListFragment"
         android:label="fragment_enemy_list"
         tools:layout="@layout/fragment_enemy_list" />
+    <fragment
+        android:id="@+id/toolLevelFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.ToolLevelFragment"
+        android:label="ToolLevelFragment"
+        tools:layout="@layout/fragment_tool_level" />
+    <fragment
+        android:id="@+id/toolPvpFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.ToolPvpFragment"
+        android:label="ToolPvpFragment"
+        tools:layout="@layout/fragment_tool_pvp" />
 
 </navigation>
