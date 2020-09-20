@@ -14,6 +14,9 @@ import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import coil.Coil
 import com.tencent.bugly.beta.Beta
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainSettingsFragment : PreferenceFragmentCompat() {
@@ -70,9 +73,11 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         //切换数据库版本
         changeDbType?.setOnPreferenceChangeListener { preference, newValue ->
-            val list = preference as ListPreference
             changeDbType?.title = "游戏版本 - " + if (newValue as String == "1") "国服" else "日服"
-            DatabaseUpdateHelper.checkDBVersion(false, true)
+            MainScope().launch {
+                delay(800L)
+                DatabaseUpdateHelper.checkDBVersion(false, true)
+            }
             return@setOnPreferenceChangeListener true
         }
         //应用更新
