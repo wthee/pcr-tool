@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 object DatabaseUpdateHelper {
 
@@ -71,8 +72,11 @@ object DatabaseUpdateHelper {
                 if (databaseType == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
                 "0"
             ) ?: "0"
-            //数据库文件不存在或有新版本更新时，下载最新数据库文件
-            if (!fromSetting && (FileUtil.needUpadateDb(databaseType) || databaseVersion == "0" || databaseVersion < ver)) {
+            //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
+            val toDownload =
+                (!fromSetting && (FileUtil.needUpadateDb(databaseType) || databaseVersion == "0" || databaseVersion < ver))  //打开应用，数据库wal被清空||有新版本
+                        || (fromSetting && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在
+            if (toDownload) {
                 ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
                 //开始下载
                 val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
@@ -81,6 +85,7 @@ object DatabaseUpdateHelper {
                             .putString(DatabaseDownloadWorker.KEY_INPUT_URL, API_URL)
                             .putString(DatabaseDownloadWorker.KEY_VERSION, ver)
                             .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
+                            .putBoolean(DatabaseDownloadWorker.KEY_FROM_SETTING, fromSetting)
                             .build()
                     )
                     .build()

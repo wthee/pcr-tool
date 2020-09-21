@@ -117,6 +117,7 @@ class CharacterListFragment : Fragment() {
                         object : DialogListener {
                             override fun onButtonOperateClick(dialog: AlertDialog) {
                                 requireActivity().finish()
+                                System.exit(0)
                             }
 
                             override fun onButtonOkClick(dialog: AlertDialog) {
