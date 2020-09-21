@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
 import androidx.preference.*
@@ -13,6 +14,7 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import coil.Coil
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tencent.bugly.beta.Beta
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -68,15 +70,24 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         //强制更新数据库
         forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdateHelper.checkDBVersion(false, false)
+            DatabaseUpdateHelper.checkDBVersion(false)
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本
         changeDbType?.setOnPreferenceChangeListener { preference, newValue ->
-            changeDbType?.title = "游戏版本 - " + if (newValue as String == "1") "国服" else "日服"
+            changeDbType.title = "游戏版本 - " + if (newValue as String == "1") "国服" else "日服"
             MainScope().launch {
+                val dialog = MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("数据切换中...")
+                    .setMessage("数据将在下次启动应用时更新，请等待")
+                    .setNegativeButton("我知道了"){it,_->
+                        it.dismiss()
+                    }
+                    .create()
+                dialog.window?.setGravity(Gravity.BOTTOM)
+                dialog.show()
                 delay(800L)
-                DatabaseUpdateHelper.checkDBVersion(false, true)
+                DatabaseUpdateHelper.checkDBVersion(false)
             }
             return@setOnPreferenceChangeListener true
         }

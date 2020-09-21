@@ -99,7 +99,7 @@ class DatabaseDownloadWorker(
             notificationManager.cancelAll()
             saveDB(response, version, type)
             return Result.success()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return Result.failure()
         }
     }
@@ -160,7 +160,10 @@ class DatabaseDownloadWorker(
                     //更新数据库版本号
                     sp.edit {
                         putString(
-                            Constants.SP_DATABASE_VERSION,
+                            if (type == 1)
+                                Constants.SP_DATABASE_VERSION
+                            else
+                                Constants.SP_DATABASE_VERSION_JP,
                             version
                         )
                     }

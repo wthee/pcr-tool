@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         lateinit var fabLove: FloatingActionButton
         lateinit var fabSearch: FloatingActionButton
         lateinit var fabFilter: FloatingActionButton
-        var dataBaseType = 2
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -97,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             .getString("change_database", "1")?.toInt() ?: 1
         if (FileUtil.needUpadateDb(type) || autoUpdateDb) {
             MainScope().launch {
-                DatabaseUpdateHelper.checkDBVersion(notToast, false)
+                DatabaseUpdateHelper.checkDBVersion(notToast)
             }
         }
     }

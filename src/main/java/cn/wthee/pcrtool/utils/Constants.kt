@@ -46,6 +46,7 @@ object Constants {
 
     //本地储存
     const val SP_DATABASE_VERSION = "database_version"
+    const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_SORT_TYPE = "sort_type"
     const val SP_SORT_ASC = "sort_asc"
 
@@ -61,7 +62,6 @@ object Constants {
     const val BTN_NOT_UPDATE_DB = "数据正常，无需更新"
 
     //默认值
-    const val DATABASE_VERSION = "202005141837"
     const val SORT_TYPE = 0
     const val SORT_ASC = false
     const val UNKNOW_EQUIP_ID = 999999

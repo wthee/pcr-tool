@@ -26,7 +26,7 @@ object DatabaseUpdateHelper {
     private val mContext = MyApplication.getContext()
 
     //检查是否需要更新
-    fun checkDBVersion(notToast: Boolean, change: Boolean) {
+    fun checkDBVersion(notToast: Boolean) {
         val databaseType = PreferenceManager.getDefaultSharedPreferences(mContext)
             .getString("change_database", "1")?.toInt() ?: 1
         //开始
@@ -51,14 +51,13 @@ object DatabaseUpdateHelper {
                     try {
                         val version = response.body()!!
                         val databaseVersion = MainActivity.sp.getString(
-                            Constants.SP_DATABASE_VERSION,
-                            Constants.DATABASE_VERSION
-                        ) ?: Constants.DATABASE_VERSION
+                            if(databaseType ==1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+                            "0"
+                        ) ?: "0"
                         //数据库文件不存在或有新版本更新时，下载最新数据库文件
                         if (FileUtil.needUpadateDb(databaseType)
-                            || databaseVersion == Constants.DATABASE_VERSION
+                            || databaseVersion == "0"
                             || (databaseVersion < version.TruthVersion)
-                            || change
                         ) {
                             downloadDB(version.TruthVersion, databaseType)
                             if (!notToast) {
