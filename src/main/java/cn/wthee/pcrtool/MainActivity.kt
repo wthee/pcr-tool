@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var isHome = true
-        var notToast = false
         var autoUpdateDb = true
 
         //fab 默认隐藏
@@ -68,8 +67,6 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        //检查数据库更新
-        autoUpdateDb = spSetting.getBoolean("auto_update_db", autoUpdateDb)
         checkUpdate(autoUpdateDb)
         //悬浮按钮
         setFab()
@@ -96,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             .getString("change_database", "1")?.toInt() ?: 1
         if (FileUtil.needUpadateDb(type) || autoUpdateDb) {
             MainScope().launch {
-                DatabaseUpdateHelper.checkDBVersion(notToast)
+                DatabaseUpdateHelper.checkDBVersion()
             }
         }
     }
@@ -109,9 +106,9 @@ class MainActivity : AppCompatActivity() {
         ).versionName
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-        //设置信息
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
-        notToast = spSetting.getBoolean("not_toast", notToast)
+        //检查数据库更新
+        autoUpdateDb = spSetting.getBoolean("auto_update_db", autoUpdateDb)
     }
 
     private fun setFab() {

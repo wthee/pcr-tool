@@ -133,9 +133,9 @@
     <string name="tool_pvp">竞技场查询</string>
     <string name="ys">佑树</string>
     <string name="character">角色</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pvp_search">开始查询</string>
     <string name="pvp_select_tip">请选择防守方角色</string>
+    <string name="game_version">游戏版本</string>
+    <string name="game_version_summary">切换版本后，重新打开应用将更新数据</string>
 
 </resources>

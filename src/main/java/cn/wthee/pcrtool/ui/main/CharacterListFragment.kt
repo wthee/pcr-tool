@@ -104,6 +104,27 @@ class CharacterListFragment : Fragment() {
                 1 -> {
                     viewModel.reload.postValue(true)
                 }
+                2 -> {
+                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
+                    DialogUtil.create(
+                        requireContext(),
+                        layout,
+                        "版本切换",
+                        "版本切换完成，数据将在下次打开APP时更新~",
+                        "关闭应用",
+                        "暂不关闭",
+                        object : DialogListener {
+                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                                requireActivity().finish()
+                            }
+
+                            override fun onButtonOkClick(dialog: AlertDialog) {
+                                dialog.dismiss()
+                            }
+                        }
+                    ).show()
+                }
             }
 
             return@Callback true

@@ -66,7 +66,6 @@ object Constants {
     const val SORT_ASC = false
     const val UNKNOW_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在下载数据..."
-    const val NOTICE_TITLE_PRE = "PCR Tool\n"
     const val NOTICE_TITLE_ERROR = "数据库信息获取失败"
     const val NOTICE_TOAST_SUCCESS = "数据库更新完成"
     const val NOTICE_TOAST_NO_FILE = "数据库文件丢失，请稍后重试~"

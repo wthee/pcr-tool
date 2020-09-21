@@ -28,8 +28,9 @@
         <ListPreference
             android:key="change_database"
             app:iconSpaceReserved="false"
-            app:title="游戏版本"
-            app:summary="切换版本将重新下载数据库文件"
+            app:title="@string/game_version"
+            app:summary="@string/game_version_summary"
+            app:defaultValue="@string/db_cn_value"
             app:entries="@array/database_type"
             app:entryValues="@array/database_type_value" />
 
@@ -40,15 +41,6 @@
             app:summaryOff="@string/off_auto_db"
             app:summaryOn="@string/on_auto_db"
             app:title="@string/auto_update_db" />
-
-        <SwitchPreferenceCompat
-            android:enabled="true"
-            app:defaultValue="false"
-            app:iconSpaceReserved="false"
-            app:key="not_toast"
-            app:summaryOff="@string/toast_on"
-            app:summaryOn="@string/toast_off"
-            app:title="@string/not_toast" />
 
     </PreferenceCategory>
 
@@ -72,6 +64,7 @@
             app:title="@string/auto_update_app" />
 
         <Preference
+            app:isPreferenceVisible="false"
             app:iconSpaceReserved="false"
             app:key="clean_data"
             app:summary="@string/clean_cache_tip"

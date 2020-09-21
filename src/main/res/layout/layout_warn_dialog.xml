@@ -31,9 +31,9 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:tag="beta_upgrade_feature"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         android:textColor="@color/text"
-        tools:text="feature" />
+        tools:text="文本测试文本测试文本测试文本测试文本测试" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
