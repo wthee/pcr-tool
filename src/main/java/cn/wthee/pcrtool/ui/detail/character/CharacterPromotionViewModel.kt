@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.model.CharacterAttrInfo
 import cn.wthee.pcrtool.data.model.add
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
 import cn.wthee.pcrtool.data.model.multiply
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch
@@ -18,7 +18,7 @@ class CharacterPromotionViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    var equipments = MutableLiveData<List<EquipmentData>>()
+    var equipments = MutableLiveData<List<EquipmentMaxData>>()
     var sumInfo = MutableLiveData<CharacterAttrInfo>()
     var maxData = MutableLiveData<List<Int>>()
 
@@ -33,10 +33,10 @@ class CharacterPromotionViewModel(
             val info = CharacterAttrInfo.setValue(rankData)
                 .add(CharacterAttrInfo.setValue(rarityData))
                 .add(CharacterAttrInfo.setGrowthValue(rarityData).multiply(lv + rank))
-            val eqs = arrayListOf<EquipmentData>()
+            val eqs = arrayListOf<EquipmentMaxData>()
             ids.forEach {
                 if (it == UNKNOW_EQUIP_ID)
-                    eqs.add(EquipmentData.unknow())
+                    eqs.add(EquipmentMaxData.unknow())
                 else
                     eqs.add(equipmentRepository.getEquipmentData(it))
             }
@@ -45,19 +45,12 @@ class CharacterPromotionViewModel(
             //计算穿戴装备后属性
             eqs.forEach { eq ->
                 if (eq.equipmentId == UNKNOW_EQUIP_ID) return@forEach
-                val mult = when (eq.promotionLevel) {
-                    1 -> 0
-                    2 -> 1
-                    3 -> 3
-                    4, 5 -> 5
-                    else -> 0
-                }
-                //获取装备信息及其提升
-                val eqData = CharacterAttrInfo.setValue(eq)
-                val eh =
-                    CharacterAttrInfo.setValue(equipmentRepository.getEquipmentEnhanceData(eq.equipmentId))
-                info.add(eh.multiply(mult))
-                    .add(eqData)
+                info.add(CharacterAttrInfo.setValue(eq))
+            }
+            //专武
+            val uniqueEquip = equipmentRepository.getUniqueEquipInfos(unitId)
+            if (uniqueEquip != null) {
+                info.add(CharacterAttrInfo.setValue(uniqueEquip))
             }
             sumInfo.postValue(info)
         }

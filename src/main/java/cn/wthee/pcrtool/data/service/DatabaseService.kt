@@ -6,6 +6,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Url
 
 interface DatabaseService {
     //下载数据库文件
@@ -13,6 +14,6 @@ interface DatabaseService {
     fun getDb(@Path("file") file: String): Call<ResponseBody>
 
     //获取数据库版本https://redive.estertion.win/last_version_cn.json
-    @GET("last_version_cn.json")
-    fun getDbVersion(): Call<DatabaseVersion>
+    @GET
+    fun getDbVersion(@Url url: String): Call<DatabaseVersion>
 }

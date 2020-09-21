@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
-import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -24,7 +23,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.io.InputStream
 
 
 class DatabaseDownloadWorker(
@@ -32,7 +30,7 @@ class DatabaseDownloadWorker(
     @NonNull parameters: WorkerParameters?
 ) : CoroutineWorker(context, parameters!!) {
 
-
+    //通知栏
     private val notificationManager: NotificationManager =
         context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private val channelId = "1"
@@ -42,11 +40,11 @@ class DatabaseDownloadWorker(
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
 
-    private val dbZipPath = FileUtil.getDatabaseZipPath()
-
     companion object {
         const val KEY_INPUT_URL = "KEY_INPUT_URL"
         const val KEY_VERSION = "KEY_VERSION"
+        const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
+        const val KEY_FROM_SETTING = "KEY_FROM_SETTING"
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -55,12 +53,19 @@ class DatabaseDownloadWorker(
         val inputUrl = inputData.getString(KEY_INPUT_URL) ?: return@coroutineScope Result.failure()
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
+        val type = inputData.getInt(KEY_VERSION_TYPE, 1)
+        val fromSetting = inputData.getBoolean(KEY_FROM_SETTING, false)
         setForegroundAsync(createForegroundInfo())
-        return@coroutineScope download(inputUrl, version)
+        return@coroutineScope download(inputUrl, version, type, fromSetting)
     }
 
 
-    private fun download(inputUrl: String, version: String): Result {
+    private fun download(
+        inputUrl: String,
+        version: String,
+        type: Int,
+        fromSetting: Boolean
+    ): Result {
         try {
             //创建Retrofit服务
             val service = ApiHelper.createWithClient(
@@ -68,7 +73,7 @@ class DatabaseDownloadWorker(
                 ApiHelper.downloadClientBuild(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Float, totalSize: Float) {
-                        Log.e(Constants.LOG_TAG, progress.toString())
+                        //更新下载进度
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
                                 "${Constants.NOTICE_TITLE} ${
@@ -83,28 +88,81 @@ class DatabaseDownloadWorker(
                     }
 
                     override fun onFinish() {
-
+                        //下载完成
+                        notification.setProgress(100, 100, false)
+                            .setContentTitle("${Constants.NOTICE_TOAST_SUCCESS} ").build()
+                        notificationManager.notify(noticeId, notification.build())
                     }
                 })
             )
 
             //下载文件
-            val response = service.getDb(Constants.DATABASE_CN_DOWNLOAD_File_Name).execute()
-            val file = response.body()?.byteStream()
+            val response =
+                service.getDb(if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP)
+                    .execute()
             //保存
-            saveDB(file)
-            sp.edit {
-                putString(
-                    Constants.SP_DATABASE_VERSION,
-                    version
-                )
+            notificationManager.cancelAll()
+            //创建数据库文件夹
+            val file = File(folderPath)
+            if (!file.exists()) {
+                file.mkdir()
+            }
+            //删除已有数据库文件
+            //br压缩包路径
+            val dbZipPath = FileUtil.getDatabaseZipPath(type)
+            val db = File(dbZipPath)
+            if (db.exists()) {
+                FileUtil.deleteDir(folderPath, dbZipPath)
+            }
+            //写入文件
+            try {
+                val input = response.body()!!.byteStream()
+                input.let { inputStream ->
+                    val out = FileOutputStream(db)
+                    val byte = ByteArray(1024 * 4)
+                    var line: Int
+                    while (inputStream.read(byte).also { line = it } > 0) {
+                        out.write(byte, 0, line)
+                    }
+                    out.flush()
+                    out.close()
+                    inputStream.close()
+                    MainScope().launch {
+                        //更新数据库
+                        AppDatabase.getInstance().close()
+                        AppDatabaseJP.getInstance().close()
+                        UnzippedUtil.deCompress(db, true)
+                        //更新数据库版本号
+                        sp.edit {
+                            putString(
+                                if (type == 1)
+                                    Constants.SP_DATABASE_VERSION
+                                else
+                                    Constants.SP_DATABASE_VERSION_JP,
+                                version
+                            )
+                        }
+                        //通知更新数据
+                        if (fromSetting) {
+                            CharacterListFragment.handler.sendEmptyMessage(2)
+                        } else {
+                            ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
+                        }
+                        CharacterListFragment.handler.sendEmptyMessage(1)
+                    }
+                }
+            } catch (e: Exception) {
+                MainScope().launch {
+                    ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
+                }
             }
             return Result.success()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return Result.failure()
         }
     }
 
+    //前台通知
     private fun createForegroundInfo(): ForegroundInfo {
         val context: Context = applicationContext
 
@@ -126,42 +184,5 @@ class DatabaseDownloadWorker(
         notificationManager.createNotificationChannel(channel)
     }
 
-    //数据库保存
-    private fun saveDB(input: InputStream?) {
-        //创建数据库文件夹
-        val file = File(folderPath)
-        if (!file.exists()) {
-            file.mkdir()
-        }
-        //删除已有数据库文件
-        val db = File(dbZipPath)
-        if (db.exists()) {
-            FileUtil.deleteDir(folderPath, dbZipPath)
-        }
-        try {
-            input?.let { inputStream ->
-                val out = FileOutputStream(db)
-                val byte = ByteArray(1024 * 4)
-                var line: Int
-                while (inputStream.read(byte).also { line = it } > 0) {
-                    out.write(byte, 0, line)
-                }
-                out.flush()
-                out.close()
-                inputStream.close()
-                MainScope().launch {
-                    //更新数据库
-                    AppDatabase.getInstance().close()
-                    UnzippedUtil.deCompress(db, true)
-                    //通知更新数据
-                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                    CharacterListFragment.handler.sendEmptyMessage(1)
-                }
-            }
-        } catch (e: Exception) {
-            ToastUtil.short(e.message)
-        }
-
-    }
 
 }

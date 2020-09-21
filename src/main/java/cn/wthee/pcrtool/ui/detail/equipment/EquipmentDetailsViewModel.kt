@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.model.entity.EquipmentData
 import cn.wthee.pcrtool.data.model.entity.EquipmentDropInfo
 import cn.wthee.pcrtool.data.model.entity.EquipmentMaterial
+import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
 import kotlinx.coroutines.launch
 
 
@@ -19,7 +20,7 @@ class EquipmentDetailsViewModel(
     var isLoading = MutableLiveData<Boolean>()
 
     //获取装备制作材料信息
-    fun getEquipInfos(equip: EquipmentData) {
+    fun getEquipInfos(equip: EquipmentMaxData) {
         isLoading.postValue(true)
         viewModelScope.launch {
             if (equip.craftFlg == 0) {

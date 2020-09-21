@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/m_padding"
-    android:paddingEnd="@dimen/m_padding"
-    android:paddingTop="@dimen/s_padding"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/m_padding"
+    android:paddingTop="@dimen/s_padding"
+    android:paddingEnd="@dimen/m_padding">
 
 
     <TextView
@@ -15,11 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
-        android:tag="label_feature"
         android:gravity="center"
+        android:tag="label_feature"
         android:text="@string/title_tip"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/message"
@@ -30,16 +31,36 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:tag="beta_upgrade_feature"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         android:textColor="@color/text"
-        tools:text="feature" />
+        tools:text="文本测试文本测试文本测试文本测试文本测试" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/dialog_next"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/next"
-        android:layout_gravity="end" />
+        android:layout_marginTop="@dimen/s_margin">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_operate"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textColor="@color/alphaPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/app_name" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dialog_next"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/next" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </LinearLayout>

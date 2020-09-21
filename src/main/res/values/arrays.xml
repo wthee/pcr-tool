@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string-array name="sort_type_character">
-        <item>@string/age</item>
-        <item>@string/title_height</item>
-        <item>@string/title_weight</item>
-        <item>@string/title_position</item>
+    <string-array name="database_type">
+        <item>@string/db_cn</item>
+        <item>@string/db_jp</item>
     </string-array>
 
+    <string-array name="database_type_value">
+        <item>@string/db_cn_value</item>
+        <item>@string/db_jp_value</item>
+    </string-array>
 </resources>

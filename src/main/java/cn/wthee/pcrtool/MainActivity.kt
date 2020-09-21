@@ -22,7 +22,9 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -39,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var isHome = true
-        var notToast = false
         var autoUpdateDb = true
 
         //fab 默认隐藏
@@ -66,8 +67,6 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        //检查数据库更新
-        autoUpdateDb = spSetting.getBoolean("auto_update_db", autoUpdateDb)
         checkUpdate(autoUpdateDb)
         //悬浮按钮
         setFab()
@@ -90,9 +89,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUpdate(autoUpdateDb: Boolean) {
-        if (FileUtil.needUpadateDb() || autoUpdateDb) {
-            CoroutineScope(Dispatchers.Main).launch {
-                DatabaseUpdateHelper().checkDBVersion(notToast)
+        val type = PreferenceManager.getDefaultSharedPreferences(this)
+            .getString("change_database", "1")?.toInt() ?: 1
+        if (FileUtil.needUpadateDb(type) || autoUpdateDb) {
+            MainScope().launch {
+                DatabaseUpdateHelper.checkDBVersion()
             }
         }
     }
@@ -105,9 +106,9 @@ class MainActivity : AppCompatActivity() {
         ).versionName
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-        //设置信息
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
-        notToast = spSetting.getBoolean("not_toast", notToast)
+        //检查数据库更新
+        autoUpdateDb = spSetting.getBoolean("auto_update_db", autoUpdateDb)
     }
 
     private fun setFab() {
@@ -205,7 +206,7 @@ class MainActivity : AppCompatActivity() {
                             sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
                         }
                         1 -> query?.let {
-                            sharedEquipViewModel.getEquips(asc, query ?: "")
+                            sharedEquipViewModel.getEquips(asc, query)
                         }
                         2 -> query?.let {
                             sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)

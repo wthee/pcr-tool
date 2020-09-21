@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
@@ -22,14 +22,13 @@ import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-
 import coil.load
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
 class EquipmentAdapter(private val isList: Boolean) :
-    ListAdapter<EquipmentData, EquipmentAdapter.ViewHolder>(EquipDiffCallback()), Filterable {
+    ListAdapter<EquipmentMaxData, EquipmentAdapter.ViewHolder>(EquipDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemEquipmentBinding.inflate(
@@ -82,7 +81,7 @@ class EquipmentAdapter(private val isList: Boolean) :
 
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                submitList(results?.values as List<EquipmentData>)
+                submitList(results?.values as List<EquipmentMaxData>)
                 MainActivity.sp.edit {
                     putInt(Constants.SP_COUNT_EQUIP, results.count)
                 }
@@ -93,7 +92,7 @@ class EquipmentAdapter(private val isList: Boolean) :
 
     inner class ViewHolder(private val binding: ItemEquipmentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(equip: EquipmentData, isList: Boolean) {
+        fun bind(equip: EquipmentMaxData, isList: Boolean) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.getContext()
@@ -112,7 +111,7 @@ class EquipmentAdapter(private val isList: Boolean) :
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.error)
+                    error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
                 //设置共享元素
@@ -131,18 +130,18 @@ class EquipmentAdapter(private val isList: Boolean) :
     }
 }
 
-class EquipDiffCallback : DiffUtil.ItemCallback<EquipmentData>() {
+class EquipDiffCallback : DiffUtil.ItemCallback<EquipmentMaxData>() {
 
     override fun areItemsTheSame(
-        oldItem: EquipmentData,
-        newItem: EquipmentData
+        oldItem: EquipmentMaxData,
+        newItem: EquipmentMaxData
     ): Boolean {
         return oldItem.equipmentId == newItem.equipmentId
     }
 
     override fun areContentsTheSame(
-        oldItem: EquipmentData,
-        newItem: EquipmentData
+        oldItem: EquipmentMaxData,
+        newItem: EquipmentMaxData
     ): Boolean {
         return oldItem.equipmentId == newItem.equipmentId
     }

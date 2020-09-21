@@ -56,5 +56,5 @@ class QuestData(
     @ColumnInfo(name = "quest_detail_bg_id") val quest_detail_bg_id: Int,
     @ColumnInfo(name = "quest_detail_bg_position") val quest_detail_bg_position: Int,
     @ColumnInfo(name = "start_time") val start_time: String,
-    @ColumnInfo(name = "end_time") val end_time: String
+    @ColumnInfo(name = "end_time") val end_time: String,
 ) : Serializable

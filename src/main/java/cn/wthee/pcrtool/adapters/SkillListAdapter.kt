@@ -59,7 +59,8 @@ class SkillAdapter :
                 //加载图片
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 itemPic.load(picUrl) {
-                    target {
+
+                    target() {
                         val bitmap = (it as BitmapDrawable).bitmap
                         //字体颜色
                         name.setTextColor(

@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.data.model.entity.CharacterPromotionStatus
-import cn.wthee.pcrtool.data.model.entity.CharacterRarity
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
-import cn.wthee.pcrtool.data.model.entity.EquipmentEnhanceRate
+import cn.wthee.pcrtool.data.model.entity.*
 import cn.wthee.pcrtool.utils.Constants
 
 //角色属性
@@ -50,7 +47,29 @@ data class CharacterAttrInfo(
             )
         }
 
-        fun setValue(equip: EquipmentEnhanceRate): CharacterAttrInfo {
+        fun setValue(equip: EquipmentMaxData): CharacterAttrInfo {
+            return CharacterAttrInfo(
+                equip.hp,
+                equip.atk,
+                equip.magicStr,
+                equip.def,
+                equip.magicDef,
+                equip.physicalCritical,
+                equip.magicCritical,
+                equip.waveHpRecovery,
+                equip.waveEnergyRecovery,
+                equip.dodge,
+                equip.physicalPenetrate,
+                equip.magicPenetrate,
+                equip.lifeSteal,
+                equip.hpRecoveryRate,
+                equip.energyRecoveryRate,
+                equip.energyReduceRate,
+                equip.accuracy
+            )
+        }
+
+        fun setValue(equip: UniqueEquipmentMaxData): CharacterAttrInfo {
             return CharacterAttrInfo(
                 equip.hp,
                 equip.atk,
@@ -142,10 +161,6 @@ data class CharacterAttrInfo(
 
 }
 
-data class CharacterAttr(
-    var type: String,
-    var value: Double
-)
 
 fun CharacterAttrInfo.add(other: CharacterAttrInfo): CharacterAttrInfo {
     this.hp += other.hp
@@ -189,30 +204,30 @@ fun CharacterAttrInfo.multiply(mult: Int): CharacterAttrInfo {
     return this
 }
 
-fun CharacterAttrInfo.getList(): List<CharacterAttr> {
-    var attrs = arrayListOf<CharacterAttr>()
-    for (i in 0 .. 16){
+fun CharacterAttrInfo.getList(): List<AttrData> {
+    val attrs = arrayListOf<AttrData>()
+    for (i in 0..16) {
         val value = when (i) {
             0 -> this.hp
-            1 -> this.atk
-            2 -> this.magicStr
-            3 -> this.def
-            4 -> this.magicDef
-            5 -> this.physicalCritical
-            6 -> this.magicCritical
-            7 -> this.waveHpRecovery
-            8 -> this.waveEnergyRecovery
-            9 -> this.dodge
-            10 -> this.physicalPenetrate
-            11 -> this.magicPenetrate
-            12 -> this.lifeSteal
+            1 -> this.lifeSteal
+            2 -> this.atk
+            3 -> this.magicStr
+            4 -> this.def
+            5 -> this.magicDef
+            6 -> this.physicalCritical
+            7 -> this.magicCritical
+            8 -> this.physicalPenetrate
+            9 -> this.magicPenetrate
+            10 -> this.accuracy
+            11 -> this.dodge
+            12 -> this.waveHpRecovery
             13 -> this.hpRecoveryRate
-            14 -> this.energyRecoveryRate
-            15 -> this.energyReduceRate
-            16 -> this.accuracy
+            14 -> this.waveEnergyRecovery
+            15 -> this.energyRecoveryRate
+            16 -> this.energyReduceRate
             else -> 0.0
         }
-        attrs.add(CharacterAttr(Constants.ATTR[i], value))
+        attrs.add(AttrData(Constants.ATTR[i], value))
     }
     return attrs
 }

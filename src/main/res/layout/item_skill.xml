@@ -49,7 +49,7 @@
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/skill_0"
+            app:srcCompat="@drawable/unknow_gray"
             tools:src="@drawable/load_mini" />
 
         <LinearLayout

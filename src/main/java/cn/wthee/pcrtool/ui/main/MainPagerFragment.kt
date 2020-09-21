@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
@@ -17,14 +20,12 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
+import cn.wthee.pcrtool.databinding.LayoutToolBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
-import cn.wthee.pcrtool.ui.setting.ToolsDialogFragment
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.Constants.SORT_AGE
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -148,7 +149,9 @@ class MainPagerFragment : Fragment() {
         }
         //工具
         toolbar.rightIcon.setOnClickListener {
-            ToolsDialogFragment().show(parentFragmentManager, "tools")
+            //popWindow
+//            ToolsDialogFragment().show(parentFragmentManager, "tools")
+            showListPopupWindow(toolbar.rightIcon)
         }
         //重复点击刷新
         binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -158,8 +161,8 @@ class MainPagerFragment : Fragment() {
                     binding.layoutTab.getTabAt(0) -> {
                         CharacterListFragment.characterfilterParams.initData()
                         CharacterListFragment.characterfilterParams.all = true
-                        sortType = SORT_AGE
-                        sortAsc = true
+                        sortType = SORT_DATE
+                        sortAsc = false
                         sharedCharacterViewModel.getCharacters(
                             sortType,
                             sortAsc, ""
@@ -183,6 +186,43 @@ class MainPagerFragment : Fragment() {
             }
         })
     }
+
+    //工具列表
+    private fun showListPopupWindow(view: View?) {
+        val toolBinding = LayoutToolBinding.inflate(layoutInflater)
+        val popupWindow = PopupWindow(
+            toolBinding.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+        popupWindow.apply {
+            width = ScreenUtil.getWidth() / 2
+            isOutsideTouchable = false
+            showAsDropDown(view)
+        }
+        toolBinding.apply {
+            toolLevel.setOnClickListener {
+                FabHelper.addBackFab()
+                //过渡动画
+                toolLevel.transitionName = "tool_level"
+                val extras = FragmentNavigatorExtras(
+                    toolLevel to toolLevel.transitionName
+                )
+                findNavController().navigate(
+                    R.id.action_containerFragment_to_toolLevelFragment, null, null, extras
+                )
+                popupWindow.dismiss()
+            }
+            toolPvp.setOnClickListener {
+                FabHelper.addBackFab()
+                findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
+                popupWindow.dismiss()
+            }
+        }
+    }
+
+
     //配置共享元素动画
     private fun prepareTransitions() {
 

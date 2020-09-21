@@ -10,6 +10,7 @@ import java.io.Serializable
 data class CharacterBasicInfo(
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,
+    @ColumnInfo(name = "kana") val kana: String,
     @ColumnInfo(name = "actual_name") val actualName: String,
     @ColumnInfo(name = "age") val age: String,
     @ColumnInfo(name = "guild") val guild: String,
@@ -61,18 +62,7 @@ data class CharacterBasicInfo(
     }
 
     //去除无效id
-    fun getFixedId(): Int {
-        val errorIds = arrayListOf(
-            101301, 105401, 101501,
-            101001, 102201, 102801,
-            103801, 104501, 104601
-        )
-        return if (errorIds.contains(id)) {
-            id + 31
-        } else {
-            id + 30
-        }
-    }
+    fun getFixedId() = id + 30
 
     //角色自我介绍
     fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {
@@ -97,7 +87,7 @@ data class CharacterBasicInfo(
     fun getNameL(): String {
         val index = this.name.indexOf("（")
         return if (index == -1) {
-            ""
+            kana
         } else {
             val sp = this.name.split("（")
             sp[1].substring(0, sp[1].lastIndex)
@@ -106,10 +96,10 @@ data class CharacterBasicInfo(
 
     //位置
     fun getPositionIcon() = when (this.position) {
-        in 0..300 -> R.drawable.ic_position_0_300
-        in 301..600 -> R.drawable.ic_position_301_600
-        in 601..9999 -> R.drawable.ic_position_600
-        else -> R.drawable.ic_position_600
+        in 0..299 -> R.drawable.ic_position_front
+        in 300..599 -> R.drawable.ic_position_middle
+        in 600..9999 -> R.drawable.ic_position_after
+        else -> R.drawable.ic_position_after
     }
 
     //羁绊提升文本

@@ -85,7 +85,8 @@ class CharacterAdapter(private val fragment: Fragment) :
                         null
                     )
                 //基本信息
-                name.text = character.name
+                name.text = character.getNameF()
+                nameExtra.text = character.getNameL()
                 three.text = fragment.resources.getString(
                     R.string.character_detail,
                     character.age,
@@ -155,8 +156,8 @@ class CharacterAdapter(private val fragment: Fragment) :
                         //位置筛选
                         if (param.positon != 0) {
                             val notInPositon = param.positon == 1 && data.position in 301..999
-                                    || param.positon == 2 && (data.position in 0..300 || data.position in 601..9999)
-                                    || param.positon == 3 && data.position in 0..600
+                                    || param.positon == 2 && (data.position in 0..299 || data.position in 600..9999)
+                                    || param.positon == 3 && data.position in 0..599
                             if (notInPositon) {
                                 filteredList.remove(data)
                             }

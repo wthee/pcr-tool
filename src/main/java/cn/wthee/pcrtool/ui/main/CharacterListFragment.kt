@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,12 +21,11 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.DialogUtil
-import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.transition.Hold
 import kotlinx.coroutines.launch
 
@@ -79,14 +79,54 @@ class CharacterListFragment : Fragment() {
             when (it.what) {
                 0 -> {
                     val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
                     DialogUtil.create(
                         requireContext(),
                         layout,
                         Constants.NOTICE_TITLE_ERROR,
-                        Constants.NOTICE_TOAST_TIMEOUT
+                        Constants.NOTICE_TOAST_TIMEOUT,
+                        Constants.BTN_OPERATE_FORCE_UPDATE_DB,
+                        Constants.BTN_NOT_UPDATE_DB,
+                        object : DialogListener {
+                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                                //强制更新数据库
+                                DatabaseUpdateHelper.forceUpdate()
+                                ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
+                                dialog.dismiss()
+                            }
+
+                            override fun onButtonOkClick(dialog: AlertDialog) {
+                                dialog.dismiss()
+                            }
+                        }
                     ).show()
                 }
-                1 -> viewModel.reload.postValue(true)
+                1 -> {
+                    viewModel.reload.postValue(true)
+                }
+                2 -> {
+                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
+                    DialogUtil.create(
+                        requireContext(),
+                        layout,
+                        "版本切换",
+                        "切换完成，请点击关闭应用",
+                        "关闭应用",
+                        "快点关闭",
+                        object : DialogListener {
+                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                                requireActivity().finish()
+                                System.exit(0)
+                            }
+
+                            override fun onButtonOkClick(dialog: AlertDialog) {
+                                requireActivity().finish()
+                                System.exit(0)
+                            }
+                        }
+                    ).show()
+                }
             }
 
             return@Callback true

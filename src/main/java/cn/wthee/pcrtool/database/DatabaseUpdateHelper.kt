@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.database
 
+import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -9,6 +11,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
+import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
@@ -19,67 +22,104 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
-class DatabaseUpdateHelper {
+object DatabaseUpdateHelper {
 
     private val mContext = MyApplication.getContext()
 
     //检查是否需要更新
-    fun checkDBVersion(notToast: Boolean) {
+    fun checkDBVersion(fromSetting: Boolean = false) {
+        //获取数据库本地版本
+        val databaseType = PreferenceManager.getDefaultSharedPreferences(mContext)
+            .getString("change_database", "1")?.toInt() ?: 1
         //开始
-        if (!notToast) {
-            ToastUtil.short(NOTICE_TOAST_CHECKING)
-        }
+        ToastUtil.short(NOTICE_TOAST_CHECKING)
+        //创建服务
         val service = ApiHelper.create(
             DatabaseService::class.java,
             API_URL
         )
-        service.getDbVersion().enqueue(object : Callback<DatabaseVersion> {
-            override fun onFailure(call: Call<DatabaseVersion>, t: Throwable) {
-                CharacterListFragment.handler.sendEmptyMessage(0)
-            }
-
-            override fun onResponse(
-                call: Call<DatabaseVersion>,
-                response: Response<DatabaseVersion>
-            ) {
-                //更新判断
-                val version = response.body()!!
-                val databaseVersion = MainActivity.sp.getString(
-                    Constants.SP_DATABASE_VERSION,
-                    Constants.DATABASE_VERSION
-                ) ?: Constants.DATABASE_VERSION
-                if (FileUtil.needUpadateDb()
-                    || databaseVersion == Constants.DATABASE_VERSION
-                    || version.TruthVersion > databaseVersion
-                ) {
-                    downloadDB(version.TruthVersion)
-                    if (!notToast) {
-                        ToastUtil.long(Constants.NOTICE_TOAST_TITLE)
-                    }
-                } else {
-                    if (!notToast) {
-                        ToastUtil.short(NOTICE_TOAST_CHECKED)
-                    }
+        //获取数据库最新版本
+        service.getDbVersion(if (databaseType == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP)
+            .enqueue(object : Callback<DatabaseVersion> {
+                override fun onFailure(call: Call<DatabaseVersion>, t: Throwable) {
+                    CharacterListFragment.handler.sendEmptyMessage(0)
                 }
-            }
-        })
+
+                override fun onResponse(
+                    call: Call<DatabaseVersion>, response: Response<DatabaseVersion>
+                ) {
+                    //更新判断
+                    val version = response.body()!!.TruthVersion
+                    downloadDB(version, databaseType, fromSetting)
+                }
+            })
+    }
+
+    //不校验版本，直接下载最新数据库
+    fun forceUpdate() {
+        val databaseType = PreferenceManager.getDefaultSharedPreferences(mContext)
+            .getString("change_database", "1")?.toInt() ?: 1
+        downloadDB("0", databaseType)
     }
 
     //获取数据库
-    private fun downloadDB(ver: String) {
-        //开始下载
-        val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
-            .setInputData(
-                Data.Builder()
-                    .putString(DatabaseDownloadWorker.KEY_INPUT_URL, API_URL)
-                    .putString(DatabaseDownloadWorker.KEY_VERSION, ver)
+    private fun downloadDB(ver: String, databaseType: Int, fromSetting: Boolean = false) {
+        //更新判断
+        try {
+            val databaseVersion = MainActivity.sp.getString(
+                if (databaseType == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+                "0"
+            ) ?: "0"
+            //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
+            val toDownload =
+                (!fromSetting && (FileUtil.needUpadateDb(databaseType) || databaseVersion == "0" || databaseVersion < ver))  //打开应用，数据库wal被清空||有新版本
+                        || (fromSetting && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在
+            if (toDownload) {
+                ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
+                //开始下载
+                val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DatabaseDownloadWorker.KEY_INPUT_URL, API_URL)
+                            .putString(DatabaseDownloadWorker.KEY_VERSION, ver)
+                            .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
+                            .putBoolean(DatabaseDownloadWorker.KEY_FROM_SETTING, fromSetting)
+                            .build()
+                    )
                     .build()
-            )
-            .build()
-        WorkManager.getInstance(mContext)
-            .enqueueUniqueWork("updateDatabase", ExistingWorkPolicy.REPLACE, uploadWorkRequest)
-
+                WorkManager.getInstance(mContext)
+                    .enqueueUniqueWork(
+                        "updateDatabase",
+                        ExistingWorkPolicy.REPLACE,
+                        uploadWorkRequest
+                    )
+            } else {
+                if (fromSetting) {
+                    CharacterListFragment.handler.sendEmptyMessage(2)
+                } else {
+                    ToastUtil.short(NOTICE_TOAST_CHECKED)
+                }
+                //更新数据库版本号
+                try {
+                    MainSettingsFragment.forceUpdateDb.summary = ver
+                } catch (e: Exception) {
+                } finally {
+                    MainActivity.sp.edit {
+                        putString(
+                            if (databaseType == 1)
+                                Constants.SP_DATABASE_VERSION
+                            else
+                                Constants.SP_DATABASE_VERSION_JP,
+                            ver
+                        )
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            CharacterListFragment.handler.sendEmptyMessage(0)
+        }
     }
 
 }

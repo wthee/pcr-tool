@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
-import cn.wthee.pcrtool.data.model.entity.EquipmentData
+import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
+import cn.wthee.pcrtool.data.model.entity.getList
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -27,7 +26,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     private val EQUIP = "equip"
 
     companion object {
-        fun getInstance(equip: EquipmentData) =
+        fun getInstance(equip: EquipmentMaxData) =
             EquipmentDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(EQUIP, equip)
@@ -38,7 +37,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         lateinit var materialAdapter: EquipmentMaterialAdapter
     }
 
-    private lateinit var equip: EquipmentData
+    private lateinit var equip: EquipmentMaxData
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var cusToolbar: ToolbarUtil
     private lateinit var behavior: BottomSheetBehavior<View>
@@ -47,7 +46,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            equip = it.getSerializable(EQUIP) as EquipmentData
+            equip = it.getSerializable(EQUIP) as EquipmentMaxData
         }
     }
 
@@ -90,27 +89,19 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                     goBack()
                 }
             }
-            //共享元素
-            itemPic.transitionName = "pic_${equip.equipmentId}"
-            //图标
-            val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
-            itemPic.load(picUrl) {
-                error(R.drawable.error)
-            }
-            //描述
-            desc.text = equip.getDesc()
-            //属性词条
-            object : LinearLayoutManager(MyApplication.getContext()) {
-                override fun canScrollVertically(): Boolean {
-                    return false
+            binding.detail.apply {
+                //图标
+                val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
+                itemPic.load(picUrl) {
+                    error(R.drawable.unknow_gray)
                 }
-            }.also {
-                it.orientation = LinearLayoutManager.VERTICAL
-                attrs.layoutManager = it
+                //描述
+                desc.text = equip.getDesc()
+                //属性词条
+                val adapter = EquipmentAttrAdapter()
+                attrs.adapter = adapter
+                adapter.submitList(equip.getList())
             }
-            val adapter = EquipmentAttrAdapter()
-            attrs.adapter = adapter
-            adapter.submitList(equip.getAttrs())
         }
     }
 
