@@ -111,9 +111,9 @@ class CharacterListFragment : Fragment() {
                         requireContext(),
                         layout,
                         "版本切换",
-                        "版本切换完成，数据将在下次打开APP时更新~",
+                        "切换完成，请点击关闭应用",
                         "关闭应用",
-                        "暂不关闭",
+                        "快点关闭",
                         object : DialogListener {
                             override fun onButtonOperateClick(dialog: AlertDialog) {
                                 requireActivity().finish()
@@ -121,7 +121,8 @@ class CharacterListFragment : Fragment() {
                             }
 
                             override fun onButtonOkClick(dialog: AlertDialog) {
-                                dialog.dismiss()
+                                requireActivity().finish()
+                                System.exit(0)
                             }
                         }
                     ).show()
