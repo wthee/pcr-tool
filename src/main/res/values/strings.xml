@@ -137,5 +137,9 @@
     <string name="pvp_select_tip">请选择防守方角色</string>
     <string name="game_version">游戏版本</string>
     <string name="game_version_summary">切换版本后，重新打开应用将更新数据</string>
+    <string name="change_success">切换完成</string>
+    <string name="change_success_tip">数据版本已切换，请点击关闭应用</string>
+    <string name="close_app">关闭应用</string>
+    <string name="close_app_too">快点关闭</string>
 
 </resources>

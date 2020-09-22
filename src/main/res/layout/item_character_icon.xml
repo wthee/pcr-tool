@@ -19,7 +19,7 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:ellipsize="end"

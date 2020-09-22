@@ -34,14 +34,6 @@
             app:entries="@array/database_type"
             app:entryValues="@array/database_type_value" />
 
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:iconSpaceReserved="false"
-            app:key="auto_update_db"
-            app:summaryOff="@string/off_auto_db"
-            app:summaryOn="@string/on_auto_db"
-            app:title="@string/auto_update_db" />
-
     </PreferenceCategory>
 
 

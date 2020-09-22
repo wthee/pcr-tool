@@ -199,7 +199,8 @@ class MainPagerFragment : Fragment() {
         popupWindow.apply {
             width = ScreenUtil.getWidth() / 2
             isOutsideTouchable = false
-            showAsDropDown(view)
+
+            showAsDropDown(view, 0, -50)
         }
         toolBinding.apply {
             toolLevel.setOnClickListener {

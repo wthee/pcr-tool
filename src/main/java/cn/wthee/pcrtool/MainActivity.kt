@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var isHome = true
-        var autoUpdateDb = true
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -67,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        checkUpdate(autoUpdateDb)
+        DatabaseUpdateHelper.checkDBVersion()
         //悬浮按钮
         setFab()
         setListener()
@@ -88,16 +87,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkUpdate(autoUpdateDb: Boolean) {
-        val type = PreferenceManager.getDefaultSharedPreferences(this)
-            .getString("change_database", "1")?.toInt() ?: 1
-        if (FileUtil.needUpadateDb(type) || autoUpdateDb) {
-            MainScope().launch {
-                DatabaseUpdateHelper.checkDBVersion()
-            }
-        }
-    }
-
     private fun init() {
         //获取版本名
         nowVersionName = packageManager.getPackageInfo(
@@ -107,8 +96,6 @@ class MainActivity : AppCompatActivity() {
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
-        //检查数据库更新
-        autoUpdateDb = spSetting.getBoolean("auto_update_db", autoUpdateDb)
     }
 
     private fun setFab() {

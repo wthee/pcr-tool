@@ -40,10 +40,10 @@ class PvpCharactertAdapter :
             binding.apply {
                 val ctx = MyApplication.getContext()
                 //加载动画
-                root.animation =
+                itemPic.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //名称
-                name.text = data.position.toString()
+                name.text = if (data.position == 999) "未选择" else data.position.toString()
                 //加载图片
                 if (data.unitId == 0) {
                     //默认

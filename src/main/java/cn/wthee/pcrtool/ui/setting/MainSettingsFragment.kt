@@ -39,7 +39,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //获取控件
         val isList = findPreference<SwitchPreferenceCompat>("equip_is_list")
         forceUpdateDb = findPreference<Preference>("force_update_db")!!
-        val autoUpdateDb = findPreference<Preference>("auto_update_db")
         val appUpdate = findPreference<Preference>("force_update_app")
         val cleanData = findPreference<Preference>("clean_data")
         val notToast = findPreference<Preference>("not_toast")
@@ -58,12 +57,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         isList?.setOnPreferenceChangeListener { _, newValue ->
             val value = newValue as Boolean
             viewModel.isList.postValue(value)
-            return@setOnPreferenceChangeListener true
-        }
-        //自动更新数据库
-        autoUpdateDb?.setOnPreferenceChangeListener { _, newValue ->
-            val value = newValue as Boolean
-            notToast?.isEnabled = value
             return@setOnPreferenceChangeListener true
         }
         //强制更新数据库

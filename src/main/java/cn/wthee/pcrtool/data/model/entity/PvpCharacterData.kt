@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.model.entity
 
 import androidx.room.ColumnInfo
+import com.google.gson.JsonArray
 import java.io.Serializable
 
 data class PvpCharacterData(
@@ -18,10 +19,10 @@ fun getDefault() = arrayListOf(
     PvpCharacterData(0, 999),
 )
 
-fun ArrayList<PvpCharacterData>.getIds(): String {
-    var ids = ""
-    for (character in this){
-        ids += character.unitId.toString() + ","
+fun ArrayList<PvpCharacterData>.getIds(): JsonArray {
+    val ids = JsonArray()
+    for (character in this) {
+        ids.add(character.unitId)
     }
     return ids
 }

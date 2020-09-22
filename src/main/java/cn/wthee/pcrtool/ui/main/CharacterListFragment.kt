@@ -110,10 +110,10 @@ class CharacterListFragment : Fragment() {
                     DialogUtil.create(
                         requireContext(),
                         layout,
-                        "版本切换",
-                        "切换完成，请点击关闭应用",
-                        "关闭应用",
-                        "快点关闭",
+                        getString(R.string.change_success),
+                        getString(R.string.change_success_tip),
+                        getString(R.string.close_app),
+                        getString(R.string.close_app_too),
                         object : DialogListener {
                             override fun onButtonOperateClick(dialog: AlertDialog) {
                                 requireActivity().finish()

@@ -33,8 +33,8 @@ object DatabaseUpdateHelper {
         //获取数据库本地版本
         val databaseType = PreferenceManager.getDefaultSharedPreferences(mContext)
             .getString("change_database", "1")?.toInt() ?: 1
-        //开始
-        ToastUtil.short(NOTICE_TOAST_CHECKING)
+        //提示开始
+        if (fromSetting) ToastUtil.short(NOTICE_TOAST_CHECKING)
         //创建服务
         val service = ApiHelper.create(
             DatabaseService::class.java,

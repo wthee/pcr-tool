@@ -19,6 +19,9 @@ import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.JsonObject
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,25 +67,31 @@ class ToolPvpFragment : Fragment() {
         binding.pvpSearch.setOnClickListener {
             //参数校验
             if (selects.contains(PvpCharacterData(0, 999))) {
-                ToastUtil.short("555")
+                ToastUtil.short("请选择 5 名角色~")
                 return@setOnClickListener
             }
             //创建服务
             val service = ApiHelper.create(PVPService::class.java, Constants.API_URL_PVP)
             //参数
-            val region = 1
-            val ids = selects.getIds()
+            val json = JsonObject()
+            json.addProperty("region", 1)
+            json.add("ids", selects.getIds())
+            val body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                json.toString()
+            );
             //发送请求
-            service.getData(region, ids).enqueue(object : Callback<PVPData> {
+            service.getData(body).enqueue(object : Callback<PVPData> {
                 override fun onResponse(call: Call<PVPData>, response: Response<PVPData>) {
                     try {
                         val body = response.body()
+                        Log.e("todo", body.toString())
                         if (body == null || body.code != 0) {
                             ToastUtil.short("查询失败，请稍后重试~")
                         } else {
-                            val result = body.data.result
-                            //dialog 展示查询结果
-                            Log.e("todo", result[0].toString())
+                            //展示查询结果
+                            ToolPvpResultDialogFragment.newInstance(body.data)
+                                .show(parentFragmentManager, "pvp")
                         }
                     } catch (e: Exception) {
                         ToastUtil.short("数据解析失败，请稍后重试~")
