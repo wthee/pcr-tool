@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool
+package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.os.Bundle
 import android.view.LayoutInflater

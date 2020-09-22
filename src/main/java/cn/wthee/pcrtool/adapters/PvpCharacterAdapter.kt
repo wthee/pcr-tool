@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.entity.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
-import cn.wthee.pcrtool.ui.tool.ToolPvpFragment
+import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ToastUtil
