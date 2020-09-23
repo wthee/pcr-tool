@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-//角色等级信息
+//角色交流文本
 @Entity(
     tableName = "unit_comments",
     indices = [Index(

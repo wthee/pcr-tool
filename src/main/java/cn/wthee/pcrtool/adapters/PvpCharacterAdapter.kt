@@ -56,27 +56,32 @@ class PvpCharactertAdapter :
                         placeholder(R.drawable.load_mini)
                     }
                 }
-                //设置点击跳转
+                //设置点击事件
                 root.setOnClickListener {
                     ToolPvpFragment.selects.apply {
                         val empty = PvpCharacterData(0, 999)
+                        //选择完毕
                         if (size == 5 && !contains(empty) && !contains(data)) {
                             ToastUtil.short("已选择五名角色，无法继续添加！")
                             return@setOnClickListener
                         }
+                        //点击选择新角色
                         if (!contains(data)) {
                             //添加角色
                             add(data)
+                            //移除待定角色
                             if (contains(empty)) {
                                 remove(empty)
                             }
                         } else {
-                            //移除角色
+                            //已选择，再次点击则移除角色
                             remove(data)
                             add(empty)
                         }
+                        //按位置排序
                         sortByDescending { it.position }
                     }
+                    //更新列表
                     ToolPvpFragment.pvpCharactertAdapter.apply {
                         submitList(ToolPvpFragment.selects)
                         notifyDataSetChanged()

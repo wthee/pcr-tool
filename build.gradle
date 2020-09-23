@@ -61,7 +61,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     //coil
-    def coil_version = "1.0.0-rc2"
+    def coil_version = '1.0.0-rc3'
     implementation "io.coil-kt:coil:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"
 
