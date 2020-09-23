@@ -15,7 +15,6 @@ import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
-import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKED
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -98,8 +97,6 @@ object DatabaseUpdateHelper {
             } else {
                 if (fromSetting) {
                     CharacterListFragment.handler.sendEmptyMessage(2)
-                } else {
-                    ToastUtil.short(NOTICE_TOAST_CHECKED)
                 }
                 //更新数据库版本号
                 try {
