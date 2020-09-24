@@ -17,9 +17,8 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
-import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
-import cn.wthee.pcrtool.data.model.entity.getList
-import cn.wthee.pcrtool.data.model.getList
+import cn.wthee.pcrtool.database.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.database.entity.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
@@ -106,6 +105,11 @@ class CharacterBasicInfoFragment : Fragment() {
         return binding.root
     }
 
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.root.layoutTransition.setAnimateParentHierarchy(false);
+    }
 
     //加载图片
     private fun loadImages() {
@@ -302,7 +306,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     //属性词条
                     val adapter = EquipmentAttrAdapter()
                     attrs.adapter = adapter
-                    adapter.submitList(it.getList())
+                    adapter.submitList(it.attr.getList())
                 } else {
                     binding.promotion.uniqueEquip.root.visibility = View.GONE
                 }

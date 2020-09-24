@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.model.CharacterSkillInfo
-import cn.wthee.pcrtool.data.model.entity.AttackPattern
+import cn.wthee.pcrtool.database.entity.AttackPattern
 import kotlinx.coroutines.launch
 
 

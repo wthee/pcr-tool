@@ -27,7 +27,7 @@ object ApiHelper {
     //创建服务
     fun <T> create(serviceClass: Class<T>, url: String): T {
         val client = OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .build()

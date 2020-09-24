@@ -7,14 +7,14 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.CharacterDao
 import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
-import cn.wthee.pcrtool.data.model.entity.*
-import cn.wthee.pcrtool.data.model.entityjp.*
+import cn.wthee.pcrtool.database.entity.*
+import cn.wthee.pcrtool.database.entityjp.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
 
 
 @Database(
     entities = [
-        Character::class,
+        CharacterProfile::class,
         Character6Star::class,
         CharacterActualData::class,
         CharacterDataJP::class,
@@ -40,6 +40,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         AttackPattern::class,
         GuildData::class,
         CharacterExperienceTeam::class,
+        CharacterComments::class,
     ],
     version = 12,
     exportSchema = false

@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.model.entity.*
+import cn.wthee.pcrtool.database.entity.*
 
 
 //角色数据DAO

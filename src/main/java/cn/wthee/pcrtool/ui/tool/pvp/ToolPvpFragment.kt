@@ -10,9 +10,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharactertAdapter
 import cn.wthee.pcrtool.data.model.PVPData
-import cn.wthee.pcrtool.data.model.entity.PvpCharacterData
-import cn.wthee.pcrtool.data.model.entity.getDefault
-import cn.wthee.pcrtool.data.model.entity.getIds
+import cn.wthee.pcrtool.database.entity.PvpCharacterData
+import cn.wthee.pcrtool.database.entity.getDefault
+import cn.wthee.pcrtool.database.entity.getIds
 import cn.wthee.pcrtool.data.service.PVPService
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.utils.ApiHelper

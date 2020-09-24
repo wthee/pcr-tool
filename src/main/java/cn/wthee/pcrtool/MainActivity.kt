@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         //绑定活动
         ActivityUtil.instance.currentActivity = this
         // Bugly 初始设置
-        BuglyHelper.init(this)
+//        BuglyHelper.init(this)
 
     }
 

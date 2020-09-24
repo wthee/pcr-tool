@@ -54,7 +54,7 @@ class DatabaseDownloadWorker(
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
-        val fromSetting = inputData.getBoolean(KEY_FROM_SETTING, false)
+        val fromSetting = inputData.getInt(KEY_FROM_SETTING, -1)
         setForegroundAsync(createForegroundInfo())
         return@coroutineScope download(inputUrl, version, type, fromSetting)
     }
@@ -64,7 +64,7 @@ class DatabaseDownloadWorker(
         inputUrl: String,
         version: String,
         type: Int,
-        fromSetting: Boolean
+        fromSetting: Int = -1
     ): Result {
         try {
             //创建Retrofit服务
@@ -143,7 +143,7 @@ class DatabaseDownloadWorker(
                             )
                         }
                         //通知更新数据
-                        if (fromSetting) {
+                        if (fromSetting == 1) {
                             CharacterListFragment.handler.sendEmptyMessage(2)
                         } else {
                             ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)

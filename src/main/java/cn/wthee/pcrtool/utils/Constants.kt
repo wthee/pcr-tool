@@ -71,8 +71,9 @@ object Constants {
     const val NOTICE_TOAST_NO_FILE = "数据库文件丢失，请稍后重试~"
     const val NOTICE_TOAST_TITLE_DB_DOWNLOAD = "下载进度请查看通知栏"
     const val NOTICE_TOAST_TIMEOUT = "若主页内容未正常显示，请点击${BTN_OPERATE_FORCE_UPDATE_DB}，下载最新数据库文件"
-    const val NOTICE_TOAST_CHECKING = "数据库切换中......"
+    const val NOTICE_TOAST_CHANGE = "数据库切换中......"
     const val NOTICE_TOAST_TODO = "功能暂未实装"
+    const val NOTICE_TOAST_CHECKING = "正在检测数据库版本"
 
 
     //列表列数

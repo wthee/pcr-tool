@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -27,13 +28,14 @@ object DatabaseUpdateHelper {
 
     private val mContext = MyApplication.getContext()
 
-    //检查是否需要更新
-    fun checkDBVersion(fromSetting: Boolean = false) {
+    //检查是否需要更新 -1:正常调用 0：点击版本号 1：切换版本调用
+    fun checkDBVersion(fromSetting: Int = -1) {
         //获取数据库本地版本
         val databaseType = PreferenceManager.getDefaultSharedPreferences(mContext)
             .getString("change_database", "1")?.toInt() ?: 1
         //提示开始
-        if (fromSetting) ToastUtil.short(NOTICE_TOAST_CHECKING)
+        if (fromSetting == 1) ToastUtil.short(NOTICE_TOAST_CHANGE)
+        if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_CHECKING)
         //创建服务
         val service = ApiHelper.create(
             DatabaseService::class.java,
@@ -64,7 +66,7 @@ object DatabaseUpdateHelper {
     }
 
     //获取数据库
-    private fun downloadDB(ver: String, databaseType: Int, fromSetting: Boolean = false) {
+    private fun downloadDB(ver: String, databaseType: Int, fromSetting: Int = -1) {
         //更新判断
         try {
             val databaseVersion = MainActivity.sp.getString(
@@ -72,9 +74,9 @@ object DatabaseUpdateHelper {
                 "0"
             ) ?: "0"
             //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
-            val toDownload =
-                (!fromSetting && (FileUtil.needUpadateDb(databaseType) || databaseVersion == "0" || databaseVersion < ver))  //打开应用，数据库wal被清空||有新版本
-                        || (fromSetting && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在
+            val toDownload = databaseVersion < ver  //有版本更新
+                    || (fromSetting == -1 && (FileUtil.needUpadateDb(databaseType) || databaseVersion == "0"))  //打开应用，数据库wal被清空
+                    || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在时更新
             if (toDownload) {
                 ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
                 //开始下载
@@ -84,7 +86,7 @@ object DatabaseUpdateHelper {
                             .putString(DatabaseDownloadWorker.KEY_INPUT_URL, API_URL)
                             .putString(DatabaseDownloadWorker.KEY_VERSION, ver)
                             .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
-                            .putBoolean(DatabaseDownloadWorker.KEY_FROM_SETTING, fromSetting)
+                            .putInt(DatabaseDownloadWorker.KEY_FROM_SETTING, fromSetting)
                             .build()
                     )
                     .build()
@@ -95,7 +97,7 @@ object DatabaseUpdateHelper {
                         uploadWorkRequest
                     )
             } else {
-                if (fromSetting) {
+                if (fromSetting == 1) {
                     CharacterListFragment.handler.sendEmptyMessage(2)
                 }
                 //更新数据库版本号

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EnemyRepository
-import cn.wthee.pcrtool.data.model.entity.EnemyData
+import cn.wthee.pcrtool.database.entity.EnemyData
 import kotlinx.coroutines.launch
 
 

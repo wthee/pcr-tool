@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.model.CharacterAttrInfo
-import cn.wthee.pcrtool.data.model.add
-import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
-import cn.wthee.pcrtool.data.model.multiply
+import cn.wthee.pcrtool.database.entity.Attr
+import cn.wthee.pcrtool.database.entity.add
+import cn.wthee.pcrtool.database.entity.multiply
+import cn.wthee.pcrtool.database.entity.EquipmentMaxData
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch
 
@@ -19,7 +19,7 @@ class CharacterPromotionViewModel(
 ) : ViewModel() {
 
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
-    var sumInfo = MutableLiveData<CharacterAttrInfo>()
+    var sumInfo = MutableLiveData<Attr>()
     var maxData = MutableLiveData<List<Int>>()
 
     //获取角色属性信息
@@ -30,9 +30,9 @@ class CharacterPromotionViewModel(
             val rarityData = characterRepository.getRarity(unitId, rarity)
             val ids = characterRepository.getEquipmentIds(unitId, rank).getAllIds()
             //计算指定rank星级下的角色属性
-            val info = CharacterAttrInfo.setValue(rankData)
-                .add(CharacterAttrInfo.setValue(rarityData))
-                .add(CharacterAttrInfo.setGrowthValue(rarityData).multiply(lv + rank))
+            val info = rankData.attr
+                .add(rarityData.attr)
+                .add(Attr.setGrowthValue(rarityData).multiply(lv + rank))
             val eqs = arrayListOf<EquipmentMaxData>()
             ids.forEach {
                 if (it == UNKNOW_EQUIP_ID)
@@ -45,12 +45,12 @@ class CharacterPromotionViewModel(
             //计算穿戴装备后属性
             eqs.forEach { eq ->
                 if (eq.equipmentId == UNKNOW_EQUIP_ID) return@forEach
-                info.add(CharacterAttrInfo.setValue(eq))
+                info.add(eq.attr)
             }
             //专武
             val uniqueEquip = equipmentRepository.getUniqueEquipInfos(unitId)
             if (uniqueEquip != null) {
-                info.add(CharacterAttrInfo.setValue(uniqueEquip))
+                info.add(uniqueEquip.attr)
             }
             sumInfo.postValue(info)
         }

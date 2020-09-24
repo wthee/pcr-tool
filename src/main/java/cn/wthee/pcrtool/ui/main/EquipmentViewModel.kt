@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
-import cn.wthee.pcrtool.data.model.entity.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.database.entity.EquipmentMaxData
+import cn.wthee.pcrtool.database.entity.UniqueEquipmentMaxData
 import kotlinx.coroutines.launch
 
 

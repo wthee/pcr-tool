@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
-import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
-import cn.wthee.pcrtool.data.model.entity.getList
+import cn.wthee.pcrtool.database.entity.EquipmentMaxData
+import cn.wthee.pcrtool.database.entity.getList
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -100,7 +100,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 //属性词条
                 val adapter = EquipmentAttrAdapter()
                 attrs.adapter = adapter
-                adapter.submitList(equip.getList())
+                adapter.submitList(equip.attr.getList())
             }
         }
     }

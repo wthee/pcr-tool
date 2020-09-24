@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterViewPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
-import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.database.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import com.google.android.material.transition.MaterialContainerTransform
