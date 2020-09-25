@@ -28,7 +28,6 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "intro") val intro: String,
     @ColumnInfo(name = "atk_type") val atkType: Int,
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
-    @ColumnInfo(name = "start_time") val startTime: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
     @ColumnInfo(name = "comments") val comments: String,
 ) : Serializable {

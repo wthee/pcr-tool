@@ -28,9 +28,7 @@ interface CharacterDao {
             unit_profile.weight,
             unit_data.search_area_width,
             unit_data.atk_type,
-            CAST (
-                SUBSTR( unit_data.start_time, 0, 4 ) || SUBSTR( unit_data.start_time, 6, 2 ) || SUBSTR( unit_data.start_time, 9, 2 ) AS INTEGER 
-            ) AS start_time
+            SUBSTR( unit_data.start_time, 0, 4 ) || SUBSTR( unit_data.start_time, 6, 2 ) || SUBSTR( unit_data.start_time, 9, 2 ) AS start_time
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
@@ -63,9 +61,6 @@ interface CharacterDao {
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
             unit_data.rarity,
-            CAST (
-                SUBSTR( unit_data.start_time, 0, 4 ) || SUBSTR( unit_data.start_time, 6, 2 ) || SUBSTR( unit_data.start_time, 9, 2 ) AS INTEGER 
-            ) AS start_time,
             COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
             (COALESCE( character_love_rankup_text.serif_1, "" ) || COALESCE( character_love_rankup_text.serif_2, "" ) || COALESCE( character_love_rankup_text.serif_3, "" )) AS serif,
             COALESCE(cts.comments, "") AS comments

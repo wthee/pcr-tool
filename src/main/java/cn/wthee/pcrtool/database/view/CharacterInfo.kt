@@ -17,7 +17,7 @@ data class CharacterInfo(
     @ColumnInfo(name = "weight") val weight: String,
     @ColumnInfo(name = "search_area_width") val position: Int,
     @ColumnInfo(name = "atk_type") val atkType: Int,
-    @ColumnInfo(name = "start_time") val startTime: Int,
+    @ColumnInfo(name = "start_time") val startTime: String,
 ) : Serializable {
 
 
