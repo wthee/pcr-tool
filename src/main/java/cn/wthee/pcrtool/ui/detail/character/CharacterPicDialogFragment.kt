@@ -8,29 +8,28 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import cn.wthee.pcrtool.adapters.CharacterCardBgAdapter
-import cn.wthee.pcrtool.database.view.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 
 
 class CharacterPicDialogFragment : DialogFragment() {
 
     companion object {
-        fun getInstance(characterInfo: CharacterBasicInfo): CharacterPicDialogFragment {
+        fun getInstance(urls: ArrayList<String>): CharacterPicDialogFragment {
             val fragment = CharacterPicDialogFragment()
             val bundle = Bundle()
-            bundle.putSerializable("character", characterInfo)
+            bundle.putStringArrayList("urls", urls)
             fragment.arguments = bundle
             return fragment
         }
     }
 
     private lateinit var binding: FragmentCharacterPicListBinding
-    private lateinit var character: CharacterBasicInfo
+    private lateinit var urls: ArrayList<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        character = requireArguments().getSerializable("character") as CharacterBasicInfo
+        urls = requireArguments().getStringArrayList("urls") as ArrayList<String>
     }
 
     override fun onCreateView(
@@ -43,8 +42,7 @@ class CharacterPicDialogFragment : DialogFragment() {
         val adapter = CharacterCardBgAdapter()
         PagerSnapHelper().attachToRecyclerView(binding.pics)
         binding.pics.adapter = adapter
-        val list = character.getAllUrl()
-        adapter.submitList(list)
+        adapter.submitList(urls)
         //返回
         binding.backCbi.setOnClickListener {
             dismiss()
@@ -53,7 +51,7 @@ class CharacterPicDialogFragment : DialogFragment() {
         binding.pics.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             val manager = binding.pics.getLayoutManager() as LinearLayoutManager
             val index = manager.findFirstCompletelyVisibleItemPosition() + 1
-            if (index != 0) binding.picIndex.text = "$index / ${list.size}"
+            if (index != 0) binding.picIndex.text = "$index / ${urls.size}"
         }
         return binding.root
     }
@@ -69,4 +67,5 @@ class CharacterPicDialogFragment : DialogFragment() {
         params?.verticalMargin = 0f
         window?.attributes = params
     }
+
 }

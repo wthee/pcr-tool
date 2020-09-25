@@ -1,13 +1,12 @@
 package cn.wthee.pcrtool.database.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
 
 
 //多表查询结果保存
-data class CharacterBasicInfo(
+data class CharacterInfoPro(
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,
     @ColumnInfo(name = "kana") val kana: String,
@@ -24,15 +23,14 @@ data class CharacterBasicInfo(
     @ColumnInfo(name = "voice") val voice: String,
     @ColumnInfo(name = "catch_copy") val catchCopy: String,
     @ColumnInfo(name = "self_text") val selfText: String,
-    @ColumnInfo(name = "serif_1") val serif1: String,
-    @ColumnInfo(name = "serif_2") val serif2: String,
-    @ColumnInfo(name = "serif_3") val serif3: String,
+    @ColumnInfo(name = "serif") val serif: String,
     @ColumnInfo(name = "search_area_width") val position: Int,
-    @ColumnInfo(name = "comment") val comment: String,
+    @ColumnInfo(name = "intro") val intro: String,
     @ColumnInfo(name = "atk_type") val atkType: Int,
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
     @ColumnInfo(name = "start_time") val startTime: Int,
-    @ColumnInfo(name = "rarity") val rarity: Int
+    @ColumnInfo(name = "rarity") val rarity: Int,
+    @ColumnInfo(name = "comments") val comments: String,
 ) : Serializable {
 
     fun getStarId(star: Int): String {
@@ -72,45 +70,18 @@ data class CharacterBasicInfo(
     }
 
 
-    //获取名字，去除限定类型
-    fun getNameF(): String {
-        val index = this.name.indexOf("（")
-        return if (index == -1) {
-            this.name
-        } else {
-            val sp = this.name.split("（")
-            sp[0]
-        }
-    }
-
-    //获取限定类型
-    fun getNameL(): String {
-        val index = this.name.indexOf("（")
-        return if (index == -1) {
-            kana
-        } else {
-            val sp = this.name.split("（")
-            sp[1].substring(0, sp[1].lastIndex)
-        }
-    }
-
-    //位置
-    fun getPositionIcon() = when (this.position) {
-        in 0..299 -> R.drawable.ic_position_front
-        in 300..599 -> R.drawable.ic_position_middle
-        in 600..9999 -> R.drawable.ic_position_after
-        else -> R.drawable.ic_position_after
-    }
-
     //羁绊提升文本
     fun getLoveSelfText(): String {
-        val text = serif1 + serif2 + serif3
-        return if (text.contains("test") || text.isBlank()) {
+        return if (serif.contains("test") || serif.isBlank()) {
             "......"
         } else {
-            text.replace("\\n", "")
+            serif.replace("\\n", "")
         }
     }
 
-    fun getFixedComment() = comment.replace("\\n", "")
+    fun getIntroText() = intro.replace("\\n", "")
+
+    fun getCommentsText() =
+        comments.replace("\\n", "").replace("-", "\n")
+
 }

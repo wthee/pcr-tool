@@ -73,6 +73,7 @@ class CharacterListFragment : Fragment() {
         setObserve()
         //控件监听
         setListener()
+        //获取角色
         viewModel.getCharacters(sortType, sortAsc, "")
         //接收消息
         handler = Handler(Handler.Callback {

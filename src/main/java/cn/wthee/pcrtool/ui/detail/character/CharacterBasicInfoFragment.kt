@@ -8,20 +8,20 @@ import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.CharacterInfoPro
+import cn.wthee.pcrtool.database.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import kotlin.math.abs
 
@@ -30,25 +30,34 @@ class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
         var isLoved = false
-        fun getInstance(characterInfo: CharacterBasicInfo): CharacterBasicInfoFragment {
+        fun getInstance(uid: Int): CharacterBasicInfoFragment {
             val fragment = CharacterBasicInfoFragment()
             val bundle = Bundle()
-            bundle.putSerializable("character", characterInfo)
+            bundle.putInt("uid", uid)
             fragment.arguments = bundle
             return fragment
         }
     }
 
-    private lateinit var character: CharacterBasicInfo
+    private var uid = -1
+    private var urls = arrayListOf<String>()
     private lateinit var binding: FragmentCharacterBasicInfoBinding
-    private lateinit var viewModel: CharacterAttrViewModel
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
+    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
+        InjectorUtil.providePromotionViewModelFactory()
+    }
+    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
+        InjectorUtil.provideCharacterSkillViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            character = it.getSerializable("character") as CharacterBasicInfo
+            uid = it.getInt("uid")
         }
-        isLoved = sp.getBoolean(character.id.toString(), false)
+        isLoved = sp.getBoolean(uid.toString(), false)
     }
 
     override fun onCreateView(
@@ -57,7 +66,7 @@ class CharacterBasicInfoFragment : Fragment() {
     ): View? {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //设置共享元素
-        binding.root.transitionName = "item_${character.id}"
+        binding.root.transitionName = "item_${uid}"
         //开始动画
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
             override fun prev(view: View) {
@@ -69,21 +78,19 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             override fun end(view: View) {
-                viewModel.getMaxRankAndRarity(character.id)
-                CharacterSkillFragment.viewModel.getCharacterSkills(character.id)
+                sharedCharacterAttrViewModel.getMaxRankAndRarity(uid)
+                sharedSkillViewModel.getCharacterSkills(uid)
             }
         }, binding.fabLoveCbi, binding.basicInfo)
-
-        //加载图片
-        loadImages()
         //点击事件
         setListener()
         //初始化数据
-        setData()
+        sharedCharacterViewModel.getCharacter(uid)
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner, Observer {
+            setData(it)
+            urls = it.getAllUrl()
+        })
         setHasOptionsMenu(true)
-        //获取viewModel
-        viewModel = InjectorUtil.providePromotionViewModelFactory()
-            .create(CharacterAttrViewModel::class.java)
         //初始收藏
         setLove(isLoved)
         return binding.root
@@ -95,26 +102,6 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.root.layoutTransition.setAnimateParentHierarchy(false);
     }
 
-    //加载图片
-    private fun loadImages() {
-        //toolbar 背景
-        val picUrl =
-            HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
-        //角色图片
-        binding.characterPic.load(picUrl) {
-            error(R.drawable.error)
-            placeholder(R.drawable.load)
-            listener(
-                onStart = {
-                    parentFragment?.startPostponedEnterTransition()
-                }
-            )
-        }
-        lifecycleScope.launch {
-            delay(resources.getInteger(R.integer.item_anim_fast).toLong())
-            canBack = true
-        }
-    }
 
     //点击事件
     private fun setListener() {
@@ -127,7 +114,9 @@ class CharacterBasicInfoFragment : Fragment() {
                 setLove(isLoved)
             }
             characterPic.setOnClickListener {
-                CharacterPicDialogFragment.getInstance(character).show(parentFragmentManager, "pic")
+                CharacterPicDialogFragment
+                    .getInstance(urls)
+                    .show(parentFragmentManager, "pic")
             }
             //toolbar 展开折叠监听
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -177,7 +166,7 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun setLove(isLoved: Boolean) {
         sp.edit {
             putBoolean(
-                character.id.toString(),
+                uid.toString(),
                 isLoved
             )
         }
@@ -201,15 +190,29 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     //初始化角色基本数据
-    private fun setData() {
+    private fun setData(characterPro: CharacterInfoPro) {
+        //toolbar 背景
+        val picUrl =
+            HttpUrl.get(Constants.CHARACTER_URL + characterPro.getAllStarId()[1] + Constants.WEBP)
+        //角色图片
+        binding.characterPic.load(picUrl) {
+            error(R.drawable.error)
+            placeholder(R.drawable.load)
+            listener(
+                onStart = {
+                    parentFragment?.startPostponedEnterTransition()
+                }
+            )
+        }
+        //文本数据
         binding.apply {
             toolTitle.text =
-                if (character.actualName.isEmpty())
-                    character.name
+                if (characterPro.actualName.isEmpty())
+                    characterPro.name
                 else
-                    character.actualName
-            catah.text = character.catchCopy
-            name.text = character.name
+                    characterPro.actualName
+            catah.text = characterPro.catchCopy
+            name.text = characterPro.name
 //            character.getNameL().apply {
 //                if (this.isNotEmpty()) {
 //                    lastName.text = this
@@ -220,32 +223,33 @@ class CharacterBasicInfoFragment : Fragment() {
 
             three.text = requireActivity().resources.getString(
                 R.string.character_detail,
-                character.age,
-                character.height,
-                character.weight,
-                character.position
+                characterPro.age,
+                characterPro.height,
+                characterPro.weight,
+                characterPro.position
             )
-            comment.text = character.getFixedComment()
-            if (comment.text.isEmpty()) comment.visibility = View.GONE
+            intro.text = characterPro.getIntroText()
+            if (intro.text.isEmpty()) intro.visibility = View.GONE
             birth.text = requireActivity().resources.getString(
                 R.string.birth,
-                character.birthMonth,
-                character.birthDay
+                characterPro.birthMonth,
+                characterPro.birthDay
             )
             blood.text =
-                requireActivity().resources.getString(R.string.blood, character.bloodType)
-            race.text = character.race
-            guide.text = character.guild
-            favorite.text = character.favorite
-            cv.text = character.voice
-            self.text = character.getSelf()
+                requireActivity().resources.getString(R.string.blood, characterPro.bloodType)
+            race.text = characterPro.race
+            guide.text = characterPro.guild
+            favorite.text = characterPro.favorite
+            cv.text = characterPro.voice
+            self.text = characterPro.getSelf()
             positionType.background =
                 ResourcesCompat.getDrawable(
                     resources,
-                    character.getPositionIcon(),
+                    getPositionIcon(characterPro.position),
                     null
                 )
-            loveSelfText.text = character.getLoveSelfText()
+            loveSelfText.text = characterPro.getLoveSelfText()
+            comments.text = characterPro.getCommentsText()
         }
     }
 }

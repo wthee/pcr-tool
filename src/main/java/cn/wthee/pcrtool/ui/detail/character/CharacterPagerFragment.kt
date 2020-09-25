@@ -10,7 +10,6 @@ import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterViewPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
-import cn.wthee.pcrtool.database.view.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import com.google.android.material.transition.MaterialContainerTransform
@@ -18,13 +17,13 @@ import com.google.android.material.transition.MaterialContainerTransform
 class CharacterPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPagerBinding
-    private var character: CharacterBasicInfo? = null
+    private var uid = -1
     private lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            character = it.getSerializable("character") as CharacterBasicInfo?
+            uid = it.getInt("uid")
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
@@ -55,7 +54,7 @@ class CharacterPagerFragment : Fragment() {
             CharacterViewPagerAdapter(
                 childFragmentManager,
                 lifecycle,
-                character!!
+                uid
             )
         viewPager.setPageTransformer(DepthPageTransformer())
         viewPager.offscreenPageLimit = 2

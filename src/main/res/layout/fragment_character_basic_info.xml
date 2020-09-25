@@ -34,6 +34,7 @@
                 android:adjustViewBounds="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 app:layout_collapseMode="parallax"
+                tools:layout_height="@dimen/card_height"
                 tools:src="@drawable/ic_logo_color" />
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -162,7 +163,7 @@
                     tools:text="your best friend" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/comment"
+                    android:id="@+id/intro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/m_padding"
@@ -177,7 +178,7 @@
                     android:paddingStart="@dimen/xs_padding"
                     android:paddingTop="@dimen/s_padding"
                     android:paddingEnd="@dimen/xs_padding"
-                    android:rowCount="8"
+                    android:rowCount="10"
                     android:useDefaultMargins="true">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -357,6 +358,33 @@
                         android:id="@+id/love_self_text"
                         android:layout_width="0dp"
                         android:layout_row="7"
+                        android:layout_column="0"
+                        android:layout_columnSpan="4"
+                        android:layout_columnWeight="1"
+                        android:gravity="start"
+                        android:padding="@dimen/s_padding"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        tools:text="test" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/title_comments"
+                        android:layout_width="0dp"
+                        android:layout_row="8"
+                        android:layout_column="0"
+                        android:layout_columnSpan="1"
+                        android:layout_columnWeight="1"
+                        android:background="@drawable/title_background"
+                        android:paddingStart="@dimen/s_padding"
+                        android:paddingEnd="@dimen/s_padding"
+                        android:text="@string/title_comments"
+                        android:textAppearance="@style/subTitleWithe"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/self" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/comments"
+                        android:layout_width="0dp"
+                        android:layout_row="9"
                         android:layout_column="0"
                         android:layout_columnSpan="4"
                         android:layout_columnWeight="1"

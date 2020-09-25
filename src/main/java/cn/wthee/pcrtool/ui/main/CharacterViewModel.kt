@@ -4,7 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
-import cn.wthee.pcrtool.database.view.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.CharacterInfo
+import cn.wthee.pcrtool.database.view.CharacterInfoPro
 import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
@@ -18,7 +19,8 @@ class CharacterViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
 
-    var characters = MutableLiveData<List<CharacterBasicInfo>>()
+    var characters = MutableLiveData<List<CharacterInfo>>()
+    var character = MutableLiveData<CharacterInfoPro>()
     var refresh = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
@@ -30,6 +32,14 @@ class CharacterViewModel(
             val data = repository.getInfoAndData(name)
                 .sortedWith(getSort(sortType, asc))
             characters.postValue(data)
+        }
+    }
+
+    //角色基本资料
+    fun getCharacter(uid: Int) {
+        viewModelScope.launch {
+            val data = repository.getInfoPro(uid)
+            character.postValue(data)
         }
     }
 
@@ -48,8 +58,8 @@ class CharacterViewModel(
     suspend fun getLevelExp() = repository.getLevelExp()
 
     //角色排序
-    private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterBasicInfo> {
-        return Comparator { o1: CharacterBasicInfo, o2: CharacterBasicInfo ->
+    private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterInfo> {
+        return Comparator { o1: CharacterInfo, o2: CharacterInfo ->
             val a: Int
             val b: Int
             when (sortType) {

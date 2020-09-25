@@ -24,7 +24,6 @@ import com.google.android.material.slider.Slider
 class CharacterAttrFragment : Fragment() {
 
     companion object {
-        var isLoved = false
         fun getInstance(uid: Int): CharacterAttrFragment {
             val fragment = CharacterAttrFragment()
             val bundle = Bundle()
@@ -36,16 +35,18 @@ class CharacterAttrFragment : Fragment() {
 
     private var uid = 0
     private lateinit var binding: FragmentCharacterAttrInfoBinding
-    private lateinit var viewModel: CharacterAttrViewModel
     private lateinit var attrAdapter: CharacterAttrAdapter
     private var selRank = 2
     private var selRatity = 1
     private var maxStar = 5
     private var lv = 85
+
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
     }
-
+    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
+        InjectorUtil.providePromotionViewModelFactory()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
@@ -60,12 +61,8 @@ class CharacterAttrFragment : Fragment() {
         binding = FragmentCharacterAttrInfoBinding.inflate(inflater, container, false)
         //点击事件
         setListener()
-        //获取viewModel
-        viewModel = InjectorUtil.providePromotionViewModelFactory()
-            .create(CharacterAttrViewModel::class.java)
         //数据监听
         setObserve()
-        viewModel.getMaxRankAndRarity(uid)
         //加载icon
         val picUrl = Constants.UNIT_ICON_URL + (uid + 30) + Constants.WEBP
         binding.icon.load(picUrl){
@@ -110,7 +107,7 @@ class CharacterAttrFragment : Fragment() {
 
     private fun setObserve() {
         //获取角色最大Rank后，加载数据
-        viewModel.maxData.observe(viewLifecycleOwner, Observer { r ->
+        sharedCharacterAttrViewModel.maxData.observe(viewLifecycleOwner, Observer { r ->
             selRank = r[0]
             selRatity = r[1]
             maxStar = r[1]
@@ -181,7 +178,7 @@ class CharacterAttrFragment : Fragment() {
 
             }
         })
-        viewModel.equipments.observe(viewLifecycleOwner, Observer {
+        sharedCharacterAttrViewModel.equipments.observe(viewLifecycleOwner, Observer {
             it.forEachIndexed { index, equip ->
                 equipPics[index].apply {
                     //加载装备图片
@@ -203,7 +200,7 @@ class CharacterAttrFragment : Fragment() {
             }
         })
         //角色属性
-        viewModel.sumInfo.observe(viewLifecycleOwner, Observer {
+        sharedCharacterAttrViewModel.sumInfo.observe(viewLifecycleOwner, Observer {
             attrAdapter = CharacterAttrAdapter()
             binding.charcterAttrs.adapter = attrAdapter
             attrAdapter.submitList(it.all())
@@ -211,7 +208,7 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private fun loadData() {
-        viewModel.getCharacterInfo(uid, selRank, selRatity, lv)
+        sharedCharacterAttrViewModel.getCharacterInfo(uid, selRank, selRatity, lv)
     }
 
     //设置rank
