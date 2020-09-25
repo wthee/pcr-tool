@@ -150,8 +150,7 @@ class MainPagerFragment : Fragment() {
         //工具
         toolbar.rightIcon.setOnClickListener {
             //popWindow
-//            ToolsDialogFragment().show(parentFragmentManager, "tools")
-            showListPopupWindow(toolbar.rightIcon)
+          showListPopupWindow(toolbar.rightIcon)
         }
         //重复点击刷新
         binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

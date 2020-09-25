@@ -213,14 +213,6 @@ class CharacterBasicInfoFragment : Fragment() {
                     characterPro.actualName
             catah.text = characterPro.catchCopy
             name.text = characterPro.name
-//            character.getNameL().apply {
-//                if (this.isNotEmpty()) {
-//                    lastName.text = this
-//                } else {
-//                    lineEx.visibility = View.GONE
-//                }
-//            }
-
             three.text = requireActivity().resources.getString(
                 R.string.character_detail,
                 characterPro.age,
