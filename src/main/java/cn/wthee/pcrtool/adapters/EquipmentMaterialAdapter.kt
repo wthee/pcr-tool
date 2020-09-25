@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.utils.Constants
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -36,10 +38,23 @@ class EquipmentMaterialAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), partentBinding, behavior)
+        holder.apply {
+            bind(getItem(position), partentBinding, behavior)
+            itemView.findViewById<MaterialTextView>(R.id.equip_name)
+                .setTextColor(
+                    ResourcesCompat.getColor(
+                        MyApplication.getContext().resources,
+                        if (position == EquipmentDetailsFragment.materialClickPosition)
+                            R.color.colorPrimary
+                        else
+                            R.color.text,
+                        null
+                    )
+                )
+        }
     }
 
-    class ViewHolder(private val binding: ItemEquipmentMaterialBinding) :
+    inner class ViewHolder(private val binding: ItemEquipmentMaterialBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
             info: EquipmentMaterial,
@@ -58,6 +73,8 @@ class EquipmentMaterialAdapter(
                 }
                 //点击查看掉落地区
                 root.setOnClickListener {
+                    EquipmentDetailsFragment.materialClickPosition = adapterPosition
+                    notifyDataSetChanged()
                     partentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区
                     MainScope().launch {

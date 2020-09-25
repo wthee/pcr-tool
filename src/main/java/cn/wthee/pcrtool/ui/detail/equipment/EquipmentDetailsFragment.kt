@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.equipment
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +12,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.database.view.EquipmentMaxData
-import cn.wthee.pcrtool.database.view.getList
+import cn.wthee.pcrtool.database.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -32,7 +33,8 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                     putSerializable(EQUIP, equip)
                 }
             }
-
+        //
+        var materialClickPosition = -1
         lateinit var viewModel: EquipmentDetailsViewModel
         lateinit var materialAdapter: EquipmentMaterialAdapter
     }
@@ -73,6 +75,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun init() {
         binding.apply {
             progressBar1.visibility = View.VISIBLE
@@ -100,7 +103,18 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 //属性词条
                 val adapter = EquipmentAttrAdapter()
                 attrs.adapter = adapter
-                adapter.submitList(equip.attr.getList())
+                adapter.submitList(equip.attr.allNotZero())
+            }
+            //动态限制只有一个列表可滚动
+            material.setOnTouchListener { v, event ->
+                if (!material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = true
+                if (drops.isNestedScrollingEnabled) drops.isNestedScrollingEnabled = false
+                return@setOnTouchListener false
+            }
+            drops.setOnTouchListener { v, event ->
+                if (material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = false
+                if (!drops.isNestedScrollingEnabled) drops.isNestedScrollingEnabled = true
+                return@setOnTouchListener false
             }
         }
     }

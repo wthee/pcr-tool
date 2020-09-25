@@ -23,7 +23,7 @@
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/load" />
+            tools:src="@drawable/unknow_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -114,7 +114,8 @@ fun Attr.multiply(mult: Int): Attr {
     return this
 }
 
-fun Attr.getList(): List<AttrValue> {
+//全部属性
+fun Attr.all(): List<AttrValue> {
     val attrs = arrayListOf<AttrValue>()
     for (i in 0..16) {
         val value = when (i) {
@@ -142,3 +143,9 @@ fun Attr.getList(): List<AttrValue> {
     return attrs
 }
 
+//非零属性
+fun Attr.allNotZero(): List<AttrValue> {
+    val attrs = (all() as ArrayList)
+    attrs.removeAll { it.value == 0.0 }
+    return attrs
+}

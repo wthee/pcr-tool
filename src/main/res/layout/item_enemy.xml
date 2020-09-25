@@ -13,7 +13,7 @@
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:layout_gravity="center_horizontal"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknow_gray" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"

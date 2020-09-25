@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.database.view.CharacterBasicInfo
+import cn.wthee.pcrtool.ui.detail.character.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment
 import kotlin.math.abs
@@ -22,8 +23,9 @@ class CharacterViewPagerAdapter(
     private val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
-        mFragments.put(PAGE_BASIC, CharacterBasicInfoFragment.getInstance(characterInfo))
-        mFragments.put(PAGE_SKILL, CharacterSkillFragment.getInstance(characterInfo.id))
+        mFragments.put(0, CharacterBasicInfoFragment.getInstance(characterInfo))
+        mFragments.put(1, CharacterAttrFragment.getInstance(characterInfo.id))
+        mFragments.put(2, CharacterSkillFragment.getInstance(characterInfo.id))
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -32,13 +34,6 @@ class CharacterViewPagerAdapter(
 
     override fun getItemCount(): Int {
         return mFragments.size()
-    }
-
-    companion object {
-
-        const val PAGE_BASIC = 0
-        const val PAGE_SKILL = 1
-
     }
 }
 

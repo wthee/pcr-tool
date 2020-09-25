@@ -65,21 +65,11 @@ abstract class AppDatabase : RoomDatabase() {
 
 
         private fun buildDatabase(): AppDatabase {
-            try {
-                return Room.databaseBuilder(
-                    MyApplication.getContext(),
-                    AppDatabase::class.java,
-                    DATABASE_Name
-                ).fallbackToDestructiveMigration().build()
-            }catch (e : Exception){
-                //TODO mirgin
-                return Room.databaseBuilder(
-                    MyApplication.getContext(),
-                    AppDatabase::class.java,
-                    DATABASE_Name
-                ).fallbackToDestructiveMigration().build()
-            }
-
+            return Room.databaseBuilder(
+                MyApplication.getContext(),
+                AppDatabase::class.java,
+                DATABASE_Name
+            ).fallbackToDestructiveMigration().build()
         }
     }
 

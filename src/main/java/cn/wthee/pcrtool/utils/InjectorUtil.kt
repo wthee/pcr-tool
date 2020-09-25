@@ -7,7 +7,7 @@ import cn.wthee.pcrtool.data.EnemyRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.database.AppDatabaseJP
-import cn.wthee.pcrtool.ui.detail.character.CharacterPromotionViewModelFactory
+import cn.wthee.pcrtool.ui.detail.character.CharacterAttrViewModelFactory
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
 import cn.wthee.pcrtool.ui.main.CharacterViewModelFactory
@@ -57,10 +57,10 @@ object InjectorUtil {
         )
     }
 
-    fun providePromotionViewModelFactory(): CharacterPromotionViewModelFactory {
+    fun providePromotionViewModelFactory(): CharacterAttrViewModelFactory {
         val repository1 = getCharacterRepository()
         val repository2 = getEquipmentRepository()
-        return CharacterPromotionViewModelFactory(
+        return CharacterAttrViewModelFactory(
             repository1, repository2
         )
     }

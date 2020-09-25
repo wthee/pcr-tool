@@ -6,14 +6,14 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.database.view.Attr
+import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.database.view.add
 import cn.wthee.pcrtool.database.view.multiply
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import kotlinx.coroutines.launch
 
 
-class CharacterPromotionViewModel(
+class CharacterAttrViewModel(
     private val characterRepository: CharacterRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
