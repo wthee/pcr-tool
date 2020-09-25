@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.database.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment

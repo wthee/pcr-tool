@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.database.entity.EquipmentMaxData
+import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment

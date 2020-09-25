@@ -55,13 +55,25 @@ data class CharacterSkillData(
         main_skill_2.also {
             if (it != 0) list.add(it)
         }
+        main_skill_evolution_2.also {
+            if (it != 0) list.add(it)
+        }
         ex_skill_1.also {
             if (it != 0) list.add(it)
         }
         ex_skill_evolution_1.also {
             if (it != 0) list.add(it)
         }
-
+        //sp skill
+        sp_skill_1.also {
+            if (it != 0) list.add(it)
+        }
+        sp_skill_2.also {
+            if (it != 0) list.add(it)
+        }
+        sp_skill_3.also {
+            if (it != 0) list.add(it)
+        }
         return list
     }
 }

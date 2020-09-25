@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.entity.PvpCharacterData
+import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
@@ -59,7 +59,11 @@ class PvpCharactertAdapter :
                 //设置点击事件
                 root.setOnClickListener {
                     ToolPvpFragment.selects.apply {
-                        val empty = PvpCharacterData(0, 999)
+                        val empty =
+                            PvpCharacterData(
+                                0,
+                                999
+                            )
                         //选择完毕
                         if (size == 5 && !contains(empty) && !contains(data)) {
                             ToastUtil.short("已选择五名角色，无法继续添加！")

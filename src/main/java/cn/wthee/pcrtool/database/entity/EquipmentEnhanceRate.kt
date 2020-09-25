@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.database.view.Attr
 
 //装备提升
 @Entity(tableName = "equipment_enhance_rate")

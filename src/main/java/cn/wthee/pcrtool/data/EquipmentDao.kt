@@ -4,6 +4,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.database.entity.*
+import cn.wthee.pcrtool.database.view.EquipmentDropInfo
+import cn.wthee.pcrtool.database.view.EquipmentMaxData
+import cn.wthee.pcrtool.database.view.UniqueEquipmentMaxData
 
 //装备满属性视图
 const val viewEquipmentMaxData = """

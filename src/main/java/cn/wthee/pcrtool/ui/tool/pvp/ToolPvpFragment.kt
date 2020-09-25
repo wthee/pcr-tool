@@ -10,9 +10,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharactertAdapter
 import cn.wthee.pcrtool.data.model.PVPData
-import cn.wthee.pcrtool.database.entity.PvpCharacterData
-import cn.wthee.pcrtool.database.entity.getDefault
-import cn.wthee.pcrtool.database.entity.getIds
+import cn.wthee.pcrtool.database.view.PvpCharacterData
+import cn.wthee.pcrtool.database.view.getDefault
+import cn.wthee.pcrtool.database.view.getIds
 import cn.wthee.pcrtool.data.service.PVPService
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.utils.ApiHelper
@@ -66,7 +66,12 @@ class ToolPvpFragment : Fragment() {
         //查询
         binding.pvpSearch.setOnClickListener {
             //参数校验
-            if (selects.contains(PvpCharacterData(0, 999))) {
+            if (selects.contains(
+                    PvpCharacterData(
+                        0,
+                        999
+                    )
+                )) {
                 ToastUtil.short("请选择 5 名角色~")
                 return@setOnClickListener
             }

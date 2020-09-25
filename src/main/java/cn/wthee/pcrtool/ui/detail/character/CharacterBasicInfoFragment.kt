@@ -17,8 +17,8 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
-import cn.wthee.pcrtool.database.entity.CharacterBasicInfo
-import cn.wthee.pcrtool.database.entity.getList
+import cn.wthee.pcrtool.database.view.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.getList
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel

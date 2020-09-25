@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.database.entity
+package cn.wthee.pcrtool.database.view
 
 import androidx.room.ColumnInfo
 

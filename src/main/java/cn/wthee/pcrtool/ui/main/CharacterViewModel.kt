@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
-import cn.wthee.pcrtool.database.entity.CharacterBasicInfo
-import cn.wthee.pcrtool.database.entity.getDefault
+import cn.wthee.pcrtool.database.view.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT

@@ -1,17 +1,18 @@
-package cn.wthee.pcrtool.database.entity
+package cn.wthee.pcrtool.database.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
-data class UniqueEquipmentMaxData(
-    @ColumnInfo(name = "unit_id") val unitId: Int,
+data class EquipmentMaxData(
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,
+    @ColumnInfo(name = "type") val type: String,
     @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "max_level") val maxLevel: Int,
-    @ColumnInfo(name = "rank") val rank: Int,
+    @ColumnInfo(name = "craft_flg") val craftFlg: Int,
+    @ColumnInfo(name = "require_level") val requireLevel: Int,
+    @ColumnInfo(name = "promotion_level") val promotionLevel: Int,
     @Embedded val attr: Attr,
 ) : Serializable {
 
@@ -19,11 +20,12 @@ data class UniqueEquipmentMaxData(
 
     companion object {
         fun unknow() =
-            UniqueEquipmentMaxData(
-                0,
+            EquipmentMaxData(
                 UNKNOW_EQUIP_ID,
                 "？？？",
                 "",
+                "",
+                0,
                 0,
                 0,
                 Attr()
@@ -32,3 +34,5 @@ data class UniqueEquipmentMaxData(
     }
 
 }
+
+

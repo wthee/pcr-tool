@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import cn.wthee.pcrtool.database.view.Attr
 
 //角色属性状态
 @Entity(

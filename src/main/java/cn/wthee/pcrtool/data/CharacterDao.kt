@@ -4,6 +4,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.database.entity.*
+import cn.wthee.pcrtool.database.view.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.CharacterExperienceAll
+import cn.wthee.pcrtool.database.view.PvpCharacterData
 
 
 //角色数据DAO

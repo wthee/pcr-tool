@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import cn.wthee.pcrtool.adapters.CharacterCardBgAdapter
-import cn.wthee.pcrtool.database.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 
 

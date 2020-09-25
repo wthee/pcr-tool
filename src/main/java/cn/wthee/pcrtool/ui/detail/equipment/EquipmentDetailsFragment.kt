@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
-import cn.wthee.pcrtool.database.entity.EquipmentMaxData
-import cn.wthee.pcrtool.database.entity.getList
+import cn.wthee.pcrtool.database.view.EquipmentMaxData
+import cn.wthee.pcrtool.database.view.getList
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil

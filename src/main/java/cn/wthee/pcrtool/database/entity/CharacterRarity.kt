@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
+import cn.wthee.pcrtool.database.view.Attr
 
 //角色星级属性
 @Entity(

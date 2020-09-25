@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.database.view.EquipmentMaterial
 
 @Entity(tableName = "equipment_craft")
 data class EquipmentCraft(

@@ -1,7 +1,8 @@
-package cn.wthee.pcrtool.database.entity
+package cn.wthee.pcrtool.database.view
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.model.AttrValue
+import cn.wthee.pcrtool.database.entity.CharacterRarity
 import cn.wthee.pcrtool.utils.Constants
 
 //角色属性

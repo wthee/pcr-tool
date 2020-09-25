@@ -32,6 +32,4 @@ data class CharacterDataJP(
     @ColumnInfo(name = "is_limited") val isLimited: Int,
     @ColumnInfo(name = "cutin1_star6") val cutin1Star6: Int,
     @ColumnInfo(name = "cutin2_star6") val cutin2Star6: Int
-) : Serializable {
-    fun getFixedId() = dataId + 30
-}
+) : Serializable
