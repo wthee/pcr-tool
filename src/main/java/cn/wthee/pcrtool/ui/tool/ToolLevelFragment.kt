@@ -26,7 +26,6 @@ class ToolLevelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentToolLevelBinding.inflate(inflater, container, false)
-        binding.toolLevel.transitionName = "tool_level"
         MainScope().launch {
             val list = sharedViewModel.getLevelExp() as MutableList
             val adapter = CharacterLevelExpAdapter()

@@ -118,14 +118,21 @@ class EquipmentAdapter(private val isList: Boolean) :
                 itemPic.transitionName = "pic_${equip.equipmentId}"
                 name.transitionName = "ename_${equip.equipmentId}"
                 //设置点击跳转
-                root.setOnClickListener {
-                    MainActivity.currentEquipPosition = adapterPosition
-                    EquipmentDetailsFragment.getInstance(equip).show(
-                        ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                        "details"
-                    )
+                itemPic.setOnClickListener {
+                    click(equip)
+                }
+                content.setOnClickListener {
+                    click(equip)
                 }
             }
+        }
+
+        private fun click(equip: EquipmentMaxData){
+            MainActivity.currentEquipPosition = adapterPosition
+            EquipmentDetailsFragment.getInstance(equip).show(
+                ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
+                "details"
+            )
         }
     }
 }

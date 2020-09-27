@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_padding"
+    android:padding="@dimen/s_padding"
     android:gravity="center"
     android:background="@color/colorWhite"
     android:orientation="vertical">
@@ -21,7 +21,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/normal_icon"
-            android:src="@drawable/ic_logo_color" />
+            android:src="@drawable/ic_level" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"

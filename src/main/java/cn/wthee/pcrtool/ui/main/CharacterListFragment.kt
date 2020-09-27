@@ -78,6 +78,7 @@ class CharacterListFragment : Fragment() {
         //接收消息
         handler = Handler(Handler.Callback {
             when (it.what) {
+                //获取版本失败
                 0 -> {
                     val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
                     //弹窗
@@ -102,9 +103,11 @@ class CharacterListFragment : Fragment() {
                         }
                     ).show()
                 }
+                //正常执行
                 1 -> {
                     viewModel.reload.postValue(true)
                 }
+                //数据切换
                 2 -> {
                     val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
                     //弹窗

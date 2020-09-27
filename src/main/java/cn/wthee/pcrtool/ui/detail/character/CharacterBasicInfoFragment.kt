@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.CharacterInfoPro
@@ -80,6 +81,7 @@ class CharacterBasicInfoFragment : Fragment() {
             override fun end(view: View) {
                 sharedCharacterAttrViewModel.getMaxRankAndRarity(uid)
                 sharedSkillViewModel.getCharacterSkills(uid)
+                MainActivity.canBack = true
             }
         }, binding.fabLoveCbi, binding.basicInfo)
         //点击事件

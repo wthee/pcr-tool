@@ -47,6 +47,7 @@
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/normal_icon"
             android:scaleType="fitCenter"
+            android:layout_gravity="top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/unknow_gray"

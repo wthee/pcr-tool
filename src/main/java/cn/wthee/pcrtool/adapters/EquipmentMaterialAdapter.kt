@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -45,7 +44,7 @@ class EquipmentMaterialAdapter(
                     ResourcesCompat.getColor(
                         MyApplication.getContext().resources,
                         if (position == EquipmentDetailsFragment.materialClickPosition)
-                            R.color.colorPrimary
+                            R.color.red
                         else
                             R.color.text,
                         null
@@ -62,8 +61,6 @@ class EquipmentMaterialAdapter(
             behavior: BottomSheetBehavior<View>
         ) {
             binding.apply {
-                root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
                 equipName.text = "${info.name}"
                 equipCount.text = "x ${info.count}"
 

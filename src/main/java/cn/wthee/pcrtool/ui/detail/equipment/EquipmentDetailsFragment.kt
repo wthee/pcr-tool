@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.detail.equipment
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -65,6 +66,10 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        materialClickPosition = -1
+    }
 
     override fun setupDialog(dialog: Dialog, style: Int) {
         val v: View = FragmentEquipmentDetailsBinding.inflate(layoutInflater).root
@@ -78,7 +83,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun init() {
         binding.apply {
-            progressBar1.visibility = View.VISIBLE
             //toolbar
             cusToolbar = ToolbarUtil(toolbar)
             cusToolbar.apply {
@@ -123,11 +127,10 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
             //合成素材
             if (it.isNotEmpty()) {
+                binding.materialCount.text = getString(R.string.title_material, it.size)
                 materialAdapter = EquipmentMaterialAdapter(binding, behavior)
                 binding.material.adapter = materialAdapter
-                materialAdapter.submitList(it) {
-                    binding.progressBar1.visibility = View.INVISIBLE
-                }
+                materialAdapter.submitList(it)
             } else {
                 binding.material.visibility = View.GONE
             }

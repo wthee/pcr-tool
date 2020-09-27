@@ -10,7 +10,6 @@ import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
@@ -54,6 +53,7 @@ class MainPagerFragment : Fragment() {
         InjectorUtil.provideEnemyViewModelFactory()
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,7 +64,6 @@ class MainPagerFragment : Fragment() {
         prepareTransitions()
         //设置toolbar
         setHasOptionsMenu(true)
-
         return binding.root
     }
 
@@ -198,20 +197,12 @@ class MainPagerFragment : Fragment() {
         popupWindow.apply {
             width = ScreenUtil.getWidth() / 2
             isOutsideTouchable = false
-
             showAsDropDown(view, 0, -50)
         }
         toolBinding.apply {
             toolLevel.setOnClickListener {
                 FabHelper.addBackFab()
-                //过渡动画
-                toolLevel.transitionName = "tool_level"
-                val extras = FragmentNavigatorExtras(
-                    toolLevel to toolLevel.transitionName
-                )
-                findNavController().navigate(
-                    R.id.action_containerFragment_to_toolLevelFragment, null, null, extras
-                )
+                findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
                 popupWindow.dismiss()
             }
             toolPvp.setOnClickListener {
@@ -221,7 +212,6 @@ class MainPagerFragment : Fragment() {
             }
         }
     }
-
 
     //配置共享元素动画
     private fun prepareTransitions() {

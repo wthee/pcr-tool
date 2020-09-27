@@ -242,7 +242,8 @@ class CharacterAttrFragment : Fragment() {
             in 2..3 -> R.color.color_rank_2_3
             in 4..6 -> R.color.color_rank_4_6
             in 7..10 -> R.color.color_rank_7_10
-            in 11..99 -> R.color.color_rank_11
+            in 11..17 -> R.color.color_rank_11_17
+            in 18..99 -> R.color.color_rank_18
             else -> {
                 R.color.color_rank_2_3
             }

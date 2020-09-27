@@ -16,7 +16,7 @@
         android:layout_margin="@dimen/s_margin"
         android:scaleType="fitCenter"
         android:foreground="?android:attr/selectableItemBackground"
-        tools:src="@drawable/load_mini" />
+        tools:src="@drawable/unknow_gray" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/content"
@@ -25,6 +25,7 @@
         android:layout_marginTop="@dimen/s_margin"
         android:layout_marginBottom="@dimen/s_margin"
         android:layout_marginStart="@dimen/s_margin"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardElevation="@dimen/elevation_card"
         app:cardCornerRadius="@dimen/card_radius">
 

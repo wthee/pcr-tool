@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.main
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,7 @@ import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
 import cn.wthee.pcrtool.utils.Constants.SORT_POSITION
 import cn.wthee.pcrtool.utils.Constants.SORT_WEIGHT
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 
 class CharacterViewModel(
@@ -58,34 +60,36 @@ class CharacterViewModel(
     suspend fun getLevelExp() = repository.getLevelExp()
 
     //角色排序
+    @SuppressLint("SimpleDateFormat")
+    val format = SimpleDateFormat("yyyy/MM/dd")
     private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterInfo> {
         return Comparator { o1: CharacterInfo, o2: CharacterInfo ->
-            val a: Int
-            val b: Int
+            val a: Long
+            val b: Long
             when (sortType) {
                 SORT_DATE -> {
-                    a = o1.startTime.toInt()
-                    b = o2.startTime.toInt()
+                    a = format.parse(o1.startTime).time
+                    b = format.parse(o2.startTime).time
                 }
                 SORT_AGE -> {
-                    a = if (o1.age.contains("?")) 999 else o1.age.toInt()
-                    b = if (o2.age.contains("?")) 999 else o2.age.toInt()
+                    a = if (o1.age.contains("?")) 999 else o1.age.toLong()
+                    b = if (o2.age.contains("?")) 999 else o2.age.toLong()
                 }
                 SORT_HEIGHT -> {
-                    a = if (o1.height.contains("?")) 999 else o1.height.toInt()
-                    b = if (o2.height.contains("?")) 999 else o2.height.toInt()
+                    a = if (o1.height.contains("?")) 999 else o1.height.toLong()
+                    b = if (o2.height.contains("?")) 999 else o2.height.toLong()
                 }
                 SORT_WEIGHT -> {
-                    a = if (o1.weight.contains("?")) 999 else o1.weight.toInt()
-                    b = if (o2.weight.contains("?")) 999 else o2.weight.toInt()
+                    a = if (o1.weight.contains("?")) 999 else o1.weight.toLong()
+                    b = if (o2.weight.contains("?")) 999 else o2.weight.toLong()
                 }
                 SORT_POSITION -> {
-                    a = o1.position
-                    b = o2.position
+                    a = o1.position.toLong()
+                    b = o2.position.toLong()
                 }
                 else -> {
-                    a = o1.id
-                    b = o2.id
+                    a = o1.id.toLong()
+                    b = o2.id.toLong()
                 }
             }
             (if (asc) -1 else 1) * b.compareTo(a)

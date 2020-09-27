@@ -28,7 +28,7 @@ interface CharacterDao {
             unit_profile.weight,
             unit_data.search_area_width,
             unit_data.atk_type,
-            SUBSTR( unit_data.start_time, 0, 4 ) || SUBSTR( unit_data.start_time, 6, 2 ) || SUBSTR( unit_data.start_time, 9, 2 ) AS start_time
+            COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id

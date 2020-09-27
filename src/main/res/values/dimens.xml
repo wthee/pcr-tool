@@ -2,6 +2,7 @@
 <resources>
     <dimen name="card_radius">4dp</dimen>
     <dimen name="card_height">150dp</dimen>
+    <dimen name="list_height">64</dimen>
     <dimen name="title_width">32dp</dimen>
     <!-- icon-->
     <dimen name="s_icon">10dp</dimen>
@@ -24,14 +25,6 @@
     <dimen name="m_padding">15dp</dimen>
     <dimen name="l_padding">25dp</dimen>
 
-    <!--    integer-->
-    <integer name="scrollbar_delay">150</integer>
-    <integer name="slide">400</integer>
-    <integer name="item_anim">600</integer>
-    <integer name="fragment_anim">600</integer>
-    <integer name="item_anim_fast">300</integer>
-    <integer name="delay">900</integer>
-
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="spinner_height">20dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
@@ -45,6 +38,5 @@
     <dimen name="elevation_button">4dp</dimen>
     <dimen name="elevation_dialog">24dp</dimen>
     <dimen name="fab_circle_radius">120dp</dimen>
-    <dimen name="list_height">486dp</dimen>
     <dimen name="hr_height">8dp</dimen>
 </resources>

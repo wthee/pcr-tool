@@ -7,13 +7,37 @@
     android:background="@color/colorWhite"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/tool_pvp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:gravity="start|center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/s_padding">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/normal_icon"
+            android:src="@drawable/ic_pvp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m_margin"
+            android:text="@string/tool_pvp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/s_margin"
         android:gravity="center"
         android:text="@string/pvp_select_tip"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimary" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -27,23 +51,53 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/pvp_search"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:text="@string/pvp_search"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:text="@string/pvp_search" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout_position"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabInlineLabel="true"
-        app:tabMode="fixed" />
+        app:tabMode="fixed">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pvp_pager"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_1" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_2" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_3" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pvp_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/pvp_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
 
 </LinearLayout>

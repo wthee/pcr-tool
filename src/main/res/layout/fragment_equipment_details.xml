@@ -22,33 +22,47 @@
             android:id="@+id/detail"
             layout="@layout/layout_equip_detail" />
 
-
         <View
             android:id="@+id/hr1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/hr_height"
             android:background="@color/colorGray" />
 
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:padding="0dp"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/material_count"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:paddingStart="@dimen/s_margin"
+                android:paddingEnd="@dimen/s_padding"
+                android:background="@drawable/title_background"
+                android:textColor="@color/colorWhite"
+                tools:text="@string/title_material" />
+
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_margin"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="@string/tip_scroll_for_more" />
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/material"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fadeScrollbars="false"
             android:nestedScrollingEnabled="false"
             android:orientation="horizontal"
-            android:scrollbarDefaultDelayBeforeFade="@integer/scrollbar_delay"
-            android:scrollbarStyle="outsideOverlay"
-            android:scrollbars="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="5"
             tools:listitem="@layout/item_equipment_material" />
@@ -70,7 +84,6 @@
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
             android:orientation="vertical"
-            android:scrollbarDefaultDelayBeforeFade="@integer/scrollbar_delay"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="1"

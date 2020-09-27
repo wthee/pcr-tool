@@ -19,7 +19,7 @@
             android:id="@+id/item_pic"
             android:layout_width="@dimen/big_icon"
             android:layout_height="@dimen/big_icon"
-            android:layout_gravity="center"
+            android:layout_gravity="top"
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
