@@ -10,8 +10,10 @@ import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharactertAdapter
+import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
+import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
 
 class ToolPvpFragment : Fragment() {
@@ -42,8 +44,12 @@ class ToolPvpFragment : Fragment() {
     private fun setListener() {
         binding.apply {
             pvpSearch.setOnClickListener {
-                //展示查询结果
-                ToolPvpResultDialogFragment().show(parentFragmentManager, "pvp")
+                if (ToolPvpFragment.selects.contains(PvpCharacterData(0, 999))) {
+                    ToastUtil.short("请选择 5 名角色~")
+                } else {
+                    //展示查询结果
+                    ToolPvpResultDialogFragment().show(parentFragmentManager, "pvp")
+                }
             }
             //返回
             toolPvp.setOnClickListener {
