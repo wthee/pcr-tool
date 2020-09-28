@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        DatabaseUpdateHelper.checkDBVersion()
+        DatabaseUpdateHelper.checkDBVersion(0)
         //悬浮按钮
         setFab()
         setListener()
@@ -320,22 +320,29 @@ class MainActivity : AppCompatActivity() {
                 1 -> {
                     //筛选
                     val layout = LayoutFilterEquipmentBinding.inflate(layoutInflater)
+                    //添加类型信息
+                    val chips = layout.chipsType
+                    MainScope().launch {
+                        EquipmentListFragment.equipTypes.forEachIndexed { index, type ->
+                            val chip = LayoutChipBinding.inflate(layoutInflater).root
+                            chip.text = type
+                            chip.isCheckable = true
+                            chip.isClickable = true
+                            chips.addView(chip)
+                            if (EquipmentListFragment.equipfilterParams.type == type) {
+                                chip.isChecked = true
+                            }
+                        }
+                    }
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
-                    //类型筛选
-                    layout.craftChips.forEachIndexed { index, view ->
-                        val chip = view as Chip
-                        chip.isChecked = EquipmentListFragment.equipfilterParams.craft == index
-                    }
+
                     layout.next.setOnClickListener {
                         dialog.dismiss()
                         //筛选选项
-                        EquipmentListFragment.equipfilterParams.craft =
-                            when (layout.craftChips.checkedChipId) {
-                                R.id.craft_chip_1 -> 1
-                                R.id.craft_chip_2 -> 2
-                                else -> 0
-                            }
+                        //公会筛选
+                        val chip = layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
+                        EquipmentListFragment.equipfilterParams.type = chip.text.toString()
                         sharedEquipViewModel.getEquips(asc, "")
                     }
                     layout.reset.setOnClickListener {

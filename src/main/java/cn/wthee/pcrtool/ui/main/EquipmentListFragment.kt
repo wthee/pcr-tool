@@ -8,6 +8,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
+import kotlinx.coroutines.launch
 
 
 class EquipmentListFragment : Fragment() {
@@ -28,8 +30,9 @@ class EquipmentListFragment : Fragment() {
         lateinit var list: RecyclerView
         lateinit var listAdapter: EquipmentAdapter
         var isList = true
-        var equipfilterParams = FilterEquipment(true, 0)
+        var equipfilterParams = FilterEquipment(true, "全部")
         var asc = false
+        lateinit var equipTypes: ArrayList<String>
     }
 
     private lateinit var binding: FragmentEquipmentListBinding
@@ -49,6 +52,15 @@ class EquipmentListFragment : Fragment() {
         //绑定观察
         setObserve()
         loadData()
+        //获取装备类型
+        //公会列表
+        equipTypes = arrayListOf()
+        viewLifecycleOwner.lifecycleScope.launch {
+            equipTypes.add("全部")
+            viewModel.getTypes().forEach {
+                equipTypes.add(it.type)
+            }
+        }
         return binding.root
     }
 

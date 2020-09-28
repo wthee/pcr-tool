@@ -46,8 +46,8 @@
             android:id="@+id/item_pic"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/normal_icon"
+            android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:layout_gravity="top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/unknow_gray"
@@ -66,6 +66,7 @@
                 android:layout_marginStart="@dimen/m_margin"
                 android:layout_marginTop="@dimen/s_margin"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
                 tools:text="道具详情道具详情道具详道具详情道具详情道具详情道具详情道具详情道具详道具详情道具详情道具详情道具详情道具详情道具详道具详情道具详情道具详情" />
 
         </LinearLayout>

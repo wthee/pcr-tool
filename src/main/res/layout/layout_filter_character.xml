@@ -16,8 +16,8 @@
         android:layout_marginTop="@dimen/m_margin"
         android:text="@string/title_sort"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textStyle="bold"
         android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -74,11 +74,10 @@
         android:layout_marginTop="@dimen/m_margin"
         android:text="@string/sort_type"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textStyle="bold"
         android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sort_type_chips" />
-
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/asc_chips"
@@ -107,141 +106,129 @@
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/filter_title"
+        android:id="@+id/title_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/l_margin"
-        android:text="@string/filter"
+        android:text="@string/title_position"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textStyle="bold"
         android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/asc_chips" />
 
-    <ScrollView
-        android:id="@+id/filter"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chips_position"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scrollbars="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_title">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m_margin"
+        app:checkedChip="@id/position_chip_1"
+        app:layout_constraintTop_toBottomOf="@id/title_position"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-        <LinearLayout
-            android:id="@+id/chips"
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/position_chip_0"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_marginTop="@dimen/s_margin"
-            android:orientation="vertical">
+            android:text="@string/tab_all" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title_position"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/asc_chips" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/position_chip_1"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_1" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chips_position"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
-                app:checkedChip="@id/position_chip_1"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+        <com.google.android.material.chip.Chip
+            android:id="@+id/position_chip_2"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_2" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/position_chip_0"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_all" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/position_chip_3"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_3" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/position_chip_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/position_1" />
+    </com.google.android.material.chip.ChipGroup>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/position_chip_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/position_2" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/atk_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_margin"
+        android:text="@string/atk_type"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chips_position" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/position_chip_3"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/position_3" />
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chips_atk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m_margin"
+        app:checkedChip="@id/atk_chip_1"
+        app:layout_constraintTop_toBottomOf="@id/atk_type"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-            </com.google.android.material.chip.ChipGroup>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/atk_chip_0"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_all" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s_margin"
-                android:text="@string/atk_type"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/atk_chip_1"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/physical" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chips_atk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
-                app:checkedChip="@id/atk_chip_1"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+        <com.google.android.material.chip.Chip
+            android:id="@+id/atk_chip_2"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/magic" />
+    </com.google.android.material.chip.ChipGroup>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/atk_chip_0"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_all" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_margin"
+        android:text="@string/title_guide"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chips_atk" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/atk_chip_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/physical" />
+    <HorizontalScrollView
+        android:id="@+id/scroll_guild"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title_guide">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/atk_chip_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/magic" />
-            </com.google.android.material.chip.ChipGroup>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chips_guild"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/m_margin"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s_margin"
-                android:text="@string/title_guide"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chips_guild"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
-                app:selectionRequired="true"
-                app:singleSelection="true">
-
-            </com.google.android.material.chip.ChipGroup>
-
-        </LinearLayout>
-    </ScrollView>
-
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/reset"
@@ -252,7 +239,7 @@
         android:textColor="@color/text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter" />
+        app:layout_constraintTop_toBottomOf="@id/scroll_guild" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/next"
@@ -262,5 +249,5 @@
         android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter" />
+        app:layout_constraintTop_toBottomOf="@id/scroll_guild" />
 </androidx.constraintlayout.widget.ConstraintLayout>

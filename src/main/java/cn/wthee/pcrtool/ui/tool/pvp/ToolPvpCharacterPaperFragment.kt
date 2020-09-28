@@ -41,7 +41,9 @@ class ToolPvpCharacterIconFragment : Fragment() {
             val data = sharedViewModel.getCharacterByPosition(position)
             val adapter = PvpCharactertAdapter()
             binding.icons.adapter = adapter
-            adapter.submitList(data)
+            adapter.submitList(data) {
+                ToolPvpFragment.progressBar.visibility = View.GONE
+            }
         }
         return binding.root
     }

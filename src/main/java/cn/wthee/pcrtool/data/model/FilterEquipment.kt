@@ -4,10 +4,10 @@ import com.google.gson.Gson
 
 class FilterEquipment(
     var all: Boolean,
-    var craft: Int
+    var type: String
 ) {
     fun initData() {
-        this.craft = 0
+        this.type = "全部"
     }
 
     //转化为 json 字符串

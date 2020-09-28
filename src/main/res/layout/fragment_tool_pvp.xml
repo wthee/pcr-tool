@@ -9,14 +9,16 @@
 
     <LinearLayout
         android:id="@+id/tool_pvp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:foreground="?attr/selectableItemBackground"
         android:gravity="start|center_vertical"
+        android:layout_gravity="start"
         android:orientation="horizontal"
-        android:padding="@dimen/s_padding">
+        android:layout_margin="@dimen/s_margin">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/pvp_icon"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/normal_icon"
             android:src="@drawable/ic_pvp" />

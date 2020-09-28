@@ -14,20 +14,20 @@
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
         android:layout_margin="@dimen/s_margin"
-        android:scaleType="fitCenter"
         android:foreground="?android:attr/selectableItemBackground"
+        android:scaleType="fitCenter"
         tools:src="@drawable/unknow_gray" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
         android:layout_marginTop="@dimen/s_margin"
         android:layout_marginBottom="@dimen/s_margin"
-        android:layout_marginStart="@dimen/s_margin"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardElevation="@dimen/elevation_card"
-        app:cardCornerRadius="@dimen/card_radius">
+        app:cardCornerRadius="@dimen/card_radius"
+        app:cardElevation="@dimen/elevation_card">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/text"
+                android:textIsSelectable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="精灵树之弓" />
@@ -50,10 +51,11 @@
                 android:id="@+id/desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:textColor="@color/colorAlphtBlack"
                 android:layout_marginTop="@dimen/s_margin"
                 android:layout_marginBottom="@dimen/s_margin"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textColor="@color/colorAlphtBlack"
+                android:textIsSelectable="true"
                 tools:text="道具详情道具\n详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
 
         </LinearLayout>

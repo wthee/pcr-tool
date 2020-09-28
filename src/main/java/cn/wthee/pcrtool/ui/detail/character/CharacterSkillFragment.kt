@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapters.SkillAdapter
-import cn.wthee.pcrtool.adapters.SkillLoopAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.InjectorUtil
-import kotlinx.coroutines.launch
 
 
 class CharacterSkillFragment : Fragment() {
@@ -29,10 +26,6 @@ class CharacterSkillFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterSkillBinding
     private lateinit var adapter: SkillAdapter
-    private lateinit var loopAdapter: SkillLoopAdapter
-    private lateinit var beforeLoopadapter: SkillLoopAdapter
-    private lateinit var loopSpAdapter: SkillLoopAdapter
-    private lateinit var beforeSpLoopadapter: SkillLoopAdapter
     private var unitId = 0
 
     private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
@@ -52,65 +45,20 @@ class CharacterSkillFragment : Fragment() {
     ): View? {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            binding.apply {
-                //循环开始信息
-                beforeLoopadapter = SkillLoopAdapter()
-                attactPattern.beforeLoop.adapter = beforeLoopadapter
-                beforeSpLoopadapter = SkillLoopAdapter()
-                attactPattern.beforeLoopSp.adapter = beforeSpLoopadapter
-                //循环信息
-                loopAdapter = SkillLoopAdapter()
-                attactPattern.looping.adapter = loopAdapter
-                loopSpAdapter = SkillLoopAdapter()
-                attactPattern.loopingSp.adapter = loopSpAdapter
-                //技能信息
-                adapter = SkillAdapter()
-                recycler.adapter = adapter
+        binding.apply {
+            //技能信息
+            adapter = SkillAdapter()
+            recycler.adapter = adapter
 
-                attactPattern.apply {
-                    titleBeforeLoop.visibility = View.VISIBLE
-                    titleLooping.visibility = View.VISIBLE
-                }
+            //点击查看
+            fabSkillLoop.setOnClickListener {
+                CharacterSkillLoopDialogFragment().show(parentFragmentManager, "loop")
             }
-
-            sharedSkillViewModel.skills.observe(viewLifecycleOwner, Observer {
-                adapter.submitList(it)
-            })
-
-            sharedSkillViewModel.acttackPattern.observe(viewLifecycleOwner, Observer {
-                if(it.size >1 ){
-                    binding.attactPattern.beforeLoopSp.visibility = View.VISIBLE
-                    binding.attactPattern.loopingSp.visibility = View.VISIBLE
-                    binding.attactPattern.titleBeforeLoopSp.visibility = View.VISIBLE
-                    binding.attactPattern.titleLoopingSp.visibility = View.VISIBLE
-                    beforeLoopadapter.submitList(it[0].getBefore()){
-                        beforeLoopadapter.notifyDataSetChanged()
-                    }
-                    loopAdapter.submitList(it[0].getLoop()){
-                        loopAdapter.notifyDataSetChanged()
-                    }
-                    beforeSpLoopadapter.submitList(it[1].getBefore()){
-                        beforeLoopadapter.notifyDataSetChanged()
-                    }
-                    loopSpAdapter.submitList(it[1].getLoop()){
-                        loopAdapter.notifyDataSetChanged()
-                    }
-                }else{
-                    binding.attactPattern.beforeLoopSp.visibility = View.GONE
-                    binding.attactPattern.loopingSp.visibility = View.GONE
-                    binding.attactPattern.titleBeforeLoopSp.visibility = View.GONE
-                    binding.attactPattern.titleLoopingSp.visibility = View.GONE
-                    beforeLoopadapter.submitList(it[0].getBefore()){
-                        beforeLoopadapter.notifyDataSetChanged()
-                    }
-                    loopAdapter.submitList(it[0].getLoop()){
-                        loopAdapter.notifyDataSetChanged()
-                    }
-                }
-            })
         }
 
+        sharedSkillViewModel.skills.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
         return binding.root
     }
 

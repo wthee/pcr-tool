@@ -63,10 +63,9 @@ class EquipmentAdapter(private val isList: Boolean) :
                                 filteredList.remove(data)
                             }
                         }
-                        //位置筛选
-                        if (param.craft != 0) {
-                            val isRemove = param.craft != data.craftFlg + 1
-                            if (isRemove) {
+                        //种类筛选
+                        if (param.type != "全部") {
+                            if (param.type != data.type) {
                                 filteredList.remove(data)
                             }
                         }

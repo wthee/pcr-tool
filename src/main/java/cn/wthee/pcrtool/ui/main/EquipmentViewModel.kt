@@ -42,4 +42,7 @@ class EquipmentViewModel(
             uniqueEquip.postValue(data)
         }
     }
+
+    //获取装备类型
+    suspend fun getTypes() = equipmentRepository.getEquipTypes()
 }

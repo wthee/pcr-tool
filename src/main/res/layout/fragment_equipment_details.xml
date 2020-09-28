@@ -31,25 +31,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/m_padding">
 
             <TextView
                 android:id="@+id/material_count"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/s_margin"
-                android:paddingStart="@dimen/s_margin"
-                android:paddingEnd="@dimen/s_padding"
-                android:background="@drawable/title_background"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorPrimary"
                 tools:text="@string/title_material" />
 
             <TextView
+                android:id="@+id/tip_scroll_for_more"
                 style="@style/TextAppearance.MaterialComponents.Caption"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/s_margin"
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="@string/tip_scroll_for_more" />
@@ -61,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fadeScrollbars="false"
-            android:nestedScrollingEnabled="false"
+            android:nestedScrollingEnabled="true"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="5"
@@ -84,6 +81,8 @@
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
             android:orientation="vertical"
+            android:nestedScrollingEnabled="true"
+            android:focusable="true"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="1"

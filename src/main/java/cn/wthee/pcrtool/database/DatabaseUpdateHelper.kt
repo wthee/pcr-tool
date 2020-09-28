@@ -35,7 +35,9 @@ object DatabaseUpdateHelper {
             .getString("change_database", "1")?.toInt() ?: 1
         //提示开始
         if (fromSetting == 1) ToastUtil.short(NOTICE_TOAST_CHANGE)
-        if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_CHECKING)
+        if (fromSetting == 0 && FileUtil.needUpadateDb(databaseType)) ToastUtil.short(
+            NOTICE_TOAST_CHECKING
+        )
         //创建服务
         val service = ApiHelper.create(
             DatabaseService::class.java,

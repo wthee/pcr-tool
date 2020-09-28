@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data
 
 
-
 //角色数据Repository
 
 class EquipmentRepository(private val equipmentDao: EquipmentDao) {
@@ -12,6 +11,9 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
 
     //获取装备具体属性
     suspend fun getEquipmentData(eid: Int) = equipmentDao.getEquipInfos(eid)
+
+    //装备类型
+    suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
     //所有装备信息
     suspend fun getAllEquipments(name: String) = equipmentDao.getAllEquipments(name)

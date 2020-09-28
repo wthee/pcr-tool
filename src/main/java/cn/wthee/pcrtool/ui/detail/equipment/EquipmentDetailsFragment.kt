@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
@@ -22,7 +23,6 @@ import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-
 class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
     private val EQUIP = "equip"
@@ -34,6 +34,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                     putSerializable(EQUIP, equip)
                 }
             }
+
         //
         var materialClickPosition = -1
         lateinit var viewModel: EquipmentDetailsViewModel
@@ -63,6 +64,14 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         init()
         setObserve()
         viewModel.getEquipInfos(equip)
+        binding.material.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
+                    binding.tipScrollForMore.visibility = View.GONE
+                }
+            }
+        })
         return binding.root
     }
 
@@ -96,7 +105,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                     goBack()
                 }
             }
-            binding.detail.apply {
+            detail.apply {
                 //图标
                 val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
                 itemPic.load(picUrl) {
@@ -131,8 +140,14 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 materialAdapter = EquipmentMaterialAdapter(binding, behavior)
                 binding.material.adapter = materialAdapter
                 materialAdapter.submitList(it)
+                if (it.size > 3) {
+                    binding.tipScrollForMore.visibility = View.VISIBLE
+                } else {
+                    binding.tipScrollForMore.visibility = View.GONE
+                }
             } else {
                 binding.material.visibility = View.GONE
+                binding.tipScrollForMore.visibility = View.GONE
             }
         })
     }

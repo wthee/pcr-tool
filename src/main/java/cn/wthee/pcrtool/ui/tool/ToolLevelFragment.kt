@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.adapters.CharacterLevelExpAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolLevelBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
@@ -31,6 +32,9 @@ class ToolLevelFragment : Fragment() {
             val adapter = CharacterLevelExpAdapter()
             binding.listLevel.adapter = adapter
             adapter.submitList(list)
+        }
+        binding.toolLevel.setOnClickListener {
+            findNavController().navigateUp()
         }
         return binding.root
     }

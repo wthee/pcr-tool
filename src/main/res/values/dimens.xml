@@ -17,6 +17,7 @@
     <dimen name="xs_margin">3dp</dimen>
     <dimen name="s_margin">6dp</dimen>
     <dimen name="m_margin">9dp</dimen>
+    <dimen name="xm_margin">12dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
     <dimen name="border_size">2dp</dimen>
@@ -39,4 +40,6 @@
     <dimen name="elevation_dialog">24dp</dimen>
     <dimen name="fab_circle_radius">120dp</dimen>
     <dimen name="hr_height">8dp</dimen>
+    <dimen name="list_item_spacing">16dp</dimen>
+    <dimen name="list_item_spacing_half">8dp</dimen>
 </resources>

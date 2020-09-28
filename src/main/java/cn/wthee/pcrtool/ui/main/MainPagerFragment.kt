@@ -22,9 +22,12 @@ import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.databinding.LayoutToolBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
+import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -117,19 +120,62 @@ class MainPagerFragment : Fragment() {
                     tab.icon =
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_character, null)
                     tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
+                    //长按重置
+                    tab.view.setOnLongClickListener {
+                        CharacterListFragment.characterfilterParams.initData()
+                        CharacterListFragment.characterfilterParams.all = true
+                        sortType = SORT_DATE
+                        sortAsc = false
+                        sharedCharacterViewModel.getCharacters(
+                            sortType,
+                            sortAsc, ""
+                        )
+                        return@setOnLongClickListener true
+                    }
+                    //点击回顶部
+                    tab.view.setOnClickListener {
+                        if (MainActivity.currentMainPage == position) {
+                            CharacterListFragment.characterList.smoothScrollToPosition(0)
+                        }
+                    }
                 }
                 //装备
                 1 -> {
                     tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_equip, null)
                     tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
+                    //长按重置
+                    tab.view.setOnLongClickListener {
+                        EquipmentListFragment.equipfilterParams.initData()
+                        asc = true
+                        sharedEquipViewModel.getEquips(asc, "")
+                        return@setOnLongClickListener true
+                    }
+                    //点击回顶部
+                    tab.view.setOnClickListener {
+                        if (MainActivity.currentMainPage == position) {
+                            EquipmentListFragment.list.smoothScrollToPosition(0)
+                        }
+                    }
                 }
                 //怪物
                 2 -> {
                     tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_enemy, null)
                     tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
+                    //长按重置
+                    tab.view.setOnLongClickListener {
+                        sharedEnemyViewModel.getAllEnemy()
+                        return@setOnLongClickListener true
+                    }
+                    //点击回顶部
+                    tab.view.setOnClickListener {
+                        if (MainActivity.currentMainPage == position) {
+                            EnemyListFragment.list.smoothScrollToPosition(0)
+                        }
+                    }
                 }
             }
         }.attach()
+
     }
 
     private fun setListener() {
@@ -149,40 +195,8 @@ class MainPagerFragment : Fragment() {
         //工具
         toolbar.rightIcon.setOnClickListener {
             //popWindow
-          showListPopupWindow(toolbar.rightIcon)
+            showListPopupWindow(toolbar.rightIcon)
         }
-        //重复点击刷新
-        binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                MainActivity.fabLove.setImageResource(R.drawable.ic_love_hollow)
-                when (tab) {
-                    binding.layoutTab.getTabAt(0) -> {
-                        CharacterListFragment.characterfilterParams.initData()
-                        CharacterListFragment.characterfilterParams.all = true
-                        sortType = SORT_DATE
-                        sortAsc = false
-                        sharedCharacterViewModel.getCharacters(
-                            sortType,
-                            sortAsc, ""
-                        )
-                    }
-                    binding.layoutTab.getTabAt(1) -> {
-                        EquipmentListFragment.equipfilterParams.initData()
-                        asc = true
-                        sharedEquipViewModel.getEquips(asc, "")
-                    }
-                    binding.layoutTab.getTabAt(2) -> {
-                        sharedEnemyViewModel.getAllEnemy()
-                    }
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-            }
-        })
     }
 
     //工具列表
@@ -195,9 +209,9 @@ class MainPagerFragment : Fragment() {
             true
         )
         popupWindow.apply {
-            width = ScreenUtil.getWidth() / 2
             isOutsideTouchable = false
-            showAsDropDown(view, 0, -50)
+            elevation = resources.getDimension(R.dimen.elevation_dialog)
+            showAsDropDown(view, 150, 10)
         }
         toolBinding.apply {
             toolLevel.setOnClickListener {
