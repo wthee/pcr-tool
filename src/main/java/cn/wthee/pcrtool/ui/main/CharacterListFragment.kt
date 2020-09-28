@@ -62,8 +62,13 @@ class CharacterListFragment : Fragment() {
         guilds = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
             guilds.add("全部")
-            viewModel.getGuilds().forEach {
+            val list = viewModel.getGuilds()
+            list.forEach {
                 guilds.add(it.guild_name)
+            }
+            if (list.isEmpty()) {
+                //为获取数据，说明数据异常，自动更新数据
+                DatabaseUpdateHelper.checkDBVersion(force = true)
             }
             guilds.add("？？？")
         }

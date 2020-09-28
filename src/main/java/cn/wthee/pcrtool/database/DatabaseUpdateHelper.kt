@@ -29,7 +29,7 @@ object DatabaseUpdateHelper {
     private val mContext = MyApplication.getContext()
 
     //检查是否需要更新 -1:正常调用 0：点击版本号 1：切换版本调用
-    fun checkDBVersion(fromSetting: Int = -1) {
+    fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
         //获取数据库本地版本
         val databaseType = PreferenceManager.getDefaultSharedPreferences(mContext)
             .getString("change_database", "1")?.toInt() ?: 1
@@ -55,7 +55,7 @@ object DatabaseUpdateHelper {
                 ) {
                     //更新判断
                     val version = response.body()!!.TruthVersion
-                    downloadDB(version, databaseType, fromSetting)
+                    downloadDB(version, databaseType, fromSetting, force)
                 }
             })
     }
@@ -68,7 +68,12 @@ object DatabaseUpdateHelper {
     }
 
     //获取数据库
-    private fun downloadDB(ver: String, databaseType: Int, fromSetting: Int = -1) {
+    private fun downloadDB(
+        ver: String,
+        databaseType: Int,
+        fromSetting: Int = -1,
+        force: Boolean = false
+    ) {
         //更新判断
         try {
             val databaseVersion = MainActivity.sp.getString(
@@ -77,6 +82,7 @@ object DatabaseUpdateHelper {
             ) ?: "0"
             //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
             val toDownload = databaseVersion < ver  //有版本更新
+                    || force
                     || (fromSetting == -1 && (FileUtil.needUpadateDb(databaseType) || databaseVersion == "0"))  //打开应用，数据库wal被清空
                     || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在时更新
             if (toDownload) {
