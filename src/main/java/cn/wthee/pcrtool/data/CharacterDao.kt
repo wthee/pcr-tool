@@ -117,7 +117,7 @@ interface CharacterDao {
 
     //角色动作循环
     @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
-    suspend fun getAttackPattern(unitId: Int): AttackPattern
+    suspend fun getAttackPattern(unitId: Int): List<AttackPattern>
 
     //公会信息
     @Query("SELECT * FROM guild")

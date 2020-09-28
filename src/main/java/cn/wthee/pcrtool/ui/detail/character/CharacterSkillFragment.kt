@@ -31,6 +31,8 @@ class CharacterSkillFragment : Fragment() {
     private lateinit var adapter: SkillAdapter
     private lateinit var loopAdapter: SkillLoopAdapter
     private lateinit var beforeLoopadapter: SkillLoopAdapter
+    private lateinit var loopSpAdapter: SkillLoopAdapter
+    private lateinit var beforeSpLoopadapter: SkillLoopAdapter
     private var unitId = 0
 
     private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
@@ -55,9 +57,13 @@ class CharacterSkillFragment : Fragment() {
                 //循环开始信息
                 beforeLoopadapter = SkillLoopAdapter()
                 attactPattern.beforeLoop.adapter = beforeLoopadapter
+                beforeSpLoopadapter = SkillLoopAdapter()
+                attactPattern.beforeLoopSp.adapter = beforeSpLoopadapter
                 //循环信息
                 loopAdapter = SkillLoopAdapter()
                 attactPattern.looping.adapter = loopAdapter
+                loopSpAdapter = SkillLoopAdapter()
+                attactPattern.loopingSp.adapter = loopSpAdapter
                 //技能信息
                 adapter = SkillAdapter()
                 recycler.adapter = adapter
@@ -73,8 +79,35 @@ class CharacterSkillFragment : Fragment() {
             })
 
             sharedSkillViewModel.acttackPattern.observe(viewLifecycleOwner, Observer {
-                beforeLoopadapter.submitList(it.getBefore())
-                loopAdapter.submitList(it.getLoop())
+                if(it.size >1 ){
+                    binding.attactPattern.beforeLoopSp.visibility = View.VISIBLE
+                    binding.attactPattern.loopingSp.visibility = View.VISIBLE
+                    binding.attactPattern.titleBeforeLoopSp.visibility = View.VISIBLE
+                    binding.attactPattern.titleLoopingSp.visibility = View.VISIBLE
+                    beforeLoopadapter.submitList(it[0].getBefore()){
+                        beforeLoopadapter.notifyDataSetChanged()
+                    }
+                    loopAdapter.submitList(it[0].getLoop()){
+                        loopAdapter.notifyDataSetChanged()
+                    }
+                    beforeSpLoopadapter.submitList(it[1].getBefore()){
+                        beforeLoopadapter.notifyDataSetChanged()
+                    }
+                    loopSpAdapter.submitList(it[1].getLoop()){
+                        loopAdapter.notifyDataSetChanged()
+                    }
+                }else{
+                    binding.attactPattern.beforeLoopSp.visibility = View.GONE
+                    binding.attactPattern.loopingSp.visibility = View.GONE
+                    binding.attactPattern.titleBeforeLoopSp.visibility = View.GONE
+                    binding.attactPattern.titleLoopingSp.visibility = View.GONE
+                    beforeLoopadapter.submitList(it[0].getBefore()){
+                        beforeLoopadapter.notifyDataSetChanged()
+                    }
+                    loopAdapter.submitList(it[0].getLoop()){
+                        loopAdapter.notifyDataSetChanged()
+                    }
+                }
             })
         }
 

@@ -145,9 +145,7 @@
                 android:id="@+id/basic_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/m_margin"
                 android:background="@color/colorWhite"
-                android:elevation="@dimen/elevation_card"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -175,9 +173,7 @@
                     android:layout_height="wrap_content"
                     android:columnCount="6"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/xs_padding"
-                    android:paddingTop="@dimen/s_padding"
-                    android:paddingEnd="@dimen/xs_padding"
+                    android:padding="@dimen/m_padding"
                     android:rowCount="10"
                     android:useDefaultMargins="true">
 

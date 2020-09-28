@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/m_padding"
     android:animateLayoutChanges="true"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
@@ -13,7 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/before_loop"
+        android:textStyle="bold"
         android:visibility="gone"
+        tools:visibility="visible"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary" />
 
@@ -21,8 +24,9 @@
         android:id="@+id/before_loop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="5"
+        app:spanCount="6"
         tools:listitem="@layout/item_skill_loop" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -31,7 +35,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
         android:text="@string/looping"
+        android:textStyle="bold"
         android:visibility="gone"
+        tools:visibility="visible"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary" />
 
@@ -41,7 +47,51 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="5"
+        app:spanCount="6"
+        tools:itemCount="7"
+        tools:listitem="@layout/item_skill_loop" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_before_loop_sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/before_loop"
+        android:visibility="gone"
+        android:textStyle="bold"
+        tools:visibility="visible"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/before_loop_sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="6"
+        tools:listitem="@layout/item_skill_loop" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_looping_sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_margin"
+        android:text="@string/title_looping_sp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/looping_sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="6"
         tools:itemCount="7"
         tools:listitem="@layout/item_skill_loop" />
 

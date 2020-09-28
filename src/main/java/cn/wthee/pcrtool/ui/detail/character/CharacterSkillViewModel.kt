@@ -19,7 +19,7 @@ class CharacterSkillViewModel(
     }
 
     var skills = MutableLiveData<List<CharacterSkillInfo>>()
-    var acttackPattern = MutableLiveData<AttackPattern>()
+    var acttackPattern = MutableLiveData<List<AttackPattern>>()
     private var refresh = MutableLiveData<Boolean>()
     private var isLoading = MutableLiveData<Boolean>()
 

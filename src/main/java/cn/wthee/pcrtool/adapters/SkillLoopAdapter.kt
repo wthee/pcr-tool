@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -42,19 +41,19 @@ class SkillLoopAdapter() :
             //设置数据
             binding.apply {
                 val ctx = MyApplication.getContext()
-                //加载动画
-                root.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //加载图片
                 if (atkId == 1) {
                     skillOrder.text = "普攻"
+                    skillOrder.setTextColor(ctx.getColor(R.color.colorPrimary))
                     skillIcon.setBackgroundResource(R.drawable.unknow_gray)
                     skillIconX.visibility = View.VISIBLE
                 } else {
                     //技能图标
-                    val iconType = if (atkId == 1001) {
+                    skillIconX.visibility = View.GONE
+                    val iconType = if (atkId == 1001 || atkId == 2001) {
                         skillOrder.text = "技能1"
                         iconType1
-                    } else {
+                    } else{
                         skillOrder.text = "技能2"
                         iconType2
                     }
