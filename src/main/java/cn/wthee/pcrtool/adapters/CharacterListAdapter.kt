@@ -75,7 +75,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
                 //加载网络图片
                 val picUrl = Constants.CHARACTER_URL + (character.id + 30) + Constants.WEBP
-                characterPic.load(R.drawable.unknow_gray) {
+                characterPic.load(picUrl) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)
                 }
