@@ -124,11 +124,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 if (drops.isNestedScrollingEnabled) drops.isNestedScrollingEnabled = false
                 return@setOnTouchListener false
             }
-            drops.setOnTouchListener { v, event ->
-                if (material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = false
-                if (!drops.isNestedScrollingEnabled) drops.isNestedScrollingEnabled = true
-                return@setOnTouchListener false
-            }
         }
     }
 

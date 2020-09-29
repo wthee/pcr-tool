@@ -56,7 +56,7 @@ class EquipmentAdapter(private val isList: Boolean) :
                     currentList
                 } else {
                     val filteredList = currentList.toMutableList()
-                    filteredList.toHashSet().forEachIndexed { index, data ->
+                    filteredList.toHashSet().forEachIndexed { _, data ->
                         if (!param.all) {
                             //过滤非收藏角色
                             if (!MainActivity.sp.getBoolean(data.equipmentId.toString(), false)) {

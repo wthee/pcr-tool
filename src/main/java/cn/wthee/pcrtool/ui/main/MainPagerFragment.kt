@@ -63,7 +63,7 @@ class MainPagerFragment : Fragment() {
     ): View? {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
-        setListener()
+        setToolbar()
         prepareTransitions()
         //设置toolbar
         setHasOptionsMenu(true)
@@ -178,7 +178,7 @@ class MainPagerFragment : Fragment() {
 
     }
 
-    private fun setListener() {
+    private fun setToolbar() {
         val toolbar =
             ToolbarUtil(binding.toolbar)
         toolbar.setLeftIcon(R.drawable.ic_logo)

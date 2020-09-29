@@ -32,6 +32,28 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "comments") val comments: String,
 ) : Serializable {
 
+    //获取名字，去除限定类型
+    fun getNameF(): String {
+        val index = this.name.indexOf("（")
+        return if (index == -1) {
+            this.name
+        } else {
+            val sp = this.name.split("（")
+            sp[0]
+        }
+    }
+
+    //获取限定类型
+    fun getNameL(): String {
+        val index = this.name.indexOf("（")
+        return if (index == -1) {
+            ""
+        } else {
+            val sp = this.name.split("（")
+            sp[1].substring(0, sp[1].lastIndex)
+        }
+    }
+
     fun getStarId(star: Int): String {
         val idStr = id.toString()
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]

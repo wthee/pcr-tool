@@ -42,7 +42,6 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/text"
-                android:textIsSelectable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="精灵树之弓" />
@@ -55,7 +54,6 @@
                 android:layout_marginBottom="@dimen/s_margin"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textColor="@color/colorAlphtBlack"
-                android:textIsSelectable="true"
                 tools:text="道具详情道具\n详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
 
         </LinearLayout>

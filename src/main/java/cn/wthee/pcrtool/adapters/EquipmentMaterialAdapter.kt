@@ -78,6 +78,9 @@ class EquipmentMaterialAdapter(
                         val data = EquipmentDetailsFragment.viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()
                         partentBinding.drops.adapter = adapter
+                        //动态限制只有一个列表可滚动
+                        partentBinding.drops.isNestedScrollingEnabled = true
+                        partentBinding.material.isNestedScrollingEnabled = false
                         adapter.submitList(data) {
                             behavior.state = BottomSheetBehavior.STATE_EXPANDED
                             partentBinding.progressBar.visibility = View.INVISIBLE

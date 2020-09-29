@@ -179,13 +179,13 @@ class CharacterBasicInfoFragment : Fragment() {
         val icFabColor =
             resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
 
-        binding.name.setTextColor(
-            ResourcesCompat.getColor(
-                resources,
-                if (isLoved) R.color.colorPrimary else R.color.text,
-                null
-            )
+        val color = ResourcesCompat.getColor(
+            resources,
+            if (isLoved) R.color.colorPrimary else R.color.text,
+            null
         )
+        binding.name.setTextColor(color)
+        binding.nameExtra.setTextColor(color)
 
         binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
 
@@ -214,7 +214,8 @@ class CharacterBasicInfoFragment : Fragment() {
                 else
                     characterPro.actualName
             catah.text = characterPro.catchCopy
-            name.text = characterPro.name
+            name.text = characterPro.getNameF()
+            nameExtra.text = characterPro.getNameL()
             three.text = requireActivity().resources.getString(
                 R.string.character_detail,
                 characterPro.age,

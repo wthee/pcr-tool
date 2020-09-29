@@ -55,18 +55,18 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
         service.getData(body).enqueue(object : Callback<PVPData> {
             override fun onResponse(call: Call<PVPData>, response: Response<PVPData>) {
                 try {
-                    val body = response.body()
-                    if (body == null || body.code != 0) {
+                    val responseBody = response.body()
+                    if (responseBody == null || responseBody.code != 0) {
                         ToastUtil.short("查询异常，请稍后重试~")
                     } else {
                         //展示查询结果
-                        if (body.data.result.isEmpty()) {
+                        if (responseBody.data.result.isEmpty()) {
                             binding.pvpNoData.visibility = View.VISIBLE
                         } else {
                             binding.pvpNoData.visibility = View.GONE
                             val adapter = PvpCharacterResultAdapter()
                             binding.list.adapter = adapter
-                            adapter.submitList(body.data.result)
+                            adapter.submitList(responseBody.data.result)
                         }
                     }
                 } catch (e: Exception) {

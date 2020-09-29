@@ -34,7 +34,7 @@ object CacheUtil {
 
     private fun deleteDir(dir: File?): Boolean {
         if (dir != null && dir.isDirectory) {
-            val children = dir.list()
+            val children = dir.list()?: arrayOf()
             for (i in children.indices) {
                 val success =
                     deleteDir(File(dir, children[i]))
@@ -53,7 +53,8 @@ object CacheUtil {
     fun getFolderSize(file: File?): Long {
         var size: Long = 0
         try {
-            val fileList = file!!.listFiles()
+            file?: return 0L
+            val fileList =  file.listFiles()?: arrayOf()
             for (i in fileList.indices) {
                 // 如果下面还有文件
                 size = if (fileList[i].isDirectory) {

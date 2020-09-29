@@ -75,13 +75,13 @@
             android:visibility="invisible"
             tools:visibility="visible" />
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/drops"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
             android:orientation="vertical"
-            android:nestedScrollingEnabled="true"
             android:focusable="true"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

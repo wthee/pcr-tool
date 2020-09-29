@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     android:paddingStart="@dimen/m_padding"
     android:paddingTop="@dimen/s_padding"
     android:paddingEnd="@dimen/m_padding">
@@ -17,9 +18,7 @@
         android:text="@string/title_sort"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/sort_type_chips"
@@ -27,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         app:checkedChip="@id/sort_chip_0"
-        app:layout_constraintTop_toBottomOf="@id/sort_character"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -75,9 +73,7 @@
         android:text="@string/sort_type"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sort_type_chips" />
+        android:textStyle="bold" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/asc_chips"
@@ -85,7 +81,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         app:checkedChip="@id/asc"
-        app:layout_constraintTop_toBottomOf="@id/title_sort_type"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -112,9 +107,7 @@
         android:text="@string/title_position"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/asc_chips" />
+        android:textStyle="bold"/>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chips_position"
@@ -122,7 +115,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         app:checkedChip="@id/position_chip_1"
-        app:layout_constraintTop_toBottomOf="@id/title_position"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -164,9 +156,7 @@
         android:text="@string/atk_type"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chips_position" />
+        android:textStyle="bold" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chips_atk"
@@ -174,7 +164,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         app:checkedChip="@id/atk_chip_1"
-        app:layout_constraintTop_toBottomOf="@id/atk_type"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -208,15 +197,13 @@
         android:text="@string/title_guide"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chips_atk" />
+        android:textStyle="bold" />
 
     <HorizontalScrollView
         android:id="@+id/scroll_guild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/title_guide">
+        android:animateLayoutChanges="true">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chips_guild"
@@ -230,24 +217,6 @@
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/reset"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reset"
-        android:textColor="@color/text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll_guild" />
+    <include android:id="@+id/btns" layout="@layout/layout_dialog_btns"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/next"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll_guild" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -33,7 +33,9 @@ interface CharacterDao {
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
         WHERE 
-            unit_profile.unit_name like '%' || :unitName || '%' """
+            unit_profile.unit_name like '%' || :unitName || '%' 
+        AND unit_profile.unit_id NOT IN (106701,110201,113801,900103,906601)
+            """
     )
     suspend fun getInfoAndData(unitName: String): List<CharacterInfo>
 
@@ -72,7 +74,7 @@ interface CharacterDao {
             LEFT JOIN character_love_rankup_text ON character_love_rankup_text.chara_id = unit_data.unit_id / 100
             LEFT JOIN (SELECT unit_id, GROUP_CONCAT( description, '-' ) AS comments FROM unit_comments GROUP BY unit_id) AS cts ON cts.unit_id = unit_profile.unit_id
         WHERE 
-            unit_profile.unit_id = :uid"""
+            unit_profile.unit_id = :uid """
     )
     suspend fun getInfoPro(uid: Int): CharacterInfoPro
 

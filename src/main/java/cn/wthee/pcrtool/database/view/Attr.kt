@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.database.entity.CharacterRarity
 import cn.wthee.pcrtool.utils.Constants
+import java.io.Serializable
 
 //角色属性
 data class Attr(
@@ -24,7 +25,7 @@ data class Attr(
     @ColumnInfo(name = "energy_recovery_rate") var energyRecoveryRate: Double,
     @ColumnInfo(name = "energy_reduce_rate") var energyReduceRate: Double,
     @ColumnInfo(name = "accuracy") var accuracy: Double
-) {
+) : Serializable{
     companion object {
 
         fun setGrowthValue(rarityGrowth: CharacterRarity): Attr {

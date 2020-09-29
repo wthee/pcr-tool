@@ -68,8 +68,8 @@ class CharacterViewModel(
             val b: Long
             when (sortType) {
                 SORT_DATE -> {
-                    a = format.parse(o1.startTime).time
-                    b = format.parse(o2.startTime).time
+                    a = format.parse(o1.startTime)?.time?:0
+                    b = format.parse(o2.startTime)?.time?:0
                 }
                 SORT_AGE -> {
                     a = if (o1.age.contains("?")) 999 else o1.age.toLong()

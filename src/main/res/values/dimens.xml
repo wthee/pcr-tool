@@ -3,6 +3,7 @@
     <dimen name="card_radius">4dp</dimen>
     <dimen name="card_height">150dp</dimen>
     <dimen name="list_height">64</dimen>
+    <dimen name="chip_height">48</dimen>
     <dimen name="title_width">32dp</dimen>
     <!-- icon-->
     <dimen name="s_icon">10dp</dimen>

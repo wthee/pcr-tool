@@ -48,8 +48,8 @@ class CharacterPicDialogFragment : DialogFragment() {
             dismiss()
         }
         //指示器
-        binding.pics.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            val manager = binding.pics.getLayoutManager() as LinearLayoutManager
+        binding.pics.setOnScrollChangeListener { _, _, _, _, _ ->
+            val manager = binding.pics.layoutManager as LinearLayoutManager
             val index = manager.findFirstCompletelyVisibleItemPosition() + 1
             if (index != 0) binding.picIndex.text = "$index / ${urls.size}"
         }

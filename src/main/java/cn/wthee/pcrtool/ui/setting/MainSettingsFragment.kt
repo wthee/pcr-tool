@@ -40,12 +40,11 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         forceUpdateDb = findPreference<Preference>("force_update_db")!!
         val appUpdate = findPreference<Preference>("force_update_app")
         val cleanData = findPreference<Preference>("clean_data")
-        val notToast = findPreference<Preference>("not_toast")
         val changeDbType = findPreference<ListPreference>("change_database")
         changeDbType?.title =
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         //摘要替换
-        forceUpdateDb?.summary = MainActivity.sp.getString(
+        forceUpdateDb.summary = MainActivity.sp.getString(
             if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             "0"
         )
@@ -60,12 +59,12 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             return@setOnPreferenceChangeListener true
         }
         //强制更新数据库
-        forceUpdateDb?.setOnPreferenceClickListener {
+        forceUpdateDb.setOnPreferenceClickListener {
             DatabaseUpdateHelper.checkDBVersion(0)
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本
-        changeDbType?.setOnPreferenceChangeListener { preference, newValue ->
+        changeDbType?.setOnPreferenceChangeListener { _, newValue ->
             changeDbType.title =
                 "游戏版本 - " + if (newValue as String == "1") getString(R.string.db_cn) else getString(
                     R.string.db_jp
@@ -76,11 +75,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             }
             return@setOnPreferenceChangeListener true
         }
-        //应用更新
-//        appUpdate?.setOnPreferenceClickListener {
-//            Beta.checkUpgrade(true, false)
-//            return@setOnPreferenceClickListener true
-//        }
         //清除图片缓存
         cleanData?.setOnPreferenceClickListener {
             CacheUtil.clearAllCache(requireContext())

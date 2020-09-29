@@ -55,13 +55,14 @@ class CharacterAdapter(private val fragment: Fragment) :
             character: CharacterInfo,
             fragment: Fragment
         ) {
+            //是否收藏
+            val isLoved = sp.getBoolean(character.id.toString(), false)
+
             binding.apply {
                 (binding.root.parent as? ViewGroup)?.doOnPreDraw {
                     // Parent has been drawn. Start transitioning!
                     fragment.startPostponedEnterTransition()
                 }
-                //是否收藏
-                val isLoved = sp.getBoolean(character.id.toString(), false)
                 name.setTextColor(
                     ResourcesCompat.getColor(
                         fragment.resources,
@@ -74,7 +75,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
                 //加载网络图片
                 val picUrl = Constants.CHARACTER_URL + (character.id + 30) + Constants.WEBP
-                characterPic.load(picUrl) {
+                characterPic.load(R.drawable.unknow_gray) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)
                 }
@@ -119,8 +120,6 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 //长按事件
                 binding.root.setOnLongClickListener {
-//                    OnTouchUtil.addEffect(root)
-                    val isLoved = sp.getBoolean(character.id.toString(), false)
                     sp.edit {
                         putBoolean(
                             character.id.toString(),
@@ -147,7 +146,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     currentList
                 } else {
                     val filteredList = currentList.toMutableList()
-                    filteredList.toHashSet().forEachIndexed { index, data ->
+                    filteredList.toHashSet().forEachIndexed { _, data ->
                         if (!param.all) {
                             //过滤非收藏角色
                             if (!sp.getBoolean(data.id.toString(), false)) {

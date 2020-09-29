@@ -203,7 +203,9 @@ class CharacterAttrFragment : Fragment() {
         sharedCharacterAttrViewModel.sumInfo.observe(viewLifecycleOwner, Observer {
             attrAdapter = CharacterAttrAdapter()
             binding.charcterAttrs.adapter = attrAdapter
-            attrAdapter.submitList(it.all())
+            attrAdapter.submitList(it.all()){
+                attrAdapter.notifyDataSetChanged()
+            }
         })
     }
 
