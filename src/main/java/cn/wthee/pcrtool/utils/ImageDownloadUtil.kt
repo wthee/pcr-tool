@@ -5,92 +5,93 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import com.permissionx.guolindev.PermissionX
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.net.URL
 
 
 class ImageDownloadUtil(
     private val context: Context
 ) {
 
-    fun download(url: String) {
+    fun save(bitmap: Bitmap, name: String) {
         //申请权限
-        PermissionX.init(ActivityUtil.instance.currentActivity)
+        val activity = ActivityUtil.instance.currentActivity
+        PermissionX.init(activity)
             .permissions(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
-            .request { allGranted, grantedList, deniedList ->
-                if(allGranted){
-                    CoroutineScope(IO).launch {
-                        try {
-                            val picUrl = URL(url)
-                            val bitmap = BitmapFactory.decodeStream(picUrl.openStream())
-                            val name = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.')) + ".png"
-                            Log.e("save", name)
-                            saveBitmap(bitmap, name)
-                        }catch (e: Exception){
-                            Looper.prepare()
-                            ToastUtil.short("图片已保存失败")
-                            Looper.loop()
-                        }
+            .request { allGranted, _, _ ->
+                if (allGranted) {
+                    activity?.runOnUiThread {
+
+                        saveBitmap(bitmap, name)
                     }
-                }else{
+                } else {
                     ToastUtil.short("无法保存~请允许相关权限")
                 }
             }
     }
 
-
-    @Throws(IOException::class)
-    private fun saveBitmap(bitmap: Bitmap, displayName: String
+    //保存bitmap
+    private fun saveBitmap(
+        bitmap: Bitmap, displayName: String
     ) {
-        val relativeLocation = Environment.DIRECTORY_PICTURES
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE,"image/*")
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, relativeLocation)
-        }
-        val resolver = context.contentResolver
         var stream: OutputStream? = null
-        var uri: Uri? = null
+        var path = ""
         try {
-            val contentUri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            uri = resolver.insert(contentUri, contentValues)
-            if (uri == null) {
-                throw IOException("Failed to create new MediaStore record.")
+            //保存属性
+            val contentValues = ContentValues()
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/*")
+            path = Environment.DIRECTORY_PICTURES
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, path)
+                var uri: Uri? = null
+                val resolver = context.contentResolver
+                try {
+                    val contentUri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    uri = resolver.insert(contentUri, contentValues)
+                    stream = resolver.openOutputStream(uri!!)
+                    bitmap.compress(CompressFormat.PNG, 100, stream)
+                    contentValues.put(MediaStore.Images.Media.IS_PENDING, false)
+                    resolver.update(uri, contentValues, null, null)
+                } catch (e: IOException) {
+                    if (uri != null) {
+                        resolver.delete(uri, null, null)
+                    }
+                }
+            } else {
+                path = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    .toString() + File.separator
+                val directory = File(path)
+                if (!directory.exists()) {
+                    directory.mkdirs()
+                }
+                val file = File(directory, displayName)
+                stream = FileOutputStream(file)
+                contentValues.put(MediaStore.Images.Media.DATA, file.absolutePath)
+                bitmap.compress(CompressFormat.PNG, 100, stream)
+                context.contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    contentValues
+                )
             }
-            stream = resolver.openOutputStream(uri)
-            if (stream == null) {
-                throw IOException("Failed to get output stream.")
-            }
-            if (!bitmap.compress(CompressFormat.PNG, 95, stream)) {
-                throw IOException("Failed to save bitmap.")
-            }
-            Looper.prepare()
-            ToastUtil.short("图片已保存到 $relativeLocation / $displayName")
-            Looper.loop()
-        } catch (e: IOException) {
-            if (uri != null) {
-                // Don't leave an orphan entry in the MediaStore
-                resolver.delete(uri, null, null)
-            }
-            throw e
+            ToastUtil.short("图片已保存\n$path/$displayName")
+        } catch (e: Exception) {
+            Log.e("save", e.message ?: "")
+            ToastUtil.short("图片保存失败")
         } finally {
             stream?.close()
         }
     }
+
 }

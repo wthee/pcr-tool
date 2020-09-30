@@ -96,6 +96,7 @@
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
+            android:theme="@style/Ripple"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"

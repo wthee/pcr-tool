@@ -37,6 +37,7 @@
         android:focusable="true"
         android:clickable="true"
         android:scaleType="fitCenter"
+        android:theme="@style/Ripple"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_download" />
 
@@ -50,6 +51,7 @@
         android:focusable="true"
         android:clickable="true"
         android:scaleType="fitCenter"
+        android:theme="@style/Ripple"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_back" />
 

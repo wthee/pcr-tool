@@ -70,6 +70,7 @@
                         android:layout_width="@dimen/fab_icon"
                         android:layout_height="@dimen/fab_icon"
                         android:layout_gravity="end"
+                        android:theme="@style/Ripple"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:scaleType="fitCenter"
                         app:layout_constraintBottom_toBottomOf="parent"
