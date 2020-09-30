@@ -34,9 +34,7 @@ class ToolPvpFragment : Fragment() {
         //已选择角色
         loadDefault()
         //角色页面 绑定tab viewpager
-        binding.pvpPager.postDelayed({
-            setPager()
-        }, resources.getInteger(R.integer.delay).toLong())
+        setPager()
         setListener()
         return binding.root
     }

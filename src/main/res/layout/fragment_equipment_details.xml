@@ -101,7 +101,6 @@
             android:focusable="true"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_back"
-            android:theme="@style/Ripple"
             android:visibility="gone" />
 
     </LinearLayout>

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.character
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import cn.wthee.pcrtool.adapters.CharacterCardBgAdapter
+import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.adapters.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
+import cn.wthee.pcrtool.utils.ImageDownloadUtil
 
 
 class CharacterPicDialogFragment : DialogFragment() {
@@ -25,10 +28,11 @@ class CharacterPicDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentCharacterPicListBinding
     private lateinit var urls: ArrayList<String>
-
+    private var index = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MainActivity.fabMain.hide()
         urls = requireArguments().getStringArrayList("urls") as ArrayList<String>
     }
 
@@ -38,20 +42,28 @@ class CharacterPicDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
-        //初始化列表
-        val adapter = CharacterCardBgAdapter()
-        PagerSnapHelper().attachToRecyclerView(binding.pics)
-        binding.pics.adapter = adapter
-        adapter.submitList(urls)
-        //返回
-        binding.backCbi.setOnClickListener {
-            dismiss()
-        }
-        //指示器
-        binding.pics.setOnScrollChangeListener { _, _, _, _, _ ->
-            val manager = binding.pics.layoutManager as LinearLayoutManager
-            val index = manager.findFirstCompletelyVisibleItemPosition() + 1
-            if (index != 0) binding.picIndex.text = "$index / ${urls.size}"
+        binding.apply {
+            //初始化列表
+            val adapter = CharacterPicAdapter()
+            PagerSnapHelper().attachToRecyclerView(binding.pics)
+            pics.adapter = adapter
+            adapter.submitList(urls)
+            //指示器
+            pics.setOnScrollChangeListener { _, _, _, _, _ ->
+                val manager = pics.layoutManager as LinearLayoutManager
+                index = manager.findFirstCompletelyVisibleItemPosition() + 1
+                if (index != 0) picIndex.text = "$index / ${urls.size}"
+            }
+            //下载
+            download.setOnClickListener {
+                if(index != 0){
+                    ImageDownloadUtil(requireContext()).download(urls[index - 1])
+                }
+            }
+            //返回
+            picsBack.setOnClickListener {
+                dismiss()
+            }
         }
         return binding.root
     }
@@ -68,4 +80,8 @@ class CharacterPicDialogFragment : DialogFragment() {
         window?.attributes = params
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        MainActivity.fabMain.show()
+    }
 }

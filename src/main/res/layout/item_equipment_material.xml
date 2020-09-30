@@ -13,7 +13,7 @@
         android:id="@+id/equip_icon"
         android:layout_width="@dimen/normal_icon"
         android:layout_height="@dimen/normal_icon"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

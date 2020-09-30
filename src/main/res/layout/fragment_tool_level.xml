@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="start|center_vertical"
         android:layout_gravity="start"
-        android:foreground="?attr/selectableItemBackground"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:orientation="horizontal"
         android:layout_margin="@dimen/s_margin">
 

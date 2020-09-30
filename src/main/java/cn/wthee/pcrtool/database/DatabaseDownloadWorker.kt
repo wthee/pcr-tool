@@ -22,7 +22,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
 
 
 class DatabaseDownloadWorker(
@@ -109,40 +108,29 @@ class DatabaseDownloadWorker(
                 FileUtil.deleteDir(folderPath, dbZipPath)
             }
             //写入文件
-            val input = response.body()!!.byteStream()
-            input.let { inputStream ->
-                val out = FileOutputStream(db)
-                val byte = ByteArray(1024 * 4)
-                var line: Int
-                while (inputStream.read(byte).also { line = it } > 0) {
-                    out.write(byte, 0, line)
+            FileUtil.save(response.body()!!.byteStream(), db)
+            MainScope().launch {
+                //更新数据库
+                AppDatabase.getInstance().close()
+                AppDatabaseJP.getInstance().close()
+                UnzippedUtil.deCompress(db, true)
+                //更新数据库版本号
+                sp.edit {
+                    putString(
+                        if (type == 1)
+                            Constants.SP_DATABASE_VERSION
+                        else
+                            Constants.SP_DATABASE_VERSION_JP,
+                        version
+                    )
                 }
-                out.flush()
-                out.close()
-                inputStream.close()
-                MainScope().launch {
-                    //更新数据库
-                    AppDatabase.getInstance().close()
-                    AppDatabaseJP.getInstance().close()
-                    UnzippedUtil.deCompress(db, true)
-                    //更新数据库版本号
-                    sp.edit {
-                        putString(
-                            if (type == 1)
-                                Constants.SP_DATABASE_VERSION
-                            else
-                                Constants.SP_DATABASE_VERSION_JP,
-                            version
-                        )
-                    }
-                    //通知更新数据
-                    if (fromSetting == 1) {
-                        CharacterListFragment.handler.sendEmptyMessage(2)
-                    } else {
-                        ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                    }
-                    CharacterListFragment.handler.sendEmptyMessage(1)
+                //通知更新数据
+                if (fromSetting == 1) {
+                    CharacterListFragment.handler.sendEmptyMessage(2)
+                } else {
+                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                 }
+                CharacterListFragment.handler.sendEmptyMessage(1)
             }
             return Result.success()
         } catch (e: Exception) {

@@ -14,7 +14,7 @@
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
         android:layout_margin="@dimen/s_margin"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:scaleType="fitCenter"
         tools:src="@drawable/unknow_gray" />
 
@@ -25,7 +25,7 @@
         android:layout_marginStart="@dimen/s_margin"
         android:layout_marginTop="@dimen/s_margin"
         android:layout_marginBottom="@dimen/s_margin"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:cardCornerRadius="@dimen/card_radius"
         app:cardElevation="@dimen/elevation_card">
 

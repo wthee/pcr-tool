@@ -10,8 +10,8 @@ import cn.wthee.pcrtool.databinding.ItemCardBgBinding
 import coil.load
 
 
-class CharacterCardBgAdapter :
-    ListAdapter<String, CharacterCardBgAdapter.ViewHolder>(ImageDiffCallback()) {
+class CharacterPicAdapter():
+    ListAdapter<String, CharacterPicAdapter.ViewHolder>(ImageDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCardBgBinding.inflate(

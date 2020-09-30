@@ -53,7 +53,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
-
+    implementation "androidx.activity:activity-ktx:1.1.0"
 
     //coil
     def coil_version = '1.0.0-rc3'
@@ -91,6 +91,9 @@ dependencies {
 
     //PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
+    //PermissionX
+    implementation 'com.permissionx.guolindev:permissionx:1.4.0'
 
     //Work
     def work_version = "2.4.0"
