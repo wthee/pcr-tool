@@ -169,12 +169,14 @@ class CharacterListFragment : Fragment() {
                             }
                             characterList.scrollToPosition(0)
                             MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
+                            isLoading.postValue(false)
+                            refresh.postValue(false)
                         }
                     } else {
                         MainPagerFragment.tipText.visibility = View.VISIBLE
+                        isLoading.postValue(false)
+                        refresh.postValue(false)
                     }
-                    isLoading.postValue(false)
-                    refresh.postValue(false)
                 })
             }
             //刷新

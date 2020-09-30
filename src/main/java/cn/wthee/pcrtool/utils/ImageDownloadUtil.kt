@@ -46,7 +46,7 @@ class ImageDownloadUtil(
         bitmap: Bitmap, displayName: String
     ) {
         var stream: OutputStream? = null
-        var path = ""
+        var path: String
         try {
             //保存属性
             val contentValues = ContentValues()
