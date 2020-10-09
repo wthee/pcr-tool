@@ -41,7 +41,6 @@ class EnemyListFragment : Fragment() {
         setListener()
         //绑定观察
         setObserve()
-        viewModel.getEnemyCount()
         return binding.root
     }
 
@@ -82,16 +81,6 @@ class EnemyListFragment : Fragment() {
                     } else {
                         MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
-                })
-            }
-            //数量
-            if (!enemyCount.hasObservers()) {
-                enemyCount.observe(viewLifecycleOwner, Observer {
-                    MainActivity.sp.edit {
-                        putInt(Constants.SP_COUNT_ENEMY, it)
-                    }
-                    MainPagerFragment.tabLayout.getTabAt(2)?.text = it.toString()
-                    MainPagerFragment.tipText.visibility = if (it != 0) View.GONE else View.VISIBLE
                 })
             }
 

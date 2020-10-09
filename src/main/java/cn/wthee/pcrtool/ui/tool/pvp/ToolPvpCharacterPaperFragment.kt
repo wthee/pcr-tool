@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.adapters.PvpCharactertAdapter
-import cn.wthee.pcrtool.databinding.FragmentToolPvpCharacterSelectBinding
+import cn.wthee.pcrtool.databinding.FragmentToolPvpCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.MainScope
@@ -20,7 +20,7 @@ private const val CHARACTER = "character"
 class ToolPvpCharacterIconFragment : Fragment() {
 
     private var position = 0
-    private lateinit var binding: FragmentToolPvpCharacterSelectBinding
+    private lateinit var binding: FragmentToolPvpCharacterBinding
     private val sharedViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -36,7 +36,7 @@ class ToolPvpCharacterIconFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentToolPvpCharacterSelectBinding.inflate(inflater, container, false)
+        binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
             val data = sharedViewModel.getCharacterByPosition(position)
             val adapter = PvpCharactertAdapter()

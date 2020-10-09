@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        DatabaseUpdateHelper.checkDBVersion(0)
+        DatabaseUpdateHelper.checkDBVersion()
         //悬浮按钮
         setFab()
         setListener()
@@ -374,6 +374,6 @@ class MainActivity : AppCompatActivity() {
                 closeFab()
             }
         }
-        fabMain.setImageResource(R.drawable.ic_cancel)
+        fabMain.setImageResource(R.drawable.ic_back)
     }
 }

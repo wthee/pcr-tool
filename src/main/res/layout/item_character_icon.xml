@@ -21,9 +21,11 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/text"
         android:gravity="center"
+        android:paddingTop="@dimen/s_padding"
         android:ellipsize="end"
         android:maxLines="1"
-        tools:text="牛头人" />
+        tools:text="123" />
 
 </LinearLayout>

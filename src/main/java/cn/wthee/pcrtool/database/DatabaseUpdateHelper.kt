@@ -17,6 +17,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_LASTEST
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import retrofit2.Call
@@ -35,9 +36,7 @@ object DatabaseUpdateHelper {
             .getString("change_database", "1")?.toInt() ?: 1
         //提示开始
         if (fromSetting == 1) ToastUtil.short(NOTICE_TOAST_CHANGE)
-        if (fromSetting == 0 && FileUtil.needUpadateDb(databaseType)) ToastUtil.short(
-            NOTICE_TOAST_CHECKING
-        )
+        if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_CHECKING)
         //创建服务
         val service = ApiHelper.create(
             DatabaseService::class.java,
@@ -108,6 +107,7 @@ object DatabaseUpdateHelper {
                 if (fromSetting == 1) {
                     CharacterListFragment.handler.sendEmptyMessage(2)
                 }
+                if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_LASTEST)
                 //更新数据库版本号
                 try {
                     MainSettingsFragment.forceUpdateDb.summary = ver

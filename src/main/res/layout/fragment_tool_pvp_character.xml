@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fadeScrollbars="false"
+        android:nestedScrollingEnabled="false"
         android:scrollbarDefaultDelayBeforeFade="@null"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="5"
         tools:listitem="@layout/item_character_icon" />
-
 
 </FrameLayout>

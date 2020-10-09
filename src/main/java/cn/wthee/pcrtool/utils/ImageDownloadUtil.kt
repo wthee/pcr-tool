@@ -32,7 +32,7 @@ class ImageDownloadUtil(
             .request { allGranted, _, _ ->
                 if (allGranted) {
                     activity?.runOnUiThread {
-
+                        ToastUtil.short("正在保存，请稍后~")
                         saveBitmap(bitmap, name)
                     }
                 } else {
@@ -85,7 +85,7 @@ class ImageDownloadUtil(
                     contentValues
                 )
             }
-            ToastUtil.short("图片已保存\n$path/$displayName")
+            ToastUtil.short("图片保存成功~\n$path/$displayName")
         } catch (e: Exception) {
             Log.e("save", e.message ?: "")
             ToastUtil.short("图片保存失败")

@@ -8,15 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 import cn.wthee.pcrtool.utils.ImageDownloadUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import com.github.chrisbanes.photoview.PhotoView
+import coil.imageLoader
+import coil.request.ImageRequest
+import kotlinx.coroutines.launch
 
 
 class CharacterPicDialogFragment : DialogFragment() {
@@ -41,7 +42,6 @@ class CharacterPicDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MainActivity.fabMain.hide()
         urls = requireArguments().getStringArrayList("urls") as ArrayList<String>
     }
 
@@ -64,29 +64,37 @@ class CharacterPicDialogFragment : DialogFragment() {
                 if (index != 0) picIndex.text = "$index / ${urls.size}"
             }
             //下载
-            download.setOnClickListener {
+            fabDownload.setOnClickListener {
                 if (index != 0) {
                     if (hasLoaded[index - 1]) {
                         try {
+
                             val url = urls[index - 1]
                             val pre = url.substring(url.indexOf("card/") + 5, url.lastIndexOf('/'))
                             val num = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.'))
                             val name = "${pre}_${num}.png"
-                            val vh = pics.findViewHolderForAdapterPosition(index - 1)
-                            val image = vh?.itemView?.findViewById<PhotoView>(R.id.character_pic)
-                            val bitmap = (image!!.drawable as BitmapDrawable).bitmap
-                            ImageDownloadUtil(requireContext()).save(bitmap, name)
+
+                            //保存图片
+                            lifecycleScope.launch {
+                                val request = ImageRequest.Builder(requireContext())
+                                    .data(url)
+                                    .build()
+                                val bitmap =
+                                    (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
+                                ImageDownloadUtil(requireContext()).save(bitmap, name)
+                            }
+
                         } catch (e: Exception) {
                             Log.e("save", e.message ?: "")
                             ToastUtil.short("保存出错，请重试~")
                         }
                     } else {
-                        ToastUtil.short("请等待图片加加载~")
+                        ToastUtil.short("请等待图片加载~")
                     }
                 }
             }
             //返回
-            picsBack.setOnClickListener {
+            fabBack.setOnClickListener {
                 dismiss()
             }
         }
@@ -107,6 +115,5 @@ class CharacterPicDialogFragment : DialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        MainActivity.fabMain.show()
     }
 }

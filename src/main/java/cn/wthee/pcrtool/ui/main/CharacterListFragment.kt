@@ -58,6 +58,7 @@ class CharacterListFragment : Fragment() {
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         binding.layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
+        viewModel.isLoading.postValue(true)
         //公会列表
         guilds = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -66,10 +67,10 @@ class CharacterListFragment : Fragment() {
             list.forEach {
                 guilds.add(it.guild_name)
             }
-            if (list.isEmpty()) {
-                //为获取数据，说明数据异常，自动更新数据
-                DatabaseUpdateHelper.checkDBVersion(force = true)
-            }
+//            if (list.isEmpty()) {
+//                //为获取数据，说明数据异常，自动更新数据
+//                DatabaseUpdateHelper.checkDBVersion(force = true)
+//            }
             guilds.add("？？？")
         }
         //加载数据
@@ -169,14 +170,12 @@ class CharacterListFragment : Fragment() {
                             }
                             characterList.scrollToPosition(0)
                             MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
-                            isLoading.postValue(false)
-                            refresh.postValue(false)
                         }
                     } else {
                         MainPagerFragment.tipText.visibility = View.VISIBLE
-                        isLoading.postValue(false)
-                        refresh.postValue(false)
                     }
+                    refresh.postValue(false)
+                    isLoading.postValue(false)
                 })
             }
             //刷新

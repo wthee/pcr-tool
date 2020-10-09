@@ -64,14 +64,12 @@ interface CharacterDao {
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
             unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
-            (COALESCE( character_love_rankup_text.serif_1, "" ) || COALESCE( character_love_rankup_text.serif_2, "" ) || COALESCE( character_love_rankup_text.serif_3, "" )) AS serif,
-            COALESCE(cts.comments, "") AS comments
+           COALESCE(cts.comments, "") AS comments
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
-            LEFT JOIN character_love_rankup_text ON character_love_rankup_text.chara_id = unit_data.unit_id / 100
             LEFT JOIN (SELECT unit_id, GROUP_CONCAT( description, '-' ) AS comments FROM unit_comments GROUP BY unit_id) AS cts ON cts.unit_id = unit_profile.unit_id
         WHERE 
             unit_profile.unit_id = :uid """

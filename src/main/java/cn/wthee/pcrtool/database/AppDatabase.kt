@@ -17,7 +17,6 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         Character6Star::class,
         CharacterActualData::class,
         CharacterData::class,
-        CharacterLoveRank::class,
         CharacterPromotion::class,
         CharacterPromotionStatus::class,
         CharacterRarity::class,

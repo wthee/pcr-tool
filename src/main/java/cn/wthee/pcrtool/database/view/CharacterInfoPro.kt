@@ -23,7 +23,6 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "voice") val voice: String,
     @ColumnInfo(name = "catch_copy") val catchCopy: String,
     @ColumnInfo(name = "self_text") val selfText: String,
-    @ColumnInfo(name = "serif") val serif: String,
     @ColumnInfo(name = "search_area_width") val position: Int,
     @ColumnInfo(name = "intro") val intro: String,
     @ColumnInfo(name = "atk_type") val atkType: Int,
@@ -91,18 +90,11 @@ data class CharacterInfoPro(
     }
 
 
-    //羁绊提升文本
-    fun getLoveSelfText(): String {
-        return if (serif.contains("test") || serif.isBlank()) {
-            "......"
-        } else {
-            serif.replace("\\n", "")
-        }
-    }
-
+    //角色介绍
     fun getIntroText() = intro.replace("\\n", "")
 
+    //交流
     fun getCommentsText() =
-        comments.replace("\\n", "").replace("-", "\n")
+        comments.replace("\\n", "").replace("-", "\n\n")
 
 }

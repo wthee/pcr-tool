@@ -74,6 +74,7 @@ object Constants {
     const val NOTICE_TOAST_CHANGE = "数据切换中......"
     const val NOTICE_TOAST_TODO = "功能暂未实装"
     const val NOTICE_TOAST_CHECKING = "正在获取数据版本信息"
+    const val NOTICE_TOAST_LASTEST = "数据已是最新版本"
 
 
     //列表列数

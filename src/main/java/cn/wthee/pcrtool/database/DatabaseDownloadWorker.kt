@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
+import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -107,36 +108,40 @@ class DatabaseDownloadWorker(
             if (db.exists()) {
                 FileUtil.deleteDir(folderPath, dbZipPath)
             }
+            Log.e("pcr", "downloaded database")
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
-            MainScope().launch {
-                //更新数据库
-                AppDatabase.getInstance().close()
-                AppDatabaseJP.getInstance().close()
-                UnzippedUtil.deCompress(db, true)
-                //更新数据库版本号
-                sp.edit {
-                    putString(
-                        if (type == 1)
-                            Constants.SP_DATABASE_VERSION
-                        else
-                            Constants.SP_DATABASE_VERSION_JP,
-                        version
-                    )
-                }
-                //通知更新数据
-                if (fromSetting == 1) {
-                    CharacterListFragment.handler.sendEmptyMessage(2)
-                } else {
+            //更新数据库
+            AppDatabase.getInstance().close()
+            AppDatabaseJP.getInstance().close()
+            UnzippedUtil.deCompress(db, true)
+            Log.e("pcr", "saved database")
+            //更新数据库版本号
+            sp.edit {
+                putString(
+                    if (type == 1)
+                        Constants.SP_DATABASE_VERSION
+                    else
+                        Constants.SP_DATABASE_VERSION_JP,
+                    version
+                )
+            }
+            //通知更新数据
+            if (fromSetting == 1) {
+                CharacterListFragment.handler.sendEmptyMessage(2)
+            } else {
+                MainScope().launch {
                     ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                 }
-                CharacterListFragment.handler.sendEmptyMessage(1)
             }
+            //跳转
+            CharacterListFragment.handler.sendEmptyMessage(1)
             return Result.success()
         } catch (e: Exception) {
             MainScope().launch {
                 ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
             }
+            Log.e("pcr", e.message.toString())
             return Result.failure()
         }
     }

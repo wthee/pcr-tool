@@ -57,6 +57,7 @@
                         android:text="@string/app_name"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:textIsSelectable="true"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                         android:textColor="@color/colorPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -351,34 +352,6 @@
                         android:id="@+id/self"
                         android:layout_width="0dp"
                         android:layout_row="5"
-                        android:layout_column="0"
-                        android:layout_columnSpan="4"
-                        android:layout_columnWeight="1"
-                        android:gravity="start"
-                        android:padding="@dimen/s_padding"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_love_self"
-                        android:layout_width="0dp"
-                        android:layout_row="6"
-                        android:layout_column="0"
-                        android:layout_columnSpan="1"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="@dimen/s_padding"
-                        android:text="@string/love_rank_up"
-                        android:textAppearance="@style/subTitleWithe"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/self" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/love_self_text"
-                        android:layout_width="0dp"
-                        android:layout_row="7"
                         android:layout_column="0"
                         android:layout_columnSpan="4"
                         android:layout_columnWeight="1"

@@ -243,7 +243,6 @@ class CharacterBasicInfoFragment : Fragment() {
                     getPositionIcon(characterPro.position),
                     null
                 )
-            loveSelfText.text = characterPro.getLoveSelfText()
             comments.text = characterPro.getCommentsText()
         }
     }

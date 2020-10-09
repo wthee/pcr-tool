@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
@@ -15,6 +16,8 @@ import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ToolPvpFragment : Fragment() {
     companion object {
@@ -34,7 +37,14 @@ class ToolPvpFragment : Fragment() {
         //已选择角色
         loadDefault()
         //角色页面 绑定tab viewpager
-        setPager()
+        try {
+            lifecycleScope.launch {
+                delay(600L)
+                setPager()
+            }
+        } catch (e: Exception) {
+        }
+
         setListener()
         return binding.root
     }
@@ -57,7 +67,7 @@ class ToolPvpFragment : Fragment() {
     }
 
     private fun setPager() {
-        binding.pvpPager.offscreenPageLimit = 2
+        binding.pvpPager.offscreenPageLimit = 3
         binding.pvpPager.adapter = PvpCharacterPageAdapter(requireActivity())
         TabLayoutMediator(
             binding.tablayoutPosition,
