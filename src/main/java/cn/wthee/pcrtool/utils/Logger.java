@@ -91,7 +91,7 @@ public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandl
                 Spanned spanned = Html.fromHtml(sb.toString());
                 Looper.prepare();
                 AlertDialog.Builder builder = new AlertDialog.Builder(mCurrentActivity);
-                builder.setTitle("应用崩溃日志：");
+                builder.setTitle("错误日志：");
                 builder.setMessage(spanned);
                 //TODO 复制文本
                 builder.setPositiveButton("关闭应用", (dialog, which) -> mDefaultHandler.uncaughtException(t, e));

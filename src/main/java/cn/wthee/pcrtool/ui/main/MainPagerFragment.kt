@@ -27,7 +27,6 @@ import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -63,10 +62,8 @@ class MainPagerFragment : Fragment() {
     ): View? {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
-        setToolbar()
         prepareTransitions()
-        //设置toolbar
-        setHasOptionsMenu(true)
+
         return binding.root
     }
 
@@ -90,6 +87,15 @@ class MainPagerFragment : Fragment() {
 
     private fun init() {
         tipText = binding.noDataTip
+        //menu
+        binding.mainToolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_tool_pvp -> findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
+                R.id.menu_tool_level -> findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
+            }
+            FabHelper.addBackFab()
+            return@setOnMenuItemClickListener true
+        }
         //禁止连续点击
         cListClick = false
         //viewpager2 配置
@@ -178,26 +184,6 @@ class MainPagerFragment : Fragment() {
 
     }
 
-    private fun setToolbar() {
-        val toolbar =
-            ToolbarUtil(binding.toolbar)
-        toolbar.setLeftIcon(R.drawable.ic_logo)
-        toolbar.leftIcon.setOnClickListener {
-            count++
-            if (count % 2 == 0) {
-                toolbar.setLeftIcon(R.drawable.ic_logo)
-                toolbar.setTitleColor(R.color.colorWhite)
-            } else {
-                toolbar.setLeftIcon(R.drawable.ic_logo_color)
-                toolbar.setTitleColor(R.color.colorAccent)
-            }
-        }
-        //工具
-        toolbar.rightIcon.setOnClickListener {
-            //popWindow
-            showListPopupWindow(toolbar.rightIcon)
-        }
-    }
 
     //工具列表
     private fun showListPopupWindow(view: View?) {

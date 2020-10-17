@@ -13,18 +13,21 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment
 import kotlin.math.abs
 
-class CharacterViewPagerAdapter(
+class CharacterPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    uid: Int
+    uid: Int,
+    noData: Boolean
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     private val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
         mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid))
-        mFragments.put(1, CharacterAttrFragment.getInstance(uid))
-        mFragments.put(2, CharacterSkillFragment.getInstance(uid))
+        if (!noData) {
+            mFragments.put(1, CharacterAttrFragment.getInstance(uid))
+            mFragments.put(2, CharacterSkillFragment.getInstance(uid))
+        }
     }
 
     override fun createFragment(position: Int): Fragment {

@@ -156,7 +156,7 @@ class DatabaseDownloadWorker(
         notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(Constants.NOTICE_TITLE)
             .setTicker(Constants.NOTICE_TITLE)
-            .setSmallIcon(R.drawable.ic_logo)
+            .setSmallIcon(R.mipmap.ic_logo)
             .setOngoing(true)
             .setProgress(100, 0, true)
         return ForegroundInfo(noticeId, notification.build())

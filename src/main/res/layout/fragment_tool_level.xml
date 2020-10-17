@@ -4,25 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/s_padding"
+    android:background="@drawable/background_color"
     android:gravity="center"
-    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/tool_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="start|center_vertical"
-        android:layout_gravity="start"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
         android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:gravity="start|center_vertical"
         android:orientation="horizontal"
-        android:layout_margin="@dimen/s_margin">
+        android:padding="@dimen/s_padding">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/level_icon"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/normal_icon"
+            android:layout_width="@dimen/xl_icon"
+            android:layout_height="@dimen/xl_icon"
             android:src="@drawable/ic_level" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -31,50 +29,68 @@
             android:layout_marginStart="@dimen/m_margin"
             android:text="@string/tool_level"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorWhite" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
+        app:cardCornerRadius="@dimen/card_radius">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="@string/level"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginTop="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/s_margin"
+            android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="end"
-            android:text="@string/ys"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="end"
-            android:text="@string/character"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/level"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
-    </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="end"
+                    android:text="@string/ys"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_level"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_level_exp" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="end"
+                    android:text="@string/character"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/item_level_exp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 </LinearLayout>

@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharactertAdapter
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
@@ -61,7 +61,7 @@ class ToolPvpFragment : Fragment() {
             }
             //返回
             toolPvp.setOnClickListener {
-                findNavController().navigateUp()
+                FabHelper.goBack()
             }
         }
     }

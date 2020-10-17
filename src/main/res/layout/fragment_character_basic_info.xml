@@ -35,7 +35,7 @@
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 app:layout_collapseMode="parallax"
                 tools:layout_height="@dimen/card_height"
-                tools:src="@drawable/ic_logo_color" />
+                tools:src="@drawable/load" />
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="card_radius">4dp</dimen>
+    <dimen name="card_radius">6dp</dimen>
     <dimen name="card_height">150dp</dimen>
     <dimen name="list_height">64</dimen>
     <dimen name="chip_height">48</dimen>
@@ -14,6 +14,7 @@
     <dimen name="normal_icon">48dp</dimen>
     <dimen name="big_icon">64dp</dimen>
     <dimen name="character_icon_size">64dp</dimen>
+
     <!-- magrin & padding-->
     <dimen name="xs_margin">3dp</dimen>
     <dimen name="s_margin">6dp</dimen>

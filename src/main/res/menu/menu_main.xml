@@ -3,33 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/settingsFragment"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/setting"
+        android:id="@+id/menu_tool_pvp"
+        android:icon="@drawable/ic_pvp"
+        android:title="@string/tool_pvp"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/love"
-        android:icon="@drawable/ic_love_hollow"
-        android:title="@string/tab_love"
+        android:id="@+id/menu_tool_level"
+        android:icon="@drawable/ic_level"
+        android:title="@string/tool_level"
         app:showAsAction="ifRoom" />
 
-
-    <item
-        android:id="@+id/search"
-        android:icon="@drawable/ic_search"
-        android:title="@string/search"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/filter"
-        android:icon="@drawable/ic_filter"
-        android:title="@string/filter"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/sort"
-        android:icon="@drawable/ic_sort"
-        android:title="@string/sort"
-        app:showAsAction="ifRoom" />
 </menu>

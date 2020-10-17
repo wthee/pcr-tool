@@ -27,30 +27,35 @@ class CharacterSkillViewModel(
     fun getCharacterSkills(id: Int) {
         isLoading.postValue(true)
         viewModelScope.launch {
-            val infos = mutableListOf<CharacterSkillInfo>()
-            val data = repository.getCharacterSkill(id)
+            try {
+                val infos = mutableListOf<CharacterSkillInfo>()
+                val data = repository.getCharacterSkill(id)
 
-            //技能信息
-            data.getAllSkillId().forEach { sid ->
-                val skill = repository.getSkillData(sid)
-                if (skill.skill_id % 10 == 2) iconType1 = skill.icon_type
-                if (skill.skill_id % 10 == 3) iconType2 = skill.icon_type
-                val info = CharacterSkillInfo(
-                    skill.skill_id,
-                    skill.name ?: "",
-                    skill.description,
-                    skill.icon_type
-                )
-                info.actions = repository.getSkillActions(skill.getAllActionId())
-                    .filter { it.description.isNotEmpty() }
-                infos.add(info)
+                //技能信息
+                data.getAllSkillId().forEach { sid ->
+                    val skill = repository.getSkillData(sid)
+                    if (skill.skill_id % 10 == 2) iconType1 = skill.icon_type
+                    if (skill.skill_id % 10 == 3) iconType2 = skill.icon_type
+                    val info = CharacterSkillInfo(
+                        skill.skill_id,
+                        skill.name ?: "",
+                        skill.description,
+                        skill.icon_type
+                    )
+                    info.actions = repository.getSkillActions(skill.getAllActionId())
+                        .filter { it.description.isNotEmpty() }
+                    infos.add(info)
+                }
+                //技能循环
+                val pattern = repository.getAttackPattern(id)
+                isLoading.postValue(false)
+                refresh.postValue(false)
+                skills.postValue(infos)
+                acttackPattern.postValue(pattern)
+            } catch (e: Exception) {
+
             }
-            //技能循环
-            val pattern = repository.getAttackPattern(id)
-            isLoading.postValue(false)
-            refresh.postValue(false)
-            skills.postValue(infos)
-            acttackPattern.postValue(pattern)
+
         }
     }
 
