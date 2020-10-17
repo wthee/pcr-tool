@@ -41,7 +41,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         CharacterExperienceTeam::class,
         CharacterComments::class,
     ],
-    version = 12,
+    version = 13,
     exportSchema = false
 )
 abstract class AppDatabaseJP : RoomDatabase() {
