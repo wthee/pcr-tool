@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
@@ -11,14 +12,17 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
+import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpService
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ToastUtil
 import coil.load
 
 
-class PvpCharactertAdapter :
-    ListAdapter<PvpCharacterData, PvpCharactertAdapter.ViewHolder>(PvpDiffCallback()) {
+class PvpCharacterAdapter(
+    private val isFloatWindow: Boolean
+) :
+    ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCharacterIconBinding.inflate(
@@ -30,18 +34,24 @@ class PvpCharactertAdapter :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!)
+        holder.bind(getItem(position)!!, isFloatWindow)
     }
 
     inner class ViewHolder(private val binding: ItemCharacterIconBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: PvpCharacterData) {
+        fun bind(
+            data: PvpCharacterData,
+            isFloatWindow: Boolean
+        ) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.getContext()
                 //加载动画
                 itemPic.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
+                if(isFloatWindow) {
+                    name.visibility = View.GONE
+                }
                 //名称
                 name.text = if (data.position == 999) "未选择" else data.position.toString()
                 //加载图片
@@ -86,7 +96,11 @@ class PvpCharactertAdapter :
                         sortByDescending { it.position }
                     }
                     //更新列表
-                    ToolPvpFragment.pvpCharactertAdapter.apply {
+                    ToolPvpService.selectedAdapter.apply {
+                        submitList(ToolPvpFragment.selects)
+                        notifyDataSetChanged()
+                    }
+                    ToolPvpFragment.selectedAdapter.apply {
                         submitList(ToolPvpFragment.selects)
                         notifyDataSetChanged()
                     }

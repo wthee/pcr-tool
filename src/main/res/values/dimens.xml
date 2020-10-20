@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_radius">6dp</dimen>
+    <dimen name="float_card_radius">10dp</dimen>
     <dimen name="card_height">150dp</dimen>
     <dimen name="list_height">64</dimen>
     <dimen name="chip_height">48</dimen>
@@ -33,6 +34,7 @@
     <dimen name="toolbar_height">48dp</dimen>
     <dimen name="tab_height_1">40dp</dimen>
     <dimen name="tab_height_2">36dp</dimen>
+    <dimen name="tab_height_3">24dp</dimen>
 
     <dimen name="elevation_drawer">64dp</dimen>
     <dimen name="elevation_toolbar">4dp</dimen>
@@ -44,4 +46,5 @@
     <dimen name="hr_height">8dp</dimen>
     <dimen name="list_item_spacing">16dp</dimen>
     <dimen name="list_item_spacing_half">8dp</dimen>
+    <dimen name="float_window">200dp</dimen>
 </resources>

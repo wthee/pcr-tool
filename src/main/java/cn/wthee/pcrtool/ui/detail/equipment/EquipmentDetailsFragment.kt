@@ -119,7 +119,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 adapter.submitList(equip.attr.allNotZero())
             }
             //动态限制只有一个列表可滚动
-            material.setOnTouchListener { v, event ->
+            material.setOnTouchListener { _, _ ->
                 if (!material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = true
                 if (drops.isNestedScrollingEnabled) drops.isNestedScrollingEnabled = false
                 return@setOnTouchListener false

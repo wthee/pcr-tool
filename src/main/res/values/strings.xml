@@ -60,6 +60,8 @@
     <string name="material">装备制作素材 x %d </string>
     <string name="material_no">装备素材</string>
     <string name="search">搜索</string>
+    <string name="move">移动</string>
+    <string name="cancel">取消</string>
     <string name="function">功能</string>
     <string name="data_null_character">未找到角色信息~</string>
     <string name="data_null_equip">未找到装备信息~</string>
@@ -108,8 +110,11 @@
     <string name="craft1">可合成装备</string>
     <string name="title_tip">信息提示</string>
     <string name="position_3">后卫</string>
+    <string name="pos_3">后</string>
     <string name="position_2">中卫</string>
+    <string name="pos_2">中</string>
     <string name="position_1">前卫</string>
+    <string name="pos_1">前</string>
     <string name="atk_type">攻击类型</string>
     <string name="physical">物理攻击</string>
     <string name="magic">魔法攻击</string>

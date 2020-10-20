@@ -1,6 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION
+import android.provider.Settings.canDrawOverlays
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,22 +12,23 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
-import cn.wthee.pcrtool.adapters.PvpCharactertAdapter
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
-import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 class ToolPvpFragment : Fragment() {
+
     companion object {
         var selects = getDefault()
-        lateinit var pvpCharactertAdapter: PvpCharactertAdapter
         lateinit var progressBar: ProgressBar
+        lateinit var selectedAdapter: PvpCharacterAdapter
     }
 
     private lateinit var binding: FragmentToolPvpBinding
@@ -46,13 +51,14 @@ class ToolPvpFragment : Fragment() {
         }
 
         setListener()
+
         return binding.root
     }
 
     private fun setListener() {
         binding.apply {
             pvpSearch.setOnClickListener {
-                if (ToolPvpFragment.selects.contains(PvpCharacterData(0, 999))) {
+                if (selects.contains(PvpCharacterData(0, 999))) {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
@@ -61,14 +67,28 @@ class ToolPvpFragment : Fragment() {
             }
             //返回
             toolPvp.setOnClickListener {
-                FabHelper.goBack()
+//                FabHelper.goBack()
+                //检查是否已经授予权限
+                if (!canDrawOverlays(requireContext())) {
+                    //若未授权则请求权限
+                    getOverlayPermission()
+                } else {
+                    val intent =
+                        Intent(requireActivity().applicationContext, ToolPvpService::class.java)
+                    requireActivity().stopService(intent)
+                    requireActivity().startService(intent)
+                    //退回桌面
+                    val home = Intent(Intent.ACTION_MAIN)
+                    home.addCategory(Intent.CATEGORY_HOME)
+                    startActivity(home)
+                }
             }
         }
     }
 
     private fun setPager() {
         binding.pvpPager.offscreenPageLimit = 3
-        binding.pvpPager.adapter = PvpCharacterPageAdapter(requireActivity())
+        binding.pvpPager.adapter = PvpCharacterPageAdapter(requireActivity(), false)
         TabLayoutMediator(
             binding.tablayoutPosition,
             binding.pvpPager
@@ -89,10 +109,17 @@ class ToolPvpFragment : Fragment() {
 
     //已选择角色
     private fun loadDefault() {
-        pvpCharactertAdapter = PvpCharactertAdapter()
-        binding.selectCharacters.adapter = pvpCharactertAdapter
-        pvpCharactertAdapter.submitList(selects)
-        pvpCharactertAdapter.notifyDataSetChanged()
+        selectedAdapter = PvpCharacterAdapter(false)
+        binding.selectCharacters.adapter = selectedAdapter
+        selectedAdapter.submitList(selects)
+        selectedAdapter.notifyDataSetChanged()
+    }
+
+    //请求悬浮窗权限
+    private fun getOverlayPermission() {
+        val intent = Intent(ACTION_MANAGE_OVERLAY_PERMISSION)
+        intent.data = Uri.parse("package:" + requireActivity().packageName)
+        startActivityForResult(intent, 0)
     }
 
 }

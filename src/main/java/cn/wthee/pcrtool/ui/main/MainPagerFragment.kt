@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupWindow
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -19,7 +18,6 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
-import cn.wthee.pcrtool.databinding.LayoutToolBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.utils.Constants
@@ -69,6 +67,7 @@ class MainPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         try {
             MainActivity.isHome = true
             //刷新收藏
@@ -81,6 +80,7 @@ class MainPagerFragment : Fragment() {
                 ResourcesCompat.getColor(resources, R.color.text, null)
             vh?.setTextColor(color)
             CharacterListFragment.characterList.scrollToPosition(MainActivity.currentCharaPosition)
+
         } catch (e: java.lang.Exception) {
         }
     }
@@ -184,34 +184,6 @@ class MainPagerFragment : Fragment() {
 
     }
 
-
-    //工具列表
-    private fun showListPopupWindow(view: View?) {
-        val toolBinding = LayoutToolBinding.inflate(layoutInflater)
-        val popupWindow = PopupWindow(
-            toolBinding.root,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-        popupWindow.apply {
-            isOutsideTouchable = false
-            elevation = resources.getDimension(R.dimen.elevation_dialog)
-            showAsDropDown(view, 150, 10)
-        }
-        toolBinding.apply {
-            toolLevel.setOnClickListener {
-                FabHelper.addBackFab()
-                findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
-                popupWindow.dismiss()
-            }
-            toolPvp.setOnClickListener {
-                FabHelper.addBackFab()
-                findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
-                popupWindow.dismiss()
-            }
-        }
-    }
 
     //配置共享元素动画
     private fun prepareTransitions() {

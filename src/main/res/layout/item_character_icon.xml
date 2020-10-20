@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_character"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin"
+    android:layout_margin="@dimen/xs_margin"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
-        android:layout_width="@dimen/normal_icon"
-        android:layout_height="@dimen/normal_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="@dimen/normal_icon"
+        android:maxHeight="@dimen/normal_icon"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:layout_gravity="center_horizontal"
