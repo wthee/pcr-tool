@@ -14,23 +14,17 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class ToolPvpCharacterIconFragment : Fragment() {
+class ToolPvpCharacterIconFragment(
+    private val position: Int,
+    private val isFloatWindow: Boolean
+) : Fragment() {
 
-    private var position = 0
-    private var isFloatWindow = false
     private lateinit var binding: FragmentToolPvpCharacterBinding
 
     private val sharedViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            position = it.getInt("position")
-            isFloatWindow = it.getBoolean("isFloatWindow", false)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,16 +40,5 @@ class ToolPvpCharacterIconFragment : Fragment() {
             }
         }
         return binding.root
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(position: Int, isFloatWindow: Boolean) =
-            ToolPvpCharacterIconFragment().apply {
-                arguments = Bundle().apply {
-                    putInt("position", position)
-                    putBoolean("isFloatWindow", isFloatWindow)
-                }
-            }
     }
 }

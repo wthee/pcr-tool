@@ -5,6 +5,7 @@
     android:id="@+id/float_window"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:maxHeight="@dimen/float_window_height"
     tools:background="@color/colorBlack"
     android:orientation="horizontal">
 
@@ -92,11 +93,23 @@
 
             </com.google.android.material.tabs.TabLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pvp_pager"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/card_height" />
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pvp_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/pvp_progress_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="@dimen/l_icon"
+                    android:layout_height="@dimen/l_icon"
+                    android:layout_gravity="center" />
+            </FrameLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

@@ -96,13 +96,14 @@ class PvpCharacterAdapter(
                         sortByDescending { it.position }
                     }
                     //更新列表
-                    ToolPvpService.selectedAdapter.apply {
-                        submitList(ToolPvpFragment.selects)
-                        notifyDataSetChanged()
-                    }
-                    ToolPvpFragment.selectedAdapter.apply {
-                        submitList(ToolPvpFragment.selects)
-                        notifyDataSetChanged()
+                    if (isFloatWindow) {
+                        ToolPvpService.selectedAdapter.apply {
+                            notifyDataSetChanged()
+                        }
+                    } else {
+                        ToolPvpFragment.selectedAdapter.apply {
+                            notifyDataSetChanged()
+                        }
                     }
                 }
             }

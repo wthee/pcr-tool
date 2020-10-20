@@ -55,7 +55,7 @@ class ToolPvpService : Service() {
                 else -> WindowManager.LayoutParams.TYPE_TOAST
             }
             gravity = Gravity.TOP or Gravity.START
-            width = ScreenUtil.getWidth() / 2
+            width = ScreenUtil.getWidth() / 5 * 4
             height = WindowManager.LayoutParams.WRAP_CONTENT
         }
         //加载布局
@@ -99,7 +99,6 @@ class ToolPvpService : Service() {
         selectedAdapter = PvpCharacterAdapter(true)
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
-        selectedAdapter.notifyDataSetChanged()
 
         binding.apply {
             //搜索按钮
