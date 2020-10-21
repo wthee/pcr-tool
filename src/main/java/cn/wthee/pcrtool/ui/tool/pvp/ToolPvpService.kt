@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
-import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
@@ -61,7 +60,7 @@ class ToolPvpService : Service() {
                 else -> WindowManager.LayoutParams.TYPE_TOAST
             }
             gravity = Gravity.TOP or Gravity.START
-            width = ScreenUtil.getWidth() - 64.dp.toInt()
+            width = WindowManager.LayoutParams.WRAP_CONTENT
             height = WindowManager.LayoutParams.WRAP_CONTENT
         }
         //加载布局
@@ -180,7 +179,7 @@ class ToolPvpService : Service() {
             if (isMin) {
                 search.visibility = View.VISIBLE
                 floatRight.visibility = View.VISIBLE
-                params!!.width = ScreenUtil.getWidth()- 64.dp.toInt()
+                params!!.width = WindowManager.LayoutParams.WRAP_CONTENT
                 params!!.height = WindowManager.LayoutParams.WRAP_CONTENT
             } else {
                 search.visibility = View.GONE

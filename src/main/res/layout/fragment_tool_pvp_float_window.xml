@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/float_window"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:maxHeight="@dimen/float_window_height"
     android:orientation="horizontal"
@@ -43,11 +43,13 @@
         android:id="@+id/float_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        tools:layout_width="@dimen/float_window_height"
         app:cardCornerRadius="@dimen/float_card_radius">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/select_characters"
@@ -62,55 +64,32 @@
                 tools:itemCount="5"
                 tools:listitem="@layout/item_character_icon" />
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tablayout_position"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/tab_height_3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/select_characters"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tabInlineLabel="true"
-                app:tabMode="fixed">
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pos_1" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pos_2" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pos_3" />
-
-            </com.google.android.material.tabs.TabLayout>
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pvp_pager"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/select_characters"
-                app:layout_constraintTop_toBottomOf="@id/tablayout_position"
-                tools:layout_height="@dimen/card_height"
-                tools:layout_width="@dimen/card_height" />
+                android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/pvp_progress_bar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="@dimen/l_icon"
-                android:layout_height="@dimen/l_icon"
-                android:layout_gravity="center"
-                app:layout_constraintBottom_toBottomOf="@+id/pvp_pager"
-                app:layout_constraintEnd_toEndOf="@+id/pvp_pager"
-                app:layout_constraintStart_toStartOf="@+id/pvp_pager"
-                app:layout_constraintTop_toBottomOf="@+id/tablayout_position" />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tablayout_position"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/tab_height_3"
+                    app:tabInlineLabel="true"
+                    app:tabMode="fixed" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ProgressBar
+                    android:id="@+id/pvp_progress_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="@dimen/l_icon"
+                    android:layout_height="@dimen/l_icon"
+                    android:layout_gravity="center" />
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pvp_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
