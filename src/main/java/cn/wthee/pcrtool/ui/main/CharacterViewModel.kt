@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.database.view.CharacterInfo
 import cn.wthee.pcrtool.database.view.CharacterInfoPro
-import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.utils.Constants.SORT_AGE
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
@@ -50,7 +49,7 @@ class CharacterViewModel(
         1 -> repository.getCharacterByPosition(0, 299)
         2 -> repository.getCharacterByPosition(300, 599)
         3 -> repository.getCharacterByPosition(600, 999)
-        else -> getDefault()
+        else -> repository.getCharacterByPosition(0, 999)
     }
 
     //公会信息

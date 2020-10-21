@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,7 +14,10 @@ import cn.wthee.pcrtool.database.view.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemEquipmentMaterialBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModel
+import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.InjectorUtil
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
@@ -75,7 +79,10 @@ class EquipmentMaterialAdapter(
                     partentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区
                     MainScope().launch {
-                        val data = EquipmentDetailsFragment.viewModel.getDropInfos(info.id)
+                        val viewModel by ActivityUtil.instance.currentActivity!!.viewModels<EquipmentDetailsViewModel> {
+                            InjectorUtil.provideEquipmentDetailsViewModelFactory()
+                        }
+                        val data = viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()
                         partentBinding.drops.adapter = adapter
                         //动态限制只有一个列表可滚动

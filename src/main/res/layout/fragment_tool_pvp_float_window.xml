@@ -3,16 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/float_window"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxHeight="@dimen/float_window_height"
-    tools:background="@color/colorBlack"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:background="@color/colorBlack">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/move"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="@string/move"
+            android:src="@mipmap/ic_logo"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:tint="@color/colorPrimary" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/search"
@@ -25,54 +36,39 @@
             app:fabSize="mini"
             app:tint="@color/colorPrimary" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/move"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/move"
-            android:src="@drawable/ic_move"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/move"
-            android:src="@drawable/ic_cancel"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
     </LinearLayout>
 
-
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
+        android:id="@+id/float_right"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="@dimen/float_card_radius">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            android:orientation="vertical">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/select_characters"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:spanCount="1"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_character_icon" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tablayout_position"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/tab_height_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/select_characters"
+                app:layout_constraintTop_toTopOf="parent"
                 app:tabInlineLabel="true"
                 app:tabMode="fixed">
 
@@ -93,25 +89,28 @@
 
             </com.google.android.material.tabs.TabLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pvp_pager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/select_characters"
+                app:layout_constraintTop_toBottomOf="@id/tablayout_position"
+                tools:layout_height="@dimen/card_height"
+                tools:layout_width="@dimen/card_height" />
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/pvp_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+            <ProgressBar
+                android:id="@+id/pvp_progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="@dimen/l_icon"
+                android:layout_height="@dimen/l_icon"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="@+id/pvp_pager"
+                app:layout_constraintEnd_toEndOf="@+id/pvp_pager"
+                app:layout_constraintStart_toStartOf="@+id/pvp_pager"
+                app:layout_constraintTop_toBottomOf="@+id/tablayout_position" />
 
-                <ProgressBar
-                    android:id="@+id/pvp_progress_bar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="@dimen/l_icon"
-                    android:layout_height="@dimen/l_icon"
-                    android:layout_gravity="center" />
-            </FrameLayout>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
@@ -37,7 +38,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
         //
         var materialClickPosition = -1
-        lateinit var viewModel: EquipmentDetailsViewModel
         lateinit var materialAdapter: EquipmentMaterialAdapter
     }
 
@@ -45,7 +45,9 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var cusToolbar: ToolbarUtil
     private lateinit var behavior: BottomSheetBehavior<View>
-
+    private val viewModel by activityViewModels<EquipmentDetailsViewModel> {
+        InjectorUtil.provideEquipmentDetailsViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +61,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentDetailsBinding.inflate(inflater, container, false)
-        viewModel = InjectorUtil.provideEquipmentDetailsViewModelFactory()
-            .create(EquipmentDetailsViewModel::class.java)
         init()
         setObserve()
         viewModel.getEquipInfos(equip)

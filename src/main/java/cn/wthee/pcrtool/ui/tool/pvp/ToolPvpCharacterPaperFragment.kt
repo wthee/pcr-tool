@@ -19,6 +19,7 @@ class ToolPvpCharacterIconFragment(
     private val isFloatWindow: Boolean
 ) : Fragment() {
 
+
     private lateinit var binding: FragmentToolPvpCharacterBinding
 
     private val sharedViewModel by activityViewModels<CharacterViewModel> {
@@ -35,8 +36,15 @@ class ToolPvpCharacterIconFragment(
             val data = sharedViewModel.getCharacterByPosition(position)
             val adapter = PvpCharacterAdapter(isFloatWindow)
             binding.icons.adapter = adapter
+            binding.icons.setItemViewCacheSize(100)
+
             adapter.submitList(data) {
-                ToolPvpFragment.progressBar.visibility = View.GONE
+                try {
+                    ToolPvpFragment.progressBar.visibility = View.GONE
+                }catch (e: Exception){}
+                try{
+                    ToolPvpService.progressBar.visibility = View.GONE
+                }catch (e: Exception){}
             }
         }
         return binding.root

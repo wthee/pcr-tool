@@ -3,9 +3,7 @@ package cn.wthee.pcrtool.utils
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.util.DisplayMetrics
-
-
-
+import cn.wthee.pcrtool.MyApplication
 
 
 object ScreenUtil {
@@ -28,4 +26,22 @@ object ScreenUtil {
         ActivityUtil.instance.currentActivity?.windowManager?.defaultDisplay?.getMetrics(dm)
         return dm.widthPixels // width
     }
+
+    fun getHeight(): Int {
+        val dm = DisplayMetrics()
+        ActivityUtil.instance.currentActivity?.windowManager?.defaultDisplay?.getMetrics(dm)
+        return dm.heightPixels // width
+    }
 }
+
+val Int.dp: Float
+    get() {
+        val scale: Float = MyApplication.getContext().resources.displayMetrics.density
+        return (this * scale + 0.5f)
+    }
+
+val Int.px: Float
+    get() {
+        val scale: Float = MyApplication.getContext().resources.displayMetrics.density
+        return (this / scale + 0.5f)
+    }

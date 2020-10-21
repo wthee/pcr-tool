@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var isHome = true
+        var isForeground = true
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -73,6 +74,16 @@ class MainActivity : AppCompatActivity() {
         //绑定活动
         ActivityUtil.instance.currentActivity = this
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isForeground = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isForeground = true
     }
 
     //动画执行完之前，禁止直接返回
