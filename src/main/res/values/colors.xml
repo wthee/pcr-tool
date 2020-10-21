@@ -25,5 +25,7 @@
     <color name="color_rank_2_3">#DF8C66</color>
     <color name="color_rank_4_6">#989898</color>
     <color name="color_rank_7_10">#DC9C06</color>
-    <color name="color_rank_11">#8F49A3</color>
+    <color name="color_rank_11_17">#8F49A3</color>
+    <color name="color_rank_18">#FF0000</color>
+    <color name="red">#FF0000</color>
 </resources>

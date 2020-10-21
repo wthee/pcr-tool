@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EnemyRepository
-import cn.wthee.pcrtool.data.model.entity.EnemyData
+import cn.wthee.pcrtool.database.entity.EnemyData
 import kotlinx.coroutines.launch
 
 
@@ -13,7 +13,6 @@ class EnemyViewModel(
 ) : ViewModel() {
 
     var enemies = MutableLiveData<List<EnemyData>>()
-    var enemyCount = MutableLiveData<Int>()
     var refresh = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
 
@@ -26,13 +25,6 @@ class EnemyViewModel(
             refresh.postValue(false)
             isLoading.postValue(false)
             enemies.postValue(data)
-        }
-    }
-
-    //怪物数量
-    fun getEnemyCount() {
-        viewModelScope.launch {
-            enemyCount.postValue(repository.getEnemyCount())
         }
     }
 

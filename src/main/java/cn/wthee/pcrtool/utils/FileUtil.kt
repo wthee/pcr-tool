@@ -5,6 +5,8 @@ import android.util.Log
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 object FileUtil {
 
@@ -48,4 +50,16 @@ object FileUtil {
         }
     }
 
+    fun save(input: InputStream, output: File){
+        //写入文件
+        val out = FileOutputStream(output)
+        val byte = ByteArray(1024 * 4)
+        var line: Int
+        while (input.read(byte).also { line = it } > 0) {
+            out.write(byte, 0, line)
+        }
+        out.flush()
+        out.close()
+        input.close()
+    }
 }

@@ -27,7 +27,7 @@
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/load" />
+            tools:src="@drawable/unknow_gray" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/desc"

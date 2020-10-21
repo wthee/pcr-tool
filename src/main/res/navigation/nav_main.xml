@@ -88,7 +88,7 @@
         tools:layout="@layout/fragment_tool_level" />
     <fragment
         android:id="@+id/toolPvpFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.ToolPvpFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment"
         android:label="ToolPvpFragment"
         tools:layout="@layout/fragment_tool_pvp" />
 

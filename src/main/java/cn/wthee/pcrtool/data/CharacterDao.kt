@@ -3,7 +3,11 @@ package cn.wthee.pcrtool.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.model.entity.*
+import cn.wthee.pcrtool.database.entity.*
+import cn.wthee.pcrtool.database.view.CharacterExperienceAll
+import cn.wthee.pcrtool.database.view.CharacterInfo
+import cn.wthee.pcrtool.database.view.CharacterInfoPro
+import cn.wthee.pcrtool.database.view.PvpCharacterData
 
 
 //角色数据DAO
@@ -13,42 +17,64 @@ interface CharacterDao {
     @Transaction
     @Query(
         """
-        SELECT 
-            unit_profile.unit_id, 
-            unit_profile.unit_name, 
-            coalesce(unit_data.kana, "") as kana, 
-            unit_profile.age, 
-            unit_profile.guild, 
-            unit_profile.race, 
-            unit_profile.height, 
-            unit_profile.weight, 
-            unit_profile.birth_month, 
-            unit_profile.birth_day, 
-            unit_profile.blood_type, 
-            unit_profile.favorite, 
-            unit_profile.voice, 
-            unit_profile.catch_copy, 
-            unit_profile.self_text, 
-            unit_data.search_area_width, 
-            coalesce(unit_data.comment, "") as comment, 
-            unit_data.atk_type, 
-            coalesce(rarity_6_quest_data.rarity_6_quest_id, 0) as rarity_6_quest_id, 
-            unit_data.rarity, 
-            CAST(SUBSTR(unit_data.start_time, 0, 4 ) || SUBSTR(unit_data.start_time, 6, 2 ) || SUBSTR(unit_data.start_time, 9, 2 ) AS INTEGER) AS start_time , 
-            coalesce(actual_unit_background.unit_name, "") as actual_name, 
-            coalesce(character_love_rankup_text.serif_1, "") as serif_1, 
-            coalesce(character_love_rankup_text.serif_2, "") as serif_2, 
-            coalesce(character_love_rankup_text.serif_3, "") as serif_3 
-        FROM 
-            unit_profile 
-        LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id 
-        LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id 
-        LEFT JOIN actual_unit_background ON (unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31) 
-        LEFT JOIN character_love_rankup_text ON character_love_rankup_text.chara_id = unit_data.unit_id / 100 
+        SELECT
+            unit_profile.unit_id,
+            unit_profile.unit_name,
+            COALESCE( unit_data.kana, "" ) AS kana,
+            unit_profile.age,
+            unit_profile.guild,
+            unit_profile.race,
+            unit_profile.height,
+            unit_profile.weight,
+            unit_data.search_area_width,
+            unit_data.atk_type,
+            COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
         WHERE 
-            unit_profile.unit_name like '%' || :unitName || '%' """
+            unit_profile.unit_name like '%' || :unitName || '%' 
+        AND unit_profile.unit_id NOT IN (106701,110201,113801,900103,906601)
+            """
     )
-    suspend fun getInfoAndData(unitName: String): List<CharacterBasicInfo>
+    suspend fun getInfoAndData(unitName: String): List<CharacterInfo>
+
+    @Transaction
+    @Query(
+        """
+        SELECT
+            unit_profile.unit_id,
+            unit_profile.unit_name,
+            COALESCE( unit_data.kana, "" ) AS kana,
+            unit_profile.age,
+            unit_profile.guild,
+            unit_profile.race,
+            unit_profile.height,
+            unit_profile.weight,
+            unit_profile.birth_month,
+            unit_profile.birth_day,
+            unit_profile.blood_type,
+            unit_profile.favorite,
+            unit_profile.voice,
+            unit_profile.catch_copy,
+            unit_profile.self_text,
+            unit_data.search_area_width,
+            COALESCE( unit_data.comment, "" ) AS intro,
+            unit_data.atk_type,
+            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
+            unit_data.rarity,
+            COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
+           COALESCE(cts.comments, "") AS comments
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
+            LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
+            LEFT JOIN (SELECT unit_id, GROUP_CONCAT( description, '-' ) AS comments FROM unit_comments GROUP BY unit_id) AS cts ON cts.unit_id = unit_profile.unit_id
+        WHERE 
+            unit_profile.unit_id = :uid """
+    )
+    suspend fun getInfoPro(uid: Int): CharacterInfoPro
 
     @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
@@ -91,7 +117,7 @@ interface CharacterDao {
 
     //角色动作循环
     @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
-    suspend fun getAttackPattern(unitId: Int): AttackPattern
+    suspend fun getAttackPattern(unitId: Int): List<AttackPattern>
 
     //公会信息
     @Query("SELECT * FROM guild")
@@ -104,9 +130,9 @@ interface CharacterDao {
          SELECT 
              a.team_level AS level, 
              a.total_exp AS exp_team, 
-             coalesce((a.total_exp - c.total_exp), 0) AS exp_team_abs, 
+             COALESCE((a.total_exp - c.total_exp), 0) AS exp_team_abs, 
              b.total_exp AS exp_unit, 
-             coalesce((b.total_exp - d.total_exp) , 0) AS exp_unit_abs 
+             COALESCE((b.total_exp - d.total_exp) , 0) AS exp_unit_abs 
          FROM 
             experience_team AS a 
          LEFT JOIN ( SELECT team_level + 1 AS team_level, total_exp FROM experience_team ) AS c ON a.team_level = c.team_level 

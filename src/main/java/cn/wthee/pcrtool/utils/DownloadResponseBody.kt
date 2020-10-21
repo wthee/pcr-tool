@@ -38,8 +38,8 @@ class DownloadResponseBody(
                     val progress = (totalBytesRead * 100.0 / responseBody.contentLength()).toInt()
                     downloadListener.onProgress(
                         progress,
-                        totalBytesRead / 1024f,
-                        responseBody.contentLength() / 1024f
+                        totalBytesRead ,
+                        responseBody.contentLength()
                     )
                     if (progress == 100) {
                         downloadListener.onFinish()
@@ -54,6 +54,6 @@ class DownloadResponseBody(
 
 
 interface DownloadListener{
-    fun onProgress(progress: Int, currSize: Float, totalSize: Float)
+    fun onProgress(progress: Int, currSize: Long, totalSize: Long)
     fun onFinish()
 }

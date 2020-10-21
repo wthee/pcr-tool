@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/s_margin">
 
@@ -21,7 +22,8 @@
         android:layout_width="@dimen/l_icon"
         android:layout_height="@dimen/l_icon"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_cancel"
+        android:src="@drawable/ic_pvp"
+        android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/skill_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

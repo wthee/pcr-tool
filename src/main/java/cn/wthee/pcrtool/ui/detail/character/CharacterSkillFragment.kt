@@ -5,14 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapters.SkillAdapter
-import cn.wthee.pcrtool.adapters.SkillLoopAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.InjectorUtil
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class CharacterSkillFragment : Fragment() {
@@ -25,15 +22,15 @@ class CharacterSkillFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
-
-        lateinit var viewModel: CharacterSkillViewModel
     }
 
     private lateinit var binding: FragmentCharacterSkillBinding
     private lateinit var adapter: SkillAdapter
-    private lateinit var loopAdapter: SkillLoopAdapter
-    private lateinit var beforeLoopadapter: SkillLoopAdapter
     private var unitId = 0
+
+    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
+        InjectorUtil.provideCharacterSkillViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,38 +44,26 @@ class CharacterSkillFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
-        viewModel = InjectorUtil.provideCharacterSkillViewModelFactory()
-            .create(CharacterSkillViewModel::class.java)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            delay(1000L)
-            binding.apply {
-                //循环开始信息
-                beforeLoopadapter = SkillLoopAdapter()
-                attactPattern.beforeLoop.adapter = beforeLoopadapter
-                //循环信息
-                loopAdapter = SkillLoopAdapter()
-                attactPattern.looping.adapter = loopAdapter
-                //技能信息
-                adapter = SkillAdapter()
-                recycler.adapter = adapter
+        binding.apply {
+            //技能信息
+            adapter = SkillAdapter()
+            recycler.adapter = adapter
 
-                attactPattern.apply {
-                    titleBeforeLoop.visibility = View.VISIBLE
-                    titleLooping.visibility = View.VISIBLE
-                }
+            //点击查看
+            fabSkillLoop.setOnClickListener {
+                CharacterSkillLoopDialogFragment().show(parentFragmentManager, "loop")
             }
-
-            viewModel.skills.observe(viewLifecycleOwner, Observer {
-                adapter.submitList(it)
-            })
-            viewModel.acttackPattern.observe(viewLifecycleOwner, Observer {
-                beforeLoopadapter.submitList(it.getBefore())
-                loopAdapter.submitList(it.getLoop())
-            })
         }
 
+        sharedSkillViewModel.skills.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.root.layoutTransition.setAnimateParentHierarchy(false);
+    }
 }

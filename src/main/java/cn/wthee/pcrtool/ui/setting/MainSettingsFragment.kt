@@ -13,7 +13,6 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import coil.Coil
-import com.tencent.bugly.beta.Beta
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,14 +38,13 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //获取控件
         val isList = findPreference<SwitchPreferenceCompat>("equip_is_list")
         forceUpdateDb = findPreference<Preference>("force_update_db")!!
-        val autoUpdateDb = findPreference<Preference>("auto_update_db")
         val appUpdate = findPreference<Preference>("force_update_app")
         val cleanData = findPreference<Preference>("clean_data")
-        val notToast = findPreference<Preference>("not_toast")
         val changeDbType = findPreference<ListPreference>("change_database")
-        changeDbType?.title = "游戏版本 - " + if (changeDbType?.value == "1") "国服" else "日服"
+        changeDbType?.title =
+            "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         //摘要替换
-        forceUpdateDb?.summary = MainActivity.sp.getString(
+        forceUpdateDb.summary = MainActivity.sp.getString(
             if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             "0"
         )
@@ -60,30 +58,22 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             viewModel.isList.postValue(value)
             return@setOnPreferenceChangeListener true
         }
-        //自动更新数据库
-        autoUpdateDb?.setOnPreferenceChangeListener { _, newValue ->
-            val value = newValue as Boolean
-            notToast?.isEnabled = value
-            return@setOnPreferenceChangeListener true
-        }
         //强制更新数据库
-        forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdateHelper.checkDBVersion()
+        forceUpdateDb.setOnPreferenceClickListener {
+            DatabaseUpdateHelper.checkDBVersion(0)
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本
-        changeDbType?.setOnPreferenceChangeListener { preference, newValue ->
-            changeDbType.title = "游戏版本 - " + if (newValue as String == "1") "国服" else "日服"
+        changeDbType?.setOnPreferenceChangeListener { _, newValue ->
+            changeDbType.title =
+                "游戏版本 - " + if (newValue as String == "1") getString(R.string.db_cn) else getString(
+                    R.string.db_jp
+                )
             MainScope().launch {
                 delay(800L)
-                DatabaseUpdateHelper.checkDBVersion(true)
+                DatabaseUpdateHelper.checkDBVersion(1)
             }
             return@setOnPreferenceChangeListener true
-        }
-        //应用更新
-        appUpdate?.setOnPreferenceClickListener {
-            Beta.checkUpgrade(true, false)
-            return@setOnPreferenceClickListener true
         }
         //清除图片缓存
         cleanData?.setOnPreferenceClickListener {

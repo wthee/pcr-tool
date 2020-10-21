@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.data.model.AttrData
+import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.databinding.ItemCharacterAttrBinding
 
 
 class CharacterAttrAdapter :
-    ListAdapter<AttrData, CharacterAttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
+    ListAdapter<AttrValue, CharacterAttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCharacterAttrBinding.inflate(
@@ -27,28 +27,28 @@ class CharacterAttrAdapter :
 
     class ViewHolder(private val binding: ItemCharacterAttrBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: AttrData) {
+        fun bind(value: AttrValue) {
             binding.apply {
-                titleAttr.text = data.title
-                value.text = data.getIntValue().toString()
+                titleAttr.text = value.title
+                this.value.text = value.getIntValue().toString()
             }
         }
     }
 
 }
 
-private class CharacterAttrDiffCallback : DiffUtil.ItemCallback<AttrData>() {
+private class CharacterAttrDiffCallback : DiffUtil.ItemCallback<AttrValue>() {
 
     override fun areItemsTheSame(
-        oldItem: AttrData,
-        newItem: AttrData
+        oldItem: AttrValue,
+        newItem: AttrValue
     ): Boolean {
         return oldItem == newItem
     }
 
     override fun areContentsTheSame(
-        oldItem: AttrData,
-        newItem: AttrData
+        oldItem: AttrValue,
+        newItem: AttrValue
     ): Boolean {
         return oldItem == newItem
     }

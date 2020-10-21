@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.adapters.CharacterLevelExpAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolLevelBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -26,12 +27,14 @@ class ToolLevelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentToolLevelBinding.inflate(inflater, container, false)
-        binding.toolLevel.transitionName = "tool_level"
         MainScope().launch {
             val list = sharedViewModel.getLevelExp() as MutableList
             val adapter = CharacterLevelExpAdapter()
             binding.listLevel.adapter = adapter
             adapter.submitList(list)
+        }
+        binding.toolLevel.setOnClickListener {
+            FabHelper.goBack()
         }
         return binding.root
     }

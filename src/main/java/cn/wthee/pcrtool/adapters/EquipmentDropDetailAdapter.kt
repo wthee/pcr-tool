@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.adapters
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.entity.EquipmentIdWithOdd
+import cn.wthee.pcrtool.database.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropDetailBinding
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -28,10 +29,12 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position), eid)
+
     }
 
     inner class ViewHolder(private val binding: ItemEquipmentDropDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(equip: EquipmentIdWithOdd, eid: Int) {
             //设置数据
             binding.apply {

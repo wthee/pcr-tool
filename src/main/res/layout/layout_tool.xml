@@ -20,9 +20,9 @@
             android:padding="@dimen/s_padding">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/normal_icon"
-                android:layout_height="@dimen/normal_icon"
-                android:src="@drawable/ic_logo_color" />
+                android:layout_width="@dimen/xl_icon"
+                android:layout_height="@dimen/xl_icon"
+                android:src="@drawable/ic_level" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -44,9 +44,9 @@
             android:padding="@dimen/s_padding">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/normal_icon"
-                android:layout_height="@dimen/normal_icon"
-                android:src="@drawable/ic_character" />
+                android:layout_width="@dimen/xl_icon"
+                android:layout_height="@dimen/xl_icon"
+                android:src="@drawable/ic_pvp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"

@@ -20,7 +20,8 @@ import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
+import cn.wthee.pcrtool.database.view.CharacterInfo
+import cn.wthee.pcrtool.database.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
@@ -31,7 +32,7 @@ import com.google.gson.reflect.TypeToken
 
 
 class CharacterAdapter(private val fragment: Fragment) :
-    ListAdapter<CharacterBasicInfo, CharacterAdapter.ViewHolder>(CharacterDiffCallback()),
+    ListAdapter<CharacterInfo, CharacterAdapter.ViewHolder>(CharacterDiffCallback()),
     Filterable {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,16 +52,17 @@ class CharacterAdapter(private val fragment: Fragment) :
     class ViewHolder(private val binding: ItemCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            character: CharacterBasicInfo,
+            character: CharacterInfo,
             fragment: Fragment
         ) {
+            //是否收藏
+            val isLoved = sp.getBoolean(character.id.toString(), false)
+
             binding.apply {
                 (binding.root.parent as? ViewGroup)?.doOnPreDraw {
                     // Parent has been drawn. Start transitioning!
                     fragment.startPostponedEnterTransition()
                 }
-                //是否收藏
-                val isLoved = sp.getBoolean(character.id.toString(), false)
                 name.setTextColor(
                     ResourcesCompat.getColor(
                         fragment.resources,
@@ -72,7 +74,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
                 //加载网络图片
-                val picUrl = Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP
+                val picUrl = Constants.CHARACTER_URL + (character.id + 30) + Constants.WEBP
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)
@@ -81,7 +83,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                 positionType.background =
                     ResourcesCompat.getDrawable(
                         fragment.resources,
-                        character.getPositionIcon(),
+                        getPositionIcon(character.position),
                         null
                     )
                 //基本信息
@@ -103,7 +105,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                         canBack = false
                         MainActivity.currentCharaPosition = adapterPosition
                         val bundle = Bundle()
-                        bundle.putSerializable("character", character)
+                        bundle.putInt("uid", character.id)
                         val extras =
                             FragmentNavigatorExtras(
                                 itemCharacter to itemCharacter.transitionName
@@ -118,8 +120,6 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 //长按事件
                 binding.root.setOnLongClickListener {
-//                    OnTouchUtil.addEffect(root)
-                    val isLoved = sp.getBoolean(character.id.toString(), false)
                     sp.edit {
                         putBoolean(
                             character.id.toString(),
@@ -146,7 +146,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     currentList
                 } else {
                     val filteredList = currentList.toMutableList()
-                    filteredList.toHashSet().forEachIndexed { index, data ->
+                    filteredList.toHashSet().forEachIndexed { _, data ->
                         if (!param.all) {
                             //过滤非收藏角色
                             if (!sp.getBoolean(data.id.toString(), false)) {
@@ -185,7 +185,7 @@ class CharacterAdapter(private val fragment: Fragment) :
 
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                submitList(results?.values as List<CharacterBasicInfo>)
+                submitList(results?.values as List<CharacterInfo>)
                 sp.edit {
                     putInt(Constants.SP_COUNT_CHARACTER, results.count)
                 }
@@ -196,18 +196,18 @@ class CharacterAdapter(private val fragment: Fragment) :
 }
 
 
-class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterBasicInfo>() {
+class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterInfo>() {
 
     override fun areItemsTheSame(
-        oldItem: CharacterBasicInfo,
-        newItem: CharacterBasicInfo
+        oldItem: CharacterInfo,
+        newItem: CharacterInfo
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: CharacterBasicInfo,
-        newItem: CharacterBasicInfo
+        oldItem: CharacterInfo,
+        newItem: CharacterInfo
     ): Boolean {
         return oldItem == newItem
     }

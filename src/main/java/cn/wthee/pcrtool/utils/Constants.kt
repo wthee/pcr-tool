@@ -6,7 +6,7 @@ object Constants {
 
     //接口地址
     const val API_URL = "https://redive.estertion.win/"
-    const val API_URL_PVP = "http://wthee.xyz:8848/api/pvp/"
+    const val API_URL_PVP = "http://wthee.xyz:8847/api/pvp/"
 
     //数据库中版
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
@@ -68,12 +68,13 @@ object Constants {
     const val NOTICE_TITLE = "正在下载数据..."
     const val NOTICE_TITLE_ERROR = "数据库信息获取失败"
     const val NOTICE_TOAST_SUCCESS = "数据库更新完成"
-    const val NOTICE_TOAST_NO_FILE = "数据库文件丢失，请稍后重试~"
-    const val NOTICE_TOAST_TITLE_DB_DOWNLOAD = "下载进度请查看通知栏"
+    const val NOTICE_TOAST_NO_FILE = "数据库文件下载失败，请稍后重试~"
+    const val NOTICE_TOAST_TITLE_DB_DOWNLOAD = "数据下载中\n请稍等..."
     const val NOTICE_TOAST_TIMEOUT = "若主页内容未正常显示，请点击${BTN_OPERATE_FORCE_UPDATE_DB}，下载最新数据库文件"
-    const val NOTICE_TOAST_CHECKING = "正在检测数据库版本"
-    const val NOTICE_TOAST_CHECKED = "数据库已是最新版本"
+    const val NOTICE_TOAST_CHANGE = "数据切换中......"
     const val NOTICE_TOAST_TODO = "功能暂未实装"
+    const val NOTICE_TOAST_CHECKING = "正在获取数据版本信息"
+    const val NOTICE_TOAST_LASTEST = "数据已是最新版本"
 
 
     //列表列数

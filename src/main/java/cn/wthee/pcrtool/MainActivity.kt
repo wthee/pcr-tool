@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var isHome = true
-        var autoUpdateDb = true
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -67,14 +66,12 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        checkUpdate(autoUpdateDb)
+        DatabaseUpdateHelper.checkDBVersion()
         //悬浮按钮
         setFab()
         setListener()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
-        // Bugly 初始设置
-        BuglyHelper.init(this)
 
     }
 
@@ -88,16 +85,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkUpdate(autoUpdateDb: Boolean) {
-        val type = PreferenceManager.getDefaultSharedPreferences(this)
-            .getString("change_database", "1")?.toInt() ?: 1
-        if (FileUtil.needUpadateDb(type) || autoUpdateDb) {
-            MainScope().launch {
-                DatabaseUpdateHelper.checkDBVersion()
-            }
-        }
-    }
-
     private fun init() {
         //获取版本名
         nowVersionName = packageManager.getPackageInfo(
@@ -107,8 +94,6 @@ class MainActivity : AppCompatActivity() {
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
-        //检查数据库更新
-        autoUpdateDb = spSetting.getBoolean("auto_update_db", autoUpdateDb)
     }
 
     private fun setFab() {
@@ -253,20 +238,19 @@ class MainActivity : AppCompatActivity() {
                     val layout = LayoutFilterCharacterBinding.inflate(layoutInflater)
                     val chips = layout.chipsGuild
                     //添加公会信息
-                    MainScope().launch {
-                        guilds.forEachIndexed { index, guild ->
-                            val chip = LayoutChipBinding.inflate(layoutInflater).root
-                            chip.text = guild
-                            chip.isCheckable = true
-                            chip.isClickable = true
-                            chips.addView(chip)
-                            if (CharacterListFragment.characterfilterParams.guild == guild) {
-                                chip.isChecked = true
-                            }
+                    guilds.forEachIndexed { _, guild ->
+                        val chip = LayoutChipBinding.inflate(layoutInflater).root
+                        chip.text = guild
+                        chip.isCheckable = true
+                        chip.isClickable = true
+                        chips.addView(chip)
+                        if (CharacterListFragment.characterfilterParams.guild == guild) {
+                            chip.isChecked = true
                         }
                     }
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
+
                     //排序类型
                     when (sortType) {
                         0 -> layout.sortChip0.isChecked = true
@@ -288,7 +272,7 @@ class MainActivity : AppCompatActivity() {
                         val chip = view as Chip
                         chip.isChecked = CharacterListFragment.characterfilterParams.atk == index
                     }
-                    layout.next.setOnClickListener {
+                    layout.btns.next.setOnClickListener {
                         dialog.dismiss()
                         //排序选项
                         sortType = when (layout.sortTypeChips.checkedChipId) {
@@ -324,7 +308,7 @@ class MainActivity : AppCompatActivity() {
                             sortAsc, ""
                         )
                     }
-                    layout.reset.setOnClickListener {
+                    layout.btns.reset.setOnClickListener {
                         dialog.dismiss()
                         MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(0))
                     }
@@ -333,25 +317,30 @@ class MainActivity : AppCompatActivity() {
                 1 -> {
                     //筛选
                     val layout = LayoutFilterEquipmentBinding.inflate(layoutInflater)
+                    //添加类型信息
+                    val chips = layout.chipsType
+                    EquipmentListFragment.equipTypes.forEachIndexed { _, type ->
+                        val chip = LayoutChipBinding.inflate(layoutInflater).root
+                        chip.text = type
+                        chip.isCheckable = true
+                        chip.isClickable = true
+                        chips.addView(chip)
+                        if (EquipmentListFragment.equipfilterParams.type == type) {
+                            chip.isChecked = true
+                        }
+                    }
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
-                    //类型筛选
-                    layout.craftChips.forEachIndexed { index, view ->
-                        val chip = view as Chip
-                        chip.isChecked = EquipmentListFragment.equipfilterParams.craft == index
-                    }
-                    layout.next.setOnClickListener {
+
+                    layout.btns.next.setOnClickListener {
                         dialog.dismiss()
                         //筛选选项
-                        EquipmentListFragment.equipfilterParams.craft =
-                            when (layout.craftChips.checkedChipId) {
-                                R.id.craft_chip_1 -> 1
-                                R.id.craft_chip_2 -> 2
-                                else -> 0
-                            }
+                        //公会筛选
+                        val chip = layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
+                        EquipmentListFragment.equipfilterParams.type = chip.text.toString()
                         sharedEquipViewModel.getEquips(asc, "")
                     }
-                    layout.reset.setOnClickListener {
+                    layout.btns.reset.setOnClickListener {
                         dialog.dismiss()
                         MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(1))
                     }
@@ -372,6 +361,7 @@ class MainActivity : AppCompatActivity() {
                 isFocusable = false
             }
         }
+        fabMain.setImageResource(R.drawable.ic_function)
     }
 
     private fun openFab() {
@@ -384,5 +374,6 @@ class MainActivity : AppCompatActivity() {
                 closeFab()
             }
         }
+        fabMain.setImageResource(R.drawable.ic_back)
     }
 }

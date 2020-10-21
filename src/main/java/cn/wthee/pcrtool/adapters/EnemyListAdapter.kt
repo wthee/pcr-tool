@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.entity.EnemyData
+import cn.wthee.pcrtool.database.entity.EnemyData
 import cn.wthee.pcrtool.databinding.ItemEnemyBinding
 import cn.wthee.pcrtool.ui.detail.enemy.EnemyDialogFragment
 import cn.wthee.pcrtool.utils.ActivityUtil

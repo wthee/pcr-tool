@@ -6,25 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterViewPagerAdapter
+import cn.wthee.pcrtool.adapters.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
-import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.transition.MaterialContainerTransform
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class CharacterPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPagerBinding
-    private var character: CharacterBasicInfo? = null
+    private var uid = -1
     private lateinit var viewPager: ViewPager2
+    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
+        InjectorUtil.providePromotionViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            character = it.getSerializable("character") as CharacterBasicInfo?
+            uid = it.getInt("uid")
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
@@ -50,15 +56,26 @@ class CharacterPagerFragment : Fragment() {
 
     private fun init() {
         //加载列表
-        viewPager = binding.root
-        viewPager.adapter =
-            CharacterViewPagerAdapter(
-                childFragmentManager,
-                lifecycle,
-                character!!
-            )
-        viewPager.setPageTransformer(DepthPageTransformer())
-        viewPager.offscreenPageLimit = 2
+        var noData = false
+
+        MainScope().launch {
+            try {
+                sharedCharacterAttrViewModel.isUnknow(uid)
+            } catch (e: Exception) {
+                noData = true
+            }
+            viewPager = binding.root
+            viewPager.adapter =
+                CharacterPagerAdapter(
+                    childFragmentManager,
+                    lifecycle,
+                    uid,
+                    noData
+                )
+            viewPager.setPageTransformer(DepthPageTransformer())
+            viewPager.offscreenPageLimit = 2
+        }
+
     }
 
 }

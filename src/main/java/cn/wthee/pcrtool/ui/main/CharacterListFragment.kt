@@ -58,13 +58,19 @@ class CharacterListFragment : Fragment() {
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         binding.layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
+        viewModel.isLoading.postValue(true)
         //公会列表
         guilds = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
             guilds.add("全部")
-            viewModel.getGuilds().forEach {
+            val list = viewModel.getGuilds()
+            list.forEach {
                 guilds.add(it.guild_name)
             }
+//            if (list.isEmpty()) {
+//                //为获取数据，说明数据异常，自动更新数据
+//                DatabaseUpdateHelper.checkDBVersion(force = true)
+//            }
             guilds.add("？？？")
         }
         //加载数据
@@ -73,10 +79,12 @@ class CharacterListFragment : Fragment() {
         setObserve()
         //控件监听
         setListener()
+        //获取角色
         viewModel.getCharacters(sortType, sortAsc, "")
         //接收消息
         handler = Handler(Handler.Callback {
             when (it.what) {
+                //获取版本失败
                 0 -> {
                     val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
                     //弹窗
@@ -101,19 +109,21 @@ class CharacterListFragment : Fragment() {
                         }
                     ).show()
                 }
+                //正常执行
                 1 -> {
                     viewModel.reload.postValue(true)
                 }
+                //数据切换
                 2 -> {
                     val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
                     //弹窗
                     DialogUtil.create(
                         requireContext(),
                         layout,
-                        "版本切换",
-                        "切换完成，请点击关闭应用",
-                        "关闭应用",
-                        "快点关闭",
+                        getString(R.string.change_success),
+                        getString(R.string.change_success_tip),
+                        getString(R.string.close_app),
+                        getString(R.string.close_app_too),
                         object : DialogListener {
                             override fun onButtonOperateClick(dialog: AlertDialog) {
                                 requireActivity().finish()
@@ -164,8 +174,8 @@ class CharacterListFragment : Fragment() {
                     } else {
                         MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
-                    isLoading.postValue(false)
                     refresh.postValue(false)
+                    isLoading.postValue(false)
                 })
             }
             //刷新

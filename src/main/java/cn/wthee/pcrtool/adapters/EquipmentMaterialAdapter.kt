@@ -3,19 +3,20 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.entity.EquipmentMaterial
+import cn.wthee.pcrtool.database.view.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemEquipmentMaterialBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.utils.Constants
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -36,10 +37,23 @@ class EquipmentMaterialAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), partentBinding, behavior)
+        holder.apply {
+            bind(getItem(position), partentBinding, behavior)
+            itemView.findViewById<MaterialTextView>(R.id.equip_name)
+                .setTextColor(
+                    ResourcesCompat.getColor(
+                        MyApplication.getContext().resources,
+                        if (position == EquipmentDetailsFragment.materialClickPosition)
+                            R.color.red
+                        else
+                            R.color.text,
+                        null
+                    )
+                )
+        }
     }
 
-    class ViewHolder(private val binding: ItemEquipmentMaterialBinding) :
+    inner class ViewHolder(private val binding: ItemEquipmentMaterialBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
             info: EquipmentMaterial,
@@ -47,8 +61,6 @@ class EquipmentMaterialAdapter(
             behavior: BottomSheetBehavior<View>
         ) {
             binding.apply {
-                root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
                 equipName.text = "${info.name}"
                 equipCount.text = "x ${info.count}"
 
@@ -58,12 +70,17 @@ class EquipmentMaterialAdapter(
                 }
                 //点击查看掉落地区
                 root.setOnClickListener {
+                    EquipmentDetailsFragment.materialClickPosition = adapterPosition
+                    notifyDataSetChanged()
                     partentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区
                     MainScope().launch {
                         val data = EquipmentDetailsFragment.viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()
                         partentBinding.drops.adapter = adapter
+                        //动态限制只有一个列表可滚动
+                        partentBinding.drops.isNestedScrollingEnabled = true
+                        partentBinding.material.isNestedScrollingEnabled = false
                         adapter.submitList(data) {
                             behavior.state = BottomSheetBehavior.STATE_EXPANDED
                             partentBinding.progressBar.visibility = View.INVISIBLE

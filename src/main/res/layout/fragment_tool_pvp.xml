@@ -4,45 +4,123 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@drawable/background_color"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <LinearLayout
+        android:id="@+id/tool_pvp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_gravity="start"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:gravity="start|center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/s_padding">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/pvp_icon"
+            android:layout_width="@dimen/xl_icon"
+            android:layout_height="@dimen/xl_icon"
+            android:src="@drawable/ic_pvp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m_margin"
+            android:text="@string/tool_pvp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:gravity="center"
-        android:text="@string/pvp_select_tip"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary" />
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/select_characters"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/s_margin"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/select_characters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="5"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_character_icon" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pvp_search"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/pvp_search" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="5"
-        tools:itemCount="5"
-        tools:listitem="@layout/item_character_icon" />
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginTop="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:padding="@dimen/s_padding"
+        app:cardCornerRadius="@dimen/card_radius">
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:text="@string/pvp_search"
-        android:layout_gravity="center" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout_position"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabInlineLabel="true"
-        app:tabMode="fixed" />
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tablayout_position"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_height_2"
+                app:tabInlineLabel="true"
+                app:tabMode="fixed">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pvp_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/position_1" />
 
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/position_2" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/position_3" />
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pvp_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/pvp_progress_bar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="@dimen/l_icon"
+                    android:layout_height="@dimen/l_icon"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

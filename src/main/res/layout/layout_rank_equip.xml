@@ -14,11 +14,11 @@
         android:layout_height="@dimen/big_icon"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="@+id/pic5"
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknow_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic3"
@@ -26,11 +26,11 @@
         android:layout_height="@dimen/big_icon"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toStartOf="@+id/pic2"
         app:layout_constraintStart_toStartOf="@+id/pic2"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknow_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic5"
@@ -39,11 +39,11 @@
         android:layout_margin="@dimen/l_margin"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toStartOf="@+id/rank_add"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pic6"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknow_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic2"
@@ -52,11 +52,11 @@
         android:layout_margin="@dimen/l_margin"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rank_reduce"
         app:layout_constraintTop_toBottomOf="@+id/pic3"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknow_gray" />
 
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -66,11 +66,11 @@
         android:layout_margin="@dimen/l_margin"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="@+id/pic5"
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toBottomOf="@+id/pic5"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknow_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic1"
@@ -79,12 +79,12 @@
         android:layout_margin="@dimen/l_margin"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:padding="0dp"
         app:layout_constraintEnd_toStartOf="@+id/pic2"
         app:layout_constraintStart_toStartOf="@+id/pic2"
         app:layout_constraintTop_toBottomOf="@id/pic2"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknow_gray" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rank_add"

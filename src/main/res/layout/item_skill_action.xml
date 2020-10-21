@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/xs_margin"
-    android:orientation="horizontal"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
@@ -14,9 +14,9 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:text="✦"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textColor="@color/colorPrimary"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+        android:textStyle="bold" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/action"
@@ -25,9 +25,10 @@
         android:layout_marginTop="@dimen/s_margin"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        tools:text="@string/atk"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textColor="@color/colorBlack"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+        android:textIsSelectable="true"
+        tools:text="@string/atk" />
 
 
 </LinearLayout>

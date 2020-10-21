@@ -5,12 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupWindow
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity
@@ -20,12 +18,13 @@ import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
-import cn.wthee.pcrtool.databinding.LayoutToolBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
+import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -54,22 +53,21 @@ class MainPagerFragment : Fragment() {
         InjectorUtil.provideEnemyViewModelFactory()
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
-        setListener()
         prepareTransitions()
-        //设置toolbar
-        setHasOptionsMenu(true)
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         try {
             MainActivity.isHome = true
             //刷新收藏
@@ -82,12 +80,22 @@ class MainPagerFragment : Fragment() {
                 ResourcesCompat.getColor(resources, R.color.text, null)
             vh?.setTextColor(color)
             CharacterListFragment.characterList.scrollToPosition(MainActivity.currentCharaPosition)
+
         } catch (e: java.lang.Exception) {
         }
     }
 
     private fun init() {
         tipText = binding.noDataTip
+        //menu
+        binding.mainToolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_tool_pvp -> findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
+                R.id.menu_tool_level -> findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
+            }
+            FabHelper.addBackFab()
+            return@setOnMenuItemClickListener true
+        }
         //禁止连续点击
         cListClick = false
         //viewpager2 配置
@@ -118,47 +126,8 @@ class MainPagerFragment : Fragment() {
                     tab.icon =
                         ResourcesCompat.getDrawable(resources, R.drawable.ic_character, null)
                     tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
-                }
-                //装备
-                1 -> {
-                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_equip, null)
-                    tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
-                }
-                //怪物
-                2 -> {
-                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_enemy, null)
-                    tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
-                }
-            }
-        }.attach()
-    }
-
-    private fun setListener() {
-        val toolbar =
-            ToolbarUtil(binding.toolbar)
-        toolbar.setLeftIcon(R.drawable.ic_logo)
-        toolbar.leftIcon.setOnClickListener {
-            count++
-            if (count % 2 == 0) {
-                toolbar.setLeftIcon(R.drawable.ic_logo)
-                toolbar.setTitleColor(R.color.colorWhite)
-            } else {
-                toolbar.setLeftIcon(R.drawable.ic_logo_color)
-                toolbar.setTitleColor(R.color.colorAccent)
-            }
-        }
-        //工具
-        toolbar.rightIcon.setOnClickListener {
-            //popWindow
-//            ToolsDialogFragment().show(parentFragmentManager, "tools")
-            showListPopupWindow(toolbar.rightIcon)
-        }
-        //重复点击刷新
-        binding.layoutTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                MainActivity.fabLove.setImageResource(R.drawable.ic_love_hollow)
-                when (tab) {
-                    binding.layoutTab.getTabAt(0) -> {
+                    //长按重置
+                    tab.view.setOnLongClickListener {
                         CharacterListFragment.characterfilterParams.initData()
                         CharacterListFragment.characterfilterParams.all = true
                         sortType = SORT_DATE
@@ -167,59 +136,52 @@ class MainPagerFragment : Fragment() {
                             sortType,
                             sortAsc, ""
                         )
+                        return@setOnLongClickListener true
                     }
-                    binding.layoutTab.getTabAt(1) -> {
+                    //点击回顶部
+                    tab.view.setOnClickListener {
+                        if (MainActivity.currentMainPage == position) {
+                            CharacterListFragment.characterList.smoothScrollToPosition(0)
+                        }
+                    }
+                }
+                //装备
+                1 -> {
+                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_equip, null)
+                    tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
+                    //长按重置
+                    tab.view.setOnLongClickListener {
                         EquipmentListFragment.equipfilterParams.initData()
                         asc = true
                         sharedEquipViewModel.getEquips(asc, "")
+                        return@setOnLongClickListener true
                     }
-                    binding.layoutTab.getTabAt(2) -> {
+                    //点击回顶部
+                    tab.view.setOnClickListener {
+                        if (MainActivity.currentMainPage == position) {
+                            EquipmentListFragment.list.smoothScrollToPosition(0)
+                        }
+                    }
+                }
+                //怪物
+                2 -> {
+                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_enemy, null)
+                    tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
+                    //长按重置
+                    tab.view.setOnLongClickListener {
                         sharedEnemyViewModel.getAllEnemy()
+                        return@setOnLongClickListener true
+                    }
+                    //点击回顶部
+                    tab.view.setOnClickListener {
+                        if (MainActivity.currentMainPage == position) {
+                            EnemyListFragment.list.smoothScrollToPosition(0)
+                        }
                     }
                 }
             }
+        }.attach()
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-            }
-        })
-    }
-
-    //工具列表
-    private fun showListPopupWindow(view: View?) {
-        val toolBinding = LayoutToolBinding.inflate(layoutInflater)
-        val popupWindow = PopupWindow(
-            toolBinding.root,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-        popupWindow.apply {
-            width = ScreenUtil.getWidth() / 2
-            isOutsideTouchable = false
-            showAsDropDown(view)
-        }
-        toolBinding.apply {
-            toolLevel.setOnClickListener {
-                FabHelper.addBackFab()
-                //过渡动画
-                toolLevel.transitionName = "tool_level"
-                val extras = FragmentNavigatorExtras(
-                    toolLevel to toolLevel.transitionName
-                )
-                findNavController().navigate(
-                    R.id.action_containerFragment_to_toolLevelFragment, null, null, extras
-                )
-                popupWindow.dismiss()
-            }
-            toolPvp.setOnClickListener {
-                FabHelper.addBackFab()
-                findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
-                popupWindow.dismiss()
-            }
-        }
     }
 
 

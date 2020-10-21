@@ -17,6 +17,7 @@ class MyApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         //获取Context
         context = applicationContext
+//        Logger.init(this)
     }
 
     override fun newImageLoader(): ImageLoader {

@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
+import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -22,7 +23,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
 
 
 class DatabaseDownloadWorker(
@@ -54,8 +54,8 @@ class DatabaseDownloadWorker(
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
-        val fromSetting = inputData.getBoolean(KEY_FROM_SETTING, false)
-        setForegroundAsync(createForegroundInfo())
+        val fromSetting = inputData.getInt(KEY_FROM_SETTING, -1)
+        setForeground(createForegroundInfo())
         return@coroutineScope download(inputUrl, version, type, fromSetting)
     }
 
@@ -64,7 +64,7 @@ class DatabaseDownloadWorker(
         inputUrl: String,
         version: String,
         type: Int,
-        fromSetting: Boolean
+        fromSetting: Int = -1
     ): Result {
         try {
             //创建Retrofit服务
@@ -72,25 +72,19 @@ class DatabaseDownloadWorker(
                 DatabaseService::class.java, inputUrl,
                 ApiHelper.downloadClientBuild(object : DownloadListener {
                     //下载进度
-                    override fun onProgress(progress: Int, currSize: Float, totalSize: Float) {
+                    override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         //更新下载进度
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
-                                "${Constants.NOTICE_TITLE} ${
-                                    String.format(
-                                        "%.0f",
-                                        currSize
-                                    )
-                                }KB / ${String.format("%.0f", totalSize)} KB"
+                                "${Constants.NOTICE_TITLE} $currSize  / $totalSize"
                             )
-                            .build()
                         notificationManager.notify(noticeId, notification.build())
                     }
 
                     override fun onFinish() {
                         //下载完成
                         notification.setProgress(100, 100, false)
-                            .setContentTitle("${Constants.NOTICE_TOAST_SUCCESS} ").build()
+                            .setContentTitle("${Constants.NOTICE_TOAST_SUCCESS} ")
                         notificationManager.notify(noticeId, notification.build())
                     }
                 })
@@ -100,8 +94,8 @@ class DatabaseDownloadWorker(
             val response =
                 service.getDb(if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP)
                     .execute()
+
             //保存
-            notificationManager.cancelAll()
             //创建数据库文件夹
             val file = File(folderPath)
             if (!file.exists()) {
@@ -114,50 +108,40 @@ class DatabaseDownloadWorker(
             if (db.exists()) {
                 FileUtil.deleteDir(folderPath, dbZipPath)
             }
+            Log.e("pcr", "downloaded database")
             //写入文件
-            try {
-                val input = response.body()!!.byteStream()
-                input.let { inputStream ->
-                    val out = FileOutputStream(db)
-                    val byte = ByteArray(1024 * 4)
-                    var line: Int
-                    while (inputStream.read(byte).also { line = it } > 0) {
-                        out.write(byte, 0, line)
-                    }
-                    out.flush()
-                    out.close()
-                    inputStream.close()
-                    MainScope().launch {
-                        //更新数据库
-                        AppDatabase.getInstance().close()
-                        AppDatabaseJP.getInstance().close()
-                        UnzippedUtil.deCompress(db, true)
-                        //更新数据库版本号
-                        sp.edit {
-                            putString(
-                                if (type == 1)
-                                    Constants.SP_DATABASE_VERSION
-                                else
-                                    Constants.SP_DATABASE_VERSION_JP,
-                                version
-                            )
-                        }
-                        //通知更新数据
-                        if (fromSetting) {
-                            CharacterListFragment.handler.sendEmptyMessage(2)
-                        } else {
-                            ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                        }
-                        CharacterListFragment.handler.sendEmptyMessage(1)
-                    }
-                }
-            } catch (e: Exception) {
+            FileUtil.save(response.body()!!.byteStream(), db)
+            //更新数据库
+            AppDatabase.getInstance().close()
+            AppDatabaseJP.getInstance().close()
+            UnzippedUtil.deCompress(db, true)
+            Log.e("pcr", "saved database")
+            //更新数据库版本号
+            sp.edit {
+                putString(
+                    if (type == 1)
+                        Constants.SP_DATABASE_VERSION
+                    else
+                        Constants.SP_DATABASE_VERSION_JP,
+                    version
+                )
+            }
+            //通知更新数据
+            if (fromSetting == 1) {
+                CharacterListFragment.handler.sendEmptyMessage(2)
+            } else {
                 MainScope().launch {
-                    ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
+                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                 }
             }
+            //跳转
+            CharacterListFragment.handler.sendEmptyMessage(1)
             return Result.success()
         } catch (e: Exception) {
+            MainScope().launch {
+                ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
+            }
+            Log.e("pcr", e.message.toString())
             return Result.failure()
         }
     }
@@ -172,7 +156,7 @@ class DatabaseDownloadWorker(
         notification = NotificationCompat.Builder(context, channelId)
             .setContentTitle(Constants.NOTICE_TITLE)
             .setTicker(Constants.NOTICE_TITLE)
-            .setSmallIcon(R.drawable.ic_logo)
+            .setSmallIcon(R.mipmap.ic_logo)
             .setOngoing(true)
             .setProgress(100, 0, true)
         return ForegroundInfo(noticeId, notification.build())

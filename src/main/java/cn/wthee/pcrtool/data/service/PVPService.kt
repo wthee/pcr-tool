@@ -1,12 +1,13 @@
 package cn.wthee.pcrtool.data.service
 
 import cn.wthee.pcrtool.data.model.PVPData
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 interface PVPService {
 
-    @GET("search")
-    fun getData(@Query("region") region: Int, @Query("ids") ids: String): Call<PVPData>
+    @POST("search")
+    fun getData(@Body() body: RequestBody): Call<PVPData>
 }

@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.data.model.entity.EquipmentMaxData
+import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
@@ -56,17 +56,16 @@ class EquipmentAdapter(private val isList: Boolean) :
                     currentList
                 } else {
                     val filteredList = currentList.toMutableList()
-                    filteredList.toHashSet().forEachIndexed { index, data ->
+                    filteredList.toHashSet().forEachIndexed { _, data ->
                         if (!param.all) {
                             //过滤非收藏角色
                             if (!MainActivity.sp.getBoolean(data.equipmentId.toString(), false)) {
                                 filteredList.remove(data)
                             }
                         }
-                        //位置筛选
-                        if (param.craft != 0) {
-                            val isRemove = param.craft != data.craftFlg + 1
-                            if (isRemove) {
+                        //种类筛选
+                        if (param.type != "全部") {
+                            if (param.type != data.type) {
                                 filteredList.remove(data)
                             }
                         }
@@ -118,14 +117,21 @@ class EquipmentAdapter(private val isList: Boolean) :
                 itemPic.transitionName = "pic_${equip.equipmentId}"
                 name.transitionName = "ename_${equip.equipmentId}"
                 //设置点击跳转
-                root.setOnClickListener {
-                    MainActivity.currentEquipPosition = adapterPosition
-                    EquipmentDetailsFragment.getInstance(equip).show(
-                        ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                        "details"
-                    )
+                itemPic.setOnClickListener {
+                    click(equip)
+                }
+                content.setOnClickListener {
+                    click(equip)
                 }
             }
+        }
+
+        private fun click(equip: EquipmentMaxData){
+            MainActivity.currentEquipPosition = adapterPosition
+            EquipmentDetailsFragment.getInstance(equip).show(
+                ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
+                "details"
+            )
         }
     }
 }

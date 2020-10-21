@@ -10,25 +10,19 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import cn.wthee.pcrtool.MainActivity.Companion.canBack
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
-import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
-import cn.wthee.pcrtool.data.model.entity.CharacterBasicInfo
-import cn.wthee.pcrtool.data.model.entity.getList
-import cn.wthee.pcrtool.data.model.getList
+import cn.wthee.pcrtool.database.view.CharacterInfoPro
+import cn.wthee.pcrtool.database.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
-import cn.wthee.pcrtool.ui.main.EquipmentViewModel
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.slider.Slider
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import kotlin.math.abs
 
@@ -37,33 +31,34 @@ class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
         var isLoved = false
-        fun getInstance(characterInfo: CharacterBasicInfo): CharacterBasicInfoFragment {
+        fun getInstance(uid: Int): CharacterBasicInfoFragment {
             val fragment = CharacterBasicInfoFragment()
             val bundle = Bundle()
-            bundle.putSerializable("character", characterInfo)
+            bundle.putInt("uid", uid)
             fragment.arguments = bundle
             return fragment
         }
     }
 
-    private lateinit var character: CharacterBasicInfo
+    private var uid = -1
+    private var urls = arrayListOf<String>()
     private lateinit var binding: FragmentCharacterBasicInfoBinding
-    private lateinit var viewModel: CharacterPromotionViewModel
-    private lateinit var attrAdapter: CharacterAttrAdapter
-    private var selRank = 2
-    private var selRatity = 1
-    private var maxStar = 5
-    private var lv = 85
-    private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
+    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
+        InjectorUtil.providePromotionViewModelFactory()
+    }
+    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
+        InjectorUtil.provideCharacterSkillViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            character = it.getSerializable("character") as CharacterBasicInfo
+            uid = it.getInt("uid")
         }
-        isLoved = sp.getBoolean(character.id.toString(), false)
+        isLoved = sp.getBoolean(uid.toString(), false)
     }
 
     override fun onCreateView(
@@ -72,7 +67,7 @@ class CharacterBasicInfoFragment : Fragment() {
     ): View? {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //设置共享元素
-        binding.root.transitionName = "item_${character.id}"
+        binding.root.transitionName = "item_${uid}"
         //开始动画
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
             override fun prev(view: View) {
@@ -84,49 +79,31 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             override fun end(view: View) {
-                viewModel.getMaxRankAndRarity(character.id)
-                CharacterSkillFragment.viewModel.getCharacterSkills(character.id)
+                sharedCharacterAttrViewModel.getMaxRankAndRarity(uid)
+                sharedSkillViewModel.getCharacterSkills(uid)
+                MainActivity.canBack = true
             }
-        }, binding.fabLoveCbi, binding.basicInfo, binding.promotion.root)
-
-        //加载图片
-        loadImages()
+        }, binding.fabLoveCbi, binding.basicInfo)
         //点击事件
         setListener()
         //初始化数据
-        setData()
+        sharedCharacterViewModel.getCharacter(uid)
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner, Observer {
+            setData(it)
+            urls = it.getAllUrl()
+        })
         setHasOptionsMenu(true)
-        //获取viewModel
-        viewModel = InjectorUtil.providePromotionViewModelFactory()
-            .create(CharacterPromotionViewModel::class.java)
-        //数据监听
-        setObserve()
         //初始收藏
         setLove(isLoved)
         return binding.root
     }
 
 
-    //加载图片
-    private fun loadImages() {
-        //toolbar 背景
-        val picUrl =
-            HttpUrl.get(Constants.CHARACTER_URL + character.getAllStarId()[1] + Constants.WEBP)
-        //角色图片
-        binding.characterPic.load(picUrl) {
-            error(R.drawable.error)
-            placeholder(R.drawable.load)
-            listener(
-                onStart = {
-                    parentFragment?.startPostponedEnterTransition()
-                }
-            )
-        }
-        lifecycleScope.launch {
-            delay(resources.getInteger(R.integer.item_anim_fast).toLong())
-            canBack = true
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.root.layoutTransition.setAnimateParentHierarchy(false);
     }
+
 
     //点击事件
     private fun setListener() {
@@ -139,7 +116,9 @@ class CharacterBasicInfoFragment : Fragment() {
                 setLove(isLoved)
             }
             characterPic.setOnClickListener {
-                CharacterPicDialogFragment.getInstance(character).show(parentFragmentManager, "pic")
+                CharacterPicDialogFragment
+                    .getInstance(urls)
+                    .show(parentFragmentManager, "pic")
             }
             //toolbar 展开折叠监听
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -182,29 +161,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 setLove(isLoved)
             }
 
-            //等级点击事件
-            binding.promotion.level.setOnClickListener {
-                binding.promotion.levelSeekBar.also {
-                    if (it.visibility == View.VISIBLE)
-                        it.visibility = View.GONE
-                    else
-                        ObjectAnimatorHelper.alpha(it)
-                }
-            }
-            binding.promotion.levelSeekBar.addOnSliderTouchListener(object :
-                Slider.OnSliderTouchListener {
-                override fun onStartTrackingTouch(slider: Slider) {
-                    lv = slider.value.toInt()
-                }
-
-                override fun onStopTrackingTouch(slider: Slider) {
-                    lv = slider.value.toInt()
-                    binding.promotion.level.text = slider.value.toInt().toString()
-                    loadData()
-                }
-
-
-            })
         }
     }
 
@@ -212,7 +168,7 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun setLove(isLoved: Boolean) {
         sp.edit {
             putBoolean(
-                character.id.toString(),
+                uid.toString(),
                 isLoved
             )
         }
@@ -223,216 +179,71 @@ class CharacterBasicInfoFragment : Fragment() {
         val icFabColor =
             resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
 
-        binding.name.setTextColor(
-            ResourcesCompat.getColor(
-                resources,
-                if (isLoved) R.color.colorPrimary else R.color.text,
-                null
-            )
+        val color = ResourcesCompat.getColor(
+            resources,
+            if (isLoved) R.color.colorPrimary else R.color.text,
+            null
         )
+        binding.name.setTextColor(color)
+        binding.nameExtra.setTextColor(color)
 
         binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
 
     }
 
-    private fun setObserve() {
-        //角色最大Rank
-        viewModel.maxData.observe(viewLifecycleOwner, Observer { r ->
-            selRank = r[0]
-            selRatity = r[1]
-            maxStar = r[1]
-            lv = r[2]
-            binding.promotion.level.text = lv.toString()
-            binding.promotion.levelSeekBar.valueTo = lv.toFloat()
-            binding.promotion.levelSeekBar.value = lv.toFloat()
-            loadData()
-
-            binding.apply {
-                setRank(selRank)
-                setRatity(selRatity)
-                promotion.rankEquip.rankAdd.setOnClickListener {
-                    if (selRank != r[0]) {
-                        selRank++
-                        if (selRank == r[0]) {
-                            it.isEnabled = false
-                        } else {
-                            promotion.rankEquip.rankReduce.isEnabled = true
-                        }
-                        setRank(selRank)
-                        loadData()
-                    }
-                }
-                promotion.rankEquip.rankReduce.setOnClickListener {
-                    if (selRank != Constants.CHARACTER_MIN_RANK) {
-                        selRank--
-                        if (selRank == 2) {
-                            it.isEnabled = false
-                        } else {
-                            promotion.rankEquip.rankAdd.isEnabled = true
-                        }
-                        setRank(selRank)
-                        loadData()
-                    }
-                }
-            }
-        })
-        //角色装备
-        val equipPics = arrayListOf(
-            binding.promotion.rankEquip.pic6,
-            binding.promotion.rankEquip.pic5,
-            binding.promotion.rankEquip.pic4,
-            binding.promotion.rankEquip.pic3,
-            binding.promotion.rankEquip.pic2,
-            binding.promotion.rankEquip.pic1
-        )
-        //专武
-        sharedEquipViewModel.getUniqueEquipInfos(character.id)
-        sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner, Observer {
-            binding.promotion.uniqueEquip.apply {
-                if (it != null) {
-                    binding.promotion.uniqueEquip.root.visibility = View.VISIBLE
-                    val picUrl = Constants.EQUIPMENT_URL + it.equipmentId + Constants.WEBP
-                    itemPic.load(picUrl) {
-                        placeholder(R.drawable.load_mini)
-                        error(R.drawable.unknow_gray)
-                    }
-                    //描述
-                    titleDes.text = it.equipmentName
-                    desc.text = it.getDesc()
-                    //属性词条
-                    val adapter = EquipmentAttrAdapter()
-                    attrs.adapter = adapter
-                    adapter.submitList(it.getList())
-                } else {
-                    binding.promotion.uniqueEquip.root.visibility = View.GONE
-                }
-
-            }
-        })
-        viewModel.equipments.observe(viewLifecycleOwner, Observer {
-            it.forEachIndexed { index, equip ->
-                equipPics[index].apply {
-                    //加载装备图片
-                    val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
-                    this.load(picUrl) {
-                        error(R.drawable.unknow_gray)
-                        placeholder(R.drawable.load_mini)
-                    }
-                    //点击跳转
-                    setOnClickListener {
-                        if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
-                            EquipmentDetailsFragment.getInstance(equip).show(
-                                ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                                "details"
-                            )
-                        }
-                    }
-                }
-            }
-        })
-        //角色属性
-        viewModel.sumInfo.observe(viewLifecycleOwner, Observer {
-            attrAdapter = CharacterAttrAdapter()
-            binding.promotion.charcterAttrs.adapter = attrAdapter
-            attrAdapter.submitList(it.getList())
-        })
-    }
-
-    private fun loadData() {
-        viewModel.getCharacterInfo(character.id, selRank, selRatity, lv)
-    }
-
     //初始化角色基本数据
-    private fun setData() {
+    private fun setData(characterPro: CharacterInfoPro) {
+        //toolbar 背景
+        val picUrl =
+            HttpUrl.get(Constants.CHARACTER_URL + characterPro.getAllStarId()[1] + Constants.WEBP)
+        //角色图片
+        binding.characterPic.load(picUrl) {
+            error(R.drawable.error)
+            placeholder(R.drawable.load)
+            listener(
+                onStart = {
+                    parentFragment?.startPostponedEnterTransition()
+                }
+            )
+        }
+        //文本数据
         binding.apply {
             toolTitle.text =
-                if (character.actualName.isEmpty())
-                    character.name
+                if (characterPro.actualName.isEmpty())
+                    characterPro.name
                 else
-                    character.actualName
-            catah.text = character.catchCopy
-            name.text = character.name
-//            character.getNameL().apply {
-//                if (this.isNotEmpty()) {
-//                    lastName.text = this
-//                } else {
-//                    lineEx.visibility = View.GONE
-//                }
-//            }
-
+                    characterPro.actualName
+            catah.text = characterPro.catchCopy
+            name.text = characterPro.getNameF()
+            nameExtra.text = characterPro.getNameL()
             three.text = requireActivity().resources.getString(
                 R.string.character_detail,
-                character.age,
-                character.height,
-                character.weight,
-                character.position
+                characterPro.age,
+                characterPro.height,
+                characterPro.weight,
+                characterPro.position
             )
-            comment.text = character.getFixedComment()
-            if (comment.text.isEmpty()) comment.visibility = View.GONE
+            intro.text = characterPro.getIntroText()
+            if (intro.text.isEmpty()) intro.visibility = View.GONE
             birth.text = requireActivity().resources.getString(
                 R.string.birth,
-                character.birthMonth,
-                character.birthDay
+                characterPro.birthMonth,
+                characterPro.birthDay
             )
             blood.text =
-                requireActivity().resources.getString(R.string.blood, character.bloodType)
-            race.text = character.race
-            guide.text = character.guild
-            favorite.text = character.favorite
-            cv.text = character.voice
-            self.text = character.getSelf()
+                requireActivity().resources.getString(R.string.blood, characterPro.bloodType)
+            race.text = characterPro.race
+            guide.text = characterPro.guild
+            favorite.text = characterPro.favorite
+            cv.text = characterPro.voice
+            self.text = characterPro.getSelf()
             positionType.background =
                 ResourcesCompat.getDrawable(
                     resources,
-                    character.getPositionIcon(),
+                    getPositionIcon(characterPro.position),
                     null
                 )
-            loveSelfText.text = character.getLoveSelfText()
-            //头像
-            val iconUrl = Constants.UNIT_ICON_URL + character.getStarId(3) + Constants.WEBP
-            promotion.icon.load(iconUrl) {
-                error(R.drawable.unknow_gray)
-                placeholder(R.drawable.load_mini)
-            }
+            comments.text = characterPro.getCommentsText()
         }
-    }
-
-    //设置rank
-    private fun setRank(num: Int) {
-        binding.promotion.rankEquip.apply {
-            rank.text = num.toString()
-            rank.setTextColor(getRankColor(num))
-            rankTitle.setTextColor(getRankColor(num))
-        }
-    }
-
-    //设置星级
-    private fun setRatity(num: Int) {
-        StarUtil.show(
-            binding.root.context,
-            binding.promotion.starts,
-            num,
-            maxStar,
-            50,
-            object : StarUtil.OnSelect {
-                override fun select(index: Int) {
-                    selRatity = index + 1
-                    loadData()
-                }
-            })
-    }
-
-    //rank 颜色
-    private fun getRankColor(rank: Int): Int {
-        val color = when (rank) {
-            in 2..3 -> R.color.color_rank_2_3
-            in 4..6 -> R.color.color_rank_4_6
-            in 7..10 -> R.color.color_rank_7_10
-            in 11..99 -> R.color.color_rank_11
-            else -> {
-                R.color.color_rank_2_3
-            }
-        }
-        return ResourcesCompat.getColor(resources, color, null)
     }
 }
