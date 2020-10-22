@@ -15,9 +15,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
-import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.OnPostListener
 import cn.wthee.pcrtool.data.PvpDataRepository
@@ -28,7 +26,7 @@ import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.dp
-import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.tabs.TabLayout
 import retrofit2.Response
 import kotlin.math.abs
 
@@ -40,19 +38,25 @@ class ToolPvpService : Service() {
         lateinit var selectedAdapter: PvpCharacterAdapter
         lateinit var progressBar: ProgressBar
         var isMin = false
+        private lateinit var activity: AppCompatActivity
     }
 
     private var windowManager: WindowManager? = null
     private var params: WindowManager.LayoutParams? = null
     private lateinit var binding: FragmentToolPvpFloatWindowBinding
-    private lateinit var activity: AppCompatActivity
     private var isMoved = false
+    private var character1 = listOf<PvpCharacterData>()
+    private var character2 = listOf<PvpCharacterData>()
+    private var character3 = listOf<PvpCharacterData>()
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     override fun onStartCommand(intent: Intent?, flg: Int, startId: Int): Int {
+        character1 = intent?.getSerializableExtra("character1") as List<PvpCharacterData>
+        character2 = intent.getSerializableExtra("character2") as List<PvpCharacterData>
+        character3 = intent.getSerializableExtra("character3") as List<PvpCharacterData>
         //窗口设置
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager?
         params = WindowManager.LayoutParams().apply {
@@ -110,8 +114,17 @@ class ToolPvpService : Service() {
         selectedAdapter = PvpCharacterAdapter(true)
         binding.floatSelectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
-        progressBar = binding.pvpProgressBar
 
+        //全部角色列表
+        val charactersAdapter1 = PvpCharacterAdapter(true)
+        binding.icons1.adapter = charactersAdapter1
+        charactersAdapter1.submitList(character1)
+        val charactersAdapter2 = PvpCharacterAdapter(true)
+        binding.icons2.adapter = charactersAdapter2
+        charactersAdapter2.submitList(character2)
+        val charactersAdapter3 = PvpCharacterAdapter(true)
+        binding.icons3.adapter = charactersAdapter3
+        charactersAdapter3.submitList(character3)
 
         binding.apply {
             resultContent.pvpResultToolbar.root.visibility = View.GONE
@@ -123,7 +136,7 @@ class ToolPvpService : Service() {
                 } else {
                     //展示查询结果
                     binding.layoutResult.visibility = View.VISIBLE
-                    PvpDataRepository.getData(object : OnPostListener{
+                    PvpDataRepository.getData(object : OnPostListener {
                         override fun success(data: Response<PVPData>) {
                             try {
                                 val responseBody = data.body()
@@ -182,35 +195,26 @@ class ToolPvpService : Service() {
                         params!!.y = initialY + offsetY
                         windowManager?.updateViewLayout(binding.root, params)
                     }
-                    MotionEvent.ACTION_UP ->{
-                        if (!isMoved){
+                    MotionEvent.ACTION_UP -> {
+                        if (!isMoved) {
                             minWindow()
                         }
                     }
                 }
                 return@setOnTouchListener true
             }
-
-
-            //加载pager
-            pvpPager.offscreenPageLimit = 3
-            pvpPager.adapter = PvpCharacterPageAdapter(activity, true)
-            TabLayoutMediator(
-                tablayoutPosition,
-                pvpPager
-            ) { tab, position ->
-                when (position) {
-                    0 -> {
-                        tab.text = getString(R.string.pos_1)
-                    }
-                    1 -> {
-                        tab.text = getString(R.string.pos_2)
-                    }
-                    2 -> {
-                        tab.text = getString(R.string.pos_3)
-                    }
+            //tab切换
+            tablayoutPosition.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    showList(tab?.position?:0)
                 }
-            }.attach()
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                }
+            })
         }
     }
 
@@ -232,4 +236,25 @@ class ToolPvpService : Service() {
         }
     }
 
+    private fun showList(position: Int){
+        binding.apply {
+            when(position){
+                0 -> {
+                    icons1.visibility = View.VISIBLE
+                    icons2.visibility = View.INVISIBLE
+                    icons3.visibility = View.INVISIBLE
+                }
+                1 -> {
+                    icons1.visibility = View.INVISIBLE
+                    icons2.visibility = View.VISIBLE
+                    icons3.visibility = View.INVISIBLE
+                }
+                2 -> {
+                    icons1.visibility = View.INVISIBLE
+                    icons2.visibility = View.INVISIBLE
+                    icons3.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
 }

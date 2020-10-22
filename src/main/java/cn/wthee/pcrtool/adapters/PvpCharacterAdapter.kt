@@ -3,11 +3,9 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
@@ -45,10 +43,6 @@ class PvpCharacterAdapter(
         ) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.getContext()
-                //加载动画
-                itemPic.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 if (isFloatWindow) {
                     name.visibility = View.GONE
                 }

@@ -32,7 +32,14 @@ class ToolPvpCharacterIconFragment(
             val data = viewModel.getCharacterByPosition(position)
             val adapter = PvpCharacterAdapter(isFloatWindow)
             binding.icons.adapter = adapter
-            adapter.submitList(data) {
+            adapter.submitList(
+                when (position) {
+                    1 -> ToolPvpFragment.character1
+                    2 -> ToolPvpFragment.character2
+                    3 -> ToolPvpFragment.character3
+                    else -> null
+                }
+            ) {
                 try {
                     ToolPvpFragment.progressBar.visibility = View.GONE
                 } catch (e: Exception) {

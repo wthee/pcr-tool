@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
@@ -17,21 +18,30 @@ import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 
 class ToolPvpFragment : Fragment() {
 
     companion object {
         var selects = getDefault()
+        var character1 = listOf<PvpCharacterData>()
+        var character2 = listOf<PvpCharacterData>()
+        var character3 = listOf<PvpCharacterData>()
         lateinit var progressBar: ProgressBar
         lateinit var selectedAdapter: PvpCharacterAdapter
     }
 
     private lateinit var binding: FragmentToolPvpBinding
+    private val viewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +54,10 @@ class ToolPvpFragment : Fragment() {
         //角色页面 绑定tab viewpager
         try {
             lifecycleScope.launch {
-                delay(600L)
+                character1 = viewModel.getCharacterByPosition(1)
+                character2 = viewModel.getCharacterByPosition(2)
+                character3 = viewModel.getCharacterByPosition(3)
+                delay(300L)
                 setPager()
             }
         } catch (e: Exception) {
@@ -76,6 +89,9 @@ class ToolPvpFragment : Fragment() {
                     val intent =
                         Intent(requireActivity().applicationContext, ToolPvpService::class.java)
                     requireActivity().stopService(intent)
+                    intent.putExtra("character1", character1 as Serializable)
+                    intent.putExtra("character2", character2 as Serializable)
+                    intent.putExtra("character3", character3 as Serializable)
                     requireActivity().startService(intent)
                     //退回桌面
                     val home = Intent(Intent.ACTION_MAIN)
