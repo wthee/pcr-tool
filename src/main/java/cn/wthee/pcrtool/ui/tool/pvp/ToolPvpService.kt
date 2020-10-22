@@ -18,6 +18,10 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
+import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.data.OnPostListener
+import cn.wthee.pcrtool.data.PvpDataRepository
+import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
@@ -25,6 +29,7 @@ import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
+import retrofit2.Response
 import kotlin.math.abs
 
 
@@ -101,24 +106,59 @@ class ToolPvpService : Service() {
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() {
 
+        //初始化列表
         selectedAdapter = PvpCharacterAdapter(true)
-        binding.selectCharacters.adapter = selectedAdapter
+        binding.floatSelectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         progressBar = binding.pvpProgressBar
 
 
         binding.apply {
+            resultContent.pvpResultToolbar.root.visibility = View.GONE
+            layoutResult.visibility = View.GONE
             //搜索按钮
             search.setOnClickListener {
                 if (selects.contains(PvpCharacterData(0, 999))) {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
-                    ToolPvpResultDialogFragment().show(
-                        activity.supportFragmentManager,
-                        "pvp"
-                    )
+                    binding.layoutResult.visibility = View.VISIBLE
+                    PvpDataRepository.getData(object : OnPostListener{
+                        override fun success(data: Response<PVPData>) {
+                            try {
+                                val responseBody = data.body()
+                                if (responseBody == null || responseBody.code != 0) {
+                                    ToastUtil.short("查询异常，请稍后重试~")
+                                } else {
+                                    //展示查询结果
+                                    binding.resultContent.apply {
+                                        if (responseBody.data.result.isEmpty()) {
+                                            pvpNoData.visibility = View.VISIBLE
+                                        } else {
+                                            pvpNoData.visibility = View.GONE
+                                            val adapter = PvpCharacterResultAdapter()
+                                            list.adapter = adapter
+                                            adapter.submitList(responseBody.data.result)
+                                        }
+                                    }
+
+                                }
+                            } catch (e: Exception) {
+                                ToastUtil.short("数据解析失败~")
+                            }
+                            binding.resultContent.pvpResultLoading.visibility = View.GONE
+                        }
+
+                        override fun error() {
+                            binding.layoutResult.visibility = View.GONE
+                            ToastUtil.short("查询失败，请检查网络~")
+                        }
+                    })
                 }
+            }
+            //关闭搜索结果
+            resultClose.setOnClickListener {
+                layoutResult.visibility = View.GONE
             }
             //移动按钮
             var initialX = 0

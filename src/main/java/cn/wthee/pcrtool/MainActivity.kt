@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
-
     }
 
     override fun onPause() {

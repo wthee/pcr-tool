@@ -43,52 +43,79 @@
         android:id="@+id/float_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_width="@dimen/float_window_height"
-        app:cardCornerRadius="@dimen/float_card_radius">
+        app:cardCornerRadius="@dimen/float_card_radius"
+        tools:layout_width="@dimen/float_window_height">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/select_characters"
-                android:layout_width="wrap_content"
+                android:id="@+id/float_select_characters"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:spanCount="1"
+                app:spanCount="5"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_character_icon" />
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tablayout_position"
+                <LinearLayout
+                    android:id="@+id/select"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/tab_height_3"
-                    app:tabInlineLabel="true"
-                    app:tabMode="fixed" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/pvp_progress_bar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="@dimen/l_icon"
-                    android:layout_height="@dimen/l_icon"
-                    android:layout_gravity="center" />
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tablayout_position"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/tab_height_3"
+                        app:tabInlineLabel="true"
+                        app:tabMode="fixed" />
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/pvp_pager"
+                    <ProgressBar
+                        android:id="@+id/pvp_progress_bar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="@dimen/l_icon"
+                        android:layout_height="@dimen/l_icon"
+                        android:layout_gravity="center" />
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/pvp_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/layout_result"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite">
 
-            </LinearLayout>
+                    <include
+                        android:id="@+id/result_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        layout="@layout/fragment_tool_pvp_result" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/result_close"
+                        android:layout_width="@dimen/xl_icon"
+                        android:layout_height="@dimen/xl_icon"
+                        android:layout_margin="@dimen/s_margin"
+                        style="@style/Ripple"
+                        android:src="@drawable/ic_back"/>
+                </FrameLayout>
+
+            </FrameLayout>
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

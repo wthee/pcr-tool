@@ -4,23 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.data.OnPostListener
+import cn.wthee.pcrtool.data.PvpDataRepository
 import cn.wthee.pcrtool.data.model.PVPData
-import cn.wthee.pcrtool.data.service.PVPService
-import cn.wthee.pcrtool.database.view.getIds
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
-import cn.wthee.pcrtool.utils.ApiHelper
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.gson.JsonObject
-import okhttp3.MediaType
-import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
 
@@ -36,26 +28,11 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentToolPvpResultBinding.inflate(inflater, container, false)
-        //参数校验
-
         //创建服务
-        val service = ApiHelper.create(PVPService::class.java, Constants.API_URL_PVP)
-        //接口参数
-        val json = JsonObject()
-        val databaseType = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            .getString("change_database", "1")?.toInt() ?: 1
-        val region = if (databaseType == 1) 2 else 4
-        json.addProperty("region", region)
-        json.add("ids", ToolPvpFragment.selects.getIds())
-        val body = RequestBody.create(
-            MediaType.parse("application/json; charset=utf-8"),
-            json.toString()
-        );
-        //发送请求
-        service.getData(body).enqueue(object : Callback<PVPData> {
-            override fun onResponse(call: Call<PVPData>, response: Response<PVPData>) {
+        PvpDataRepository.getData(object : OnPostListener{
+            override fun success(data: Response<PVPData>) {
                 try {
-                    val responseBody = response.body()
+                    val responseBody = data.body()
                     if (responseBody == null || responseBody.code != 0) {
                         ToastUtil.short("查询异常，请稍后重试~")
                     } else {
@@ -75,7 +52,7 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
                 binding.pvpResultLoading.visibility = View.GONE
             }
 
-            override fun onFailure(call: Call<PVPData>, t: Throwable) {
+            override fun error() {
                 ToastUtil.short("查询失败，请检查网络~")
             }
         })

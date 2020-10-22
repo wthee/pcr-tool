@@ -8,7 +8,8 @@
 
     <include
         android:id="@+id/pvp_result_toolbar"
-        layout="@layout/view_toolbar" />
+        layout="@layout/view_toolbar"
+        tools:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"

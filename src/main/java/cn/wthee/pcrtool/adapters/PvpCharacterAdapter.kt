@@ -49,7 +49,7 @@ class PvpCharacterAdapter(
                 //加载动画
                 itemPic.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
-                if(isFloatWindow) {
+                if (isFloatWindow) {
                     name.visibility = View.GONE
                 }
                 //名称
@@ -94,15 +94,19 @@ class PvpCharacterAdapter(
                         }
                         //按位置排序
                         sortByDescending { it.position }
-                    }
-                    //更新列表
-                    if (isFloatWindow) {
-                        ToolPvpService.selectedAdapter.apply {
-                            notifyDataSetChanged()
-                        }
-                    } else {
-                        ToolPvpFragment.selectedAdapter.apply {
-                            notifyDataSetChanged()
+                        //更新列表
+                        if (isFloatWindow) {
+                            ToolPvpService.selectedAdapter.apply {
+                                submitList(ToolPvpFragment.selects){
+                                    notifyDataSetChanged()
+                                }
+                            }
+                        } else {
+                            ToolPvpFragment.selectedAdapter.apply{
+                                submitList(ToolPvpFragment.selects){
+                                    notifyDataSetChanged()
+                                }
+                            }
                         }
                     }
                 }

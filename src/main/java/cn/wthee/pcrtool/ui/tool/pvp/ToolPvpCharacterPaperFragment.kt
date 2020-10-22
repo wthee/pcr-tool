@@ -18,7 +18,6 @@ class ToolPvpCharacterIconFragment(
     private val isFloatWindow: Boolean
 ) : Fragment() {
 
-
     private lateinit var binding: FragmentToolPvpCharacterBinding
 
 
