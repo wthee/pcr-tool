@@ -132,7 +132,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
             //合成素材
             if (it.isNotEmpty()) {
                 binding.materialCount.text = getString(R.string.title_material, it.size)
-                materialAdapter = EquipmentMaterialAdapter(binding, behavior)
+                materialAdapter = EquipmentMaterialAdapter(binding, behavior, viewModel)
                 binding.material.adapter = materialAdapter
                 materialAdapter.submitList(it)
                 if (it.size > 3) {

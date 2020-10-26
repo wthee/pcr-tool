@@ -48,7 +48,7 @@ class EnemyListFragment : Fragment() {
         binding.apply {
             list = recycler
             layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
-            listAdapter = EnemyListAdapter()
+            listAdapter = EnemyListAdapter(parentFragmentManager)
             list.adapter = listAdapter
         }
         viewModel.getAllEnemy()

@@ -40,7 +40,7 @@ class SkillLoopAdapter() :
         fun bind(atkId: Int) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.getContext()
+                val ctx = MyApplication.context
                 //加载图片
                 if (atkId == 1) {
                     skillOrder.text = "普攻"

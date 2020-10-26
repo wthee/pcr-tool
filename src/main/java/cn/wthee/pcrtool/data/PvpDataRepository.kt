@@ -23,7 +23,7 @@ object PvpDataRepository {
         val service = ApiHelper.create(PVPService::class.java, Constants.API_URL_PVP)
         //接口参数
         val json = JsonObject()
-        val databaseType = PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext())
+        val databaseType = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
         val region = if (databaseType == 1) 2 else 4
         json.addProperty("region", region)

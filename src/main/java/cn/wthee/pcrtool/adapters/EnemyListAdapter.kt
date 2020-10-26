@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,15 +15,15 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.entity.EnemyData
 import cn.wthee.pcrtool.databinding.ItemEnemyBinding
 import cn.wthee.pcrtool.ui.detail.enemy.EnemyDialogFragment
-import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_SHADOW_URL
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-
 import coil.load
 
 
-class EnemyListAdapter :
+class EnemyListAdapter(
+    private val fragmentManager: FragmentManager
+) :
     ListAdapter<EnemyData, EnemyListAdapter.ViewHolder>(EnemyDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -77,7 +78,7 @@ class EnemyListAdapter :
         fun bind(enemyData: EnemyData) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.getContext()
+                val ctx = MyApplication.context
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale_alpha)
@@ -96,10 +97,7 @@ class EnemyListAdapter :
                 //设置点击跳转
                 root.setOnClickListener {
                     MainActivity.currentEquipPosition = adapterPosition
-                    EnemyDialogFragment.getInstance(enemyData).show(
-                        ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                        "enemy"
-                    )
+                    EnemyDialogFragment.getInstance(enemyData).show(fragmentManager, "enemy")
                 }
             }
         }

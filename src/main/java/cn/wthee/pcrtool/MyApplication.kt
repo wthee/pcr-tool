@@ -44,7 +44,6 @@ class MyApplication : Application(), ImageLoaderFactory {
     }
 
     companion object {
-        private lateinit var context: Context
-        fun getContext() = context
+        lateinit var context: Context
     }
 }

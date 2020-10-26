@@ -6,11 +6,11 @@ import cn.wthee.pcrtool.MyApplication
 object ToastUtil {
 
     fun short(message: String?) {
-        Toast.makeText(MyApplication.getContext(), message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(MyApplication.context, message, Toast.LENGTH_SHORT).show()
     }
 
     fun long(message: String?) {
-        Toast.makeText(MyApplication.getContext(), message, Toast.LENGTH_LONG).show()
+        Toast.makeText(MyApplication.context, message, Toast.LENGTH_LONG).show()
     }
 
 }

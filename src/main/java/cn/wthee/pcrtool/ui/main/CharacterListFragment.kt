@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.main
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -82,7 +83,7 @@ class CharacterListFragment : Fragment() {
         //获取角色
         viewModel.getCharacters(sortType, sortAsc, "")
         //接收消息
-        handler = Handler(Handler.Callback {
+        handler = Handler(Looper.getMainLooper(), Handler.Callback {
             when (it.what) {
                 //获取版本失败
                 0 -> {

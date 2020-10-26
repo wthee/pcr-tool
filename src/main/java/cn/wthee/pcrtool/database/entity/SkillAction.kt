@@ -129,7 +129,7 @@ data class SkillAction(
         if (start != -1 && end != -1) {
             spannable.setSpan(
                 ForegroundColorSpan(
-                    MyApplication.getContext().getColor(R.color.colorPrimary)
+                    MyApplication.context.getColor(R.color.colorPrimary)
                 ), start, end + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }

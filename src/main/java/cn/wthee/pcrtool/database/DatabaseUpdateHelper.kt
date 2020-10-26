@@ -27,7 +27,7 @@ import java.io.File
 
 object DatabaseUpdateHelper {
 
-    private val mContext = MyApplication.getContext()
+    private val mContext = MyApplication.context
 
     //检查是否需要更新 -1:正常调用 0：点击版本号 1：切换版本调用
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {

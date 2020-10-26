@@ -9,12 +9,9 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.OnPostListener
@@ -23,7 +20,6 @@ import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
-import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayout
@@ -31,14 +27,12 @@ import retrofit2.Response
 import kotlin.math.abs
 
 
-class ToolPvpService : Service() {
+class ToolPvpService() : Service() {
 
     companion object {
         const val CHANNEL_ID = "Overlay_notification_channel"
-        lateinit var selectedAdapter: PvpCharacterAdapter
         lateinit var progressBar: ProgressBar
         var isMin = false
-        private lateinit var activity: AppCompatActivity
     }
 
     private var windowManager: WindowManager? = null
@@ -53,6 +47,7 @@ class ToolPvpService : Service() {
         return null
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onStartCommand(intent: Intent?, flg: Int, startId: Int): Int {
         character1 = intent?.getSerializableExtra("character1") as List<PvpCharacterData>
         character2 = intent.getSerializableExtra("character2") as List<PvpCharacterData>
@@ -62,7 +57,6 @@ class ToolPvpService : Service() {
         params = WindowManager.LayoutParams().apply {
             format = PixelFormat.TRANSLUCENT
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            @Suppress("DEPRECATION")
             type = when {
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ->
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
@@ -73,9 +67,8 @@ class ToolPvpService : Service() {
             height = WindowManager.LayoutParams.WRAP_CONTENT
         }
         //加载布局
-        activity = ActivityUtil.instance.currentActivity!!
         binding =
-            FragmentToolPvpFloatWindowBinding.inflate(activity.layoutInflater)
+            FragmentToolPvpFloatWindowBinding.inflate(LayoutInflater.from(MyApplication.context))
         initView()
         windowManager!!.addView(binding.root, params)
 
@@ -111,9 +104,7 @@ class ToolPvpService : Service() {
     private fun initView() {
 
         //初始化列表
-        selectedAdapter = PvpCharacterAdapter(true)
-        binding.floatSelectCharacters.adapter = selectedAdapter
-        selectedAdapter.submitList(selects)
+
 
         //全部角色列表
         val charactersAdapter1 = PvpCharacterAdapter(true)
@@ -178,7 +169,7 @@ class ToolPvpService : Service() {
             var initialY = 0
             var initialTouchX = 0f
             var initialTouchY = 0f
-            move.setOnTouchListener { v, event ->
+            move.setOnTouchListener { _, event ->
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         initialX = params!!.x
@@ -206,7 +197,7 @@ class ToolPvpService : Service() {
             //tab切换
             tablayoutPosition.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    showList(tab?.position?:0)
+                    showList(tab?.position ?: 0)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -236,9 +227,9 @@ class ToolPvpService : Service() {
         }
     }
 
-    private fun showList(position: Int){
+    private fun showList(position: Int) {
         binding.apply {
-            when(position){
+            when (position) {
                 0 -> {
                     icons1.visibility = View.VISIBLE
                     icons2.visibility = View.INVISIBLE

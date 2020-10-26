@@ -26,10 +26,7 @@ class ToolPvpCharacterIconFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
-        val viewModel =
-            InjectorUtil.provideCharacterViewModelFactory().create(CharacterViewModel::class.java)
         MainScope().launch {
-            val data = viewModel.getCharacterByPosition(position)
             val adapter = PvpCharacterAdapter(isFloatWindow)
             binding.icons.adapter = adapter
             adapter.submitList(

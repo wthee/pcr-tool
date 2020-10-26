@@ -12,9 +12,9 @@ object FileUtil {
 
     //数据库所在文件夹
     fun getDatabaseDir() = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-        MyApplication.getContext().dataDir.absolutePath
+        MyApplication.context.dataDir.absolutePath
     else {
-        val path = MyApplication.getContext().filesDir.absolutePath
+        val path = MyApplication.context.filesDir.absolutePath
         path.substring(0, path.length - 6)
     } + "/databases"
 

@@ -34,7 +34,7 @@ class CharacterLevelExpAdapter() :
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(
-                        MyApplication.getContext(),
+                        MyApplication.context,
                         R.anim.anim_translate_y
                     )
                 level.text = data.level.toString()

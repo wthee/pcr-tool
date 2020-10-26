@@ -16,7 +16,10 @@ import cn.wthee.pcrtool.database.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
+import cn.wthee.pcrtool.utils.StarUtil
 import coil.load
 import com.google.android.material.slider.Slider
 
@@ -190,10 +193,7 @@ class CharacterAttrFragment : Fragment() {
                     //点击跳转
                     setOnClickListener {
                         if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
-                            EquipmentDetailsFragment.getInstance(equip).show(
-                                ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                                "details"
-                            )
+                            EquipmentDetailsFragment.getInstance(equip).show(parentFragmentManager, "details")
                         }
                     }
                 }

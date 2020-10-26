@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,9 +14,7 @@ import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemEquipmentMaterialBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModel
-import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
@@ -27,7 +24,8 @@ import kotlinx.coroutines.launch
 
 class EquipmentMaterialAdapter(
     private val partentBinding: FragmentEquipmentDetailsBinding,
-    private val behavior: BottomSheetBehavior<View>
+    private val behavior: BottomSheetBehavior<View>,
+    private val viewModel: EquipmentDetailsViewModel
 ) :
     ListAdapter<EquipmentMaterial, EquipmentMaterialAdapter.ViewHolder>(MaterialDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,11 +40,11 @@ class EquipmentMaterialAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
-            bind(getItem(position), partentBinding, behavior)
+            bind(getItem(position))
             itemView.findViewById<MaterialTextView>(R.id.equip_name)
                 .setTextColor(
                     ResourcesCompat.getColor(
-                        MyApplication.getContext().resources,
+                        MyApplication.context.resources,
                         if (position == EquipmentDetailsFragment.materialClickPosition)
                             R.color.red
                         else
@@ -59,11 +57,7 @@ class EquipmentMaterialAdapter(
 
     inner class ViewHolder(private val binding: ItemEquipmentMaterialBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(
-            info: EquipmentMaterial,
-            partentBinding: FragmentEquipmentDetailsBinding,
-            behavior: BottomSheetBehavior<View>
-        ) {
+        fun bind(info: EquipmentMaterial) {
             binding.apply {
                 equipName.text = "${info.name}"
                 equipCount.text = "x ${info.count}"
@@ -79,9 +73,6 @@ class EquipmentMaterialAdapter(
                     partentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区
                     MainScope().launch {
-                        val viewModel by ActivityUtil.instance.currentActivity!!.viewModels<EquipmentDetailsViewModel> {
-                            InjectorUtil.provideEquipmentDetailsViewModelFactory()
-                        }
                         val data = viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()
                         partentBinding.drops.adapter = adapter

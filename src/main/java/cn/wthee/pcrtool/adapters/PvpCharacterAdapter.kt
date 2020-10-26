@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpService
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -32,15 +31,12 @@ class PvpCharacterAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, isFloatWindow)
+        holder.bind(getItem(position)!!)
     }
 
     inner class ViewHolder(private val binding: ItemCharacterIconBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(
-            data: PvpCharacterData,
-            isFloatWindow: Boolean
-        ) {
+        fun bind(data: PvpCharacterData) {
             //设置数据
             binding.apply {
                 if (isFloatWindow) {
@@ -89,17 +85,9 @@ class PvpCharacterAdapter(
                         //按位置排序
                         sortByDescending { it.position }
                         //更新列表
-                        if (isFloatWindow) {
-                            ToolPvpService.selectedAdapter.apply {
-                                submitList(ToolPvpFragment.selects){
-                                    notifyDataSetChanged()
-                                }
-                            }
-                        } else {
-                            ToolPvpFragment.selectedAdapter.apply{
-                                submitList(ToolPvpFragment.selects){
-                                    notifyDataSetChanged()
-                                }
+                        ToolPvpFragment.selectedAdapter.apply{
+                            submitList(ToolPvpFragment.selects){
+                                notifyDataSetChanged()
                             }
                         }
                     }

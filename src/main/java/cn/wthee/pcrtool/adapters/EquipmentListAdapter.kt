@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.core.content.edit
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,6 @@ import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
-import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -27,7 +27,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-class EquipmentAdapter(private val isList: Boolean) :
+class EquipmentAdapter(
+    private val isList: Boolean,
+    private val fragmentManager: FragmentManager
+) :
     ListAdapter<EquipmentMaxData, EquipmentAdapter.ViewHolder>(EquipDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -40,7 +43,7 @@ class EquipmentAdapter(private val isList: Boolean) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), isList)
+        holder.bind(getItem(position))
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -91,10 +94,10 @@ class EquipmentAdapter(private val isList: Boolean) :
 
     inner class ViewHolder(private val binding: ItemEquipmentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(equip: EquipmentMaxData, isList: Boolean) {
+        fun bind(equip: EquipmentMaxData) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.getContext()
+                val ctx = MyApplication.context
                 content.visibility = if (isList) View.VISIBLE else View.GONE
                 //加载动画
                 content.animation =
@@ -126,12 +129,9 @@ class EquipmentAdapter(private val isList: Boolean) :
             }
         }
 
-        private fun click(equip: EquipmentMaxData){
+        private fun click(equip: EquipmentMaxData) {
             MainActivity.currentEquipPosition = adapterPosition
-            EquipmentDetailsFragment.getInstance(equip).show(
-                ActivityUtil.instance.currentActivity?.supportFragmentManager!!,
-                "details"
-            )
+            EquipmentDetailsFragment.getInstance(equip).show(fragmentManager, "details")
         }
     }
 }

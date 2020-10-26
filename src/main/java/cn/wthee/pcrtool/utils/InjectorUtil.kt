@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.ui.main.EquipmentViewModelFactory
 
 object InjectorUtil {
     private fun getType() =
-        PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext())
+        PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
     private fun getCharacterRepository(): CharacterRepository {

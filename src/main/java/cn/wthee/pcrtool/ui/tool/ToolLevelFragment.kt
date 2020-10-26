@@ -34,7 +34,7 @@ class ToolLevelFragment : Fragment() {
             adapter.submitList(list)
         }
         binding.toolLevel.setOnClickListener {
-            FabHelper.goBack()
+            FabHelper.goBack(requireActivity())
         }
         return binding.root
     }

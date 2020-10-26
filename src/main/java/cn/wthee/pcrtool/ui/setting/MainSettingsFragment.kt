@@ -82,7 +82,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                 cleanData.title.toString().split(" ")[0] + "  " + CacheUtil.getTotalCacheSize(
                     requireContext()
                 )
-            Coil.imageLoader(MyApplication.getContext()).memoryCache.clear()
+            Coil.imageLoader(MyApplication.context).memoryCache.clear()
             ToastUtil.short("图片缓存已清理")
             return@setOnPreferenceClickListener true
         }

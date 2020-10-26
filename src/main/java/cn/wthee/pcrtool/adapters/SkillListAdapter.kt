@@ -40,7 +40,7 @@ class SkillAdapter :
         fun bind(skill: CharacterSkillInfo) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.getContext()
+                val ctx = MyApplication.context
                 //加载动画
                 content.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
@@ -76,7 +76,7 @@ class SkillAdapter :
                 //技能属性
                 val adapter = SkillActionAdapter()
                 actions.adapter = adapter
-                val lm = LinearLayoutManager(MyApplication.getContext())
+                val lm = LinearLayoutManager(MyApplication.context)
                 lm.orientation = LinearLayoutManager.VERTICAL
                 actions.layoutManager = lm
                 adapter.submitList(skill.actions)

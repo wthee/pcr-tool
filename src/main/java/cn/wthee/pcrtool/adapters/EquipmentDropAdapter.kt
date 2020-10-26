@@ -47,7 +47,7 @@ class EquipmentDropAdapter :
                     13 -> R.color.color_map_vh
                     else -> R.color.color_map_n
                 }
-                questNum.setTextColor(ResourcesCompat.getColor(MyApplication.getContext().resources, color, null))
+                questNum.setTextColor(ResourcesCompat.getColor(MyApplication.context.resources, color, null))
                 val adapter = EquipmentDropDetailAdapter(info.eid)
                 drops.adapter = adapter
                 adapter.submitList(info.getAllOdd())

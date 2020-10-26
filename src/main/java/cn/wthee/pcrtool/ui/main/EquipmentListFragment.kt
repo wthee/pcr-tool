@@ -69,16 +69,16 @@ class EquipmentListFragment : Fragment() {
             layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
             list = recycler
             if (isList) {
-                val linearLayoutManager = LinearLayoutManager(MyApplication.getContext())
+                val linearLayoutManager = LinearLayoutManager(MyApplication.context)
                 linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
                 recycler.layoutManager = linearLayoutManager
             } else {
                 val gridLayoutManager =
-                    GridLayoutManager(MyApplication.getContext(), Constants.COLUMN_COUNT_EQUIP)
+                    GridLayoutManager(MyApplication.context, Constants.COLUMN_COUNT_EQUIP)
                 gridLayoutManager.orientation = GridLayoutManager.VERTICAL
                 recycler.layoutManager = gridLayoutManager
             }
-            listAdapter = EquipmentAdapter(isList)
+            listAdapter = EquipmentAdapter(isList, parentFragmentManager)
             recycler.adapter = listAdapter
             recycler.setItemViewCacheSize(100)
         }

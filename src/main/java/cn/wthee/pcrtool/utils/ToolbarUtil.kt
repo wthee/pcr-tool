@@ -13,7 +13,7 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     val leftIcon = toolbar.leftIcon
     val rightIcon = toolbar.rightIcon
     val title = toolbar.title
-    val resources: Resources = MyApplication.getContext().resources
+    val resources: Resources = MyApplication.context.resources
 
     fun setLeftIcon(resId: Int){
         leftIcon.setImageResource(resId)

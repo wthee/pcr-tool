@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import com.permissionx.guolindev.PermissionX
 import java.io.File
 import java.io.FileOutputStream
@@ -18,12 +19,13 @@ import java.io.OutputStream
 
 
 class ImageDownloadUtil(
-    private val context: Context
+    private val activity: FragmentActivity
 ) {
+
+    val context: Context = activity.applicationContext
 
     fun save(bitmap: Bitmap, name: String) {
         //申请权限
-        val activity = ActivityUtil.instance.currentActivity
         PermissionX.init(activity)
             .permissions(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -31,7 +33,7 @@ class ImageDownloadUtil(
             )
             .request { allGranted, _, _ ->
                 if (allGranted) {
-                    activity?.runOnUiThread {
+                    activity.runOnUiThread {
                         ToastUtil.short("正在保存，请稍后~")
                         saveBitmap(bitmap, name)
                     }

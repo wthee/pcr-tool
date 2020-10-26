@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         val motion = binding.motionLayout
         fabMain.setOnClickListener {
             if (!isHome) {
-                FabHelper.goBack()
+                FabHelper.goBack(this)
             } else {
                 if (motion.currentState == R.id.start) {
                     openFab()

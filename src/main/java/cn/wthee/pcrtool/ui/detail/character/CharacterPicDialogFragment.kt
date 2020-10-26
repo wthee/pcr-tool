@@ -81,7 +81,7 @@ class CharacterPicDialogFragment : DialogFragment() {
                                     .build()
                                 val bitmap =
                                     (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
-                                ImageDownloadUtil(requireContext()).save(bitmap, name)
+                                ImageDownloadUtil(requireActivity()).save(bitmap, name)
                             }
 
                         } catch (e: Exception) {

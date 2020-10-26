@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
@@ -18,11 +19,10 @@ object FabHelper {
         MainActivity.fabMain.setImageResource(resId)
     }
 
-    fun goBack() {
+    fun goBack(activity: FragmentActivity) {
         if (canBack && !isHome) {
-            val activity = ActivityUtil.instance.currentActivity
             setIcon(R.drawable.ic_function)
-            activity?.findNavController(R.id.nav_host_fragment)?.navigateUp()
+            activity.findNavController(R.id.nav_host_fragment).navigateUp()
         }
     }
 
