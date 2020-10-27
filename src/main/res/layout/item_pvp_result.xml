@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="start|center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/xs_padding">
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/atk_characters"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -19,17 +20,19 @@
         tools:itemCount="5"
         tools:listitem="@layout/item_pvp_result_icon" />
 
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/s_margin"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_weight="1"
             android:textColor="@color/colorPrimary"
             tools:text="100" />
 
@@ -37,10 +40,8 @@
             android:id="@+id/down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
             tools:text="10" />
-    </LinearLayout>
 
+    </LinearLayout>
 
 </LinearLayout>

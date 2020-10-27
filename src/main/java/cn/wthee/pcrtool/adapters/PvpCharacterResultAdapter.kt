@@ -36,8 +36,8 @@ class PvpCharacterResultAdapter(
                 val adapter = PvpCharacterResultItemAdapter(activity)
                 atkCharacters.adapter = adapter
                 adapter.submitList(data.atk)
-                up.text = "👍\n${data.up}"
-                down.text = "👎\n${data.down}"
+                up.text = "${data.up}"
+                down.text = "${data.down}"
             }
         }
     }

@@ -64,4 +64,11 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         setLeftIcon(R.drawable.ic_back)
         setBackground(R.color.colorWhite)
     }
+
+    fun setFloatTitle(){
+        title.textSize = 12f
+        val params = title.layoutParams as ConstraintLayout.LayoutParams
+        params.height = 34.dp
+        title.layoutParams = params
+    }
 }

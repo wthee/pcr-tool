@@ -164,6 +164,7 @@ class ToolPvpService : Service() {
             toolbar.setLeftIcon(R.drawable.ic_back)
             toolbar.setRightIcon(R.drawable.ic_detail_share)
             toolbar.setCenterStyle()
+            toolbar.setFloatTitle()
             toolbar.leftIcon.setOnClickListener {
                 layoutResult.visibility = View.GONE
             }
@@ -251,5 +252,6 @@ class ToolPvpService : Service() {
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()
+
     }
 }

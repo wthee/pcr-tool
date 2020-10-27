@@ -5,7 +5,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:adjustViewBounds="true"
-    android:minWidth="@dimen/fab_icon"
-    android:minHeight="@dimen/fab_icon"
     android:layout_margin="@dimen/xs_margin"
     tools:src="@drawable/unknow_gray" />
