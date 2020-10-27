@@ -17,13 +17,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.CharacterInfoPro
 import cn.wthee.pcrtool.database.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
-import okhttp3.HttpUrl
 import kotlin.math.abs
 
 
@@ -194,8 +194,9 @@ class CharacterBasicInfoFragment : Fragment() {
     //初始化角色基本数据
     private fun setData(characterPro: CharacterInfoPro) {
         //toolbar 背景
-        val picUrl =
-            HttpUrl.get(Constants.CHARACTER_URL + characterPro.getAllStarId()[1] + Constants.WEBP)
+        var id = uid
+        id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
+        val picUrl = Constants.CHARACTER_URL + id + Constants.WEBP
         //角色图片
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)

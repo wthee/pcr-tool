@@ -5,7 +5,6 @@
     android:id="@+id/float_window"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:maxHeight="@dimen/float_window_height"
     android:orientation="horizontal"
     tools:background="@color/colorBlack">
 
@@ -41,83 +40,25 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/float_right"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/float_window_width"
         android:layout_height="wrap_content"
         app:cardCornerRadius="@dimen/float_card_radius"
-        tools:layout_width="@dimen/float_window_height">
+        tools:layout_width="@dimen/float_window_width">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/select_characters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_margin="@dimen/xs_margin"
-                android:gravity="center">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon0"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:maxWidth="@dimen/normal_icon"
-                    android:maxHeight="@dimen/normal_icon"
-                    tools:src="@drawable/unknow_gray" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon1"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:maxWidth="@dimen/normal_icon"
-                    android:maxHeight="@dimen/normal_icon"
-                    tools:src="@drawable/unknow_gray" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon2"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:maxWidth="@dimen/normal_icon"
-                    android:maxHeight="@dimen/normal_icon"
-                    tools:src="@drawable/unknow_gray" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon3"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:maxWidth="@dimen/normal_icon"
-                    android:maxHeight="@dimen/normal_icon"
-                    tools:src="@drawable/unknow_gray" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/icon4"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:adjustViewBounds="true"
-                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                    android:maxWidth="@dimen/normal_icon"
-                    android:maxHeight="@dimen/normal_icon"
-                    tools:src="@drawable/unknow_gray" />
-            </LinearLayout>
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="5"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_character_icon" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -132,7 +73,7 @@
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tablayout_position"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/tab_height_3"
+                        android:layout_height="@dimen/tab_height_2"
                         app:tabInlineLabel="true"
                         app:tabMode="fixed">
 
@@ -153,46 +94,10 @@
 
                     </com.google.android.material.tabs.TabLayout>
 
-
-                    <FrameLayout
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/pvp_pager"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/icons1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fadeScrollbars="false"
-                            android:nestedScrollingEnabled="false"
-                            android:scrollbars="vertical"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                            app:spanCount="5"
-                            tools:listitem="@layout/item_character_icon" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/icons2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fadeScrollbars="false"
-                            android:nestedScrollingEnabled="false"
-                            android:scrollbars="vertical"
-                            android:visibility="invisible"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                            app:spanCount="5"
-                            tools:listitem="@layout/item_character_icon" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/icons3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fadeScrollbars="false"
-                            android:nestedScrollingEnabled="false"
-                            android:scrollbars="vertical"
-                            android:visibility="invisible"
-                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                            app:spanCount="5"
-                            tools:listitem="@layout/item_character_icon" />
-                    </FrameLayout>
+                        android:layout_height="match_parent" />
 
                 </LinearLayout>
 
@@ -201,21 +106,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/colorWhite"
-                    tools:visibility="gone">
+                    android:visibility="gone"
+                    android:focusable="true"
+                    android:clickable="true"
+                    tools:visibility="visible">
 
                     <include
                         android:id="@+id/result_content"
                         layout="@layout/fragment_tool_pvp_result"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/result_close"
-                        style="@style/Ripple"
-                        android:layout_width="@dimen/xl_icon"
-                        android:layout_height="@dimen/xl_icon"
-                        android:layout_margin="@dimen/s_margin"
-                        android:src="@drawable/ic_back" />
                 </FrameLayout>
 
             </FrameLayout>

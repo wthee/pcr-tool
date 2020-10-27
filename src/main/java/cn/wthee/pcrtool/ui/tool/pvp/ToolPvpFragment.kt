@@ -78,8 +78,8 @@ class ToolPvpFragment : Fragment() {
                     ToolPvpResultDialogFragment().show(parentFragmentManager, "pvp")
                 }
             }
-            //返回
-            toolPvp.setOnClickListener {
+            //悬浮窗
+            pvpFloat.setOnClickListener {
 //                FabHelper.goBack()
                 //检查是否已经授予权限
                 if (!canDrawOverlays(requireContext())) {
@@ -125,7 +125,7 @@ class ToolPvpFragment : Fragment() {
 
     //已选择角色
     private fun loadDefault() {
-        selectedAdapter = PvpCharacterAdapter(false)
+        selectedAdapter = PvpCharacterAdapter(false, requireActivity())
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()

@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.data
 
-import androidx.room.Query
-
 
 //角色数据Repository
 
@@ -54,8 +52,10 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     suspend fun getGuilds() = characterDao.getGuilds()
 
     //角色升级经验列表
-    @Query("SELECT * FROM experience_unit")
     suspend fun getLevelExp() = characterDao.getLevelExp()
+
+    //获取已六星角色
+    suspend fun getR6Ids() = characterDao.getR6Ids()
 
     companion object {
 

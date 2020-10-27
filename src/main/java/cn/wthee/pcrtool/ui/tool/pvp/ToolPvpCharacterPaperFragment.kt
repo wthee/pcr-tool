@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolPvpCharacterBinding
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -27,7 +25,7 @@ class ToolPvpCharacterIconFragment(
     ): View? {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
-            val adapter = PvpCharacterAdapter(isFloatWindow)
+            val adapter = PvpCharacterAdapter(isFloatWindow, requireActivity())
             binding.icons.adapter = adapter
             adapter.submitList(
                 when (position) {

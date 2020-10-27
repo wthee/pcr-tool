@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/m_margin"
+    android:layout_margin="@dimen/s_margin"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -19,8 +19,8 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_marginTop="@dimen/s_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         tools:text="牛头人" />

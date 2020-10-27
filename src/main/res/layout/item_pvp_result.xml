@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="start|center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/s_padding">
+    android:padding="@dimen/xs_padding">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/atk_characters"
@@ -15,9 +15,6 @@
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:spanCount="5"
         tools:itemCount="5"
         tools:listitem="@layout/item_pvp_result_icon" />

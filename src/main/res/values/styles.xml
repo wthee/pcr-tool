@@ -8,6 +8,7 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
     </style>
 
 
@@ -34,6 +35,10 @@
     <style name="Ripple">
         <item name="android:colorControlHighlight">#C5C4C4</item>
         <item name="android:radius">18dp</item>
+    </style>
+
+    <style name="OverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_tool</item>
     </style>
 
 </resources>

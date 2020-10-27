@@ -52,6 +52,9 @@ class CharacterViewModel(
         else -> repository.getCharacterByPosition(0, 999)
     }
 
+    //升级经验列表
+    suspend fun getR6Ids() = repository.getR6Ids()
+
     //公会信息
     suspend fun getGuilds() = repository.getGuilds()
 

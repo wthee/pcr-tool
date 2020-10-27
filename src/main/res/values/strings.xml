@@ -151,5 +151,6 @@
     <string name="tip_scroll_for_more">滑动查看更多</string>
     <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
+    <string name="tool_enemy">怪物信息</string>
 
 </resources>

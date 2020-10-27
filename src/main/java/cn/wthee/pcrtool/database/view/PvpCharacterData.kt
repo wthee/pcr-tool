@@ -7,9 +7,7 @@ import java.io.Serializable
 data class PvpCharacterData(
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "position") val position: Int
-) : Serializable {
-    fun getFixedId() = unitId + 30
-}
+) : Serializable
 
 fun getDefault() = arrayListOf(
     PvpCharacterData(0, 999),

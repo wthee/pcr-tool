@@ -74,7 +74,9 @@ class CharacterAdapter(private val fragment: Fragment) :
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
                 //加载网络图片
-                val picUrl = Constants.CHARACTER_URL + (character.id + 30) + Constants.WEBP
+                var id = character.id
+                id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
+                val picUrl = Constants.CHARACTER_URL + id + Constants.WEBP
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)

@@ -1,13 +1,31 @@
 package cn.wthee.pcrtool.utils
 
+import android.content.Context
+import android.util.DisplayMetrics
+import android.view.Display
 import cn.wthee.pcrtool.MyApplication
 
 
+object ScreenUtil {
 
-val Int.dp: Float
+    fun getWidth(context: Context): Int {
+        val displayMetrics = DisplayMetrics()
+        val display: Display = context.display!!
+        display.getRealMetrics(displayMetrics)
+        return displayMetrics.widthPixels
+    }
+
+    fun getHeight(context: Context): Int {
+        val displayMetrics = DisplayMetrics()
+        val display: Display = context.display!!
+        display.getRealMetrics(displayMetrics)
+        return displayMetrics.heightPixels
+    }
+}
+val Int.dp: Int
     get() {
         val scale: Float = MyApplication.context.resources.displayMetrics.density
-        return (this * scale + 0.5f)
+        return (this * scale + 0.5f).toInt()
     }
 
 val Int.px: Float

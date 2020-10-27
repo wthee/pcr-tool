@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
+import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import com.google.android.material.transition.Hold
@@ -41,6 +42,7 @@ class CharacterListFragment : Fragment() {
         )
         lateinit var handler: Handler
         lateinit var guilds: ArrayList<String>
+        var r6Ids = listOf<Int>()
     }
 
     private lateinit var binding: FragmentCharacterListBinding
@@ -73,6 +75,7 @@ class CharacterListFragment : Fragment() {
 //                DatabaseUpdateHelper.checkDBVersion(force = true)
 //            }
             guilds.add("？？？")
+            r6Ids = viewModel.getR6Ids()
         }
         //加载数据
         init()

@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.database.view.all
 import cn.wthee.pcrtool.database.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -67,7 +68,9 @@ class CharacterAttrFragment : Fragment() {
         //数据监听
         setObserve()
         //加载icon
-        val picUrl = Constants.UNIT_ICON_URL + (uid + 30) + Constants.WEBP
+        var id = uid
+        if (CharacterListFragment.r6Ids.contains(id)) id += 60 else id += 30
+        val picUrl = Constants.UNIT_ICON_URL + id + Constants.WEBP
         binding.icon.load(picUrl){
             error(R.drawable.unknow_gray)
             placeholder(R.drawable.load_mini)

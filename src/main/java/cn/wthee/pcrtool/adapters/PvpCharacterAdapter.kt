@@ -1,23 +1,31 @@
 package cn.wthee.pcrtool.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
+import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.r6Ids
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
+import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpService
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ToastUtil
-import coil.load
+import coil.Coil
+import coil.request.ImageRequest
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class PvpCharacterAdapter(
-    private val isFloatWindow: Boolean
+    private val isFloatWindow: Boolean,
+    private val activity: Activity
 ) :
     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,13 +55,23 @@ class PvpCharacterAdapter(
                 //加载图片
                 if (data.unitId == 0) {
                     //默认
-                    itemPic.load(R.drawable.unknow_gray)
+                    val drawable = ResourcesCompat.getDrawable(
+                        activity.resources,
+                        R.drawable.unknow_gray,
+                        null
+                    )
+                    itemPic.setImageDrawable(drawable)
                 } else {
                     //角色
-                    val picUrl = UNIT_ICON_URL + data.getFixedId() + WEBP
-                    itemPic.load(picUrl) {
-                        error(R.drawable.unknow_gray)
-                        placeholder(R.drawable.load_mini)
+                    var id = data.unitId
+                    id += if (r6Ids.contains(id)) 60 else 30
+                    val picUrl = UNIT_ICON_URL + id + WEBP
+                    val coil = Coil.imageLoader(activity.applicationContext)
+                    val request = ImageRequest.Builder(activity.applicationContext)
+                        .data(picUrl)
+                        .build()
+                    MainScope().launch {
+                        itemPic.setImageDrawable(coil.execute(request).drawable)
                     }
                 }
                 //设置点击事件
@@ -85,11 +103,25 @@ class PvpCharacterAdapter(
                         //按位置排序
                         sortByDescending { it.position }
                         //更新列表
-                        ToolPvpFragment.selectedAdapter.apply{
-                            submitList(ToolPvpFragment.selects){
-                                notifyDataSetChanged()
+                        try {
+                            ToolPvpFragment.selectedAdapter.apply {
+                                submitList(ToolPvpFragment.selects) {
+                                    notifyDataSetChanged()
+                                }
                             }
+                        } catch (e: Exception) {
+
                         }
+                        try {
+                            ToolPvpService.selectedAdapter.apply {
+                                submitList(ToolPvpFragment.selects) {
+                                    notifyDataSetChanged()
+                                }
+                            }
+                        } catch (e: Exception) {
+
+                        }
+
                     }
                 }
             }

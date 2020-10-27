@@ -41,6 +41,13 @@
             app:exitAnim="@anim/fragment_exit_tool"
             app:popEnterAnim="@anim/fragment_popenter_tool"
             app:popExitAnim="@anim/fragment_popexit_tool" />
+        <action
+            android:id="@+id/action_containerFragment_to_enemyListFragment"
+            app:destination="@id/enemyListFragment"
+            app:enterAnim="@anim/fragment_enter_tool"
+            app:exitAnim="@anim/fragment_exit_tool"
+            app:popEnterAnim="@anim/fragment_popenter_tool"
+            app:popExitAnim="@anim/fragment_popexit_tool"/>
 
     </fragment>
 
@@ -73,14 +80,14 @@
         tools:layout="@layout/fragment_character_skill" />
     <fragment
         android:id="@+id/enemyListFragment"
-        android:name="cn.wthee.pcrtool.ui.main.EnemyListFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.enemy.EnemyListFragment"
         android:label="EnemyListFragment"
-        tools:layout="@layout/fragment_enemy_list" />
+        tools:layout="@layout/fragment_tool_enemy" />
     <fragment
         android:id="@+id/equipmentListFragment"
         android:name="cn.wthee.pcrtool.ui.main.EquipmentListFragment"
         android:label="fragment_enemy_list"
-        tools:layout="@layout/fragment_enemy_list" />
+        tools:layout="@layout/fragment_tool_enemy" />
     <fragment
         android:id="@+id/toolLevelFragment"
         android:name="cn.wthee.pcrtool.ui.tool.ToolLevelFragment"

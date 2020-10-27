@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterAttrViewModelFactory
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
 import cn.wthee.pcrtool.ui.main.CharacterViewModelFactory
-import cn.wthee.pcrtool.ui.main.EnemyViewModelFactory
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyViewModelFactory
 import cn.wthee.pcrtool.ui.main.EquipmentViewModelFactory
 
 

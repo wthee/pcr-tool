@@ -24,13 +24,20 @@
             android:src="@drawable/ic_pvp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginStart="@dimen/m_margin"
             android:text="@string/tool_pvp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="@color/colorWhite" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/pvp_float"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_float" />
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
@@ -82,7 +89,7 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tablayout_position"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/tab_height_2"
+                android:layout_height="@dimen/tab_height_1"
                 app:tabInlineLabel="true"
                 app:tabMode="fixed">
 

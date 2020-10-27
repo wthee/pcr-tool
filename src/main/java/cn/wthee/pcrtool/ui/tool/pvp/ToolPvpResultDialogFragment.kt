@@ -34,20 +34,20 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
                 try {
                     val responseBody = data.body()
                     if (responseBody == null || responseBody.code != 0) {
-                        ToastUtil.short("查询异常，请稍后重试~")
+                        ToastUtil.short("查询异常，请重试~")
                     } else {
                         //展示查询结果
                         if (responseBody.data.result.isEmpty()) {
                             binding.pvpNoData.visibility = View.VISIBLE
                         } else {
                             binding.pvpNoData.visibility = View.GONE
-                            val adapter = PvpCharacterResultAdapter()
+                            val adapter = PvpCharacterResultAdapter(requireActivity())
                             binding.list.adapter = adapter
                             adapter.submitList(responseBody.data.result)
                         }
                     }
                 } catch (e: Exception) {
-                    ToastUtil.short("数据解析失败~")
+                    ToastUtil.short("数据解析失败，请重试~")
                 }
                 binding.pvpResultLoading.visibility = View.GONE
             }

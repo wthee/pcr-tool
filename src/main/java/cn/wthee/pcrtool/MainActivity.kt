@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
@@ -95,6 +96,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //TODO 让菜单同时显示图标和文字
+//    override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
+//        if (menu != null) {
+//            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
+//                try {
+//                    val method: Method = menu.getClass()
+//                        .getDeclaredMethod("setOptionalIconsVisible", java.lang.Boolean.TYPE)
+//                    method.setAccessible(true)
+//                    method.invoke(menu, true)
+//                } catch (e: java.lang.Exception) {
+//                    e.printStackTrace()
+//                }
+//            }
+//        }
+//        return super.onMenuOpened(featureId, menu)
+//    }
+
+
     private fun init() {
         //获取版本名
         nowVersionName = packageManager.getPackageInfo(
@@ -120,7 +139,6 @@ class MainActivity : AppCompatActivity() {
             when (currentMainPage) {
                 0 -> CharacterListFragment.characterList.scrollToPosition(0)
                 1 -> EquipmentListFragment.list.scrollToPosition(0)
-                2 -> EnemyListFragment.list.scrollToPosition(0)
             }
             return@setOnLongClickListener true
         }
@@ -171,9 +189,6 @@ class MainActivity : AppCompatActivity() {
                 1 -> {
                     ToastUtil.short(NOTICE_TOAST_TODO)
                 }
-                2 -> {
-                    ToastUtil.short(NOTICE_TOAST_TODO)
-                }
             }
         }
         //搜索
@@ -190,7 +205,6 @@ class MainActivity : AppCompatActivity() {
             when (currentMainPage) {
                 0 -> searchView.queryHint = "角色名"
                 1 -> searchView.queryHint = "装备名"
-                2 -> searchView.queryHint = "怪物名"
             }
             //搜索监听
             searchView.setOnQueryTextListener(object :
@@ -202,9 +216,6 @@ class MainActivity : AppCompatActivity() {
                         }
                         1 -> query?.let {
                             sharedEquipViewModel.getEquips(asc, query)
-                        }
-                        2 -> query?.let {
-                            sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
                         }
                     }
 
@@ -226,7 +237,6 @@ class MainActivity : AppCompatActivity() {
                         sortAsc, ""
                     )
                     1 -> sharedEquipViewModel.getEquips(asc, "")
-                    2 -> EnemyListFragment.viewModel.getAllEnemy()
                 }
                 searchView.setQuery("", false)
             }
@@ -354,9 +364,6 @@ class MainActivity : AppCompatActivity() {
                         dialog.dismiss()
                         MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(1))
                     }
-                }
-                2 -> {
-                    ToastUtil.short(NOTICE_TOAST_TODO)
                 }
             }
         }

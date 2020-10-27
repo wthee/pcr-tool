@@ -3,8 +3,10 @@ package cn.wthee.pcrtool.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.SharedElementCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -20,6 +22,7 @@ import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
@@ -29,6 +32,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
+import java.lang.Boolean
+import java.lang.reflect.Method
 import kotlin.collections.set
 
 
@@ -85,6 +90,21 @@ class MainPagerFragment : Fragment() {
         }
     }
 
+    // TODO 让菜单同时显示图标和文字
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        super.onPrepareOptionsMenu(menu)
+//        if (menu.javaClass == MenuBuilder::class.java) {
+//            try {
+//                val m: Method =
+//                    menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE)
+//                m.isAccessible = true
+//                m.invoke(menu, true)
+//            } catch (e: java.lang.Exception) {
+//            }
+//        }
+//    }
+
+
     private fun init() {
         tipText = binding.noDataTip
         //menu
@@ -92,6 +112,7 @@ class MainPagerFragment : Fragment() {
             when (it.itemId) {
                 R.id.menu_tool_pvp -> findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
                 R.id.menu_tool_level -> findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
+                R.id.menu_tool_enemy -> findNavController().navigate(R.id.action_containerFragment_to_enemyListFragment)
             }
             FabHelper.addBackFab()
             return@setOnMenuItemClickListener true
@@ -171,12 +192,6 @@ class MainPagerFragment : Fragment() {
                     tab.view.setOnLongClickListener {
                         sharedEnemyViewModel.getAllEnemy()
                         return@setOnLongClickListener true
-                    }
-                    //点击回顶部
-                    tab.view.setOnClickListener {
-                        if (MainActivity.currentMainPage == position) {
-                            EnemyListFragment.list.smoothScrollToPosition(0)
-                        }
                     }
                 }
             }

@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
-import cn.wthee.pcrtool.ui.main.EnemyListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 
 class MainPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
@@ -15,7 +14,6 @@ class MainPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activi
     init {
         mFragments.put(PAGE_CHARACTER, CharacterListFragment())
         mFragments.put(PAGE_EQUIP, EquipmentListFragment())
-        mFragments.put(PAGE_ENEMY, EnemyListFragment())
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -29,6 +27,5 @@ class MainPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activi
     companion object {
         const val PAGE_CHARACTER = 0
         const val PAGE_EQUIP = 1
-        const val PAGE_ENEMY = 2
     }
 }

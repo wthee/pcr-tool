@@ -141,4 +141,18 @@ interface CharacterDao {
          ORDER BY level DESC"""
     )
     suspend fun getLevelExp(): List<CharacterExperienceAll>
+
+    //获取已六星角色
+    @Transaction
+    @Query(
+        """
+        SELECT
+            unit_profile.unit_id 
+        FROM
+            unit_profile
+            LEFT JOIN rarity_6_quest_data ON unit_profile.unit_id = rarity_6_quest_data.unit_id 
+        WHERE
+            rarity_6_quest_data.unit_id <> 0"""
+    )
+    suspend fun getR6Ids(): List<Int>
 }

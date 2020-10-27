@@ -9,10 +9,15 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
-import android.view.*
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.WindowManager
 import android.widget.ProgressBar
-import cn.wthee.pcrtool.MyApplication
+import androidx.appcompat.app.AppCompatActivity
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
+import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.OnPostListener
 import cn.wthee.pcrtool.data.PvpDataRepository
@@ -20,19 +25,20 @@ import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.dp
-import com.google.android.material.tabs.TabLayout
+import cn.wthee.pcrtool.utils.*
+import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Response
 import kotlin.math.abs
 
 
-class ToolPvpService() : Service() {
+class ToolPvpService : Service() {
 
     companion object {
         const val CHANNEL_ID = "Overlay_notification_channel"
         lateinit var progressBar: ProgressBar
         var isMin = false
+        lateinit var activity: AppCompatActivity
+        lateinit var selectedAdapter: PvpCharacterAdapter
     }
 
     private var windowManager: WindowManager? = null
@@ -49,6 +55,7 @@ class ToolPvpService() : Service() {
 
     @Suppress("UNCHECKED_CAST")
     override fun onStartCommand(intent: Intent?, flg: Int, startId: Int): Int {
+        activity = ActivityUtil.instance.currentActivity!!
         character1 = intent?.getSerializableExtra("character1") as List<PvpCharacterData>
         character2 = intent.getSerializableExtra("character2") as List<PvpCharacterData>
         character3 = intent.getSerializableExtra("character3") as List<PvpCharacterData>
@@ -64,11 +71,12 @@ class ToolPvpService() : Service() {
             }
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
-            height = WindowManager.LayoutParams.WRAP_CONTENT
+            height = ScreenUtil.getWidth(activity.applicationContext) - 48.dp
         }
         //加载布局
+
         binding =
-            FragmentToolPvpFloatWindowBinding.inflate(LayoutInflater.from(MyApplication.context))
+            FragmentToolPvpFloatWindowBinding.inflate(activity.layoutInflater)
         initView()
         windowManager!!.addView(binding.root, params)
 
@@ -103,22 +111,11 @@ class ToolPvpService() : Service() {
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() {
 
-        //初始化列表
-
-
-        //全部角色列表
-        val charactersAdapter1 = PvpCharacterAdapter(true)
-        binding.icons1.adapter = charactersAdapter1
-        charactersAdapter1.submitList(character1)
-        val charactersAdapter2 = PvpCharacterAdapter(true)
-        binding.icons2.adapter = charactersAdapter2
-        charactersAdapter2.submitList(character2)
-        val charactersAdapter3 = PvpCharacterAdapter(true)
-        binding.icons3.adapter = charactersAdapter3
-        charactersAdapter3.submitList(character3)
+        //初始化
+        loadDefault()
+        setPager()
 
         binding.apply {
-            resultContent.pvpResultToolbar.root.visibility = View.GONE
             layoutResult.visibility = View.GONE
             //搜索按钮
             search.setOnClickListener {
@@ -126,6 +123,7 @@ class ToolPvpService() : Service() {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
+                    binding.resultContent.pvpResultLoading.visibility = View.VISIBLE
                     binding.layoutResult.visibility = View.VISIBLE
                     PvpDataRepository.getData(object : OnPostListener {
                         override fun success(data: Response<PVPData>) {
@@ -140,7 +138,7 @@ class ToolPvpService() : Service() {
                                             pvpNoData.visibility = View.VISIBLE
                                         } else {
                                             pvpNoData.visibility = View.GONE
-                                            val adapter = PvpCharacterResultAdapter()
+                                            val adapter = PvpCharacterResultAdapter(activity)
                                             list.adapter = adapter
                                             adapter.submitList(responseBody.data.result)
                                         }
@@ -161,7 +159,14 @@ class ToolPvpService() : Service() {
                 }
             }
             //关闭搜索结果
-            resultClose.setOnClickListener {
+            //toolbar
+            val toolbar = ToolbarUtil(binding.resultContent.pvpResultToolbar)
+            toolbar.title.text = "进攻方信息"
+            toolbar.hideRightIcon()
+            toolbar.setLeftIcon(R.drawable.ic_back)
+            toolbar.setRightIcon(R.drawable.ic_detail_share)
+            toolbar.setCenterStyle()
+            toolbar.leftIcon.setOnClickListener {
                 layoutResult.visibility = View.GONE
             }
             //移动按钮
@@ -182,9 +187,10 @@ class ToolPvpService() : Service() {
                         val offsetY = (event.rawY - initialTouchY).toInt()
                         //移动距离小，视为点击
                         isMoved = !(abs(offsetX) < 10 && abs(offsetY) < 10)
-                        params!!.x = initialX + offsetX
-                        params!!.y = initialY + offsetY
-                        windowManager?.updateViewLayout(binding.root, params)
+                        //拖动效果，暂时不做
+//                        params!!.x = initialX + offsetX
+//                        params!!.y = initialY + offsetY
+//                        windowManager?.updateViewLayout(binding.root, params)
                     }
                     MotionEvent.ACTION_UP -> {
                         if (!isMoved) {
@@ -194,58 +200,55 @@ class ToolPvpService() : Service() {
                 }
                 return@setOnTouchListener true
             }
-            //tab切换
-            tablayoutPosition.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                    showList(tab?.position ?: 0)
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                }
-
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-                }
-            })
         }
     }
 
+    //page 初始化
+    private fun setPager() {
+        binding.pvpPager.offscreenPageLimit = 3
+        binding.pvpPager.adapter = PvpCharacterPageAdapter(activity, true)
+        TabLayoutMediator(
+            binding.tablayoutPosition,
+            binding.pvpPager
+        ) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = getString(R.string.pos_1)
+                }
+                1 -> {
+                    tab.text = getString(R.string.pos_2)
+                }
+                2 -> {
+                    tab.text = getString(R.string.pos_3)
+                }
+            }
+        }.attach()
+    }
+
+    //最大/小化
     private fun minWindow() {
         binding.apply {
             if (isMin) {
                 search.visibility = View.VISIBLE
                 floatRight.visibility = View.VISIBLE
                 params!!.width = WindowManager.LayoutParams.WRAP_CONTENT
-                params!!.height = WindowManager.LayoutParams.WRAP_CONTENT
+                params!!.height = ScreenUtil.getWidth(activity.applicationContext) - 48.dp
             } else {
                 search.visibility = View.GONE
                 floatRight.visibility = View.GONE
-                params!!.width = 48.dp.toInt()
-                params!!.height = 48.dp.toInt()
+                params!!.width = 48.dp
+                params!!.height = 48.dp
             }
             isMin = !isMin
             windowManager?.updateViewLayout(binding.root, params)
         }
     }
 
-    private fun showList(position: Int) {
-        binding.apply {
-            when (position) {
-                0 -> {
-                    icons1.visibility = View.VISIBLE
-                    icons2.visibility = View.INVISIBLE
-                    icons3.visibility = View.INVISIBLE
-                }
-                1 -> {
-                    icons1.visibility = View.INVISIBLE
-                    icons2.visibility = View.VISIBLE
-                    icons3.visibility = View.INVISIBLE
-                }
-                2 -> {
-                    icons1.visibility = View.INVISIBLE
-                    icons2.visibility = View.INVISIBLE
-                    icons3.visibility = View.VISIBLE
-                }
-            }
-        }
+    //初始化
+    private fun loadDefault() {
+        selectedAdapter = PvpCharacterAdapter(true, activity)
+        binding.selectCharacters.adapter = selectedAdapter
+        selectedAdapter.submitList(selects)
+        selectedAdapter.notifyDataSetChanged()
     }
 }

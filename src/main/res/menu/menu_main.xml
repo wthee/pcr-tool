@@ -6,12 +6,19 @@
         android:id="@+id/menu_tool_pvp"
         android:icon="@drawable/ic_pvp"
         android:title="@string/tool_pvp"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
 
     <item
         android:id="@+id/menu_tool_level"
         android:icon="@drawable/ic_level"
         android:title="@string/tool_level"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
+    <item
+        android:id="@+id/menu_tool_enemy"
+        android:icon="@drawable/ic_enemy"
+        android:iconTint="@color/colorWhite"
+        android:title="@string/tool_enemy"
+        app:showAsAction="never" />
 </menu>

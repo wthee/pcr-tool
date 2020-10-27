@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.main
+package cn.wthee.pcrtool.ui.tool.enemy
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,29 +11,26 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EnemyListAdapter
-import cn.wthee.pcrtool.databinding.FragmentEnemyListBinding
+import cn.wthee.pcrtool.databinding.FragmentToolEnemyBinding
+import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 
 
 class EnemyListFragment : Fragment() {
 
-
-    companion object {
-        lateinit var viewModel: EnemyViewModel
-        var filterFlag = 0
-        lateinit var listAdapter: EnemyListAdapter
-        lateinit var list: RecyclerView
-    }
-
-    private lateinit var binding: FragmentEnemyListBinding
-
+    private lateinit var binding: FragmentToolEnemyBinding
+    private lateinit var viewModel: EnemyViewModel
+    var filterFlag = 0
+    private lateinit var listAdapter: EnemyListAdapter
+    private lateinit var list: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentEnemyListBinding.inflate(inflater, container, false)
+        binding = FragmentToolEnemyBinding.inflate(inflater, container, false)
         viewModel =
             InjectorUtil.provideEnemyViewModelFactory().create(EnemyViewModel::class.java)
         init()
@@ -100,6 +97,9 @@ class EnemyListFragment : Fragment() {
                 viewModel.getAllEnemy()
             }
 
+            toolEnemy.setOnClickListener {
+                FabHelper.goBack(requireActivity())
+            }
         }
     }
 }

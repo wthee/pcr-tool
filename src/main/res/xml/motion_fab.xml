@@ -17,9 +17,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            android:visibility="gone"
+            android:visibility="invisible"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintEnd_toEndOf="parent" />
+            motion:layout_constraintEnd_toEndOf="parent"/>
 
         <Constraint
             android:id="@+id/love"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            android:visibility="gone"
+            android:visibility="invisible"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent" />
 
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            android:visibility="gone"
+            android:visibility="invisible"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            android:visibility="gone"
+            android:visibility="invisible"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent" />
 
