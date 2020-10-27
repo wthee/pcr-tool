@@ -36,6 +36,8 @@
             android:id="@+id/pvp_float"
             android:layout_width="@dimen/l_icon"
             android:layout_height="@dimen/l_icon"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="@dimen/s_margin"
             android:layout_gravity="center"
             android:src="@drawable/ic_float" />
     </LinearLayout>

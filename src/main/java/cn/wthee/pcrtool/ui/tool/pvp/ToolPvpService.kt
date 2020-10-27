@@ -10,7 +10,6 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.view.Gravity
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
@@ -28,7 +27,6 @@ import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Response
-import kotlin.math.abs
 
 
 class ToolPvpService : Service() {
@@ -169,36 +167,39 @@ class ToolPvpService : Service() {
             toolbar.leftIcon.setOnClickListener {
                 layoutResult.visibility = View.GONE
             }
-            //移动按钮
-            var initialX = 0
-            var initialY = 0
-            var initialTouchX = 0f
-            var initialTouchY = 0f
-            move.setOnTouchListener { _, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        initialX = params!!.x
-                        initialY = params!!.y
-                        initialTouchX = event.rawX
-                        initialTouchY = event.rawY
-                    }
-                    MotionEvent.ACTION_MOVE -> {
-                        val offsetX = (event.rawX - initialTouchX).toInt()
-                        val offsetY = (event.rawY - initialTouchY).toInt()
-                        //移动距离小，视为点击
-                        isMoved = !(abs(offsetX) < 10 && abs(offsetY) < 10)
-                        //拖动效果，暂时不做
+            //移动按钮//拖动效果，暂时不做
+//            var initialX = 0
+//            var initialY = 0
+//            var initialTouchX = 0f
+//            var initialTouchY = 0f
+//            move.setOnTouchListener { _, event ->
+//                when (event.action) {
+//                    MotionEvent.ACTION_DOWN -> {
+//                        initialX = params!!.x
+//                        initialY = params!!.y
+//                        initialTouchX = event.rawX
+//                        initialTouchY = event.rawY
+//                    }
+//                    MotionEvent.ACTION_MOVE -> {
+//                        val offsetX = (event.rawX - initialTouchX).toInt()
+//                        val offsetY = (event.rawY - initialTouchY).toInt()
+//                        //移动距离小，视为点击
+//                        isMoved = !(abs(offsetX) < 10 && abs(offsetY) < 10)
+//
 //                        params!!.x = initialX + offsetX
 //                        params!!.y = initialY + offsetY
 //                        windowManager?.updateViewLayout(binding.root, params)
-                    }
-                    MotionEvent.ACTION_UP -> {
-                        if (!isMoved) {
-                            minWindow()
-                        }
-                    }
-                }
-                return@setOnTouchListener true
+//                    }
+//                    MotionEvent.ACTION_UP -> {
+//                        if (!isMoved) {
+//                            minWindow()
+//                        }
+//                    }
+//                }
+//                return@setOnTouchListener true
+//            }
+            move.setOnClickListener {
+                minWindow()
             }
         }
     }
