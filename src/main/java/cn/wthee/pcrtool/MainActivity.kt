@@ -2,9 +2,10 @@ package cn.wthee.pcrtool
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
-import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         var canBack = true
         var isHome = true
         var isForeground = true
+        var mHeight = 0
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -74,6 +76,15 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            mHeight = ScreenUtil.getHeight(this) - 48.dp
+        else
+            mHeight = ScreenUtil.getWidth(this) - 48.dp
+        Log.e("float", mHeight.toString())
+        super.onConfigurationChanged(newConfig)
     }
 
     override fun onPause() {

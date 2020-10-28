@@ -20,6 +20,7 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_config"
         android:requestLegacyExternalStorage="true"
+        android:configChanges="orientation|screenSize"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"

@@ -14,6 +14,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import cn.wthee.pcrtool.MainActivity.Companion.mHeight
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
@@ -24,7 +25,10 @@ import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Response
 
@@ -37,6 +41,7 @@ class ToolPvpService : Service() {
         var isMin = false
         lateinit var activity: AppCompatActivity
         lateinit var selectedAdapter: PvpCharacterAdapter
+
     }
 
     private var windowManager: WindowManager? = null
@@ -70,7 +75,7 @@ class ToolPvpService : Service() {
             }
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
-            height = ScreenUtil.getWidth(activity.applicationContext) - 48.dp
+            height = mHeight
         }
         //加载布局
 
@@ -235,7 +240,7 @@ class ToolPvpService : Service() {
                 search.visibility = View.VISIBLE
                 floatRight.visibility = View.VISIBLE
                 params!!.width = WindowManager.LayoutParams.WRAP_CONTENT
-                params!!.height = ScreenUtil.getWidth(activity.applicationContext) - 48.dp
+                params!!.height = mHeight
             } else {
                 search.visibility = View.GONE
                 floatRight.visibility = View.GONE
