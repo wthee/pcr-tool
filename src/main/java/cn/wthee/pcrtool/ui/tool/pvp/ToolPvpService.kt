@@ -46,6 +46,7 @@ class ToolPvpService : Service() {
     private var character1 = listOf<PvpCharacterData>()
     private var character2 = listOf<PvpCharacterData>()
     private var character3 = listOf<PvpCharacterData>()
+    private lateinit var adapter: PvpCharacterResultAdapter
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -113,6 +114,7 @@ class ToolPvpService : Service() {
         loadDefault()
         setPager()
 
+
         binding.apply {
             layoutResult.visibility = View.GONE
             //搜索按钮
@@ -136,7 +138,7 @@ class ToolPvpService : Service() {
                                             pvpNoData.visibility = View.VISIBLE
                                         } else {
                                             pvpNoData.visibility = View.GONE
-                                            val adapter = PvpCharacterResultAdapter(activity)
+                                            adapter = PvpCharacterResultAdapter(activity)
                                             list.adapter = adapter
                                             adapter.submitList(responseBody.data.result)
                                         }
@@ -162,11 +164,10 @@ class ToolPvpService : Service() {
             toolbar.title.text = "进攻方信息"
             toolbar.hideRightIcon()
             toolbar.setLeftIcon(R.drawable.ic_back)
-            toolbar.setRightIcon(R.drawable.ic_detail_share)
-            toolbar.setCenterStyle()
             toolbar.setFloatTitle()
             toolbar.leftIcon.setOnClickListener {
                 layoutResult.visibility = View.GONE
+                adapter.submitList(null)
             }
             //移动按钮//拖动效果，暂时不做
 //            var initialX = 0
