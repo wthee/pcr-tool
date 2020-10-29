@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -17,10 +16,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
-import cn.wthee.pcrtool.utils.StarUtil
+import cn.wthee.pcrtool.utils.*
 import coil.load
 import com.google.android.material.slider.Slider
 
@@ -253,6 +249,6 @@ class CharacterAttrFragment : Fragment() {
                 R.color.color_rank_2_3
             }
         }
-        return ResourcesCompat.getColor(resources, color, null)
+        return ResourcesUtil.getColor(color)
     }
 }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -22,6 +21,7 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
 import kotlin.math.abs
@@ -179,16 +179,10 @@ class CharacterBasicInfoFragment : Fragment() {
         val icFabColor =
             resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
 
-        val color = ResourcesCompat.getColor(
-            resources,
-            if (isLoved) R.color.colorPrimary else R.color.text,
-            null
-        )
+        val color = ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text)
         binding.name.setTextColor(color)
         binding.nameExtra.setTextColor(color)
-
         binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
-
     }
 
     //初始化角色基本数据
@@ -239,11 +233,7 @@ class CharacterBasicInfoFragment : Fragment() {
             cv.text = characterPro.voice
             self.text = characterPro.getSelf()
             positionType.background =
-                ResourcesCompat.getDrawable(
-                    resources,
-                    getPositionIcon(characterPro.position),
-                    null
-                )
+                ResourcesUtil.getDrawable(getPositionIcon(characterPro.position))
             comments.text = characterPro.getCommentsText()
         }
     }

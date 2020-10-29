@@ -15,35 +15,18 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     val title = toolbar.title
     val resources: Resources = MyApplication.context.resources
 
-    fun setLeftIcon(resId: Int){
+    fun setLeftIcon(resId: Int) {
+        leftIcon.visibility = View.VISIBLE
         leftIcon.setImageResource(resId)
     }
 
-    fun setRightIcon(resId: Int){
-        rightIcon.setImageResource(resId)
-    } 
-    
-    fun hideLeftIcon(){
-        leftIcon.visibility = View.GONE
-    }
-
-    fun showLeftIcon(){
-        leftIcon.visibility = View.VISIBLE
-    }
-
-    fun hideRightIcon(){
-        rightIcon.visibility = View.GONE
-    }
-
-    fun showRightIcon(){
+    fun setRightIcon(resId: Int) {
         rightIcon.visibility = View.VISIBLE
+        rightIcon.setImageResource(resId)
     }
 
-    fun setTitle(text: String){
-        title.text = text
-    }
 
-    fun setTitleCenter(){
+    fun setTitleCenter() {
         val params = title.layoutParams as ConstraintLayout.LayoutParams
         params.startToStart = 0
         params.endToEnd = 0

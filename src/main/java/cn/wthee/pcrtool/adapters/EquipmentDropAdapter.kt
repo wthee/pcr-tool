@@ -2,14 +2,13 @@ package cn.wthee.pcrtool.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.EquipmentDropInfo
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropBinding
+import cn.wthee.pcrtool.utils.ResourcesUtil
 
 
 class EquipmentDropAdapter :
@@ -47,7 +46,7 @@ class EquipmentDropAdapter :
                     13 -> R.color.color_map_vh
                     else -> R.color.color_map_n
                 }
-                questNum.setTextColor(ResourcesCompat.getColor(MyApplication.context.resources, color, null))
+                questNum.setTextColor(ResourcesUtil.getColor(color))
                 val adapter = EquipmentDropDetailAdapter(info.eid)
                 drops.adapter = adapter
                 adapter.submitList(info.getAllOdd())

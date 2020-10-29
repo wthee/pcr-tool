@@ -167,7 +167,6 @@ class ToolPvpService : Service() {
             //toolbar
             val toolbar = ToolbarUtil(binding.resultContent.pvpResultToolbar)
             toolbar.title.text = "进攻方信息"
-            toolbar.hideRightIcon()
             toolbar.setLeftIcon(R.drawable.ic_back)
             toolbar.setFloatTitle()
             toolbar.leftIcon.setOnClickListener {

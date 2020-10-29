@@ -3,7 +3,10 @@ package cn.wthee.pcrtool.ui.setting
 import android.os.Bundle
 import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
-import androidx.preference.*
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceFragmentCompat
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -36,7 +39,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //添加返回fab
         FabHelper.addBackFab()
         //获取控件
-        val isList = findPreference<SwitchPreferenceCompat>("equip_is_list")
         forceUpdateDb = findPreference<Preference>("force_update_db")!!
         val appUpdate = findPreference<Preference>("force_update_app")
         val cleanData = findPreference<Preference>("clean_data")
@@ -52,12 +54,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         cleanData?.title =
             cleanData?.title.toString() + "  " + CacheUtil.getTotalCacheSize(requireContext())
         //设置监听
-        //装备列表界面
-        isList?.setOnPreferenceChangeListener { _, newValue ->
-            val value = newValue as Boolean
-            viewModel.isList.postValue(value)
-            return@setOnPreferenceChangeListener true
-        }
         //强制更新数据库
         forceUpdateDb.setOnPreferenceClickListener {
             DatabaseUpdateHelper.checkDBVersion(0)

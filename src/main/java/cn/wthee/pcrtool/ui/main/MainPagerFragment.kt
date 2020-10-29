@@ -3,12 +3,9 @@ package cn.wthee.pcrtool.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.app.SharedElementCallback
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -28,12 +25,11 @@ import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
-import java.lang.Boolean
-import java.lang.reflect.Method
 import kotlin.collections.set
 
 
@@ -80,9 +76,9 @@ class MainPagerFragment : Fragment() {
                 MainActivity.currentCharaPosition
             )?.itemView?.findViewById<MaterialTextView>(R.id.name)
             val color = if (CharacterBasicInfoFragment.isLoved)
-                ResourcesCompat.getColor(resources, R.color.colorPrimary, null)
+                ResourcesUtil.getColor(R.color.colorPrimary)
             else
-                ResourcesCompat.getColor(resources, R.color.text, null)
+                ResourcesUtil.getColor(R.color.text)
             vh?.setTextColor(color)
             CharacterListFragment.characterList.scrollToPosition(MainActivity.currentCharaPosition)
 
@@ -145,7 +141,7 @@ class MainPagerFragment : Fragment() {
                 //角色
                 0 -> {
                     tab.icon =
-                        ResourcesCompat.getDrawable(resources, R.drawable.ic_character, null)
+                        ResourcesUtil.getDrawable(R.drawable.ic_character)
                     tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
                     //长按重置
                     tab.view.setOnLongClickListener {
@@ -168,11 +164,11 @@ class MainPagerFragment : Fragment() {
                 }
                 //装备
                 1 -> {
-                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_equip, null)
+                    tab.icon = ResourcesUtil.getDrawable(R.drawable.ic_equip)
                     tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
                     //长按重置
                     tab.view.setOnLongClickListener {
-                        EquipmentListFragment.equipfilterParams.initData()
+                        EquipmentListFragment.equipFilterParams.initData()
                         asc = true
                         sharedEquipViewModel.getEquips(asc, "")
                         return@setOnLongClickListener true
@@ -186,7 +182,7 @@ class MainPagerFragment : Fragment() {
                 }
                 //怪物
                 2 -> {
-                    tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_enemy, null)
+                    tab.icon = ResourcesUtil.getDrawable(R.drawable.ic_enemy)
                     tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
                     //长按重置
                     tab.view.setOnLongClickListener {

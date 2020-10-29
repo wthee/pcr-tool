@@ -7,7 +7,6 @@ import android.view.animation.AnimationUtils
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.core.content.edit
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -26,6 +25,7 @@ import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -63,13 +63,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     // Parent has been drawn. Start transitioning!
                     fragment.startPostponedEnterTransition()
                 }
-                name.setTextColor(
-                    ResourcesCompat.getColor(
-                        fragment.resources,
-                        if (isLoved) R.color.colorPrimary else R.color.text,
-                        null
-                    )
-                )
+                name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
@@ -83,11 +77,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 //角色位置
                 positionType.background =
-                    ResourcesCompat.getDrawable(
-                        fragment.resources,
-                        getPositionIcon(character.position),
-                        null
-                    )
+                    ResourcesUtil.getDrawable(getPositionIcon(character.position))
                 //基本信息
                 name.text = character.getNameF()
                 nameExtra.text = character.getNameL()

@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.entity.EnemyData
-import cn.wthee.pcrtool.databinding.ItemEnemyBinding
+import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.detail.enemy.EnemyDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_SHADOW_URL
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
@@ -27,7 +27,7 @@ class EnemyListAdapter(
     ListAdapter<EnemyData, EnemyListAdapter.ViewHolder>(EnemyDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemEnemyBinding.inflate(
+            ItemCommonBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -73,7 +73,7 @@ class EnemyListAdapter(
         }
     }
 
-    inner class ViewHolder(private val binding: ItemEnemyBinding) :
+    inner class ViewHolder(private val binding: ItemCommonBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(enemyData: EnemyData) {
             //设置数据
@@ -90,7 +90,7 @@ class EnemyListAdapter(
                 } else {
                     UNIT_ICON_SHADOW_URL + enemyData.getTruePrefabId()
                 } + WEBP
-                itemPic.load(picUrl) {
+                pic.load(picUrl) {
                     error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }

@@ -21,6 +21,7 @@
             android:id="@+id/pvp_icon"
             android:layout_width="@dimen/xl_icon"
             android:layout_height="@dimen/xl_icon"
+            android:tint="@color/colorWhite"
             android:src="@drawable/ic_pvp" />
 
         <com.google.android.material.textview.MaterialTextView

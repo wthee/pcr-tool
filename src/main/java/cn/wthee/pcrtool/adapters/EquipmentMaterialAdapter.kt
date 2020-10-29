@@ -3,18 +3,17 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
-import cn.wthee.pcrtool.databinding.ItemEquipmentMaterialBinding
+import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModel
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
@@ -30,7 +29,7 @@ class EquipmentMaterialAdapter(
     ListAdapter<EquipmentMaterial, EquipmentMaterialAdapter.ViewHolder>(MaterialDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemEquipmentMaterialBinding.inflate(
+            ItemCommonBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -41,28 +40,24 @@ class EquipmentMaterialAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.apply {
             bind(getItem(position))
-            itemView.findViewById<MaterialTextView>(R.id.equip_name)
+            itemView.findViewById<MaterialTextView>(R.id.name)
                 .setTextColor(
-                    ResourcesCompat.getColor(
-                        MyApplication.context.resources,
+                    ResourcesUtil.getColor(
                         if (position == EquipmentDetailsFragment.materialClickPosition)
                             R.color.red
                         else
-                            R.color.text,
-                        null
+                            R.color.text
                     )
                 )
         }
     }
 
-    inner class ViewHolder(private val binding: ItemEquipmentMaterialBinding) :
+    inner class ViewHolder(private val binding: ItemCommonBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(info: EquipmentMaterial) {
             binding.apply {
-                equipName.text = "${info.name}"
-                equipCount.text = "x ${info.count}"
-
-                equipIcon.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
+                name.text = "${info.name} x${info.count}"
+                pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
                     error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }

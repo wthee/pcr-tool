@@ -4,18 +4,18 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.PvpCharacterData
-import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
+import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.r6Ids
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpService
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import coil.Coil
 import coil.request.ImageRequest
@@ -30,7 +30,7 @@ class PvpCharacterAdapter(
     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemCharacterIconBinding.inflate(
+            ItemCommonBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -42,7 +42,7 @@ class PvpCharacterAdapter(
         holder.bind(getItem(position)!!)
     }
 
-    inner class ViewHolder(private val binding: ItemCharacterIconBinding) :
+    inner class ViewHolder(private val binding: ItemCommonBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: PvpCharacterData) {
             //设置数据
@@ -55,12 +55,8 @@ class PvpCharacterAdapter(
                 //加载图片
                 if (data.unitId == 0) {
                     //默认
-                    val drawable = ResourcesCompat.getDrawable(
-                        activity.resources,
-                        R.drawable.unknow_gray,
-                        null
-                    )
-                    itemPic.setImageDrawable(drawable)
+                    val drawable = ResourcesUtil.getDrawable(R.drawable.unknow_gray)
+                    pic.setImageDrawable(drawable)
                 } else {
                     //角色
                     var id = data.unitId
@@ -71,7 +67,7 @@ class PvpCharacterAdapter(
                         .data(picUrl)
                         .build()
                     MainScope().launch {
-                        itemPic.setImageDrawable(coil.execute(request).drawable)
+                        pic.setImageDrawable(coil.execute(request).drawable)
                     }
                 }
                 //设置点击事件

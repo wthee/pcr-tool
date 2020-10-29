@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Filter
@@ -16,7 +15,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.database.view.EquipmentMaxData
-import cn.wthee.pcrtool.databinding.ItemEquipmentBinding
+import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
@@ -28,13 +27,12 @@ import com.google.gson.reflect.TypeToken
 
 
 class EquipmentAdapter(
-    private val isList: Boolean,
     private val fragmentManager: FragmentManager
 ) :
     ListAdapter<EquipmentMaxData, EquipmentAdapter.ViewHolder>(EquipDiffCallback()), Filterable {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemEquipmentBinding.inflate(
+            ItemCommonBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -92,38 +90,23 @@ class EquipmentAdapter(
         }
     }
 
-    inner class ViewHolder(private val binding: ItemEquipmentBinding) :
+    inner class ViewHolder(private val binding: ItemCommonBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(equip: EquipmentMaxData) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.context
-                content.visibility = if (isList) View.VISIBLE else View.GONE
-                //加载动画
-                content.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale_alpha)
-                itemPic.animation =
-                    AnimationUtils.loadAnimation(
-                        ctx,
-                        if (isList) R.anim.anim_translate else R.anim.anim_scale
-                    )
+                pic.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //装备名称
                 name.text = equip.equipmentName
-                desc.text = equip.getDesc()
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
-                itemPic.load(picUrl) {
+                pic.load(picUrl) {
                     error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
-                //设置共享元素
-                itemPic.transitionName = "pic_${equip.equipmentId}"
-                name.transitionName = "ename_${equip.equipmentId}"
                 //设置点击跳转
-                itemPic.setOnClickListener {
-                    click(equip)
-                }
-                content.setOnClickListener {
+                root.setOnClickListener {
                     click(equip)
                 }
             }

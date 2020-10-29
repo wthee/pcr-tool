@@ -8,4 +8,4 @@
     android:scrollbars="none"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     app:spanCount="5"
-    tools:listitem="@layout/item_character_icon" />
+    tools:listitem="@layout/item_common" />

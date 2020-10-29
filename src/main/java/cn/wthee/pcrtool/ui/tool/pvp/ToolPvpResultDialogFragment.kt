@@ -60,8 +60,6 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
         //toolbar
         val toolbar = ToolbarUtil(binding.pvpResultToolbar)
         toolbar.title.text = "进攻方信息"
-        toolbar.hideRightIcon()
-        toolbar.setLeftIcon(R.drawable.ic_back)
         toolbar.setRightIcon(R.drawable.ic_detail_share)
         toolbar.setCenterStyle()
         toolbar.leftIcon.setOnClickListener {

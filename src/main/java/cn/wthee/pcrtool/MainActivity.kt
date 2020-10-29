@@ -356,7 +356,7 @@ class MainActivity : AppCompatActivity() {
                         chip.isCheckable = true
                         chip.isClickable = true
                         chips.addView(chip)
-                        if (EquipmentListFragment.equipfilterParams.type == type) {
+                        if (EquipmentListFragment.equipFilterParams.type == type) {
                             chip.isChecked = true
                         }
                     }
@@ -368,7 +368,7 @@ class MainActivity : AppCompatActivity() {
                         //筛选选项
                         //公会筛选
                         val chip = layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
-                        EquipmentListFragment.equipfilterParams.type = chip.text.toString()
+                        EquipmentListFragment.equipFilterParams.type = chip.text.toString()
                         sharedEquipViewModel.getEquips(asc, "")
                     }
                     layout.btns.reset.setOnClickListener {

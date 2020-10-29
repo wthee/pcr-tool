@@ -95,11 +95,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
             //toolbar
             cusToolbar = ToolbarUtil(toolbar)
             cusToolbar.apply {
-                setLeftIcon(R.drawable.ic_back)
-                hideRightIcon()
-                setTitleColor(R.color.colorPrimary)
-                setBackground(R.color.colorWhite)
-                setTitleCenter()
+                setCenterStyle()
                 title.text = equip.equipmentName
                 leftIcon.setOnClickListener {
                     goBack()

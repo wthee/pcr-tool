@@ -9,12 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MainActivity.Companion.spSetting
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
@@ -29,8 +25,7 @@ class EquipmentListFragment : Fragment() {
     companion object {
         lateinit var list: RecyclerView
         lateinit var listAdapter: EquipmentAdapter
-        var isList = true
-        var equipfilterParams = FilterEquipment(true, "全部")
+        var equipFilterParams = FilterEquipment(true, "全部")
         var asc = false
         lateinit var equipTypes: ArrayList<String>
     }
@@ -45,8 +40,7 @@ class EquipmentListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
-        isList = spSetting.getBoolean("equip_is_list", true)
-        init(isList)
+        init()
         //设置监听
         setListener()
         //绑定观察
@@ -64,47 +58,24 @@ class EquipmentListFragment : Fragment() {
         return binding.root
     }
 
-    private fun init(isList: Boolean) {
+    private fun init() {
         binding.apply {
             layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
             list = recycler
-            if (isList) {
-                val linearLayoutManager = LinearLayoutManager(MyApplication.context)
-                linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-                recycler.layoutManager = linearLayoutManager
-            } else {
-                val gridLayoutManager =
-                    GridLayoutManager(MyApplication.context, Constants.COLUMN_COUNT_EQUIP)
-                gridLayoutManager.orientation = GridLayoutManager.VERTICAL
-                recycler.layoutManager = gridLayoutManager
-            }
-            listAdapter = EquipmentAdapter(isList, parentFragmentManager)
+            listAdapter = EquipmentAdapter(parentFragmentManager)
             recycler.adapter = listAdapter
-            recycler.setItemViewCacheSize(100)
         }
     }
 
     private fun setObserve() {
         viewModel.apply {
-            //加载
-            if (!isLoading.hasObservers()) {
-                isLoading.observe(viewLifecycleOwner, Observer {
-//                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
-                })
-            }
-            if (!isList.hasObservers()) {
-                isList.observe(viewLifecycleOwner, Observer {
-                    init(it)
-                    loadData()
-                })
-            }
             //获取信息
             if (!equipments.hasObservers()) {
                 equipments.observe(viewLifecycleOwner, Observer { data ->
                     if (data != null && data.isNotEmpty()) {
                         MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(data) {
-                            listAdapter.filter.filter(equipfilterParams.toJsonString())
+                            listAdapter.filter.filter(equipFilterParams.toJsonString())
                             MainActivity.sp.edit {
                                 putInt(Constants.SP_COUNT_EQUIP, data.size)
                             }
@@ -129,7 +100,7 @@ class EquipmentListFragment : Fragment() {
         binding.apply {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
-                equipfilterParams.initData()
+                equipFilterParams.initData()
                 loadData()
                 layoutRefresh.isRefreshing = false
             }

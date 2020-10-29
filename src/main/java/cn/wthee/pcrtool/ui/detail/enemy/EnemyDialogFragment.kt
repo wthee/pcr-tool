@@ -61,11 +61,7 @@ class EnemyDialogFragment : BottomSheetDialogFragment() {
             //toolbar
             val cusToolbar = ToolbarUtil(toolbar)
             cusToolbar.apply {
-                setLeftIcon(R.drawable.ic_back)
-                hideRightIcon()
-                setTitleColor(R.color.colorPrimary)
-                setBackground(R.color.colorWhite)
-                setTitleCenter()
+                setCenterStyle()
                 title.text = enemy.unit_name
                 leftIcon.setOnClickListener {
                     dialog?.dismiss()
