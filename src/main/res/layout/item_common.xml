@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_character"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/xs_margin"
@@ -15,6 +14,7 @@
         android:maxWidth="@dimen/normal_icon"
         android:maxHeight="@dimen/normal_icon"
         android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/unknow_gray" />
@@ -29,7 +29,7 @@
         android:gravity="center"
         android:layout_marginTop="@dimen/xs_margin"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         tools:text="123" />
 
 </LinearLayout>

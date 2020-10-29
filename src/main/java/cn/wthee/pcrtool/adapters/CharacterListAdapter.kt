@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canBack
 import cn.wthee.pcrtool.MainActivity.Companion.sp
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.database.view.CharacterInfo
 import cn.wthee.pcrtool.database.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
-import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load

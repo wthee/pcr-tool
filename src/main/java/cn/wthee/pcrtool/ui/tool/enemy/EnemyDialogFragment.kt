@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.enemy
+package cn.wthee.pcrtool.ui.tool.enemy
 
 import android.app.Dialog
 import android.os.Bundle

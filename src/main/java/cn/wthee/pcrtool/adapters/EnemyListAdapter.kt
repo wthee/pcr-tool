@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.entity.EnemyData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.detail.enemy.EnemyDialogFragment
+import cn.wthee.pcrtool.ui.tool.enemy.EnemyDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_SHADOW_URL
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP

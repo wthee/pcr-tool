@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.dp
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
@@ -56,18 +57,28 @@ class EquipmentMaterialAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(info: EquipmentMaterial) {
             binding.apply {
-                name.text = "${info.name} x${info.count}"
+                //修改宽度 TODO 图片大小不一致
+                val params = root.layoutParams as RecyclerView.LayoutParams
+                params.width = 52.dp
+                root.layoutParams = params
+                //加载数据
+                name.text = "${info.count}"
                 pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
                     error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
                 //点击查看掉落地区
                 root.setOnClickListener {
-                    EquipmentDetailsFragment.materialClickPosition = adapterPosition
+                    EquipmentDetailsFragment.materialClickPosition = absoluteAdapterPosition
                     notifyDataSetChanged()
                     partentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区
                     MainScope().launch {
+                        //显示当前查看掉落的装备名称
+                        partentBinding.materialName.visibility = View.VISIBLE
+                        partentBinding.materialTip.visibility = View.VISIBLE
+                        partentBinding.materialName.text = "${info.name}"
+                        //掉落列表
                         val data = viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()
                         partentBinding.drops.adapter = adapter

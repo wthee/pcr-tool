@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/containerFragment"
-        android:name="cn.wthee.pcrtool.ui.main.MainPagerFragment"
+        android:name="cn.wthee.pcrtool.MainPagerFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_character_list">
         <action
@@ -90,7 +90,7 @@
         tools:layout="@layout/fragment_tool_enemy" />
     <fragment
         android:id="@+id/toolLevelFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.ToolLevelFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.level.ToolLevelFragment"
         android:label="ToolLevelFragment"
         tools:layout="@layout/fragment_tool_level" />
     <fragment

@@ -74,6 +74,9 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
+    def paging_version = "3.0.0-alpha07"
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
     //Retrofit
     def retrofit_version = '2.9.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

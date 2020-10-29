@@ -23,6 +23,16 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/item_common" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/equip_page"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="4"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/item_common" />
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

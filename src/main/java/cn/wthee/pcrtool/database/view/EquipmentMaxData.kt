@@ -6,6 +6,7 @@ import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
 data class EquipmentMaxData(
+
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,
     @ColumnInfo(name = "type") val type: String,

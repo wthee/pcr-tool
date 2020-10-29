@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.main
+package cn.wthee.pcrtool
 
 import android.os.Bundle
 import android.util.Log
@@ -10,15 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
+import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG

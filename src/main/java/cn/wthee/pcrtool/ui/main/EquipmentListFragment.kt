@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
@@ -84,9 +85,16 @@ class EquipmentListFragment : Fragment() {
                     } else {
                         MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
-
                 })
             }
+//            val pageAdapter = EquipmentPageAdapter(parentFragmentManager)
+//            binding.equipPage.adapter = pageAdapter
+//
+//            lifecycleScope.launch {
+//                @OptIn(ExperimentalCoroutinesApi::class)
+//                viewModel.allEquips.collectLatest { pageAdapter.submitData(it) }
+//            }
+
             //刷新
             if (!refresh.hasObservers()) {
                 refresh.observe(viewLifecycleOwner, Observer {

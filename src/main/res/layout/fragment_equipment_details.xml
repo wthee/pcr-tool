@@ -28,41 +28,27 @@
             android:layout_height="@dimen/hr_height"
             android:background="@color/colorGray" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/material_count"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/m_padding">
-
-            <TextView
-                android:id="@+id/material_count"
-                style="@style/TextAppearance.MaterialComponents.Body2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                tools:text="@string/title_material" />
-
-            <TextView
-                android:id="@+id/tip_scroll_for_more"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:text="@string/tip_scroll_for_more" />
-        </LinearLayout>
-
+            android:textColor="@color/colorPrimary"
+            android:padding="@dimen/s_padding"
+            tools:text="@string/title_material" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/material"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
             android:fadeScrollbars="false"
             android:nestedScrollingEnabled="true"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="5"
-            tools:listitem="@layout/item_equipment_material" />
+            tools:listitem="@layout/item_common" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -75,14 +61,36 @@
             android:visibility="invisible"
             tools:visibility="visible" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/material_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:textColor="@color/red"
+            android:visibility="gone"
+            tools:text="@string/app_name"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/material_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="- 掉落信息 -"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/drops"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
-            android:orientation="vertical"
             android:focusable="true"
+            android:orientation="vertical"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="1"
@@ -96,12 +104,12 @@
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            android:theme="@style/Ripple"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_back"
+            android:theme="@style/Ripple"
             android:visibility="gone" />
 
     </LinearLayout>

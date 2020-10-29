@@ -15,16 +15,12 @@ class EquipmentViewModel(
 
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
-    var isLoading = MutableLiveData<Boolean>()
     var refresh = MutableLiveData<Boolean>()
-    var isList = MutableLiveData<Boolean>()
 
     //获取装备列表
     fun getEquips(asc: Boolean, name: String) {
-        isLoading.postValue(true)
         viewModelScope.launch {
             val data = equipmentRepository.getAllEquipments(name)
-            isLoading.postValue(false)
             refresh.postValue(false)
             if (asc) {
                 data.sortedBy { it.promotionLevel }
@@ -45,4 +41,39 @@ class EquipmentViewModel(
 
     //获取装备类型
     suspend fun getTypes() = equipmentRepository.getEquipTypes()
+
+    //TODO 分页加载
+//    val allEquips = Pager(
+//        PagingConfig(
+//            /**
+//             * A good page size is a value that fills at least a few screens worth of content on a
+//             * large device so the User is unlikely to see a null item.
+//             * You can play with this constant to observe the paging behavior.
+//             *
+//             * It's possible to vary this with list device size, but often unnecessary, unless a
+//             * user scrolling on a large device is expected to scroll through items more quickly
+//             * than a small device, such as when the large device uses a grid layout of items.
+//             */
+//            pageSize = 60,
+//
+//            /**
+//             * If placeholders are enabled, PagedList will report the full size but some items might
+//             * be null in onBind method (PagedListAdapter triggers a rebind when data is loaded).
+//             *
+//             * If placeholders are disabled, onBind will never receive null but as more pages are
+//             * loaded, the scrollbars will jitter as new pages are loaded. You should probably
+//             * disable scrollbars if you disable placeholders.
+//             */
+//            enablePlaceholders = true,
+//
+//            /**
+//             * Maximum number of items a PagedList should hold in memory at once.
+//             *
+//             * This number triggers the PagedList to start dropping distant pages as more are loaded.
+//             */
+//            maxSize = 200
+//        )
+//    ) {
+//        equipmentRepository.getPagingEquipments(name = "")
+//    }.flow
 }

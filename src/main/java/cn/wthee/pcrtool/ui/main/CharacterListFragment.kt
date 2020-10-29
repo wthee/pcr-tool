@@ -19,13 +19,13 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import com.google.android.material.transition.Hold

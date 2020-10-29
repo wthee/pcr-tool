@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
@@ -64,14 +63,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
         init()
         setObserve()
         viewModel.getEquipInfos(equip)
-        binding.material.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
-                    binding.tipScrollForMore.visibility = View.GONE
-                }
-            }
-        })
         return binding.root
     }
 
@@ -131,14 +122,8 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
                 materialAdapter = EquipmentMaterialAdapter(binding, behavior, viewModel)
                 binding.material.adapter = materialAdapter
                 materialAdapter.submitList(it)
-                if (it.size > 3) {
-                    binding.tipScrollForMore.visibility = View.VISIBLE
-                } else {
-                    binding.tipScrollForMore.visibility = View.GONE
-                }
             } else {
                 binding.material.visibility = View.GONE
-                binding.tipScrollForMore.visibility = View.GONE
             }
         })
     }
