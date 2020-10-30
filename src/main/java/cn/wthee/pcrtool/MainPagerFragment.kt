@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
+import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
@@ -24,7 +25,6 @@ import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.Constants.SORT_DATE
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
@@ -111,6 +111,7 @@ class MainPagerFragment : Fragment() {
                 R.id.menu_tool_pvp -> findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
                 R.id.menu_tool_level -> findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
                 R.id.menu_tool_enemy -> findNavController().navigate(R.id.action_containerFragment_to_enemyListFragment)
+                R.id.menu_tool_gacha -> findNavController().navigate(R.id.action_containerFragment_to_toolGachaFragment)
             }
             FabHelper.addBackFab()
             return@setOnMenuItemClickListener true
@@ -149,7 +150,7 @@ class MainPagerFragment : Fragment() {
                     tab.view.setOnLongClickListener {
                         CharacterListFragment.characterfilterParams.initData()
                         CharacterListFragment.characterfilterParams.all = true
-                        sortType = SORT_DATE
+                        sortType = SortType.SORT_DATE
                         sortAsc = false
                         sharedCharacterViewModel.getCharacters(
                             sortType,

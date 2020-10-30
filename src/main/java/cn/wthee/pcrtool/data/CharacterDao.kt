@@ -64,7 +64,7 @@ interface CharacterDao {
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
             unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
-           COALESCE(cts.comments, "") AS comments
+            COALESCE(cts.comments, "") AS comments
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id

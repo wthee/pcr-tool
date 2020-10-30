@@ -152,5 +152,9 @@
     <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_enemy">怪物信息</string>
+    <string name="tool_gacha">卡池记录</string>
+    <string name="pre">✦</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

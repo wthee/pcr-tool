@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.SkillLoopAllAdapter
 import cn.wthee.pcrtool.data.model.SkillLoop
@@ -30,7 +29,7 @@ class CharacterSkillLoopDialogFragment : BottomSheetDialogFragment() {
         val adapter = SkillLoopAllAdapter()
         binding.skillLoopList.adapter = adapter
         //技能动作循环
-        sharedSkillViewModel.acttackPattern.observe(viewLifecycleOwner, Observer {
+        sharedSkillViewModel.acttackPattern.observe(viewLifecycleOwner, {
             val loops = arrayListOf<SkillLoop>()
             if (it.size > 1) {
                 loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))

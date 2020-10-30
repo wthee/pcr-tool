@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.CharacterDao
 import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
+import cn.wthee.pcrtool.data.GachaDao
 import cn.wthee.pcrtool.database.entity.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
 
@@ -39,8 +40,10 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         GuildData::class,
         CharacterExperienceTeam::class,
         CharacterComments::class,
+        GachaData::class,
+        GachaExchange::class
     ],
-    version = 13,
+    version = 14,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -48,6 +51,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getCharacterDao(): CharacterDao
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getEnemyDao(): EnemyDao
+    abstract fun getGachaDao(): GachaDao
 
     companion object {
 

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
@@ -72,7 +71,7 @@ class EquipmentListFragment : Fragment() {
         viewModel.apply {
             //获取信息
             if (!equipments.hasObservers()) {
-                equipments.observe(viewLifecycleOwner, Observer { data ->
+                equipments.observe(viewLifecycleOwner, { data ->
                     if (data != null && data.isNotEmpty()) {
                         MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(data) {
@@ -97,7 +96,7 @@ class EquipmentListFragment : Fragment() {
 
             //刷新
             if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, Observer {
+                refresh.observe(viewLifecycleOwner, {
                     binding.layoutRefresh.isRefreshing = it
                 })
             }

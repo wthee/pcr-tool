@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainPagerFragment
@@ -55,13 +54,13 @@ class EnemyListFragment : Fragment() {
         viewModel.apply {
             //加载
             if (!isLoading.hasObservers()) {
-                isLoading.observe(viewLifecycleOwner, Observer {
+                isLoading.observe(viewLifecycleOwner, {
 //                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
                 })
             }
             //获取信息
             if (!enemies.hasObservers()) {
-                viewModel.enemies.observe(viewLifecycleOwner, Observer {
+                viewModel.enemies.observe(viewLifecycleOwner, {
                     if (it != null && it.isNotEmpty()) {
                         MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(it) {
@@ -83,7 +82,7 @@ class EnemyListFragment : Fragment() {
 
             //刷新
             if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, Observer {
+                refresh.observe(viewLifecycleOwner, {
                     binding.layoutRefresh.isRefreshing = it
                 })
             }

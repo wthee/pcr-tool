@@ -7,11 +7,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.database.view.CharacterInfo
 import cn.wthee.pcrtool.database.view.CharacterInfoPro
-import cn.wthee.pcrtool.utils.Constants.SORT_AGE
-import cn.wthee.pcrtool.utils.Constants.SORT_DATE
-import cn.wthee.pcrtool.utils.Constants.SORT_HEIGHT
-import cn.wthee.pcrtool.utils.Constants.SORT_POSITION
-import cn.wthee.pcrtool.utils.Constants.SORT_WEIGHT
+import cn.wthee.pcrtool.enums.SortType
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
@@ -27,7 +23,7 @@ class CharacterViewModel(
     var reload = MutableLiveData<Boolean>()
 
     //角色基本资料
-    fun getCharacters(sortType: Int, asc: Boolean, name: String) {
+    fun getCharacters(sortType: SortType, asc: Boolean, name: String) {
         isLoading.postValue(true)
         viewModelScope.launch {
             val data = repository.getInfoAndData(name)
@@ -64,34 +60,30 @@ class CharacterViewModel(
     //角色排序
     @SuppressLint("SimpleDateFormat")
     val format = SimpleDateFormat("yyyy/MM/dd")
-    private fun getSort(sortType: Int, asc: Boolean): java.util.Comparator<CharacterInfo> {
+    private fun getSort(sortType: SortType, asc: Boolean): java.util.Comparator<CharacterInfo> {
         return Comparator { o1: CharacterInfo, o2: CharacterInfo ->
             val a: Long
             val b: Long
             when (sortType) {
-                SORT_DATE -> {
-                    a = format.parse(o1.startTime)?.time?:0
-                    b = format.parse(o2.startTime)?.time?:0
+                SortType.SORT_DATE -> {
+                    a = format.parse(o1.startTime)?.time ?: 0
+                    b = format.parse(o2.startTime)?.time ?: 0
                 }
-                SORT_AGE -> {
+                SortType.SORT_AGE -> {
                     a = if (o1.age.contains("?")) 999 else o1.age.toLong()
                     b = if (o2.age.contains("?")) 999 else o2.age.toLong()
                 }
-                SORT_HEIGHT -> {
+                SortType.SORT_HEIGHT -> {
                     a = if (o1.height.contains("?")) 999 else o1.height.toLong()
                     b = if (o2.height.contains("?")) 999 else o2.height.toLong()
                 }
-                SORT_WEIGHT -> {
+                SortType.SORT_WEIGHT -> {
                     a = if (o1.weight.contains("?")) 999 else o1.weight.toLong()
                     b = if (o2.weight.contains("?")) 999 else o2.weight.toLong()
                 }
-                SORT_POSITION -> {
+                SortType.SORT_POSITION -> {
                     a = o1.position.toLong()
                     b = o2.position.toLong()
-                }
-                else -> {
-                    a = o1.id.toLong()
-                    b = o2.id.toLong()
                 }
             }
             (if (asc) -1 else 1) * b.compareTo(a)

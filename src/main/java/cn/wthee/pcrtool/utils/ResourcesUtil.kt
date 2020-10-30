@@ -11,4 +11,5 @@ object ResourcesUtil {
     fun getColor(resId: Int) = ResourcesCompat.getColor(resource, resId, null)
 
     fun getDrawable(resId: Int) = ResourcesCompat.getDrawable(resource, resId, null)
+
 }

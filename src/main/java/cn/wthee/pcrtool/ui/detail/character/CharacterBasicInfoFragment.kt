@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sp
@@ -88,7 +87,7 @@ class CharacterBasicInfoFragment : Fragment() {
         setListener()
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
-        sharedCharacterViewModel.character.observe(viewLifecycleOwner, Observer {
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
             setData(it)
             urls = it.getAllUrl()
         })

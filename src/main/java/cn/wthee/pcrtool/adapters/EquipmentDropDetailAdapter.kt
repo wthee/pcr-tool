@@ -28,14 +28,14 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), eid)
+        holder.bind(getItem(position))
 
     }
 
     inner class ViewHolder(private val binding: ItemEquipmentDropDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("ClickableViewAccessibility")
-        fun bind(equip: EquipmentIdWithOdd, eid: Int) {
+        fun bind(equip: EquipmentIdWithOdd) {
             //设置数据
             binding.apply {
                 //装备名称
