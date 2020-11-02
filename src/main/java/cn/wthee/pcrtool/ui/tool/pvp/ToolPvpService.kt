@@ -120,6 +120,10 @@ class ToolPvpService : Service() {
         setPager()
 
         binding.apply {
+            //查询结果列表
+            adapter = PvpCharacterResultAdapter(activity)
+            resultContent.list.adapter = adapter
+
             resultContent.root.visibility = View.GONE
             resultContent.pvpResultToolbar.root.visibility = View.GONE
             //搜索按钮
@@ -138,8 +142,6 @@ class ToolPvpService : Service() {
                                     pvpNoData.visibility = View.VISIBLE
                                 } else {
                                     pvpNoData.visibility = View.GONE
-                                    adapter = PvpCharacterResultAdapter(activity)
-                                    list.adapter = adapter
                                     adapter.submitList(data.sortedByDescending {
                                         it.up
                                     })
@@ -189,8 +191,10 @@ class ToolPvpService : Service() {
 //            }
             //返回
             back.setOnClickListener {
-                resultContent.root.visibility = View.GONE
-                adapter.submitList(null)
+                if (resultContent.root.visibility == View.VISIBLE) {
+                    resultContent.root.visibility = View.GONE
+                    adapter.submitList(null)
+                }
             }
             //移动
             move.setOnClickListener {

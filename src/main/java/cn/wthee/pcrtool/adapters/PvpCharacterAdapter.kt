@@ -53,8 +53,8 @@ class PvpCharacterAdapter(
 //            itemView.background = ResourcesUtil.getDrawable(R.drawable.title_background)
             itemView.setTextColor(ResourcesUtil.getColor(R.color.red))
         } else {
-            itemView.background = null
-//            itemView.setTextColor(ResourcesUtil.getColor(R.color.text))
+//            itemView.background = null
+            itemView.setTextColor(ResourcesUtil.getColor(R.color.text))
         }
     }
 
@@ -139,7 +139,7 @@ class PvpCharacterAdapter(
                         }
 
                     }
-//                    notifyDataSetChanged()
+                    notifyDataSetChanged()
                 }
             }
         }
