@@ -17,12 +17,9 @@ import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.*
-import cn.wthee.pcrtool.ui.main.CharacterListFragment
+import cn.wthee.pcrtool.ui.main.*
 import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.guilds
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
-import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
@@ -42,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
         lateinit var spSetting: SharedPreferences
-        var sortType = Constants.SORT_TYPE
+        var sortType = SortType.SORT_DATE
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var isHome = true
@@ -288,11 +285,11 @@ class MainActivity : AppCompatActivity() {
 
                     //排序类型
                     when (sortType) {
-                        0 -> layout.sortChip0.isChecked = true
-                        1 -> layout.sortChip1.isChecked = true
-                        2 -> layout.sortChip2.isChecked = true
-                        3 -> layout.sortChip3.isChecked = true
-                        4 -> layout.sortChip4.isChecked = true
+                        SortType.SORT_DATE -> layout.sortChip0.isChecked = true
+                        SortType.SORT_AGE -> layout.sortChip1.isChecked = true
+                        SortType.SORT_HEIGHT -> layout.sortChip2.isChecked = true
+                        SortType.SORT_POSITION -> layout.sortChip3.isChecked = true
+                        SortType.SORT_WEIGHT -> layout.sortChip4.isChecked = true
                     }
                     //排序规则
                     if (sortAsc) layout.asc.isChecked = true else layout.desc.isChecked = true
@@ -311,12 +308,12 @@ class MainActivity : AppCompatActivity() {
                         dialog.dismiss()
                         //排序选项
                         sortType = when (layout.sortTypeChips.checkedChipId) {
-                            R.id.sort_chip_0 -> 0
-                            R.id.sort_chip_1 -> 1
-                            R.id.sort_chip_2 -> 2
-                            R.id.sort_chip_3 -> 3
-                            R.id.sort_chip_4 -> 4
-                            else -> 0
+                            R.id.sort_chip_0 -> SortType.SORT_DATE
+                            R.id.sort_chip_1 -> SortType.SORT_AGE
+                            R.id.sort_chip_2 -> SortType.SORT_HEIGHT
+                            R.id.sort_chip_3 -> SortType.SORT_WEIGHT
+                            R.id.sort_chip_4 -> SortType.SORT_POSITION
+                            else -> SortType.SORT_DATE
                         }
                         sortAsc = layout.ascChips.checkedChipId == R.id.asc
                         //位置

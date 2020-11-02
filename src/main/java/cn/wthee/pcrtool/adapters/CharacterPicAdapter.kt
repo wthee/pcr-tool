@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterPicDialogFragment
 import coil.load
 
 
-class CharacterPicAdapter() :
+class CharacterPicAdapter :
     ListAdapter<String, CharacterPicAdapter.ViewHolder>(ImageDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

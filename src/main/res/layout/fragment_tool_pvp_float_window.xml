@@ -35,6 +35,17 @@
             app:fabSize="mini"
             app:tint="@color/colorPrimary" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="@string/search"
+            android:src="@drawable/ic_cancel"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:tint="@color/colorPrimary" />
+
 
     </LinearLayout>
 
@@ -58,7 +69,7 @@
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="5"
                 tools:itemCount="5"
-                tools:listitem="@layout/item_character_icon" />
+                tools:listitem="@layout/item_common" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -101,22 +112,11 @@
 
                 </LinearLayout>
 
-                <FrameLayout
-                    android:id="@+id/layout_result"
+                <include
+                    android:id="@+id/result_content"
+                    layout="@layout/fragment_tool_pvp_result"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorWhite"
-                    android:visibility="gone"
-                    android:focusable="true"
-                    android:clickable="true"
-                    tools:visibility="visible">
-
-                    <include
-                        android:id="@+id/result_content"
-                        layout="@layout/fragment_tool_pvp_result"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </FrameLayout>
+                    android:layout_height="match_parent" />
 
             </FrameLayout>
 

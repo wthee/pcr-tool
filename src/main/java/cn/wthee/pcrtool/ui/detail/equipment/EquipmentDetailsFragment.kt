@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
@@ -115,7 +114,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     }
 
     private fun setObserve() {
-        viewModel.equipMaterialInfos.observe(viewLifecycleOwner, Observer {
+        viewModel.equipMaterialInfos.observe(viewLifecycleOwner, {
             //合成素材
             if (it.isNotEmpty()) {
                 binding.materialCount.text = getString(R.string.title_material, it.size)

@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import coil.Coil
 import coil.request.ImageRequest
+import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,7 @@ class PvpCharacterAdapter(
     private val activity: Activity
 ) :
     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -39,7 +41,20 @@ class PvpCharacterAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!)
+        val item = getItem(position)
+        holder.bind(item)
+        val itemView = holder.itemView.findViewById<MaterialTextView>(R.id.name)
+        val isSelected =
+            ToolPvpFragment.selects.contains(PvpCharacterData(item.unitId, item.position))
+                    && item.unitId != 0
+        //选中变更
+        if (isSelected) {
+//            itemView.background = ResourcesUtil.getDrawable(R.drawable.title_background)
+            itemView.setTextColor(ResourcesUtil.getColor(R.color.red))
+        } else {
+            itemView.background = null
+//            itemView.setTextColor(ResourcesUtil.getColor(R.color.text))
+        }
     }
 
     inner class ViewHolder(private val binding: ItemCommonBinding) :
@@ -119,6 +134,8 @@ class PvpCharacterAdapter(
                         }
 
                     }
+                    notifyDataSetChanged()
+
                 }
             }
         }
@@ -131,7 +148,7 @@ class PvpDiffCallback : DiffUtil.ItemCallback<PvpCharacterData>() {
         oldItem: PvpCharacterData,
         newItem: PvpCharacterData
     ): Boolean {
-        return oldItem.unitId == newItem.unitId
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 object Constants {
+
     //图片格式
     const val WEBP = ".webp"
 
@@ -62,7 +63,6 @@ object Constants {
     const val BTN_NOT_UPDATE_DB = "数据正常，无需更新"
 
     //默认值
-    const val SORT_TYPE = 0
     const val SORT_ASC = false
     const val UNKNOW_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在下载数据..."
@@ -76,17 +76,6 @@ object Constants {
     const val NOTICE_TOAST_CHECKING = "正在获取数据版本信息"
     const val NOTICE_TOAST_LASTEST = "数据已是最新版本"
 
-
-    //列表列数
-    const val COLUMN_COUNT = 1
-    const val COLUMN_COUNT_EQUIP = 4
-
-    //排序
-    const val SORT_DATE = 0
-    const val SORT_AGE = 1
-    const val SORT_HEIGHT = 2
-    const val SORT_WEIGHT = 3
-    const val SORT_POSITION = 4
 
     val ATTR = arrayListOf(
         "HP",

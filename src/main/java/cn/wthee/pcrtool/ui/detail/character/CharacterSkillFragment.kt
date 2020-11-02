@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import cn.wthee.pcrtool.adapters.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -15,10 +14,11 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 class CharacterSkillFragment : Fragment() {
 
     companion object {
-        fun getInstance(id: Int): CharacterSkillFragment {
+        fun getInstance(id: Int, isDialog: Boolean = false): CharacterSkillFragment {
             val fragment = CharacterSkillFragment()
             val bundle = Bundle()
             bundle.putInt("id", id)
+            bundle.putBoolean("isDialog", isDialog)
             fragment.arguments = bundle
             return fragment
         }
@@ -27,6 +27,7 @@ class CharacterSkillFragment : Fragment() {
     private lateinit var binding: FragmentCharacterSkillBinding
     private lateinit var adapter: SkillAdapter
     private var unitId = 0
+    private var isDialog = false
 
     private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
         InjectorUtil.provideCharacterSkillViewModelFactory()
@@ -36,6 +37,7 @@ class CharacterSkillFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requireArguments().let {
             unitId = it.getInt("id")
+            isDialog = it.getBoolean("isDialog")
         }
     }
 
@@ -55,8 +57,11 @@ class CharacterSkillFragment : Fragment() {
                 CharacterSkillLoopDialogFragment().show(parentFragmentManager, "loop")
             }
         }
-
-        sharedSkillViewModel.skills.observe(viewLifecycleOwner, Observer {
+        //以悬浮窗显示时
+        if (isDialog) {
+            sharedSkillViewModel.getCharacterSkills(unitId)
+        }
+        sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
         return binding.root

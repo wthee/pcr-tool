@@ -26,7 +26,9 @@ class ToolPvpCharacterIconFragment(
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
             val adapter = PvpCharacterAdapter(isFloatWindow, requireActivity())
+            adapter.setHasStableIds(true)
             binding.icons.adapter = adapter
+
             adapter.submitList(
                 when (position) {
                     1 -> ToolPvpFragment.character1

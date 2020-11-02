@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -164,7 +163,7 @@ class CharacterListFragment : Fragment() {
         viewModel.apply {
             //角色
             if (!characters.hasObservers()) {
-                characters.observe(viewLifecycleOwner, Observer { data ->
+                characters.observe(viewLifecycleOwner, { data ->
                     if (data != null && data.isNotEmpty()) {
                         MainPagerFragment.tipText.visibility = View.GONE
                         listAdapter.submitList(data) {
@@ -184,19 +183,19 @@ class CharacterListFragment : Fragment() {
             }
             //刷新
             if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, Observer {
+                refresh.observe(viewLifecycleOwner, {
                     binding.layoutRefresh.isRefreshing = it
                 })
             }
             //加载
             if (!isLoading.hasObservers()) {
-                isLoading.observe(viewLifecycleOwner, Observer {
+                isLoading.observe(viewLifecycleOwner, {
                     binding.progress.visibility = if (it) View.VISIBLE else View.GONE
                 })
             }
             //重新加载
             if (!reload.hasObservers()) {
-                reload.observe(viewLifecycleOwner, Observer {
+                reload.observe(viewLifecycleOwner, {
                     try {
                         findNavController().popBackStack(R.id.containerFragment, true)
                         findNavController().navigate(R.id.containerFragment)

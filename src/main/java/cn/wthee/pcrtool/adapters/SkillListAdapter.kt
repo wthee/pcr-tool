@@ -49,9 +49,11 @@ class SkillAdapter :
                 desc.text = skill.desc
                 type.text = when (skill.skillId % 1000) {
                     1 -> "连结爆发"
+                    11 -> "连结爆发+"
                     2 -> "技能1"
                     12 -> "技能1+"
                     3 -> "技能2"
+                    13 -> "技能2+"
                     501 -> "EX技能"
                     511 -> "EX技能+"
                     101 -> "SP技能1"

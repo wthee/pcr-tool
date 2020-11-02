@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.OnPostListener
 import cn.wthee.pcrtool.data.PvpDataRepository
-import cn.wthee.pcrtool.data.model.PVPData
+import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.database.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
@@ -30,7 +30,6 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
-import retrofit2.Response
 
 
 class ToolPvpService : Service() {
@@ -76,6 +75,7 @@ class ToolPvpService : Service() {
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
             height = mHeight
+            y = 20.dp
         }
         //加载布局
 
@@ -121,43 +121,35 @@ class ToolPvpService : Service() {
 
 
         binding.apply {
-            layoutResult.visibility = View.GONE
-            adapter = PvpCharacterResultAdapter(activity)
-            resultContent.list.adapter = adapter
+            resultContent.root.visibility = View.GONE
             //搜索按钮
             search.setOnClickListener {
                 if (selects.contains(PvpCharacterData(0, 999))) {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
-                    binding.resultContent.pvpResultLoading.visibility = View.VISIBLE
-                    binding.layoutResult.visibility = View.VISIBLE
+                    resultContent.pvpResultLoading.visibility = View.VISIBLE
+                    resultContent.root.visibility = View.VISIBLE
                     PvpDataRepository.getData(object : OnPostListener {
-                        override fun success(data: Response<PVPData>) {
-                            try {
-                                val responseBody = data.body()
-                                if (responseBody == null || responseBody.code != 0) {
-                                    ToastUtil.short("查询异常，请稍后重试~")
+                        override fun success(data: List<Result>) {
+                            //展示查询结果
+                            binding.resultContent.apply {
+                                if (data.isEmpty()) {
+                                    pvpNoData.visibility = View.VISIBLE
                                 } else {
-                                    //展示查询结果
-                                    binding.resultContent.apply {
-                                        if (responseBody.data.result.isEmpty()) {
-                                            pvpNoData.visibility = View.VISIBLE
-                                        } else {
-                                            pvpNoData.visibility = View.GONE
-                                            adapter.submitList(responseBody.data.result)
-                                        }
-                                    }
-
+                                    pvpNoData.visibility = View.GONE
+                                    adapter = PvpCharacterResultAdapter(activity)
+                                    list.adapter = adapter
+                                    adapter.submitList(data.sortedByDescending {
+                                        it.up
+                                    })
                                 }
-                            } catch (e: Exception) {
-                                ToastUtil.short("数据解析失败~")
                             }
                             binding.resultContent.pvpResultLoading.visibility = View.GONE
                         }
 
                         override fun error() {
-                            binding.layoutResult.visibility = View.GONE
+                            resultContent.root.visibility = View.GONE
                             ToastUtil.short("查询失败，请检查网络~")
                         }
                     })
@@ -170,7 +162,7 @@ class ToolPvpService : Service() {
             toolbar.setLeftIcon(R.drawable.ic_back)
             toolbar.setFloatTitle()
             toolbar.leftIcon.setOnClickListener {
-                layoutResult.visibility = View.GONE
+                resultContent.root.visibility = View.GONE
                 adapter.submitList(null)
             }
             //移动按钮//拖动效果，暂时不做
@@ -206,6 +198,10 @@ class ToolPvpService : Service() {
 //            }
             move.setOnClickListener {
                 minWindow()
+            }
+            //关闭
+            close.setOnClickListener {
+                onDestroy()
             }
         }
     }
@@ -257,6 +253,5 @@ class ToolPvpService : Service() {
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()
-
     }
 }

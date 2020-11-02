@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/tool_enemy"
+        android:id="@+id/tool_gacha"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -19,44 +19,30 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/level_icon"
-            android:padding="@dimen/s_padding"
             android:layout_width="@dimen/xl_icon"
             android:layout_height="@dimen/xl_icon"
-            android:tint="@color/colorWhite"
-            android:src="@drawable/ic_enemy" />
+            android:padding="@dimen/s_padding"
+            android:src="@drawable/ic_character"
+            android:tint="@color/colorWhite" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/m_margin"
-            android:text="@string/tool_enemy"
+            android:text="@string/tool_gacha"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="@color/colorWhite" />
 
     </LinearLayout>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gacha_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/m_margin"
-        app:cardCornerRadius="@dimen/card_radius">
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/layout_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="4"
-                tools:listitem="@layout/item_common" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+        android:background="@color/colorAlpha"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_gacha" />
 
 </LinearLayout>

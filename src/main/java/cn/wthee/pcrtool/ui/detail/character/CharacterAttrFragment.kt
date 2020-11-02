@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
@@ -109,7 +108,7 @@ class CharacterAttrFragment : Fragment() {
 
     private fun setObserve() {
         //获取角色最大Rank后，加载数据
-        sharedCharacterAttrViewModel.maxData.observe(viewLifecycleOwner, Observer { r ->
+        sharedCharacterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
             selRank = r[0]
             selRatity = r[1]
             maxStar = r[1]
@@ -158,7 +157,7 @@ class CharacterAttrFragment : Fragment() {
         )
         //专武
         sharedEquipViewModel.getUniqueEquipInfos(uid)
-        sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner, Observer {
+        sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner, {
             binding.uniqueEquip.apply {
                 if (it != null) {
                     binding.uniqueEquip.root.visibility = View.VISIBLE
@@ -180,7 +179,7 @@ class CharacterAttrFragment : Fragment() {
 
             }
         })
-        sharedCharacterAttrViewModel.equipments.observe(viewLifecycleOwner, Observer {
+        sharedCharacterAttrViewModel.equipments.observe(viewLifecycleOwner, {
             it.forEachIndexed { index, equip ->
                 equipPics[index].apply {
                     //加载装备图片
@@ -192,17 +191,18 @@ class CharacterAttrFragment : Fragment() {
                     //点击跳转
                     setOnClickListener {
                         if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
-                            EquipmentDetailsFragment.getInstance(equip).show(parentFragmentManager, "details")
+                            EquipmentDetailsFragment.getInstance(equip)
+                                .show(parentFragmentManager, "details")
                         }
                     }
                 }
             }
         })
         //角色属性
-        sharedCharacterAttrViewModel.sumInfo.observe(viewLifecycleOwner, Observer {
+        sharedCharacterAttrViewModel.sumInfo.observe(viewLifecycleOwner, {
             attrAdapter = CharacterAttrAdapter()
             binding.charcterAttrs.adapter = attrAdapter
-            attrAdapter.submitList(it.all()){
+            attrAdapter.submitList(it.all()) {
                 attrAdapter.notifyDataSetChanged()
             }
         })

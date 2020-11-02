@@ -110,7 +110,7 @@ object DatabaseUpdateHelper {
                 if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_LASTEST)
                 //更新数据库版本号
                 try {
-                    MainSettingsFragment.forceUpdateDb.summary = ver
+                    MainSettingsFragment.checkUpdateDb.summary = ver
                 } catch (e: Exception) {
                 } finally {
                     MainActivity.sp.edit {

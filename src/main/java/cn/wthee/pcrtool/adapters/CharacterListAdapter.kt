@@ -46,14 +46,13 @@ class CharacterAdapter(private val fragment: Fragment) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), fragment)
+        holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemCharacterBinding) :
+    inner class ViewHolder(private val binding: ItemCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            character: CharacterInfo,
-            fragment: Fragment
+            character: CharacterInfo
         ) {
             //是否收藏
             val isLoved = sp.getBoolean(character.id.toString(), false)

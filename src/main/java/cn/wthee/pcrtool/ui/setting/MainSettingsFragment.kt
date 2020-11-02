@@ -8,14 +8,15 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
-import cn.wthee.pcrtool.utils.*
-import coil.Coil
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 class MainSettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
-        lateinit var forceUpdateDb: Preference
+        lateinit var checkUpdateDb: Preference
     }
 
     private val viewModel by activityViewModels<EquipmentViewModel> {
@@ -39,24 +40,28 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //添加返回fab
         FabHelper.addBackFab()
         //获取控件
-        forceUpdateDb = findPreference<Preference>("force_update_db")!!
+        checkUpdateDb = findPreference<Preference>("check_update_db")!!
+        val forceUpdateDb = findPreference<Preference>("force_update_db")
         val appUpdate = findPreference<Preference>("force_update_app")
         val cleanData = findPreference<Preference>("clean_data")
         val changeDbType = findPreference<ListPreference>("change_database")
         changeDbType?.title =
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         //摘要替换
-        forceUpdateDb.summary = MainActivity.sp.getString(
+        checkUpdateDb.summary = MainActivity.sp.getString(
             if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             "0"
         )
         appUpdate?.summary = MainActivity.nowVersionName
-        cleanData?.title =
-            cleanData?.title.toString() + "  " + CacheUtil.getTotalCacheSize(requireContext())
         //设置监听
-        //强制更新数据库
-        forceUpdateDb.setOnPreferenceClickListener {
+        //检查更新数据库
+        checkUpdateDb.setOnPreferenceClickListener {
             DatabaseUpdateHelper.checkDBVersion(0)
+            return@setOnPreferenceClickListener true
+        }
+        //强制更新数据库
+        forceUpdateDb?.setOnPreferenceClickListener {
+            DatabaseUpdateHelper.checkDBVersion(0, force = true)
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本
@@ -70,17 +75,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                 DatabaseUpdateHelper.checkDBVersion(1)
             }
             return@setOnPreferenceChangeListener true
-        }
-        //清除图片缓存
-        cleanData?.setOnPreferenceClickListener {
-            CacheUtil.clearAllCache(requireContext())
-            cleanData.title =
-                cleanData.title.toString().split(" ")[0] + "  " + CacheUtil.getTotalCacheSize(
-                    requireContext()
-                )
-            Coil.imageLoader(MyApplication.context).memoryCache.clear()
-            ToastUtil.short("图片缓存已清理")
-            return@setOnPreferenceClickListener true
         }
         //egg
         val eggs = findPreference<PreferenceCategory>("egg")

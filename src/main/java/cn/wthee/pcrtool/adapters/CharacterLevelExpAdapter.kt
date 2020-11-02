@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.database.view.CharacterExperienceAll
 import cn.wthee.pcrtool.databinding.ItemLevelExpBinding
 
 
-class CharacterLevelExpAdapter() :
+class CharacterLevelExpAdapter :
     ListAdapter<CharacterExperienceAll, CharacterLevelExpAdapter.ViewHolder>(LevelDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

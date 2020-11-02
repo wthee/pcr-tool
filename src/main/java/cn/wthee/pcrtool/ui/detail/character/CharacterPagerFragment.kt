@@ -59,11 +59,7 @@ class CharacterPagerFragment : Fragment() {
         var noData = false
 
         MainScope().launch {
-            try {
-                sharedCharacterAttrViewModel.isUnknow(uid)
-            } catch (e: Exception) {
-                noData = true
-            }
+            noData = sharedCharacterAttrViewModel.isUnknow(uid)
             viewPager = binding.root
             viewPager.adapter =
                 CharacterPagerAdapter(

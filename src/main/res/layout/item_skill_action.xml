@@ -13,7 +13,7 @@
         android:layout_marginTop="@dimen/s_margin"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        android:text="✦"
+        android:text="@string/pre"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold" />

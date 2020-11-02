@@ -47,7 +47,14 @@
             app:enterAnim="@anim/fragment_enter_tool"
             app:exitAnim="@anim/fragment_exit_tool"
             app:popEnterAnim="@anim/fragment_popenter_tool"
-            app:popExitAnim="@anim/fragment_popexit_tool"/>
+            app:popExitAnim="@anim/fragment_popexit_tool" />
+        <action
+            android:id="@+id/action_containerFragment_to_toolGachaFragment"
+            app:destination="@id/toolGachaFragment"
+            app:enterAnim="@anim/fragment_enter_tool"
+            app:exitAnim="@anim/fragment_exit_tool"
+            app:popEnterAnim="@anim/fragment_popenter_tool"
+            app:popExitAnim="@anim/fragment_popexit_tool" />
 
     </fragment>
 
@@ -98,5 +105,9 @@
         android:name="cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment"
         android:label="ToolPvpFragment"
         tools:layout="@layout/fragment_tool_pvp" />
+    <fragment
+        android:id="@+id/toolGachaFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.gacha.GachaFragment"
+        android:label="ToolGachaFragment" />
 
 </navigation>
