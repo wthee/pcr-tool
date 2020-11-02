@@ -113,7 +113,7 @@ class EquipmentAdapter(
         }
 
         private fun click(equip: EquipmentMaxData) {
-            MainActivity.currentEquipPosition = adapterPosition
+            MainActivity.currentEquipPosition = absoluteAdapterPosition
             EquipmentDetailsFragment.getInstance(equip).show(fragmentManager, "details")
         }
     }

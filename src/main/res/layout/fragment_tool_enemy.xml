@@ -8,32 +8,9 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <include
         android:id="@+id/tool_enemy"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:gravity="start|center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/s_padding">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/level_icon"
-            android:padding="@dimen/s_padding"
-            android:layout_width="@dimen/xl_icon"
-            android:layout_height="@dimen/xl_icon"
-            android:tint="@color/colorWhite"
-            android:src="@drawable/ic_enemy" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/m_margin"
-            android:text="@string/tool_enemy"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textColor="@color/colorWhite" />
-
-    </LinearLayout>
+        layout="@layout/view_tool_head" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -45,7 +22,8 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/layout_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/m_padding">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler"

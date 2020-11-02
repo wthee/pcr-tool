@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.database.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.adapters.UnitData
 
 data class GachaInfo(
     @ColumnInfo(name = "gacha_id") val gacha_id: Int,
@@ -12,25 +12,16 @@ data class GachaInfo(
     @ColumnInfo(name = "unit_ids") val unitIds: String,
     @ColumnInfo(name = "unit_names") val unitNames: String,
 ) {
-    fun getIds(): List<Int> {
-        val ids = mutableListOf<Int>()
-        val idStrs = unitIds.split("-")
-        idStrs.forEach {
-            ids.add(it.toInt())
-        }
-        return ids
-    }
 
-    fun getAllUrls(): List<String> {
-        val urls = mutableListOf<String>()
+    fun getUnits(): ArrayList<UnitData> {
+        val units = arrayListOf<UnitData>()
+        val names = unitNames.split("-")
         val ids = unitIds.split("-")
-        ids.forEach {
-            urls.add(Constants.UNIT_ICON_URL + (it.toInt() + 30) + Constants.WEBP)
+        ids.forEachIndexed { index, id ->
+            units.add(UnitData(id.toInt(), names[index]))
         }
-        return urls
+        return units
     }
-
-    fun getNames() = unitNames.split("-")
 
     fun getDesc() = "- " + description.replace("\\n", "\n- ")
 }

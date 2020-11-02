@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
         android:paddingTop="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
         android:paddingBottom="@dimen/m_padding">
 
         <com.google.android.material.textview.MaterialTextView
@@ -29,59 +29,19 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/app_name" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/gacha_pic0"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/normal_icon"
-            android:scaleType="centerCrop"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gacha_icons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/m_margin"
-            app:layout_constraintEnd_toStartOf="@id/gacha_pic1"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gacha_name"
-            tools:src="@drawable/unknow_gray" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/gacha_pic1"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/normal_icon"
-            android:layout_marginTop="@dimen/m_margin"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/gacha_pic0"
-            app:layout_constraintTop_toBottomOf="@id/gacha_name"
-            tools:src="@drawable/unknow_gray"
-            tools:visibility="visible" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gacha_title0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            android:textColor="@color/colorPrimary"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@+id/gacha_title1"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gacha_pic0"
-            tools:text="@string/app_name" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gacha_title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            android:textColor="@color/colorPrimary"
-            android:visibility="gone"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/gacha_title0"
-            app:layout_constraintTop_toBottomOf="@id/gacha_pic1"
-            tools:text="@string/app_name"
-            tools:visibility="visible" />
+            app:spanCount="2"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_common" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/gacha_date"
@@ -91,7 +51,7 @@
             android:layout_marginTop="@dimen/s_margin"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gacha_title0"
+            app:layout_constraintTop_toBottomOf="@id/gacha_icons"
             tools:text="@string/app_name" />
 
         <com.google.android.material.textview.MaterialTextView

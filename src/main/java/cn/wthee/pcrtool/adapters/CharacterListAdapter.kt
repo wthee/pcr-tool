@@ -94,7 +94,7 @@ class CharacterAdapter(private val fragment: Fragment) :
                     if (!MainPagerFragment.cListClick) {
                         MainPagerFragment.cListClick = true
                         canBack = false
-                        MainActivity.currentCharaPosition = adapterPosition
+                        MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
                         bundle.putInt("uid", character.id)
                         val extras =
@@ -117,7 +117,9 @@ class CharacterAdapter(private val fragment: Fragment) :
                             !isLoved
                         )
                     }
-                    CharacterListFragment.characterList.adapter?.notifyItemChanged(adapterPosition)
+                    CharacterListFragment.characterList.adapter?.notifyItemChanged(
+                        absoluteAdapterPosition
+                    )
                     return@setOnLongClickListener true
                 }
             }

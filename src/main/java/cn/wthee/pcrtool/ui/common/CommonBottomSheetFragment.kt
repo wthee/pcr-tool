@@ -27,6 +27,7 @@ class CommonBottomSheetFragment(private val uid: Int, private val page: PageType
                     .replace(R.id.container, CharacterSkillFragment.getInstance(uid, true))
                     .commit()
             }
+            else -> null
         }
 
         return binding.root

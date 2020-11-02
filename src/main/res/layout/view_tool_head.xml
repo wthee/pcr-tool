@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_height"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:gravity="start|center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/s_padding"
+    tools:background="@color/colorPrimary">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/tool_icon"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
+        android:tint="@color/colorWhite"
+        tools:src="@mipmap/ic_logo" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tool_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textColor="@color/colorWhite"
+        tools:text="@string/app_name" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/right_icon"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:visibility="gone"
+        tools:src="@mipmap/ic_logo" />
+</LinearLayout>

@@ -33,6 +33,8 @@
                     android:layout_height="@dimen/toolbar_height"
                     app:title="@string/app_name"
                     app:titleTextColor="@color/colorWhite"
+                    app:navigationIcon="@mipmap/ic_logo"
+                    android:background="@color/colorPrimary"
                     app:contentInsetLeft="0dp"
                     app:contentInsetStartWithNavigation="0dp"
                     app:menu="@menu/menu_main" />

@@ -81,7 +81,7 @@ class EnemyListAdapter(
                 val ctx = MyApplication.context
                 //加载动画
                 root.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale_alpha)
+                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //名称
                 name.text = enemyData.unit_name
                 //加载图片
@@ -96,7 +96,7 @@ class EnemyListAdapter(
                 }
                 //设置点击跳转
                 root.setOnClickListener {
-                    MainActivity.currentEquipPosition = adapterPosition
+                    MainActivity.currentEquipPosition = absoluteAdapterPosition
                     EnemyDialogFragment.getInstance(enemyData).show(fragmentManager, "enemy")
                 }
             }

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.setting
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
@@ -43,7 +44,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         checkUpdateDb = findPreference<Preference>("check_update_db")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
         val appUpdate = findPreference<Preference>("force_update_app")
-        val cleanData = findPreference<Preference>("clean_data")
+        val shareApp = findPreference<Preference>("share_app")
         val changeDbType = findPreference<ListPreference>("change_database")
         changeDbType?.title =
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
@@ -105,6 +106,26 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                 )
             }
 
+            return@setOnPreferenceClickListener true
+        }
+
+        //分享应用
+        shareApp?.setOnPreferenceClickListener {
+            var shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                "PCR Tool 下载地址: https://www.coolapk.com/apk/273453"
+            )
+            shareIntent = Intent.createChooser(shareIntent, "分享到：")
+            //将mipmap中图片转换成Uri
+//            val imgUri = FileUtil.getUriFromDrawableRes(MyApplication.context, R.drawable.app_code)
+//            shareIntent.action = Intent.ACTION_SEND
+//            shareIntent.putExtra(Intent.EXTRA_STREAM, imgUri)
+//            shareIntent.type = "image/*"
+//            shareIntent = Intent.createChooser(shareIntent, "分享下载二维码")
+            startActivity(shareIntent)
             return@setOnPreferenceClickListener true
         }
     }

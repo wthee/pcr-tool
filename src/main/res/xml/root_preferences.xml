@@ -53,21 +53,6 @@
             app:summaryOn="@string/on_auto_app"
             app:title="@string/auto_update_app" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
-        app:title="@string/other">
-
-        <Preference
-            app:iconSpaceReserved="false"
-            app:summary="wthee"
-            app:title="@string/coolapk">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="http://www.coolapk.com/u/1975843" />
-        </Preference>
-
         <Preference
             app:iconSpaceReserved="false"
             app:summary="https://github.com/wthee/pcr-tool"
@@ -76,6 +61,13 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/wthee/pcr-tool" />
         </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="share_app"
+            app:summary="@string/share_app_sm"
+            app:title="@string/share_app" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -110,7 +102,7 @@
             app:icon="@drawable/ic_hide"
             app:key="kl"
             app:summary="@string/egg_summary"
-            app:title="@string/egg_text"></Preference>
+            app:title="@string/egg_text" />
 
     </PreferenceCategory>
 </PreferenceScreen>

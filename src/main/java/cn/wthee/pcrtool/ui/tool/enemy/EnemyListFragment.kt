@@ -13,8 +13,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EnemyListAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEnemyBinding
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 
 
 class EnemyListFragment : Fragment() {
@@ -46,6 +46,11 @@ class EnemyListFragment : Fragment() {
             layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
             listAdapter = EnemyListAdapter(parentFragmentManager)
             list.adapter = listAdapter
+            //设置头部
+            toolEnemy.apply {
+                toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_enemy))
+                toolTitle.text = getString(R.string.tool_enemy)
+            }
         }
         viewModel.getAllEnemy()
     }
@@ -94,10 +99,6 @@ class EnemyListFragment : Fragment() {
             //下拉刷新
             layoutRefresh.setOnRefreshListener {
                 viewModel.getAllEnemy()
-            }
-
-            toolEnemy.setOnClickListener {
-                FabHelper.goBack(requireActivity())
             }
         }
     }

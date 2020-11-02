@@ -56,19 +56,19 @@ class EquipmentMaterialAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(info: EquipmentMaterial) {
             binding.apply {
-                //修改宽度 TODO 图片大小不一致
+                //修改宽度
                 val params = root.layoutParams as RecyclerView.LayoutParams
                 params.width = RecyclerView.LayoutParams.WRAP_CONTENT
                 root.layoutParams = params
                 //加载数据
-                name.text = " ${info.name} X${info.count} "
+                name.text = " ${info.name.substring(0, 7)}... X${info.count} "
                 pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
                     error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
                 }
                 //点击查看掉落地区
                 root.setOnClickListener {
-                    EquipmentDetailsFragment.materialClickPosition = adapterPosition
+                    EquipmentDetailsFragment.materialClickPosition = absoluteAdapterPosition
                     notifyDataSetChanged()
                     partentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区

@@ -60,6 +60,14 @@ class CharacterSkillFragment : Fragment() {
         //以悬浮窗显示时
         if (isDialog) {
             sharedSkillViewModel.getCharacterSkills(unitId)
+            //修改fab位置
+            binding.apply {
+                fabSkillLoop.visibility = View.GONE
+                layoutLoopTitle.visibility = View.VISIBLE
+                openLoopListBtn.setOnClickListener {
+                    fabSkillLoop.callOnClick()
+                }
+            }
         }
         sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
             adapter.submitList(it)

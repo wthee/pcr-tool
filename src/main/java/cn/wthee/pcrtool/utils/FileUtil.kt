@@ -1,5 +1,9 @@
 package cn.wthee.pcrtool.utils
 
+import android.content.ContentResolver
+import android.content.Context
+import android.content.res.Resources
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import cn.wthee.pcrtool.MyApplication
@@ -7,6 +11,7 @@ import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+
 
 object FileUtil {
 
@@ -61,5 +66,20 @@ object FileUtil {
         out.flush()
         out.close()
         input.close()
+    }
+
+    /**
+     * 得到资源文件中图片的Uri
+     * @param context 上下文对象
+     * @param id 资源id
+     * @return Uri
+     */
+    fun getUriFromDrawableRes(context: Context, id: Int): Uri? {
+        val resources: Resources = context.resources
+        val path = (ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                + resources.getResourcePackageName(id) + "/"
+                + resources.getResourceTypeName(id) + "/"
+                + resources.getResourceEntryName(id))
+        return Uri.parse(path)
     }
 }

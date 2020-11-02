@@ -56,10 +56,8 @@ class CharacterPagerFragment : Fragment() {
 
     private fun init() {
         //加载列表
-        var noData = false
-
         MainScope().launch {
-            noData = sharedCharacterAttrViewModel.isUnknow(uid)
+            var noData = sharedCharacterAttrViewModel.isUnknow(uid)
             viewPager = binding.root
             viewPager.adapter =
                 CharacterPagerAdapter(

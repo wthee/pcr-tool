@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -64,6 +65,10 @@ class PvpCharacterAdapter(
             binding.apply {
                 if (isFloatWindow) {
                     name.visibility = View.GONE
+                    val params = pic.layoutParams as LinearLayout.LayoutParams
+                    params.width = RecyclerView.LayoutParams.WRAP_CONTENT
+                    params.height = RecyclerView.LayoutParams.WRAP_CONTENT
+                    pic.layoutParams = params
                 }
                 //名称
                 name.text = if (data.position == 999) "未选择" else data.position.toString()
@@ -134,8 +139,7 @@ class PvpCharacterAdapter(
                         }
 
                     }
-                    notifyDataSetChanged()
-
+//                    notifyDataSetChanged()
                 }
             }
         }

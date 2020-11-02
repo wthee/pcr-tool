@@ -78,7 +78,6 @@
     <string name="open_source">开源信息</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
-    <string name="coolapk">酷安主页</string>
     <string name="data_from">干炸里脊资源</string>
     <string name="data_from_hint">感谢大佬提供的数据接口</string>
     <string name="shizuru_note">静流笔记</string>
@@ -156,6 +155,11 @@
     <string name="tool_gacha">卡池记录</string>
     <string name="pre">✦</string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
-    <string name="pcrdfans_com">数据来源 pcrdfans.com</string>
+    <string name="pcrdfans_com">数据来源 pcrdfans</string>
+    <string name="url_pcrdfans_com">https://pcrdfans.com</string>
+    <string name="loop_skill">技能循环 > </string>
+    <string name="share_app">分享应用</string>
+    <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
+    <string name="skill_info">技能信息</string>
 
 </resources>

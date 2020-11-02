@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterLevelExpAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolLevelBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -33,9 +34,12 @@ class ToolLevelFragment : Fragment() {
             binding.listLevel.adapter = adapter
             adapter.submitList(list)
         }
-        binding.toolLevel.setOnClickListener {
-            FabHelper.goBack(requireActivity())
+        //设置头部
+        binding.toolLevel.apply {
+            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_level))
+            toolTitle.text = getString(R.string.tool_level)
         }
+
         return binding.root
     }
 

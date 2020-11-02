@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -17,9 +16,13 @@ import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.*
-import cn.wthee.pcrtool.ui.main.*
+import cn.wthee.pcrtool.enums.SortType
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.guilds
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
+import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
@@ -84,7 +87,6 @@ class MainActivity : AppCompatActivity() {
             mHeight = ScreenUtil.getHeight(this) - 48.dp
         else
             mHeight = ScreenUtil.getWidth(this) - 48.dp
-        Log.e("float", mHeight.toString())
         super.onConfigurationChanged(newConfig)
     }
 

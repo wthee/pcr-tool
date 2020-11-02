@@ -1,18 +1,14 @@
 package cn.wthee.pcrtool.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.GachaInfo
 import cn.wthee.pcrtool.databinding.ItemGachaBinding
-import cn.wthee.pcrtool.enums.PageType
-import cn.wthee.pcrtool.ui.common.CommonBottomSheetFragment
-import coil.load
 
 
 class GachaHistoryAdapter(
@@ -36,29 +32,16 @@ class GachaHistoryAdapter(
     inner class ViewHolder(private val binding: ItemGachaBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("SetTextI18n")
         fun bind(gacha: GachaInfo) {
             //设置数据
             binding.apply {
                 //卡池名
                 gachaName.text = gacha.gacha_name
                 //角色图片
-                gachaPic0.load(gacha.getAllUrls()[0]) {
-                    placeholder(R.drawable.load)
-                    error(R.drawable.error)
-                }
-                if (gacha.getAllUrls().size > 1) {
-                    gachaPic1.visibility = View.VISIBLE
-                    gachaPic1.load(gacha.getAllUrls()[1]) {
-                        placeholder(R.drawable.load)
-                        error(R.drawable.error)
-                    }
-                }
-                //角色名
-                gachaTitle0.text = gacha.getNames()[0]
-                if (gacha.getNames().size > 1) {
-                    gachaTitle1.visibility = View.VISIBLE
-                    gachaTitle1.text = gacha.getNames()[1]
-                }
+                val adapter = GachaListAdapter(manager)
+                gachaIcons.adapter = adapter
+                adapter.submitList(gacha.getUnits())
                 //起止日期
                 gachaDate.text = "- ${gacha.start_time.subSequence(0, 10)} ~ ${
                     gacha.end_time.subSequence(
@@ -68,19 +51,6 @@ class GachaHistoryAdapter(
                 }"
                 //卡池描述
                 gachaDesc.text = gacha.getDesc()
-                //点击查看角色技能
-                gachaPic0.setOnClickListener {
-                    CommonBottomSheetFragment(gacha.getIds()[0], PageType.CAHRACTER_SKILL).show(
-                        manager,
-                        "skill"
-                    )
-                }
-                gachaPic1.setOnClickListener {
-                    CommonBottomSheetFragment(gacha.getIds()[1], PageType.CAHRACTER_SKILL).show(
-                        manager,
-                        "skill"
-                    )
-                }
             }
         }
     }

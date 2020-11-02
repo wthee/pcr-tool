@@ -27,7 +27,6 @@ import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -62,6 +61,7 @@ class ToolPvpService : Service() {
         character1 = intent?.getSerializableExtra("character1") as List<PvpCharacterData>
         character2 = intent.getSerializableExtra("character2") as List<PvpCharacterData>
         character3 = intent.getSerializableExtra("character3") as List<PvpCharacterData>
+        if (mHeight > 300.dp) mHeight = 300.dp
         //窗口设置
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager?
         params = WindowManager.LayoutParams().apply {
@@ -119,9 +119,9 @@ class ToolPvpService : Service() {
         loadDefault()
         setPager()
 
-
         binding.apply {
             resultContent.root.visibility = View.GONE
+            resultContent.pvpResultToolbar.root.visibility = View.GONE
             //搜索按钮
             search.setOnClickListener {
                 if (selects.contains(PvpCharacterData(0, 999))) {
@@ -156,15 +156,6 @@ class ToolPvpService : Service() {
                 }
             }
             //关闭搜索结果
-            //toolbar
-            val toolbar = ToolbarUtil(binding.resultContent.pvpResultToolbar)
-            toolbar.title.text = "进攻方信息"
-            toolbar.setLeftIcon(R.drawable.ic_back)
-            toolbar.setFloatTitle()
-            toolbar.leftIcon.setOnClickListener {
-                resultContent.root.visibility = View.GONE
-                adapter.submitList(null)
-            }
             //移动按钮//拖动效果，暂时不做
 //            var initialX = 0
 //            var initialY = 0
@@ -196,6 +187,12 @@ class ToolPvpService : Service() {
 //                }
 //                return@setOnTouchListener true
 //            }
+            //返回
+            back.setOnClickListener {
+                resultContent.root.visibility = View.GONE
+                adapter.submitList(null)
+            }
+            //移动
             move.setOnClickListener {
                 minWindow()
             }

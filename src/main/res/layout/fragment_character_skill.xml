@@ -7,16 +7,54 @@
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBg"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_skill" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_loop_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:background="@drawable/title_background"
+                android:layout_margin="@dimen/m_margin"
+                android:paddingStart="@dimen/m_padding"
+                android:paddingEnd="@dimen/m_padding"
+                android:textColor="@color/colorWhite"
+                android:text="@string/skill_info" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/open_loop_list_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_weight="1"
+                android:textColor="@color/colorPrimary"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                android:text="@string/loop_skill" />
+        </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBg"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/item_skill" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_skill_loop"

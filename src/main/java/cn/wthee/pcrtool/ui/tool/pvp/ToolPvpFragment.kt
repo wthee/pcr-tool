@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.database.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.delay
@@ -78,9 +79,27 @@ class ToolPvpFragment : Fragment() {
                     ToolPvpResultDialogFragment().show(parentFragmentManager, "pvp")
                 }
             }
+            pcrfan.setOnClickListener {
+                //从其他浏览器打开
+                val intent = Intent()
+                intent.action = Intent.ACTION_VIEW
+                intent.data = Uri.parse(getString(R.string.url_pcrdfans_com))
+                startActivity(
+                    Intent.createChooser(
+                        intent,
+                        "访问：${getString(R.string.url_pcrdfans_com)}"
+                    )
+                )
+            }
+            //设置头部
+            toolPvp.apply {
+                toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_pvp))
+                toolTitle.text = getString(R.string.tool_pvp)
+                rightIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_float))
+                rightIcon.visibility = View.VISIBLE
+            }
             //悬浮窗
-            pvpFloat.setOnClickListener {
-//                FabHelper.goBack()
+            toolPvp.rightIcon.setOnClickListener {
                 //检查是否已经授予权限
                 if (!canDrawOverlays(requireContext())) {
                     //若未授权则请求权限
