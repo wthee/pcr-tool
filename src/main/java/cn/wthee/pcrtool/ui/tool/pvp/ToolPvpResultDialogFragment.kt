@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.OnPostListener
 import cn.wthee.pcrtool.data.PvpDataRepository
@@ -29,7 +28,7 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
     ): View? {
         binding = FragmentToolPvpResultBinding.inflate(inflater, container, false)
         //创建服务
-        PvpDataRepository.getData(object : OnPostListener{
+        PvpDataRepository.getData(object : OnPostListener {
             override fun success(data: Response<PVPData>) {
                 try {
                     val responseBody = data.body()
@@ -60,7 +59,8 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
         //toolbar
         val toolbar = ToolbarUtil(binding.pvpResultToolbar)
         toolbar.title.text = "进攻方信息"
-        toolbar.setRightIcon(R.drawable.ic_detail_share)
+        //TODO 分享
+//        toolbar.setRightIcon(R.drawable.ic_detail_share)
         toolbar.setCenterStyle()
         toolbar.leftIcon.setOnClickListener {
             dialog?.dismiss()

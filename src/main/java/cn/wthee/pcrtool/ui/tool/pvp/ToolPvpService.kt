@@ -122,6 +122,8 @@ class ToolPvpService : Service() {
 
         binding.apply {
             layoutResult.visibility = View.GONE
+            adapter = PvpCharacterResultAdapter(activity)
+            resultContent.list.adapter = adapter
             //搜索按钮
             search.setOnClickListener {
                 if (selects.contains(PvpCharacterData(0, 999))) {
@@ -143,8 +145,6 @@ class ToolPvpService : Service() {
                                             pvpNoData.visibility = View.VISIBLE
                                         } else {
                                             pvpNoData.visibility = View.GONE
-                                            adapter = PvpCharacterResultAdapter(activity)
-                                            list.adapter = adapter
                                             adapter.submitList(responseBody.data.result)
                                         }
                                     }

@@ -152,5 +152,6 @@
     <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_enemy">怪物信息</string>
+    <string name="pcrdfans_com">数据来源 pcrdfans.com</string>
 
 </resources>

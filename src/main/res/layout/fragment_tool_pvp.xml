@@ -14,32 +14,48 @@
         android:layout_gravity="start"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:gravity="start|center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/s_padding">
+        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/pvp_icon"
             android:layout_width="@dimen/xl_icon"
             android:layout_height="@dimen/xl_icon"
-            android:tint="@color/colorWhite"
-            android:src="@drawable/ic_pvp" />
+            android:src="@drawable/ic_pvp"
+            android:layout_margin="@dimen/s_margin"
+            android:tint="@color/colorWhite" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/m_margin"
-            android:text="@string/tool_pvp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textColor="@color/colorWhite" />
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tool_pvp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/colorWhite" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:layout_marginStart="@dimen/xs_margin"
+                android:text="@string/pcrdfans_com"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorGray" />
+
+        </LinearLayout>
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/pvp_float"
             android:layout_width="@dimen/l_icon"
             android:layout_height="@dimen/l_icon"
+            android:layout_gravity="center"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="@dimen/s_margin"
-            android:layout_gravity="center"
             android:src="@drawable/ic_float" />
     </LinearLayout>
 
@@ -62,7 +78,7 @@
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="5"
                 tools:itemCount="5"
-                tools:listitem="@layout/item_character_icon" />
+                tools:listitem="@layout/item_common" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pvp_search"

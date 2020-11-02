@@ -17,9 +17,12 @@ import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.*
-import cn.wthee.pcrtool.ui.main.*
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.guilds
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
+import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
@@ -76,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
+        mHeight = ScreenUtil.getWidth(this) - 48.dp
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
