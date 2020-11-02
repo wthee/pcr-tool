@@ -46,7 +46,7 @@ class SkillLoopAdapter :
                 Log.e("skill", atkId.toString())
                 if (atkId == 1) {
                     name.text = "普攻"
-                    name.setTextColor(ctx.getColor(R.color.colorPrimary))
+                    name.setTextColor(ctx.getColor(R.color.colorAccent))
                     pic.setBackgroundResource(R.drawable.unknow_gray)
                     val drawable = ResourcesUtil.getDrawable(R.drawable.ic_pvp)
                     drawable?.setTint(ResourcesUtil.getColor(R.color.colorAccent))

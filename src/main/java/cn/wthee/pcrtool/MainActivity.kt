@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
+        mHeight = ScreenUtil.getWidth(this) - 48.dp
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

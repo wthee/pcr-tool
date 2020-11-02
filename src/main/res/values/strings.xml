@@ -69,6 +69,7 @@
 
     <!-- 设置页面   -->
     <string name="update_db">数据库版本</string>
+    <string name="redownload_db">重新下载数据</string>
     <string name="auto_update_db">自动更新数据库</string>
     <string name="off_auto_db">已取消自动更新</string>
     <string name="on_auto_db">打开应用时，自动检查更新数据库</string>
@@ -126,7 +127,7 @@
     <string name="before_loop">入场动作</string>
     <string name="looping">循环动作</string>
     <string name="egg_text">我啊，很幸福哦</string>
-    <string name="egg_summary">...还...还是被发现了</string>
+    <string name="egg_summary">…还…还是被发现了</string>
     <string name="sort_date">登场日期</string>
     <string name="sort_type">排序方式</string>
     <string name="sort_desc">降序</string>
@@ -154,7 +155,6 @@
     <string name="tool_enemy">怪物信息</string>
     <string name="tool_gacha">卡池记录</string>
     <string name="pre">✦</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
 
 </resources>

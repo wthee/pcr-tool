@@ -8,7 +8,7 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:key="force_update_db"
+            app:key="check_update_db"
             app:summary="0"
             app:title="@string/update_db" />
 
@@ -20,6 +20,12 @@
             app:iconSpaceReserved="false"
             app:summary="@string/game_version_summary"
             app:title="@string/game_version" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="force_update_db"
+            app:summary="@string/to_download"
+            app:title="@string/redownload_db" />
 
     </PreferenceCategory>
 
@@ -46,13 +52,6 @@
             app:summaryOff="@string/off_auto_app"
             app:summaryOn="@string/on_auto_app"
             app:title="@string/auto_update_app" />
-
-        <Preference
-            app:iconSpaceReserved="false"
-            app:isPreferenceVisible="false"
-            app:key="clean_data"
-            app:summary="@string/clean_cache_tip"
-            app:title="@string/clean_cache" />
 
     </PreferenceCategory>
 

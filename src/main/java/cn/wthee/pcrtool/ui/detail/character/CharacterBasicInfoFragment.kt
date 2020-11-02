@@ -202,6 +202,7 @@ class CharacterBasicInfoFragment : Fragment() {
         }
         //文本数据
         binding.apply {
+            unitId.text = uid.toString()
             toolTitle.text =
                 if (characterPro.actualName.isEmpty())
                     characterPro.name

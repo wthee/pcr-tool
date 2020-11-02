@@ -74,5 +74,13 @@ class CharacterAttrViewModel(
         }
     }
 
-    suspend fun isUnknow(id: Int) = characterRepository.getMaxRank(id)
+    suspend fun isUnknow(id: Int): Boolean {
+        try {
+            characterRepository.getMaxRank(id)
+            characterRepository.getMaxRarity(id)
+        } catch (e: Exception) {
+            return true
+        }
+        return false
+    }
 }

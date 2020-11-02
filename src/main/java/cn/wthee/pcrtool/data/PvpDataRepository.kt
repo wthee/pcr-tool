@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.PVPData
+import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.data.service.PVPService
 import cn.wthee.pcrtool.database.view.getIds
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
@@ -40,7 +41,7 @@ object PvpDataRepository {
                     if (responseBody == null || responseBody.code != 0) {
                         ToastUtil.short("查询异常，请稍后重试~")
                     } else {
-                        onPostListener.success(response)
+                        onPostListener.success(responseBody.data.result)
                     }
                 } catch (e: Exception) {
                     ToastUtil.short("数据解析失败~")
@@ -57,7 +58,7 @@ object PvpDataRepository {
 }
 interface OnPostListener{
 
-    fun success(data: Response<PVPData>)
+    fun success(data: List<Result>)
 
     fun error()
 }
