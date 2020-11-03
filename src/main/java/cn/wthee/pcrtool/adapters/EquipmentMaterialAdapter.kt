@@ -61,7 +61,9 @@ class EquipmentMaterialAdapter(
                 params.width = RecyclerView.LayoutParams.WRAP_CONTENT
                 root.layoutParams = params
                 //加载数据
-                name.text = " ${info.name.substring(0, 7)}... X${info.count} "
+                var subName = if (info.name.length > 8) info.name.substring(0, 7) else
+                    info.name
+                name.text = " ${subName}... X${info.count} "
                 pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
                     error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
