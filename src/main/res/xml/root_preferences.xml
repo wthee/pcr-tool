@@ -1,31 +1,24 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:key="title_database"
         app:title="@string/data">
-
-        <Preference
-            app:iconSpaceReserved="false"
-            app:key="check_update_db"
-            app:summary="0"
-            app:title="@string/update_db" />
-
-        <ListPreference
-            android:key="change_database"
-            app:defaultValue="@string/db_cn_value"
-            app:entries="@array/database_type"
-            app:entryValues="@array/database_type_value"
-            app:iconSpaceReserved="false"
-            app:summary="@string/game_version_summary"
-            app:title="@string/game_version" />
 
         <Preference
             app:iconSpaceReserved="false"
             app:key="force_update_db"
             app:summary="@string/to_download"
             app:title="@string/redownload_db" />
+
+        <ListPreference
+            app:defaultValue="@string/db_cn_value"
+            app:entries="@array/database_type"
+            app:entryValues="@array/database_type_value"
+            app:iconSpaceReserved="false"
+            app:key="change_database"
+            app:summary="@string/game_version_summary"
+            app:title="@string/game_version" />
 
     </PreferenceCategory>
 
@@ -40,8 +33,8 @@
             app:summary="0.0.3-beta"
             app:title="@string/check_app_update">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://www.coolapk.com/apk/273453" />
+                app:action="android.intent.action.VIEW"
+                app:data="https://www.coolapk.com/apk/273453" />
         </Preference>
 
         <SwitchPreferenceCompat
@@ -58,8 +51,8 @@
             app:summary="https://github.com/wthee/pcr-tool"
             app:title="@string/app_sourcce">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/wthee/pcr-tool" />
+                app:action="android.intent.action.VIEW"
+                app:data="https://github.com/wthee/pcr-tool" />
         </Preference>
 
         <Preference
@@ -79,8 +72,8 @@
             app:summary="@string/data_from_hint"
             app:title="@string/data_from">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://redive.estertion.win/" />
+                app:action="android.intent.action.VIEW"
+                app:data="https://redive.estertion.win/" />
         </Preference>
 
         <Preference
@@ -88,8 +81,8 @@
             app:summary="@string/dev_tip"
             app:title="@string/shizuru_note">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/MalitsPlus/ShizuruNotes" />
+                app:action="android.intent.action.VIEW"
+                app:data="https://github.com/MalitsPlus/ShizuruNotes" />
         </Preference>
     </PreferenceCategory>
 

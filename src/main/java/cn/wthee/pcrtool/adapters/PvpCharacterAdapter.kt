@@ -138,7 +138,7 @@ class PvpCharacterAdapter(
                         }
 
                     }
-                    notifyDataSetChanged()
+//                    notifyDataSetChanged()
                 }
             }
         }

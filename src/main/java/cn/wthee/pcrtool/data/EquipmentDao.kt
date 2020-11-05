@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -62,8 +63,8 @@ interface EquipmentDao {
     @Query(viewEquipmentMaxData + "WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
     suspend fun getAllEquipments(name: String): List<EquipmentMaxData>
 
-//    @Query(viewEquipmentMaxData + "WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
-//    fun getPagingEquipments(name: String): PagingSource<Int, EquipmentMaxData>
+    @Query(viewEquipmentMaxData + "WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
+    fun getPagingEquipments(name: String): PagingSource<Int, EquipmentMaxData>
 
     //装备提升属性
     @Query("SELECT * FROM equipment_enhance_rate WHERE equipment_enhance_rate.equipment_id = :eid ")

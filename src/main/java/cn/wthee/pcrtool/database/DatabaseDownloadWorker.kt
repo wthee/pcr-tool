@@ -127,7 +127,7 @@ class DatabaseDownloadWorker(
                 )
             }
             //通知更新数据
-            if (fromSetting == 1) {
+            if (fromSetting == 0 || fromSetting == 1) {
                 CharacterListFragment.handler.sendEmptyMessage(2)
             } else {
                 MainScope().launch {

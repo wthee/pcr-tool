@@ -4,7 +4,7 @@
     <integer name="scrollbar_fade">150</integer>
     <integer name="slide">400</integer>
     <integer name="item_anim">600</integer>
-    <integer name="fragment_anim">600</integer>
+    <integer name="fragment_anim">500</integer>
     <integer name="item_anim_fast">300</integer>
     <integer name="delay">900</integer>
 </resources>

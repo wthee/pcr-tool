@@ -33,8 +33,6 @@ class EnemyListFragment : Fragment() {
         viewModel =
             InjectorUtil.provideEnemyViewModelFactory().create(EnemyViewModel::class.java)
         init()
-        //设置监听
-        setListener()
         //绑定观察
         setObserve()
         return binding.root
@@ -43,7 +41,6 @@ class EnemyListFragment : Fragment() {
     private fun init() {
         binding.apply {
             list = recycler
-            layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
             listAdapter = EnemyListAdapter(parentFragmentManager)
             list.adapter = listAdapter
             //设置头部
@@ -84,22 +81,7 @@ class EnemyListFragment : Fragment() {
                     }
                 })
             }
-
-            //刷新
-            if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, {
-                    binding.layoutRefresh.isRefreshing = it
-                })
-            }
         }
     }
 
-    private fun setListener() {
-        binding.apply {
-            //下拉刷新
-            layoutRefresh.setOnRefreshListener {
-                viewModel.getAllEnemy()
-            }
-        }
-    }
 }

@@ -80,7 +80,7 @@ data class CharacterInfoPro(
     }
 
     //去除无效id
-    private fun getFixedId() = id + 30
+    private fun getFixedId() = if (Constants.errorIDs.contains(id)) id + 31 else 30
 
     //角色自我介绍
     fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {

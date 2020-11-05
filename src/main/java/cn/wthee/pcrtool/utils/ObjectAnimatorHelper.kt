@@ -4,6 +4,8 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.view.View
+import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -11,12 +13,12 @@ import kotlinx.coroutines.launch
 object ObjectAnimatorHelper {
 
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
-        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.85f, 1f)
-        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.85f, 1f)
-        val holder3 = PropertyValuesHolder.ofFloat("translationY", 100f, 0f)
+        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.95f, 1f)
+        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.95f, 1f)
+        val holder3 = PropertyValuesHolder.ofFloat("translationY", 60f, 0f)
 
         view.forEach {
-            start(it, onAnimatorListener,  holder1, holder2, holder3)
+            start(it, onAnimatorListener, holder1, holder2, holder3)
         }
     }
 
@@ -32,7 +34,8 @@ object ObjectAnimatorHelper {
         MainScope().launch {
             delay(200L)
             ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
-                duration = 600L
+                duration =
+                    MyApplication.context.resources.getInteger(R.integer.fragment_anim).toLong()
                 addListener(object : Animator.AnimatorListener {
                     override fun onAnimationEnd(animation: Animator?) {
                         onAnimatorListener?.end(view)

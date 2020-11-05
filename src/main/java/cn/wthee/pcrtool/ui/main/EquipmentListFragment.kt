@@ -4,19 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MainPagerFragment
-import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.EquipmentAdapter
+import cn.wthee.pcrtool.adapters.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -24,10 +24,10 @@ class EquipmentListFragment : Fragment() {
 
     companion object {
         lateinit var list: RecyclerView
-        lateinit var listAdapter: EquipmentAdapter
         var equipFilterParams = FilterEquipment(true, "全部")
         var asc = false
         lateinit var equipTypes: ArrayList<String>
+        lateinit var pageAdapter: EquipmentPageAdapter
     }
 
     private lateinit var binding: FragmentEquipmentListBinding
@@ -41,8 +41,6 @@ class EquipmentListFragment : Fragment() {
     ): View? {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
         init()
-        //设置监听
-        setListener()
         //绑定观察
         setObserve()
         loadData()
@@ -60,62 +58,48 @@ class EquipmentListFragment : Fragment() {
 
     private fun init() {
         binding.apply {
-            layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
-            list = recycler
-            listAdapter = EquipmentAdapter(parentFragmentManager)
-            recycler.adapter = listAdapter
+
+            pageAdapter = EquipmentPageAdapter(parentFragmentManager)
+            binding.equipPage.adapter = pageAdapter
         }
     }
 
     private fun setObserve() {
         viewModel.apply {
-            //获取信息
-            if (!equipments.hasObservers()) {
-                equipments.observe(viewLifecycleOwner, { data ->
-                    if (data != null && data.isNotEmpty()) {
-                        MainPagerFragment.tipText.visibility = View.GONE
-                        listAdapter.submitList(data) {
-                            listAdapter.filter.filter(equipFilterParams.toJsonString())
-                            MainActivity.sp.edit {
-                                putInt(Constants.SP_COUNT_EQUIP, data.size)
-                            }
-                            MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
-                        }
-                    } else {
-                        MainPagerFragment.tipText.visibility = View.VISIBLE
-                    }
-                })
+            lifecycleScope.launch {
+                @OptIn(ExperimentalCoroutinesApi::class)
+                viewModel.allEquips.collectLatest {
+                    submitData(it)
+                }
             }
-//            val pageAdapter = EquipmentPageAdapter(parentFragmentManager)
-//            binding.equipPage.adapter = pageAdapter
-//
-//            lifecycleScope.launch {
-//                @OptIn(ExperimentalCoroutinesApi::class)
-//                viewModel.allEquips.collectLatest { pageAdapter.submitData(it) }
-//            }
-
-            //刷新
-            if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, {
-                    binding.layoutRefresh.isRefreshing = it
-                })
-            }
-        }
-    }
-
-    private fun setListener() {
-        binding.apply {
-            //下拉刷新
-            layoutRefresh.setOnRefreshListener {
-                equipFilterParams.initData()
-                loadData()
-                layoutRefresh.isRefreshing = false
-            }
-
         }
     }
 
     private fun loadData() {
-        viewModel.getEquips(asc, "")
+        lifecycleScope.launch {
+            @OptIn(ExperimentalCoroutinesApi::class)
+            viewModel.allEquips.collectLatest {
+                submitData(it)
+            }
+        }
+    }
+
+    private suspend fun submitData(it: PagingData<EquipmentMaxData>) {
+        pageAdapter.submitData(it.filterSync {
+            if (!equipFilterParams.all) {
+                //过滤非收藏角色
+                if (!MainActivity.sp.getBoolean(it.equipmentId.toString(), false)) {
+                    return@filterSync false
+                }
+            }
+            //种类筛选
+            if (equipFilterParams.type != "全部") {
+                if (equipFilterParams.type != it.type) {
+                    return@filterSync false
+                }
+            }
+            return@filterSync true
+        })
+        pageAdapter.notifyDataSetChanged()
     }
 }

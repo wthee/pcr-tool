@@ -11,9 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorAlpha"
         android:orientation="horizontal"
-        android:scrollbars="horizontal"
-        android:scrollbarStyle="outsideOverlay"
-        android:fadeScrollbars="false"
+        android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_card_bg" />
 

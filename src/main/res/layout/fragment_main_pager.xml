@@ -42,7 +42,7 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/layout_tab"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/tab_height_1"
                     app:layout_collapseMode="parallax"
                     app:tabInlineLabel="true"
                     app:tabMode="fixed" />

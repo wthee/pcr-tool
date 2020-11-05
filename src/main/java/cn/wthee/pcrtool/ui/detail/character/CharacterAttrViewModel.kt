@@ -66,11 +66,15 @@ class CharacterAttrViewModel(
     //获取最大Rank和星级
     fun getMaxRankAndRarity(id: Int) {
         viewModelScope.launch {
-            val rank = characterRepository.getMaxRank(id)
-            val rarity = characterRepository.getMaxRarity(id)
-            val level = characterRepository.getMaxLevel()
+            try {
+                val rank = characterRepository.getMaxRank(id)
+                val rarity = characterRepository.getMaxRarity(id)
+                val level = characterRepository.getMaxLevel()
 
-            maxData.postValue(listOf(rank, rarity, level))
+                maxData.postValue(listOf(rank, rarity, level))
+            } catch (e: Exception) {
+
+            }
         }
     }
 

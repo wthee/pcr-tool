@@ -67,6 +67,20 @@ class CharacterBasicInfoFragment : Fragment() {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //设置共享元素
         binding.root.transitionName = "item_${uid}"
+        //toolbar 背景
+        val picUrl =
+            Constants.CHARACTER_URL + (uid + if (CharacterListFragment.r6Ids.contains(id)) 60 else 30) + Constants.WEBP
+        //角色图片
+        binding.characterPic.load(picUrl) {
+            error(R.drawable.error)
+            placeholder(R.drawable.load)
+            listener(
+                onStart = {
+                    MainActivity.canBack = true
+                    parentFragment?.startPostponedEnterTransition()
+                }
+            )
+        }
         //开始动画
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
             override fun prev(view: View) {
@@ -186,20 +200,6 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //初始化角色基本数据
     private fun setData(characterPro: CharacterInfoPro) {
-        //toolbar 背景
-        var id = uid
-        id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
-        val picUrl = Constants.CHARACTER_URL + id + Constants.WEBP
-        //角色图片
-        binding.characterPic.load(picUrl) {
-            error(R.drawable.error)
-            placeholder(R.drawable.load)
-            listener(
-                onStart = {
-                    parentFragment?.startPostponedEnterTransition()
-                }
-            )
-        }
         //文本数据
         binding.apply {
             unitId.text = uid.toString()

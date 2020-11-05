@@ -5,7 +5,6 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.database.view.Attr
-import java.io.Serializable
 
 @Entity(tableName = "equipment_data")
 class EquipmentData(
@@ -20,10 +19,5 @@ class EquipmentData(
     @ColumnInfo(name = "require_level") val requireLevel: Int,
     @ColumnInfo(name = "enable_donation") val enableDonation: Int,
     @Embedded val attr: Attr,
-) : Serializable {
-
-    fun getDesc() = description.replace("\\n", "")
-
-}
-
+)
 

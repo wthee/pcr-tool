@@ -59,7 +59,6 @@ class CharacterListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
-        binding.layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
         viewModel.isLoading.postValue(true)
         //公会列表
         guilds = arrayListOf()
@@ -80,8 +79,6 @@ class CharacterListFragment : Fragment() {
         init()
         //监听数据变化
         setObserve()
-        //控件监听
-        setListener()
         //获取角色
         viewModel.getCharacters(sortType, sortAsc, "")
         //接收消息
@@ -181,12 +178,6 @@ class CharacterListFragment : Fragment() {
                     isLoading.postValue(false)
                 })
             }
-            //刷新
-            if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, {
-                    binding.layoutRefresh.isRefreshing = it
-                })
-            }
             //加载
             if (!isLoading.hasObservers()) {
                 isLoading.observe(viewLifecycleOwner, {
@@ -209,16 +200,4 @@ class CharacterListFragment : Fragment() {
         }
     }
 
-    //控件监听
-    private fun setListener() {
-        binding.apply {
-            //下拉刷新
-            layoutRefresh.setOnRefreshListener {
-                characterfilterParams.initData()
-                characterfilterParams.all = true
-                viewModel.getCharacters(sortType, sortAsc, "")
-                layoutRefresh.isRefreshing = false
-            }
-        }
-    }
 }

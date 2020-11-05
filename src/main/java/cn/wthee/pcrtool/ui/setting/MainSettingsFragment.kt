@@ -13,7 +13,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -26,12 +25,9 @@ import kotlinx.coroutines.launch
 class MainSettingsFragment : PreferenceFragmentCompat() {
 
     companion object {
-        lateinit var checkUpdateDb: Preference
+        lateinit var titleDatabase: Preference
     }
 
-    private val viewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -41,25 +37,20 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //添加返回fab
         FabHelper.addBackFab()
         //获取控件
-        checkUpdateDb = findPreference<Preference>("check_update_db")!!
+        titleDatabase = findPreference<Preference>("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
         val appUpdate = findPreference<Preference>("force_update_app")
         val shareApp = findPreference<Preference>("share_app")
         val changeDbType = findPreference<ListPreference>("change_database")
         changeDbType?.title =
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
-        //摘要替换
-        checkUpdateDb.summary = MainActivity.sp.getString(
+        //数据版本
+        titleDatabase.title = getString(R.string.data) + MainActivity.sp.getString(
             if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             "0"
         )
         appUpdate?.summary = MainActivity.nowVersionName
         //设置监听
-        //检查更新数据库
-        checkUpdateDb.setOnPreferenceClickListener {
-            DatabaseUpdateHelper.checkDBVersion(0)
-            return@setOnPreferenceClickListener true
-        }
         //强制更新数据库
         forceUpdateDb?.setOnPreferenceClickListener {
             DatabaseUpdateHelper.checkDBVersion(0, force = true)
@@ -67,13 +58,15 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         //切换数据库版本
         changeDbType?.setOnPreferenceChangeListener { _, newValue ->
-            changeDbType.title =
-                "游戏版本 - " + if (newValue as String == "1") getString(R.string.db_cn) else getString(
-                    R.string.db_jp
-                )
-            MainScope().launch {
-                delay(800L)
-                DatabaseUpdateHelper.checkDBVersion(1)
+            if (changeDbType.value != newValue as String) {
+                changeDbType.title =
+                    "游戏版本 - " + if (newValue == "1") getString(R.string.db_cn) else getString(
+                        R.string.db_jp
+                    )
+                MainScope().launch {
+                    delay(800L)
+                    DatabaseUpdateHelper.checkDBVersion(1)
+                }
             }
             return@setOnPreferenceChangeListener true
         }

@@ -75,7 +75,7 @@ class ToolPvpService : Service() {
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
             height = mHeight
-            y = 20.dp
+            y = 30.dp
         }
         //加载布局
 
@@ -132,6 +132,7 @@ class ToolPvpService : Service() {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
+                    back.visibility = View.VISIBLE
                     resultContent.pvpResultLoading.visibility = View.VISIBLE
                     resultContent.root.visibility = View.VISIBLE
                     PvpDataRepository.getData(object : OnPostListener {
@@ -195,6 +196,8 @@ class ToolPvpService : Service() {
                     resultContent.root.visibility = View.GONE
                     adapter.submitList(null)
                 }
+                resultContent.pvpNoData.visibility = View.GONE
+                back.visibility = View.GONE
             }
             //移动
             move.setOnClickListener {
