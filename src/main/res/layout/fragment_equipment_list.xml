@@ -6,7 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:animateLayoutChanges="true"
-    android:layout_margin="@dimen/s_margin"
+    android:layout_marginStart="@dimen/m_margin"
+    android:layout_marginEnd="@dimen/m_margin"
+    android:paddingTop="@dimen/m_padding"
     tools:context=".ui.main.EquipmentListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -14,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
+        app:spanCount="4"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_common" />
 

@@ -16,9 +16,12 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
     //所有装备信息
-    suspend fun getAllEquipments(name: String) = equipmentDao.getAllEquipments(name)
-
     fun getPagingEquipments(name: String) = equipmentDao.getPagingEquipments(name)
+
+    suspend fun getEquipmentCount(type: String, name: String) = if (type == "全部")
+        equipmentDao.getEquipmentCount("%%", name)
+    else
+        equipmentDao.getEquipmentCount(type, name)
 
     //获取装备掉落区域
     suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)

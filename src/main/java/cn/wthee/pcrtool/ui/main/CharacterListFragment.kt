@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import com.google.android.material.transition.Hold
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 
 class CharacterListFragment : Fragment() {
@@ -127,12 +128,12 @@ class CharacterListFragment : Fragment() {
                         object : DialogListener {
                             override fun onButtonOperateClick(dialog: AlertDialog) {
                                 requireActivity().finish()
-                                System.exit(0)
+                                exitProcess(0)
                             }
 
                             override fun onButtonOkClick(dialog: AlertDialog) {
                                 requireActivity().finish()
-                                System.exit(0)
+                                exitProcess(0)
                             }
                         }
                     ).show()

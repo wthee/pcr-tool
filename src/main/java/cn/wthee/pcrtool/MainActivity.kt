@@ -21,7 +21,6 @@ import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.guilds
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
-import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
@@ -229,9 +228,7 @@ class MainActivity : AppCompatActivity() {
                             sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
                         }
                         1 -> query?.let {
-                            MainScope().launch {
-                                sharedEquipViewModel.getEquips(asc, query)
-                            }
+                            sharedEquipViewModel.getEquips(query)
                         }
                     }
 
@@ -252,9 +249,8 @@ class MainActivity : AppCompatActivity() {
                         sortType,
                         sortAsc, ""
                     )
-                    1 -> MainScope().launch {
-                        sharedEquipViewModel.getEquips(asc, "")
-                    }
+                    1 -> sharedEquipViewModel.getEquips("")
+
                 }
                 searchView.setQuery("", false)
             }
@@ -348,7 +344,14 @@ class MainActivity : AppCompatActivity() {
                     }
                     layout.btns.reset.setOnClickListener {
                         dialog.dismiss()
-                        MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(0))
+                        CharacterListFragment.characterfilterParams.initData()
+                        CharacterListFragment.characterfilterParams.all = true
+                        sortType = SortType.SORT_DATE
+                        sortAsc = false
+                        sharedCharacterViewModel.getCharacters(
+                            sortType,
+                            sortAsc, ""
+                        )
                     }
                 }
                 //装备筛选
@@ -374,13 +377,13 @@ class MainActivity : AppCompatActivity() {
                         //筛选选项
                         val chip = layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
                         EquipmentListFragment.equipFilterParams.type = chip.text.toString()
-                        MainScope().launch {
-                            sharedEquipViewModel.getEquips(asc, "")
-                        }
+                        sharedEquipViewModel.getEquips("")
+
                     }
                     layout.btns.reset.setOnClickListener {
                         dialog.dismiss()
-                        MainPagerFragment.tabLayout.selectTab(MainPagerFragment.tabLayout.getTabAt(1))
+                        EquipmentListFragment.equipFilterParams.initData()
+                        sharedEquipViewModel.getEquips("")
                     }
                 }
             }

@@ -6,12 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.database.view.UniqueEquipmentMaxData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -19,57 +17,34 @@ class EquipmentViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    var equipments = Pager(
-        PagingConfig(
-            pageSize = 30,
-            enablePlaceholders = true,
-            maxSize = 200
-        )
-    ) {
-        equipmentRepository.getPagingEquipments("")
-    }.flow
+    lateinit var equipments: Flow<PagingData<EquipmentMaxData>>
 
+    var updateEquip = MutableLiveData<Boolean>()
     var equipmentCounts = MutableLiveData<Int>()
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
 
     //获取装备列表
-    suspend fun getEquips(asc: Boolean, name: String) {
-        equipments = getPageEquips(asc, name)
-    }
-
-    private suspend fun getPageEquips(
-        asc: Boolean,
-        name: String
-    ): Flow<PagingData<EquipmentMaxData>> {
-        val equips = Pager(
-            PagingConfig(
-                pageSize = 30,
-                enablePlaceholders = true,
-                maxSize = 200
+    fun getEquips(name: String) {
+        viewModelScope.launch {
+            equipments = Pager(
+                PagingConfig(
+                    pageSize = 50,
+                    enablePlaceholders = false,
+                    maxSize = 500
+                )
+            ) {
+                equipmentRepository.getPagingEquipments(name)
+            }.flow
+            equipmentCounts.postValue(
+                equipmentRepository.getEquipmentCount(
+                    EquipmentListFragment.equipFilterParams.type,
+                    name
+                )
             )
-        ) {
-            equipmentRepository.getPagingEquipments(name)
-        }.flow
-
-        equips.collectLatest {
-            it.filterSync {
-                if (!EquipmentListFragment.equipFilterParams.all) {
-                    //过滤非收藏角色
-                    if (!MainActivity.sp.getBoolean(it.equipmentId.toString(), false)) {
-                        return@filterSync false
-                    }
-                }
-                //种类筛选
-                if (EquipmentListFragment.equipFilterParams.type != "全部") {
-                    if (EquipmentListFragment.equipFilterParams.type != it.type) {
-                        return@filterSync false
-                    }
-                }
-                return@filterSync true
-            }
+            updateEquip.postValue(true)
         }
-        return equips
     }
+
 
     //专武信息
     fun getUniqueEquipInfos(uid: Int) {

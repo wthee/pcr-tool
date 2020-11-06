@@ -8,6 +8,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.filter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainPagerFragment
@@ -17,9 +18,7 @@ import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 
 
@@ -50,7 +49,6 @@ class EquipmentListFragment : Fragment() {
         }
         //绑定观察
         setObserve()
-        loadData()
         //获取装备类型
         equipTypes = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -59,6 +57,7 @@ class EquipmentListFragment : Fragment() {
                 equipTypes.add(it.type)
             }
         }
+        viewModel.getEquips("")
         return binding.root
     }
 
@@ -79,21 +78,31 @@ class EquipmentListFragment : Fragment() {
             })
         }
 
-        //装备信息
-        lifecycleScope.launch {
-            viewModel.equipmentCounts.postValue(viewModel.equipments.count())
-            @OptIn(ExperimentalCoroutinesApi::class)
-            viewModel.equipments.collectLatest { data ->
-                pageAdapter.submitData(data)
-            }
+        if (!viewModel.updateEquip.hasActiveObservers()) {
+            viewModel.updateEquip.observe(viewLifecycleOwner, {
+                //装备信息
+                lifecycleScope.launch {
+                    @OptIn(ExperimentalCoroutinesApi::class)
+                    viewModel.equipments.collectLatest { data ->
+                        val filter = data.filter {
+                            if (!equipFilterParams.all) {
+                                //过滤非收藏角色
+                                if (!MainActivity.sp.getBoolean(it.equipmentId.toString(), false)) {
+                                    return@filter false
+                                }
+                            }
+                            //种类筛选
+                            if (equipFilterParams.type != "全部") {
+                                if (equipFilterParams.type != it.type) {
+                                    return@filter false
+                                }
+                            }
+                            return@filter true
+                        }
+                        pageAdapter.submitData(filter)
+                    }
+                }
+            })
         }
     }
-
-    private fun loadData() {
-        MainScope().launch {
-            viewModel.getEquips(asc, "")
-        }
-
-    }
-
 }

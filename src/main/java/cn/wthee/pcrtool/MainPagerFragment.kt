@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
-import cn.wthee.pcrtool.ui.main.EquipmentListFragment.Companion.asc
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyViewModel
 import cn.wthee.pcrtool.utils.Constants
@@ -32,8 +31,6 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import kotlin.collections.set
 
 
@@ -174,10 +171,7 @@ class MainPagerFragment : Fragment() {
                     //长按重置
                     tab.view.setOnLongClickListener {
                         EquipmentListFragment.equipFilterParams.initData()
-                        asc = true
-                        MainScope().launch {
-                            sharedEquipViewModel.getEquips(asc, "")
-                        }
+                        sharedEquipViewModel.getEquips("")
                         return@setOnLongClickListener true
                     }
                     //点击回顶部

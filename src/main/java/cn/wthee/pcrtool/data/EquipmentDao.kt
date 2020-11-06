@@ -66,6 +66,19 @@ interface EquipmentDao {
     @Query("$viewEquipmentMaxData WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
     fun getPagingEquipments(name: String): PagingSource<Int, EquipmentMaxData>
 
+    @Transaction
+    @Query(
+        """
+    SELECT
+        COUNT(b.description)
+    FROM
+        equipment_data AS a
+        LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
+    WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 AND b.description like :type ORDER BY  a.require_level DESC 
+  """
+    )
+    suspend fun getEquipmentCount(type: String, name: String): Int
+
     //装备提升属性
     @Query("SELECT * FROM equipment_enhance_rate WHERE equipment_enhance_rate.equipment_id = :eid ")
     suspend fun getEquipmentEnhanceData(eid: Int): EquipmentEnhanceRate
