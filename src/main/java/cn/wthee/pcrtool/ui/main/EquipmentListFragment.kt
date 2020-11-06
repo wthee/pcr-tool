@@ -4,19 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.adapters.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 
 
@@ -40,12 +43,15 @@ class EquipmentListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
-        init()
+        binding.apply {
+            list = binding.equipPage
+            pageAdapter = EquipmentPageAdapter(parentFragmentManager)
+            binding.equipPage.adapter = pageAdapter
+        }
         //绑定观察
         setObserve()
         loadData()
         //获取装备类型
-        //公会列表
         equipTypes = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
             equipTypes.add("全部")
@@ -56,50 +62,38 @@ class EquipmentListFragment : Fragment() {
         return binding.root
     }
 
-    private fun init() {
-        binding.apply {
-
-            pageAdapter = EquipmentPageAdapter(parentFragmentManager)
-            binding.equipPage.adapter = pageAdapter
-        }
-    }
-
     private fun setObserve() {
-        viewModel.apply {
-            lifecycleScope.launch {
-                @OptIn(ExperimentalCoroutinesApi::class)
-                viewModel.allEquips.collectLatest {
-                    submitData(it)
+
+        //装备数量
+        if (!viewModel.equipmentCounts.hasObservers()) {
+            viewModel.equipmentCounts.observe(viewLifecycleOwner, {
+                if (it > 0) {
+                    MainPagerFragment.tipText.visibility = View.GONE
+                    MainActivity.sp.edit {
+                        putInt(Constants.SP_COUNT_EQUIP, it)
+                    }
+                    MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
+                } else {
+                    MainPagerFragment.tipText.visibility = View.VISIBLE
                 }
+            })
+        }
+
+        //装备信息
+        lifecycleScope.launch {
+            viewModel.equipmentCounts.postValue(viewModel.equipments.count())
+            @OptIn(ExperimentalCoroutinesApi::class)
+            viewModel.equipments.collectLatest { data ->
+                pageAdapter.submitData(data)
             }
         }
     }
 
     private fun loadData() {
-        lifecycleScope.launch {
-            @OptIn(ExperimentalCoroutinesApi::class)
-            viewModel.allEquips.collectLatest {
-                submitData(it)
-            }
+        MainScope().launch {
+            viewModel.getEquips(asc, "")
         }
+
     }
 
-    private suspend fun submitData(it: PagingData<EquipmentMaxData>) {
-        pageAdapter.submitData(it.filterSync {
-            if (!equipFilterParams.all) {
-                //过滤非收藏角色
-                if (!MainActivity.sp.getBoolean(it.equipmentId.toString(), false)) {
-                    return@filterSync false
-                }
-            }
-            //种类筛选
-            if (equipFilterParams.type != "全部") {
-                if (equipFilterParams.type != it.type) {
-                    return@filterSync false
-                }
-            }
-            return@filterSync true
-        })
-        pageAdapter.notifyDataSetChanged()
-    }
 }

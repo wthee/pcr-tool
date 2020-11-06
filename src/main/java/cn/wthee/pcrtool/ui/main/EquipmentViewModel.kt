@@ -5,9 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.database.view.EquipmentMaxData
 import cn.wthee.pcrtool.database.view.UniqueEquipmentMaxData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -15,22 +19,56 @@ class EquipmentViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    var equipments = MutableLiveData<List<EquipmentMaxData>>()
+    var equipments = Pager(
+        PagingConfig(
+            pageSize = 30,
+            enablePlaceholders = true,
+            maxSize = 200
+        )
+    ) {
+        equipmentRepository.getPagingEquipments("")
+    }.flow
+
+    var equipmentCounts = MutableLiveData<Int>()
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
-    var refresh = MutableLiveData<Boolean>()
 
     //获取装备列表
-    fun getEquips(asc: Boolean, name: String) {
-        viewModelScope.launch {
-            val data = equipmentRepository.getAllEquipments(name)
-            refresh.postValue(false)
-            if (asc) {
-                data.sortedBy { it.promotionLevel }
-            } else {
-                data.sortedByDescending { it.promotionLevel }
+    suspend fun getEquips(asc: Boolean, name: String) {
+        equipments = getPageEquips(asc, name)
+    }
+
+    private suspend fun getPageEquips(
+        asc: Boolean,
+        name: String
+    ): Flow<PagingData<EquipmentMaxData>> {
+        val equips = Pager(
+            PagingConfig(
+                pageSize = 30,
+                enablePlaceholders = true,
+                maxSize = 200
+            )
+        ) {
+            equipmentRepository.getPagingEquipments(name)
+        }.flow
+
+        equips.collectLatest {
+            it.filterSync {
+                if (!EquipmentListFragment.equipFilterParams.all) {
+                    //过滤非收藏角色
+                    if (!MainActivity.sp.getBoolean(it.equipmentId.toString(), false)) {
+                        return@filterSync false
+                    }
+                }
+                //种类筛选
+                if (EquipmentListFragment.equipFilterParams.type != "全部") {
+                    if (EquipmentListFragment.equipFilterParams.type != it.type) {
+                        return@filterSync false
+                    }
+                }
+                return@filterSync true
             }
-            equipments.postValue(data)
         }
+        return equips
     }
 
     //专武信息
@@ -44,14 +82,4 @@ class EquipmentViewModel(
     //获取装备类型
     suspend fun getTypes() = equipmentRepository.getEquipTypes()
 
-    //TODO 分页加载
-    val allEquips = Pager(
-        PagingConfig(
-            pageSize = 30,
-            enablePlaceholders = true,
-            maxSize = 200
-        )
-    ) {
-        equipmentRepository.getPagingEquipments(name = "")
-    }.flow
 }

@@ -32,6 +32,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlin.collections.set
 
 
@@ -173,7 +175,9 @@ class MainPagerFragment : Fragment() {
                     tab.view.setOnLongClickListener {
                         EquipmentListFragment.equipFilterParams.initData()
                         asc = true
-                        sharedEquipViewModel.getEquips(asc, "")
+                        MainScope().launch {
+                            sharedEquipViewModel.getEquips(asc, "")
+                        }
                         return@setOnLongClickListener true
                     }
                     //点击回顶部
@@ -181,16 +185,6 @@ class MainPagerFragment : Fragment() {
                         if (MainActivity.currentMainPage == position) {
                             EquipmentListFragment.list.smoothScrollToPosition(0)
                         }
-                    }
-                }
-                //怪物
-                2 -> {
-                    tab.icon = ResourcesUtil.getDrawable(R.drawable.ic_enemy)
-                    tab.text = sp.getInt(Constants.SP_COUNT_ENEMY, 0).toString()
-                    //长按重置
-                    tab.view.setOnLongClickListener {
-                        sharedEnemyViewModel.getAllEnemy()
-                        return@setOnLongClickListener true
                     }
                 }
             }

@@ -229,7 +229,9 @@ class MainActivity : AppCompatActivity() {
                             sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
                         }
                         1 -> query?.let {
-                            sharedEquipViewModel.getEquips(asc, query)
+                            MainScope().launch {
+                                sharedEquipViewModel.getEquips(asc, query)
+                            }
                         }
                     }
 
@@ -250,7 +252,9 @@ class MainActivity : AppCompatActivity() {
                         sortType,
                         sortAsc, ""
                     )
-                    1 -> sharedEquipViewModel.getEquips(asc, "")
+                    1 -> MainScope().launch {
+                        sharedEquipViewModel.getEquips(asc, "")
+                    }
                 }
                 searchView.setQuery("", false)
             }
@@ -365,14 +369,14 @@ class MainActivity : AppCompatActivity() {
                     }
                     val dialog = DialogUtil.create(this, layout.root)
                     dialog.show()
-
                     layout.btns.next.setOnClickListener {
                         dialog.dismiss()
                         //筛选选项
-                        //公会筛选
                         val chip = layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
                         EquipmentListFragment.equipFilterParams.type = chip.text.toString()
-                        sharedEquipViewModel.getEquips(asc, "")
+                        MainScope().launch {
+                            sharedEquipViewModel.getEquips(asc, "")
+                        }
                     }
                     layout.btns.reset.setOnClickListener {
                         dialog.dismiss()

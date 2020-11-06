@@ -60,10 +60,10 @@ interface EquipmentDao {
     suspend fun getEquipTypes(): List<EquipType>
 
     //所有装备信息
-    @Query(viewEquipmentMaxData + "WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
+    @Query("$viewEquipmentMaxData WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
     suspend fun getAllEquipments(name: String): List<EquipmentMaxData>
 
-    @Query(viewEquipmentMaxData + "WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
+    @Query("$viewEquipmentMaxData WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
     fun getPagingEquipments(name: String): PagingSource<Int, EquipmentMaxData>
 
     //装备提升属性
@@ -120,7 +120,7 @@ interface EquipmentDao {
 
     //装备信息
     @Transaction
-    @Query(viewEquipmentMaxData + " WHERE a.equipment_id =:eid")
+    @Query("$viewEquipmentMaxData WHERE a.equipment_id =:eid")
     suspend fun getEquipInfos(eid: Int): EquipmentMaxData
 
     @Transaction
