@@ -8,7 +8,6 @@
     android:animateLayoutChanges="true"
     android:layout_marginStart="@dimen/m_margin"
     android:layout_marginEnd="@dimen/m_margin"
-    android:paddingTop="@dimen/m_padding"
     tools:context=".ui.main.EquipmentListFragment">
 
     <androidx.recyclerview.widget.RecyclerView

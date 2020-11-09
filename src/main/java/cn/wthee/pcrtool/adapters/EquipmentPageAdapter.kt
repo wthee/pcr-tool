@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
@@ -62,5 +63,22 @@ class EquipmentPageAdapter(
             MainActivity.currentEquipPosition = absoluteAdapterPosition
             EquipmentDetailsFragment.getInstance(equip).show(fragmentManager, "details")
         }
+    }
+}
+
+class EquipDiffCallback : DiffUtil.ItemCallback<EquipmentMaxData>() {
+
+    override fun areItemsTheSame(
+        oldItem: EquipmentMaxData,
+        newItem: EquipmentMaxData
+    ): Boolean {
+        return oldItem.equipmentId == newItem.equipmentId
+    }
+
+    override fun areContentsTheSame(
+        oldItem: EquipmentMaxData,
+        newItem: EquipmentMaxData
+    ): Boolean {
+        return oldItem == newItem
     }
 }

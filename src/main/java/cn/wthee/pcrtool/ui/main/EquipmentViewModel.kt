@@ -33,7 +33,10 @@ class EquipmentViewModel(
                     maxSize = 500
                 )
             ) {
-                equipmentRepository.getPagingEquipments(name)
+                equipmentRepository.getPagingEquipments(
+                    EquipmentListFragment.equipFilterParams.type,
+                    name
+                )
             }.flow
             equipmentCounts.postValue(
                 equipmentRepository.getEquipmentCount(

@@ -8,7 +8,6 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.filter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainPagerFragment
@@ -84,22 +83,7 @@ class EquipmentListFragment : Fragment() {
                 lifecycleScope.launch {
                     @OptIn(ExperimentalCoroutinesApi::class)
                     viewModel.equipments.collectLatest { data ->
-                        val filter = data.filter {
-                            if (!equipFilterParams.all) {
-                                //过滤非收藏角色
-                                if (!MainActivity.sp.getBoolean(it.equipmentId.toString(), false)) {
-                                    return@filter false
-                                }
-                            }
-                            //种类筛选
-                            if (equipFilterParams.type != "全部") {
-                                if (equipFilterParams.type != it.type) {
-                                    return@filter false
-                                }
-                            }
-                            return@filter true
-                        }
-                        pageAdapter.submitData(filter)
+                        pageAdapter.submitData(data)
                     }
                 }
             })

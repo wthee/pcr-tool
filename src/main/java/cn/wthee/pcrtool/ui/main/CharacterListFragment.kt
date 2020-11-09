@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,10 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
-import cn.wthee.pcrtool.MainActivity.Companion.sp
-import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterAdapter
+import cn.wthee.pcrtool.adapters.CharacterPageAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
@@ -28,6 +25,8 @@ import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import com.google.android.material.transition.Hold
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
@@ -36,7 +35,7 @@ class CharacterListFragment : Fragment() {
 
     companion object {
         lateinit var characterList: RecyclerView
-        lateinit var listAdapter: CharacterAdapter
+        lateinit var listAdapter: CharacterPageAdapter
         var characterfilterParams = FilterCharacter(
             true, 0, 0, "全部"
         )
@@ -147,11 +146,10 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
-        listAdapter = CharacterAdapter(this@CharacterListFragment)
+        listAdapter = CharacterPageAdapter(this@CharacterListFragment)
         characterList = binding.characterList
         binding.characterList.apply {
             adapter = listAdapter
-
         }
     }
 
@@ -159,21 +157,28 @@ class CharacterListFragment : Fragment() {
     //绑定observe
     private fun setObserve() {
         viewModel.apply {
-            //角色
-            if (!characters.hasObservers()) {
-                characters.observe(viewLifecycleOwner, { data ->
-                    if (data != null && data.isNotEmpty()) {
-                        MainPagerFragment.tipText.visibility = View.GONE
-                        listAdapter.submitList(data) {
-                            listAdapter.filter.filter(characterfilterParams.toJsonString())
-                            sp.edit {
-                                putInt(Constants.SP_COUNT_CHARACTER, data.size)
-                            }
-                            characterList.scrollToPosition(0)
-                            MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
+//            //TODO 角色数量
+//        if (!viewModel.equipmentCounts.hasObservers()) {
+//            viewModel.equipmentCounts.observe(viewLifecycleOwner, {
+//                if (it > 0) {
+//                    MainPagerFragment.tipText.visibility = View.GONE
+//                    MainActivity.sp.edit {
+//                        putInt(Constants.SP_COUNT_EQUIP, it)
+//                    }
+//                    MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
+//                } else {
+//                    MainPagerFragment.tipText.visibility = View.VISIBLE
+//                }
+//            })
+//        }
+            //角色信息
+            if (!updateChatacter.hasObservers()) {
+                updateChatacter.observe(viewLifecycleOwner, { data ->
+                    lifecycleScope.launch {
+                        @OptIn(ExperimentalCoroutinesApi::class)
+                        viewModel.characters.collectLatest { data ->
+                            listAdapter.submitData(data)
                         }
-                    } else {
-                        MainPagerFragment.tipText.visibility = View.VISIBLE
                     }
                     refresh.postValue(false)
                     isLoading.postValue(false)

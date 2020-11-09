@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -14,6 +15,7 @@ import cn.wthee.pcrtool.database.view.PvpCharacterData
 @Dao
 interface CharacterDao {
 
+    //获取角色列表所需数据
     @Transaction
     @Query(
         """
@@ -21,11 +23,11 @@ interface CharacterDao {
             unit_profile.unit_id,
             unit_profile.unit_name,
             COALESCE( unit_data.kana, "" ) AS kana,
-            unit_profile.age,
+            CAST((CASE WHEN unit_profile.age ='??' THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
             unit_profile.race,
-            unit_profile.height,
-            unit_profile.weight,
+            CAST((CASE WHEN unit_profile.height ='??' OR  unit_profile.height = 0 THEN 999 ELSE unit_profile.height END) AS INTEGER) AS height_int,
+            CAST((CASE WHEN unit_profile.weight ='??' OR  unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
             unit_data.search_area_width,
             unit_data.atk_type,
             COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
@@ -35,10 +37,36 @@ interface CharacterDao {
         WHERE 
             unit_profile.unit_name like '%' || :unitName || '%' 
         AND unit_profile.unit_id NOT IN (106701,110201,113801,900103,906601)
+        AND 1 = CASE
+            WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  0 = :atkType  THEN 1
+            WHEN  unit_data.atk_type = :atkType  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  "全部" = :guild  THEN 1 
+            WHEN  unit_profile.guild = :guild  THEN 1 
+        END        
+        ORDER BY 
+        CASE WHEN :sortType = 0 AND :asc = 'asc'  THEN start_time END ASC,
+        CASE WHEN :sortType = 0 AND :asc = 'desc'  THEN start_time END DESC,
+        CASE WHEN :sortType = 1 AND :asc = 'asc'  THEN age_int END ASC,
+        CASE WHEN :sortType = 1 AND :asc = 'desc'  THEN age_int END DESC,
+        CASE WHEN :sortType = 2 AND :asc = 'asc'  THEN height_int END ASC,
+        CASE WHEN :sortType = 2 AND :asc = 'desc'  THEN height_int END DESC,
+        CASE WHEN :sortType = 3 AND :asc = 'asc'  THEN weight_int END ASC,
+        CASE WHEN :sortType = 3 AND :asc = 'desc'  THEN weight_int END DESC,
+        CASE WHEN :sortType = 4 AND :asc = 'asc'  THEN unit_data.search_area_width END ASC,
+        CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC
             """
     )
-    suspend fun getInfoAndData(unitName: String): List<CharacterInfo>
+    fun getInfoAndData(
+        sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
+        atkType: Int, guild: String
+    ): PagingSource<Int, CharacterInfo>
 
+    //获取角色详情数据
     @Transaction
     @Query(
         """
@@ -76,6 +104,7 @@ interface CharacterDao {
     )
     suspend fun getInfoPro(uid: Int): CharacterInfoPro
 
+    //根据位置获取角色
     @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
 

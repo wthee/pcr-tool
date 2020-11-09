@@ -46,7 +46,16 @@ FROM
 	LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON b.promotion_level = d.promotion_level
  """
 
-
+const val equipWhere = """
+    WHERE a.craft_flg = 1 
+        AND a.equipment_name like '%' || :name || '%' 
+        AND a.equipment_id < 140000 
+        AND 1 = CASE
+            WHEN  '全部' = :type  THEN 1 
+            WHEN  b.description = :type  THEN 1 
+        END
+        ORDER BY  a.require_level DESC
+    """
 //角色数据DAO
 @Dao
 interface EquipmentDao {
@@ -63,8 +72,8 @@ interface EquipmentDao {
     @Query("$viewEquipmentMaxData WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
     suspend fun getAllEquipments(name: String): List<EquipmentMaxData>
 
-    @Query("$viewEquipmentMaxData WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
-    fun getPagingEquipments(name: String): PagingSource<Int, EquipmentMaxData>
+    @Query("""$viewEquipmentMaxData  $equipWhere""")
+    fun getPagingEquipments(type: String, name: String): PagingSource<Int, EquipmentMaxData>
 
     @Transaction
     @Query(
@@ -74,8 +83,8 @@ interface EquipmentDao {
     FROM
         equipment_data AS a
         LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
-    WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 AND b.description like :type ORDER BY  a.require_level DESC 
-  """
+    $equipWhere
+    """
     )
     suspend fun getEquipmentCount(type: String, name: String): Int
 
@@ -140,38 +149,38 @@ interface EquipmentDao {
     @Query(
         """
         SELECT
-	c.unit_id,
-	a.equipment_id,
-	a.equipment_name,
-	a.description,
-	d.equipment_enhance_level AS max_level,
-	d.rank,
-	(
-	a.hp + b.hp * COALESCE( d.rank, 0 )) AS hp,
-	( a.atk + b.atk * COALESCE( d.rank, 0 ) ) AS atk,
-	( a.magic_str + b.magic_str * COALESCE( d.rank, 0 ) ) AS magic_str,
-	( a.def + b.def * COALESCE( d.rank, 0 ) ) AS def,
-	( a.magic_def + b.magic_def * COALESCE( d.rank, 0 ) ) AS magic_def,
-	( a.physical_critical + b.physical_critical * COALESCE( d.rank, 0 ) ) AS physical_critical,
-	( a.magic_critical + b.magic_critical * COALESCE( d.rank, 0 ) ) AS magic_critical,
-	( a.wave_hp_recovery + b.wave_hp_recovery * COALESCE( d.rank, 0 ) ) AS wave_hp_recovery,
-	( a.wave_energy_recovery + b.wave_energy_recovery * COALESCE( d.rank, 0 ) ) AS wave_energy_recovery,
-	( a.dodge + b.dodge * COALESCE( d.rank, 0 ) ) AS dodge,
-	( a.physical_penetrate + b.physical_penetrate * COALESCE( d.rank, 0 ) ) AS physical_penetrate,
-	( a.magic_penetrate + b.magic_penetrate * COALESCE( d.rank, 0 ) ) AS magic_penetrate,
-	( a.life_steal + b.life_steal * COALESCE( d.rank, 0 ) ) AS life_steal,
-	( a.hp_recovery_rate + b.hp_recovery_rate * COALESCE( d.rank, 0 ) ) AS hp_recovery_rate,
-	( a.energy_recovery_rate + b.energy_recovery_rate * COALESCE( d.rank, 0 ) ) AS energy_recovery_rate,
-	( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( d.rank, 0 ) ) AS energy_reduce_rate,
-	( a.accuracy + b.accuracy * COALESCE( d.rank, 0 ) ) AS accuracy 
-FROM
-	unit_data AS c
-	LEFT OUTER JOIN unique_equipment_data AS a ON c.unit_id < 200000 
-	AND SUBSTR( c.unit_id, 2, 3 ) = SUBSTR( a.equipment_id, 3, 3 )
-	LEFT OUTER JOIN unique_equipment_data AS b ON a.equipment_id = b.equipment_id
-	LEFT OUTER JOIN ( SELECT MAX( unique_equipment_enhance_data.enhance_level ) AS equipment_enhance_level, MAX( unique_equipment_enhance_data.rank ) AS rank FROM unique_equipment_enhance_data ) AS d 
-WHERE
-	a.equipment_id IS NOT NULL AND unit_id =:uid
+            c.unit_id,
+            a.equipment_id,
+            a.equipment_name,
+            a.description,
+            d.equipment_enhance_level AS max_level,
+            d.rank,
+            (
+            a.hp + b.hp * COALESCE( d.rank, 0 )) AS hp,
+            ( a.atk + b.atk * COALESCE( d.rank, 0 ) ) AS atk,
+            ( a.magic_str + b.magic_str * COALESCE( d.rank, 0 ) ) AS magic_str,
+            ( a.def + b.def * COALESCE( d.rank, 0 ) ) AS def,
+            ( a.magic_def + b.magic_def * COALESCE( d.rank, 0 ) ) AS magic_def,
+            ( a.physical_critical + b.physical_critical * COALESCE( d.rank, 0 ) ) AS physical_critical,
+            ( a.magic_critical + b.magic_critical * COALESCE( d.rank, 0 ) ) AS magic_critical,
+            ( a.wave_hp_recovery + b.wave_hp_recovery * COALESCE( d.rank, 0 ) ) AS wave_hp_recovery,
+            ( a.wave_energy_recovery + b.wave_energy_recovery * COALESCE( d.rank, 0 ) ) AS wave_energy_recovery,
+            ( a.dodge + b.dodge * COALESCE( d.rank, 0 ) ) AS dodge,
+            ( a.physical_penetrate + b.physical_penetrate * COALESCE( d.rank, 0 ) ) AS physical_penetrate,
+            ( a.magic_penetrate + b.magic_penetrate * COALESCE( d.rank, 0 ) ) AS magic_penetrate,
+            ( a.life_steal + b.life_steal * COALESCE( d.rank, 0 ) ) AS life_steal,
+            ( a.hp_recovery_rate + b.hp_recovery_rate * COALESCE( d.rank, 0 ) ) AS hp_recovery_rate,
+            ( a.energy_recovery_rate + b.energy_recovery_rate * COALESCE( d.rank, 0 ) ) AS energy_recovery_rate,
+            ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( d.rank, 0 ) ) AS energy_reduce_rate,
+            ( a.accuracy + b.accuracy * COALESCE( d.rank, 0 ) ) AS accuracy 
+        FROM
+            unit_data AS c
+            LEFT OUTER JOIN unique_equipment_data AS a ON c.unit_id < 200000 
+            AND SUBSTR( c.unit_id, 2, 3 ) = SUBSTR( a.equipment_id, 3, 3 )
+            LEFT OUTER JOIN unique_equipment_data AS b ON a.equipment_id = b.equipment_id
+            LEFT OUTER JOIN ( SELECT MAX( unique_equipment_enhance_data.enhance_level ) AS equipment_enhance_level, MAX( unique_equipment_enhance_data.rank ) AS rank FROM unique_equipment_enhance_data ) AS d 
+        WHERE
+            a.equipment_id IS NOT NULL AND unit_id =:uid
     """
     )
     suspend fun getUniqueEquipInfos(uid: Int): UniqueEquipmentMaxData?

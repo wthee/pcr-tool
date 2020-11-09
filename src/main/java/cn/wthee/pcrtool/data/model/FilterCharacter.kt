@@ -17,4 +17,10 @@ class FilterCharacter(
     //转化为 json 字符串
     fun toJsonString(): String = Gson().toJson(this)
 
+    fun getPositon() = when (this.positon) {
+        1 -> arrayListOf(0, 299)
+        2 -> arrayListOf(300, 599)
+        3 -> arrayListOf(600, 9999)
+        else -> arrayListOf(0, 9999)
+    }
 }
