@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.SkillLoopAllAdapter
 import cn.wthee.pcrtool.data.model.SkillLoop
@@ -13,13 +12,11 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class CharacterSkillLoopDialogFragment : BottomSheetDialogFragment() {
+class CharacterSkillLoopDialogFragment(
+    private val uid: Int
+) : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentSkillLoopBinding
-
-    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
-        InjectorUtil.provideCharacterSkillViewModelFactory()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +25,13 @@ class CharacterSkillLoopDialogFragment : BottomSheetDialogFragment() {
         binding = FragmentSkillLoopBinding.inflate(inflater, container, false)
         val adapter = SkillLoopAllAdapter()
         binding.skillLoopList.adapter = adapter
+
+        val viewModel = InjectorUtil.provideCharacterSkillViewModelFactory()
+            .create(CharacterSkillViewModel::class.java)
+
+        viewModel.getCharacterSkillLoops(uid)
         //技能动作循环
-        sharedSkillViewModel.acttackPattern.observe(viewLifecycleOwner, {
+        viewModel.acttackPattern.observe(viewLifecycleOwner, {
             val loops = arrayListOf<SkillLoop>()
             if (it.size > 1) {
                 loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))

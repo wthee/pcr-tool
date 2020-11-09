@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minHeight="@dimen/card_height"
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +17,7 @@
         <LinearLayout
             android:id="@+id/layout_loop_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/tab_height_1"
             android:visibility="gone"
             tools:visibility="visible"
             android:gravity="center"
@@ -36,6 +38,7 @@
                 android:id="@+id/open_loop_list_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/m_margin"
                 android:gravity="end"
                 android:layout_weight="1"
                 android:textColor="@color/colorPrimary"
@@ -43,6 +46,12 @@
                 android:text="@string/loop_skill" />
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/skill_load"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/tab_height_1" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"

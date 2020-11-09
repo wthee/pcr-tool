@@ -24,10 +24,9 @@ class CommonBottomSheetFragment(private val uid: Int, private val page: PageType
         when (page) {
             PageType.CAHRACTER_SKILL -> {
                 childFragmentManager.beginTransaction()
-                    .replace(R.id.container, CharacterSkillFragment.getInstance(uid, true))
+                    .replace(R.id.container, CharacterSkillFragment(uid, true))
                     .commit()
             }
-            else -> null
         }
 
         return binding.root

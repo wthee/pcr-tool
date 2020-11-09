@@ -25,6 +25,16 @@ class CharacterRepository(private val characterDao: CharacterDao) {
         filter.guild
     )
 
+    //获取角色列表所需数据
+    suspend fun getInfoAndDataCount(name: String, filter: FilterCharacter) =
+        characterDao.getInfoAndDataCount(
+            name,
+            filter.getPositon()[0],
+            filter.getPositon()[1],
+            filter.atk,
+            filter.guild
+        )
+
     //获取角色详情数据
     suspend fun getInfoPro(uid: Int) = characterDao.getInfoPro(uid)
 

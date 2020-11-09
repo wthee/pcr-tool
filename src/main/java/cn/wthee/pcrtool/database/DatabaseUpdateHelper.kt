@@ -8,6 +8,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
@@ -110,7 +111,8 @@ object DatabaseUpdateHelper {
                 if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_LASTEST)
                 //更新数据库版本号
                 try {
-                    MainSettingsFragment.titleDatabase.summary = ver
+                    MainSettingsFragment.titleDatabase.title =
+                        MyApplication.context.getString(R.string.data) + ver
                 } catch (e: Exception) {
                 } finally {
                     MainActivity.sp.edit {

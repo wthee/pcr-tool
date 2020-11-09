@@ -101,6 +101,6 @@ class SkillDiffCallback : DiffUtil.ItemCallback<CharacterSkillInfo>() {
         oldItem: CharacterSkillInfo,
         newItem: CharacterSkillInfo
     ): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem == newItem
     }
 }

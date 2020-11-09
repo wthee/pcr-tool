@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterPageAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -157,20 +159,20 @@ class CharacterListFragment : Fragment() {
     //绑定observe
     private fun setObserve() {
         viewModel.apply {
-//            //TODO 角色数量
-//        if (!viewModel.equipmentCounts.hasObservers()) {
-//            viewModel.equipmentCounts.observe(viewLifecycleOwner, {
-//                if (it > 0) {
-//                    MainPagerFragment.tipText.visibility = View.GONE
-//                    MainActivity.sp.edit {
-//                        putInt(Constants.SP_COUNT_EQUIP, it)
-//                    }
-//                    MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
-//                } else {
-//                    MainPagerFragment.tipText.visibility = View.VISIBLE
-//                }
-//            })
-//        }
+            //角色数量
+            if (!viewModel.characterCount.hasObservers()) {
+                viewModel.characterCount.observe(viewLifecycleOwner, {
+                    if (it > 0) {
+                        MainPagerFragment.tipText.visibility = View.GONE
+                        MainActivity.sp.edit {
+                            putInt(Constants.SP_COUNT_CHARACTER, it)
+                        }
+                        MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
+                    } else {
+                        MainPagerFragment.tipText.visibility = View.VISIBLE
+                    }
+                })
+            }
             //角色信息
             if (!updateChatacter.hasObservers()) {
                 updateChatacter.observe(viewLifecycleOwner, { data ->

@@ -26,7 +26,7 @@ class CharacterPagerAdapter(
         mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid))
         if (!noData) {
             mFragments.put(1, CharacterAttrFragment.getInstance(uid))
-            mFragments.put(2, CharacterSkillFragment.getInstance(uid))
+            mFragments.put(2, CharacterSkillFragment(uid))
         }
     }
 

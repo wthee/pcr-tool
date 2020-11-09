@@ -93,7 +93,6 @@ class CharacterBasicInfoFragment : Fragment() {
 
             override fun end(view: View) {
                 sharedCharacterAttrViewModel.getMaxRankAndRarity(uid)
-                sharedSkillViewModel.getCharacterSkills(uid)
                 MainActivity.canBack = true
             }
         }, binding.fabLoveCbi, binding.basicInfo)

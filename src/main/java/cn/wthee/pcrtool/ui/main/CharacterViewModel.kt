@@ -19,6 +19,7 @@ class CharacterViewModel(
 ) : ViewModel() {
 
     lateinit var characters: Flow<PagingData<CharacterInfo>>
+    var characterCount = MutableLiveData<Int>()
     var character = MutableLiveData<CharacterInfoPro>()
     var refresh = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
@@ -27,7 +28,9 @@ class CharacterViewModel(
 
     //角色基本资料
     fun getCharacters(sortType: SortType, asc: Boolean, name: String) {
+        isLoading.postValue(true)
         viewModelScope.launch {
+            //TODO 收藏 DataStroe 获取 已收藏的角色 id 数据
             characters = Pager(
                 PagingConfig(
                     pageSize = 50,
@@ -42,14 +45,12 @@ class CharacterViewModel(
                     CharacterListFragment.characterfilterParams
                 )
             }.flow
-            //TODO 角色数量
-//            equipmentCounts.postValue(
-//                equipmentRepository.getEquipmentCount(
-//                    EquipmentListFragment.equipFilterParams.type,
-//                    name
-//                )
-//            )
+            //角色数量
+            characterCount.postValue(
+                repository.getInfoAndDataCount(name, CharacterListFragment.characterfilterParams)
+            )
             updateChatacter.postValue(true)
+            isLoading.postValue(false)
         }
     }
 

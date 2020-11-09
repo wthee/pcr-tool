@@ -59,5 +59,15 @@ class CharacterSkillViewModel(
         }
     }
 
+    //角色技能循环
+    fun getCharacterSkillLoops(id: Int) {
+        isLoading.postValue(true)
+        viewModelScope.launch {
+            //技能循环
+            val pattern = repository.getAttackPattern(id)
+            acttackPattern.postValue(pattern)
+        }
+    }
+
 
 }

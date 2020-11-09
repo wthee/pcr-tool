@@ -66,6 +66,35 @@ interface CharacterDao {
         atkType: Int, guild: String
     ): PagingSource<Int, CharacterInfo>
 
+    @Transaction
+    @Query(
+        """
+        SELECT
+            COUNT(unit_profile.unit_id)
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+        WHERE 
+            unit_profile.unit_name like '%' || :unitName || '%' 
+        AND unit_profile.unit_id NOT IN (106701,110201,113801,900103,906601)
+        AND 1 = CASE
+            WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  0 = :atkType  THEN 1
+            WHEN  unit_data.atk_type = :atkType  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  "全部" = :guild  THEN 1 
+            WHEN  unit_profile.guild = :guild  THEN 1 
+        END       
+            """
+    )
+    suspend fun getInfoAndDataCount(
+        unitName: String, pos1: Int, pos2: Int,
+        atkType: Int, guild: String
+    ): Int
+
     //获取角色详情数据
     @Transaction
     @Query(
