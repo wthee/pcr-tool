@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_TODO
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.MainScope
@@ -200,7 +199,23 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 1 -> {
-                    ToastUtil.short(NOTICE_TOAST_TODO)
+                    EquipmentListFragment.equipFilterParams.all =
+                        if (EquipmentListFragment.equipFilterParams.all) {
+                            ToastUtil.short("仅显示收藏")
+                            MainScope().launch {
+                                delay(300L)
+                                fabLove.setImageResource(R.drawable.ic_loved)
+                            }
+                            false
+                        } else {
+                            ToastUtil.short("显示全部")
+                            MainScope().launch {
+                                delay(300L)
+                                fabLove.setImageResource(R.drawable.ic_love_hollow)
+                            }
+                            true
+                        }
+                    sharedEquipViewModel.getEquips("")
                 }
             }
         }

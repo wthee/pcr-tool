@@ -34,14 +34,14 @@ class EquipmentViewModel(
                 )
             ) {
                 equipmentRepository.getPagingEquipments(
-                    EquipmentListFragment.equipFilterParams.type,
-                    name
+                    name,
+                    EquipmentListFragment.equipFilterParams
                 )
             }.flow
             equipmentCounts.postValue(
                 equipmentRepository.getEquipmentCount(
-                    EquipmentListFragment.equipFilterParams.type,
-                    name
+                    name,
+                    EquipmentListFragment.equipFilterParams
                 )
             )
             updateEquip.postValue(true)
