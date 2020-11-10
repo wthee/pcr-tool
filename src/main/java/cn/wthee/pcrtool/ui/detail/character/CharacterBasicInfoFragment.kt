@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.view.CharacterInfoPro
 import cn.wthee.pcrtool.database.view.getPositionIcon
@@ -57,7 +55,7 @@ class CharacterBasicInfoFragment : Fragment() {
         requireArguments().let {
             uid = it.getInt("uid")
         }
-        isLoved = sp.getBoolean(uid.toString(), false)
+        isLoved = CharacterListFragment.characterfilterParams.starIds.contains(uid)
     }
 
     override fun onCreateView(
@@ -178,12 +176,11 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //设置收藏
     private fun setLove(isLoved: Boolean) {
-        sp.edit {
-            putBoolean(
-                uid.toString(),
-                isLoved
-            )
-        }
+
+        if (isLoved)
+            CharacterListFragment.characterfilterParams.add(uid)
+        else
+            CharacterListFragment.characterfilterParams.remove(uid)
 
         val ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
         binding.rightIcon.setImageResource(ic)

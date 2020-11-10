@@ -41,7 +41,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
 
     private lateinit var equip: EquipmentMaxData
     private lateinit var binding: FragmentEquipmentDetailsBinding
-    private lateinit var cusToolbar: ToolbarUtil
     private lateinit var behavior: BottomSheetBehavior<View>
     private val viewModel by activityViewModels<EquipmentDetailsViewModel> {
         InjectorUtil.provideEquipmentDetailsViewModelFactory()
@@ -83,14 +82,10 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     private fun init() {
         binding.apply {
             //toolbar
-            cusToolbar = ToolbarUtil(toolbar)
-            cusToolbar.apply {
-                setCenterStyle()
-                title.text = equip.equipmentName
-                leftIcon.setOnClickListener {
+            ToolbarUtil(toolbar).setCenterTitle(equip.equipmentName)
+                .leftIcon.setOnClickListener {
                     goBack()
                 }
-            }
             detail.apply {
                 //图标
                 val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data
 
+import androidx.room.Transaction
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.enums.value
@@ -22,7 +23,9 @@ class CharacterRepository(private val characterDao: CharacterDao) {
         filter.getPositon()[0],
         filter.getPositon()[1],
         filter.atk,
-        filter.guild
+        filter.guild,
+        if (filter.all) 1 else 0,
+        filter.starIds
     )
 
     //获取角色列表所需数据
@@ -32,7 +35,9 @@ class CharacterRepository(private val characterDao: CharacterDao) {
             filter.getPositon()[0],
             filter.getPositon()[1],
             filter.atk,
-            filter.guild
+            filter.guild,
+            if (filter.all) 1 else 0,
+            filter.starIds
         )
 
     //获取角色详情数据
@@ -81,6 +86,10 @@ class CharacterRepository(private val characterDao: CharacterDao) {
 
     //获取已六星角色
     suspend fun getR6Ids() = characterDao.getR6Ids()
+
+    //角色掉落
+    @Transaction
+    suspend fun getItemDropInfos(unitId: Int) = characterDao.getItemDropInfos(unitId)
 
     companion object {
 

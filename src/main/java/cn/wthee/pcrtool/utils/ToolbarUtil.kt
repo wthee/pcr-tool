@@ -50,8 +50,14 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         setBackground(R.color.colorWhite)
     }
 
+    fun setCenterTitle(titleText: String): ToolbarUtil {
+        setCenterStyle()
+        title.text = titleText
+        return this
+    }
+
     //悬浮窗标题适当缩小
-    fun setFloatTitle(){
+    fun setFloatTitle() {
         setCenterStyle()
         title.textSize = 16f
         val params = toolbar.root.layoutParams as ConstraintLayout.LayoutParams

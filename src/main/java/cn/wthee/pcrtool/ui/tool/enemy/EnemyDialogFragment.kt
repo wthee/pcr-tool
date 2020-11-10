@@ -59,14 +59,10 @@ class EnemyDialogFragment : BottomSheetDialogFragment() {
                 error(R.drawable.unknow_gray)
             }
             //toolbar
-            val cusToolbar = ToolbarUtil(toolbar)
-            cusToolbar.apply {
-                setCenterStyle()
-                title.text = enemy.unit_name
-                leftIcon.setOnClickListener {
+            ToolbarUtil(toolbar).setCenterTitle(enemy.unit_name)
+                .leftIcon.setOnClickListener {
                     dialog?.dismiss()
                 }
-            }
         }
         return binding.root
     }

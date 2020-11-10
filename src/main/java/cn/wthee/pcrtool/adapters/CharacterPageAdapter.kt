@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.core.content.edit
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -48,7 +47,7 @@ class CharacterPageAdapter(
             character: CharacterInfo
         ) {
             //是否收藏
-            val isLoved = MainActivity.sp.getBoolean(character.id.toString(), false)
+            val isLoved = CharacterListFragment.characterfilterParams.starIds.contains(character.id)
 
             binding.apply {
                 (binding.root.parent as? ViewGroup)?.doOnPreDraw {
@@ -104,12 +103,7 @@ class CharacterPageAdapter(
                 }
                 //长按事件
                 binding.root.setOnLongClickListener {
-                    MainActivity.sp.edit {
-                        putBoolean(
-                            character.id.toString(),
-                            !isLoved
-                        )
-                    }
+                    CharacterListFragment.characterfilterParams.add(character.id)
                     CharacterListFragment.characterList.adapter?.notifyItemChanged(
                         absoluteAdapterPosition
                     )

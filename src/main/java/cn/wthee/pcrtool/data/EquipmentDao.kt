@@ -69,9 +69,7 @@ interface EquipmentDao {
     suspend fun getEquipTypes(): List<EquipType>
 
     //所有装备信息
-    @Query("$viewEquipmentMaxData WHERE a.craft_flg = 1 AND a.equipment_name like '%' || :name || '%' AND a.equipment_id < 140000 ORDER BY  a.require_level DESC")
-    suspend fun getAllEquipments(name: String): List<EquipmentMaxData>
-
+    @Transaction
     @Query("""$viewEquipmentMaxData  $equipWhere""")
     fun getPagingEquipments(type: String, name: String): PagingSource<Int, EquipmentMaxData>
 

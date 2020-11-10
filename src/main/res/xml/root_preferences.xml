@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
@@ -33,8 +34,8 @@
             app:summary="0.0.3-beta"
             app:title="@string/check_app_update">
             <intent
-                app:action="android.intent.action.VIEW"
-                app:data="https://www.coolapk.com/apk/273453" />
+                android:action="android.intent.action.VIEW"
+                android:data="https://www.coolapk.com/apk/273453" />
         </Preference>
 
         <SwitchPreferenceCompat
@@ -51,8 +52,8 @@
             app:summary="https://github.com/wthee/pcr-tool"
             app:title="@string/app_sourcce">
             <intent
-                app:action="android.intent.action.VIEW"
-                app:data="https://github.com/wthee/pcr-tool" />
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/wthee/pcr-tool" />
         </Preference>
 
         <Preference
@@ -81,8 +82,8 @@
             app:summary="@string/dev_tip"
             app:title="@string/shizuru_note">
             <intent
-                app:action="android.intent.action.VIEW"
-                app:data="https://github.com/MalitsPlus/ShizuruNotes" />
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/MalitsPlus/ShizuruNotes" />
         </Preference>
     </PreferenceCategory>
 

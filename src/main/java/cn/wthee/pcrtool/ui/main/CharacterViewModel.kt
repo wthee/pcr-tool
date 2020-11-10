@@ -79,4 +79,6 @@ class CharacterViewModel(
     //升级经验列表
     suspend fun getLevelExp() = repository.getLevelExp()
 
+    //掉落信息
+    suspend fun getDrops(uid: Int) = repository.getItemDropInfos(uid)
 }

@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.setting
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -73,30 +72,32 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //egg
         val eggs = findPreference<PreferenceCategory>("egg")
         val eggKL = findPreference<Preference>("kl")
-        eggs?.isVisible = MainActivity.sp.getBoolean("106001", false)
-                || MainActivity.sp.getBoolean("107801", false)
+        //是否显示
+        eggs?.isVisible = CharacterListFragment.characterfilterParams.starIds.contains(106001)
+                || CharacterListFragment.characterfilterParams.starIds.contains(107801)
+                || CharacterListFragment.characterfilterParams.starIds.contains(112001)
         var count = MainActivity.sp.getInt("click_kl", 0)
         eggKL?.setOnPreferenceClickListener {
             count++
-            val text = when (count) {
-                1 -> "不要碰我了~烦死啦"
-                2 -> "我都说过了！烦死啦~烦死啦~"
-                3 -> "凯露我啊~真的生气了！！！"
-                else -> ""
-            }
-            ToastUtil.short(text)
-            if (count == 3) {
+            if (count > 3) {
+                //隐藏
                 eggs?.isVisible = false
-                MainActivity.sp.edit {
-                    putBoolean("106001", false)
-                    putBoolean("107801", false)
-                }
+                CharacterListFragment.characterfilterParams
+                    .remove(106001, 107801, 112001)
                 CharacterListFragment.characterfilterParams.initData()
                 sharedCharacterViewModel.getCharacters(
                     MainActivity.sortType,
                     MainActivity.sortAsc,
                     ""
                 )
+            } else {
+                val text = when (count) {
+                    1 -> "不要碰我了~烦死啦"
+                    2 -> "我都说过了！烦死啦~烦死啦~"
+                    3 -> "凯露我啊~真的生气了！！！"
+                    else -> ""
+                }
+                ToastUtil.short(text)
             }
 
             return@setOnPreferenceClickListener true

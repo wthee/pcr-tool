@@ -46,6 +46,7 @@ class CharacterAttrFragment : Fragment() {
     private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.providePromotionViewModelFactory()
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
@@ -66,7 +67,7 @@ class CharacterAttrFragment : Fragment() {
         var id = uid
         if (CharacterListFragment.r6Ids.contains(id)) id += 60 else id += 30
         val picUrl = Constants.UNIT_ICON_URL + id + Constants.WEBP
-        binding.icon.load(picUrl){
+        binding.icon.load(picUrl) {
             error(R.drawable.unknow_gray)
             placeholder(R.drawable.load_mini)
         }
@@ -82,16 +83,23 @@ class CharacterAttrFragment : Fragment() {
     //点击事件
     private fun setListener() {
         binding.apply {
+            //头像点击查看掉落
+            icon.setOnClickListener {
+                CharacterDropDialogFragment(uid).show(
+                    parentFragmentManager, "character_drop"
+                )
+            }
             //等级点击事件
-            binding.level.setOnClickListener {
-                binding.levelSeekBar.also {
+            level.setOnClickListener {
+                levelSeekBar.also {
                     if (it.visibility == View.VISIBLE)
                         it.visibility = View.GONE
                     else
                         ObjectAnimatorHelper.alpha(it)
                 }
             }
-            binding.levelSeekBar.addOnSliderTouchListener(object :
+            //等级滑动条
+            levelSeekBar.addOnSliderTouchListener(object :
                 Slider.OnSliderTouchListener {
                 override fun onStartTrackingTouch(slider: Slider) {
                     lv = slider.value.toInt()
@@ -99,7 +107,7 @@ class CharacterAttrFragment : Fragment() {
 
                 override fun onStopTrackingTouch(slider: Slider) {
                     lv = slider.value.toInt()
-                    binding.level.text = slider.value.toInt().toString()
+                    level.text = slider.value.toInt().toString()
                     loadData()
                 }
             })
