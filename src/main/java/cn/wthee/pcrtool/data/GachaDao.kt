@@ -4,7 +4,7 @@ package cn.wthee.pcrtool.data
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.database.view.GachaInfo
+import cn.wthee.pcrtool.data.view.GachaInfo
 
 @Dao
 interface GachaDao {

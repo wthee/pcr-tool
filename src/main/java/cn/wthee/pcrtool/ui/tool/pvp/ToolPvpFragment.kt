@@ -15,8 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
-import cn.wthee.pcrtool.database.view.PvpCharacterData
-import cn.wthee.pcrtool.database.view.getDefault
+import cn.wthee.pcrtool.data.view.PvpCharacterData
+import cn.wthee.pcrtool.data.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil

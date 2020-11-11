@@ -7,8 +7,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
-import cn.wthee.pcrtool.database.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 

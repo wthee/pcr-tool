@@ -9,8 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapters.CharacterDropAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterDropInfoBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
+import coil.load
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 
@@ -36,6 +38,8 @@ class CharacterDropDialogFragment(
             .leftIcon.setOnClickListener {
                 dialog?.dismiss()
             }
+        val picUrl = Constants.ITEM_URL + (uid / 100 + 30000) + Constants.WEBP
+        binding.dropIcon.load(picUrl)
         lifecycleScope.launch {
             //初始化列表
             val adapter = CharacterDropAdapter()

@@ -10,8 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.CharacterInfoPro
-import cn.wthee.pcrtool.database.view.getPositionIcon
+import cn.wthee.pcrtool.data.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
@@ -176,7 +176,6 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //设置收藏
     private fun setLove(isLoved: Boolean) {
-
         if (isLoved)
             CharacterListFragment.characterfilterParams.add(uid)
         else

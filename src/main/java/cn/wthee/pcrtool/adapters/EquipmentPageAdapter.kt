@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
@@ -56,7 +56,7 @@ class EquipmentPageAdapter(
                     val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
                     pic.load(picUrl) {
                         error(R.drawable.unknow_gray)
-                        placeholder(R.drawable.load_mini)
+                        placeholder(R.drawable.unknow_gray)
                     }
                     //设置点击跳转
                     root.setOnClickListener {

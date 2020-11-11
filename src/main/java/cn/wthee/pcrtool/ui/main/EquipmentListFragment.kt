@@ -65,15 +65,11 @@ class EquipmentListFragment : Fragment() {
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
             viewModel.equipmentCounts.observe(viewLifecycleOwner, {
-                if (it > 0) {
-                    MainPagerFragment.tipText.visibility = View.GONE
-                    MainActivity.sp.edit {
-                        putInt(Constants.SP_COUNT_EQUIP, it)
-                    }
-                    MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
-                } else {
-                    MainPagerFragment.tipText.visibility = View.VISIBLE
+                MainActivity.sp.edit {
+                    putInt(Constants.SP_COUNT_EQUIP, it)
                 }
+                MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
+                MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
             })
         }
 

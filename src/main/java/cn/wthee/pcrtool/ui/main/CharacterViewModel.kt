@@ -7,8 +7,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.CharacterRepository
-import cn.wthee.pcrtool.database.view.CharacterInfo
-import cn.wthee.pcrtool.database.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.view.CharacterInfo
+import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.enums.SortType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

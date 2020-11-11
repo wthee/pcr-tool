@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.GachaRepository
-import cn.wthee.pcrtool.database.view.GachaInfo
+import cn.wthee.pcrtool.data.view.GachaInfo
 import kotlinx.coroutines.launch
 
 

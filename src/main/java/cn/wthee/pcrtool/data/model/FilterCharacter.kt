@@ -31,9 +31,7 @@ class FilterCharacter(
     fun add(vararg id: Int) {
         val list = starIds
         id.forEach {
-            if (list.contains(it)) {
-                list.remove(it)
-            } else {
+            if (!list.contains(it)) {
                 list.add(it)
             }
         }

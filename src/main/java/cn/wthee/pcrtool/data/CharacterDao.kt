@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.database.entity.*
-import cn.wthee.pcrtool.database.view.*
+import cn.wthee.pcrtool.data.entity.*
+import cn.wthee.pcrtool.data.view.*
 
 //角色筛选条件
 const val characterWhere =

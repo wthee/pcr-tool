@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.data.CharacterDao
 import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
 import cn.wthee.pcrtool.data.GachaDao
-import cn.wthee.pcrtool.database.entity.*
-import cn.wthee.pcrtool.database.entityjp.*
+import cn.wthee.pcrtool.data.entity.*
+import cn.wthee.pcrtool.data.entityjp.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
 
 

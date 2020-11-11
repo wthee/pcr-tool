@@ -5,7 +5,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.data.service.PVPService
-import cn.wthee.pcrtool.database.view.getIds
+import cn.wthee.pcrtool.data.view.getIds
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants

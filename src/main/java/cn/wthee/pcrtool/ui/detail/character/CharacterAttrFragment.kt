@@ -6,18 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterAttrAdapter
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
-import cn.wthee.pcrtool.database.view.all
-import cn.wthee.pcrtool.database.view.allNotZero
+import cn.wthee.pcrtool.data.view.all
+import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import coil.load
 import com.google.android.material.slider.Slider
+import kotlinx.coroutines.launch
 
 
 class CharacterAttrFragment : Fragment() {
@@ -45,6 +48,9 @@ class CharacterAttrFragment : Fragment() {
     }
     private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.providePromotionViewModelFactory()
+    }
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,9 +91,15 @@ class CharacterAttrFragment : Fragment() {
         binding.apply {
             //头像点击查看掉落
             icon.setOnClickListener {
-                CharacterDropDialogFragment(uid).show(
-                    parentFragmentManager, "character_drop"
-                )
+                lifecycleScope.launch {
+                    if (sharedCharacterViewModel.getDrops(uid).isNotEmpty()) {
+                        CharacterDropDialogFragment(uid).show(
+                            parentFragmentManager, "character_drop"
+                        )
+                    } else {
+                        ToastUtil.short("无掉落信息~")
+                    }
+                }
             }
             //等级点击事件
             level.setOnClickListener {
@@ -106,26 +118,35 @@ class CharacterAttrFragment : Fragment() {
                 }
 
                 override fun onStopTrackingTouch(slider: Slider) {
-                    lv = slider.value.toInt()
-                    level.text = slider.value.toInt().toString()
                     loadData()
                 }
+
             })
+            levelSeekBar.addOnChangeListener { slider, value, fromUser ->
+                lv = slider.value.toInt()
+                level.text = lv.toString()
+            }
         }
     }
 
     private fun setObserve() {
+        //角色基本信息
+        sharedCharacterViewModel.getCharacter(uid)
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
+            binding.name.text = it.name
+        })
         //获取角色最大Rank后，加载数据
         sharedCharacterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
             selRank = r[0]
             selRatity = r[1]
             maxStar = r[1]
             lv = r[2]
-            binding.level.text = lv.toString()
-            binding.levelSeekBar.valueTo = lv.toFloat()
-            binding.levelSeekBar.value = lv.toFloat()
-            loadData()
             binding.apply {
+                level.text = lv.toString()
+                levelSeekBar.valueFrom = 1.0f
+                levelSeekBar.valueTo = lv.toFloat()
+                levelSeekBar.value = lv.toFloat()
+                loadData()
                 setRank(selRank)
                 setRatity(selRatity)
                 rankEquip.rankAdd.setOnClickListener {

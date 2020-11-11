@@ -29,6 +29,9 @@ object Constants {
     //装备图标接口
     const val EQUIPMENT_URL = API_URL + "icon/equipment/"
 
+    //道具
+    const val ITEM_URL = API_URL + "icon/item/"
+
     //图标接口
     const val UNIT_ICON_URL = API_URL + "icon/unit/"
     const val UNIT_ICON_SHADOW_URL = API_URL + "icon/unit_shadow/"

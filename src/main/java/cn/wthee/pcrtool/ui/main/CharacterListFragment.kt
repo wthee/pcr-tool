@@ -162,15 +162,11 @@ class CharacterListFragment : Fragment() {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
                 viewModel.characterCount.observe(viewLifecycleOwner, {
-                    if (it > 0) {
-                        MainPagerFragment.tipText.visibility = View.GONE
-                        MainActivity.sp.edit {
-                            putInt(Constants.SP_COUNT_CHARACTER, it)
-                        }
-                        MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
-                    } else {
-                        MainPagerFragment.tipText.visibility = View.VISIBLE
+                    MainActivity.sp.edit {
+                        putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
+                    MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
+                    MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
                 })
             }
             //角色信息

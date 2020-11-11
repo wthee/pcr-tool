@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.CharacterInfo
-import cn.wthee.pcrtool.database.view.getPositionIcon
+import cn.wthee.pcrtool.data.view.CharacterInfo
+import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
@@ -103,7 +103,13 @@ class CharacterPageAdapter(
                 }
                 //长按事件
                 binding.root.setOnLongClickListener {
-                    CharacterListFragment.characterfilterParams.add(character.id)
+                    //收藏或取消
+                    CharacterListFragment.characterfilterParams.apply {
+                        if (starIds.contains(character.id))
+                            remove(character.id)
+                        else
+                            add(character.id)
+                    }
                     CharacterListFragment.characterList.adapter?.notifyItemChanged(
                         absoluteAdapterPosition
                     )

@@ -4,14 +4,14 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.database.entity.EnemyRewardData
-import cn.wthee.pcrtool.database.entity.EquipmentCraft
-import cn.wthee.pcrtool.database.entity.EquipmentData
-import cn.wthee.pcrtool.database.entity.EquipmentEnhanceRate
-import cn.wthee.pcrtool.database.view.EquipType
-import cn.wthee.pcrtool.database.view.EquipmentDropInfo
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
-import cn.wthee.pcrtool.database.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.entity.EnemyRewardData
+import cn.wthee.pcrtool.data.entity.EquipmentCraft
+import cn.wthee.pcrtool.data.entity.EquipmentData
+import cn.wthee.pcrtool.data.entity.EquipmentEnhanceRate
+import cn.wthee.pcrtool.data.view.EquipType
+import cn.wthee.pcrtool.data.view.EquipmentDropInfo
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
 
 //装备满属性视图
 const val viewEquipmentMaxData = """

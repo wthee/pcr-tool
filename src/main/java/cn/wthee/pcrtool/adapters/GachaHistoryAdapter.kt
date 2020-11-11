@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.database.view.GachaInfo
+import cn.wthee.pcrtool.data.view.GachaInfo
 import cn.wthee.pcrtool.databinding.ItemGachaBinding
 
 

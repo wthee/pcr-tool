@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.EquipmentDropInfo
+import cn.wthee.pcrtool.data.view.EquipmentDropInfo
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 

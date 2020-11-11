@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="@dimen/elevation_card"
-    android:layout_marginTop="@dimen/m_margin"
-    android:layout_marginBottom="@dimen/m_margin">
+    android:background="@color/colorWhite"
+    android:paddingTop="@dimen/m_padding">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic6"

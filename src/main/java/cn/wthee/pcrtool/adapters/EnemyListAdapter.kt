@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.entity.EnemyData
+import cn.wthee.pcrtool.data.entity.EnemyData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.tool.enemy.EnemyDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_SHADOW_URL
@@ -92,7 +92,7 @@ class EnemyListAdapter(
                 } + WEBP
                 pic.load(picUrl) {
                     error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.load_mini)
+                    placeholder(R.drawable.unknow_gray)
                 }
                 //设置点击跳转
                 root.setOnClickListener {

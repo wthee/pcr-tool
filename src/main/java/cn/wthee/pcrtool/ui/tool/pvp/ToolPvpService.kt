@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.OnPostListener
 import cn.wthee.pcrtool.data.PvpDataRepository
 import cn.wthee.pcrtool.data.model.Result
-import cn.wthee.pcrtool.database.view.PvpCharacterData
+import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
