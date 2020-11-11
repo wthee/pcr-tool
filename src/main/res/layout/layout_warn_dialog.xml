@@ -26,7 +26,7 @@
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/l_margin"
+        android:layout_marginTop="@dimen/xm_margin"
         android:lineSpacingExtra="5dp"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
