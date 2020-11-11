@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterDropAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterDropInfoBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
@@ -39,7 +40,10 @@ class CharacterDropDialogFragment(
                 dialog?.dismiss()
             }
         val picUrl = Constants.ITEM_URL + (uid / 100 + 30000) + Constants.WEBP
-        binding.dropIcon.load(picUrl)
+        binding.dropIcon.load(picUrl) {
+            placeholder(R.drawable.unknow_gray)
+            error(R.drawable.unknow_gray)
+        }
         lifecycleScope.launch {
             //初始化列表
             val adapter = CharacterDropAdapter()

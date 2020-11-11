@@ -32,27 +32,15 @@
                 tools:src="@drawable/unknow_gray" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/xm_margin"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:textColor="@color/colorPrimary"
-                app:layout_constraintBottom_toTopOf="@+id/level"
-                app:layout_constraintStart_toEndOf="@id/icon"
-                app:layout_constraintTop_toTopOf="@id/icon"
-                tools:text="@string/app_name" />
-
-            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/xm_margin"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toTopOf="@+id/starts"
                 app:layout_constraintStart_toEndOf="@id/icon"
-                app:layout_constraintTop_toBottomOf="@id/name"
-                app:layout_constraintBottom_toTopOf="@id/starts"
+                app:layout_constraintTop_toTopOf="@id/icon"
                 tools:text="999" />
 
             <LinearLayout
@@ -110,11 +98,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/colorWhite"
             android:gravity="center"
             android:paddingTop="@dimen/l_padding"
             android:text="@string/sorry_ue"
-            android:textColor="@color/colorAlphaWhite"
+            android:textColor="@color/colorAlpha"
             android:textIsSelectable="true" />
 
     </LinearLayout>

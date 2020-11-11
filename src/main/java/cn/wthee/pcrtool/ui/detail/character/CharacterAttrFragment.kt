@@ -131,10 +131,10 @@ class CharacterAttrFragment : Fragment() {
 
     private fun setObserve() {
         //角色基本信息
-        sharedCharacterViewModel.getCharacter(uid)
-        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
-            binding.name.text = it.name
-        })
+//        sharedCharacterViewModel.getCharacter(uid)
+//        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
+//            binding.name.text = it.name
+//        })
         //获取角色最大Rank后，加载数据
         sharedCharacterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
             selRank = r[0]
