@@ -48,7 +48,7 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/other"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_tool"
+        android:src="@drawable/ic_more"
         android:theme="@style/Ripple"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

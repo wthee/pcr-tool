@@ -8,25 +8,10 @@
         android:title="@string/tool_pvp"
         app:showAsAction="always" />
 
-
     <item
-        android:id="@+id/menu_tool_level"
-        android:icon="@drawable/ic_level"
-        android:title="@string/tool_level"
-        app:showAsAction="never" />
+        android:id="@+id/show_more"
+        android:icon="@drawable/ic_more"
+        android:title="@string/more"
+        app:showAsAction="always" />
 
-    <item
-        android:id="@+id/menu_tool_enemy"
-        android:icon="@drawable/ic_enemy"
-        android:iconTint="@color/colorWhite"
-        android:title="@string/tool_enemy"
-        app:showAsAction="never" />
-
-
-    <item
-        android:id="@+id/menu_tool_gacha"
-        android:icon="@drawable/ic_enemy"
-        android:iconTint="@color/colorWhite"
-        android:title="@string/tool_gacha"
-        app:showAsAction="never" />
 </menu>

@@ -2,9 +2,12 @@ package cn.wthee.pcrtool
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,6 +18,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
+import cn.wthee.pcrtool.databinding.LayoutPopupMenuBinding
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
@@ -45,6 +49,7 @@ class MainPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentMainPagerBinding
     private lateinit var viewPager2: ViewPager2
+    private lateinit var popupMenu: PopupWindow
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -63,7 +68,6 @@ class MainPagerFragment : Fragment() {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         prepareTransitions()
-
         return binding.root
     }
 
@@ -87,32 +91,39 @@ class MainPagerFragment : Fragment() {
         }
     }
 
-    // TODO 让菜单同时显示图标和文字
-//    override fun onPrepareOptionsMenu(menu: Menu) {
-//        super.onPrepareOptionsMenu(menu)
-//        if (menu.javaClass == MenuBuilder::class.java) {
-//            try {
-//                val m: Method =
-//                    menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE)
-//                m.isAccessible = true
-//                m.invoke(menu, true)
-//            } catch (e: java.lang.Exception) {
-//            }
-//        }
-//    }
-
-
     private fun init() {
         tipText = binding.noDataTip
         //menu
         binding.mainToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.menu_tool_pvp -> findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
-                R.id.menu_tool_level -> findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
-                R.id.menu_tool_enemy -> findNavController().navigate(R.id.action_containerFragment_to_enemyListFragment)
-                R.id.menu_tool_gacha -> findNavController().navigate(R.id.action_containerFragment_to_toolGachaFragment)
+                R.id.menu_tool_pvp -> {
+                    findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
+                    FabHelper.addBackFab()
+                }
+                R.id.show_more -> {
+                    //显示
+                    showPopupMenu().apply {
+                        root.setOnClickListener {
+                            popupMenu.dismiss()
+                        }
+                        toolLevel.setOnClickListener {
+                            popupMenu.dismiss()
+                            findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
+                            FabHelper.addBackFab()
+                        }
+                        toolEnemy.setOnClickListener {
+                            popupMenu.dismiss()
+                            findNavController().navigate(R.id.action_containerFragment_to_enemyListFragment)
+                            FabHelper.addBackFab()
+                        }
+                        toolGacha.setOnClickListener {
+                            popupMenu.dismiss()
+                            findNavController().navigate(R.id.action_containerFragment_to_toolGachaFragment)
+                            FabHelper.addBackFab()
+                        }
+                    }
+                }
             }
-            FabHelper.addBackFab()
             return@setOnMenuItemClickListener true
         }
         //禁止连续点击
@@ -186,6 +197,20 @@ class MainPagerFragment : Fragment() {
 
     }
 
+    private fun showPopupMenu(): LayoutPopupMenuBinding {
+
+        val menuBinding = LayoutPopupMenuBinding.inflate(layoutInflater)
+
+        popupMenu = PopupWindow(context)
+        popupMenu.contentView = menuBinding.root
+        popupMenu.width = LinearLayout.LayoutParams.MATCH_PARENT
+        popupMenu.height = LinearLayout.LayoutParams.MATCH_PARENT
+        popupMenu.isFocusable = true
+        popupMenu.setBackgroundDrawable(ResourcesUtil.getDrawable(R.color.colorAlphtBlack))
+        popupMenu.showAtLocation(menuBinding.root, Gravity.NO_GRAVITY, 0, 0)
+
+        return menuBinding
+    }
 
     //配置共享元素动画
     private fun prepareTransitions() {

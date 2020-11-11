@@ -38,7 +38,7 @@
     </style>
 
     <style name="OverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_tool</item>
+        <item name="android:src">@drawable/ic_more</item>
     </style>
 
 </resources>
