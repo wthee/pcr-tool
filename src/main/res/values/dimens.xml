@@ -34,7 +34,7 @@
 
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="spinner_height">20dp</dimen>
-    <dimen name="toolbar_height">42dp</dimen>
+    <dimen name="toolbar_height">38dp</dimen>
     <dimen name="tab_height_1">36dp</dimen>
     <dimen name="tab_height_2">22dp</dimen>
 

@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.activity.viewModels
@@ -81,16 +80,17 @@ class MainActivity : AppCompatActivity() {
         //绑定活动
         ActivityUtil.instance.currentActivity = this
         mHeight = ScreenUtil.getWidth(this) - 48.dp
+
         //状态栏适配 TODO 替换 Deprecated 的方法
-        val window: Window = window
         val layoutParams = WindowManager.LayoutParams()
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = Color.TRANSPARENT
-        var systemUiVisibility: Int = window.decorView.getSystemUiVisibility()
-        systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        window.decorView.systemUiVisibility = systemUiVisibility
+//        var systemUiVisibility: Int = window.decorView.getSystemUiVisibility()
+//        systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//        systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//        window.decorView.systemUiVisibility = systemUiVisibility
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -100,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             mHeight = ScreenUtil.getWidth(this) - 48.dp
         super.onConfigurationChanged(newConfig)
     }
+
 
     override fun onPause() {
         super.onPause()
@@ -120,24 +121,6 @@ class MainActivity : AppCompatActivity() {
             super.dispatchKeyEvent(event)
         }
     }
-
-    //TODO 让菜单同时显示图标和文字
-//    override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
-//        if (menu != null) {
-//            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
-//                try {
-//                    val method: Method = menu.getClass()
-//                        .getDeclaredMethod("setOptionalIconsVisible", java.lang.Boolean.TYPE)
-//                    method.setAccessible(true)
-//                    method.invoke(menu, true)
-//                } catch (e: java.lang.Exception) {
-//                    e.printStackTrace()
-//                }
-//            }
-//        }
-//        return super.onMenuOpened(featureId, menu)
-//    }
-
 
     private fun init() {
         //获取版本名

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="@dimen/card_height"
     android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:minHeight="@dimen/card_height">
 
 
     <LinearLayout
@@ -18,32 +18,32 @@
             android:id="@+id/layout_loop_title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height_1"
-            android:visibility="gone"
-            tools:visibility="visible"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:background="@drawable/title_background"
                 android:layout_margin="@dimen/m_margin"
+                android:background="@drawable/title_background"
                 android:paddingStart="@dimen/m_padding"
                 android:paddingEnd="@dimen/m_padding"
-                android:textColor="@color/colorWhite"
-                android:text="@string/skill_info" />
+                android:text="@string/skill_info"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorWhite" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/open_loop_list_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/m_margin"
-                android:gravity="end"
                 android:layout_weight="1"
-                android:textColor="@color/colorPrimary"
+                android:gravity="end"
+                android:text="@string/loop_skill"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:text="@string/loop_skill" />
+                android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
         <ProgressBar
@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorBg"
+            android:fitsSystemWindows="true"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -69,13 +70,13 @@
         android:id="@+id/fab_skill_loop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:layout_marginBottom="@dimen/xl_margin"
         android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/looping"
         android:src="@drawable/ic_loop"
         app:borderWidth="0dp"
         app:fabSize="mini"
-        app:tint="@color/colorPrimary"
-        android:layout_marginBottom="@dimen/xl_margin"
-        android:layout_marginEnd="@dimen/m_margin"
-        android:layout_gravity="bottom|end"
-        android:contentDescription="@string/looping" />
+        app:tint="@color/colorPrimary" />
 </FrameLayout>

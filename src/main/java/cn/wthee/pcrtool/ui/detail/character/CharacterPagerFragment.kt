@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -52,6 +53,11 @@ class CharacterPagerFragment : Fragment() {
             postponeEnterTransition()
         }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
     private fun init() {

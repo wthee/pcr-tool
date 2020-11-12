@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="windowNoTitle">true</item>
-<!--        <item name="android:windowFullscreen">true</item>-->
+        <item name="android:windowFullscreen">true</item>
         <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
     </style>
 
