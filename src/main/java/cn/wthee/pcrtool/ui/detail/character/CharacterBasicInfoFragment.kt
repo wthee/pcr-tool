@@ -185,7 +185,7 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.rightIcon.setImageResource(ic)
 
         val icFabColor =
-            resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
+            ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)
 
         val color = ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text)
         binding.name.setTextColor(color)

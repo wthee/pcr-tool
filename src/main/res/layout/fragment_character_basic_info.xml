@@ -409,10 +409,10 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/tab_love"
-        android:src="@drawable/ic_love"
+        android:src="@drawable/ic_loved"
         app:borderWidth="0dp"
         app:fabSize="mini"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:tint="@color/colorAlphtBlack" />
+        app:tint="@color/alphaPrimary" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
