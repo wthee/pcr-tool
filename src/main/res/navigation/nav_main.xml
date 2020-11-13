@@ -62,7 +62,11 @@
         android:id="@+id/characterPagerFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment"
         android:label="CharacterPagerFragment"
-        tools:layout="@layout/fragment_character_basic_info" />
+        tools:layout="@layout/fragment_character_basic_info">
+        <action
+            android:id="@+id/action_characterPagerFragment_to_characterPicListFragment"
+            app:destination="@id/characterPicListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/equipmentDetailsFragment"
         android:name="cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment"
@@ -109,5 +113,9 @@
         android:id="@+id/toolGachaFragment"
         android:name="cn.wthee.pcrtool.ui.tool.gacha.GachaFragment"
         android:label="ToolGachaFragment" />
+    <fragment
+        android:id="@+id/characterPicListFragment"
+        android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPicListFragment"
+        android:label="CharacterPicListFragment" />
 
 </navigation>

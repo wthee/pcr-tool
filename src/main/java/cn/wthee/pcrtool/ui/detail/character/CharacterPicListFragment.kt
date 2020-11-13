@@ -1,13 +1,15 @@
 package cn.wthee.pcrtool.ui.detail.character
 
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import cn.wthee.pcrtool.R
@@ -17,23 +19,14 @@ import cn.wthee.pcrtool.utils.ImageDownloadUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import coil.imageLoader
 import coil.request.ImageRequest
+import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.launch
 
 
-class CharacterPicDialogFragment : DialogFragment() {
+class CharacterPicListFragment : Fragment() {
 
     companion object {
-        var hasLoaded = arrayListOf<Boolean>()
-
-        fun getInstance(urls: ArrayList<String>): CharacterPicDialogFragment {
-            val fragment = CharacterPicDialogFragment()
-            val bundle = Bundle()
-            bundle.putStringArrayList("urls", urls)
-            fragment.arguments = bundle
-            hasLoaded = arrayListOf(false, false, false, false)
-            return fragment
-        }
-
+        var hasLoaded = arrayListOf(false, false, false, false)
     }
 
     private lateinit var binding: FragmentCharacterPicListBinding
@@ -43,6 +36,11 @@ class CharacterPicDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         urls = requireArguments().getStringArrayList("urls") as ArrayList<String>
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            scrimColor = Color.TRANSPARENT
+            duration = resources.getInteger(R.integer.fragment_anim).toLong()
+            setAllContainerColors(Color.TRANSPARENT)
+        }
     }
 
     override fun onCreateView(
@@ -95,22 +93,11 @@ class CharacterPicDialogFragment : DialogFragment() {
             }
             //返回
             fabBack.setOnClickListener {
-                dismiss()
+                findNavController().navigateUp()
             }
         }
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        val window = dialog?.window
-        window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val params = window?.attributes
-        params?.width = ViewGroup.LayoutParams.MATCH_PARENT
-        params?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        params?.horizontalMargin = 0f
-        params?.verticalMargin = 0f
-        window?.attributes = params
-    }
 
 }

@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
@@ -21,6 +23,7 @@ import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.transition.Hold
 import kotlin.math.abs
 
 
@@ -28,6 +31,7 @@ class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
         var isLoved = false
+        lateinit var pic: AppCompatImageView
         fun getInstance(uid: Int): CharacterBasicInfoFragment {
             val fragment = CharacterBasicInfoFragment()
             val bundle = Bundle()
@@ -46,9 +50,6 @@ class CharacterBasicInfoFragment : Fragment() {
     private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.providePromotionViewModelFactory()
     }
-    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
-        InjectorUtil.provideCharacterSkillViewModelFactory()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +57,7 @@ class CharacterBasicInfoFragment : Fragment() {
             uid = it.getInt("uid")
         }
         isLoved = CharacterListFragment.characterfilterParams.starIds.contains(uid)
+        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -66,9 +68,11 @@ class CharacterBasicInfoFragment : Fragment() {
         //设置共享元素
         binding.root.transitionName = "item_${uid}"
         //toolbar 背景
+        pic = binding.characterPic
         val picUrl =
             Constants.CHARACTER_URL + (uid + if (CharacterListFragment.r6Ids.contains(id)) 60 else 30) + Constants.WEBP
         //角色图片
+        binding.characterPic.transitionName = picUrl
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
             placeholder(R.drawable.load)
@@ -105,6 +109,7 @@ class CharacterBasicInfoFragment : Fragment() {
         setHasOptionsMenu(true)
         //初始收藏
         setLove(isLoved)
+
         return binding.root
     }
 
@@ -126,9 +131,12 @@ class CharacterBasicInfoFragment : Fragment() {
                 setLove(isLoved)
             }
             characterPic.setOnClickListener {
-                CharacterPicDialogFragment
-                    .getInstance(urls)
-                    .show(parentFragmentManager, "pic")
+                val bundle = Bundle()
+                bundle.putStringArrayList("urls", urls)
+                findNavController().navigate(
+                    R.id.action_characterPagerFragment_to_characterPicListFragment,
+                    bundle
+                )
             }
             //toolbar 展开折叠监听
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -232,4 +240,6 @@ class CharacterBasicInfoFragment : Fragment() {
             comments.text = characterPro.getCommentsText()
         }
     }
+
+
 }

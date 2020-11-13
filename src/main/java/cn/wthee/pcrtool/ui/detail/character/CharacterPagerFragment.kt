@@ -2,9 +2,11 @@ package cn.wthee.pcrtool.ui.detail.character
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -12,6 +14,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.transition.MaterialContainerTransform
@@ -51,6 +54,8 @@ class CharacterPagerFragment : Fragment() {
         if (savedInstanceState == null) {
             postponeEnterTransition()
         }
+        //共享元素
+        prepareTransitions()
         return binding.root
     }
 
@@ -71,5 +76,28 @@ class CharacterPagerFragment : Fragment() {
         }
 
     }
+
+    //配置共享元素动画
+    private fun prepareTransitions() {
+
+        setExitSharedElementCallback(object : SharedElementCallback() {
+            override fun onMapSharedElements(
+                names: MutableList<String>?,
+                sharedElements: MutableMap<String, View>?
+            ) {
+                try {
+                    if (names!!.isNotEmpty()) {
+                        sharedElements ?: return
+                        //角色图片
+                        val v0 = CharacterBasicInfoFragment.pic
+                        sharedElements[names[0]] = v0
+                    }
+                } catch (e: Exception) {
+                    Log.e(Constants.LOG_TAG, e.message ?: "")
+                }
+            }
+        })
+    }
+
 
 }
