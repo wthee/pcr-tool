@@ -36,6 +36,7 @@ class CharacterPicListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         urls = requireArguments().getStringArrayList("urls") as ArrayList<String>
+        //过渡
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = resources.getInteger(R.integer.fragment_anim).toLong()

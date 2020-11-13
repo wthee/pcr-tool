@@ -31,9 +31,7 @@ class CharacterPicAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(url: String) {
             with(binding) {
-                if (absoluteAdapterPosition == 0) {
-                    characterPic.transitionName = url
-                }
+                characterPic.transitionName = url
                 //加载网络图片
                 characterPic.load(url) {
                     error(R.drawable.error)

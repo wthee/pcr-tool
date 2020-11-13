@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.transition.Hold
 import kotlin.math.abs
 
 
@@ -57,7 +56,6 @@ class CharacterBasicInfoFragment : Fragment() {
             uid = it.getInt("uid")
         }
         isLoved = CharacterListFragment.characterfilterParams.starIds.contains(uid)
-        exitTransition = Hold()
     }
 
     override fun onCreateView(
