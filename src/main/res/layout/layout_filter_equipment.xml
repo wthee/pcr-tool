@@ -27,7 +27,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:scrollbars="vertical"
-        android:layout_height="@dimen/card_height">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chips_type"
@@ -38,11 +38,5 @@
             app:singleSelection="true" />
 
     </androidx.core.widget.NestedScrollView>
-
-    <include
-        android:id="@+id/btns"
-        layout="@layout/layout_dialog_btns"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize" />
 
 </LinearLayout>

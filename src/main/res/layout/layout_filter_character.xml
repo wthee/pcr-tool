@@ -222,11 +222,4 @@
     </androidx.core.widget.NestedScrollView>
 
 
-    <include
-        android:id="@+id/btns"
-        layout="@layout/layout_dialog_btns"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
 </LinearLayout>

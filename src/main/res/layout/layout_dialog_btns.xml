@@ -6,21 +6,19 @@
     android:orientation="horizontal">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/reset"
+        android:id="@+id/left"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/xl_margin"
         android:layout_weight="1"
         android:text="@string/reset"
         android:textColor="@color/text" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/next"
+        android:id="@+id/right"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xl_margin"
         android:layout_weight="1"
         android:text="@string/next" />
 

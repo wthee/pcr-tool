@@ -98,14 +98,14 @@ class CharacterListFragment : Fragment() {
                         Constants.BTN_OPERATE_FORCE_UPDATE_DB,
                         Constants.BTN_NOT_UPDATE_DB,
                         object : DialogListener {
-                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                            override fun onCancel(dialog: AlertDialog) {
                                 //强制更新数据库
                                 DatabaseUpdateHelper.forceUpdate()
                                 ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
                                 dialog.dismiss()
                             }
 
-                            override fun onButtonOkClick(dialog: AlertDialog) {
+                            override fun onConfirm(dialog: AlertDialog) {
                                 dialog.dismiss()
                             }
                         }
@@ -127,12 +127,12 @@ class CharacterListFragment : Fragment() {
                         getString(R.string.close_app),
                         getString(R.string.close_app_too),
                         object : DialogListener {
-                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                            override fun onCancel(dialog: AlertDialog) {
                                 requireActivity().finish()
                                 exitProcess(0)
                             }
 
-                            override fun onButtonOkClick(dialog: AlertDialog) {
+                            override fun onConfirm(dialog: AlertDialog) {
                                 requireActivity().finish()
                                 exitProcess(0)
                             }

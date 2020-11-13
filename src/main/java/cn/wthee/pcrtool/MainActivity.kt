@@ -8,6 +8,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEachIndexed
@@ -281,9 +282,6 @@ class MainActivity : AppCompatActivity() {
                             chip.isChecked = true
                         }
                     }
-                    val dialog = DialogUtil.create(this, layout.root)
-                    dialog.show()
-
                     //排序类型
                     when (sortType) {
                         SortType.SORT_DATE -> layout.sortChip0.isChecked = true
@@ -305,53 +303,58 @@ class MainActivity : AppCompatActivity() {
                         val chip = view as Chip
                         chip.isChecked = CharacterListFragment.characterfilterParams.atk == index
                     }
-                    layout.btns.next.setOnClickListener {
-                        dialog.dismiss()
-                        //排序选项
-                        sortType = when (layout.sortTypeChips.checkedChipId) {
-                            R.id.sort_chip_0 -> SortType.SORT_DATE
-                            R.id.sort_chip_1 -> SortType.SORT_AGE
-                            R.id.sort_chip_2 -> SortType.SORT_HEIGHT
-                            R.id.sort_chip_3 -> SortType.SORT_WEIGHT
-                            R.id.sort_chip_4 -> SortType.SORT_POSITION
-                            else -> SortType.SORT_DATE
-                        }
-                        sortAsc = layout.ascChips.checkedChipId == R.id.asc
-                        //位置
-                        CharacterListFragment.characterfilterParams.positon =
-                            when (layout.chipsPosition.checkedChipId) {
-                                R.id.position_chip_1 -> 1
-                                R.id.position_chip_2 -> 2
-                                R.id.position_chip_3 -> 3
-                                else -> 0
+                    //显示弹窗
+                    DialogUtil.create(this, layout.root, getString(R.string.reset),
+                        getString(R.string.next), object : DialogListener {
+                            override fun onCancel(dialog: AlertDialog) {
+                                CharacterListFragment.characterfilterParams.initData()
+                                CharacterListFragment.characterfilterParams.all = true
+                                sortType = SortType.SORT_DATE
+                                sortAsc = false
+                                sharedCharacterViewModel.getCharacters(
+                                    sortType,
+                                    sortAsc, ""
+                                )
                             }
-                        //攻击类型
-                        CharacterListFragment.characterfilterParams.atk =
-                            when (layout.chipsAtk.checkedChipId) {
-                                R.id.atk_chip_1 -> 1
-                                R.id.atk_chip_2 -> 2
-                                else -> 0
+
+                            override fun onConfirm(dialog: AlertDialog) {
+                                //排序选项
+                                sortType = when (layout.sortTypeChips.checkedChipId) {
+                                    R.id.sort_chip_0 -> SortType.SORT_DATE
+                                    R.id.sort_chip_1 -> SortType.SORT_AGE
+                                    R.id.sort_chip_2 -> SortType.SORT_HEIGHT
+                                    R.id.sort_chip_3 -> SortType.SORT_WEIGHT
+                                    R.id.sort_chip_4 -> SortType.SORT_POSITION
+                                    else -> SortType.SORT_DATE
+                                }
+                                sortAsc = layout.ascChips.checkedChipId == R.id.asc
+                                //位置
+                                CharacterListFragment.characterfilterParams.positon =
+                                    when (layout.chipsPosition.checkedChipId) {
+                                        R.id.position_chip_1 -> 1
+                                        R.id.position_chip_2 -> 2
+                                        R.id.position_chip_3 -> 3
+                                        else -> 0
+                                    }
+                                //攻击类型
+                                CharacterListFragment.characterfilterParams.atk =
+                                    when (layout.chipsAtk.checkedChipId) {
+                                        R.id.atk_chip_1 -> 1
+                                        R.id.atk_chip_2 -> 2
+                                        else -> 0
+                                    }
+                                //公会筛选
+                                val chip =
+                                    layout.root.findViewById<Chip>(layout.chipsGuild.checkedChipId)
+                                CharacterListFragment.characterfilterParams.guild =
+                                    chip.text.toString()
+                                //筛选
+                                sharedCharacterViewModel.getCharacters(
+                                    sortType,
+                                    sortAsc, ""
+                                )
                             }
-                        //公会筛选
-                        val chip = layout.root.findViewById<Chip>(layout.chipsGuild.checkedChipId)
-                        CharacterListFragment.characterfilterParams.guild = chip.text.toString()
-                        //筛选
-                        sharedCharacterViewModel.getCharacters(
-                            sortType,
-                            sortAsc, ""
-                        )
-                    }
-                    layout.btns.reset.setOnClickListener {
-                        dialog.dismiss()
-                        CharacterListFragment.characterfilterParams.initData()
-                        CharacterListFragment.characterfilterParams.all = true
-                        sortType = SortType.SORT_DATE
-                        sortAsc = false
-                        sharedCharacterViewModel.getCharacters(
-                            sortType,
-                            sortAsc, ""
-                        )
-                    }
+                        }).show()
                 }
                 //装备筛选
                 1 -> {
@@ -369,21 +372,22 @@ class MainActivity : AppCompatActivity() {
                             chip.isChecked = true
                         }
                     }
-                    val dialog = DialogUtil.create(this, layout.root)
-                    dialog.show()
-                    layout.btns.next.setOnClickListener {
-                        dialog.dismiss()
-                        //筛选选项
-                        val chip = layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
-                        EquipmentListFragment.equipFilterParams.type = chip.text.toString()
-                        sharedEquipViewModel.getEquips("")
+                    //显示弹窗
+                    DialogUtil.create(this, layout.root, getString(R.string.reset),
+                        getString(R.string.next), object : DialogListener {
+                            override fun onCancel(dialog: AlertDialog) {
+                                EquipmentListFragment.equipFilterParams.initData()
+                                sharedEquipViewModel.getEquips("")
+                            }
 
-                    }
-                    layout.btns.reset.setOnClickListener {
-                        dialog.dismiss()
-                        EquipmentListFragment.equipFilterParams.initData()
-                        sharedEquipViewModel.getEquips("")
-                    }
+                            override fun onConfirm(dialog: AlertDialog) {
+                                //筛选选项
+                                val chip =
+                                    layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
+                                EquipmentListFragment.equipFilterParams.type = chip.text.toString()
+                                sharedEquipViewModel.getEquips("")
+                            }
+                        }).show()
                 }
             }
         }
