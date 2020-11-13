@@ -17,7 +17,7 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:background="@drawable/title_background"
-        tools:text="@string/atk"
+        tools:text="@string/physical"
         android:textAppearance="@style/subTitleWithe" />
 
     <com.google.android.material.textview.MaterialTextView

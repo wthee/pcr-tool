@@ -8,19 +8,38 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapters.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
+import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class CharacterSkillFragment(
-    val uid: Int = 0,
-    val isDialog: Boolean = false
-) : Fragment() {
+class CharacterSkillFragment : Fragment() {
 
+    private val DIALOG = "isDialog"
+
+    companion object {
+        fun getInstance(uid: Int, isDialog: Boolean = false) =
+            CharacterSkillFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(UID, uid)
+                    putBoolean(DIALOG, isDialog)
+                }
+            }
+    }
 
     private lateinit var binding: FragmentCharacterSkillBinding
     private lateinit var adapter: SkillAdapter
+    private var uid = 0
+    private var isDialog = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireArguments().apply {
+            uid = getInt(UID)
+            isDialog = getBoolean(DIALOG)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +56,8 @@ class CharacterSkillFragment(
             recycler.adapter = adapter
             //点击查看
             fabSkillLoop.setOnClickListener {
-                CharacterSkillLoopDialogFragment(uid).show(parentFragmentManager, "loop")
+                CharacterSkillLoopDialogFragment.getInstance(uid)
+                    .show(parentFragmentManager, "loop")
             }
         }
         //以悬浮窗显示时
@@ -67,6 +87,6 @@ class CharacterSkillFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.root.layoutTransition.setAnimateParentHierarchy(false);
+        binding.root.layoutTransition.setAnimateParentHierarchy(false)
     }
 }

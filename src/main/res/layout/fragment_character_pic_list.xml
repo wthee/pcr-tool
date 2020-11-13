@@ -38,7 +38,8 @@
         android:layout_marginBottom="@dimen/xl_margin"
         app:borderWidth="0dp"
         app:fabSize="mini"
-        app:tint="@color/colorPrimary" />
+        app:tint="@color/colorPrimary"
+        android:contentDescription="@string/to_download" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_back"

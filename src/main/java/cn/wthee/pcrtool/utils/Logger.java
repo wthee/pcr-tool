@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandler {
-    private static boolean debuggable = true; //正式环境(false)不打印日志，也不能唤起app的debug界面
+    private static final boolean debuggable = true; //正式环境(false)不打印日志，也不能唤起app的debug界面
     private static Logger me;
     private Context mCurrentActivity;
     private static Thread.UncaughtExceptionHandler mDefaultHandler;

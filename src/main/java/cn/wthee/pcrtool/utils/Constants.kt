@@ -81,6 +81,8 @@ object Constants {
     const val NOTICE_TOAST_CHECKING = "正在获取数据版本信息"
     const val NOTICE_TOAST_LASTEST = "数据已是最新版本"
 
+    //常量值
+    const val UID = "uid"
 
     val ATTR = arrayListOf(
         "HP",

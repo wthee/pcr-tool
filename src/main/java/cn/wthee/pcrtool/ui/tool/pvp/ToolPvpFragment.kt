@@ -8,7 +8,6 @@ import android.provider.Settings.canDrawOverlays
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,7 +23,6 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
@@ -54,25 +52,16 @@ class ToolPvpFragment : Fragment() {
         //已选择角色
         loadDefault()
         //角色页面 绑定tab viewpager
-        try {
-            lifecycleScope.launch {
-                character1 = viewModel.getCharacterByPosition(1)
-                character2 = viewModel.getCharacterByPosition(2)
-                character3 = viewModel.getCharacterByPosition(3)
-                delay(300L)
-                setPager()
-            }
-        } catch (e: Exception) {
+        lifecycleScope.launch {
+            character1 = viewModel.getCharacterByPosition(1)
+            character2 = viewModel.getCharacterByPosition(2)
+            character3 = viewModel.getCharacterByPosition(3)
+            setPager()
         }
-
+        //监听
         setListener()
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
     private fun setListener() {

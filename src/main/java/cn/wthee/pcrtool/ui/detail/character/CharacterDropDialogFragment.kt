@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.adapters.CharacterDropAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterDropInfoBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import coil.load
@@ -18,14 +19,29 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 
 
-class CharacterDropDialogFragment(
-    private val uid: Int
-) : BottomSheetDialogFragment() {
+class CharacterDropDialogFragment : BottomSheetDialogFragment() {
 
+    companion object {
+        fun getInstance(uid: Int) =
+            CharacterDropDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(UID, uid)
+                }
+            }
+    }
 
     private lateinit var binding: FragmentCharacterDropInfoBinding
+    private var uid = 0
+
     private val sharedViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireArguments().apply {
+            uid = getInt(UID)
+        }
     }
 
     override fun onCreateView(

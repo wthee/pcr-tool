@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentDropInfo
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropBinding
@@ -33,12 +34,14 @@ class EquipmentDropAdapter :
             binding.apply {
                 quest.text = info.getName()
                 //地图难度
-                questNum.text = when (info.questId / 1000000) {
+                val pre = when (info.questId / 1000000) {
                     11 -> "N"
                     12 -> "H"
                     13 -> "VH"
                     else -> ""
-                } + "-" + info.getNum()
+                } + "-"
+                questNum.text =
+                    MyApplication.context.getString(R.string.quest_name, pre, info.getNum())
                 //颜色
                 val color = when (info.questId / 1000000) {
                     11 -> R.color.color_map_n

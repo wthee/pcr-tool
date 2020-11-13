@@ -1,102 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:paddingBottom="@dimen/m_padding"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/s_padding">
 
-    <LinearLayout
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/view_toolbar" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/item_pic"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/s_margin"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:src="@drawable/unknow_gray" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/desc"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_pic"
+        app:layout_constraintTop_toTopOf="@id/item_pic"
+        tools:text="道具详情道具详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
 
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/view_toolbar" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_atk_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/m_margin"
+        android:background="@drawable/title_background"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
+        app:layout_constraintWidth_percent="0.3"
+        android:text="@string/atk_time"
+        android:textAppearance="@style/subTitleWithe"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/desc" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/atk_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/title_atk_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/title_atk_time"
+        tools:text="780" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/item_pic"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/normal_icon"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/unknow_gray" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_atk_area"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/m_margin"
+        android:background="@drawable/title_background"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
+        android:text="@string/atk_dis"
+        app:layout_constraintWidth_percent="0.3"
+        android:textAppearance="@style/subTitleWithe"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_atk_time" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/s_margin"
-            android:padding="@dimen/m_padding"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="道具详情道具详情道具详情道道具详情道具详情道具详情道道具详情道具详情道具详情道具详情道具详情道具详情" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/atk_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/title_atk_area"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintTop_toTopOf="@id/title_atk_area"
+        tools:text="780" />
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/m_margin"
-            android:paddingStart="@dimen/m_padding"
-            android:paddingEnd="@dimen/m_padding"
-            android:animateLayoutChanges="true">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="@dimen/s_padding"
-                android:background="@drawable/title_background"
-                android:text="攻击时间间隔"
-                android:textAppearance="@style/subTitleWithe" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/atk_time"
-                android:layout_weight="3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:gravity="end"
-                tools:text="780" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/m_margin"
-            android:paddingStart="@dimen/m_padding"
-            android:paddingEnd="@dimen/m_padding"
-            android:animateLayoutChanges="true">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="@dimen/s_padding"
-                android:background="@drawable/title_background"
-                android:text="攻击距离"
-                android:textAppearance="@style/subTitleWithe" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/atk_area"
-                android:layout_weight="3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:gravity="end"
-                tools:text="780" />
-
-        </LinearLayout>
-    </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

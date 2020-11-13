@@ -10,6 +10,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+//TODO 优化扩展性
 object ObjectAnimatorHelper {
 
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
@@ -29,7 +30,11 @@ object ObjectAnimatorHelper {
         }
     }
 
-    private fun start(view: View, onAnimatorListener: OnAnimatorListener?, vararg holders: PropertyValuesHolder) {
+    private fun start(
+        view: View,
+        onAnimatorListener: OnAnimatorListener?,
+        vararg holders: PropertyValuesHolder
+    ) {
         onAnimatorListener?.prev(view)
         MainScope().launch {
             delay(200L)

@@ -24,7 +24,7 @@ object FileUtil {
     } + "/databases"
 
     //数据库路径
-    public fun getDatabasePath(type: Int) =
+    fun getDatabasePath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_Name else Constants.DATABASE_Name_JP
 
     private fun getDatabaseWalPath(type: Int) =

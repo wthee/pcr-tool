@@ -8,15 +8,31 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.SkillLoopAllAdapter
 import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.databinding.FragmentSkillLoopBinding
+import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class CharacterSkillLoopDialogFragment(
-    private val uid: Int
-) : BottomSheetDialogFragment() {
+class CharacterSkillLoopDialogFragment : BottomSheetDialogFragment() {
+
+    companion object {
+        fun getInstance(uid: Int) =
+            CharacterSkillLoopDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(UID, uid)
+                }
+            }
+    }
 
     private lateinit var binding: FragmentSkillLoopBinding
+    private var uid = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireArguments().apply {
+            uid = getInt(UID)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

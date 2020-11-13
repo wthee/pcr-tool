@@ -14,8 +14,6 @@ import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-const val RESULT = "results"
-
 class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentToolPvpResultBinding

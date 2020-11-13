@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.detail.character
 
-import android.content.DialogInterface
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 import cn.wthee.pcrtool.utils.ImageDownloadUtil
@@ -61,7 +61,7 @@ class CharacterPicDialogFragment : DialogFragment() {
             pics.setOnScrollChangeListener { _, _, _, _, _ ->
                 val manager = pics.layoutManager as LinearLayoutManager
                 index = manager.findFirstCompletelyVisibleItemPosition() + 1
-                if (index != 0) picIndex.text = "$index / ${urls.size}"
+                if (index != 0) picIndex.text = getString(R.string.pic_index, index, urls.size)
             }
             //下载
             fabDownload.setOnClickListener {
@@ -113,7 +113,4 @@ class CharacterPicDialogFragment : DialogFragment() {
         window?.attributes = params
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-    }
 }

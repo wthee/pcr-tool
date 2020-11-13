@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
-import cn.wthee.pcrtool.ui.tool.enemy.GachaViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 

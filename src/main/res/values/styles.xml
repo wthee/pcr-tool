@@ -5,21 +5,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="background">@color/colorBg</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
-    </style>
-
-
-    <style name="PopUpAnimation" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/popup_show</item>
-        <item name="android:windowExitAnimation">@anim/popup_hide</item>
-    </style>
-
-    <style name="CollapsedTitle">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/colorAlpha</item>
     </style>
 
     <style name="ExpandedTitle">

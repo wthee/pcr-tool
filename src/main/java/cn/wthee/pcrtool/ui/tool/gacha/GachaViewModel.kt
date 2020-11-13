@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.enemy
+package cn.wthee.pcrtool.ui.tool.gacha
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

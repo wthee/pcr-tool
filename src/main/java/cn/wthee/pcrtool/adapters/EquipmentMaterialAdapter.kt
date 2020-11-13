@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
@@ -61,9 +62,10 @@ class EquipmentMaterialAdapter(
                 params.width = RecyclerView.LayoutParams.WRAP_CONTENT
                 root.layoutParams = params
                 //加载数据
-                var subName = if (info.name.length > 8) info.name.substring(0, 7) else
+                val subName = if (info.name.length > 8) info.name.substring(0, 7) else
                     info.name
-                name.text = " ${subName}... X${info.count} "
+                name.text =
+                    MyApplication.context.getString(R.string.equip_count, subName, info.count)
                 pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
                     error(R.drawable.unknow_gray)
                     placeholder(R.drawable.load_mini)
@@ -78,7 +80,7 @@ class EquipmentMaterialAdapter(
                         //显示当前查看掉落的装备名称
                         partentBinding.materialName.visibility = View.VISIBLE
                         partentBinding.materialTip.visibility = View.VISIBLE
-                        partentBinding.materialName.text = "${info.name}"
+                        partentBinding.materialName.text = info.name
                         //掉落列表
                         val data = viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()

@@ -11,13 +11,32 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class ToolPvpCharacterIconFragment(
-    private val position: Int,
-    private val isFloatWindow: Boolean
-) : Fragment() {
+class ToolPvpCharacterPageFragment : Fragment() {
+
+    private val POSITION = "positon"
+    private val FLOAT = "float"
+
+    companion object {
+        fun getInstance(position: Int, isFloatWindow: Boolean) =
+            ToolPvpCharacterPageFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(POSITION, position)
+                    putSerializable(FLOAT, isFloatWindow)
+                }
+            }
+    }
 
     private lateinit var binding: FragmentToolPvpCharacterBinding
+    private var position = 0
+    private var isFloatWindow = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireArguments().apply {
+            position = getInt(POSITION)
+            isFloatWindow = getBoolean(FLOAT)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

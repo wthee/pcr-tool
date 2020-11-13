@@ -171,7 +171,7 @@ class CharacterListFragment : Fragment() {
             }
             //角色信息
             if (!updateChatacter.hasObservers()) {
-                updateChatacter.observe(viewLifecycleOwner, { data ->
+                updateChatacter.observe(viewLifecycleOwner, {
                     lifecycleScope.launch {
                         @OptIn(ExperimentalCoroutinesApi::class)
                         viewModel.characters.collectLatest { data ->

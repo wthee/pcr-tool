@@ -42,7 +42,7 @@ class SkillAdapter :
             binding.apply {
                 val ctx = MyApplication.context
                 //加载动画
-                content.animation =
+                root.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //装备名称
                 name.text = skill.name
@@ -65,7 +65,7 @@ class SkillAdapter :
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 itemPic.load(picUrl) {
 
-                    target() {
+                    target {
                         val bitmap = (it as BitmapDrawable).bitmap
                         //字体颜色
                         name.setTextColor(

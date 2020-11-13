@@ -4,7 +4,7 @@ import android.util.SparseArray
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpCharacterIconFragment
+import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpCharacterPageFragment
 
 class PvpCharacterPageAdapter(
     activity: FragmentActivity,
@@ -13,9 +13,9 @@ class PvpCharacterPageAdapter(
     private val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
-        mFragments.put(0, ToolPvpCharacterIconFragment(1, isFloatWindow))
-        mFragments.put(1, ToolPvpCharacterIconFragment(2, isFloatWindow))
-        mFragments.put(2, ToolPvpCharacterIconFragment(3, isFloatWindow))
+        mFragments.put(0, ToolPvpCharacterPageFragment.getInstance(1, isFloatWindow))
+        mFragments.put(1, ToolPvpCharacterPageFragment.getInstance(2, isFloatWindow))
+        mFragments.put(2, ToolPvpCharacterPageFragment.getInstance(3, isFloatWindow))
     }
 
     override fun createFragment(position: Int): Fragment {

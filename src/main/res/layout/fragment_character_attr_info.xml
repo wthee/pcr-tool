@@ -3,81 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/colorWhite"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
+        android:animateLayoutChanges="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/big_icon"
+            android:layout_height="@dimen/big_icon"
+            android:layout_margin="@dimen/xm_margin"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/unknow_gray" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/l_margin"
-            android:layout_gravity="center">
+            android:layout_marginStart="@dimen/xm_margin"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/starts"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toTopOf="@id/icon"
+            tools:text="999" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icon"
-                android:layout_width="@dimen/big_icon"
-                android:layout_height="@dimen/big_icon"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitCenter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/unknow_gray" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/level"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/xm_margin"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                android:textColor="@color/colorPrimary"
-                app:layout_constraintBottom_toTopOf="@+id/starts"
-                app:layout_constraintStart_toEndOf="@id/icon"
-                app:layout_constraintTop_toTopOf="@id/icon"
-                tools:text="999" />
-
-            <LinearLayout
-                android:id="@+id/starts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/xm_margin"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@id/icon"
-                app:layout_constraintStart_toEndOf="@id/icon"
-                app:layout_constraintTop_toBottomOf="@+id/level" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/starts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_height="@dimen/toolbar_height"
+            android:layout_marginStart="@dimen/xm_margin"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/icon"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toBottomOf="@+id/level" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/level_seek_bar"
-            android:layout_marginStart="@dimen/xl_margin"
-            android:layout_marginEnd="@dimen/xl_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:stepSize="1"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
             android:visibility="gone"
-            tools:visibility="gone"
             app:labelBehavior="gone"
-            android:stepSize="1" />
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/level"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/level"
+            app:layout_constraintTop_toTopOf="@+id/level"
+            tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/charcter_attrs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/m_margin"
             android:background="@color/colorWhite"
             android:nestedScrollingEnabled="false"
-            android:layout_marginTop="@dimen/m_margin"
             android:paddingStart="@dimen/m_padding"
             android:paddingEnd="@dimen/m_padding"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/icon"
             app:spanCount="2"
             tools:itemCount="5"
             tools:listitem="@layout/item_character_attr" />
@@ -85,16 +79,18 @@
         <include
             android:id="@+id/rank_equip"
             layout="@layout/layout_rank_equip"
-            android:layout_marginTop="@dimen/s_margin"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/s_margin"
+            app:layout_constraintTop_toBottomOf="@id/charcter_attrs" />
 
         <include
             android:id="@+id/unique_equip"
             layout="@layout/layout_equip_detail"
-            android:layout_marginTop="@dimen/s_margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/s_margin"
+            app:layout_constraintTop_toBottomOf="@id/rank_equip" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
@@ -104,8 +100,8 @@
             android:paddingTop="@dimen/l_padding"
             android:text="@string/sorry_ue"
             android:textColor="@color/colorAlpha"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+            app:layout_constraintTop_toBottomOf="@id/unique_equip" />
 
-    </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

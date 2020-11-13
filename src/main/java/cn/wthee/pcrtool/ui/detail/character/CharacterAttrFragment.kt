@@ -80,12 +80,6 @@ class CharacterAttrFragment : Fragment() {
         return binding.root
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.root.layoutTransition.setAnimateParentHierarchy(false);
-    }
-
     //点击事件
     private fun setListener() {
         binding.apply {
@@ -93,7 +87,7 @@ class CharacterAttrFragment : Fragment() {
             icon.setOnClickListener {
                 lifecycleScope.launch {
                     if (sharedCharacterViewModel.getDrops(uid).isNotEmpty()) {
-                        CharacterDropDialogFragment(uid).show(
+                        CharacterDropDialogFragment.getInstance(uid).show(
                             parentFragmentManager, "character_drop"
                         )
                     } else {
@@ -104,10 +98,10 @@ class CharacterAttrFragment : Fragment() {
             //等级点击事件
             level.setOnClickListener {
                 levelSeekBar.also {
-                    if (it.visibility == View.VISIBLE)
-                        it.visibility = View.GONE
+                    it.visibility = if (it.visibility == View.VISIBLE)
+                        View.GONE
                     else
-                        ObjectAnimatorHelper.alpha(it)
+                        View.VISIBLE
                 }
             }
             //等级滑动条
@@ -122,7 +116,7 @@ class CharacterAttrFragment : Fragment() {
                 }
 
             })
-            levelSeekBar.addOnChangeListener { slider, value, fromUser ->
+            levelSeekBar.addOnChangeListener { slider, _, _ ->
                 lv = slider.value.toInt()
                 level.text = lv.toString()
             }
@@ -196,7 +190,8 @@ class CharacterAttrFragment : Fragment() {
                         error(R.drawable.unknow_gray)
                     }
                     //描述
-                    titleDes.text = "${it.equipmentName}  LV ${it.maxLevel}"
+                    titleDes.text =
+                        getString(R.string.unique_equip_name, it.equipmentName, it.maxLevel)
                     desc.text = it.getDesc()
                     //属性词条
                     val adapter = EquipmentAttrAdapter()
