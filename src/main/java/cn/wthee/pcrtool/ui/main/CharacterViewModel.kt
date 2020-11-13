@@ -21,7 +21,7 @@ class CharacterViewModel(
     lateinit var characters: Flow<PagingData<CharacterInfo>>
     var characterCount = MutableLiveData<Int>()
     var character = MutableLiveData<CharacterInfoPro>()
-    var refresh = MutableLiveData<Boolean>()
+    var reset = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
     var updateChatacter = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()

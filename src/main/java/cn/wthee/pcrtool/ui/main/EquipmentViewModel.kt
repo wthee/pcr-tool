@@ -18,8 +18,8 @@ class EquipmentViewModel(
 ) : ViewModel() {
 
     lateinit var equipments: Flow<PagingData<EquipmentMaxData>>
-
     var updateEquip = MutableLiveData<Boolean>()
+    var reset = MutableLiveData<Boolean>()
     var equipmentCounts = MutableLiveData<Int>()
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
 

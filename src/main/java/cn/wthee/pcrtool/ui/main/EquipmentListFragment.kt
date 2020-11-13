@@ -11,11 +11,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainPagerFragment
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,6 +47,14 @@ class EquipmentListFragment : Fragment() {
             list = binding.equipPage
             pageAdapter = EquipmentPageAdapter(parentFragmentManager)
             binding.equipPage.adapter = pageAdapter
+            //重置
+            equipReset.apply {
+                setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
+                setColorSchemeResources(R.color.colorPrimary)
+                setOnRefreshListener {
+                    reset()
+                }
+            }
         }
         //绑定观察
         setObserve()
@@ -60,6 +70,12 @@ class EquipmentListFragment : Fragment() {
         return binding.root
     }
 
+    private fun reset() {
+        equipFilterParams.initData()
+        viewModel.getEquips("")
+        binding.equipReset.isRefreshing = false
+    }
+
     private fun setObserve() {
 
         //装备数量
@@ -72,7 +88,7 @@ class EquipmentListFragment : Fragment() {
                 MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
             })
         }
-
+        //装备信息
         if (!viewModel.updateEquip.hasActiveObservers()) {
             viewModel.updateEquip.observe(viewLifecycleOwner, {
                 //装备信息
@@ -82,6 +98,12 @@ class EquipmentListFragment : Fragment() {
                         pageAdapter.submitData(data)
                     }
                 }
+            })
+        }
+        //重置
+        if (!viewModel.reset.hasActiveObservers()) {
+            viewModel.reset.observe(viewLifecycleOwner, {
+                reset()
             })
         }
     }

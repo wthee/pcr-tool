@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.database.DatabaseUpdateHelper
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
+import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import com.google.android.material.transition.Hold
@@ -79,6 +80,14 @@ class CharacterListFragment : Fragment() {
         }
         //加载数据
         init()
+        //刷新
+        binding.characterReset.apply {
+            setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
+            setColorSchemeResources(R.color.colorPrimary)
+            setOnRefreshListener {
+                reset()
+            }
+        }
         //监听数据变化
         setObserve()
         //获取角色
@@ -146,6 +155,18 @@ class CharacterListFragment : Fragment() {
         return binding.root
     }
 
+    private fun reset() {
+        characterfilterParams.initData()
+        characterfilterParams.all = true
+        sortType = SortType.SORT_DATE
+        sortAsc = false
+        viewModel.getCharacters(
+            sortType,
+            sortAsc, ""
+        )
+        binding.characterReset.isRefreshing = false
+    }
+
     //加载数据
     private fun init() {
         listAdapter = CharacterPageAdapter(this@CharacterListFragment)
@@ -178,7 +199,6 @@ class CharacterListFragment : Fragment() {
                             listAdapter.submitData(data)
                         }
                     }
-                    refresh.postValue(false)
                     isLoading.postValue(false)
                 })
             }
@@ -186,6 +206,12 @@ class CharacterListFragment : Fragment() {
             if (!isLoading.hasObservers()) {
                 isLoading.observe(viewLifecycleOwner, {
                     binding.progress.visibility = if (it) View.VISIBLE else View.GONE
+                })
+            }
+            //重置
+            if (!reset.hasObservers()) {
+                reset.observe(viewLifecycleOwner, {
+                    reset()
                 })
             }
             //重新加载

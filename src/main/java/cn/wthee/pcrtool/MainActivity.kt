@@ -307,14 +307,7 @@ class MainActivity : AppCompatActivity() {
                     DialogUtil.create(this, layout.root, getString(R.string.reset),
                         getString(R.string.next), object : DialogListener {
                             override fun onCancel(dialog: AlertDialog) {
-                                CharacterListFragment.characterfilterParams.initData()
-                                CharacterListFragment.characterfilterParams.all = true
-                                sortType = SortType.SORT_DATE
-                                sortAsc = false
-                                sharedCharacterViewModel.getCharacters(
-                                    sortType,
-                                    sortAsc, ""
-                                )
+                                sharedCharacterViewModel.reset.postValue(true)
                             }
 
                             override fun onConfirm(dialog: AlertDialog) {
@@ -376,8 +369,7 @@ class MainActivity : AppCompatActivity() {
                     DialogUtil.create(this, layout.root, getString(R.string.reset),
                         getString(R.string.next), object : DialogListener {
                             override fun onCancel(dialog: AlertDialog) {
-                                EquipmentListFragment.equipFilterParams.initData()
-                                sharedEquipViewModel.getEquips("")
+                                sharedEquipViewModel.reset.postValue(true)
                             }
 
                             override fun onConfirm(dialog: AlertDialog) {

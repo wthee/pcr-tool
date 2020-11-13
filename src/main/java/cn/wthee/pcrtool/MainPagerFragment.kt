@@ -13,13 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
-import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.adapters.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.databinding.LayoutPopupMenuBinding
-import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
@@ -158,14 +155,7 @@ class MainPagerFragment : Fragment() {
                     tab.text = sp.getInt(Constants.SP_COUNT_CHARACTER, 0).toString()
                     //长按重置
                     tab.view.setOnLongClickListener {
-                        CharacterListFragment.characterfilterParams.initData()
-                        CharacterListFragment.characterfilterParams.all = true
-                        sortType = SortType.SORT_DATE
-                        sortAsc = false
-                        sharedCharacterViewModel.getCharacters(
-                            sortType,
-                            sortAsc, ""
-                        )
+                        sharedCharacterViewModel.reset.postValue(true)
                         return@setOnLongClickListener true
                     }
                     //点击回顶部
@@ -181,8 +171,7 @@ class MainPagerFragment : Fragment() {
                     tab.text = sp.getInt(Constants.SP_COUNT_EQUIP, 0).toString()
                     //长按重置
                     tab.view.setOnLongClickListener {
-                        EquipmentListFragment.equipFilterParams.initData()
-                        sharedEquipViewModel.getEquips("")
+                        sharedEquipViewModel.reset.postValue(true)
                         return@setOnLongClickListener true
                     }
                     //点击回顶部
