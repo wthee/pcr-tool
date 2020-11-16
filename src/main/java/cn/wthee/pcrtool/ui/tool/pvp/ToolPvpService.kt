@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.graphics.PixelFormat
@@ -27,6 +24,7 @@ import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.utils.NotificationUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
@@ -36,7 +34,6 @@ import retrofit2.Call
 class ToolPvpService : Service() {
 
     companion object {
-        const val CHANNEL_ID = "Overlay_notification_channel"
         lateinit var progressBar: ProgressBar
         var isMin = false
         lateinit var activity: AppCompatActivity
@@ -53,6 +50,7 @@ class ToolPvpService : Service() {
     private var character3 = listOf<PvpCharacterData>()
     private lateinit var adapter: PvpCharacterResultAdapter
     private lateinit var call: Call<PVPData>
+
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -88,19 +86,7 @@ class ToolPvpService : Service() {
         windowManager!!.addView(binding.root, params)
 
         //前台通知
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
-            val notificationChannel = NotificationChannel(
-                CHANNEL_ID,
-                "running",
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            notificationChannel.setSound(null, null)
-            notificationManager!!.createNotificationChannel(notificationChannel)
-            val builder: Notification.Builder = Notification.Builder(this, CHANNEL_ID)
-            builder.setContentTitle("服务运行中...")
-            startForeground(1, builder.build())
-        }
+        NotificationUtil.createForeground(this, "竞技场查询服务运行中...")
         return super.onStartCommand(intent, flg, startId)
     }
 
@@ -213,6 +199,8 @@ class ToolPvpService : Service() {
             }
             //关闭
             close.setOnClickListener {
+                stopForeground(true)
+                NotificationUtil.notificationManager.cancelAll()
                 onDestroy()
             }
         }
