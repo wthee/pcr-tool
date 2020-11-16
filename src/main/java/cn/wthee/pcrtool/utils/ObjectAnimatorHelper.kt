@@ -23,13 +23,6 @@ object ObjectAnimatorHelper {
         }
     }
 
-    fun alpha(vararg view: View) {
-        val holder = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
-        view.forEach {
-            start(it, holder)
-        }
-    }
-
     private fun start(
         view: View,
         onAnimatorListener: OnAnimatorListener?,
@@ -56,34 +49,6 @@ object ObjectAnimatorHelper {
 
                     override fun onAnimationStart(animation: Animator?) {
                         onAnimatorListener?.start(view)
-                    }
-                })
-                start()
-            }
-        }
-    }
-
-    private fun start(view: View, vararg holders: PropertyValuesHolder) {
-        view.visibility = View.GONE
-        MainScope().launch {
-            delay(300L)
-            ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
-                duration = 300L
-                addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        view.visibility = View.VISIBLE
-                    }
-
-                    override fun onAnimationRepeat(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-                        view.visibility = View.VISIBLE
                     }
                 })
                 start()

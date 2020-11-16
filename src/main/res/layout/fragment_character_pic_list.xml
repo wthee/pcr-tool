@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorAlpha"
         android:orientation="horizontal"
+        android:padding="0dp"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_card_bg" />
@@ -20,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="@dimen/l_margin"
+        android:layout_marginTop="@dimen/s_margin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textColor="@color/colorPrimary"
         tools:text="1 / 3" />

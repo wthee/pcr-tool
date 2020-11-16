@@ -31,16 +31,20 @@ class CharacterPicAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(url: String) {
             with(binding) {
-                characterPic.transitionName = url
-                //加载网络图片
-                characterPic.load(url) {
-                    error(R.drawable.error)
-                    placeholder(R.drawable.load)
-                    listener(
-                        onSuccess = { _, _ ->
-                            CharacterPicListFragment.hasLoaded[layoutPosition] = true
-                        }
-                    )
+                characterPic.apply {
+                    transitionName = url
+                    setScaleLevels(1f, 2f, 6f)
+                    setZoomable(true)
+                    //加载图片
+                    load(url) {
+                        error(R.drawable.error)
+                        placeholder(R.drawable.load)
+                        listener(
+                            onSuccess = { _, _ ->
+                                CharacterPicListFragment.hasLoaded[layoutPosition] = true
+                            }
+                        )
+                    }
                 }
             }
         }

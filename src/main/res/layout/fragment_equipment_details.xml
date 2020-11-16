@@ -14,78 +14,73 @@
         android:id="@+id/detail"
         layout="@layout/layout_equip_detail" />
 
-    <View
-        android:id="@+id/hr1"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/hr_height"
-        android:background="@color/colorGray" />
-
     <TextView
         android:id="@+id/material_count"
         style="@style/TextAppearance.MaterialComponents.Body2"
-        tools:text="@string/title_material"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
         android:padding="@dimen/s_padding"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/colorPrimary"
+        tools:text="@string/title_material" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/material"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="5"
-        tools:listitem="@layout/item_common"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/m_margin"
         android:layout_marginEnd="@dimen/m_margin"
         android:fadeScrollbars="false"
         android:nestedScrollingEnabled="true"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_common" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
-        tools:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true"
         android:padding="0dp"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/material_name"
-        tools:text="@string/app_name"
-        tools:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/red"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="@string/app_name"
+        tools:visibility="visible" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/material_tip"
-        tools:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/drop_info"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drops"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="1"
-        tools:listitem="@layout/item_equipment_drop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
         android:focusable="true"
         android:orientation="vertical"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="1"
+        tools:listitem="@layout/item_equipment_drop" />
 
 </LinearLayout>

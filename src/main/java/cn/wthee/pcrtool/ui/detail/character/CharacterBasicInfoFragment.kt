@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
@@ -23,6 +24,7 @@ import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.transition.Hold
 import kotlin.math.abs
 
 
@@ -56,6 +58,7 @@ class CharacterBasicInfoFragment : Fragment() {
             uid = it.getInt("uid")
         }
         isLoved = CharacterListFragment.characterfilterParams.starIds.contains(uid)
+        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -107,16 +110,8 @@ class CharacterBasicInfoFragment : Fragment() {
         setHasOptionsMenu(true)
         //初始收藏
         setLove(isLoved)
-
         return binding.root
     }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.root.layoutTransition.setAnimateParentHierarchy(false)
-    }
-
 
     //点击事件
     private fun setListener() {
@@ -131,9 +126,15 @@ class CharacterBasicInfoFragment : Fragment() {
             characterPic.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putStringArrayList("urls", urls)
+                val extras =
+                    FragmentNavigatorExtras(
+                        it to it.transitionName
+                    )
                 findNavController().navigate(
                     R.id.action_characterPagerFragment_to_characterPicListFragment,
-                    bundle
+                    bundle,
+                    null,
+                    extras
                 )
             }
             //toolbar 展开折叠监听
@@ -238,6 +239,4 @@ class CharacterBasicInfoFragment : Fragment() {
             comments.text = characterPro.getCommentsText()
         }
     }
-
-
 }

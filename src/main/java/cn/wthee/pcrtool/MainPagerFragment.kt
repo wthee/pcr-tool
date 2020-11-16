@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.FabHelper
@@ -53,10 +52,6 @@ class MainPagerFragment : Fragment() {
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
     }
-    private val sharedEnemyViewModel by activityViewModels<EnemyViewModel> {
-        InjectorUtil.provideEnemyViewModelFactory()
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

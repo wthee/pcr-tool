@@ -90,7 +90,7 @@
             layout="@layout/layout_equip_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/s_margin"
+            android:layout_marginTop="@dimen/xm_margin"
             app:layout_constraintTop_toBottomOf="@id/rank_equip" />
 
         <com.google.android.material.textview.MaterialTextView

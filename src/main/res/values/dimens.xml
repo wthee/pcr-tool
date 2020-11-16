@@ -33,5 +33,6 @@
 
     <dimen name="elevation_card">2dp</dimen>
     <dimen name="fab_circle_radius">120dp</dimen>
-    <dimen name="hr_height">8dp</dimen>
+    <dimen name="hr_height">4dp</dimen>
+    <dimen name="hr_width">36dp</dimen>
 </resources>
