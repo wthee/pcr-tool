@@ -42,12 +42,12 @@ class CharacterViewModel(
                     sortType,
                     asc,
                     name,
-                    CharacterListFragment.characterfilterParams
+                    CharacterListFragment.characterFilterParams
                 )
             }.flow
             //角色数量
             characterCount.postValue(
-                repository.getInfoAndDataCount(name, CharacterListFragment.characterfilterParams)
+                repository.getInfoAndDataCount(name, CharacterListFragment.characterFilterParams)
             )
             updateChatacter.postValue(true)
             isLoading.postValue(false)

@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterPageAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.database.DatabaseUpdateHelper
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.enums.SortType
@@ -39,7 +39,7 @@ class CharacterListFragment : Fragment() {
     companion object {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterPageAdapter
-        var characterfilterParams = FilterCharacter(
+        var characterFilterParams = FilterCharacter(
             true, 0, 0, "全部"
         )
         lateinit var handler: Handler
@@ -54,6 +54,7 @@ class CharacterListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //从次页面至CharacterPagerFragment过渡开始
         exitTransition = Hold()
     }
 
@@ -71,10 +72,6 @@ class CharacterListFragment : Fragment() {
             list.forEach {
                 guilds.add(it.guild_name)
             }
-//            if (list.isEmpty()) {
-//                //为获取数据，说明数据异常，自动更新数据
-//                DatabaseUpdateHelper.checkDBVersion(force = true)
-//            }
             guilds.add("？？？")
             r6Ids = viewModel.getR6Ids()
         }
@@ -109,7 +106,7 @@ class CharacterListFragment : Fragment() {
                         object : DialogListener {
                             override fun onCancel(dialog: AlertDialog) {
                                 //强制更新数据库
-                                DatabaseUpdateHelper.forceUpdate()
+                                DatabaseUpdater.forceUpdate()
                                 ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
                                 dialog.dismiss()
                             }
@@ -156,8 +153,8 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun reset() {
-        characterfilterParams.initData()
-        characterfilterParams.all = true
+        characterFilterParams.initData()
+        characterFilterParams.all = true
         sortType = SortType.SORT_DATE
         sortAsc = false
         viewModel.getCharacters(

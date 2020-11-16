@@ -1,19 +1,22 @@
 package cn.wthee.pcrtool.utils;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.os.Looper;
-import android.os.MessageQueue;
 import android.text.Html;
 import android.text.Spanned;
 import android.widget.FrameLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandler {
-    private static final boolean debuggable = true; //正式环境(false)不打印日志，也不能唤起app的debug界面
+    private static final boolean debuggable = false; //正式环境(false)不打印日志，也不能唤起app的debug界面
+    @SuppressLint("StaticFieldLeak")
     private static Logger me;
     private Context mCurrentActivity;
     private static Thread.UncaughtExceptionHandler mDefaultHandler;
@@ -25,8 +28,6 @@ public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandl
 
     /**
      * 在application 的 onCreate() 方法初始化
-     *
-     * @param application
      */
     public static void init(Application application) {
         if (debuggable && me == null) {
@@ -36,12 +37,9 @@ public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandl
                     //获取系统默认异常处理器
                     mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
                     //线程空闲时设置异常处理，兼容其他框架异常处理能力
-                    Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-                        @Override
-                        public boolean queueIdle() {
-                            Thread.setDefaultUncaughtExceptionHandler(me);//线程异常处理设置为自己
-                            return false;
-                        }
+                    Looper.myQueue().addIdleHandler(() -> {
+                        Thread.setDefaultUncaughtExceptionHandler(me);//线程异常处理设置为自己
+                        return false;
                     });
                 }
             }
@@ -50,12 +48,9 @@ public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandl
 
     /**
      * 捕获崩溃信息
-     *
-     * @param t
-     * @param e
      */
     @Override
-    public void uncaughtException(Thread t, Throwable e) {
+    public void uncaughtException(@NotNull Thread t, Throwable e) {
         // 打印异常信息
         e.printStackTrace();
         // 我们没有处理异常 并且默认异常处理不为空 则交给系统处理

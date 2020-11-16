@@ -120,5 +120,8 @@
     <string name="atk_dis">攻击距离</string>
     <string name="drop_info">- 掉落信息 -</string>
     <string name="test">test</string>
+    <string name="title_all_attr_sub">✦ 已计算角色剧情额外属性</string>
+    <string name="title_all_attr">- 人物属性 -</string>
+    <string name="title_story_attr">- 剧情属性 -</string>
 
 </resources>

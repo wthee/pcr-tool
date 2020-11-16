@@ -39,7 +39,6 @@ class MainPagerFragment : Fragment() {
     companion object {
         var cListClick = false
         lateinit var tabLayout: TabLayout
-        private var count = 0
         lateinit var tipText: MaterialTextView
     }
 

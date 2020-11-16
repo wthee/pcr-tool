@@ -26,15 +26,6 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     }
 
 
-    fun setTitleCenter() {
-        val params = title.layoutParams as ConstraintLayout.LayoutParams
-        params.startToStart = 0
-        params.endToEnd = 0
-        params.topToTop = 0
-        params.bottomToBottom = 0
-        title.layoutParams = params
-    }
-
     fun setTitleColor(resId: Int) {
         title.setTextColor(resources.getColor(resId, null))
     }
@@ -43,8 +34,13 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         toolbar.viewToolbar.setBackgroundColor(resources.getColor(resId, null))
     }
 
-    fun setCenterStyle() {
-        setTitleCenter()
+    private fun setCenterStyle() {
+        val params = title.layoutParams as ConstraintLayout.LayoutParams
+        params.startToStart = 0
+        params.endToEnd = 0
+        params.topToTop = 0
+        params.bottomToBottom = 0
+        title.layoutParams = params
         setTitleColor(R.color.colorPrimary)
         setLeftIcon(R.drawable.ic_back)
         setBackground(R.color.colorWhite)

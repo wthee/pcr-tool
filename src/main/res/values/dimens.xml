@@ -2,6 +2,8 @@
 <resources>
     <dimen name="card_radius">6dp</dimen>
     <dimen name="float_card_radius">11dp</dimen>
+    <dimen name="loading_dialog_width">100dp</dimen>
+    <dimen name="loading_dialog_height">120dp</dimen>
     <dimen name="card_height">150dp</dimen>
     <dimen name="card_height_1">220dp</dimen>
     <dimen name="float_window_width">233dp</dimen>

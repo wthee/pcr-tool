@@ -9,7 +9,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.DatabaseUpdateHelper
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
@@ -52,7 +52,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //设置监听
         //强制更新数据库
         forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdateHelper.checkDBVersion(0, force = true)
+            DatabaseUpdater.checkDBVersion(0, force = true)
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本
@@ -64,7 +64,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                     )
                 MainScope().launch {
                     delay(800L)
-                    DatabaseUpdateHelper.checkDBVersion(1)
+                    DatabaseUpdater.checkDBVersion(1)
                 }
             }
             return@setOnPreferenceChangeListener true
@@ -73,18 +73,18 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val eggs = findPreference<PreferenceCategory>("egg")
         val eggKL = findPreference<Preference>("kl")
         //是否显示
-        eggs?.isVisible = CharacterListFragment.characterfilterParams.starIds.contains(106001)
-                || CharacterListFragment.characterfilterParams.starIds.contains(107801)
-                || CharacterListFragment.characterfilterParams.starIds.contains(112001)
+        eggs?.isVisible = CharacterListFragment.characterFilterParams.starIds.contains(106001)
+                || CharacterListFragment.characterFilterParams.starIds.contains(107801)
+                || CharacterListFragment.characterFilterParams.starIds.contains(112001)
         var count = MainActivity.sp.getInt("click_kl", 0)
         eggKL?.setOnPreferenceClickListener {
             count++
             if (count > 3) {
                 //隐藏
                 eggs?.isVisible = false
-                CharacterListFragment.characterfilterParams
+                CharacterListFragment.characterFilterParams
                     .remove(106001, 107801, 112001)
-                CharacterListFragment.characterfilterParams.initData()
+                CharacterListFragment.characterFilterParams.initData()
                 sharedCharacterViewModel.getCharacters(
                     MainActivity.sortType,
                     MainActivity.sortAsc,

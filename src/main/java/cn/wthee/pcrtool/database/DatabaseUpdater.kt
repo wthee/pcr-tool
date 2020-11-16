@@ -26,7 +26,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-object DatabaseUpdateHelper {
+object DatabaseUpdater {
 
     private val mContext = MyApplication.context
 

@@ -23,11 +23,4 @@ data class EnemyDataJP(
     @ColumnInfo(name = "comment") val comment: String,
     //jp
     @ColumnInfo(name = "cutin_star6") val cutinStar6: Int,
-) : Serializable {
-    fun getFixedComment() = comment.replace("\\n", "，")
-
-    fun getTruePrefabId(): Int {
-        val trueId = prefab_id + 10
-        return trueId
-    }
-}
+) : Serializable

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.view.Attr
+import cn.wthee.pcrtool.data.view.CharacterStoryAttr.Companion.getAttr
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.add
 import cn.wthee.pcrtool.data.view.multiply
@@ -20,6 +21,7 @@ class CharacterAttrViewModel(
 ) : ViewModel() {
 
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
+    var storyAttrs = MutableLiveData<Attr>()
     var sumInfo = MutableLiveData<Attr>()
     var maxData = MutableLiveData<List<Int>>()
 
@@ -54,6 +56,14 @@ class CharacterAttrViewModel(
                 if (uniqueEquip != null) {
                     info.add(uniqueEquip.attr)
                 }
+                //故事剧情
+                val storyAttr = Attr()
+                val storyInfo = characterRepository.getCharacterStoryStatus(unitId)
+                storyInfo.forEach {
+                    storyAttr.add(it.getAttr())
+                }
+                storyAttrs.postValue(storyAttr)
+                info.add(storyAttr)
                 sumInfo.postValue(info)
             } catch (e: Exception) {
                 ToastUtil.short("角色详细信息暂无~")
