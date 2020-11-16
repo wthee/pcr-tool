@@ -24,7 +24,6 @@ import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import com.google.android.material.card.MaterialCardView
@@ -89,7 +88,6 @@ class MainPagerFragment : Fragment() {
             when (it.itemId) {
                 R.id.menu_tool_pvp -> {
                     findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
-                    FabHelper.addBackFab()
                 }
                 R.id.show_more -> {
                     //显示
@@ -100,17 +98,14 @@ class MainPagerFragment : Fragment() {
                         toolLevel.setOnClickListener {
                             popupMenu.dismiss()
                             findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
-                            FabHelper.addBackFab()
                         }
                         toolEnemy.setOnClickListener {
                             popupMenu.dismiss()
                             findNavController().navigate(R.id.action_containerFragment_to_enemyListFragment)
-                            FabHelper.addBackFab()
                         }
                         toolGacha.setOnClickListener {
                             popupMenu.dismiss()
                             findNavController().navigate(R.id.action_containerFragment_to_toolGachaFragment)
-                            FabHelper.addBackFab()
                         }
                     }
                 }

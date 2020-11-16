@@ -47,9 +47,9 @@ class CharacterAttrFragment : Fragment() {
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
     }
-    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.providePromotionViewModelFactory()
-    }
+    private val characterAttrViewModel =
+        InjectorUtil.providePromotionViewModelFactory().create(CharacterAttrViewModel::class.java)
+
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -78,6 +78,7 @@ class CharacterAttrFragment : Fragment() {
             error(R.drawable.unknow_gray)
             placeholder(R.drawable.load_mini)
         }
+        characterAttrViewModel.getMaxRankAndRarity(uid)
         return binding.root
     }
 
@@ -131,7 +132,7 @@ class CharacterAttrFragment : Fragment() {
 //            binding.name.text = it.name
 //        })
         //获取角色最大Rank后，加载数据
-        sharedCharacterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
+        characterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
             selRank = r[0]
             selRatity = r[1]
             maxStar = r[1]
@@ -204,7 +205,7 @@ class CharacterAttrFragment : Fragment() {
 
             }
         })
-        sharedCharacterAttrViewModel.equipments.observe(viewLifecycleOwner, {
+        characterAttrViewModel.equipments.observe(viewLifecycleOwner, {
             it.forEachIndexed { index, equip ->
                 equipPics[index].apply {
                     //加载装备图片
@@ -226,7 +227,7 @@ class CharacterAttrFragment : Fragment() {
         //角色属性
         attrAdapter = CharacterAttrAdapter()
         binding.charcterAttrs.adapter = attrAdapter
-        sharedCharacterAttrViewModel.sumInfo.observe(viewLifecycleOwner, {
+        characterAttrViewModel.sumInfo.observe(viewLifecycleOwner, {
             attrAdapter.submitList(it.all()) {
                 attrAdapter.notifyDataSetChanged()
             }
@@ -234,7 +235,7 @@ class CharacterAttrFragment : Fragment() {
         //角色剧情属性
         val storyAttrAdapter = CharacterAttrAdapter()
         binding.charcterStoryAttrs.adapter = storyAttrAdapter
-        sharedCharacterAttrViewModel.storyAttrs.observe(viewLifecycleOwner, {
+        characterAttrViewModel.storyAttrs.observe(viewLifecycleOwner, {
             storyAttrAdapter.submitList(it.allNotZero()) {
                 attrAdapter.notifyDataSetChanged()
             }
@@ -242,7 +243,7 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private fun loadData() {
-        sharedCharacterAttrViewModel.getCharacterInfo(uid, selRank, selRatity, lv)
+        characterAttrViewModel.getCharacterInfo(uid, selRank, selRatity, lv)
     }
 
     //设置rank

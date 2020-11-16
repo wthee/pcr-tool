@@ -152,8 +152,9 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
                 android:textColor="@color/colorAlpha"
                 android:textIsSelectable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintBottom_toBottomOf="@id/three"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/three" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -198,7 +199,7 @@
                     android:id="@+id/title_birth"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/s_margin"
+                    android:layout_marginTop="@dimen/xm_margin"
                     android:background="@drawable/title_background"
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"

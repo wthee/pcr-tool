@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterLevelExpAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolLevelBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import kotlinx.coroutines.MainScope
@@ -27,6 +28,7 @@ class ToolLevelFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        FabHelper.addBackFab()
         binding = FragmentToolLevelBinding.inflate(inflater, container, false)
         MainScope().launch {
             val list = sharedViewModel.getLevelExp() as MutableList

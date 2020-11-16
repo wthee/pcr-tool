@@ -52,6 +52,7 @@ object PvpDataRepository {
 
             override fun onFailure(call: Call<PVPData>, t: Throwable) {
                 Log.e("api-failure", t.message ?: "")
+                ToastUtil.short("查询失败，请检查网络~")
                 onPostListener.error()
             }
         })

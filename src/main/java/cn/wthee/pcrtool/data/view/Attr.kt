@@ -116,7 +116,8 @@ fun Attr.multiply(mult: Int): Attr {
 }
 
 //全部属性
-fun Attr.all(): List<AttrValue> {
+fun Attr.all(): ArrayList
+<AttrValue> {
     val attrs = arrayListOf<AttrValue>()
     for (i in 0..16) {
         val value = when (i) {

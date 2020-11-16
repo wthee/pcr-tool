@@ -11,7 +11,6 @@ import cn.wthee.pcrtool.data.PvpDataRepository
 import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
-import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import retrofit2.Call
@@ -44,9 +43,7 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
                 binding.loadingDialog.visibility = View.GONE
             }
 
-            override fun error() {
-                ToastUtil.short("查询失败，请检查网络~")
-            }
+            override fun error() {}
         })
 
         //toolbar

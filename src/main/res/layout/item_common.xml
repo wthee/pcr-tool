@@ -12,6 +12,7 @@
         android:layout_width="@dimen/normal_icon"
         android:layout_height="@dimen/normal_icon"
         android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/unknow_gray" />

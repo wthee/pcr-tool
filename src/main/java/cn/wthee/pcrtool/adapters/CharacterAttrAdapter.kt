@@ -43,7 +43,7 @@ private class CharacterAttrDiffCallback : DiffUtil.ItemCallback<AttrValue>() {
         oldItem: AttrValue,
         newItem: AttrValue
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.title == newItem.title
     }
 
     override fun areContentsTheSame(

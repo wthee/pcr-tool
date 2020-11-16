@@ -65,17 +65,17 @@ object Constants {
     const val BTN_OPERATE_FORCE_UPDATE_DB = "强制更新"
     const val BTN_OK = "确认"
     const val BTN_CLOSE = "关闭"
-    const val BTN_NOT_UPDATE_DB = "数据正常，无需更新"
+    const val BTN_NOT_UPDATE_DB = "忽略"
 
     //默认值
     const val SORT_ASC = false
     const val UNKNOW_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在下载数据..."
-    const val NOTICE_TITLE_ERROR = "数据库信息获取失败"
-    const val NOTICE_TOAST_SUCCESS = "数据库更新完成"
-    const val NOTICE_TOAST_NO_FILE = "数据库文件下载失败，请稍后重试~"
+    const val NOTICE_TITLE_ERROR = "数据信息获取失败"
+    const val NOTICE_TOAST_SUCCESS = "数据更新完成"
+    const val NOTICE_TOAST_NO_FILE = "数据文件下载失败，请稍后重试~"
     const val NOTICE_TOAST_TITLE_DB_DOWNLOAD = "数据下载中\n请稍等..."
-    const val NOTICE_TOAST_TIMEOUT = "若主页内容未正常显示，请点击${BTN_OPERATE_FORCE_UPDATE_DB}，下载最新数据库文件"
+    const val NOTICE_TOAST_TIMEOUT = "若内容正常显示，请点击${BTN_NOT_UPDATE_DB}，直接进入应用"
     const val NOTICE_TOAST_CHANGE = "数据切换中......"
     const val NOTICE_TOAST_TODO = "功能暂未实装"
     const val NOTICE_TOAST_CHECKING = "正在获取数据版本信息"

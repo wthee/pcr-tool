@@ -1,7 +1,9 @@
 package cn.wthee.pcrtool.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +13,7 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterPicListFragment
 import coil.load
 
 
-class CharacterPicAdapter :
+class CharacterPicAdapter(private val fragment: Fragment) :
     ListAdapter<String, CharacterPicAdapter.ViewHolder>(ImageDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -27,14 +29,13 @@ class CharacterPicAdapter :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemCardBgBinding) :
+    inner class ViewHolder(private val binding: ItemCardBgBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(url: String) {
+            Log.e("piclist", url)
             with(binding) {
                 characterPic.apply {
                     transitionName = url
-                    setScaleLevels(1f, 2f, 6f)
-                    setZoomable(true)
                     //加载图片
                     load(url) {
                         error(R.drawable.error)
@@ -42,6 +43,7 @@ class CharacterPicAdapter :
                         listener(
                             onSuccess = { _, _ ->
                                 CharacterPicListFragment.hasLoaded[layoutPosition] = true
+                                fragment.startPostponedEnterTransition()
                             }
                         )
                     }

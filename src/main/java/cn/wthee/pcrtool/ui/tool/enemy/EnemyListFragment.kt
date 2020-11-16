@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EnemyListAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEnemyBinding
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
@@ -29,6 +30,7 @@ class EnemyListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        FabHelper.addBackFab()
         binding = FragmentToolEnemyBinding.inflate(inflater, container, false)
         viewModel =
             InjectorUtil.provideEnemyViewModelFactory().create(EnemyViewModel::class.java)

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
@@ -33,7 +32,7 @@ class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
         var isLoved = false
-        lateinit var pic: AppCompatImageView
+        lateinit var binding: FragmentCharacterBasicInfoBinding
         fun getInstance(uid: Int): CharacterBasicInfoFragment {
             val fragment = CharacterBasicInfoFragment()
             val bundle = Bundle()
@@ -45,12 +44,8 @@ class CharacterBasicInfoFragment : Fragment() {
 
     private var uid = -1
     private var urls = arrayListOf<String>()
-    private lateinit var binding: FragmentCharacterBasicInfoBinding
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
-    }
-    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.providePromotionViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +54,6 @@ class CharacterBasicInfoFragment : Fragment() {
             uid = it.getInt(UID)
         }
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
-        //从此页面过渡至CharacterPicListFragment
         exitTransition = Hold()
     }
 
@@ -71,9 +65,8 @@ class CharacterBasicInfoFragment : Fragment() {
         //设置共享元素
         binding.root.transitionName = "item_${uid}"
         //toolbar 背景
-        pic = binding.characterPic
         val picUrl =
-            Constants.CHARACTER_URL + (uid + if (CharacterListFragment.r6Ids.contains(id)) 60 else 30) + Constants.WEBP
+            Constants.CHARACTER_URL + (uid + if (CharacterListFragment.r6Ids.contains(uid)) 60 else 30) + Constants.WEBP
         //角色图片
         binding.characterPic.transitionName = picUrl
         binding.characterPic.load(picUrl) {
@@ -97,7 +90,6 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             override fun end(view: View) {
-                sharedCharacterAttrViewModel.getMaxRankAndRarity(uid)
                 MainActivity.canBack = true
             }
         }, binding.fabLoveCbi, binding.basicInfo)
@@ -241,4 +233,5 @@ class CharacterBasicInfoFragment : Fragment() {
             comments.text = characterPro.getCommentsText()
         }
     }
+
 }

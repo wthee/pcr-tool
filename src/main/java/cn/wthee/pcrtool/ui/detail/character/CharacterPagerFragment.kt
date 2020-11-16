@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterPagerAdapter
@@ -27,9 +26,9 @@ class CharacterPagerFragment : Fragment() {
     private lateinit var binding: FragmentCharacterPagerBinding
     private var uid = -1
     private lateinit var viewPager: ViewPager2
-    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.providePromotionViewModelFactory()
-    }
+    private val characterAttrViewModel =
+        InjectorUtil.providePromotionViewModelFactory().create(CharacterAttrViewModel::class.java)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +63,7 @@ class CharacterPagerFragment : Fragment() {
     private fun init() {
         //加载列表
         MainScope().launch {
-            val noData = sharedCharacterAttrViewModel.isUnknow(uid)
+            val noData = characterAttrViewModel.isUnknow(uid)
             viewPager = binding.root
             viewPager.adapter =
                 CharacterPagerAdapter(
@@ -91,7 +90,7 @@ class CharacterPagerFragment : Fragment() {
                     if (names!!.isNotEmpty()) {
                         sharedElements ?: return
                         //角色图片
-                        val v0 = CharacterBasicInfoFragment.pic
+                        val v0 = CharacterBasicInfoFragment.binding.characterPic
                         sharedElements[names[0]] = v0
                     }
                 } catch (e: Exception) {
@@ -100,6 +99,4 @@ class CharacterPagerFragment : Fragment() {
             }
         })
     }
-
-
 }

@@ -96,10 +96,6 @@ dependencies {
     def palette_version = '1.0.0'
     implementation "androidx.palette:palette-ktx:$palette_version"
 
-    //PhotoView
-    def photoview_version = '2.0.0'
-    implementation "com.github.chrisbanes:PhotoView:$photoview_version"
-
     //PermissionX
     def permissionx_version = '1.4.0'
     implementation "com.permissionx.guolindev:permissionx:$permissionx_version"

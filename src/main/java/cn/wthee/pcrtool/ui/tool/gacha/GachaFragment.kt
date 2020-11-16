@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
@@ -20,6 +21,7 @@ class GachaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        FabHelper.addBackFab()
         binding = FragmentToolGachaBinding.inflate(inflater, container, false)
         val adapter = GachaHistoryAdapter(parentFragmentManager)
         binding.gachaList.adapter = adapter

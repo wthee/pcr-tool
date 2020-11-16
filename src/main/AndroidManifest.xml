@@ -24,8 +24,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="n"
-        android:allowBackup="false">
+        tools:targetApi="n">
 
         <service
             android:name=".ui.tool.pvp.ToolPvpService"

@@ -142,7 +142,6 @@ class ToolPvpService : Service() {
 
                         override fun error() {
                             resultContent.root.visibility = View.GONE
-                            ToastUtil.short("查询失败，请检查网络~")
                         }
                     })
                 }

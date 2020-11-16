@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.data.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -47,6 +48,7 @@ class ToolPvpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        FabHelper.addBackFab()
         binding = FragmentToolPvpBinding.inflate(inflater, container, false)
         progressBar = binding.pvpProgressBar
         //已选择角色

@@ -52,7 +52,7 @@ class CharacterPicListFragment : Fragment() {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
         binding.apply {
             //初始化列表
-            val adapter = CharacterPicAdapter()
+            val adapter = CharacterPicAdapter(this@CharacterPicListFragment)
             PagerSnapHelper().attachToRecyclerView(binding.pics)
             pics.adapter = adapter
             adapter.submitList(urls)
@@ -96,6 +96,10 @@ class CharacterPicListFragment : Fragment() {
             fabBack.setOnClickListener {
                 findNavController().navigateUp()
             }
+        }
+
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
         }
         return binding.root
     }
