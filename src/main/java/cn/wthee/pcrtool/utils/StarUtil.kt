@@ -39,11 +39,11 @@ object StarUtil {
             partent.addView(starView, i + num)
         }
         for(i in 0 until num){
-            partent.get(i).setOnClickListener {
-                for (j in 0 until  max){
-                    if(j > i){
+            partent[i].setOnClickListener {
+                for (j in 0 until max) {
+                    if (j > i) {
                         partent[j].setBackgroundResource(R.drawable.ic_star_dark)
-                    }else{
+                    } else {
                         partent.get(j).setBackgroundResource(R.drawable.ic_star)
                     }
                 }

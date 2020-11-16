@@ -11,5 +11,6 @@ data class GachaExchangeJP(
     @ColumnInfo(name = "exchange_id") val exchange_id: Int,
     @ColumnInfo(name = "unit_id") val unit_id: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
+    //jp
     @ColumnInfo(name = "gacha_bonus_id") val gacha_bonus_id: Int,
 )

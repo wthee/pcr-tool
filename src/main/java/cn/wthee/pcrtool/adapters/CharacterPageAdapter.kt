@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
@@ -47,7 +48,7 @@ class CharacterPageAdapter(
             character: CharacterInfo
         ) {
             //是否收藏
-            val isLoved = CharacterListFragment.characterfilterParams.starIds.contains(character.id)
+            val isLoved = CharacterListFragment.characterFilterParams.starIds.contains(character.id)
 
             binding.apply {
                 (binding.root.parent as? ViewGroup)?.doOnPreDraw {
@@ -88,7 +89,7 @@ class CharacterPageAdapter(
                         MainActivity.canBack = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
-                        bundle.putInt("uid", character.id)
+                        bundle.putInt(UID, character.id)
                         val extras =
                             FragmentNavigatorExtras(
                                 itemCharacter to itemCharacter.transitionName
@@ -104,7 +105,7 @@ class CharacterPageAdapter(
                 //长按事件
                 binding.root.setOnLongClickListener {
                     //收藏或取消
-                    CharacterListFragment.characterfilterParams.apply {
+                    CharacterListFragment.characterFilterParams.apply {
                         if (starIds.contains(character.id))
                             remove(character.id)
                         else

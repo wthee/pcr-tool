@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data
 
-import androidx.room.Transaction
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.enums.value
@@ -88,8 +87,10 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     suspend fun getR6Ids() = characterDao.getR6Ids()
 
     //角色掉落
-    @Transaction
     suspend fun getItemDropInfos(unitId: Int) = characterDao.getItemDropInfos(unitId)
+
+    //获取角色剧情属性
+    suspend fun getCharacterStoryStatus(unitId: Int) = characterDao.getCharacterStoryStatus(unitId)
 
     companion object {
 

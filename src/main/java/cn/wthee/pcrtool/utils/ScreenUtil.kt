@@ -22,14 +22,9 @@ object ScreenUtil {
         return displayMetrics.heightPixels
     }
 }
+// 获取 dp 的像素值
 val Int.dp: Int
     get() {
         val scale: Float = MyApplication.context.resources.displayMetrics.density
         return (this * scale + 0.5f).toInt()
-    }
-
-val Int.px: Float
-    get() {
-        val scale: Float = MyApplication.context.resources.displayMetrics.density
-        return (this / scale + 0.5f)
     }

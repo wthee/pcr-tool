@@ -82,7 +82,7 @@ object Constants {
     const val NOTICE_TOAST_LASTEST = "数据已是最新版本"
 
     //常量值
-    const val UID = "uid"
+    const val UID = "unit_id"
 
     val ATTR = arrayListOf(
         "HP",

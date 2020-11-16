@@ -42,9 +42,11 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         CharacterComments::class,
         GachaData::class,
         GachaExchange::class,
-        ItemData::class
+        ItemData::class,
+        CharacterStoryStatus::class,
+        CharacterType::class,
     ],
-    version = 16,
+    version = 17,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

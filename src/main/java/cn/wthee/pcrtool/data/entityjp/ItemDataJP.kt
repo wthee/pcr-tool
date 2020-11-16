@@ -16,8 +16,9 @@ data class ItemDataJP(
     @ColumnInfo(name = "value") val value: Int,
     @ColumnInfo(name = "price") val price: Int,
     @ColumnInfo(name = "limit_num") val limit_num: Int,
-    @ColumnInfo(name = "gojuon_order") val gojuon_order: Int,
-    @ColumnInfo(name = "sell_check_disp") val sell_check_disp: Int,
     @ColumnInfo(name = "start_time") val start_time: String,
     @ColumnInfo(name = "end_time") val end_time: String,
+    //jp
+    @ColumnInfo(name = "gojuon_order") val gojuon_order: Int,
+    @ColumnInfo(name = "sell_check_disp") val sell_check_disp: Int,
 ) : Serializable

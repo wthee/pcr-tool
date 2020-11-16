@@ -15,7 +15,7 @@ import androidx.core.view.forEachIndexed
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
-import cn.wthee.pcrtool.database.DatabaseUpdateHelper
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        DatabaseUpdateHelper.checkDBVersion()
+        DatabaseUpdater.checkDBVersion()
         //悬浮按钮
         setFab()
         setListener()
@@ -162,8 +162,8 @@ class MainActivity : AppCompatActivity() {
             closeFab()
             when (currentMainPage) {
                 0 -> {
-                    CharacterListFragment.characterfilterParams.all =
-                        if (CharacterListFragment.characterfilterParams.all) {
+                    CharacterListFragment.characterFilterParams.all =
+                        if (CharacterListFragment.characterFilterParams.all) {
                             ToastUtil.short("仅显示收藏")
                             MainScope().launch {
                                 delay(300L)
@@ -278,7 +278,7 @@ class MainActivity : AppCompatActivity() {
                         chip.isCheckable = true
                         chip.isClickable = true
                         chips.addView(chip)
-                        if (CharacterListFragment.characterfilterParams.guild == guild) {
+                        if (CharacterListFragment.characterFilterParams.guild == guild) {
                             chip.isChecked = true
                         }
                     }
@@ -296,12 +296,12 @@ class MainActivity : AppCompatActivity() {
                     layout.chipsPosition.forEachIndexed { index, view ->
                         val chip = view as Chip
                         chip.isChecked =
-                            CharacterListFragment.characterfilterParams.positon == index
+                            CharacterListFragment.characterFilterParams.positon == index
                     }
                     //攻击类型初始
                     layout.chipsAtk.forEachIndexed { index, view ->
                         val chip = view as Chip
-                        chip.isChecked = CharacterListFragment.characterfilterParams.atk == index
+                        chip.isChecked = CharacterListFragment.characterFilterParams.atk == index
                     }
                     //显示弹窗
                     DialogUtil.create(this, layout.root, getString(R.string.reset),
@@ -322,7 +322,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 sortAsc = layout.ascChips.checkedChipId == R.id.asc
                                 //位置
-                                CharacterListFragment.characterfilterParams.positon =
+                                CharacterListFragment.characterFilterParams.positon =
                                     when (layout.chipsPosition.checkedChipId) {
                                         R.id.position_chip_1 -> 1
                                         R.id.position_chip_2 -> 2
@@ -330,7 +330,7 @@ class MainActivity : AppCompatActivity() {
                                         else -> 0
                                     }
                                 //攻击类型
-                                CharacterListFragment.characterfilterParams.atk =
+                                CharacterListFragment.characterFilterParams.atk =
                                     when (layout.chipsAtk.checkedChipId) {
                                         R.id.atk_chip_1 -> 1
                                         R.id.atk_chip_2 -> 2
@@ -339,7 +339,7 @@ class MainActivity : AppCompatActivity() {
                                 //公会筛选
                                 val chip =
                                     layout.root.findViewById<Chip>(layout.chipsGuild.checkedChipId)
-                                CharacterListFragment.characterfilterParams.guild =
+                                CharacterListFragment.characterFilterParams.guild =
                                     chip.text.toString()
                                 //筛选
                                 sharedCharacterViewModel.getCharacters(

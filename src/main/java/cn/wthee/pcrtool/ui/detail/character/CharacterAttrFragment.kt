@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants.UID
 import coil.load
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ class CharacterAttrFragment : Fragment() {
         fun getInstance(uid: Int): CharacterAttrFragment {
             val fragment = CharacterAttrFragment()
             val bundle = Bundle()
-            bundle.putInt("uid", uid)
+            bundle.putInt(UID, uid)
             fragment.arguments = bundle
             return fragment
         }
@@ -56,7 +57,7 @@ class CharacterAttrFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            uid = it.getInt("uid")
+            uid = it.getInt(UID)
         }
     }
 
@@ -223,10 +224,18 @@ class CharacterAttrFragment : Fragment() {
             }
         })
         //角色属性
+        attrAdapter = CharacterAttrAdapter()
+        binding.charcterAttrs.adapter = attrAdapter
         sharedCharacterAttrViewModel.sumInfo.observe(viewLifecycleOwner, {
-            attrAdapter = CharacterAttrAdapter()
-            binding.charcterAttrs.adapter = attrAdapter
             attrAdapter.submitList(it.all()) {
+                attrAdapter.notifyDataSetChanged()
+            }
+        })
+        //角色剧情属性
+        val storyAttrAdapter = CharacterAttrAdapter()
+        binding.charcterStoryAttrs.adapter = storyAttrAdapter
+        sharedCharacterAttrViewModel.storyAttrs.observe(viewLifecycleOwner, {
+            storyAttrAdapter.submitList(it.allNotZero()) {
                 attrAdapter.notifyDataSetChanged()
             }
         })

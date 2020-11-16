@@ -18,11 +18,13 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.transition.Hold
 import kotlin.math.abs
 
 
@@ -34,7 +36,7 @@ class CharacterBasicInfoFragment : Fragment() {
         fun getInstance(uid: Int): CharacterBasicInfoFragment {
             val fragment = CharacterBasicInfoFragment()
             val bundle = Bundle()
-            bundle.putInt("uid", uid)
+            bundle.putInt(UID, uid)
             fragment.arguments = bundle
             return fragment
         }
@@ -53,9 +55,11 @@ class CharacterBasicInfoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            uid = it.getInt("uid")
+            uid = it.getInt(UID)
         }
-        isLoved = CharacterListFragment.characterfilterParams.starIds.contains(uid)
+        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
+        //从此页面过渡至CharacterPicListFragment
+        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -183,9 +187,9 @@ class CharacterBasicInfoFragment : Fragment() {
     //设置收藏
     private fun setLove(isLoved: Boolean) {
         if (isLoved)
-            CharacterListFragment.characterfilterParams.add(uid)
+            CharacterListFragment.characterFilterParams.add(uid)
         else
-            CharacterListFragment.characterfilterParams.remove(uid)
+            CharacterListFragment.characterFilterParams.remove(uid)
 
         val ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
         binding.rightIcon.setImageResource(ic)

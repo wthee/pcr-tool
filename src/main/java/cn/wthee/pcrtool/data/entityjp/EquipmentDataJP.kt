@@ -23,10 +23,6 @@ class EquipmentDataJP(
     //jp
     @ColumnInfo(name = "display_item") val displayItem: Int,
     @ColumnInfo(name = "item_type") val itemType: Int,
-) : Serializable {
-
-    fun getDesc() = description.replace("\\n", "")
-
-}
+) : Serializable
 
 

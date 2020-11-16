@@ -226,4 +226,34 @@ interface CharacterDao {
         """
     )
     suspend fun getItemDropInfos(unitId: Int): List<ItemDropInfo>
+
+    //获取角色剧情属性
+    @Transaction
+    @Query(
+        """
+        SELECT
+            * 
+        FROM
+            (
+            SELECT
+                b.chara_type,
+                a.status_type_1,
+                a.status_rate_1,
+                a.status_type_2,
+                a.status_rate_2,
+                a.status_type_3,
+                a.status_rate_3,
+                a.status_type_4,
+                a.status_rate_4,
+                a.status_type_5,
+                a.status_rate_5 
+            FROM
+                chara_story_status AS a
+                LEFT JOIN chara_identity AS b ON a.chara_id_1 = b.unit_id / 100 
+            ) AS c 
+        WHERE
+            c.chara_type IN ( SELECT chara_type FROM chara_identity WHERE unit_id =:unitId)
+    """
+    )
+    suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>
 }

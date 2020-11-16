@@ -13,10 +13,6 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
 
 class GachaFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = GachaFragment()
-    }
-
     private lateinit var viewModel: GachaViewModel
     private lateinit var binding: FragmentToolGachaBinding
 

@@ -15,9 +15,9 @@ import cn.wthee.pcrtool.adapters.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapters.DepthPageTransformer
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -34,9 +34,9 @@ class CharacterPagerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            uid = it.getInt("uid")
+            uid = it.getInt(UID)
         }
-        exitTransition = Hold()
+        //从 MainPagerFragment CharacterListFragment过渡至次页面
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = resources.getInteger(R.integer.fragment_anim).toLong()
