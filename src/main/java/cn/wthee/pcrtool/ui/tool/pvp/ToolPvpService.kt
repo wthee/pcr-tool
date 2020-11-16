@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.OnPostListener
 import cn.wthee.pcrtool.data.PvpDataRepository
+import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
@@ -29,6 +30,7 @@ import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
+import retrofit2.Call
 
 
 class ToolPvpService : Service() {
@@ -50,6 +52,7 @@ class ToolPvpService : Service() {
     private var character2 = listOf<PvpCharacterData>()
     private var character3 = listOf<PvpCharacterData>()
     private lateinit var adapter: PvpCharacterResultAdapter
+    private lateinit var call: Call<PVPData>
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -133,9 +136,9 @@ class ToolPvpService : Service() {
                 } else {
                     //展示查询结果
                     back.visibility = View.VISIBLE
-                    resultContent.pvpResultLoading.visibility = View.VISIBLE
+                    resultContent.loadingDialog.visibility = View.VISIBLE
                     resultContent.root.visibility = View.VISIBLE
-                    PvpDataRepository.getData(object : OnPostListener {
+                    call = PvpDataRepository.getData(object : OnPostListener {
                         override fun success(data: List<Result>) {
                             //展示查询结果
                             binding.resultContent.apply {
@@ -148,7 +151,7 @@ class ToolPvpService : Service() {
                                     })
                                 }
                             }
-                            binding.resultContent.pvpResultLoading.visibility = View.GONE
+                            binding.resultContent.loadingDialog.visibility = View.GONE
                         }
 
                         override fun error() {
@@ -192,6 +195,11 @@ class ToolPvpService : Service() {
 //            }
             //返回
             back.setOnClickListener {
+                if (this@ToolPvpService::call.isLateinit) {
+                    if (!call.isCanceled) {
+                        call.cancel()
+                    }
+                }
                 if (resultContent.root.visibility == View.VISIBLE) {
                     resultContent.root.visibility = View.GONE
                     adapter.submitList(null)

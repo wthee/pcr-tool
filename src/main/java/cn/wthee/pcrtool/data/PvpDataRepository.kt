@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data
 
+import android.util.Log
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.PVPData
@@ -19,7 +20,7 @@ import retrofit2.Response
 
 object PvpDataRepository {
 
-    fun getData(onPostListener: OnPostListener){
+    fun getData(onPostListener: OnPostListener): Call<PVPData> {
         //创建服务
         val service = ApiHelper.create(PVPService::class.java, Constants.API_URL_PVP)
         //接口参数
@@ -34,24 +35,27 @@ object PvpDataRepository {
             json.toString()
         )
         //发送请求
-        service.getData(body).enqueue(object : Callback<PVPData> {
+        val request = service.getData(body)
+        request.enqueue(object : Callback<PVPData> {
             override fun onResponse(call: Call<PVPData>, response: Response<PVPData>) {
                 try {
                     val responseBody = response.body()
-                    if (responseBody == null || responseBody.code != 0) {
-                        ToastUtil.short("查询异常，请稍后重试~")
+                    if (responseBody == null || responseBody.code != 0 || responseBody.data.result == null) {
+                        ToastUtil.short("未正常获取数据，请重新查询~")
                     } else {
                         onPostListener.success(responseBody.data.result)
                     }
                 } catch (e: Exception) {
-                    ToastUtil.short("数据解析失败~")
+                    ToastUtil.short("未正常解析数据，请重新查询~")
                 }
             }
 
             override fun onFailure(call: Call<PVPData>, t: Throwable) {
+                Log.e("api-failure", t.message ?: "")
                 onPostListener.error()
             }
         })
+        return request
     }
 
 
