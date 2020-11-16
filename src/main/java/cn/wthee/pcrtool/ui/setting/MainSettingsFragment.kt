@@ -31,10 +31,14 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         InjectorUtil.provideCharacterViewModelFactory()
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.root_preferences, rootKey)
+    override fun onResume() {
+        super.onResume()
         //添加返回fab
         FabHelper.addBackFab()
+    }
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.root_preferences, rootKey)
         //获取控件
         titleDatabase = findPreference<Preference>("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
