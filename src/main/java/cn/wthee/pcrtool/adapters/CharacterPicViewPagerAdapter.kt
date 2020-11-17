@@ -11,7 +11,7 @@ class CharacterPicViewPagerAdapter internal constructor(
 ) : FragmentStateAdapter(fm, lifeCycle) {
 
     private val items = mutableListOf<String>()
-    val firstElementPosition = Int.MAX_VALUE / 2
+    val firstElementPosition = Int.MAX_VALUE / 12 * 12
 
     fun updateList(list: List<String>) {
         items.apply {

@@ -58,7 +58,6 @@ class CharacterPicListFragment : Fragment() {
                 pics.setCurrentItem(this.firstElementPosition, false)
             }
             //指示器
-
             picIndex.text = getString(R.string.pic_index, index, urls.size)
             pics.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageScrolled(
@@ -67,13 +66,10 @@ class CharacterPicListFragment : Fragment() {
                     positionOffsetPixels: Int
                 ) {
                     super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                    //TODO index显示
-                    index = when {
-                        positionOffset > 0 -> index + 1
-                        positionOffset < 0 -> index - 1
-                        else -> index
-                    }
-                    picIndex.text = getString(R.string.pic_index, position, urls.size)
+                    //index显示
+
+                    index =
+                        (urls.size + (position - endlessScrollAdapter.firstElementPosition) % urls.size) % urls.size + 1
                 }
 
                 override fun onPageSelected(position: Int) {
@@ -82,6 +78,7 @@ class CharacterPicListFragment : Fragment() {
 
                 override fun onPageScrollStateChanged(state: Int) {
                     super.onPageScrollStateChanged(state)
+                    picIndex.text = getString(R.string.pic_index, index, urls.size)
                 }
             })
             //下载
