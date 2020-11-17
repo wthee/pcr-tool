@@ -55,6 +55,8 @@ class MainPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.e("create", "MainPagerFragment")
+
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         prepareTransitions()

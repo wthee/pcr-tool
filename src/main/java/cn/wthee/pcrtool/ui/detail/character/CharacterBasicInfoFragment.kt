@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
@@ -33,13 +33,14 @@ class CharacterBasicInfoFragment : Fragment() {
     companion object {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
-        fun getInstance(uid: Int): CharacterBasicInfoFragment {
-            val fragment = CharacterBasicInfoFragment()
-            val bundle = Bundle()
-            bundle.putInt(UID, uid)
-            fragment.arguments = bundle
-            return fragment
-        }
+
+        @Volatile
+        private var instance: CharacterBasicInfoFragment? = null
+
+        fun getInstance() =
+            instance ?: synchronized(this) {
+                instance ?: CharacterBasicInfoFragment().also { instance = it }
+            }
     }
 
     private var uid = -1
@@ -50,9 +51,7 @@ class CharacterBasicInfoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().let {
-            uid = it.getInt(UID)
-        }
+        uid = CharacterPagerFragment.uid
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
         exitTransition = Hold()
     }
@@ -61,6 +60,7 @@ class CharacterBasicInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.e("create", "CharacterBasicInfoFragment")
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //设置共享元素
         binding.root.transitionName = "item_${uid}"
@@ -107,6 +107,7 @@ class CharacterBasicInfoFragment : Fragment() {
         return binding.root
     }
 
+
     //点击事件
     private fun setListener() {
         binding.apply {
@@ -118,18 +119,27 @@ class CharacterBasicInfoFragment : Fragment() {
                 setLove(isLoved)
             }
             characterPic.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putStringArrayList("urls", urls)
-                val extras =
-                    FragmentNavigatorExtras(
-                        it to it.transitionName
+                try {
+                    val bundle = Bundle()
+                    bundle.putStringArrayList("urls", urls)
+                    val extras =
+                        FragmentNavigatorExtras(
+                            it to it.transitionName
+                        )
+                    findNavController().navigate(
+                        R.id.action_characterPagerFragment_to_characterPicListFragment,
+                        bundle,
+                        null,
+                        extras
                     )
-                findNavController().navigate(
-                    R.id.action_characterPagerFragment_to_characterPicListFragment,
-                    bundle,
-                    null,
-                    extras
-                )
+                    //移除旧的单例，避免viewpager2重新添加fragment时异常
+                    parentFragmentManager.beginTransaction()
+                        .remove(getInstance())
+                        .commit()
+                } catch (e: Exception) {
+
+                }
+
             }
             //toolbar 展开折叠监听
             appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->

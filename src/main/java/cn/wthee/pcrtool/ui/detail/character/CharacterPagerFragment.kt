@@ -23,8 +23,11 @@ import kotlinx.coroutines.launch
 
 class CharacterPagerFragment : Fragment() {
 
+    companion object {
+        var uid = -1
+    }
+
     private lateinit var binding: FragmentCharacterPagerBinding
-    private var uid = -1
     private lateinit var viewPager: ViewPager2
     private val characterAttrViewModel =
         InjectorUtil.providePromotionViewModelFactory().create(CharacterAttrViewModel::class.java)
@@ -48,6 +51,8 @@ class CharacterPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.e("create", "CharacterPagerFragment")
+
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         //添加返回fab
         FabHelper.addBackFab()
@@ -66,12 +71,7 @@ class CharacterPagerFragment : Fragment() {
             val noData = characterAttrViewModel.isUnknow(uid)
             viewPager = binding.root
             viewPager.adapter =
-                CharacterPagerAdapter(
-                    childFragmentManager,
-                    lifecycle,
-                    uid,
-                    noData
-                )
+                CharacterPagerAdapter(childFragmentManager, lifecycle, noData)
             viewPager.setPageTransformer(DepthPageTransformer())
             viewPager.offscreenPageLimit = 2
         }

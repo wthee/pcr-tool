@@ -35,8 +35,8 @@ class CharacterSkillFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().apply {
-            uid = getInt(UID)
+        uid = CharacterPagerFragment.uid
+        arguments?.apply {
             isDialog = getBoolean(DIALOG)
         }
     }
@@ -85,8 +85,4 @@ class CharacterSkillFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.root.layoutTransition.setAnimateParentHierarchy(false)
-    }
 }

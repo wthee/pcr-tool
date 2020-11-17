@@ -56,9 +56,7 @@ class CharacterAttrFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().let {
-            uid = it.getInt(UID)
-        }
+        uid = CharacterPagerFragment.uid
     }
 
     override fun onCreateView(

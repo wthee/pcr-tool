@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
-import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -34,7 +33,7 @@ class DatabaseDownloadWorker(
     private val notificationManager: NotificationManager =
         context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private val channelId = "1"
-    private val noticeId = 1
+    private val noticeId = 0
     private lateinit var notification: NotificationCompat.Builder
 
     //适配低版本数据库路径
@@ -55,7 +54,7 @@ class DatabaseDownloadWorker(
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         val fromSetting = inputData.getInt(KEY_FROM_SETTING, -1)
-        setForeground(createForegroundInfo())
+        setForegroundAsync(createForegroundInfo())
         return@coroutineScope download(inputUrl, version, type, fromSetting)
     }
 
@@ -108,14 +107,13 @@ class DatabaseDownloadWorker(
             if (db.exists()) {
                 FileUtil.deleteDir(folderPath, dbZipPath)
             }
-            Log.e("pcr", "downloaded database")
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
             //更新数据库
             AppDatabase.getInstance().close()
             AppDatabaseJP.getInstance().close()
             UnzippedUtil.deCompress(db, true)
-            Log.e("pcr", "saved database")
+            notificationManager.cancelAll()
             //更新数据库版本号
             sp.edit {
                 putString(
@@ -141,7 +139,6 @@ class DatabaseDownloadWorker(
             MainScope().launch {
                 ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
             }
-            Log.e("pcr", e.message.toString())
             return Result.failure()
         }
     }

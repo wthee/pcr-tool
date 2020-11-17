@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterPicAdapter
+import cn.wthee.pcrtool.adapters.CharacterPicViewPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 import cn.wthee.pcrtool.utils.ImageDownloadUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -31,7 +30,7 @@ class CharacterPicListFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPicListBinding
     private lateinit var urls: ArrayList<String>
-    private var index = 0
+    private var index = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,27 +51,48 @@ class CharacterPicListFragment : Fragment() {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
         binding.apply {
             //初始化列表
-            val adapter = CharacterPicAdapter(this@CharacterPicListFragment)
-            PagerSnapHelper().attachToRecyclerView(binding.pics)
-            pics.adapter = adapter
-            adapter.submitList(urls)
-            //指示器
-            pics.setOnScrollChangeListener { _, _, _, _, _ ->
-                val manager = pics.layoutManager as LinearLayoutManager
-                index = manager.findFirstCompletelyVisibleItemPosition() + 1
-                if (index != 0) picIndex.text = getString(R.string.pic_index, index, urls.size)
+            val endlessScrollAdapter = CharacterPicViewPagerAdapter(childFragmentManager, lifecycle)
+            pics.adapter = endlessScrollAdapter
+            endlessScrollAdapter.apply {
+                updateList(urls)
+                pics.setCurrentItem(this.firstElementPosition, false)
             }
+            //指示器
+
+            picIndex.text = getString(R.string.pic_index, index, urls.size)
+            pics.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                    //TODO index显示
+                    index = when {
+                        positionOffset > 0 -> index + 1
+                        positionOffset < 0 -> index - 1
+                        else -> index
+                    }
+                    picIndex.text = getString(R.string.pic_index, position, urls.size)
+                }
+
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                    super.onPageScrollStateChanged(state)
+                }
+            })
             //下载
             fabDownload.setOnClickListener {
                 if (index != 0) {
                     if (hasLoaded[index - 1]) {
                         try {
-
                             val url = urls[index - 1]
                             val pre = url.substring(url.indexOf("card/") + 5, url.lastIndexOf('/'))
                             val num = url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('.'))
                             val name = "${pre}_${num}.png"
-
                             //保存图片
                             lifecycleScope.launch {
                                 val request = ImageRequest.Builder(requireContext())
@@ -85,10 +105,10 @@ class CharacterPicListFragment : Fragment() {
 
                         } catch (e: Exception) {
                             Log.e("save", e.message ?: "")
-                            ToastUtil.short("保存出错，请重试~")
+                            ToastUtil.short("未保存成功，请重试~")
                         }
                     } else {
-                        ToastUtil.short("请等待图片加载~")
+                        ToastUtil.short("请等待图片加载完成~")
                     }
                 }
             }

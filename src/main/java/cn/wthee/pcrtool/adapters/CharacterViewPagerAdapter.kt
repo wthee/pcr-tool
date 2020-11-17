@@ -16,17 +16,16 @@ import kotlin.math.abs
 class CharacterPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    uid: Int,
     noData: Boolean
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     private val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
-        mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid))
+        mFragments.put(0, CharacterBasicInfoFragment.getInstance())
         if (!noData) {
-            mFragments.put(1, CharacterAttrFragment.getInstance(uid))
-            mFragments.put(2, CharacterSkillFragment.getInstance(uid))
+            mFragments.put(1, CharacterAttrFragment())
+            mFragments.put(2, CharacterSkillFragment())
         }
     }
 

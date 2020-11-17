@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -94,7 +94,7 @@ class CharacterPageAdapter(
                             FragmentNavigatorExtras(
                                 itemCharacter to itemCharacter.transitionName
                             )
-                        root.findNavController().navigate(
+                        fragment.findNavController().navigate(
                             R.id.action_containerFragment_to_characterPagerFragment,
                             bundle,
                             null,

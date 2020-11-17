@@ -33,12 +33,12 @@ object DialogUtil {
             .create()
         dialog.apply {
             //取消
-            setButton(DialogInterface.BUTTON_NEUTRAL, btn1) { dialog, which ->
+            setButton(DialogInterface.BUTTON_NEUTRAL, btn1) { dialog, _ ->
                 listener.onCancel(this)
                 dialog.dismiss()
             }
             //确认
-            setButton(DialogInterface.BUTTON_POSITIVE, btn2) { dialog, which ->
+            setButton(DialogInterface.BUTTON_POSITIVE, btn2) { dialog, _ ->
                 listener.onConfirm(this)
                 dialog.dismiss()
             }

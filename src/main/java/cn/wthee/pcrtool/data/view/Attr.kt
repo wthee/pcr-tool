@@ -147,7 +147,7 @@ fun Attr.all(): ArrayList
 
 //非零属性
 fun Attr.allNotZero(): List<AttrValue> {
-    val attrs = (all() as ArrayList)
+    val attrs = all()
     attrs.removeAll { it.value == 0.0 }
     return attrs
 }
