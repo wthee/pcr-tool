@@ -7,18 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentImageBinding
+import cn.wthee.pcrtool.ui.detail.character.CharacterPicListFragment
 import coil.load
 
 
 class ImageFragment : Fragment() {
 
     private val URL = "url"
+    private val POSITION = "position"
+    private var position = 0
     private var url: String? = null
     private lateinit var binding: FragmentImageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+            position = it.getInt(POSITION)
             url = it.getString(URL)
         }
     }
@@ -36,6 +40,9 @@ class ImageFragment : Fragment() {
                 listener(
                     onStart = {
                         parentFragment?.startPostponedEnterTransition()
+                    },
+                    onSuccess = { _, _ ->
+                        CharacterPicListFragment.hasLoaded[position] = true
                     }
                 )
             }
@@ -46,9 +53,10 @@ class ImageFragment : Fragment() {
     companion object {
 
         @JvmStatic
-        fun newInstance(url: String) =
+        fun newInstance(position: Int, url: String) =
             ImageFragment().apply {
                 arguments = Bundle().apply {
+                    putInt(POSITION, position)
                     putString(URL, url)
                 }
             }

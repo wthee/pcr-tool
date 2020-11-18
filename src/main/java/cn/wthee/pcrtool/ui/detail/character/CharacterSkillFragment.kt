@@ -5,11 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
+import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -32,12 +37,18 @@ class CharacterSkillFragment : Fragment() {
     private lateinit var adapter: SkillAdapter
     private var uid = 0
     private var isDialog = false
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        uid = CharacterPagerFragment.uid
         arguments?.apply {
+            uid = getInt(UID)
             isDialog = getBoolean(DIALOG)
+        }
+        if (!isDialog) {
+            uid = CharacterPagerFragment.uid
         }
     }
 
@@ -62,21 +73,30 @@ class CharacterSkillFragment : Fragment() {
         }
         //以悬浮窗显示时
         if (isDialog) {
+            lifecycleScope.launch {
+                binding.layoutLoopTitle.title.text =
+                    sharedCharacterViewModel.getCharacterData(uid).name
+            }
             adapter.submitList(null)
             //修改fab位置
             binding.apply {
                 fabSkillLoop.visibility = View.GONE
-                layoutLoopTitle.visibility = View.VISIBLE
-                openLoopListBtn.setOnClickListener {
-                    fabSkillLoop.callOnClick()
+                layoutLoopTitle.root.visibility = View.VISIBLE
+                ToolbarUtil(layoutLoopTitle).apply {
+                    setCenterTitle("")
+                    setRightIcon(R.drawable.ic_loop)
+                    rightIcon.setOnClickListener {
+                        fabSkillLoop.callOnClick()
+                    }
+                    leftIcon.setOnClickListener {
+                        (parentFragment as BottomSheetDialogFragment).dismiss()
+                    }
                 }
             }
         }
 
         viewModel.skills.observe(viewLifecycleOwner, {
-            adapter.submitList(it) {
-                binding.skillLoad.visibility = View.GONE
-            }
+            adapter.submitList(it)
         })
         lifecycleScope.launch {
             delay(400L)

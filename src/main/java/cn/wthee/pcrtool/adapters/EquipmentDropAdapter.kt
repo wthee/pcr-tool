@@ -39,7 +39,7 @@ class EquipmentDropAdapter :
                     12 -> "H"
                     13 -> "VH"
                     else -> ""
-                } + "-"
+                }
                 questNum.text =
                     MyApplication.context.getString(R.string.quest_name, pre, info.getNum())
                 //颜色

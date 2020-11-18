@@ -107,7 +107,7 @@
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_enemy">怪物信息</string>
     <string name="tool_gacha">卡池记录</string>
-    <string name="pre">✦</string>
+    <string name="pre">✦ </string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
     <string name="pcrdfans_com">数据来源 pcrdfans</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
@@ -120,11 +120,10 @@
     <string name="atk_dis">攻击距离</string>
     <string name="drop_info">- 掉落信息 -</string>
     <string name="test">test</string>
-    <string name="title_all_attr_sub">✦ 已计算角色剧情额外属性</string>
+    <string name="title_all_attr_sub">✦ 已计算角色剧情属性</string>
+    <string name="title_story_attr_sub">✦ 相同角色所有剧情属性</string>
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">- 剧情属性 -</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="download_pic">下载当前图片</string>
 
 </resources>

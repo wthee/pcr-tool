@@ -83,10 +83,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            mHeight = ScreenUtil.getHeight(this) - 48.dp
+        mHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            ScreenUtil.getHeight(this) - 48.dp
         else
-            mHeight = ScreenUtil.getWidth(this) - 48.dp
+            ScreenUtil.getWidth(this) - 48.dp
         super.onConfigurationChanged(newConfig)
     }
 

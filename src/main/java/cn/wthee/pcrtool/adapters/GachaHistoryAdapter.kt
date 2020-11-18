@@ -43,7 +43,7 @@ class GachaHistoryAdapter(
                 gachaIcons.adapter = adapter
                 adapter.submitList(gacha.getUnits())
                 //起止日期
-                gachaDate.text = "- ${gacha.start_time.subSequence(0, 10)} ~ ${
+                gachaDate.text = "${gacha.start_time.subSequence(0, 10)} ~ ${
                     gacha.end_time.subSequence(
                         0,
                         10

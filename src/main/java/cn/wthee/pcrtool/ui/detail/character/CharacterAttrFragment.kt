@@ -70,7 +70,7 @@ class CharacterAttrFragment : Fragment() {
         setObserve()
         //加载icon
         var id = uid
-        if (CharacterListFragment.r6Ids.contains(id)) id += 60 else id += 30
+        id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
         val picUrl = Constants.UNIT_ICON_URL + id + Constants.WEBP
         binding.icon.load(picUrl) {
             error(R.drawable.unknow_gray)

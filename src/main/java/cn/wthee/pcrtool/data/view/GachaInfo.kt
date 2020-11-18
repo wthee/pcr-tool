@@ -23,5 +23,5 @@ data class GachaInfo(
         return units
     }
 
-    fun getDesc() = "- " + description.replace("\\n", "\n- ")
+    fun getDesc() = description.replace("\\n", "\n")
 }

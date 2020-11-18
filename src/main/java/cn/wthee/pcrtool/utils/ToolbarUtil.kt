@@ -20,9 +20,10 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         leftIcon.setImageResource(resId)
     }
 
-    fun setRightIcon(resId: Int) {
+    fun setRightIcon(resId: Int): ToolbarUtil {
         rightIcon.visibility = View.VISIBLE
         rightIcon.setImageResource(resId)
+        return this
     }
 
 

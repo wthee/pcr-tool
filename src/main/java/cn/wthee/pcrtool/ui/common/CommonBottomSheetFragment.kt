@@ -8,13 +8,36 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentCommonBottomSheetBinding
 import cn.wthee.pcrtool.enums.PageType
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment
+import cn.wthee.pcrtool.utils.Constants.UID
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class CommonBottomSheetFragment(private val uid: Int, private val page: PageType) :
+class CommonBottomSheetFragment() :
     BottomSheetDialogFragment() {
 
+    private val DIALOG = "dialog"
+
+    companion object {
+        fun getInstance(uid: Int, page: PageType) =
+            CommonBottomSheetFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(UID, uid)
+                    putSerializable(DIALOG, page)
+                }
+            }
+    }
+
     private lateinit var binding: FragmentCommonBottomSheetBinding
+    private var uid = 0
+    private var page = PageType.CAHRACTER_SKILL
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.apply {
+            uid = getInt(UID)
+            page = getSerializable(DIALOG) as PageType
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +51,6 @@ class CommonBottomSheetFragment(private val uid: Int, private val page: PageType
                     .commit()
             }
         }
-
         return binding.root
     }
-
 }

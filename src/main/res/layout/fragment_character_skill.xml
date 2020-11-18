@@ -9,38 +9,10 @@
     android:background="@color/colorBg"
     android:minHeight="@dimen/card_height">
 
-    <LinearLayout
+    <include
         android:id="@+id/layout_loop_title"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tab_height_1"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/m_margin"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/m_padding"
-            android:paddingEnd="@dimen/m_padding"
-            android:text="@string/skill_info"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:textColor="@color/colorWhite" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/open_loop_list_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="@string/loop_skill"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-            android:textColor="@color/colorPrimary" />
-    </LinearLayout>
+        layout="@layout/view_toolbar"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
@@ -53,16 +25,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/layout_loop_title"
         tools:listitem="@layout/item_skill" />
-
-    <ProgressBar
-        android:id="@+id/skill_load"
-        android:layout_width="@dimen/l_icon"
-        android:layout_height="@dimen/l_icon"
-        android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_skill_loop"

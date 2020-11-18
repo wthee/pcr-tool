@@ -1,27 +1,19 @@
 package cn.wthee.pcrtool.utils
 
 import android.content.Context
-import android.util.DisplayMetrics
-import android.view.Display
 import cn.wthee.pcrtool.MyApplication
 
 
 object ScreenUtil {
 
-    fun getWidth(context: Context): Int {
-        val displayMetrics = DisplayMetrics()
-        val display: Display = context.display!!
-        display.getRealMetrics(displayMetrics)
-        return displayMetrics.widthPixels
-    }
+    val display = ActivityUtil.instance.currentActivity?.windowManager?.defaultDisplay
 
-    fun getHeight(context: Context): Int {
-        val displayMetrics = DisplayMetrics()
-        val display: Display = context.display!!
-        display.getRealMetrics(displayMetrics)
-        return displayMetrics.heightPixels
-    }
+    fun getWidth(context: Context) = display?.width ?: 0
+
+    fun getHeight(context: Context) = display?.height ?: 0
+
 }
+
 // 获取 dp 的像素值
 val Int.dp: Int
     get() {

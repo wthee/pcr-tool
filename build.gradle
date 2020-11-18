@@ -89,7 +89,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     //Paging3
-    def paging_version = "3.0.0-alpha08"
+    def paging_version = "3.0.0-alpha09"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     //Palette

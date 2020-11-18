@@ -12,7 +12,7 @@
     <dimen name="m_icon">16dp</dimen>
     <dimen name="l_icon">24dp</dimen>
     <dimen name="xl_icon">36dp</dimen>
-    <dimen name="menu_icon">34dp</dimen>
+    <dimen name="menu_icon">24dp</dimen>
     <dimen name="fab_icon">24dp</dimen>
     <dimen name="normal_icon">48dp</dimen>
     <dimen name="big_icon">64dp</dimen>
@@ -38,4 +38,5 @@
     <dimen name="fab_circle_radius">120dp</dimen>
     <dimen name="hr_height">4dp</dimen>
     <dimen name="hr_width">36dp</dimen>
+    <dimen name="seekbar_width">256dp</dimen>
 </resources>

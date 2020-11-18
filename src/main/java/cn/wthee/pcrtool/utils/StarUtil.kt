@@ -44,7 +44,7 @@ object StarUtil {
                     if (j > i) {
                         partent[j].setBackgroundResource(R.drawable.ic_star_dark)
                     } else {
-                        partent.get(j).setBackgroundResource(R.drawable.ic_star)
+                        partent[j].setBackgroundResource(R.drawable.ic_star)
                     }
                 }
                 onSelect.select(i)

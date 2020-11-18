@@ -30,7 +30,6 @@ class CharacterViewModel(
     fun getCharacters(sortType: SortType, asc: Boolean, name: String) {
         isLoading.postValue(true)
         viewModelScope.launch {
-            //TODO 收藏 DataStroe 获取 已收藏的角色 id 数据
             characters = Pager(
                 PagingConfig(
                     pageSize = 50,
@@ -61,6 +60,8 @@ class CharacterViewModel(
             character.postValue(data)
         }
     }
+
+    suspend fun getCharacterData(uid: Int) = repository.getInfoPro(uid)
 
     //角色基本资料
     suspend fun getCharacterByPosition(positionType: Int) = when (positionType) {

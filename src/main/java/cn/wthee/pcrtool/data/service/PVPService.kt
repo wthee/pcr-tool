@@ -9,5 +9,5 @@ import retrofit2.http.POST
 interface PVPService {
 
     @POST("search")
-    fun getData(@Body() body: RequestBody): Call<PVPData>
+    fun getData(@Body body: RequestBody): Call<PVPData>
 }

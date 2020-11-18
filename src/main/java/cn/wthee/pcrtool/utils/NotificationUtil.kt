@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.R
 
 object NotificationUtil {
 
-    private val channelId = "1"
+    private const val channelId = "1"
     val context: Context = MyApplication.context
     val notificationManager: NotificationManager =
         context.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager

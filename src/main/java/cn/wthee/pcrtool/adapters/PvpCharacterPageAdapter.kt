@@ -8,7 +8,8 @@ import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpCharacterPageFragment
 
 class PvpCharacterPageAdapter(
     activity: FragmentActivity,
-    isFloatWindow: Boolean) : FragmentStateAdapter(activity) {
+    isFloatWindow: Boolean
+) : FragmentStateAdapter(activity) {
 
     private val mFragments: SparseArray<Fragment> = SparseArray()
 

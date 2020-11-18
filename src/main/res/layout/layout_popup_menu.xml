@@ -27,11 +27,11 @@
                 style="@style/Ripple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/s_padding"
                 android:foreground="?selectableItemBackgroundBorderless"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/m_padding"
-                android:paddingTop="@dimen/s_padding"
                 android:paddingEnd="@dimen/m_padding">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -43,7 +43,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_marginStart="@dimen/m_margin"
                     android:layout_weight="1"
                     android:text="@string/tool_level"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
@@ -56,11 +56,11 @@
                 style="@style/Ripple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
                 android:foreground="?selectableItemBackgroundBorderless"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/m_padding"
-                android:paddingTop="@dimen/s_padding"
                 android:paddingEnd="@dimen/m_padding">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -72,7 +72,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_marginStart="@dimen/m_margin"
                     android:layout_weight="1"
                     android:text="@string/tool_enemy"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
@@ -85,24 +85,24 @@
                 style="@style/Ripple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
                 android:foreground="?selectableItemBackgroundBorderless"
-                android:gravity="center"
+                android:layout_marginBottom="@dimen/s_margin"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/m_padding"
-                android:paddingTop="@dimen/s_padding"
-                android:paddingEnd="@dimen/m_padding"
-                android:paddingBottom="@dimen/s_padding">
+                android:gravity="center_vertical"
+                android:paddingEnd="@dimen/m_padding">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/menu_icon"
                     android:layout_height="@dimen/menu_icon"
-                    android:src="@drawable/ic_character"
+                    android:src="@drawable/ic_gacha"
                     android:tint="@color/colorPrimary" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/s_margin"
+                    android:layout_marginStart="@dimen/m_margin"
                     android:layout_weight="1"
                     android:text="@string/tool_gacha"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"

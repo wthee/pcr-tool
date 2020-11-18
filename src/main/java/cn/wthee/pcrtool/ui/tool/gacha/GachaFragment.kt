@@ -35,7 +35,7 @@ class GachaFragment : Fragment() {
 
         //设置头部
         binding.toolGacha.apply {
-            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_character))
+            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_gacha))
             toolTitle.text = getString(R.string.tool_gacha)
         }
 

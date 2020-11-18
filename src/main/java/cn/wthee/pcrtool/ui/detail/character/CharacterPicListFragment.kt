@@ -56,7 +56,6 @@ class CharacterPicListFragment : Fragment() {
             pics.adapter = endlessScrollAdapter
             endlessScrollAdapter.apply {
                 updateList(urls)
-                pics.setCurrentItem(this.firstElementPosition, false)
             }
             setListener()
         }
@@ -78,9 +77,7 @@ class CharacterPicListFragment : Fragment() {
             ) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                 //index显示
-
-                index =
-                    (urls.size + (position - endlessScrollAdapter.firstElementPosition) % urls.size) % urls.size + 1
+                index = position + 1
             }
 
             override fun onPageSelected(position: Int) {

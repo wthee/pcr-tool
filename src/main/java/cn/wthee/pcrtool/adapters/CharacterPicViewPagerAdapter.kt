@@ -11,7 +11,6 @@ class CharacterPicViewPagerAdapter internal constructor(
 ) : FragmentStateAdapter(fm, lifeCycle) {
 
     private val items = mutableListOf<String>()
-    val firstElementPosition = Int.MAX_VALUE / 12 * 12
 
     fun updateList(list: List<String>) {
         items.apply {
@@ -21,11 +20,9 @@ class CharacterPicViewPagerAdapter internal constructor(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int =
-        if (items.isNotEmpty()) Int.MAX_VALUE else 0
+    override fun getItemCount(): Int = items.size
 
     override fun createFragment(position: Int) =
-        ImageFragment.newInstance(items[position.rem(items.size)])
-
+        ImageFragment.newInstance(position, items[position])
 
 }

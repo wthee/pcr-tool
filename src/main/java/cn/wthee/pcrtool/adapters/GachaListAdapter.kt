@@ -51,7 +51,7 @@ class GachaListAdapter(
 //                name.text = data.name
 //                name.setTextColor(ResourcesUtil.getColor(R.color.colorPrimary))
                 pic.setOnClickListener {
-                    CommonBottomSheetFragment(data.id, PageType.CAHRACTER_SKILL).show(
+                    CommonBottomSheetFragment.getInstance(data.id, PageType.CAHRACTER_SKILL).show(
                         manager,
                         "skill"
                     )
