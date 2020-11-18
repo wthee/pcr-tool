@@ -33,6 +33,14 @@ class CharacterBasicInfoFragment : Fragment() {
     companion object {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
+
+        @Volatile
+        private var instance: CharacterBasicInfoFragment? = null
+
+        fun getInstance() =
+            instance ?: synchronized(this) {
+                instance ?: CharacterBasicInfoFragment().also { instance = it }
+            }
     }
 
     private var uid = -1
@@ -134,6 +142,10 @@ class CharacterBasicInfoFragment : Fragment() {
                         null,
                         extras
                     )
+                    //移除旧的单例，避免viewpager2重新添加fragment时异常
+                    parentFragmentManager.beginTransaction()
+                        .remove(getInstance())
+                        .commit()
                 } catch (e: Exception) {
 
                 }

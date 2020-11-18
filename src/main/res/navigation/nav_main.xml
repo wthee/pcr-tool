@@ -66,10 +66,10 @@
         <action
             android:id="@+id/action_characterPagerFragment_to_characterPicListFragment"
             app:destination="@id/characterPicListFragment"
-            app:enterAnim="@anim/fragment_enter_tool"
-            app:exitAnim="@anim/fragment_exit_tool"
-            app:popEnterAnim="@anim/fragment_popenter_tool"
-            app:popExitAnim="@anim/fragment_popexit_tool" />
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/equipmentDetailsFragment"

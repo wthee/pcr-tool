@@ -161,7 +161,6 @@
                 android:id="@+id/basic_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/three">
 

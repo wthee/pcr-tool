@@ -43,7 +43,6 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         title.layoutParams = params
         setTitleColor(R.color.colorPrimary)
         setLeftIcon(R.drawable.ic_back)
-        setBackground(R.color.colorWhite)
     }
 
     fun setCenterTitle(titleText: String): ToolbarUtil {
