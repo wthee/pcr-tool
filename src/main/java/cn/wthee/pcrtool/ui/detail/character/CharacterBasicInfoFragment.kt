@@ -33,14 +33,6 @@ class CharacterBasicInfoFragment : Fragment() {
     companion object {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
-
-        @Volatile
-        private var instance: CharacterBasicInfoFragment? = null
-
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: CharacterBasicInfoFragment().also { instance = it }
-            }
     }
 
     private var uid = -1
@@ -62,6 +54,24 @@ class CharacterBasicInfoFragment : Fragment() {
     ): View? {
         Log.e("create", "CharacterBasicInfoFragment")
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
+        //初始化
+        init()
+        //点击事件
+        setListener()
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
+            setData(it)
+            urls = it.getAllUrl()
+        })
+        setHasOptionsMenu(true)
+        //初始收藏
+        setLove(isLoved)
+        return binding.root
+    }
+
+    //初始化
+    private fun init() {
+        //初始化数据
+        sharedCharacterViewModel.getCharacter(uid)
         //设置共享元素
         binding.root.transitionName = "item_${uid}"
         //toolbar 背景
@@ -76,6 +86,10 @@ class CharacterBasicInfoFragment : Fragment() {
                 onStart = {
                     MainActivity.canBack = true
                     parentFragment?.startPostponedEnterTransition()
+                    postponeEnterTransition()
+                },
+                onSuccess = { _, _ ->
+                    startPostponedEnterTransition()
                 }
             )
         }
@@ -93,18 +107,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 MainActivity.canBack = true
             }
         }, binding.fabLoveCbi, binding.basicInfo)
-        //点击事件
-        setListener()
-        //初始化数据
-        sharedCharacterViewModel.getCharacter(uid)
-        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
-            setData(it)
-            urls = it.getAllUrl()
-        })
-        setHasOptionsMenu(true)
-        //初始收藏
-        setLove(isLoved)
-        return binding.root
     }
 
 
@@ -132,10 +134,6 @@ class CharacterBasicInfoFragment : Fragment() {
                         null,
                         extras
                     )
-                    //移除旧的单例，避免viewpager2重新添加fragment时异常
-                    parentFragmentManager.beginTransaction()
-                        .remove(getInstance())
-                        .commit()
                 } catch (e: Exception) {
 
                 }

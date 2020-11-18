@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.adapters
 
 import android.util.SparseArray
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -22,7 +21,7 @@ class CharacterPagerAdapter(
     private val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
-        mFragments.put(0, CharacterBasicInfoFragment.getInstance())
+        mFragments.put(0, CharacterBasicInfoFragment())
         if (!noData) {
             mFragments.put(1, CharacterAttrFragment())
             mFragments.put(2, CharacterSkillFragment())
@@ -36,11 +35,12 @@ class CharacterPagerAdapter(
     override fun getItemCount(): Int {
         return mFragments.size()
     }
+
+
 }
 
 private const val MIN_SCALE = 0.75f
 
-@RequiresApi(21)
 class DepthPageTransformer : ViewPager2.PageTransformer {
 
     override fun transformPage(view: View, position: Float) {

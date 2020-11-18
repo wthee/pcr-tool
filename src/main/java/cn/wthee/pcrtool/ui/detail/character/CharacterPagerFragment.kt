@@ -21,10 +21,12 @@ import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+
 class CharacterPagerFragment : Fragment() {
 
     companion object {
         var uid = -1
+        var adapter: CharacterPagerAdapter? = null
     }
 
     private lateinit var binding: FragmentCharacterPagerBinding
@@ -65,15 +67,22 @@ class CharacterPagerFragment : Fragment() {
         return binding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewPager.adapter = null
+    }
+
     private fun init() {
         //加载列表
         MainScope().launch {
             val noData = characterAttrViewModel.isUnknow(uid)
             viewPager = binding.root
-            viewPager.adapter =
-                CharacterPagerAdapter(childFragmentManager, lifecycle, noData)
+            if (adapter == null) {
+                adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData)
+            }
+            viewPager.adapter = adapter
             viewPager.setPageTransformer(DepthPageTransformer())
-            viewPager.offscreenPageLimit = 2
+            viewPager.offscreenPageLimit = 3
         }
 
     }
