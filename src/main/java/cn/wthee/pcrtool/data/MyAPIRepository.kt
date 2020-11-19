@@ -3,9 +3,10 @@ package cn.wthee.pcrtool.data
 import android.util.Log
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.model.NewsData
 import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.data.model.Result
-import cn.wthee.pcrtool.data.service.PVPService
+import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.data.view.getIds
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
 import cn.wthee.pcrtool.utils.ApiHelper
@@ -18,11 +19,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object PvpDataRepository {
+object MyAPIRepository {
 
-    fun getData(onPostListener: OnPostListener): Call<PVPData> {
-        //创建服务
-        val service = ApiHelper.create(PVPService::class.java, Constants.API_URL_PVP)
+    //创建服务
+    private val service = ApiHelper.create(MyAPIService::class.java, Constants.MY_API_URL)
+
+    fun getPVPData(onPostListener: OnPostListener): Call<PVPData> {
         //接口参数
         val json = JsonObject()
         val databaseType = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
@@ -35,7 +37,7 @@ object PvpDataRepository {
             json.toString()
         )
         //发送请求
-        val request = service.getData(body)
+        val request = service.getPVPData(body)
         request.enqueue(object : Callback<PVPData> {
             override fun onResponse(call: Call<PVPData>, response: Response<PVPData>) {
                 try {
@@ -59,9 +61,22 @@ object PvpDataRepository {
         return request
     }
 
-
+    //官网信息
+    fun getNewsCall(region: Int, page: Int): Call<NewsData> {
+        //接口参数
+        val json = JsonObject()
+        json.addProperty("region", region)
+        json.addProperty("page", page)
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            json.toString()
+        )
+        //请求
+        return service.getNewsData(body)
+    }
 }
-interface OnPostListener{
+
+interface OnPostListener {
 
     fun success(data: List<Result>)
 

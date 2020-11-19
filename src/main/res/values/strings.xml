@@ -125,5 +125,8 @@
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">- 剧情属性 -</string>
     <string name="download_pic">下载当前图片</string>
+    <string name="tool_news">最新消息</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

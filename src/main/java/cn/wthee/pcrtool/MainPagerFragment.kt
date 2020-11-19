@@ -88,6 +88,9 @@ class MainPagerFragment : Fragment() {
         //menu
         binding.mainToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
+                R.id.menu_tool_news -> {
+                    findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
+                }
                 R.id.menu_tool_pvp -> {
                     findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
                 }

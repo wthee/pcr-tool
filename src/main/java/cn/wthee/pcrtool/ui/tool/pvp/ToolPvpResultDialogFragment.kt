@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.data.OnPostListener
-import cn.wthee.pcrtool.data.PvpDataRepository
 import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
@@ -27,7 +27,7 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
     ): View? {
         binding = FragmentToolPvpResultBinding.inflate(inflater, container, false)
         //创建服务
-        call = PvpDataRepository.getData(object : OnPostListener {
+        call = MyAPIRepository.getPVPData(object : OnPostListener {
             override fun success(data: List<Result>) {
                 //展示查询结果
                 if (data.isEmpty()) {

@@ -16,8 +16,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.data.OnPostListener
-import cn.wthee.pcrtool.data.PvpDataRepository
 import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.data.view.PvpCharacterData
@@ -124,7 +124,7 @@ class ToolPvpService : Service() {
                     back.visibility = View.VISIBLE
                     resultContent.loadingDialog.visibility = View.VISIBLE
                     resultContent.root.visibility = View.VISIBLE
-                    call = PvpDataRepository.getData(object : OnPostListener {
+                    call = MyAPIRepository.getPVPData(object : OnPostListener {
                         override fun success(data: List<Result>) {
                             //展示查询结果
                             binding.resultContent.apply {
