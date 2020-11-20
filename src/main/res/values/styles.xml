@@ -9,6 +9,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
+        <item name="android:actionButtonStyle">@style/myActionButtonStyle</item>
     </style>
 
     <style name="ExpandedTitle">
@@ -30,4 +31,8 @@
         <item name="android:src">@drawable/ic_more</item>
     </style>
 
+    <!--menu items 间隔设置-->
+    <style name="myActionButtonStyle" parent="Widget.AppCompat.ActionButton">
+        <item name="android:padding">0dp</item>
+    </style>
 </resources>

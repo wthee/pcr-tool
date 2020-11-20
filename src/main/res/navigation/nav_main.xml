@@ -18,9 +18,6 @@
             app:popEnterAnim="@anim/fragment_popenter"
             app:popExitAnim="@anim/fragment_popexit" />
         <action
-            android:id="@+id/action_containerFragment_to_equipmentDetailsFragment"
-            app:destination="@id/equipmentDetailsFragment" />
-        <action
             android:id="@+id/action_containerFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
             app:enterAnim="@anim/fragment_open_enter"
@@ -55,6 +52,12 @@
             app:exitAnim="@anim/fragment_exit_tool"
             app:popEnterAnim="@anim/fragment_popenter_tool"
             app:popExitAnim="@anim/fragment_popexit_tool" />
+        <action
+            android:id="@+id/action_containerFragment_self"
+            app:destination="@id/containerFragment" />
+        <action
+            android:id="@+id/action_containerFragment_to_toolNewsFragment"
+            app:destination="@id/toolNewsFragment" />
 
     </fragment>
 
@@ -72,11 +75,6 @@
             app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
-        android:id="@+id/equipmentDetailsFragment"
-        android:name="cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment"
-        android:label="fragment_equipment_details"
-        tools:layout="@layout/fragment_equipment_details" />
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="cn.wthee.pcrtool.ui.setting.MainSettingsFragment"
         android:label="SettingsFragment" />
@@ -84,24 +82,9 @@
         android:id="@+id/action_global_containerFragment"
         app:destination="@id/containerFragment" />
     <fragment
-        android:id="@+id/characterListFragment"
-        android:name="cn.wthee.pcrtool.ui.main.CharacterListFragment"
-        android:label="CharacterListFragment"
-        tools:layout="@layout/fragment_character_list" />
-    <fragment
-        android:id="@+id/characterSkillFragment"
-        android:name="cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment"
-        android:label="CharacterSkillFragment"
-        tools:layout="@layout/fragment_character_skill" />
-    <fragment
         android:id="@+id/enemyListFragment"
         android:name="cn.wthee.pcrtool.ui.tool.enemy.EnemyListFragment"
         android:label="EnemyListFragment"
-        tools:layout="@layout/fragment_tool_enemy" />
-    <fragment
-        android:id="@+id/equipmentListFragment"
-        android:name="cn.wthee.pcrtool.ui.main.EquipmentListFragment"
-        android:label="fragment_enemy_list"
         tools:layout="@layout/fragment_tool_enemy" />
     <fragment
         android:id="@+id/toolLevelFragment"
@@ -121,5 +104,10 @@
         android:id="@+id/characterPicListFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPicListFragment"
         android:label="CharacterPicListFragment" />
+    <fragment
+        android:id="@+id/toolNewsFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.news.ToolNewsFragment"
+        android:label="fragment_tool_news"
+        tools:layout="@layout/fragment_tool_news" />
 
 </navigation>

@@ -55,8 +55,6 @@ class MainPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("create", "MainPagerFragment")
-
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         prepareTransitions()
@@ -89,7 +87,7 @@ class MainPagerFragment : Fragment() {
         binding.mainToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_tool_news -> {
-                    findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
+                    findNavController().navigate(R.id.action_containerFragment_to_toolNewsFragment)
                 }
                 R.id.menu_tool_pvp -> {
                     findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)

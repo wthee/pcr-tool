@@ -62,8 +62,6 @@ class CharacterListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.e("create", "CharacterListFragment")
-
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         viewModel.isLoading.postValue(true)
         //公会列表

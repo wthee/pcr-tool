@@ -52,8 +52,6 @@ class CharacterPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("create", "CharacterPagerFragment")
-
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         //添加返回fab
         FabHelper.addBackFab()

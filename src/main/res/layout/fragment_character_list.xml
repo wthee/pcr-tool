@@ -11,8 +11,8 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="@dimen/l_icon"
-        android:layout_height="@dimen/l_icon"
+        android:layout_width="@dimen/progress_bar_size"
+        android:layout_height="@dimen/progress_bar_size"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/m_margin"
         android:visibility="gone" />

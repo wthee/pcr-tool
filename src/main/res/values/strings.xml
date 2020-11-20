@@ -56,6 +56,7 @@
     <string name="off_auto_app">已取消自动更新</string>
     <string name="on_auto_app">打开应用时，自动检查更新应用</string>
     <string name="db_cn">国服</string>
+    <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
     <string name="db_cn_value">1</string>
     <string name="db_jp_value">2</string>

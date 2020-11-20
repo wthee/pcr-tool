@@ -51,8 +51,8 @@
 
         <ProgressBar
             style="?android:attr/progressBarStyle"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
             android:layout_marginBottom="@dimen/m_margin"
             android:layout_gravity="center" />
 

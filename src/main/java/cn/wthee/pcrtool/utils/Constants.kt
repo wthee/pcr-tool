@@ -7,8 +7,8 @@ object Constants {
 
     //接口地址
     const val API_URL = "https://redive.estertion.win/"
-    const val MY_API_URL = "http://wthee.xyz:8847/api" +
-            "/"
+    const val MY_API_URL = "http://wthee.xyz:8847/api/"
+    const val BILIBILI_API_URL = "https://api.biligame.com/news/"
 
     //数据库中版
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"

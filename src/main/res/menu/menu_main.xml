@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_tool_news"
-        android:icon="@drawable/ic_gacha"
+        android:icon="@drawable/ic_news"
         android:title="@string/tool_news"
         app:showAsAction="always" />
 

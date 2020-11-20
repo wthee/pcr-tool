@@ -3,9 +3,11 @@ package cn.wthee.pcrtool.data
 import android.util.Log
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.model.BilibiliNewsData
 import cn.wthee.pcrtool.data.model.NewsData
 import cn.wthee.pcrtool.data.model.PVPData
 import cn.wthee.pcrtool.data.model.Result
+import cn.wthee.pcrtool.data.service.BilibiliNewsService
 import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.data.view.getIds
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
@@ -73,6 +75,13 @@ object MyAPIRepository {
         )
         //请求
         return service.getNewsData(body)
+    }
+
+    //bilibili官网信息详情
+    fun getNewsDetailCall(id: Int): Call<BilibiliNewsData> {
+        val service = ApiHelper.create(BilibiliNewsService::class.java, Constants.BILIBILI_API_URL)
+        //请求
+        return service.getNewsData(id)
     }
 }
 

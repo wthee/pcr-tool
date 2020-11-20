@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +59,6 @@ class CharacterBasicInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("create", "CharacterBasicInfoFragment")
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //初始化
         init()

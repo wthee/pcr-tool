@@ -15,4 +15,5 @@ interface MyAPIService {
 
     @POST("news")
     fun getNewsData(@Body body: RequestBody): Call<NewsData>
+
 }

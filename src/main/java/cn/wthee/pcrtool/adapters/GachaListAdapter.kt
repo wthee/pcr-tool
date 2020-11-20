@@ -68,14 +68,14 @@ private class GachaListDiffCallback : DiffUtil.ItemCallback<UnitData>() {
         oldItem: UnitData,
         newItem: UnitData
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
         oldItem: UnitData,
         newItem: UnitData
     ): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 }
 

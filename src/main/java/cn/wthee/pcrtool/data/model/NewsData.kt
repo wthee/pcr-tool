@@ -10,6 +10,7 @@ data class NewsData(
 data class News(
     val id: Int,
     val title: String,
+    val tag: List<String>,
     val url: String,
     val date: String
 ) : Serializable

@@ -6,10 +6,12 @@
     <dimen name="loading_dialog_height">80dp</dimen>
     <dimen name="desc_height">60dp</dimen>
     <dimen name="card_height">150dp</dimen>
+    <dimen name="news_card_height">100dp</dimen>
     <dimen name="card_height_1">220dp</dimen>
     <dimen name="float_window_width">233dp</dimen>
     <!-- icon-->
     <dimen name="m_icon">16dp</dimen>
+    <dimen name="progress_bar_size">24dp</dimen>
     <dimen name="l_icon">24dp</dimen>
     <dimen name="xl_icon">36dp</dimen>
     <dimen name="menu_icon">24dp</dimen>
