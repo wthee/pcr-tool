@@ -7,19 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
-import cn.wthee.pcrtool.data.OnPostListener
-import cn.wthee.pcrtool.data.model.PVPData
-import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import retrofit2.Call
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentToolPvpResultBinding
-    private lateinit var call: Call<PVPData>
+    private lateinit var job: Job
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,25 +26,21 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
     ): View? {
         binding = FragmentToolPvpResultBinding.inflate(inflater, container, false)
         //创建服务
-        call = MyAPIRepository.getPVPData(object : OnPostListener {
-            override fun success(data: List<Result>) {
-                //展示查询结果
-                if (data.isEmpty()) {
-                    binding.pvpNoData.visibility = View.VISIBLE
-                } else {
-                    binding.pvpNoData.visibility = View.GONE
-                    val adapter = PvpCharacterResultAdapter(requireActivity())
-                    binding.list.adapter = adapter
-                    adapter.submitList(data.sortedByDescending {
-                        it.up
-                    })
-                }
+        //展示查询结果
+        job = MainScope().launch {
+            binding.pvpNoData.visibility = View.GONE
+            val data = MyAPIRepository.getPVPData()
+            if (data.isEmpty()) {
+                binding.pvpNoData.visibility = View.VISIBLE
+            } else {
                 binding.loadingDialog.visibility = View.GONE
+                val adapter = PvpCharacterResultAdapter(requireActivity())
+                binding.list.adapter = adapter
+                adapter.submitList(data.sortedByDescending {
+                    it.up
+                })
             }
-
-            override fun error() {}
-        })
-
+        }
         //toolbar
         ToolbarUtil(binding.pvpResultToolbar).setCenterTitle("进攻方信息")
             .leftIcon.setOnClickListener {
@@ -56,8 +51,8 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (!call.isCanceled) {
-            call.cancel()
+        if (!job.isCancelled) {
+            job.cancel()
         }
     }
 }

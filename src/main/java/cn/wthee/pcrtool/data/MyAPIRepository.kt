@@ -1,10 +1,8 @@
 package cn.wthee.pcrtool.data
 
-import android.util.Log
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.model.NewsData
-import cn.wthee.pcrtool.data.model.PVPData
+import cn.wthee.pcrtool.data.model.News
 import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.data.view.getIds
@@ -13,18 +11,16 @@ import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.gson.JsonObject
+import kotlinx.coroutines.CancellationException
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 object MyAPIRepository {
 
     //创建服务
     private val service = ApiHelper.create(MyAPIService::class.java, Constants.MY_API_URL)
 
-    fun getPVPData(onPostListener: OnPostListener): Call<PVPData> {
+    suspend fun getPVPData(): List<Result> {
         //接口参数
         val json = JsonObject()
         val databaseType = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
@@ -37,32 +33,24 @@ object MyAPIRepository {
             json.toString()
         )
         //发送请求
-        val request = service.getPVPData(body)
-        request.enqueue(object : Callback<PVPData> {
-            override fun onResponse(call: Call<PVPData>, response: Response<PVPData>) {
-                try {
-                    val responseBody = response.body()
-                    if (responseBody == null || responseBody.code != 0 || responseBody.data.result == null) {
-                        ToastUtil.short("未正常获取数据，请重新查询~")
-                    } else {
-                        onPostListener.success(responseBody.data.result)
-                    }
-                } catch (e: Exception) {
-                    ToastUtil.short("未正常解析数据，请重新查询~")
-                }
+        try {
+            val response = service.getPVPData(body)
+            if (response.code != 0 || response.data.result == null) {
+                ToastUtil.short("未正常获取数据，请重新查询~")
+                return arrayListOf()
             }
+            return response.data.result
+        } catch (e: Exception) {
+            if (e !is CancellationException) {
+                ToastUtil.short("查询失败，请稍后重新查询~")
+            }
+        }
+        return arrayListOf()
 
-            override fun onFailure(call: Call<PVPData>, t: Throwable) {
-                Log.e("api-failure", t.message ?: "")
-                ToastUtil.short("查询失败，请检查网络~")
-                onPostListener.error()
-            }
-        })
-        return request
     }
 
     //官网信息
-    fun getNewsCall(region: Int, page: Int): Call<NewsData> {
+    suspend fun getNewsCall(region: Int, page: Int): List<News> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)
@@ -72,7 +60,19 @@ object MyAPIRepository {
             json.toString()
         )
         //请求
-        return service.getNewsData(body)
+        try {
+            val response = service.getNewsData(body)
+            if (response.status != 0 || response.data.isEmpty()) {
+                ToastUtil.short("未正常获取数据，请重新查询~")
+                return arrayListOf()
+            }
+            return response.data
+        } catch (e: Exception) {
+            if (e !is CancellationException) {
+                ToastUtil.short("获取数据失败，请稍后重新查询~")
+            }
+        }
+        return arrayListOf()
     }
 
 }

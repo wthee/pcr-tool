@@ -3,18 +3,18 @@ package cn.wthee.pcrtool.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.model.News
 import cn.wthee.pcrtool.databinding.ItemNewsBinding
 import cn.wthee.pcrtool.ui.tool.news.ToolNewsDetailFragment
 
 
-class NewsListAdapter(
+class NewsAdapter(
     private val fragmentManager: FragmentManager,
     private val region: Int
-) : ListAdapter<News, NewsListAdapter.ViewHolder>(NewsListDiffCallback()) {
+) : PagingDataAdapter<News, NewsAdapter.ViewHolder>(NewsListDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemNewsBinding.inflate(
@@ -26,7 +26,7 @@ class NewsListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position)!!)
     }
 
     inner class ViewHolder(private val binding: ItemNewsBinding) :

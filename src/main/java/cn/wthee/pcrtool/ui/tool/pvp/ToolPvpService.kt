@@ -17,9 +17,6 @@ import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
-import cn.wthee.pcrtool.data.OnPostListener
-import cn.wthee.pcrtool.data.model.PVPData
-import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
@@ -28,7 +25,9 @@ import cn.wthee.pcrtool.utils.NotificationUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.tabs.TabLayoutMediator
-import retrofit2.Call
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class ToolPvpService : Service() {
@@ -49,7 +48,7 @@ class ToolPvpService : Service() {
     private var character2 = listOf<PvpCharacterData>()
     private var character3 = listOf<PvpCharacterData>()
     private lateinit var adapter: PvpCharacterResultAdapter
-    private lateinit var call: Call<PVPData>
+    private lateinit var job: Job
 
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -124,26 +123,19 @@ class ToolPvpService : Service() {
                     back.visibility = View.VISIBLE
                     resultContent.loadingDialog.visibility = View.VISIBLE
                     resultContent.root.visibility = View.VISIBLE
-                    call = MyAPIRepository.getPVPData(object : OnPostListener {
-                        override fun success(data: List<Result>) {
-                            //展示查询结果
-                            binding.resultContent.apply {
-                                if (data.isEmpty()) {
-                                    pvpNoData.visibility = View.VISIBLE
-                                } else {
-                                    pvpNoData.visibility = View.GONE
-                                    adapter.submitList(data.sortedByDescending {
-                                        it.up
-                                    })
-                                }
-                            }
-                            binding.resultContent.loadingDialog.visibility = View.GONE
-                        }
-
-                        override fun error() {
+                    job = MainScope().launch {
+                        resultContent.pvpNoData.visibility = View.GONE
+                        val data = MyAPIRepository.getPVPData()
+                        if (data.isEmpty()) {
+                            resultContent.pvpNoData.visibility = View.VISIBLE
                             resultContent.root.visibility = View.GONE
+                        } else {
+                            adapter.submitList(data.sortedByDescending {
+                                it.up
+                            })
                         }
-                    })
+                        resultContent.loadingDialog.visibility = View.GONE
+                    }
                 }
             }
             //关闭搜索结果
@@ -180,9 +172,9 @@ class ToolPvpService : Service() {
 //            }
             //返回
             back.setOnClickListener {
-                if (this@ToolPvpService::call.isLateinit) {
-                    if (!call.isCanceled) {
-                        call.cancel()
+                if (this@ToolPvpService::job.isLateinit) {
+                    if (!job.isCancelled) {
+                        job.cancel()
                     }
                 }
                 if (resultContent.root.visibility == View.VISIBLE) {
@@ -190,6 +182,7 @@ class ToolPvpService : Service() {
                     adapter.submitList(null)
                 }
                 resultContent.pvpNoData.visibility = View.GONE
+                resultContent.loadingDialog.visibility = View.GONE
                 back.visibility = View.GONE
             }
             //移动

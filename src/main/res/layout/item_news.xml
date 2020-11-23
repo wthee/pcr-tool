@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin"
+    android:layout_marginBottom="@dimen/m_margin"
     app:cardCornerRadius="@dimen/card_radius">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/s_margin"
         android:minHeight="@dimen/news_card_height">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -38,9 +37,9 @@
             android:id="@+id/news_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             tools:text="@string/app_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
