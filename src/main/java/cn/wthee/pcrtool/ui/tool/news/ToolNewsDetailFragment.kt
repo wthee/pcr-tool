@@ -12,6 +12,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
+import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -84,6 +85,11 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
                 loadWithOverviewMode = true // 缩放至屏幕的大小
             }
 
+            if (region == 2) {
+                val params = webView.layoutParams
+                params.height = ScreenUtil.getHeight(requireContext())
+                webView.layoutParams = params
+            }
         }
         return binding.root
     }

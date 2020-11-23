@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/s_margin"
         android:minHeight="@dimen/news_card_height">
 
         <androidx.recyclerview.widget.RecyclerView

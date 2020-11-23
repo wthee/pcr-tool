@@ -17,12 +17,13 @@ class NewsViewModel : ViewModel() {
 
     lateinit var news: Flow<PagingData<News>>
     var update = MutableLiveData<Boolean>()
+    var loadingMore = MutableLiveData<Boolean>()
 
     //获取装备列表
     fun getNews(region: Int) {
         viewModelScope.launch {
             news = Pager(PagingConfig(pageSize = 10)) {
-                NewsDataPagingSource(region)
+                NewsDataPagingSource(this@NewsViewModel, region)
             }.flow.cachedIn(viewModelScope)
             update.postValue(true)
         }

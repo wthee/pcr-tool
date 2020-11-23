@@ -13,26 +13,64 @@
         android:id="@+id/tool_news"
         layout="@layout/view_tool_head" />
 
-    <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.chip.ChipGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/m_margin"
-        app:cardCornerRadius="@dimen/card_radius">
+        android:padding="@dimen/m_padding"
+        app:checkedChip="@id/chip_cn"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/news_tab_layout"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_cn"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/db_cn" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_tw"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/db_tw" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_jp"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/db_jp" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/m_padding">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="vertical">
 
-    </com.google.android.material.card.MaterialCardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/news_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="6"
+                tools:listitem="@layout/item_news" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/news_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/m_margin"
-        app:layout_constraintTop_toBottomOf="@id/news_tab_layout"
-        tools:layout_height="@dimen/card_height" />
+            <ProgressBar
+                android:id="@+id/loading_more"
+                android:layout_width="@dimen/progress_bar_size"
+                android:layout_height="@dimen/progress_bar_size"
+                android:layout_gravity="bottom|center"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
