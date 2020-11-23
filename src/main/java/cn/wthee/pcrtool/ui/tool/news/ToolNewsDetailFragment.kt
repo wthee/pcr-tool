@@ -7,13 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.SslErrorHandler
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -40,18 +35,13 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentToolNewsDetailBinding.inflate(inflater, container, false)
         binding.apply {
-            ToolbarUtil(toolBar).apply {
-                setCenterTitle("详情信息")
-                leftIcon.setOnClickListener {
-                    dialog?.dismiss()
-                }
-            }
             Log.e("news", url)
             webView.loadUrl(url)
             //设置
+            webView.webChromeClient = WebChromeClient()
             webView.webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView,
@@ -76,7 +66,46 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
+                    if (region == 2) {
+                        //取消内部滑动
+                        webView.loadUrl(
+                            """
+                            javascript:
+                            $('#news-content').css('overflow','inherit');
+                            $('.news-detail').css('top','0.3rem');
+                            $('.top').css('display','none');
+                        """.trimIndent()
+                        );
+                    }
+                    if (region == 3) {
+                        webView.loadUrl(
+                            """
+                            javascript:
+                            $('.menu').css('display','none');
+                            $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                            $('.title').css('display','none');
+                            $('header').css('display','none');
+                            $('footer').css('display','none');
+                            $('aside').css('display','none');
+                            $('.paging').css('display','none');
+                        """.trimIndent()
+                        )
+                    }
+                    if (region == 4) {
+                        webView.loadUrl(
+                            """
+                            javascript:
+                            $('#main_area').css('display','none');
+                            $('.bg-gray').css('display','none');
+                            $('.news_prev').css('display','none');
+                            $('.news_next').css('display','none');
+                            $('header').css('display','none');
+                            $('footer').css('display','none');
+                        """.trimIndent()
+                        );
+                    }
                     loading.visibility = View.GONE
+                    webView.visibility = View.VISIBLE
                 }
             }
             webView.settings.apply {
@@ -85,11 +114,6 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
                 loadWithOverviewMode = true // 缩放至屏幕的大小
             }
 
-            if (region == 2) {
-                val params = webView.layoutParams
-                params.height = ScreenUtil.getHeight(requireContext())
-                webView.layoutParams = params
-            }
         }
         return binding.root
     }
