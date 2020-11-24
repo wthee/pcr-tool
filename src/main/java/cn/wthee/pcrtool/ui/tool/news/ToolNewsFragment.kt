@@ -6,15 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.NewsAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 class ToolNewsFragment : Fragment() {
@@ -31,6 +27,7 @@ class ToolNewsFragment : Fragment() {
     ): View? {
         FabHelper.addBackFab()
         binding = FragmentToolNewsBinding.inflate(inflater, container, false)
+
         //设置头部
         binding.toolNews.apply {
             toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_news))
@@ -43,6 +40,7 @@ class ToolNewsFragment : Fragment() {
                 R.id.chip_tw -> region = 3
                 R.id.chip_jp -> region = 4
             }
+            newsViewModel.loadingMore.postValue(true)
             newsViewModel.getNews(region)
         }
         //下拉刷新
@@ -50,27 +48,26 @@ class ToolNewsFragment : Fragment() {
             setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
             setColorSchemeResources(R.color.colorPrimary)
             setOnRefreshListener {
-//                getNews(adapter)
+                newsViewModel.getNews(region)
             }
         }
         //初次获取
-        newsViewModel.getNews(region)
+        newsViewModel.getNewsAndSave(region)
         //新闻数据更新
-        newsViewModel.update.observe(viewLifecycleOwner, {
-            lifecycleScope.launch {
-                @OptIn(ExperimentalCoroutinesApi::class)
-                newsViewModel.news.collectLatest {
-                    adapter = NewsAdapter(parentFragmentManager, region)
-                    binding.newsList.adapter = adapter
-                    adapter.submitData(it)
-                    binding.refresh.isRefreshing = false
-                }
-
-            }
-        })
+//        newsViewModel.update.observe(viewLifecycleOwner, {
+//            lifecycleScope.launch {
+//                @OptIn(ExperimentalCoroutinesApi::class)
+//                newsViewModel.news.collectLatest {
+//                    adapter = NewsAdapter(parentFragmentManager, region)
+//                    binding.newsList.adapter = adapter
+//                    binding.refresh.isRefreshing = false
+//                    adapter.submitData(it)
+//                }
+//            }
+//        })
         //加载更多进度显示
         newsViewModel.loadingMore.observe(viewLifecycleOwner, {
-//            binding.loadingMore.visibility = if (it) View.VISIBLE else View.GONE
+            binding.loading.visibility = if (it) View.VISIBLE else View.GONE
         })
         return binding.root
     }

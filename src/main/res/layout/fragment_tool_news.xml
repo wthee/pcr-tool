@@ -50,27 +50,34 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/m_padding">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/news_list"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="6"
                 tools:listitem="@layout/item_news" />
 
-            <ProgressBar
-                android:id="@+id/loading_more"
-                android:layout_width="@dimen/progress_bar_size"
-                android:layout_height="@dimen/progress_bar_size"
-                android:layout_gravity="bottom|center"
-                android:visibility="gone" />
-        </LinearLayout>
+            <FrameLayout
+                android:id="@+id/loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:clickable="true"
+                android:background="@color/colorAlphtWhite">
+
+                <include
+                    layout="@layout/layout_loading_dialog"
+                    android:layout_width="@dimen/loading_dialog_width"
+                    android:layout_height="@dimen/loading_dialog_height"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
+        </FrameLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

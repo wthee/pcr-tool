@@ -23,7 +23,7 @@ class CharacterViewModel(
     var character = MutableLiveData<CharacterInfoPro>()
     var reset = MutableLiveData<Boolean>()
     var isLoading = MutableLiveData<Boolean>()
-    var updateChatacter = MutableLiveData<Boolean>()
+    var updateCharacter = MutableLiveData<Boolean>()
     var reload = MutableLiveData<Boolean>()
 
     //角色基本资料
@@ -48,7 +48,7 @@ class CharacterViewModel(
             characterCount.postValue(
                 repository.getInfoAndDataCount(name, CharacterListFragment.characterFilterParams)
             )
-            updateChatacter.postValue(true)
+            updateCharacter.postValue(true)
             isLoading.postValue(false)
         }
     }

@@ -33,7 +33,7 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
             if (data.isEmpty()) {
                 binding.pvpNoData.visibility = View.VISIBLE
             } else {
-                binding.loadingDialog.visibility = View.GONE
+                binding.loading.root.visibility = View.GONE
                 val adapter = PvpCharacterResultAdapter(requireActivity())
                 binding.list.adapter = adapter
                 adapter.submitList(data.sortedByDescending {

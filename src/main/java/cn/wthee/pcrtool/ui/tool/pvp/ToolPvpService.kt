@@ -121,7 +121,7 @@ class ToolPvpService : Service() {
                 } else {
                     //展示查询结果
                     back.visibility = View.VISIBLE
-                    resultContent.loadingDialog.visibility = View.VISIBLE
+                    resultContent.loading.root.visibility = View.VISIBLE
                     resultContent.root.visibility = View.VISIBLE
                     job = MainScope().launch {
                         resultContent.pvpNoData.visibility = View.GONE
@@ -134,7 +134,7 @@ class ToolPvpService : Service() {
                                 it.up
                             })
                         }
-                        resultContent.loadingDialog.visibility = View.GONE
+                        resultContent.loading.root.visibility = View.GONE
                     }
                 }
             }
@@ -182,7 +182,7 @@ class ToolPvpService : Service() {
                     adapter.submitList(null)
                 }
                 resultContent.pvpNoData.visibility = View.GONE
-                resultContent.loadingDialog.visibility = View.GONE
+                resultContent.loading.root.visibility = View.GONE
                 back.visibility = View.GONE
             }
             //移动
