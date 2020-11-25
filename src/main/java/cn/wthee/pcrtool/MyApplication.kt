@@ -3,7 +3,7 @@ package cn.wthee.pcrtool
 import android.app.Application
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
-import cn.wthee.pcrtool.utils.Logger
+import cn.wthee.pcrtool.utils.LoggerUtil
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -18,7 +18,7 @@ class MyApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         //获取Context
         context = applicationContext
-        Logger.init(this)
+        LoggerUtil.init(this)
     }
 
     override fun newImageLoader(): ImageLoader {

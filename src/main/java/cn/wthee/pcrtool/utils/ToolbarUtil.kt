@@ -27,13 +27,10 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     }
 
 
-    fun setTitleColor(resId: Int) {
+    private fun setTitleColor(resId: Int) {
         title.setTextColor(resources.getColor(resId, null))
     }
 
-    fun setBackground(resId: Int) {
-        toolbar.viewToolbar.setBackgroundColor(resources.getColor(resId, null))
-    }
 
     private fun setCenterStyle() {
         val params = title.layoutParams as ConstraintLayout.LayoutParams
@@ -52,16 +49,4 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         return this
     }
 
-    //悬浮窗标题适当缩小
-    fun setFloatTitle() {
-        setCenterStyle()
-        title.textSize = 16f
-        val params = toolbar.root.layoutParams as ConstraintLayout.LayoutParams
-        params.height = 28.dp
-        toolbar.root.layoutParams = params
-        val icon = leftIcon.layoutParams
-        icon.width = 22.dp
-        icon.height = 22.dp
-        leftIcon.layoutParams = icon
-    }
 }

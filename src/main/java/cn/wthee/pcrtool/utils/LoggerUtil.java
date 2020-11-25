@@ -14,15 +14,15 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandler {
+public class LoggerUtil extends FrameLayout implements Thread.UncaughtExceptionHandler {
     private static final boolean debuggable = false; //正式环境(false)不打印日志，也不能唤起app的debug界面
     @SuppressLint("StaticFieldLeak")
-    private static Logger me;
+    private static LoggerUtil me;
     private static Thread.UncaughtExceptionHandler mDefaultHandler;
     private Context mCurrentActivity;
 
 
-    private Logger(final Context context) {
+    private LoggerUtil(final Context context) {
         super(context);
     }
 
@@ -31,9 +31,9 @@ public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandl
      */
     public static void init(Application application) {
         if (debuggable && me == null) {
-            synchronized (Logger.class) {
+            synchronized (LoggerUtil.class) {
                 if (me == null) {
-                    me = new Logger(application.getApplicationContext());
+                    me = new LoggerUtil(application.getApplicationContext());
                     //获取系统默认异常处理器
                     mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
                     //线程空闲时设置异常处理，兼容其他框架异常处理能力
@@ -88,7 +88,6 @@ public class Logger extends FrameLayout implements Thread.UncaughtExceptionHandl
                 AlertDialog.Builder builder = new AlertDialog.Builder(mCurrentActivity);
                 builder.setTitle("错误日志：");
                 builder.setMessage(spanned);
-                //TODO 复制文本
                 builder.setPositiveButton("关闭应用", (dialog, which) -> mDefaultHandler.uncaughtException(t, e));
                 builder.setCancelable(false);
                 builder.show();

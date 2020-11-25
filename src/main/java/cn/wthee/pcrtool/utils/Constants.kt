@@ -64,8 +64,6 @@ object Constants {
 
     //弹框
     const val BTN_OPERATE_FORCE_UPDATE_DB = "强制更新"
-    const val BTN_OK = "确认"
-    const val BTN_CLOSE = "关闭"
     const val BTN_NOT_UPDATE_DB = "忽略"
 
     //默认值
