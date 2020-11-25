@@ -15,4 +15,7 @@ interface NewsDao {
 
     @Query("SELECT * FROM news WHERE id LIKE :query")
     fun pagingSource(query: String): PagingSource<Int, NewsTable>
+
+    @Query("DELETE FROM news")
+    suspend fun clearAll()
 }

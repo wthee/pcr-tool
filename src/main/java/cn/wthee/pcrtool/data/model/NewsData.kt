@@ -33,4 +33,9 @@ data class NewsTable(
     val tags: String,
     val url: String,
     val date: String
-) : Serializable
+) : Serializable {
+
+    fun getTags() = tags.split(",")
+
+    fun getTrueId() = id.split("-")[1].toInt()
+}

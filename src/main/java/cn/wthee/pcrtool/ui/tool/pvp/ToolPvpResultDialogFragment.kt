@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
+import cn.wthee.pcrtool.enums.Response
+import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Job
@@ -29,17 +31,18 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
         //展示查询结果
         job = MainScope().launch {
             binding.pvpNoData.visibility = View.GONE
-            val data = MyAPIRepository.getPVPData()
-            if (data.isEmpty()) {
+            val result = MyAPIRepository.getPVPData()
+            if (result.status == Response.FAILURE) {
+                ToastUtil.short(result.message)
                 binding.pvpNoData.visibility = View.VISIBLE
             } else {
-                binding.loading.root.visibility = View.GONE
                 val adapter = PvpCharacterResultAdapter(requireActivity())
                 binding.list.adapter = adapter
-                adapter.submitList(data.sortedByDescending {
+                adapter.submitList(result.data?.sortedByDescending {
                     it.up
                 })
             }
+            binding.loading.root.visibility = View.GONE
         }
         //toolbar
         ToolbarUtil(binding.pvpResultToolbar).setCenterTitle("进攻方信息")

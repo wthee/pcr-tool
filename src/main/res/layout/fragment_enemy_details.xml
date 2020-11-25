@@ -28,6 +28,7 @@
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/desc_height"
         android:layout_marginStart="@dimen/s_margin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         app:layout_constrainedWidth="true"

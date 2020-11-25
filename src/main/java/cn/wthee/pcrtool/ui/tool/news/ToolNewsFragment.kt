@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.NewsAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class ToolNewsFragment : Fragment() {
@@ -51,20 +55,16 @@ class ToolNewsFragment : Fragment() {
                 newsViewModel.getNews(region)
             }
         }
-        //初次获取
-        newsViewModel.getNewsAndSave(region)
-        //新闻数据更新
-//        newsViewModel.update.observe(viewLifecycleOwner, {
-//            lifecycleScope.launch {
-//                @OptIn(ExperimentalCoroutinesApi::class)
-//                newsViewModel.news.collectLatest {
-//                    adapter = NewsAdapter(parentFragmentManager, region)
-//                    binding.newsList.adapter = adapter
-//                    binding.refresh.isRefreshing = false
-//                    adapter.submitData(it)
-//                }
-//            }
-//        })
+        //新闻数据
+        lifecycleScope.launch {
+            @OptIn(ExperimentalCoroutinesApi::class)
+            newsViewModel.getNews(region).collectLatest {
+                adapter = NewsAdapter(parentFragmentManager, region)
+                binding.newsList.adapter = adapter
+                binding.refresh.isRefreshing = false
+                adapter.submitData(it)
+            }
+        }
         //加载更多进度显示
         newsViewModel.loadingMore.observe(viewLifecycleOwner, {
             binding.loading.visibility = if (it) View.VISIBLE else View.GONE

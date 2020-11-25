@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
+import cn.wthee.pcrtool.enums.Response
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.NotificationUtil
@@ -125,12 +126,12 @@ class ToolPvpService : Service() {
                     resultContent.root.visibility = View.VISIBLE
                     job = MainScope().launch {
                         resultContent.pvpNoData.visibility = View.GONE
-                        val data = MyAPIRepository.getPVPData()
-                        if (data.isEmpty()) {
+                        val result = MyAPIRepository.getPVPData()
+                        if (result.status == Response.FAILURE) {
+                            ToastUtil.short(result.message)
                             resultContent.pvpNoData.visibility = View.VISIBLE
-                            resultContent.root.visibility = View.GONE
                         } else {
-                            adapter.submitList(data.sortedByDescending {
+                            adapter.submitList(result.data?.sortedByDescending {
                                 it.up
                             })
                         }
