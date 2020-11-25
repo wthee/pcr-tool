@@ -31,7 +31,7 @@
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        android:textAppearance="@style/subTitleWithe"
+        android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/name"
         app:layout_constraintTop_toTopOf="@id/name"
@@ -72,7 +72,7 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:text="@string/skill_action"
-        android:textAppearance="@style/subTitleWithe"
+        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/desc" />
 

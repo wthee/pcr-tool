@@ -28,7 +28,7 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:text="@string/equip_details"
-        android:textAppearance="@style/subTitleWithe"
+        android:textColor="@color/colorWhite"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toEndOf="@id/item_pic"
         app:layout_constraintTop_toTopOf="@id/item_pic" />

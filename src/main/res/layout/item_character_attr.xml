@@ -19,7 +19,7 @@
         android:paddingEnd="@dimen/s_padding"
         android:background="@drawable/title_background"
         tools:text="@string/physical"
-        android:textAppearance="@style/subTitleWithe" />
+        android:textColor="@color/colorWhite" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"

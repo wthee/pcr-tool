@@ -44,9 +44,6 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
         binding.apply {
             Log.e("news", url)
 
-            if (region == 3 || region == 4) {
-                tip.visibility = View.VISIBLE
-            }
             openBrowse.setOnClickListener {
 //                ClipboardUtli.add(url)
                 BrowserUtil.open(requireContext(), url)
@@ -120,8 +117,10 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
                 useWideViewPort = true //将图片调整到适合webview的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
                 javaScriptCanOpenWindowsAutomatically = true
-                loadsImagesAutomatically = false
-
+                if (region == 3 || region == 4) {
+                    tip.visibility = View.VISIBLE
+                    loadsImagesAutomatically = false
+                }
             }
             //加载网页
             webView.loadUrl(url)

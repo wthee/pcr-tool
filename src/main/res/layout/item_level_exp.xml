@@ -19,7 +19,7 @@
         android:background="@drawable/title_background"
         android:gravity="center"
         tools:text="123"
-        android:textAppearance="@style/subTitleWithe" />
+        android:textColor="@color/colorWhite" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/exp_team_abs"

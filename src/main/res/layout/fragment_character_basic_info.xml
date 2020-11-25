@@ -203,7 +203,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/title_birth"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/intro"
                     app:layout_constraintWidth_percent="0.15" />
@@ -231,7 +231,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/title_blood"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toEndOf="@id/birth"
                     app:layout_constraintTop_toTopOf="@id/title_birth"
                     app:layout_constraintWidth_percent="0.15" />
@@ -257,7 +257,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/title_race"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title_birth"
                     app:layout_constraintWidth_percent="0.15" />
@@ -285,7 +285,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/cv"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toEndOf="@id/race"
                     app:layout_constraintTop_toTopOf="@id/title_race"
                     app:layout_constraintWidth_percent="0.15" />
@@ -311,7 +311,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/title_guide"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title_race"
                     app:layout_constraintWidth_percent="0.15" />
@@ -337,7 +337,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/title_fav"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title_guide"
                     app:layout_constraintWidth_percent="0.15" />
@@ -364,7 +364,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="0dp"
                     android:text="@string/title_self"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/title_favorite"
                     app:layout_constraintWidth_percent="0.15" />
@@ -391,7 +391,7 @@
                     android:paddingStart="@dimen/s_padding"
                     android:paddingEnd="@dimen/s_padding"
                     android:text="@string/title_comments"
-                    android:textAppearance="@style/subTitleWithe"
+                    android:textColor="@color/colorWhite"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/self"

@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
+    android:background="@color/colorBg"
     android:padding="@dimen/s_padding">
 
     <include
@@ -48,7 +49,7 @@
         android:paddingEnd="@dimen/s_padding"
         app:layout_constraintWidth_percent="0.3"
         android:text="@string/atk_time"
-        android:textAppearance="@style/subTitleWithe"
+        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/desc" />
 
@@ -72,7 +73,7 @@
         android:paddingEnd="@dimen/s_padding"
         android:text="@string/atk_dis"
         app:layout_constraintWidth_percent="0.3"
-        android:textAppearance="@style/subTitleWithe"
+        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_atk_time" />
 

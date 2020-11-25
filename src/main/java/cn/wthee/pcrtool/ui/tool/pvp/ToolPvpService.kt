@@ -130,9 +130,11 @@ class ToolPvpService : Service() {
                         val result = MyAPIRepository.getPVPData()
                         if (result.status == Response.FAILURE) {
                             ToastUtil.short(result.message)
-                            resultContent.pvpNoData.visibility = View.VISIBLE
                         } else {
-                            adapter.submitList(result.data?.sortedByDescending {
+                            if (result.data.isEmpty()) {
+                                resultContent.pvpNoData.visibility = View.VISIBLE
+                            }
+                            adapter.submitList(result.data.sortedByDescending {
                                 it.up
                             })
                         }

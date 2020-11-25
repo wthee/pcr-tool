@@ -34,11 +34,14 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
             val result = MyAPIRepository.getPVPData()
             if (result.status == Response.FAILURE) {
                 ToastUtil.short(result.message)
-                binding.pvpNoData.visibility = View.VISIBLE
+                dialog?.dismiss()
             } else {
+                if (result.data.isEmpty()) {
+                    binding.pvpNoData.visibility = View.VISIBLE
+                }
                 val adapter = PvpCharacterResultAdapter(requireActivity())
                 binding.list.adapter = adapter
-                adapter.submitList(result.data?.sortedByDescending {
+                adapter.submitList(result.data.sortedByDescending {
                     it.up
                 })
             }
