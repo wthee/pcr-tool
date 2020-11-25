@@ -9,7 +9,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.data.model.NewsRemoteMediator
-import cn.wthee.pcrtool.database.NewsDatabase
+import cn.wthee.pcrtool.database.AppNewsDatabase
 import kotlinx.coroutines.flow.Flow
 
 
@@ -19,30 +19,30 @@ class NewsViewModel : ViewModel() {
     var loadingMore = MutableLiveData<Boolean>()
 
     fun getNewsCN(): Flow<PagingData<NewsTable>> {
-        val newsDao = NewsDatabase.getInstance().getNewsDao()
+        val newsDao = AppNewsDatabase.getInstance().getNewsDao()
         return Pager(
             config = PagingConfig(pageSize = 10),
-            remoteMediator = NewsRemoteMediator(2, NewsDatabase.getInstance())
+            remoteMediator = NewsRemoteMediator(2, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${2}-%")
         }.flow.cachedIn(viewModelScope)
     }
 
     fun getNewsTW(): Flow<PagingData<NewsTable>> {
-        val newsDao = NewsDatabase.getInstance().getNewsDao()
+        val newsDao = AppNewsDatabase.getInstance().getNewsDao()
         return Pager(
             config = PagingConfig(pageSize = 10),
-            remoteMediator = NewsRemoteMediator(3, NewsDatabase.getInstance())
+            remoteMediator = NewsRemoteMediator(3, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${3}-%")
         }.flow.cachedIn(viewModelScope)
     }
 
     fun getNewsJP(): Flow<PagingData<NewsTable>> {
-        val newsDao = NewsDatabase.getInstance().getNewsDao()
+        val newsDao = AppNewsDatabase.getInstance().getNewsDao()
         return Pager(
             config = PagingConfig(pageSize = 10),
-            remoteMediator = NewsRemoteMediator(4, NewsDatabase.getInstance())
+            remoteMediator = NewsRemoteMediator(4, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${4}-%")
         }.flow.cachedIn(viewModelScope)

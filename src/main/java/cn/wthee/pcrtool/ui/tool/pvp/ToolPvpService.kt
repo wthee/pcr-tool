@@ -76,6 +76,7 @@ class ToolPvpService : Service() {
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
             height = mHeight
+            x = 6.dp
             y = 36.dp
         }
         //加载布局

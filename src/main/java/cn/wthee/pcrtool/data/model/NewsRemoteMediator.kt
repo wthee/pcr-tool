@@ -8,7 +8,7 @@ import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.data.entity.RemoteKey
-import cn.wthee.pcrtool.database.NewsDatabase
+import cn.wthee.pcrtool.database.AppNewsDatabase
 import retrofit2.HttpException
 import java.io.IOException
 import java.io.InvalidObjectException
@@ -16,7 +16,7 @@ import java.io.InvalidObjectException
 @OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
     private val region: Int,
-    private val database: NewsDatabase,
+    private val database: AppNewsDatabase,
 ) : RemoteMediator<Int, NewsTable>() {
 
     val DEFAULT_PAGE_INDEX = 1

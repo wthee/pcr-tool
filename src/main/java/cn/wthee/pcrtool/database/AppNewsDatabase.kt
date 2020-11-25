@@ -15,10 +15,10 @@ import cn.wthee.pcrtool.data.entity.RemoteKey
         NewsTable::class,
         RemoteKey::class,
     ],
-    version = 17,
+    version = 18,
     exportSchema = false
 )
-abstract class NewsDatabase : RoomDatabase() {
+abstract class AppNewsDatabase : RoomDatabase() {
 
     abstract fun getNewsDao(): NewsDao
     abstract fun getRemoteKeyDao(): RemoteKeyDao
@@ -26,9 +26,9 @@ abstract class NewsDatabase : RoomDatabase() {
     companion object {
 
         @Volatile
-        private var instance: NewsDatabase? = null
+        private var instance: AppNewsDatabase? = null
 
-        fun getInstance(): NewsDatabase {
+        fun getInstance(): AppNewsDatabase {
             return instance ?: synchronized(this) {
                 instance
                     ?: buildDatabase()
@@ -37,10 +37,10 @@ abstract class NewsDatabase : RoomDatabase() {
         }
 
 
-        private fun buildDatabase(): NewsDatabase {
+        private fun buildDatabase(): AppNewsDatabase {
             return Room.databaseBuilder(
                 MyApplication.context,
-                NewsDatabase::class.java,
+                AppNewsDatabase::class.java,
                 "news_db"
             ).fallbackToDestructiveMigration().build()
         }
