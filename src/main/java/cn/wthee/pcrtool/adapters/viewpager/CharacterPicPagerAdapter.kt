@@ -1,11 +1,11 @@
-package cn.wthee.pcrtool.adapters
+package cn.wthee.pcrtool.adapters.viewpager
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.wthee.pcrtool.ui.common.ImageFragment
 
-class CharacterPicViewPagerAdapter internal constructor(
+class CharacterPicPagerAdapter internal constructor(
     fm: FragmentManager,
     lifeCycle: Lifecycle
 ) : FragmentStateAdapter(fm, lifeCycle) {

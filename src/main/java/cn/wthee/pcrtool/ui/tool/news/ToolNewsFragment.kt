@@ -5,25 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.NewsAdapter
+import cn.wthee.pcrtool.adapters.viewpager.NewsListPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class ToolNewsFragment : Fragment() {
 
     private lateinit var binding: FragmentToolNewsBinding
-    private var page = 1
-    private var region = 2
-    private val newsViewModel by activityViewModels<NewsViewModel>()
-    private lateinit var adapter: NewsAdapter
+
+    companion object {
+        var currentPage = 0
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,44 +29,56 @@ class ToolNewsFragment : Fragment() {
     ): View? {
         FabHelper.addBackFab()
         binding = FragmentToolNewsBinding.inflate(inflater, container, false)
-
         //设置头部
         binding.toolNews.apply {
             toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_news))
             toolTitle.text = getString(R.string.tool_news)
         }
-        //切换来源
-        binding.regionChips.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.chip_cn -> region = 2
-                R.id.chip_tw -> region = 3
-                R.id.chip_jp -> region = 4
+        //viewpager
+        val adapter = NewsListPagerAdapter(requireActivity())
+        binding.viewPager.adapter = adapter
+        binding.viewPager.offscreenPageLimit = 3
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                currentPage = position
             }
-            newsViewModel.loadingMore.postValue(true)
-            newsViewModel.getNews(region)
-        }
-        //下拉刷新
-        binding.refresh.apply {
-            setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
-            setColorSchemeResources(R.color.colorPrimary)
-            setOnRefreshListener {
-                newsViewModel.getNews(region)
-            }
-        }
-        //新闻数据
-        lifecycleScope.launch {
-            @OptIn(ExperimentalCoroutinesApi::class)
-            newsViewModel.getNews(region).collectLatest {
-                adapter = NewsAdapter(parentFragmentManager, region)
-                binding.newsList.adapter = adapter
-                binding.refresh.isRefreshing = false
-                adapter.submitData(it)
-            }
-        }
-        //加载更多进度显示
-        newsViewModel.loadingMore.observe(viewLifecycleOwner, {
-            binding.loading.visibility = if (it) View.VISIBLE else View.GONE
         })
+
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            when (position) {
+                0 -> {
+                    tab.text = getString(R.string.db_cn)
+                    tab.view.setOnClickListener {
+                        if (currentPage == position) {
+                            val view = binding.viewPager.getChildAt(position)
+                            view.findViewById<RecyclerView>(R.id.news_list)
+                                .smoothScrollToPosition(0)
+                        }
+                    }
+                }
+                1 -> {
+                    tab.text = getString(R.string.db_tw)
+                    tab.view.setOnClickListener {
+                        if (currentPage == position) {
+                            val view = binding.viewPager.getChildAt(position)
+                            view.findViewById<RecyclerView>(R.id.news_list)
+                                .smoothScrollToPosition(0)
+                        }
+                    }
+                }
+                2 -> {
+                    tab.text = getString(R.string.db_jp)
+                    tab.view.setOnClickListener {
+                        if (currentPage == position) {
+                            val view = binding.viewPager.getChildAt(position)
+                            view.findViewById<RecyclerView>(R.id.news_list)
+                                .smoothScrollToPosition(0)
+                        }
+                    }
+                }
+            }
+        }.attach()
         return binding.root
     }
 

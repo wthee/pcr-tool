@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
-import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
+import cn.wthee.pcrtool.adapters.viewpager.PvpCharacterPagerAdapter
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.data.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
@@ -120,7 +120,7 @@ class ToolPvpFragment : Fragment() {
 
     private fun setPager() {
         binding.pvpPager.offscreenPageLimit = 3
-        binding.pvpPager.adapter = PvpCharacterPageAdapter(requireActivity(), false)
+        binding.pvpPager.adapter = PvpCharacterPagerAdapter(requireActivity(), false)
         TabLayoutMediator(
             binding.tablayoutPosition,
             binding.pvpPager

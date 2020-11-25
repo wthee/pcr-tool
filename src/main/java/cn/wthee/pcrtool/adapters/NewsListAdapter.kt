@@ -2,11 +2,14 @@ package cn.wthee.pcrtool.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.data.model.NewsTable
+import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.databinding.ItemNewsBinding
 import cn.wthee.pcrtool.ui.tool.news.ToolNewsDetailFragment
 
@@ -38,7 +41,11 @@ class NewsAdapter(
                 newsDate.text = data.date
                 val adapter = NewsTagAdapter()
                 tags.adapter = adapter
-                adapter.submitList(data.getTags())
+                adapter.submitList(data.getTagList())
+
+                root.animation =
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
+
                 //点击查看
                 root.setOnClickListener {
                     ToolNewsDetailFragment.newInstance(

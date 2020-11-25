@@ -9,18 +9,18 @@ import java.io.Serializable
 @Entity(tableName = "unit_enemy_data")
 data class EnemyDataJP(
     @PrimaryKey
-    @ColumnInfo(name = "unit_id") val unit_id: Int,
-    @ColumnInfo(name = "unit_name") val unit_name: String,
-    @ColumnInfo(name = "prefab_id") val prefab_id: Int,
-    @ColumnInfo(name = "motion_type") val motion_type: Int,
-    @ColumnInfo(name = "se_type") val se_type: Int,
-    @ColumnInfo(name = "move_speed") val move_speed: Int,
-    @ColumnInfo(name = "search_area_width") val search_area_width: Int,
-    @ColumnInfo(name = "atk_type") val atk_type: Int,
-    @ColumnInfo(name = "normal_atk_cast_time") val normal_atk_cast_time: Double,
-    @ColumnInfo(name = "cutin") val cutin: Int,
-    @ColumnInfo(name = "visual_change_flag") val visual_change_flag: Int,
-    @ColumnInfo(name = "comment") val comment: String,
+    @ColumnInfo(name = "unit_id") var unit_id: Int = 0,
+    @ColumnInfo(name = "unit_name") var unit_name: String = "",
+    @ColumnInfo(name = "prefab_id") var prefab_id: Int = 0,
+    @ColumnInfo(name = "motion_type") var motion_type: Int = 0,
+    @ColumnInfo(name = "se_type") var se_type: Int = 0,
+    @ColumnInfo(name = "move_speed") var move_speed: Int = 0,
+    @ColumnInfo(name = "search_area_width") var search_area_width: Int = 0,
+    @ColumnInfo(name = "atk_type") var atk_type: Int = 0,
+    @ColumnInfo(name = "normal_atk_cast_time") var normal_atk_cast_time: Double = 0.0,
+    @ColumnInfo(name = "cutin") var cutin: Int = 0,
+    @ColumnInfo(name = "visual_change_flag") var visual_change_flag: Int = 0,
+    @ColumnInfo(name = "comment") var comment: String = "",
     //jp
-    @ColumnInfo(name = "cutin_star6") val cutinStar6: Int,
+    @ColumnInfo(name = "cutin_star6") var cutinStar6: Int = 0,
 ) : Serializable

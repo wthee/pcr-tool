@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.adapters
+package cn.wthee.pcrtool.adapters.viewpager
 
 import android.util.SparseArray
 import androidx.fragment.app.Fragment
@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpCharacterPageFragment
 
-class PvpCharacterPageAdapter(
+class PvpCharacterPagerAdapter(
     activity: FragmentActivity,
     isFloatWindow: Boolean
 ) : FragmentStateAdapter(activity) {

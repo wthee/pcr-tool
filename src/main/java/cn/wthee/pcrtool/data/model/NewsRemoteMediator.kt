@@ -6,6 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import cn.wthee.pcrtool.data.MyAPIRepository
+import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.data.entity.RemoteKey
 import cn.wthee.pcrtool.database.NewsDatabase
 import retrofit2.HttpException
@@ -18,8 +19,6 @@ class NewsRemoteMediator(
     private val database: NewsDatabase,
 ) : RemoteMediator<Int, NewsTable>() {
 
-    val newsDao = database.getNewsDao()
-    val remoteKeyDao = database.getRemoteKeyDao()
     val DEFAULT_PAGE_INDEX = 1
 
     override suspend fun load(
@@ -45,16 +44,16 @@ class NewsRemoteMediator(
             database.withTransaction {
                 // clear all tables in the database
                 if (loadType == LoadType.REFRESH) {
-                    remoteKeyDao.clearRemoteKeys()
-                    newsDao.clearAll()
+                    database.getRemoteKeyDao().clearRemoteKeys("${region}-%")
+                    database.getNewsDao().clearAll("${region}-%")
                 }
                 val prevKey = if (page == DEFAULT_PAGE_INDEX) null else page - 1
                 val nextKey = if (isEndOfList) null else page + 1
                 val keys = list.map {
                     RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
-                remoteKeyDao.insertAll(keys)
-                newsDao.insertAll(list)
+                database.getRemoteKeyDao().insertAll(keys)
+                database.getNewsDao().insertAll(list)
             }
             return MediatorResult.Success(endOfPaginationReached = isEndOfList)
         } catch (exception: IOException) {
@@ -95,7 +94,7 @@ class NewsRemoteMediator(
         return state.pages
             .lastOrNull { it.data.isNotEmpty() }
             ?.data?.lastOrNull()
-            ?.let { news -> remoteKeyDao.remoteKeys(news.id) }
+            ?.let { news -> database.getRemoteKeyDao().remoteKeys(news.id) }
     }
 
     /**
@@ -105,7 +104,7 @@ class NewsRemoteMediator(
         return state.pages
             .firstOrNull() { it.data.isNotEmpty() }
             ?.data?.firstOrNull()
-            ?.let { news -> remoteKeyDao.remoteKeys(news.id) }
+            ?.let { news -> database.getRemoteKeyDao().remoteKeys(news.id) }
     }
 
     /**
@@ -114,7 +113,7 @@ class NewsRemoteMediator(
     private suspend fun getClosestRemoteKey(state: PagingState<Int, NewsTable>): RemoteKey? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { repoId ->
-                remoteKeyDao.remoteKeys(repoId)
+                database.getRemoteKeyDao().remoteKeys(repoId)
             }
         }
     }

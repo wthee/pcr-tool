@@ -60,7 +60,7 @@
 
         <com.google.android.material.slider.Slider
             android:id="@+id/level_seek_bar"
-            android:layout_width="@dimen/seekbar_width"
+            android:layout_width="@dimen/seek_bar_width"
             android:layout_height="wrap_content"
             android:stepSize="1"
             android:visibility="gone"

@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.wthee.pcrtool.MainActivity.Companion.mHeight
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
-import cn.wthee.pcrtool.adapters.PvpCharacterPageAdapter
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.adapters.viewpager.PvpCharacterPagerAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
@@ -202,7 +202,7 @@ class ToolPvpService : Service() {
     //page 初始化
     private fun setPager() {
         binding.pvpPager.offscreenPageLimit = 3
-        binding.pvpPager.adapter = PvpCharacterPageAdapter(activity, true)
+        binding.pvpPager.adapter = PvpCharacterPagerAdapter(activity, true)
         TabLayoutMediator(
             binding.tablayoutPosition,
             binding.pvpPager

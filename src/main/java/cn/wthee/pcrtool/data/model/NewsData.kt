@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.data.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.io.Serializable
 
 data class NewsData(
@@ -25,17 +23,3 @@ data class News(
     }
 }
 
-@Entity(tableName = "news")
-data class NewsTable(
-    @PrimaryKey
-    val id: String,
-    val title: String,
-    val tags: String,
-    val url: String,
-    val date: String
-) : Serializable {
-
-    fun getTags() = tags.split(",")
-
-    fun getTrueId() = id.split("-")[1].toInt()
-}

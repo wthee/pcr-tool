@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterPicViewPagerAdapter
+import cn.wthee.pcrtool.adapters.viewpager.CharacterPicPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 import cn.wthee.pcrtool.utils.ImageDownloadUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -30,7 +30,7 @@ class CharacterPicListFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPicListBinding
     private lateinit var urls: ArrayList<String>
-    private lateinit var endlessScrollAdapter: CharacterPicViewPagerAdapter
+    private lateinit var endlessScrollAdapter: CharacterPicPagerAdapter
     private var index = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +52,7 @@ class CharacterPicListFragment : Fragment() {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
         binding.apply {
             //初始化列表
-            endlessScrollAdapter = CharacterPicViewPagerAdapter(childFragmentManager, lifecycle)
+            endlessScrollAdapter = CharacterPicPagerAdapter(childFragmentManager, lifecycle)
             pics.adapter = endlessScrollAdapter
             endlessScrollAdapter.apply {
                 updateList(urls)

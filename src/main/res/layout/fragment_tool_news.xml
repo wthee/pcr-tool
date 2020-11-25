@@ -13,72 +13,23 @@
         android:id="@+id/tool_news"
         layout="@layout/view_tool_head" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/region_chips"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/m_padding"
-        app:checkedChip="@id/chip_cn"
-        app:selectionRequired="true"
-        app:singleSelection="true">
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
+        app:cardCornerRadius="@dimen/card_radius">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_cn"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/db_cn" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_tw"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/db_tw" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_jp"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/db_jp" />
-    </com.google.android.material.chip.ChipGroup>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/m_padding">
-
-        <FrameLayout
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/tab_height_1" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/news_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="6"
-                tools:listitem="@layout/item_news" />
+    </com.google.android.material.card.MaterialCardView>
 
-            <FrameLayout
-                android:id="@+id/loading"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusable="true"
-                android:clickable="true"
-                android:background="@color/colorAlphtWhite">
-
-                <include
-                    layout="@layout/layout_loading_dialog"
-                    android:layout_width="@dimen/loading_dialog_width"
-                    android:layout_height="@dimen/loading_dialog_height"
-                    android:layout_gravity="center" />
-            </FrameLayout>
-
-        </FrameLayout>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

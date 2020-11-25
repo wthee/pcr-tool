@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.adapters
+package cn.wthee.pcrtool.adapters.viewpager
 
 import android.util.SparseArray
 import androidx.fragment.app.Fragment

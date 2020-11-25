@@ -10,8 +10,8 @@ import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterPagerAdapter
-import cn.wthee.pcrtool.adapters.DepthPageTransformer
+import cn.wthee.pcrtool.adapters.viewpager.CharacterPagerAdapter
+import cn.wthee.pcrtool.adapters.viewpager.DepthPageTransformer
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID

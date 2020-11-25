@@ -15,7 +15,7 @@ interface RemoteKeyDao {
     @Query("SELECT * FROM remote_key WHERE repoId = :id")
     suspend fun remoteKeys(id: String): RemoteKey?
 
-    @Query("DELETE FROM remote_key")
-    suspend fun clearRemoteKeys()
+    @Query("DELETE FROM remote_key WHERE repoId like :region")
+    suspend fun clearRemoteKeys(region: String)
 
 }

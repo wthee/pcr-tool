@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cn.wthee.pcrtool.data.model.NewsTable
+import cn.wthee.pcrtool.data.entity.NewsTable
 
 @Dao
 interface NewsDao {
@@ -16,6 +16,6 @@ interface NewsDao {
     @Query("SELECT * FROM news WHERE id LIKE :query")
     fun pagingSource(query: String): PagingSource<Int, NewsTable>
 
-    @Query("DELETE FROM news")
-    suspend fun clearAll()
+    @Query("DELETE FROM news WHERE id LIKE :region")
+    suspend fun clearAll(region: String)
 }

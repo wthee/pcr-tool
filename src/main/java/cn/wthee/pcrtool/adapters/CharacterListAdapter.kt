@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -51,10 +50,6 @@ class CharacterPageAdapter(
             val isLoved = CharacterListFragment.characterFilterParams.starIds.contains(character.id)
 
             binding.apply {
-                (binding.root.parent as? ViewGroup)?.doOnPreDraw {
-                    // Parent has been drawn. Start transitioning!
-                    fragment.startPostponedEnterTransition()
-                }
                 name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                 //加载动画
                 root.animation =

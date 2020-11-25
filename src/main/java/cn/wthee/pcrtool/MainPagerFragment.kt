@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity.Companion.sp
-import cn.wthee.pcrtool.adapters.MainPagerAdapter
+import cn.wthee.pcrtool.adapters.viewpager.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
 import cn.wthee.pcrtool.databinding.LayoutPopupMenuBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment

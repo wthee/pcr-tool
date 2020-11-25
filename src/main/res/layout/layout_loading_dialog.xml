@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/loading_dialog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/loading_dialog_height"
     android:elevation="@dimen/elevation_card"
+    android:layout_marginStart="@dimen/s_margin"
+    android:layout_marginEnd="@dimen/s_margin"
     app:cardCornerRadius="@dimen/card_radius">
 
     <ProgressBar
@@ -19,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="@dimen/s_margin"
-        android:text="加载中..."
+        android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:textColor="@color/colorAccent" />
 

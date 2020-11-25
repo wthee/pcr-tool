@@ -8,17 +8,17 @@ import java.io.Serializable
 @Entity(tableName = "item_data")
 data class ItemDataJP(
     @PrimaryKey
-    @ColumnInfo(name = "item_id") val item_id: Int,
-    @ColumnInfo(name = "item_name") val item_name: String,
-    @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "promotion_level") val promotion_level: Int,
-    @ColumnInfo(name = "item_type") val item_type: Int,
-    @ColumnInfo(name = "value") val value: Int,
-    @ColumnInfo(name = "price") val price: Int,
-    @ColumnInfo(name = "limit_num") val limit_num: Int,
-    @ColumnInfo(name = "start_time") val start_time: String,
-    @ColumnInfo(name = "end_time") val end_time: String,
+    @ColumnInfo(name = "item_id") var item_id: Int = 0,
+    @ColumnInfo(name = "item_name") var item_name: String = "",
+    @ColumnInfo(name = "description") var description: String = "",
+    @ColumnInfo(name = "promotion_level") var promotion_level: Int = 0,
+    @ColumnInfo(name = "item_type") var item_type: Int = 0,
+    @ColumnInfo(name = "value") var value: Int = 0,
+    @ColumnInfo(name = "price") var price: Int = 0,
+    @ColumnInfo(name = "limit_num") var limit_num: Int = 0,
+    @ColumnInfo(name = "start_time") var start_time: String = "",
+    @ColumnInfo(name = "end_time") var end_time: String = "",
     //jp
-    @ColumnInfo(name = "gojuon_order") val gojuon_order: Int,
-    @ColumnInfo(name = "sell_check_disp") val sell_check_disp: Int,
+    @ColumnInfo(name = "gojuon_order") var gojuon_order: Int = 0,
+    @ColumnInfo(name = "sell_check_disp") var sell_check_disp: Int = 0,
 ) : Serializable
