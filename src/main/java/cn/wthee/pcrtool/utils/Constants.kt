@@ -6,9 +6,9 @@ object Constants {
     const val WEBP = ".webp"
 
     //接口地址
-    const val API_URL = "https://redive.estertion.win/"
-    const val MY_API_URL = "http://wthee.xyz:8847/api/"
-    const val BILIBILI_API_URL = "https://api.biligame.com/news/"
+    const val RESOURCE_URL = "https://redive.estertion.win/"
+    const val DATABASE_URL = "http://wthee.xyz/"
+    const val API_URL = "http://wthee.xyz:8847/api/"
 
     //数据库中版
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
@@ -22,26 +22,26 @@ object Constants {
     const val DATABASE_VERSION_URL = "last_version_cn.json"
 
     //角色卡片接口
-    const val CHARACTER_URL = API_URL + "card/profile/"
+    const val CHARACTER_URL = RESOURCE_URL + "card/profile/"
 
     //现实角色卡片接口
-    const val Reality_CHARACTER_URL = API_URL + "card/actual_profile/"
+    const val Reality_CHARACTER_URL = RESOURCE_URL + "card/actual_profile/"
 
     //装备图标接口
-    const val EQUIPMENT_URL = API_URL + "icon/equipment/"
+    const val EQUIPMENT_URL = RESOURCE_URL + "icon/equipment/"
 
     //道具
-    const val ITEM_URL = API_URL + "icon/item/"
+    const val ITEM_URL = RESOURCE_URL + "icon/item/"
 
     //图标接口
-    const val UNIT_ICON_URL = API_URL + "icon/unit/"
-    const val UNIT_ICON_SHADOW_URL = API_URL + "icon/unit_shadow/"
+    const val UNIT_ICON_URL = RESOURCE_URL + "icon/unit/"
+    const val UNIT_ICON_SHADOW_URL = RESOURCE_URL + "icon/unit_shadow/"
 
     //角色界面接口
-    const val CHARACTER_PLATE_URL = API_URL + "icon/plate/"
+    const val CHARACTER_PLATE_URL = RESOURCE_URL + "icon/plate/"
 
     //技能图标接口
-    const val SKILL_ICON_URL = API_URL + "icon/skill/"
+    const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
     //角色Rank
     const val CHARACTER_MIN_RANK = 2

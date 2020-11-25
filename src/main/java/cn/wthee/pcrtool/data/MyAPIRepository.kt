@@ -19,7 +19,7 @@ import okhttp3.RequestBody
 object MyAPIRepository {
 
     //创建服务
-    private val service = ApiHelper.create(MyAPIService::class.java, Constants.MY_API_URL)
+    private val service = ApiHelper.create(MyAPIService::class.java, Constants.API_URL)
 
     suspend fun getPVPData(): ResultData<List<Result>> {
         //接口参数

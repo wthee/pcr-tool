@@ -16,9 +16,8 @@ data class NewsTable(
 ) : Serializable {
 
     fun getTagList() = tags.split(",").filter {
-        it.isNotEmpty()
-    }
-
+        it.isNotEmpty() && it != "すべて"
+    } as ArrayList<String>
 
     fun getTrueId() = id.split("-")[1].toInt()
 }

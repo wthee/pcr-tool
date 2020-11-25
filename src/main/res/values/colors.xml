@@ -22,4 +22,7 @@
     <color name="color_rank_11_17">#B55CCF</color>
     <color name="color_rank_18">#FF0000</color>
     <color name="red">#FF0000</color>
+    <color name="news_update">#f55291</color>
+    <color name="news_system">#a067c5</color>
+    <color name="news_event">#399be6</color>
 </resources>

@@ -7,8 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
+import android.webkit.SslErrorHandler
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
+import cn.wthee.pcrtool.utils.BrowserUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -39,20 +43,21 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
         binding = FragmentToolNewsDetailBinding.inflate(inflater, container, false)
         binding.apply {
             Log.e("news", url)
-            webView.loadUrl(url)
+
+            if (region == 3 || region == 4) {
+                tip.visibility = View.VISIBLE
+            }
+            openBrowse.setOnClickListener {
+//                ClipboardUtli.add(url)
+                BrowserUtil.open(requireContext(), url)
+            }
+
             //设置
             webView.webChromeClient = WebChromeClient()
             webView.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(
-                    view: WebView,
-                    request: WebResourceRequest
-                ): Boolean {
-                    view.loadUrl(request.url.toString())
-                    return true
-                }
 
-                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    view.loadUrl(url)
+                override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
+                    view.loadUrl(url!!)
                     return true
                 }
 
@@ -105,15 +110,21 @@ class ToolNewsDetailFragment : BottomSheetDialogFragment() {
                         );
                     }
                     loading.visibility = View.GONE
+                    tip.visibility = View.GONE
                     webView.visibility = View.VISIBLE
                 }
             }
             webView.settings.apply {
+                domStorageEnabled = true
                 javaScriptEnabled = true
                 useWideViewPort = true //将图片调整到适合webview的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
-            }
+                javaScriptCanOpenWindowsAutomatically = true
+                loadsImagesAutomatically = false
 
+            }
+            //加载网页
+            webView.loadUrl(url)
         }
         return binding.root
     }

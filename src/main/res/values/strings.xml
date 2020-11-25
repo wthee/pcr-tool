@@ -128,5 +128,6 @@
     <string name="download_pic">下载当前图片</string>
     <string name="tool_news">最新消息</string>
     <string name="loading">加载中...</string>
+    <string name="news_load_tip">若加载较慢，可尝试在浏览器中查看~</string>
 
 </resources>

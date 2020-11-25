@@ -79,6 +79,7 @@ class ToolNewsFragment : Fragment() {
                 }
             }
         }.attach()
+
         return binding.root
     }
 

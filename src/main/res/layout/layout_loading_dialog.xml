@@ -17,6 +17,7 @@
         android:layout_marginBottom="@dimen/m_margin" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/loading_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"

@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.databinding.ItemNewsBinding
 import cn.wthee.pcrtool.ui.tool.news.ToolNewsDetailFragment
+import cn.wthee.pcrtool.utils.ClipboardUtli
 
 
 class NewsAdapter(
@@ -41,7 +42,9 @@ class NewsAdapter(
                 newsDate.text = data.date
                 val adapter = NewsTagAdapter()
                 tags.adapter = adapter
-                adapter.submitList(data.getTagList())
+                val tags = data.getTagList()
+                if (data.getTagList().size > 1) tags.remove("お知らせ")
+                adapter.submitList(tags)
 
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
@@ -51,6 +54,10 @@ class NewsAdapter(
                     ToolNewsDetailFragment.newInstance(
                         region, data.getTrueId(), data.url
                     ).show(fragmentManager, "detail$data.id")
+                }
+                root.setOnLongClickListener {
+                    ClipboardUtli.add(data.url)
+                    return@setOnLongClickListener true
                 }
             }
         }

@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemTagBinding
+import cn.wthee.pcrtool.utils.ResourcesUtil
 
 
 class NewsTagAdapter :
@@ -29,7 +31,15 @@ class NewsTagAdapter :
         fun bind(tag: String) {
             //设置数据
             binding.apply {
+                val colorId = when {
+                    tag == "公告" || tag == "更新" || tag == "アップデート" -> R.color.news_update
+                    tag == "系統" || tag == "メンテナンス" -> R.color.news_system
+                    else -> R.color.news_event
+                }
                 text1.text = tag
+                val drawable = ResourcesUtil.getDrawable(R.drawable.title_background)
+                drawable?.setTint(ResourcesUtil.getColor(colorId))
+                text1.background = drawable
             }
         }
     }

@@ -15,10 +15,11 @@ import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.API_URL
+import cn.wthee.pcrtool.utils.Constants.DATABASE_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_LASTEST
+import cn.wthee.pcrtool.utils.Constants.RESOURCE_URL
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import retrofit2.Call
@@ -41,7 +42,7 @@ object DatabaseUpdater {
         //创建服务
         val service = ApiHelper.create(
             DatabaseService::class.java,
-            API_URL
+            RESOURCE_URL
         )
         //获取数据库最新版本
         service.getDbVersion(if (databaseType == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP)
@@ -91,7 +92,7 @@ object DatabaseUpdater {
                 val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
                     .setInputData(
                         Data.Builder()
-                            .putString(DatabaseDownloadWorker.KEY_INPUT_URL, API_URL)
+                            .putString(DatabaseDownloadWorker.KEY_INPUT_URL, DATABASE_URL)
                             .putString(DatabaseDownloadWorker.KEY_VERSION, ver)
                             .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
                             .putInt(DatabaseDownloadWorker.KEY_FROM_SETTING, fromSetting)
