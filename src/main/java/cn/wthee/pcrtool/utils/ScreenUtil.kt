@@ -1,16 +1,28 @@
 package cn.wthee.pcrtool.utils
 
-import android.content.Context
+import android.util.DisplayMetrics
 import cn.wthee.pcrtool.MyApplication
 
 
 object ScreenUtil {
 
-    val display = ActivityUtil.instance.currentActivity?.windowManager?.defaultDisplay
+    private fun getDm(): DisplayMetrics {
+        val outMetrics = DisplayMetrics()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            val display = ActivityUtil.instance.currentActivity?.display
+            display?.getRealMetrics(outMetrics)
+        } else {
+            @Suppress("DEPRECATION")
+            val display = ActivityUtil.instance.currentActivity?.windowManager?.defaultDisplay
+            @Suppress("DEPRECATION")
+            display?.getMetrics(outMetrics)
+        }
+        return outMetrics
+    }
 
-    fun getWidth(context: Context) = display?.width ?: 0
+    fun getWidth() = getDm().widthPixels
 
-    fun getHeight(context: Context) = display?.height ?: 0
+    fun getHeight() = getDm().heightPixels
 
 }
 

@@ -78,15 +78,15 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
-        mHeight = ScreenUtil.getWidth(this) - 48.dp
+        mHeight = ScreenUtil.getWidth() - 48.dp
 
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         mHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            ScreenUtil.getHeight(this) - 48.dp
+            ScreenUtil.getHeight() - 48.dp
         else
-            ScreenUtil.getWidth(this) - 48.dp
+            ScreenUtil.getWidth() - 48.dp
         super.onConfigurationChanged(newConfig)
     }
 
