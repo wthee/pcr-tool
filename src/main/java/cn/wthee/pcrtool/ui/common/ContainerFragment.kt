@@ -9,17 +9,16 @@ import cn.wthee.pcrtool.databinding.FragmentCommonBottomSheetBinding
 import cn.wthee.pcrtool.enums.PageType
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment
 import cn.wthee.pcrtool.utils.Constants.UID
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class CommonBottomSheetFragment() :
-    BottomSheetDialogFragment() {
+class ContainerFragment() :
+    CommonBasicDialogFragment() {
 
     private val DIALOG = "dialog"
 
     companion object {
         fun getInstance(uid: Int, page: PageType) =
-            CommonBottomSheetFragment().apply {
+            ContainerFragment().apply {
                 arguments = Bundle().apply {
                     putInt(UID, uid)
                     putSerializable(DIALOG, page)

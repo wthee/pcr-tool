@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
-    android:background="@color/colorBg"
-    android:padding="@dimen/s_padding">
+    android:paddingStart="@dimen/s_padding"
+    android:paddingEnd="@dimen/s_padding">
 
     <include
         android:id="@+id/toolbar"
@@ -29,8 +29,8 @@
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/desc_height"
         android:layout_marginStart="@dimen/s_margin"
+        android:minHeight="@dimen/desc_height"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,11 +47,11 @@
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        app:layout_constraintWidth_percent="0.3"
         android:text="@string/atk_time"
         android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/desc" />
+        app:layout_constraintTop_toBottomOf="@id/desc"
+        app:layout_constraintWidth_percent="0.3" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/atk_time"
@@ -72,10 +72,10 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:text="@string/atk_dis"
-        app:layout_constraintWidth_percent="0.3"
         android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_atk_time" />
+        app:layout_constraintTop_toBottomOf="@id/title_atk_time"
+        app:layout_constraintWidth_percent="0.3" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/atk_area"

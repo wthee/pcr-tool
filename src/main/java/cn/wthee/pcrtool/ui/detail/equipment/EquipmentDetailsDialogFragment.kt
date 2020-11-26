@@ -1,13 +1,11 @@
 package cn.wthee.pcrtool.ui.detail.equipment
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
@@ -15,33 +13,31 @@ import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
+import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import coil.load
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class EquipmentDetailsFragment : BottomSheetDialogFragment() {
+class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
 
     private val EQUIP = "equip"
 
     companion object {
         fun getInstance(equip: EquipmentMaxData) =
-            EquipmentDetailsFragment().apply {
+            EquipmentDetailsDialogFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(EQUIP, equip)
                 }
             }
 
-        //
         var materialClickPosition = -1
-        lateinit var materialAdapter: EquipmentMaterialAdapter
     }
 
     private lateinit var equip: EquipmentMaxData
     private lateinit var binding: FragmentEquipmentDetailsBinding
-    private lateinit var behavior: BottomSheetBehavior<View>
+    private lateinit var materialAdapter: EquipmentMaterialAdapter
+
     private val viewModel by activityViewModels<EquipmentDetailsViewModel> {
         InjectorUtil.provideEquipmentDetailsViewModelFactory()
     }
@@ -56,7 +52,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEquipmentDetailsBinding.inflate(inflater, container, false)
         init()
         setObserve()
@@ -67,15 +63,6 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         materialClickPosition = -1
-    }
-
-    override fun setupDialog(dialog: Dialog, style: Int) {
-        val v: View = FragmentEquipmentDetailsBinding.inflate(layoutInflater).root
-        dialog.setContentView(v)
-
-        val layoutParams = (v.parent as View).layoutParams as CoordinatorLayout.LayoutParams
-        behavior = layoutParams.behavior as BottomSheetBehavior<View>
-        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -113,7 +100,7 @@ class EquipmentDetailsFragment : BottomSheetDialogFragment() {
             //合成素材
             if (it.isNotEmpty()) {
                 binding.materialCount.text = getString(R.string.title_material, it.size)
-                materialAdapter = EquipmentMaterialAdapter(binding, behavior, viewModel)
+                materialAdapter = EquipmentMaterialAdapter(binding, viewModel)
                 binding.material.adapter = materialAdapter
                 materialAdapter.submitList(it)
             } else {

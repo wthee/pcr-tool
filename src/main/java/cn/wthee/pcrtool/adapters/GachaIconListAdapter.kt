@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.enums.PageType
-import cn.wthee.pcrtool.ui.common.CommonBottomSheetFragment
+import cn.wthee.pcrtool.ui.common.ContainerFragment
 import cn.wthee.pcrtool.utils.Constants
 import coil.load
 
@@ -51,7 +51,7 @@ class GachaListAdapter(
 //                name.text = data.name
 //                name.setTextColor(ResourcesUtil.getColor(R.color.colorPrimary))
                 pic.setOnClickListener {
-                    CommonBottomSheetFragment.getInstance(data.id, PageType.CAHRACTER_SKILL).show(
+                    ContainerFragment.getInstance(data.id, PageType.CAHRACTER_SKILL).show(
                         manager,
                         "skill"
                     )

@@ -9,13 +9,13 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.entity.EnemyData
 import cn.wthee.pcrtool.databinding.FragmentEnemyDetailsBinding
+import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class EnemyDialogFragment : BottomSheetDialogFragment() {
+class EnemyDialogFragment : CommonBasicDialogFragment() {
 
     companion object {
         private const val ENEMY = "enemy"

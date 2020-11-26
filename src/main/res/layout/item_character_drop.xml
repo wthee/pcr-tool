@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/m_padding"
-    android:paddingEnd="@dimen/m_padding"
+    android:paddingStart="@dimen/xm_padding"
+    android:paddingEnd="@dimen/xm_padding"
     android:paddingTop="@dimen/s_padding"
     android:animateLayoutChanges="true"
     android:orientation="horizontal">

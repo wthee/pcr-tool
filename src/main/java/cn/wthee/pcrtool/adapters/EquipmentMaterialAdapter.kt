@@ -11,12 +11,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -24,7 +23,6 @@ import kotlinx.coroutines.launch
 
 class EquipmentMaterialAdapter(
     private val partentBinding: FragmentEquipmentDetailsBinding,
-    private val behavior: BottomSheetBehavior<View>,
     private val viewModel: EquipmentDetailsViewModel
 ) :
     ListAdapter<EquipmentMaterial, EquipmentMaterialAdapter.ViewHolder>(MaterialDiffCallback()) {
@@ -44,7 +42,7 @@ class EquipmentMaterialAdapter(
             itemView.findViewById<MaterialTextView>(R.id.name)
                 .setTextColor(
                     ResourcesUtil.getColor(
-                        if (position == EquipmentDetailsFragment.materialClickPosition)
+                        if (position == EquipmentDetailsDialogFragment.materialClickPosition)
                             R.color.red
                         else
                             R.color.text
@@ -68,11 +66,11 @@ class EquipmentMaterialAdapter(
                     MyApplication.context.getString(R.string.equip_count, subName, info.count)
                 pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
                     error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.load_mini)
+                    placeholder(R.drawable.unknow_gray)
                 }
                 //点击查看掉落地区
                 root.setOnClickListener {
-                    EquipmentDetailsFragment.materialClickPosition = absoluteAdapterPosition
+                    EquipmentDetailsDialogFragment.materialClickPosition = absoluteAdapterPosition
                     notifyDataSetChanged()
                     partentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区
@@ -89,7 +87,6 @@ class EquipmentMaterialAdapter(
                         partentBinding.drops.isNestedScrollingEnabled = true
                         partentBinding.material.isNestedScrollingEnabled = false
                         adapter.submitList(data) {
-                            behavior.state = BottomSheetBehavior.STATE_EXPANDED
                             partentBinding.progressBar.visibility = View.INVISIBLE
                         }
                         partentBinding.drops.setItemViewCacheSize(50)

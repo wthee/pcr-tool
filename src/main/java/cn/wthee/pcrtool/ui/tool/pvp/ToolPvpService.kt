@@ -114,7 +114,7 @@ class ToolPvpService : Service() {
             adapter = PvpCharacterResultAdapter(activity)
             resultContent.list.adapter = adapter
 
-            resultContent.root.visibility = View.GONE
+            resultContentBg.visibility = View.GONE
             resultContent.pvpResultToolbar.root.visibility = View.GONE
             //搜索按钮
             search.setOnClickListener {
@@ -124,7 +124,7 @@ class ToolPvpService : Service() {
                     //展示查询结果
                     back.visibility = View.VISIBLE
                     resultContent.loading.root.visibility = View.VISIBLE
-                    resultContent.root.visibility = View.VISIBLE
+                    resultContentBg.visibility = View.VISIBLE
                     job = MainScope().launch {
                         resultContent.pvpNoData.visibility = View.GONE
                         val result = MyAPIRepository.getPVPData()
@@ -181,8 +181,8 @@ class ToolPvpService : Service() {
                         job.cancel()
                     }
                 }
-                if (resultContent.root.visibility == View.VISIBLE) {
-                    resultContent.root.visibility = View.GONE
+                if (resultContentBg.visibility == View.VISIBLE) {
+                    resultContentBg.visibility = View.GONE
                     adapter.submitList(null)
                 }
                 resultContent.pvpNoData.visibility = View.GONE

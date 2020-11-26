@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
 import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
@@ -74,7 +74,7 @@ class CharacterAttrFragment : Fragment() {
         val picUrl = Constants.UNIT_ICON_URL + id + Constants.WEBP
         binding.icon.load(picUrl) {
             error(R.drawable.unknow_gray)
-            placeholder(R.drawable.load_mini)
+            placeholder(R.drawable.unknow_gray)
         }
         characterAttrViewModel.getMaxRankAndRarity(uid)
         return binding.root
@@ -169,15 +169,6 @@ class CharacterAttrFragment : Fragment() {
                 }
             }
         })
-        //角色装备
-        val equipPics = arrayListOf(
-            binding.rankEquip.pic6,
-            binding.rankEquip.pic5,
-            binding.rankEquip.pic4,
-            binding.rankEquip.pic3,
-            binding.rankEquip.pic2,
-            binding.rankEquip.pic1
-        )
         //专武
         sharedEquipViewModel.getUniqueEquipInfos(uid)
         sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner, {
@@ -186,7 +177,7 @@ class CharacterAttrFragment : Fragment() {
                     binding.uniqueEquip.root.visibility = View.VISIBLE
                     val picUrl = Constants.EQUIPMENT_URL + it.equipmentId + Constants.WEBP
                     itemPic.load(picUrl) {
-                        placeholder(R.drawable.load_mini)
+                        placeholder(R.drawable.unknow_gray)
                         error(R.drawable.unknow_gray)
                     }
                     //描述
@@ -203,6 +194,15 @@ class CharacterAttrFragment : Fragment() {
 
             }
         })
+        //角色装备
+        val equipPics = arrayListOf(
+            binding.rankEquip.pic6,
+            binding.rankEquip.pic5,
+            binding.rankEquip.pic4,
+            binding.rankEquip.pic3,
+            binding.rankEquip.pic2,
+            binding.rankEquip.pic1
+        )
         characterAttrViewModel.equipments.observe(viewLifecycleOwner, {
             it.forEachIndexed { index, equip ->
                 equipPics[index].apply {
@@ -210,12 +210,12 @@ class CharacterAttrFragment : Fragment() {
                     val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
                     this.load(picUrl) {
                         error(R.drawable.unknow_gray)
-                        placeholder(R.drawable.load_mini)
+                        placeholder(R.drawable.unknow_gray)
                     }
                     //点击跳转
                     setOnClickListener {
                         if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
-                            EquipmentDetailsFragment.getInstance(equip)
+                            EquipmentDetailsDialogFragment.getInstance(equip)
                                 .show(parentFragmentManager, "details")
                         }
                     }

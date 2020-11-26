@@ -8,12 +8,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.SkillLoopAllAdapter
 import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.databinding.FragmentSkillLoopBinding
+import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class CharacterSkillLoopDialogFragment : BottomSheetDialogFragment() {
+class CharacterSkillLoopDialogFragment : CommonBasicDialogFragment() {
 
     companion object {
         fun getInstance(uid: Int) =
@@ -37,7 +37,7 @@ class CharacterSkillLoopDialogFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSkillLoopBinding.inflate(inflater, container, false)
         val adapter = SkillLoopAllAdapter()
         binding.skillLoopList.adapter = adapter

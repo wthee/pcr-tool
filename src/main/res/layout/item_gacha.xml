@@ -16,7 +16,7 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingTop="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        android:paddingBottom="@dimen/m_padding">
+        android:paddingBottom="@dimen/xm_padding">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/gacha_name"

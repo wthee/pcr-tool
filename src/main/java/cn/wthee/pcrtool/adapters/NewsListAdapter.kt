@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.databinding.ItemNewsBinding
-import cn.wthee.pcrtool.ui.tool.news.ToolNewsDetailFragment
+import cn.wthee.pcrtool.ui.tool.news.ToolNewsDetailDialogFragment
 import cn.wthee.pcrtool.utils.ClipboardUtli
 
 
@@ -51,7 +51,7 @@ class NewsAdapter(
 
                 //点击查看
                 root.setOnClickListener {
-                    ToolNewsDetailFragment.newInstance(
+                    ToolNewsDetailDialogFragment.newInstance(
                         region, data.getTrueId(), data.url
                     ).show(fragmentManager, "detail$data.id")
                 }

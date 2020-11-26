@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/m_margin"
-    android:elevation="@dimen/elevation_card"
-    android:padding="@dimen/m_padding">
+    android:elevation="@dimen/elevation_card">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
@@ -32,8 +31,8 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:textColor="@color/colorWhite"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/name"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/name"
         tools:text="必杀技" />
 
@@ -52,10 +51,10 @@
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
         android:minHeight="@dimen/desc_height"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textIsSelectable="true"
-        android:layout_marginStart="@dimen/s_margin"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_pic"
@@ -81,6 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginBottom="@dimen/l_margin"
         android:nestedScrollingEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/skill_des"

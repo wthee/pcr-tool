@@ -45,7 +45,7 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
                 val picUrl = EQUIPMENT_URL + equip.eid + WEBP
                 itemPic.load(picUrl) {
                     error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.load_mini)
+                    placeholder(R.drawable.unknow_gray)
                 }
                 if (eid == equip.eid) {
                     odd.setTextColor(Color.RED)

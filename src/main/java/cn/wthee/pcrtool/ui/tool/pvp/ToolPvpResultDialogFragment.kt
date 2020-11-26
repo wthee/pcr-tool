@@ -9,15 +9,15 @@ import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.enums.Response
+import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
+class ToolPvpResultDialogFragment : CommonBasicDialogFragment() {
 
     private lateinit var binding: FragmentToolPvpResultBinding
     private lateinit var job: Job
@@ -25,7 +25,7 @@ class ToolPvpResultDialogFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentToolPvpResultBinding.inflate(inflater, container, false)
         //创建服务
         //展示查询结果

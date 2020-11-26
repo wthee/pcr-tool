@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBg"
     android:orientation="vertical">
 
     <include
@@ -13,14 +12,20 @@
 
     <include
         android:id="@+id/detail"
-        layout="@layout/layout_equip_detail" />
+        layout="@layout/layout_equip_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginEnd="@dimen/xm_margin" />
 
     <TextView
         android:id="@+id/material_count"
         style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_margin"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/s_margin"
         android:padding="@dimen/s_padding"
         android:textColor="@color/colorPrimary"
         tools:text="@string/title_material" />
@@ -29,8 +34,8 @@
         android:id="@+id/material"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/m_margin"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
         android:fadeScrollbars="false"
         android:nestedScrollingEnabled="true"
         android:orientation="horizontal"

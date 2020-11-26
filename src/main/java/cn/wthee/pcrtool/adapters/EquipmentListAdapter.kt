@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsFragment
+import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -76,7 +76,7 @@ class EquipmentPageAdapter(
 
         private fun click(equip: EquipmentMaxData) {
             MainActivity.currentEquipPosition = absoluteAdapterPosition
-            EquipmentDetailsFragment.getInstance(equip).show(fragmentManager, "details")
+            EquipmentDetailsDialogFragment.getInstance(equip).show(fragmentManager, "details")
         }
     }
 }

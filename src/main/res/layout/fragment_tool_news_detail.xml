@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:minHeight="@dimen/card_height"
     android:orientation="vertical"
-    tools:context=".ui.tool.news.ToolNewsDetailFragment">
+    tools:context=".ui.tool.news.ToolNewsDetailDialogFragment">
 
     <ProgressBar
         android:id="@+id/loading"
@@ -29,7 +29,8 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/s_margin">
 
         <WebView
             android:id="@+id/web_view"

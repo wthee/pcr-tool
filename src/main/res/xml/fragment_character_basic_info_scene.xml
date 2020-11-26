@@ -17,7 +17,7 @@
             android:id="@id/position_type"
             android:layout_width="@dimen/l_icon"
             android:layout_height="@dimen/l_icon"
-            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginStart="@dimen/xm_margin"
             app:layout_constraintBottom_toBottomOf="@id/name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/name" />
@@ -43,7 +43,7 @@
             android:id="@id/three"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginStart="@dimen/xm_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name" />
 
@@ -82,6 +82,7 @@
             android:id="@id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/s_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

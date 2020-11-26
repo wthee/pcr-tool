@@ -64,7 +64,7 @@
         android:id="@+id/float_right"
         android:layout_width="@dimen/float_window_width"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/float_card_radius"
+        app:cardCornerRadius="@dimen/card_radius"
         tools:layout_width="@dimen/float_window_width">
 
         <LinearLayout
@@ -123,11 +123,19 @@
 
                 </LinearLayout>
 
-                <include
-                    android:id="@+id/result_content"
-                    layout="@layout/fragment_tool_pvp_result"
+                <FrameLayout
+                    android:id="@+id/result_content_bg"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite">
+
+                    <include
+                        android:id="@+id/result_content"
+                        layout="@layout/fragment_tool_pvp_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
+
 
             </FrameLayout>
 

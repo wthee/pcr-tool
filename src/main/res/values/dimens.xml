@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_radius">6dp</dimen>
-    <dimen name="float_card_radius">11dp</dimen>
     <dimen name="loading_dialog_width">100dp</dimen>
     <dimen name="loading_dialog_height">80dp</dimen>
     <dimen name="desc_height">60dp</dimen>
@@ -30,7 +29,7 @@
     <dimen name="right_icon_margin">11dp</dimen>
     <dimen name="xs_padding">3dp</dimen>
     <dimen name="s_padding">6dp</dimen>
-    <dimen name="m_padding">12dp</dimen>
+    <dimen name="xm_padding">12dp</dimen>
     <dimen name="l_padding">25dp</dimen>
 
     <dimen name="toolbar_height">38dp</dimen>

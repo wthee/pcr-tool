@@ -7,9 +7,9 @@
     android:fitsSystemWindows="true"
     android:minHeight="@dimen/card_height"
     android:orientation="vertical"
-    android:paddingStart="@dimen/m_padding"
+    android:paddingStart="@dimen/xm_padding"
     android:paddingTop="@dimen/s_padding"
-    android:paddingEnd="@dimen/m_padding">
+    android:paddingEnd="@dimen/xm_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/filter_type"
