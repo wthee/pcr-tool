@@ -116,10 +116,6 @@ class CharacterBasicInfoFragment : Fragment() {
     //点击事件
     private fun setListener() {
         binding.apply {
-            rightIcon.setOnClickListener {
-                isLoved = !isLoved
-                setLove(isLoved)
-            }
             characterPic.setOnClickListener {
                 try {
                     val bundle = Bundle()
@@ -143,40 +139,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 }
 
             }
-            //TODO toolbar 展开折叠监听
-//            appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-//                when {
-//                    //展开
-//                    verticalOffset == 0 -> {
-//                        rightIcon.visibility = View.GONE
-//                        binding.toolTitle.setTextColor(
-//                            resources.getColor(
-//                                R.color.colorAlpha,
-//                                null
-//                            )
-//                        )
-//                    }
-//                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
-//                        rightIcon.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
-//                        rightIcon.visibility = View.VISIBLE
-//                        binding.toolTitle.setTextColor(
-//                            resources.getColor(
-//                                R.color.colorPrimary,
-//                                null
-//                            )
-//                        )
-//                    }
-//                    else -> {
-//                        if (rightIcon.visibility == View.VISIBLE) rightIcon.visibility = View.GONE
-//                        binding.toolTitle.setTextColor(
-//                            resources.getColor(
-//                                R.color.colorAlpha,
-//                                null
-//                            )
-//                        )
-//                    }
-//                }
-//            })
 
             //fab点击监听
             fabLoveCbi.setOnClickListener {
@@ -193,9 +155,6 @@ class CharacterBasicInfoFragment : Fragment() {
             CharacterListFragment.characterFilterParams.add(uid)
         else
             CharacterListFragment.characterFilterParams.remove(uid)
-
-        val ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
-        binding.rightIcon.setImageResource(ic)
 
         val icFabColor =
             ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)

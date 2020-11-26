@@ -26,6 +26,8 @@
             android:id="@id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginTop="@dimen/s_margin"
             app:layout_constraintStart_toEndOf="@id/position_type"
             app:layout_constraintTop_toBottomOf="@id/character_pic" />
 
@@ -36,16 +38,6 @@
             app:layout_constraintBottom_toBottomOf="@id/name"
             app:layout_constraintStart_toEndOf="@id/name"
             app:layout_constraintTop_toTopOf="@id/name" />
-
-        <Constraint
-            android:id="@id/right_icon"
-            android:layout_width="@dimen/fab_icon"
-            android:layout_height="@dimen/fab_icon"
-            android:visibility="invisible"
-            android:layout_marginEnd="@dimen/right_icon_margin"
-            app:layout_constraintBottom_toBottomOf="@id/character_pic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/character_pic" />
 
         <Constraint
             android:id="@id/three"
@@ -102,16 +94,6 @@
             app:layout_constraintBottom_toBottomOf="@id/name"
             app:layout_constraintStart_toEndOf="@id/name"
             app:layout_constraintTop_toTopOf="@id/name" />
-
-        <Constraint
-            android:id="@id/right_icon"
-            android:layout_width="@dimen/fab_icon"
-            android:layout_height="@dimen/fab_icon"
-            android:visibility="visible"
-            android:layout_marginEnd="@dimen/right_icon_margin"
-            app:layout_constraintBottom_toBottomOf="@id/character_pic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/character_pic" />
 
         <Constraint
             android:id="@id/three"
