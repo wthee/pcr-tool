@@ -1,9 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import android.content.ContentResolver
-import android.content.Context
-import android.content.res.Resources
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import cn.wthee.pcrtool.MyApplication
@@ -33,16 +29,18 @@ object FileUtil {
     fun getDatabaseZipPath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP
 
+    fun getNewsDatabasePath() = getDatabaseDir() + Constants.DATABASE_NEWS
+
     //数据库判断
-    fun needUpadateDb(type: Int) =
+    fun needUpdate(type: Int) =
         !File(getDatabasePath(type)).exists()
                 || File(getDatabasePath(type)).length() < 1 * 1024 * 1024
                 || File(getDatabaseWalPath(type)).length() < 1 * 1024
 
-    //迭代删除文件夹里的内容(不包括文件夹)
-    fun deleteDir(dirPath: String, notDel: String) {
+    //迭代删除文件夹里的内容
+    fun deleteDir(dirPath: String, notDel: List<String>) {
         val file = File(dirPath)
-        if (file.isFile && file.path != notDel) {
+        if (file.isFile && !notDel.contains(file.path)) {
             Log.e(LOG_TAG, file.path)
             file.delete()
         } else {
@@ -55,8 +53,8 @@ object FileUtil {
         }
     }
 
-    fun save(input: InputStream, output: File){
-        //写入文件
+    //保存文件
+    fun save(input: InputStream, output: File) {
         val out = FileOutputStream(output)
         val byte = ByteArray(1024 * 4)
         var line: Int
@@ -68,18 +66,4 @@ object FileUtil {
         input.close()
     }
 
-    /**
-     * 得到资源文件中图片的Uri
-     * @param context 上下文对象
-     * @param id 资源id
-     * @return Uri
-     */
-    fun getUriFromDrawableRes(context: Context, id: Int): Uri? {
-        val resources: Resources = context.resources
-        val path = (ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
-                + resources.getResourcePackageName(id) + "/"
-                + resources.getResourceTypeName(id) + "/"
-                + resources.getResourceEntryName(id))
-        return Uri.parse(path)
-    }
 }

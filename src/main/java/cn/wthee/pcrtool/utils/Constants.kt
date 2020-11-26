@@ -6,8 +6,8 @@ object Constants {
     const val WEBP = ".webp"
 
     //接口地址
-    const val RESOURCE_URL = "https://redive.estertion.win/"
-    const val DATABASE_URL = "http://wthee.xyz/"
+    const val RESOURCE_URL = "http://wthee.xyz/resource/"
+    const val DATABASE_URL = "http://wthee.xyz/db/"
     const val API_URL = "http://wthee.xyz:8847/api/"
 
     //数据库中版
@@ -20,6 +20,7 @@ object Constants {
     const val DATABASE_Name = "redive_cn.db"
     const val DATABASE_WAL = "redive_cn.db-wal"
     const val DATABASE_VERSION_URL = "last_version_cn.json"
+    const val DATABASE_NEWS = "news.db"
 
     //角色卡片接口
     const val CHARACTER_URL = RESOURCE_URL + "card/profile/"
@@ -51,9 +52,9 @@ object Constants {
 
     //本地储存
     const val SP_DATABASE_VERSION = "database_version"
-    const val SP_DATABASE_VERSION_JP = "database_version_jp"
-    const val SP_SORT_TYPE = "sort_type"
-    const val SP_SORT_ASC = "sort_asc"
+    const val SP_DATABASE_HASH = "database_hash"
+    const val SP_DATABASE_VERSION_JP = "database_hash_jp"
+    const val SP_DATABASE_HASH_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
     const val SP_STAR_EQUIP = "star_equip"
 

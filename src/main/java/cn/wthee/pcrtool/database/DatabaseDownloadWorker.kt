@@ -8,13 +8,12 @@ import android.os.Build
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.edit
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.service.DatabaseService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
@@ -40,35 +39,33 @@ class DatabaseDownloadWorker(
     private val folderPath = FileUtil.getDatabaseDir()
 
     companion object {
-        const val KEY_INPUT_URL = "KEY_INPUT_URL"
         const val KEY_VERSION = "KEY_VERSION"
+        const val KEY_HASH = "KEY_HASH"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
         const val KEY_FROM_SETTING = "KEY_FROM_SETTING"
     }
 
     override suspend fun doWork(): Result = coroutineScope {
         val inputData: Data = inputData
-        //下载地址
-        val inputUrl = inputData.getString(KEY_INPUT_URL) ?: return@coroutineScope Result.failure()
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
+        val hash = inputData.getString(KEY_HASH) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         val fromSetting = inputData.getInt(KEY_FROM_SETTING, -1)
         setForegroundAsync(createForegroundInfo())
-        return@coroutineScope download(inputUrl, version, type, fromSetting)
+        return@coroutineScope download(DatabaseVersion(version, hash), type, fromSetting)
     }
 
 
     private fun download(
-        inputUrl: String,
-        version: String,
+        version: DatabaseVersion,
         type: Int,
         fromSetting: Int = -1
     ): Result {
         try {
             //创建Retrofit服务
             val service = ApiHelper.createWithClient(
-                DatabaseService::class.java, inputUrl,
+                DatabaseService::class.java, Constants.DATABASE_URL,
                 ApiHelper.downloadClientBuild(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
@@ -105,7 +102,10 @@ class DatabaseDownloadWorker(
             val dbZipPath = FileUtil.getDatabaseZipPath(type)
             val db = File(dbZipPath)
             if (db.exists()) {
-                FileUtil.deleteDir(folderPath, dbZipPath)
+                FileUtil.deleteDir(
+                    folderPath,
+                    arrayListOf(dbZipPath, FileUtil.getNewsDatabasePath())
+                )
             }
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
@@ -115,15 +115,7 @@ class DatabaseDownloadWorker(
             UnzippedUtil.deCompress(db, true)
             notificationManager.cancelAll()
             //更新数据库版本号
-            sp.edit {
-                putString(
-                    if (type == 1)
-                        Constants.SP_DATABASE_VERSION
-                    else
-                        Constants.SP_DATABASE_VERSION_JP,
-                    version
-                )
-            }
+            DatabaseUpdater.updateLocalDataBaseVersion(version)
             //通知更新数据
             if (fromSetting == 0 || fromSetting == 1) {
                 CharacterListFragment.handler.sendEmptyMessage(2)
@@ -139,6 +131,7 @@ class DatabaseDownloadWorker(
             MainScope().launch {
                 ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
             }
+            notificationManager.cancelAll()
             return Result.failure()
         }
     }

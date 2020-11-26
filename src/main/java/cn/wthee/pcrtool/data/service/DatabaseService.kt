@@ -10,10 +10,10 @@ import retrofit2.http.Url
 
 interface DatabaseService {
     //下载数据库文件
-    @GET("db/{file}")
+    @GET("{file}")
     fun getDb(@Path("file") file: String): Call<ResponseBody>
 
-    //获取数据库版本https://redive.estertion.win/last_version_cn.json
+    //获取数据库版本
     @GET
-    fun getDbVersion(@Url url: String): Call<DatabaseVersion>
+    suspend fun getDbVersion(@Url url: String): DatabaseVersion
 }

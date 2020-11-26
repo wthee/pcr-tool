@@ -20,44 +20,52 @@
         <action
             android:id="@+id/action_containerFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit" />
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_containerFragment_to_toolLevelFragment"
             app:destination="@id/toolLevelFragment"
-            app:enterAnim="@anim/fragment_enter_tool"
-            app:exitAnim="@anim/fragment_exit_tool"
-            app:popEnterAnim="@anim/fragment_popenter_tool"
-            app:popExitAnim="@anim/fragment_popexit_tool" />
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_containerFragment_to_toolPvpFragment"
             app:destination="@id/toolPvpFragment"
-            app:enterAnim="@anim/fragment_enter_tool"
-            app:exitAnim="@anim/fragment_exit_tool"
-            app:popEnterAnim="@anim/fragment_popenter_tool"
-            app:popExitAnim="@anim/fragment_popexit_tool" />
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_containerFragment_to_enemyListFragment"
             app:destination="@id/enemyListFragment"
-            app:enterAnim="@anim/fragment_enter_tool"
-            app:exitAnim="@anim/fragment_exit_tool"
-            app:popEnterAnim="@anim/fragment_popenter_tool"
-            app:popExitAnim="@anim/fragment_popexit_tool" />
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_containerFragment_to_toolGachaFragment"
             app:destination="@id/toolGachaFragment"
-            app:enterAnim="@anim/fragment_enter_tool"
-            app:exitAnim="@anim/fragment_exit_tool"
-            app:popEnterAnim="@anim/fragment_popenter_tool"
-            app:popExitAnim="@anim/fragment_popexit_tool" />
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_containerFragment_self"
-            app:destination="@id/containerFragment" />
+            app:destination="@id/containerFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_containerFragment_to_toolNewsFragment"
-            app:destination="@id/toolNewsFragment" />
+            app:destination="@id/toolNewsFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
 
     </fragment>
 

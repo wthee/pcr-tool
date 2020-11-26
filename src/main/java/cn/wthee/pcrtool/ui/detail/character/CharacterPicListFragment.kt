@@ -123,5 +123,4 @@ class CharacterPicListFragment : Fragment() {
         }
     }
 
-
 }

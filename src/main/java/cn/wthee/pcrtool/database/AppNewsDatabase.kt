@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.data.NewsDao
 import cn.wthee.pcrtool.data.RemoteKeyDao
 import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.data.entity.RemoteKey
+import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
 
 
 @Database(
@@ -41,7 +42,7 @@ abstract class AppNewsDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 MyApplication.context,
                 AppNewsDatabase::class.java,
-                "news_db"
+                DATABASE_NEWS
             ).fallbackToDestructiveMigration().build()
         }
     }

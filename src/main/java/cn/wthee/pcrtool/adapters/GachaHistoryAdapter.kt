@@ -3,10 +3,13 @@ package cn.wthee.pcrtool.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.GachaInfo
 import cn.wthee.pcrtool.databinding.ItemGachaBinding
 
@@ -36,6 +39,8 @@ class GachaHistoryAdapter(
         fun bind(gacha: GachaInfo) {
             //设置数据
             binding.apply {
+                root.animation =
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
                 //卡池名
                 gachaName.text = gacha.gacha_name
                 //角色图片
