@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.MainActivity
@@ -22,9 +21,7 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.transition.Hold
-import kotlin.math.abs
 
 
 class CharacterBasicInfoFragment : Fragment() {
@@ -119,9 +116,6 @@ class CharacterBasicInfoFragment : Fragment() {
     //点击事件
     private fun setListener() {
         binding.apply {
-            toolbar.setNavigationOnClickListener { view ->
-                view.findNavController().navigateUp()
-            }
             rightIcon.setOnClickListener {
                 isLoved = !isLoved
                 setLove(isLoved)
@@ -149,40 +143,40 @@ class CharacterBasicInfoFragment : Fragment() {
                 }
 
             }
-            //toolbar 展开折叠监听
-            appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                when {
-                    //展开
-                    verticalOffset == 0 -> {
-                        rightIcon.visibility = View.GONE
-                        binding.toolTitle.setTextColor(
-                            resources.getColor(
-                                R.color.colorAlpha,
-                                null
-                            )
-                        )
-                    }
-                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
-                        rightIcon.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
-                        rightIcon.visibility = View.VISIBLE
-                        binding.toolTitle.setTextColor(
-                            resources.getColor(
-                                R.color.colorPrimary,
-                                null
-                            )
-                        )
-                    }
-                    else -> {
-                        if (rightIcon.visibility == View.VISIBLE) rightIcon.visibility = View.GONE
-                        binding.toolTitle.setTextColor(
-                            resources.getColor(
-                                R.color.colorAlpha,
-                                null
-                            )
-                        )
-                    }
-                }
-            })
+            //TODO toolbar 展开折叠监听
+//            appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+//                when {
+//                    //展开
+//                    verticalOffset == 0 -> {
+//                        rightIcon.visibility = View.GONE
+//                        binding.toolTitle.setTextColor(
+//                            resources.getColor(
+//                                R.color.colorAlpha,
+//                                null
+//                            )
+//                        )
+//                    }
+//                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
+//                        rightIcon.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
+//                        rightIcon.visibility = View.VISIBLE
+//                        binding.toolTitle.setTextColor(
+//                            resources.getColor(
+//                                R.color.colorPrimary,
+//                                null
+//                            )
+//                        )
+//                    }
+//                    else -> {
+//                        if (rightIcon.visibility == View.VISIBLE) rightIcon.visibility = View.GONE
+//                        binding.toolTitle.setTextColor(
+//                            resources.getColor(
+//                                R.color.colorAlpha,
+//                                null
+//                            )
+//                        )
+//                    }
+//                }
+//            })
 
             //fab点击监听
             fabLoveCbi.setOnClickListener {
@@ -217,11 +211,11 @@ class CharacterBasicInfoFragment : Fragment() {
         //文本数据
         binding.apply {
             unitId.text = uid.toString()
-            toolTitle.text =
-                if (characterPro.actualName.isEmpty())
-                    characterPro.name
-                else
-                    characterPro.actualName
+//            toolTitle.text =
+//                if (characterPro.actualName.isEmpty())
+//                    characterPro.name
+//                else
+//                    characterPro.actualName
             catah.text = characterPro.catchCopy
             name.text = characterPro.getNameF()
             nameExtra.text = characterPro.getNameL()

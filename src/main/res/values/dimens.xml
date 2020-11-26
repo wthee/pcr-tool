@@ -27,6 +27,7 @@
     <dimen name="xm_margin">12dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
+    <dimen name="right_icon_margin">11dp</dimen>
     <dimen name="xs_padding">3dp</dimen>
     <dimen name="s_padding">6dp</dimen>
     <dimen name="m_padding">12dp</dimen>

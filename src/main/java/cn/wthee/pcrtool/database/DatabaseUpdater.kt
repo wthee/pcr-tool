@@ -25,7 +25,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
 
-//TODO 优化判断逻辑
+
 object DatabaseUpdater {
 
     private val mContext = MyApplication.context
