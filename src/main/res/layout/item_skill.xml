@@ -44,7 +44,7 @@
         android:adjustViewBounds="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/name"
-        app:srcCompat="@drawable/unknow_gray"
+        app:srcCompat="@drawable/unknown_gray"
         tools:src="@drawable/unknown_gray" />
 
     <com.google.android.material.textview.MaterialTextView

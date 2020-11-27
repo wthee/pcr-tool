@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pvp_result_toolbar"
-        tools:context=".ui.tool.pvp.ToolPvpResultDialogFragment"
+        tools:context=".ui.tool.pvp.PvpResultDialogFragment"
         tools:itemCount="3"
         tools:listitem="@layout/item_pvp_result" />
 

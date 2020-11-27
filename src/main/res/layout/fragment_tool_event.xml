@@ -5,21 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_color"
-    android:gravity="center"
     android:fitsSystemWindows="true"
+    android:gravity="center"
     android:orientation="vertical">
 
     <include
-        android:id="@+id/tool_gacha"
+        android:id="@+id/tool_event"
         layout="@layout/view_tool_head" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/gacha_list"
+        android:id="@+id/event_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorAlpha"
         android:orientation="vertical"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_gacha" />
+        tools:listitem="@layout/item_event_data" />
 
 </LinearLayout>

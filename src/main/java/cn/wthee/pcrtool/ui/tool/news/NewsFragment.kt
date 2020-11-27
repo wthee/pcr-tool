@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
 import com.google.android.material.tabs.TabLayoutMediator
 
 
-class ToolNewsFragment : Fragment() {
+class NewsFragment : Fragment() {
 
     private lateinit var binding: FragmentToolNewsBinding
 
@@ -26,7 +26,7 @@ class ToolNewsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         FabHelper.addBackFab()
         binding = FragmentToolNewsBinding.inflate(inflater, container, false)
         //设置头部
@@ -51,9 +51,9 @@ class ToolNewsFragment : Fragment() {
                     tab.text = getString(R.string.db_cn)
                     tab.view.setOnClickListener {
                         if (currentPage == position) {
-                            val view = binding.viewPager.getChildAt(position)
-                            view.findViewById<RecyclerView>(R.id.news_list)
-                                .smoothScrollToPosition(0)
+                            val view = adapter.mFragments[position].view
+                            view?.findViewById<RecyclerView>(R.id.news_list)
+                                ?.smoothScrollToPosition(0)
                         }
                     }
                 }
@@ -61,9 +61,9 @@ class ToolNewsFragment : Fragment() {
                     tab.text = getString(R.string.db_tw)
                     tab.view.setOnClickListener {
                         if (currentPage == position) {
-                            val view = binding.viewPager.getChildAt(position)
-                            view.findViewById<RecyclerView>(R.id.news_list)
-                                .smoothScrollToPosition(0)
+                            val view = adapter.mFragments[position].view
+                            view?.findViewById<RecyclerView>(R.id.news_list)
+                                ?.smoothScrollToPosition(0)
                         }
                     }
                 }
@@ -71,9 +71,9 @@ class ToolNewsFragment : Fragment() {
                     tab.text = getString(R.string.db_jp)
                     tab.view.setOnClickListener {
                         if (currentPage == position) {
-                            val view = binding.viewPager.getChildAt(position)
-                            view.findViewById<RecyclerView>(R.id.news_list)
-                                .smoothScrollToPosition(0)
+                            val view = adapter.mFragments[position].view
+                            view?.findViewById<RecyclerView>(R.id.news_list)
+                                ?.smoothScrollToPosition(0)
                         }
                     }
                 }

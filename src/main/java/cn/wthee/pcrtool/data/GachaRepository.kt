@@ -4,7 +4,7 @@ package cn.wthee.pcrtool.data
 //怪物数据Repository
 class GachaRepository(private val gachaDao: GachaDao) {
 
-    //获取怪物信息
+    //获取卡池信息
     suspend fun getGachaHistory() = gachaDao.getGachaHistory()
 
     companion object {

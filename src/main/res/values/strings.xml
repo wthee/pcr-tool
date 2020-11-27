@@ -108,6 +108,7 @@
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_enemy">怪物信息</string>
     <string name="tool_gacha">卡池记录</string>
+    <string name="tool_event">活动记录</string>
     <string name="pre">✦ </string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
     <string name="pcrdfans_com">数据来源 pcrdfans</string>

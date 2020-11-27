@@ -11,14 +11,14 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class ToolPvpCharacterPageFragment : Fragment() {
+class PvpPageFragment : Fragment() {
 
     private val POSITION = "positon"
     private val FLOAT = "float"
 
     companion object {
         fun getInstance(position: Int, isFloatWindow: Boolean) =
-            ToolPvpCharacterPageFragment().apply {
+            PvpPageFragment().apply {
                 arguments = Bundle().apply {
                     putInt(POSITION, position)
                     putSerializable(FLOAT, isFloatWindow)
@@ -50,18 +50,18 @@ class ToolPvpCharacterPageFragment : Fragment() {
 
             adapter.submitList(
                 when (position) {
-                    1 -> ToolPvpFragment.character1
-                    2 -> ToolPvpFragment.character2
-                    3 -> ToolPvpFragment.character3
+                    1 -> PvpFragment.character1
+                    2 -> PvpFragment.character2
+                    3 -> PvpFragment.character3
                     else -> null
                 }
             ) {
                 try {
-                    ToolPvpFragment.progressBar.visibility = View.GONE
+                    PvpFragment.progressBar.visibility = View.GONE
                 } catch (e: Exception) {
                 }
                 try {
-                    ToolPvpService.progressBar.visibility = View.GONE
+                    PvpService.progressBar.visibility = View.GONE
                 } catch (e: Exception) {
                 }
             }

@@ -20,7 +20,7 @@ class GachaFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         FabHelper.addBackFab()
         binding = FragmentToolGachaBinding.inflate(inflater, container, false)
         val adapter = GachaHistoryAdapter(parentFragmentManager)

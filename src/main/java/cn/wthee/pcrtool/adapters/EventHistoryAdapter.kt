@@ -4,23 +4,20 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.view.GachaInfo
-import cn.wthee.pcrtool.databinding.ItemGachaBinding
+import cn.wthee.pcrtool.data.entity.EventStoryData
+import cn.wthee.pcrtool.databinding.ItemEventDataBinding
 
 
-class GachaHistoryAdapter(
-    private val manager: FragmentManager
-) :
-    ListAdapter<GachaInfo, GachaHistoryAdapter.ViewHolder>(GachaDiffCallback()) {
+class EventHistoryAdapter :
+    ListAdapter<EventStoryData, EventHistoryAdapter.ViewHolder>(EventDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemGachaBinding.inflate(
+            ItemEventDataBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -32,48 +29,37 @@ class GachaHistoryAdapter(
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val binding: ItemGachaBinding) :
+    inner class ViewHolder(private val binding: ItemEventDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(gacha: GachaInfo) {
+        fun bind(event: EventStoryData) {
             //设置数据
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
                 //卡池名
-                gachaName.text = gacha.gacha_name
-                //角色图片
-                val adapter = GachaListAdapter(manager)
-                gachaIcons.adapter = adapter
-                adapter.submitList(gacha.getUnits())
+                eventName.text = event.title
                 //起止日期
-                gachaDate.text = "${gacha.start_time.subSequence(0, 10)} ~ ${
-                    gacha.end_time.subSequence(
-                        0,
-                        10
-                    )
-                }"
-                //卡池描述
-                gachaDesc.text = gacha.getDesc()
+                eventDate.text = event.start_time.subSequence(0, 10)
             }
         }
     }
 
 }
 
-private class GachaDiffCallback : DiffUtil.ItemCallback<GachaInfo>() {
+private class EventDiffCallback : DiffUtil.ItemCallback<EventStoryData>() {
 
     override fun areItemsTheSame(
-        oldItem: GachaInfo,
-        newItem: GachaInfo
+        oldItem: EventStoryData,
+        newItem: EventStoryData
     ): Boolean {
-        return oldItem.gacha_id == newItem.gacha_id
+        return oldItem.story_group_id == newItem.story_group_id
     }
 
     override fun areContentsTheSame(
-        oldItem: GachaInfo,
-        newItem: GachaInfo
+        oldItem: EventStoryData,
+        newItem: EventStoryData
     ): Boolean {
         return oldItem == newItem
     }

@@ -4,19 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/s_margin"
-    android:layout_marginEnd="@dimen/s_margin"
-    android:layout_marginBottom="@dimen/xm_margin"
+    android:layout_marginStart="@dimen/xm_margin"
+    android:layout_marginEnd="@dimen/xm_margin"
+    android:layout_marginBottom="@dimen/m_margin"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/card_radius">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingTop="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:paddingBottom="@dimen/xm_padding">
+        android:padding="@dimen/s_padding">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/gacha_name"

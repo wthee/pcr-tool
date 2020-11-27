@@ -110,6 +110,10 @@ class MainPagerFragment : Fragment() {
                             popupMenu.dismiss()
                             findNavController().navigate(R.id.action_containerFragment_to_toolGachaFragment)
                         }
+                        toolEvent.setOnClickListener {
+                            popupMenu.dismiss()
+                            findNavController().navigate(R.id.action_containerFragment_to_eventFragment)
+                        }
                     }
                 }
             }

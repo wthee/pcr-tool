@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.ui.tool.news.ToolNewsListFragment
 
 class NewsListPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    private val mFragments: SparseArray<Fragment> = SparseArray()
+    val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
         mFragments.put(0, ToolNewsListFragment.newInstance(2))

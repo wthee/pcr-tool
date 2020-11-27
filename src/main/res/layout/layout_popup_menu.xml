@@ -87,10 +87,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/m_margin"
                 android:foreground="?selectableItemBackgroundBorderless"
-                android:layout_marginBottom="@dimen/s_margin"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="@dimen/xm_padding"
-                android:gravity="center_vertical"
                 android:paddingEnd="@dimen/xm_padding">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -105,6 +104,36 @@
                     android:layout_marginStart="@dimen/m_margin"
                     android:layout_weight="1"
                     android:text="@string/tool_gacha"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textColor="@color/colorPrimary" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tool_event"
+                style="@style/Ripple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginBottom="@dimen/s_margin"
+                android:foreground="?selectableItemBackgroundBorderless"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/xm_padding"
+                android:paddingEnd="@dimen/xm_padding">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/menu_icon"
+                    android:layout_height="@dimen/menu_icon"
+                    android:src="@drawable/ic_gacha"
+                    android:tint="@color/colorPrimary" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/m_margin"
+                    android:layout_weight="1"
+                    android:text="@string/tool_event"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:textColor="@color/colorPrimary" />
 

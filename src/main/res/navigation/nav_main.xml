@@ -62,6 +62,9 @@
             app:exitAnim="@anim/tool_open_exit"
             app:popEnterAnim="@anim/tool_close_enter"
             app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_containerFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
 
     </fragment>
 
@@ -92,12 +95,12 @@
         tools:layout="@layout/fragment_tool_enemy" />
     <fragment
         android:id="@+id/toolLevelFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.level.ToolLevelFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.level.LevelFragment"
         android:label="ToolLevelFragment"
         tools:layout="@layout/fragment_tool_level" />
     <fragment
         android:id="@+id/toolPvpFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpFragment"
         android:label="ToolPvpFragment"
         tools:layout="@layout/fragment_tool_pvp" />
     <fragment
@@ -110,8 +113,12 @@
         android:label="CharacterPicListFragment" />
     <fragment
         android:id="@+id/toolNewsFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.news.ToolNewsFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.news.NewsFragment"
         android:label="fragment_tool_news"
         tools:layout="@layout/fragment_tool_news" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.event.EventFragment"
+        android:label="EventFragment" />
 
 </navigation>

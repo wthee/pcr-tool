@@ -16,7 +16,7 @@ class GachaViewModel(
     var isLoading = MutableLiveData<Boolean>()
 
 
-    //怪物基本资料
+    //卡池信息
     fun getGachaHistory() {
         isLoading.postValue(true)
         viewModelScope.launch {

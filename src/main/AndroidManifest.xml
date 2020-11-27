@@ -27,7 +27,7 @@
         tools:targetApi="n">
 
         <service
-            android:name=".ui.tool.pvp.ToolPvpService"
+            android:name=".ui.tool.pvp.PvpService"
             android:enabled="true"
             android:exported="false" />
 

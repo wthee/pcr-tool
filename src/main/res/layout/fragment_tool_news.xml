@@ -7,7 +7,7 @@
     android:background="@drawable/background_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".ui.tool.news.ToolNewsFragment">
+    tools:context=".ui.tool.news.NewsFragment">
 
     <include
         android:id="@+id/tool_news"

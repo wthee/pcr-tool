@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.data.model.ResultData
 import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.data.view.getIds
 import cn.wthee.pcrtool.enums.Response
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
+import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.JsonObject
@@ -28,7 +28,7 @@ object MyAPIRepository {
             .getString("change_database", "1")?.toInt() ?: 1
         val region = if (databaseType == 1) 2 else 4
         json.addProperty("region", region)
-        json.add("ids", ToolPvpFragment.selects.getIds())
+        json.add("ids", PvpFragment.selects.getIds())
         val body = RequestBody.create(
             MediaType.parse("application/json; charset=utf-8"),
             json.toString()

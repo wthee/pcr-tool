@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import java.io.Serializable
 
 
-class ToolPvpFragment : Fragment() {
+class PvpFragment : Fragment() {
 
     companion object {
         var selects = getDefault()
@@ -73,7 +73,7 @@ class ToolPvpFragment : Fragment() {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
-                    ToolPvpResultDialogFragment().show(parentFragmentManager, "pvp")
+                    PvpResultDialogFragment().show(parentFragmentManager, "pvp")
                 }
             }
             pcrfan.setOnClickListener {
@@ -103,7 +103,7 @@ class ToolPvpFragment : Fragment() {
                     getOverlayPermission()
                 } else {
                     val intent =
-                        Intent(requireActivity().applicationContext, ToolPvpService::class.java)
+                        Intent(requireActivity().applicationContext, PvpService::class.java)
                     requireActivity().stopService(intent)
                     intent.putExtra("character1", character1 as Serializable)
                     intent.putExtra("character2", character2 as Serializable)

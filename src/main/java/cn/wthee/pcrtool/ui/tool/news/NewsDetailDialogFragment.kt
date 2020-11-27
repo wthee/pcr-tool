@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class ToolNewsDetailDialogFragment : BottomSheetDialogFragment() {
+class NewsDetailDialogFragment : BottomSheetDialogFragment() {
     private val REGION = "region"
     private val NEWSID = "news_id"
     private val URL = "url"
@@ -131,7 +131,7 @@ class ToolNewsDetailDialogFragment : BottomSheetDialogFragment() {
     companion object {
         @JvmStatic
         fun newInstance(region: Int, newsId: Int, url: String) =
-            ToolNewsDetailDialogFragment().apply {
+            NewsDetailDialogFragment().apply {
                 arguments = Bundle().apply {
                     putInt(REGION, region)
                     putInt(NEWSID, newsId)

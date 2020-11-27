@@ -12,8 +12,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.r6Ids
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpService
+import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment
+import cn.wthee.pcrtool.ui.tool.pvp.PvpService
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ResourcesUtil
@@ -91,7 +91,7 @@ class PvpCharacterAdapter(
                 }
                 //设置点击事件
                 root.setOnClickListener {
-                    ToolPvpFragment.selects.apply {
+                    PvpFragment.selects.apply {
                         val empty =
                             PvpCharacterData(
                                 0,
@@ -119,8 +119,8 @@ class PvpCharacterAdapter(
                         sortByDescending { it.position }
                         //更新列表
                         try {
-                            ToolPvpFragment.selectedAdapter.apply {
-                                submitList(ToolPvpFragment.selects) {
+                            PvpFragment.selectedAdapter.apply {
+                                submitList(PvpFragment.selects) {
                                     notifyDataSetChanged()
                                 }
                             }
@@ -128,8 +128,8 @@ class PvpCharacterAdapter(
 
                         }
                         try {
-                            ToolPvpService.selectedAdapter.apply {
-                                submitList(ToolPvpFragment.selects) {
+                            PvpService.selectedAdapter.apply {
+                                submitList(PvpFragment.selects) {
                                     notifyDataSetChanged()
                                 }
                             }

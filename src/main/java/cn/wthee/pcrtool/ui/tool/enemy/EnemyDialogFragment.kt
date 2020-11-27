@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.databinding.FragmentEnemyDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToolbarUtil
+import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class EnemyDialogFragment : CommonBasicDialogFragment() {

@@ -41,7 +41,7 @@ class ContainerFragment() :
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCommonBottomSheetBinding.inflate(inflater, container, false)
         when (page) {
             PageType.CAHRACTER_SKILL -> {

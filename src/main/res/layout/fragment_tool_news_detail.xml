@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:minHeight="@dimen/card_height"
     android:orientation="vertical"
-    tools:context=".ui.tool.news.ToolNewsDetailDialogFragment">
+    tools:context=".ui.tool.news.NewsDetailDialogFragment">
 
     <ProgressBar
         android:id="@+id/loading"

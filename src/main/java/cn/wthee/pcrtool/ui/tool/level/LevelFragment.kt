@@ -17,7 +17,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class ToolLevelFragment : Fragment() {
+class LevelFragment : Fragment() {
 
     private lateinit var binding: FragmentToolLevelBinding
     private val sharedViewModel by activityViewModels<CharacterViewModel> {

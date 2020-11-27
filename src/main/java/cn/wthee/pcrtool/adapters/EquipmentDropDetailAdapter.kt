@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.data.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropDetailBinding
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
+import coil.load
 
 
 class EquipmentDropDetailAdapter(private val eid: Int) :

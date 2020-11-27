@@ -4,10 +4,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.CharacterDao
-import cn.wthee.pcrtool.data.EnemyDao
-import cn.wthee.pcrtool.data.EquipmentDao
-import cn.wthee.pcrtool.data.GachaDao
+import cn.wthee.pcrtool.data.*
 import cn.wthee.pcrtool.data.entity.*
 import cn.wthee.pcrtool.data.entityjp.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
@@ -46,8 +43,10 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         ItemDataJP::class,
         CharacterStoryStatus::class,
         CharacterType::class,
+        EventStoryData::class,
+        EventStoryDetail::class,
     ],
-    version = 18,
+    version = 20,
     exportSchema = false
 )
 abstract class AppDatabaseJP : RoomDatabase() {
@@ -56,6 +55,7 @@ abstract class AppDatabaseJP : RoomDatabase() {
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getEnemyDao(): EnemyDao
     abstract fun getGachaDao(): GachaDao
+    abstract fun getEventDao(): EventDao
 
     companion object {
 

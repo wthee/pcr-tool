@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
+import coil.load
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.launch
 

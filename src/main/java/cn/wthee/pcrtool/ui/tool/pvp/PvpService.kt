@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.enums.Response
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment.Companion.selects
+import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.NotificationUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -31,7 +31,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class ToolPvpService : Service() {
+class PvpService : Service() {
 
     companion object {
         lateinit var progressBar: ProgressBar
@@ -176,7 +176,7 @@ class ToolPvpService : Service() {
 //            }
             //返回
             back.setOnClickListener {
-                if (this@ToolPvpService::job.isLateinit) {
+                if (this@PvpService::job.isLateinit) {
                     if (!job.isCancelled) {
                         job.cancel()
                     }
