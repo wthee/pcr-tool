@@ -35,7 +35,7 @@ class EventFragment : Fragment() {
 
         //设置头部
         binding.toolEvent.apply {
-            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_gacha))
+            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_event))
             toolTitle.text = getString(R.string.tool_event)
         }
 

@@ -125,7 +125,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/menu_icon"
                     android:layout_height="@dimen/menu_icon"
-                    android:src="@drawable/ic_gacha"
+                    android:src="@drawable/ic_event"
                     android:tint="@color/colorPrimary" />
 
                 <com.google.android.material.textview.MaterialTextView
