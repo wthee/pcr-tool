@@ -54,7 +54,7 @@ class MainPagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         prepareTransitions()
@@ -65,7 +65,7 @@ class MainPagerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         try {
-            MainActivity.isHome = true
+            MainActivity.pageLevel = 0
             //刷新收藏
             val vh = CharacterListFragment.characterList.findViewHolderForAdapterPosition(
                 MainActivity.currentCharaPosition

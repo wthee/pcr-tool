@@ -16,8 +16,8 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/m_margin"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
         app:cardCornerRadius="@dimen/card_radius">
 
         <androidx.recyclerview.widget.RecyclerView

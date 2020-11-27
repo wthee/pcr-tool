@@ -51,7 +51,7 @@ class CharacterPagerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         //添加返回fab
         FabHelper.addBackFab()

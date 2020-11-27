@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.viewpager.CharacterPicPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ImageDownloadUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import coil.imageLoader
@@ -48,8 +48,9 @@ class CharacterPicListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
+        FabHelper.addBackFab(2)
         binding.apply {
             //初始化列表
             endlessScrollAdapter = CharacterPicPagerAdapter(childFragmentManager, lifecycle)
@@ -116,10 +117,6 @@ class CharacterPicListFragment : Fragment() {
                     ToastUtil.short("请等待图片加载完成~")
                 }
             }
-        }
-        //返回
-        fabBack.setOnClickListener {
-            findNavController().navigateUp()
         }
     }
 

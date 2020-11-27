@@ -3,7 +3,7 @@
 
     <Transition
         motion:constraintSetEnd="@+id/end"
-        motion:constraintSetStart="@+id/start"
+        motion:constraintSetStart="@id/start"
         motion:duration="300"
         motion:motionInterpolator="easeInOut">
 
@@ -12,7 +12,7 @@
     <ConstraintSet android:id="@+id/start">
 
         <Constraint
-            android:id="@+id/setting"
+            android:id="@id/setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
@@ -22,7 +22,7 @@
             motion:layout_constraintEnd_toEndOf="parent"/>
 
         <Constraint
-            android:id="@+id/love"
+            android:id="@id/love"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
@@ -32,7 +32,7 @@
             motion:layout_constraintEnd_toEndOf="parent" />
 
         <Constraint
-            android:id="@+id/search"
+            android:id="@id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
@@ -42,7 +42,7 @@
             motion:layout_constraintEnd_toEndOf="parent" />
 
         <Constraint
-            android:id="@+id/filter"
+            android:id="@id/filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"

@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainPagerFragment
@@ -217,7 +218,7 @@ class CharacterListFragment : Fragment() {
                     try {
                         findNavController().popBackStack(R.id.containerFragment, true)
                         findNavController().navigate(R.id.containerFragment)
-                        MainActivity.isHome = true
+                        pageLevel = 0
                         MainActivity.fabMain.setImageResource(R.drawable.ic_function)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())

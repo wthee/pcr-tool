@@ -29,7 +29,7 @@ class EnemyListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         FabHelper.addBackFab()
         binding = FragmentToolEnemyBinding.inflate(inflater, container, false)
         viewModel =

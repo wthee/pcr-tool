@@ -83,9 +83,6 @@ dependencies {
     def permissionx_version = '1.4.0'
     implementation "com.permissionx.guolindev:permissionx:$permissionx_version"
 
-    //Photoview
-    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
-
     //Retrofit
     def retrofit_version = '2.9.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

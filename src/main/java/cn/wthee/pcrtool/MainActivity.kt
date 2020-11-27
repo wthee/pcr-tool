@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEachIndexed
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         var sortType = SortType.SORT_DATE
         var sortAsc = Constants.SORT_ASC
         var canBack = true
-        var isHome = true
+        var pageLevel = 0
         var isForeground = true
         var mHeight = 0
 
@@ -142,8 +143,8 @@ class MainActivity : AppCompatActivity() {
         //点击展开
         val motion = binding.motionLayout
         fabMain.setOnClickListener {
-            if (!isHome) {
-                FabHelper.goBack(this)
+            if (pageLevel > 0) {
+                goBack(this)
             } else {
                 if (motion.currentState == R.id.start) {
                     openFab()
@@ -409,4 +410,13 @@ class MainActivity : AppCompatActivity() {
         }
         fabMain.setImageResource(R.drawable.ic_back)
     }
+
+    private fun goBack(activity: FragmentActivity) {
+        if (canBack && pageLevel > 0) {
+            if (pageLevel == 1) FabHelper.setIcon(R.drawable.ic_function)
+            activity.findNavController(R.id.nav_host_fragment).navigateUp()
+            pageLevel--
+        }
+    }
+
 }
