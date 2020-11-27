@@ -77,7 +77,7 @@ class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
                 //图标
                 val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.unknow_gray)
+                    error(R.drawable.unknown_gray)
                 }
                 //描述
                 desc.text = equip.getDesc()

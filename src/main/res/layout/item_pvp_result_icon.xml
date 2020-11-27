@@ -6,4 +6,4 @@
     android:layout_height="wrap_content"
     android:adjustViewBounds="true"
     android:layout_margin="@dimen/xs_margin"
-    tools:src="@drawable/unknow_gray" />
+    tools:src="@drawable/unknown_gray" />

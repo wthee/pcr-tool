@@ -13,7 +13,6 @@ import cn.wthee.pcrtool.data.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropDetailBinding
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import coil.load
 
 
 class EquipmentDropDetailAdapter(private val eid: Int) :
@@ -44,8 +43,8 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.eid + WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.unknow_gray)
+                    error(R.drawable.unknown_gray)
+                    placeholder(R.drawable.unknown_gray)
                 }
                 if (eid == equip.eid) {
                     odd.setTextColor(Color.RED)

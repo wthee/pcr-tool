@@ -15,7 +15,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import coil.load
 import kotlinx.coroutines.launch
 
 
@@ -57,8 +56,8 @@ class CharacterDropDialogFragment : CommonBasicDialogFragment() {
             }
         val picUrl = Constants.ITEM_URL + (uid / 100 + 30000) + Constants.WEBP
         binding.dropIcon.load(picUrl) {
-            placeholder(R.drawable.unknow_gray)
-            error(R.drawable.unknow_gray)
+            placeholder(R.drawable.unknown_gray)
+            error(R.drawable.unknown_gray)
         }
         lifecycleScope.launch {
             //初始化列表

@@ -28,15 +28,18 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <!-- 自定义弹出/关闭动画   -->
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <!-- 主题设置   -->
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
+    <!--  背景设置  -->
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/dialog_background</item>
     </style>

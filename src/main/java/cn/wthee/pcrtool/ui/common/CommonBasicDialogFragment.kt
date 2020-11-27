@@ -8,10 +8,7 @@ open class CommonBasicDialogFragment : BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dialog?.window?.apply {
-            attributes?.windowAnimations = R.style.DialogAnimation
-//            setBackgroundDrawableResource(R.drawable.dialog_background)
-        }
-
+        // 设置动画
+        dialog?.window?.attributes?.windowAnimations = R.style.DialogAnimation
     }
 }

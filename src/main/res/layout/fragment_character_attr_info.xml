@@ -33,7 +33,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/level"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/unknow_gray" />
+                tools:src="@drawable/unknown_gray" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/level"

@@ -12,7 +12,6 @@ import cn.wthee.pcrtool.databinding.FragmentEnemyDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class EnemyDialogFragment : CommonBasicDialogFragment() {
@@ -56,7 +55,7 @@ class EnemyDialogFragment : CommonBasicDialogFragment() {
                 Constants.UNIT_ICON_SHADOW_URL + enemy.getTruePrefabId()
             } + Constants.WEBP
             itemPic.load(picUrl) {
-                error(R.drawable.unknow_gray)
+                error(R.drawable.unknown_gray)
             }
             //toolbar
             ToolbarUtil(toolbar).setCenterTitle(enemy.unit_name)

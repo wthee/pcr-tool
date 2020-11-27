@@ -55,8 +55,8 @@ class EquipmentPageAdapter(
                     //加载装备图片
                     val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
                     pic.load(picUrl) {
-                        error(R.drawable.unknow_gray)
-                        placeholder(R.drawable.unknow_gray)
+                        error(R.drawable.unknown_gray)
+                        placeholder(R.drawable.unknown_gray)
                     }
                     //设置点击跳转
                     root.setOnClickListener {

@@ -15,7 +15,7 @@
         android:scaleType="centerCrop"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/unknow_gray" />
+        android:src="@drawable/unknown_gray" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"

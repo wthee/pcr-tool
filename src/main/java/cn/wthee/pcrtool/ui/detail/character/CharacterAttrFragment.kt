@@ -19,7 +19,6 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
-import coil.load
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.launch
 
@@ -73,8 +72,8 @@ class CharacterAttrFragment : Fragment() {
         id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
         val picUrl = Constants.UNIT_ICON_URL + id + Constants.WEBP
         binding.icon.load(picUrl) {
-            error(R.drawable.unknow_gray)
-            placeholder(R.drawable.unknow_gray)
+            error(R.drawable.unknown_gray)
+            placeholder(R.drawable.unknown_gray)
         }
         characterAttrViewModel.getMaxRankAndRarity(uid)
         return binding.root
@@ -177,8 +176,8 @@ class CharacterAttrFragment : Fragment() {
                     binding.uniqueEquip.root.visibility = View.VISIBLE
                     val picUrl = Constants.EQUIPMENT_URL + it.equipmentId + Constants.WEBP
                     itemPic.load(picUrl) {
-                        placeholder(R.drawable.unknow_gray)
-                        error(R.drawable.unknow_gray)
+                        placeholder(R.drawable.unknown_gray)
+                        error(R.drawable.unknown_gray)
                     }
                     //描述
                     titleDes.text =
@@ -209,8 +208,8 @@ class CharacterAttrFragment : Fragment() {
                     //加载装备图片
                     val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
                     this.load(picUrl) {
-                        error(R.drawable.unknow_gray)
-                        placeholder(R.drawable.unknow_gray)
+                        error(R.drawable.unknown_gray)
+                        placeholder(R.drawable.unknown_gray)
                     }
                     //点击跳转
                     setOnClickListener {

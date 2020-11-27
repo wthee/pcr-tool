@@ -74,7 +74,7 @@ class PvpCharacterAdapter(
                 //加载图片
                 if (data.unitId == 0) {
                     //默认
-                    val drawable = ResourcesUtil.getDrawable(R.drawable.unknow_gray)
+                    val drawable = ResourcesUtil.getDrawable(R.drawable.unknown_gray)
                     pic.setImageDrawable(drawable)
                 } else {
                     //角色

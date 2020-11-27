@@ -91,8 +91,8 @@ class EnemyListAdapter(
                     UNIT_ICON_SHADOW_URL + enemyData.getTruePrefabId()
                 } + WEBP
                 pic.load(picUrl) {
-                    error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.unknow_gray)
+                    error(R.drawable.unknown_gray)
+                    placeholder(R.drawable.unknown_gray)
                 }
                 //设置点击跳转
                 root.setOnClickListener {

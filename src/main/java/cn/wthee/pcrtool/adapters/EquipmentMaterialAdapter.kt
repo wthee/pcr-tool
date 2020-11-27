@@ -65,8 +65,8 @@ class EquipmentMaterialAdapter(
                 name.text =
                     MyApplication.context.getString(R.string.equip_count, subName, info.count)
                 pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
-                    error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.unknow_gray)
+                    error(R.drawable.unknown_gray)
+                    placeholder(R.drawable.unknown_gray)
                 }
                 //点击查看掉落地区
                 root.setOnClickListener {

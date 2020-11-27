@@ -43,7 +43,7 @@ class GachaListAdapter(
                 //角色图片
                 val picUrl = Constants.UNIT_ICON_URL + (data.id + 30) + Constants.WEBP
                 pic.load(picUrl) {
-                    placeholder(R.drawable.unknow_gray)
+                    placeholder(R.drawable.unknown_gray)
                     error(R.drawable.error)
                 }
                 //角色名

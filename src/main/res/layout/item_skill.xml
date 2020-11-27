@@ -45,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/name"
         app:srcCompat="@drawable/unknow_gray"
-        tools:src="@drawable/unknow_gray" />
+        tools:src="@drawable/unknown_gray" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/desc"
