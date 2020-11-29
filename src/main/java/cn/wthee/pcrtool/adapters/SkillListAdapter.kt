@@ -40,18 +40,20 @@ class SkillAdapter :
         fun bind(skill: CharacterSkillInfo) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.getContext()
+                val ctx = MyApplication.context
                 //加载动画
-                content.animation =
+                root.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 //装备名称
                 name.text = skill.name
                 desc.text = skill.desc
                 type.text = when (skill.skillId % 1000) {
                     1 -> "连结爆发"
+                    11 -> "连结爆发+"
                     2 -> "技能1"
                     12 -> "技能1+"
                     3 -> "技能2"
+                    13 -> "技能2+"
                     501 -> "EX技能"
                     511 -> "EX技能+"
                     101 -> "SP技能1"
@@ -63,7 +65,7 @@ class SkillAdapter :
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 itemPic.load(picUrl) {
 
-                    target() {
+                    target {
                         val bitmap = (it as BitmapDrawable).bitmap
                         //字体颜色
                         name.setTextColor(
@@ -76,7 +78,7 @@ class SkillAdapter :
                 //技能属性
                 val adapter = SkillActionAdapter()
                 actions.adapter = adapter
-                val lm = LinearLayoutManager(MyApplication.getContext())
+                val lm = LinearLayoutManager(MyApplication.context)
                 lm.orientation = LinearLayoutManager.VERTICAL
                 actions.layoutManager = lm
                 adapter.submitList(skill.actions)
@@ -99,6 +101,6 @@ class SkillDiffCallback : DiffUtil.ItemCallback<CharacterSkillInfo>() {
         oldItem: CharacterSkillInfo,
         newItem: CharacterSkillInfo
     ): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem == newItem
     }
 }

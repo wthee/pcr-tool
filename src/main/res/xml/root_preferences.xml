@@ -1,36 +1,23 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="@string/screen">
-
-        <SwitchPreferenceCompat
-            app:defaultValue="true"
-            app:iconSpaceReserved="false"
-            app:key="equip_is_list"
-            app:summaryOff="@string/equip_off"
-            app:summaryOn="@string/equip_on"
-            app:title="@string/equip_list" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
+        app:key="title_database"
         app:title="@string/data">
 
         <Preference
             app:iconSpaceReserved="false"
             app:key="force_update_db"
-            app:summary="0"
-            app:title="@string/update_db" />
+            app:summary="@string/to_download"
+            app:title="@string/redownload_db" />
 
         <ListPreference
-            android:key="change_database"
             app:defaultValue="@string/db_cn_value"
             app:entries="@array/database_type"
             app:entryValues="@array/database_type_value"
             app:iconSpaceReserved="false"
+            app:key="change_database"
             app:summary="@string/game_version_summary"
             app:title="@string/game_version" />
 
@@ -62,34 +49,19 @@
 
         <Preference
             app:iconSpaceReserved="false"
-            app:isPreferenceVisible="false"
-            app:key="clean_data"
-            app:summary="@string/clean_cache_tip"
-            app:title="@string/clean_cache" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:iconSpaceReserved="false"
-        app:title="@string/other">
-
-        <Preference
-            app:iconSpaceReserved="false"
-            app:summary="wthee"
-            app:title="@string/coolapk">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="http://www.coolapk.com/u/1975843" />
-        </Preference>
-
-        <Preference
-            app:iconSpaceReserved="false"
             app:summary="https://github.com/wthee/pcr-tool"
             app:title="@string/app_sourcce">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/wthee/pcr-tool" />
         </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="share_app"
+            app:summary="@string/share_app_sm"
+            app:title="@string/share_app" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -101,8 +73,8 @@
             app:summary="@string/data_from_hint"
             app:title="@string/data_from">
             <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://redive.estertion.win/" />
+                app:action="android.intent.action.VIEW"
+                app:data="https://redive.estertion.win/" />
         </Preference>
 
         <Preference
@@ -124,7 +96,7 @@
             app:icon="@drawable/ic_hide"
             app:key="kl"
             app:summary="@string/egg_summary"
-            app:title="@string/egg_text"></Preference>
+            app:title="@string/egg_text" />
 
     </PreferenceCategory>
 </PreferenceScreen>

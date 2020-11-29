@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/xs_margin"
+    android:background="@drawable/title_background"
+    android:paddingStart="@dimen/s_padding"
+    android:paddingEnd="@dimen/s_padding"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+    android:textColor="@color/colorWhite"
+    tools:text="@string/app_name" />

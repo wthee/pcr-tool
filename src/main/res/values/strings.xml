@@ -3,39 +3,16 @@
     <string name="birth">%s 月 %s 日</string>
     <string name="character_detail">%s / %sCM / %sKG / %d</string>
     <string name="blood">%s 型</string>
-    <string name="character_info">角色属性</string>
-    <string name="character_pic">角色原画</string>
-    <string name="event_list">装备信息</string>
-
-    <!--属性    -->
-    <string name="hp">HP</string>
-    <string name="atk">物理攻击力</string>
-    <string name="p_penetrate">物理贯穿</string>
-    <string name="magic_str">魔法攻击力</string>
-    <string name="m_penetrate">魔法贯穿</string>
-    <string name="def">物理防御力</string>
-    <string name="magic_def">魔法防御力</string>
-    <string name="p_critical">物理暴击</string>
-    <string name="dodge">回避</string>
-    <string name="m_critical">魔法暴击</string>
-    <string name="hp_recovery">HP自动回复</string>
-    <string name="tp_recovery">TP自动回复</string>
-    <string name="hp_steal">HP吸收</string>
-    <string name="hp_recovery_rate">回复量上升</string>
-    <string name="tp_recovery_rate">TP上升</string>
-    <string name="tp_reduce_rate">TP消耗减轻</string>
-    <string name="accuracy">命中</string>
-
+    <string name="unique_equip_name">%s 等级%d</string>
+    <string name="quest_name">%s-%s</string>
+    <string name="pic_index">%d / %d</string>
+    <string name="percent">%d%%</string>
+    <string name="equip_count">%s …x%d</string>
     <!-- 角色 & 装备  -->
     <string name="level">等级</string>
     <string name="rank">RANK</string>
-    <string name="rarity">星级</string>
     <string name="title_quest">什么地方</string>
-    <string name="drop_quest">掉落信息</string>
-    <string name="love_rank_up">羁绊</string>
-    <string name="name">名字</string>
     <string name="age">年龄</string>
-    <string name="limit">限定</string>
     <string name="title_height">身高</string>
     <string name="title_weight">体重</string>
     <string name="title_birth">生日</string>
@@ -57,8 +34,6 @@
     <string name="back">返回</string>
     <string name="other">其它</string>
     <string name="setting">设置</string>
-    <string name="material">装备制作素材 x %d </string>
-    <string name="material_no">装备素材</string>
     <string name="search">搜索</string>
     <string name="move">移动</string>
     <string name="cancel">取消</string>
@@ -68,16 +43,10 @@
     <string name="data_null_enemy">未找到怪物信息~</string>
 
     <!-- 设置页面   -->
-    <string name="update_db">数据库版本</string>
-    <string name="auto_update_db">自动更新数据库</string>
-    <string name="off_auto_db">已取消自动更新</string>
-    <string name="on_auto_db">打开应用时，自动检查更新数据库</string>
-    <string name="database_info">数据信息</string>
-    <string name="data">数据</string>
-    <string name="open_source">开源信息</string>
+    <string name="redownload_db">强制更新</string>
+    <string name="data">数据版本：</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
-    <string name="coolapk">酷安主页</string>
     <string name="data_from">干炸里脊资源</string>
     <string name="data_from_hint">感谢大佬提供的数据接口</string>
     <string name="shizuru_note">静流笔记</string>
@@ -86,12 +55,8 @@
     <string name="auto_update_app">自动更新应用</string>
     <string name="off_auto_app">已取消自动更新</string>
     <string name="on_auto_app">打开应用时，自动检查更新应用</string>
-    <string name="clean_cache">清除图片缓存</string>
-    <string name="clean_cache_tip">若可正常使用应用，不建议清理图片缓存</string>
-    <string name="toast_on">检查数据库版本时，显示提示消息</string>
-    <string name="toast_off">检查数据库版本时，不提示消息</string>
-    <string name="not_toast">自动更新时取消提示</string>
     <string name="db_cn">国服</string>
+    <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
     <string name="db_cn_value">1</string>
     <string name="db_jp_value">2</string>
@@ -100,14 +65,8 @@
     <string name="filter">筛选</string>
     <string name="sort">排序</string>
     <string name="title_sort">排序类型</string>
-    <string name="screen">界面</string>
-    <string name="equip_off">只显示装备图标</string>
-    <string name="equip_on">显示装备名称、描述</string>
-    <string name="equip_list">装备列表</string>
     <string name="next">确认</string>
     <string name="reset">重置</string>
-    <string name="craft0">不可合成装备（碎片、设计图等）</string>
-    <string name="craft1">可合成装备</string>
     <string name="title_tip">信息提示</string>
     <string name="position_3">后卫</string>
     <string name="pos_3">后</string>
@@ -121,12 +80,10 @@
 
 
     <string name="sorry_ue">优衣，对不起~ </string>
-    <string name="reduce">⇣</string>
-    <string name="add">⇡</string>
     <string name="before_loop">入场动作</string>
     <string name="looping">循环动作</string>
     <string name="egg_text">我啊，很幸福哦</string>
-    <string name="egg_summary">...还...还是被发现了</string>
+    <string name="egg_summary">…还…还是被发现了</string>
     <string name="sort_date">登场日期</string>
     <string name="sort_type">排序方式</string>
     <string name="sort_desc">降序</string>
@@ -138,18 +95,37 @@
     <string name="tool_pvp">竞技场查询</string>
     <string name="ys">佑树</string>
     <string name="character">角色</string>
-    <string name="pvp_search">开始查询</string>
-    <string name="pvp_select_tip">请选择防守方角色</string>
-    <string name="game_version">游戏版本</string>
-    <string name="game_version_summary">切换版本后，重新打开应用将更新数据</string>
-    <string name="change_success">切换完成</string>
-    <string name="change_success_tip">数据版本已切换，请点击关闭应用</string>
+    <string name="pvp_search">查询</string>
+    <string name="game_version">切换数据</string>
+    <string name="game_version_summary">可选择国服或日服数据</string>
+    <string name="change_success">更新完成</string>
+    <string name="change_success_tip">数据已更新，请点击关闭应用</string>
     <string name="close_app">关闭应用</string>
     <string name="close_app_too">快点关闭</string>
     <string name="title_comments">交流</string>
     <string name="title_material">所需装备：%d</string>
-    <string name="tip_scroll_for_more">滑动查看更多</string>
     <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
+    <string name="tool_gacha">卡池记录</string>
+    <string name="tool_event">活动记录</string>
+    <string name="pre">✦ </string>
+    <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
+    <string name="pcrdfans_com">数据来源 pcrdfans</string>
+    <string name="url_pcrdfans_com">https://pcrdfans.com</string>
+    <string name="share_app">分享应用</string>
+    <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
+    <string name="more">更多</string>
+    <string name="drop_info">- 掉落信息 -</string>
+    <string name="test">testtesttesttesttesttesttestttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttestestesttesttesttesttesttesttesttesttesttestttesttest</string>
+    <string name="title_all_attr_sub">- 已计算角色剧情属性 -</string>
+    <string name="title_story_attr_sub">- 相同角色所有剧情属性 -</string>
+    <string name="title_all_attr">- 人物属性 -</string>
+    <string name="title_story_attr">- 剧情属性 -</string>
+    <string name="download_pic">下载当前图片</string>
+    <string name="tool_news">最新消息</string>
+    <string name="loading">加载中...</string>
+    <string name="news_load_tip">网页加载较慢或无法加载，可尝试在浏览器中查看~</string>
+    <string name="loading_news">正在获取最新数据...</string>
+    <string name="stared">已收藏</string>
 
 </resources>

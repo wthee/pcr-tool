@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.main
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,36 +11,41 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
-import cn.wthee.pcrtool.MainActivity.Companion.sp
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterAdapter
+import cn.wthee.pcrtool.adapters.CharacterListAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.database.DatabaseUpdateHelper
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
+import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import com.google.android.material.transition.Hold
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 
 class CharacterListFragment : Fragment() {
 
     companion object {
         lateinit var characterList: RecyclerView
-        lateinit var listAdapter: CharacterAdapter
-        var characterfilterParams = FilterCharacter(
+        lateinit var listAdapter: CharacterListAdapter
+        var characterFilterParams = FilterCharacter(
             true, 0, 0, "全部"
         )
         lateinit var handler: Handler
         lateinit var guilds: ArrayList<String>
+        var r6Ids = listOf<Int>()
     }
 
     private lateinit var binding: FragmentCharacterListBinding
@@ -49,6 +55,7 @@ class CharacterListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //从次页面至CharacterPagerFragment过渡开始
         exitTransition = Hold()
     }
 
@@ -57,8 +64,6 @@ class CharacterListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
-        binding.layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
-        viewModel.isLoading.postValue(true)
         //公会列表
         guilds = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -67,22 +72,25 @@ class CharacterListFragment : Fragment() {
             list.forEach {
                 guilds.add(it.guild_name)
             }
-//            if (list.isEmpty()) {
-//                //为获取数据，说明数据异常，自动更新数据
-//                DatabaseUpdateHelper.checkDBVersion(force = true)
-//            }
             guilds.add("？？？")
+            r6Ids = viewModel.getR6Ids()
         }
         //加载数据
         init()
+        //刷新
+        binding.characterReset.apply {
+            setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
+            setColorSchemeResources(R.color.colorPrimary)
+            setOnRefreshListener {
+                reset()
+            }
+        }
         //监听数据变化
         setObserve()
-        //控件监听
-        setListener()
         //获取角色
         viewModel.getCharacters(sortType, sortAsc, "")
         //接收消息
-        handler = Handler(Handler.Callback {
+        handler = Handler(Looper.getMainLooper(), Handler.Callback {
             when (it.what) {
                 //获取版本失败
                 0 -> {
@@ -96,14 +104,14 @@ class CharacterListFragment : Fragment() {
                         Constants.BTN_OPERATE_FORCE_UPDATE_DB,
                         Constants.BTN_NOT_UPDATE_DB,
                         object : DialogListener {
-                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                            override fun onCancel(dialog: AlertDialog) {
                                 //强制更新数据库
-                                DatabaseUpdateHelper.forceUpdate()
+                                DatabaseUpdater.forceUpdate()
                                 ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
                                 dialog.dismiss()
                             }
 
-                            override fun onButtonOkClick(dialog: AlertDialog) {
+                            override fun onConfirm(dialog: AlertDialog) {
                                 dialog.dismiss()
                             }
                         }
@@ -125,14 +133,14 @@ class CharacterListFragment : Fragment() {
                         getString(R.string.close_app),
                         getString(R.string.close_app_too),
                         object : DialogListener {
-                            override fun onButtonOperateClick(dialog: AlertDialog) {
+                            override fun onCancel(dialog: AlertDialog) {
                                 requireActivity().finish()
-                                System.exit(0)
+                                exitProcess(0)
                             }
 
-                            override fun onButtonOkClick(dialog: AlertDialog) {
+                            override fun onConfirm(dialog: AlertDialog) {
                                 requireActivity().finish()
-                                System.exit(0)
+                                exitProcess(0)
                             }
                         }
                     ).show()
@@ -144,13 +152,24 @@ class CharacterListFragment : Fragment() {
         return binding.root
     }
 
+    private fun reset() {
+        characterFilterParams.initData()
+        characterFilterParams.all = true
+        sortType = SortType.SORT_DATE
+        sortAsc = false
+        viewModel.getCharacters(
+            sortType,
+            sortAsc, ""
+        )
+        binding.characterReset.isRefreshing = false
+    }
+
     //加载数据
     private fun init() {
-        listAdapter = CharacterAdapter(this@CharacterListFragment)
+        listAdapter = CharacterListAdapter(this@CharacterListFragment)
         characterList = binding.characterList
         binding.characterList.apply {
             adapter = listAdapter
-
         }
     }
 
@@ -158,45 +177,41 @@ class CharacterListFragment : Fragment() {
     //绑定observe
     private fun setObserve() {
         viewModel.apply {
-            //角色
-            if (!characters.hasObservers()) {
-                characters.observe(viewLifecycleOwner, Observer { data ->
-                    if (data != null && data.isNotEmpty()) {
-                        MainPagerFragment.tipText.visibility = View.GONE
-                        listAdapter.submitList(data) {
-                            listAdapter.filter.filter(characterfilterParams.toJsonString())
-                            sp.edit {
-                                putInt(Constants.SP_COUNT_CHARACTER, data.size)
-                            }
-                            characterList.scrollToPosition(0)
-                            MainPagerFragment.tabLayout.getTabAt(0)?.text = data.size.toString()
-                        }
-                    } else {
-                        MainPagerFragment.tipText.visibility = View.VISIBLE
+            //角色数量
+            if (!viewModel.characterCount.hasObservers()) {
+                viewModel.characterCount.observe(viewLifecycleOwner, {
+                    MainActivity.sp.edit {
+                        putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
-                    refresh.postValue(false)
-                    isLoading.postValue(false)
+                    MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
+                    MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
                 })
             }
-            //刷新
-            if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, Observer {
-                    binding.layoutRefresh.isRefreshing = it
+            //角色信息
+            if (!updateCharacter.hasObservers()) {
+                updateCharacter.observe(viewLifecycleOwner, {
+                    lifecycleScope.launch {
+                        @OptIn(ExperimentalCoroutinesApi::class)
+                        viewModel.characters.collectLatest { data ->
+                            listAdapter.submitData(data)
+                            binding.loading.root.visibility = View.GONE
+                        }
+                    }
                 })
             }
-            //加载
-            if (!isLoading.hasObservers()) {
-                isLoading.observe(viewLifecycleOwner, Observer {
-                    binding.progress.visibility = if (it) View.VISIBLE else View.GONE
+            //重置
+            if (!reset.hasObservers()) {
+                reset.observe(viewLifecycleOwner, {
+                    reset()
                 })
             }
             //重新加载
             if (!reload.hasObservers()) {
-                reload.observe(viewLifecycleOwner, Observer {
+                reload.observe(viewLifecycleOwner, {
                     try {
                         findNavController().popBackStack(R.id.containerFragment, true)
                         findNavController().navigate(R.id.containerFragment)
-                        MainActivity.isHome = true
+                        pageLevel = 0
                         MainActivity.fabMain.setImageResource(R.drawable.ic_function)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())
@@ -206,16 +221,4 @@ class CharacterListFragment : Fragment() {
         }
     }
 
-    //控件监听
-    private fun setListener() {
-        binding.apply {
-            //下拉刷新
-            layoutRefresh.setOnRefreshListener {
-                characterfilterParams.initData()
-                characterfilterParams.all = true
-                viewModel.getCharacters(sortType, sortAsc, "")
-                layoutRefresh.isRefreshing = false
-            }
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +10,9 @@ import cn.wthee.pcrtool.data.model.Result
 import cn.wthee.pcrtool.databinding.ItemPvpResultBinding
 
 
-class PvpCharacterResultAdapter :
+class PvpCharacterResultAdapter(
+    private val activity: Activity
+) :
     ListAdapter<Result, PvpCharacterResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -30,11 +33,11 @@ class PvpCharacterResultAdapter :
         fun bind(data: Result) {
             //设置数据
             binding.apply {
-                val adapter = PvpCharacterResultItemAdapter()
+                val adapter = PvpCharacterResultItemAdapter(activity)
                 atkCharacters.adapter = adapter
                 adapter.submitList(data.atk)
-                up.text = "👍\n${data.up.toString()}"
-                down.text = "👎\n${data.down.toString()}"
+                up.text = "${data.up}"
+                down.text = "${data.down}"
             }
         }
     }

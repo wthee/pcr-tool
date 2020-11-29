@@ -1,19 +1,46 @@
 package cn.wthee.pcrtool.data
 
-import androidx.room.Query
+import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.enums.SortType
+import cn.wthee.pcrtool.enums.value
 
 
 //角色数据Repository
 
 class CharacterRepository(private val characterDao: CharacterDao) {
 
-    //获取角色个人资料
-    suspend fun getInfoAndData(name: String) =
-        characterDao.getInfoAndData(name)
+    //获取角色列表所需数据
+    fun getInfoAndData(
+        sortType: SortType,
+        asc: Boolean,
+        name: String,
+        filter: FilterCharacter
+    ) = characterDao.getInfoAndData(
+        sortType.value,
+        if (asc) "asc" else "desc",
+        name,
+        filter.getPositon()[0],
+        filter.getPositon()[1],
+        filter.atk,
+        filter.guild,
+        if (filter.all) 1 else 0,
+        filter.starIds
+    )
 
-    //获取角色个人资料
-    suspend fun getInfoPro(uid: Int) =
-        characterDao.getInfoPro(uid)
+    //获取角色列表所需数据
+    suspend fun getInfoAndDataCount(name: String, filter: FilterCharacter) =
+        characterDao.getInfoAndDataCount(
+            name,
+            filter.getPositon()[0],
+            filter.getPositon()[1],
+            filter.atk,
+            filter.guild,
+            if (filter.all) 1 else 0,
+            filter.starIds
+        )
+
+    //获取角色详情数据
+    suspend fun getInfoPro(uid: Int) = characterDao.getInfoPro(uid)
 
     //根据位置获取角色
     suspend fun getCharacterByPosition(start: Int, end: Int) =
@@ -54,8 +81,16 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     suspend fun getGuilds() = characterDao.getGuilds()
 
     //角色升级经验列表
-    @Query("SELECT * FROM experience_unit")
     suspend fun getLevelExp() = characterDao.getLevelExp()
+
+    //获取已六星角色
+    suspend fun getR6Ids() = characterDao.getR6Ids()
+
+    //角色掉落
+    suspend fun getItemDropInfos(unitId: Int) = characterDao.getItemDropInfos(unitId)
+
+    //获取角色剧情属性
+    suspend fun getCharacterStoryStatus(unitId: Int) = characterDao.getCharacterStoryStatus(unitId)
 
     companion object {
 

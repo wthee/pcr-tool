@@ -3,21 +3,23 @@ package cn.wthee.pcrtool.utils
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.CharacterRepository
-import cn.wthee.pcrtool.data.EnemyRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
+import cn.wthee.pcrtool.data.EventRepository
+import cn.wthee.pcrtool.data.GachaRepository
 import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.ui.detail.character.CharacterAttrViewModelFactory
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
 import cn.wthee.pcrtool.ui.main.CharacterViewModelFactory
-import cn.wthee.pcrtool.ui.main.EnemyViewModelFactory
 import cn.wthee.pcrtool.ui.main.EquipmentViewModelFactory
+import cn.wthee.pcrtool.ui.tool.event.EventViewModelFactory
+import cn.wthee.pcrtool.ui.tool.gacha.GachaViewModelFactory
 
 
 object InjectorUtil {
     private fun getType() =
-        PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext())
+        PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
     private fun getCharacterRepository(): CharacterRepository {
@@ -40,12 +42,22 @@ object InjectorUtil {
         )
     }
 
-    private fun getEnemyRepository(): EnemyRepository {
-        return EnemyRepository.getInstance(
+    private fun getGachaRepository(): GachaRepository {
+        return GachaRepository.getInstance(
             if (getType() == 1) {
-                AppDatabase.getInstance().getEnemyDao()
+                AppDatabase.getInstance().getGachaDao()
             } else {
-                AppDatabaseJP.getInstance().getEnemyDao()
+                AppDatabaseJP.getInstance().getGachaDao()
+            }
+        )
+    }
+
+    private fun getEventRepository(): EventRepository {
+        return EventRepository.getInstance(
+            if (getType() == 1) {
+                AppDatabase.getInstance().getEventDao()
+            } else {
+                AppDatabaseJP.getInstance().getEventDao()
             }
         )
     }
@@ -86,10 +98,13 @@ object InjectorUtil {
         )
     }
 
-    fun provideEnemyViewModelFactory(): EnemyViewModelFactory {
-        val repository = getEnemyRepository()
-        return EnemyViewModelFactory(
-            repository
-        )
+    fun provideGachaViewModelFactory(): GachaViewModelFactory {
+        val repository = getGachaRepository()
+        return GachaViewModelFactory(repository)
+    }
+
+    fun provideEventViewModelFactory(): EventViewModelFactory {
+        val repository = getEventRepository()
+        return EventViewModelFactory(repository)
     }
 }

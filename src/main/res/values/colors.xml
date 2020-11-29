@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6097f2</color>
+    <color name="colorPrimary">#5690EF</color>
     <color name="colorPrimaryDark">#4585EF</color>
     <color name="colorAccent">#8BBBF1</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="colorAlphaWhite">#40FFFFFF</color>
     <color name="colorAlpha">#00FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="text">#454545</color>
     <color name="colorGray">#86EEEEEE</color>
-    <color name="colorBg">#F6F6F6</color>
-    <color name="colorGrayBlack">#E4000000</color>
-    <color name="colorAlphtBlack">#93000000</color>
-    <color name="background">#F9F9F9</color>
+    <color name="colorFg">#15000000</color>
+    <color name="colorBg">#FEFEFE</color>
+    <color name="colorAlphtBlack">#75000000</color>
+    <color name="colorAlphtWhite">#75FFFFFF</color>
     <color name="alphaPrimary">#8E9CB1</color>
-    <color name="light_blue_600">#FF039BE5</color>
-    <color name="light_blue_900">#FF01579B</color>
-    <color name="light_blue_A200">#FF40C4FF</color>
-    <color name="light_blue_A400">#FF00B0FF</color>
-    <color name="black_overlay">#66000000</color>
     <color name="color_map_n">@color/colorPrimary</color>
     <color name="color_map_h">#C94C5D</color>
     <color name="color_map_vh">#7A418A</color>
     <color name="color_rank_2_3">#DF8C66</color>
     <color name="color_rank_4_6">#989898</color>
     <color name="color_rank_7_10">#DC9C06</color>
-    <color name="color_rank_11_17">#8F49A3</color>
+    <color name="color_rank_11_17">#B55CCF</color>
     <color name="color_rank_18">#FF0000</color>
     <color name="red">#FF0000</color>
+    <color name="news_update">#f55291</color>
+    <color name="news_system">#a067c5</color>
+    <color name="news_event">#399be6</color>
 </resources>

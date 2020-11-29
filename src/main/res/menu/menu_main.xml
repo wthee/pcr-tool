@@ -3,15 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_tool_news"
+        android:icon="@drawable/ic_news"
+        android:title="@string/tool_news"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_tool_pvp"
         android:icon="@drawable/ic_pvp"
         android:title="@string/tool_pvp"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_tool_level"
-        android:icon="@drawable/ic_level"
-        android:title="@string/tool_level"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/show_more"
+        android:icon="@drawable/ic_more"
+        android:title="@string/more"
+        app:showAsAction="always" />
 
 </menu>

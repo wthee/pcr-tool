@@ -1,44 +1,44 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 30
 
-    packagingOptions {
-        exclude 'classes.dex'
-        exclude '**.**'
-    }
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 13
-        versionName "0.1.3"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionCode 20
+        versionName "0.2.0"
 
         ndk {
             //设置支持的SO库架构
             abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
         freeCompilerArgs = ["-Xjvm-default=all"]
         freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
+
     buildFeatures {
         viewBinding = true
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     buildTypes {
         release {
             minifyEnabled false
+            multiDexEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -49,14 +49,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation "androidx.activity:activity-ktx:1.1.0"
 
     //coil
-    def coil_version = '1.0.0-rc3'
+    def coil_version = '1.1.0'
     implementation "io.coil-kt:coil:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"
 
@@ -67,12 +67,21 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     //Material
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    def material_version = '1.3.0-alpha04'
+    implementation "com.google.android.material:material:$material_version"
 
     //Navigation
-    def nav_version = "2.3.0"
+    def nav_version = "2.3.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    //Palette
+    def palette_version = '1.0.0'
+    implementation "androidx.palette:palette-ktx:$palette_version"
+
+    //PermissionX
+    def permissionx_version = '1.4.0'
+    implementation "com.permissionx.guolindev:permissionx:$permissionx_version"
 
     //Retrofit
     def retrofit_version = '2.9.0'
@@ -81,26 +90,22 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
     //Room
-    def room_version = "2.2.5"
+    def room_version = "2.3.0-alpha03"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    //Palette
-    implementation "androidx.palette:palette-ktx:1.0.0"
-
-    //PhotoView
-    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
-
-    //PermissionX
-    implementation 'com.permissionx.guolindev:permissionx:1.4.0'
+    //Paging3
+    def paging_version = "3.0.0-alpha09"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     //Work
     def work_version = "2.4.0"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     //Viewpager2
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    def viewpager2_version = '1.0.0'
+    implementation "androidx.viewpager2:viewpager2:$viewpager2_version"
 
     //from lisbs
     implementation files('libs/commons-compress-1.19.jar')

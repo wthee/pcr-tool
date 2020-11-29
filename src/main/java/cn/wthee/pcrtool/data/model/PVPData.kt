@@ -13,7 +13,7 @@ data class PVPData(
 
 data class Data(
     val page: Page,
-    val result: List<Result>
+    val result: List<Result>?
 ) : Serializable
 
 data class Page(

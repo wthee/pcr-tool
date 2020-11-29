@@ -1,19 +1,25 @@
 package cn.wthee.pcrtool.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.Atk
 import cn.wthee.pcrtool.databinding.ItemPvpResultIconBinding
+import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.r6Ids
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import coil.load
+import coil.Coil
+import coil.request.ImageRequest
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
-class PvpCharacterResultItemAdapter :
+class PvpCharacterResultItemAdapter(
+    private val activity: Activity
+) :
     ListAdapter<Atk, PvpCharacterResultItemAdapter.ViewHolder>(PvpResultItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -34,10 +40,15 @@ class PvpCharacterResultItemAdapter :
         fun bind(data: Atk) {
             //设置数据
             binding.apply {
-                val picUrl = UNIT_ICON_URL + (data.id + 30) + WEBP
-                icon.load(picUrl) {
-                    error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.unknow_gray)
+                var id = data.id
+                id += if (r6Ids.contains(id)) 60 else 30
+                val picUrl = UNIT_ICON_URL + id + WEBP
+                val coil = Coil.imageLoader(activity.applicationContext)
+                val request = ImageRequest.Builder(activity.applicationContext)
+                    .data(picUrl)
+                    .build()
+                MainScope().launch {
+                    icon.setImageDrawable(coil.execute(request).drawable)
                 }
             }
         }

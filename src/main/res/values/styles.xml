@@ -8,32 +8,43 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-    </style>
-
-
-    <style name="PopUpAnimation" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/popup_show</item>
-        <item name="android:windowExitAnimation">@anim/popup_hide</item>
-    </style>
-
-    <style name="CollapsedTitle">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/colorAlpha</item>
-    </style>
-
-    <style name="ExpandedTitle">
-        <item name="android:textSize">28sp</item>
-        <item name="android:textColor">@color/colorAlpha</item>
-    </style>
-
-    <style name="subTitleWithe" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
+        <item name="android:actionButtonStyle">@style/myActionButtonStyle</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <!-- 点击波浪-->
     <style name="Ripple">
-        <item name="android:colorControlHighlight">#C5C4C4</item>
+        <item name="android:colorControlHighlight">@color/colorFg</item>
         <item name="android:radius">18dp</item>
+    </style>
+
+    <style name="OverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_more</item>
+    </style>
+
+    <!--menu items 间隔设置-->
+    <style name="myActionButtonStyle" parent="Widget.AppCompat.ActionButton">
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <!-- 自定义弹出/关闭动画   -->
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <!-- 主题设置   -->
+    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <!--  背景设置  -->
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/dialog_background</item>
     </style>
 
 </resources>

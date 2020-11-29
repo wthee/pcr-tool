@@ -1,397 +1,352 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/colorBg">
+    android:background="@color/colorBg"
+    app:layoutDescription="@xml/fragment_character_basic_info_scene">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/character_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="@dimen/elevation_card">
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/error" />
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/layout_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite"
-            android:fitsSystemWindows="true"
-            app:collapsedTitleGravity="center"
-            app:contentScrim="@color/colorWhite"
-            app:expandedTitleGravity="center"
-            app:expandedTitleTextAppearance="@style/ExpandedTitle"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/colorWhite"
-            app:toolbarId="@id/toolbar">
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toEndOf="@id/position_type"
+        app:layout_constraintTop_toBottomOf="@id/character_pic"
+        app:layout_constraintEnd_toStartOf="@id/name_extra"
+        tools:text="@string/app_name" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/character_pic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                app:layout_collapseMode="parallax"
-                tools:layout_height="@dimen/card_height"
-                tools:src="@drawable/load" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/position_type"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
+        tools:background="@drawable/ic_position_front" />
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                android:background="@android:color/transparent"
-                app:contentInsetStartWithNavigation="0dp"
-                app:layout_collapseMode="pin">
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name_extra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/name"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:layout_constrainedWidth="true"
+        tools:text="@string/test" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="15dp">
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        tools:text="10 / 110 / 56" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tool_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:textIsSelectable="true"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                        android:textColor="@color/colorPrimary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/right_icon"
-                        android:layout_width="@dimen/fab_icon"
-                        android:layout_height="@dimen/fab_icon"
-                        android:layout_gravity="end"
-                        android:theme="@style/Ripple"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:scaleType="fitCenter"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@drawable/ic_love" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.appbar.MaterialToolbar>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/unit_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/colorAlpha"
+        android:textIsSelectable="true"
+        app:layout_constraintBottom_toBottomOf="@id/three"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/three" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/three">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/basic_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/news_card_height">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/catah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/m_margin"
-                android:background="@color/colorWhite"
-                android:elevation="@dimen/elevation_card"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginBottom="@dimen/s_margin"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/colorPrimary"
+                android:textIsSelectable="true"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/s_margin"
-                    android:layout_marginTop="@dimen/s_margin"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    app:layout_constraintStart_toEndOf="@id/position_type"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="莫妮卡" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/name_extra"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/s_margin"
-                    android:layout_marginTop="@dimen/s_margin"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                    app:layout_constraintStart_toEndOf="@id/name"
-                    app:layout_constraintTop_toTopOf="@id/name"
-                    app:layout_constraintBottom_toBottomOf="@id/name"
-                    tools:text="莫妮卡" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/position_type"
-                    android:layout_width="@dimen/l_icon"
-                    android:layout_height="@dimen/l_icon"
-                    android:layout_marginStart="@dimen/s_margin"
-                    app:layout_constraintBottom_toBottomOf="@id/name"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/name"
-                    tools:background="@drawable/ic_position_front" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/three"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/s_margin"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="@dimen/s_padding"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    android:textColor="@color/colorAccent"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/name"
-                    tools:text="10 / 110 / 56" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <LinearLayout
-                android:id="@+id/basic_info"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/intro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/s_margin"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/catah"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/catah"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:layout_marginBottom="@dimen/s_margin"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:textColor="@color/colorPrimary"
-                    android:textIsSelectable="true"
-                    android:textStyle="bold"
-                    tools:text="your best friend" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_birth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_birth"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/intro"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/m_padding"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                    android:textIsSelectable="true"
-                    tools:text="@string/app_name" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/birth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/title_birth"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
 
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:columnCount="6"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/m_padding"
-                    android:rowCount="10"
-                    android:useDefaultMargins="true">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_blood"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_blood"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toEndOf="@id/birth"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.15" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_birth"
-                        android:layout_width="0dp"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_birth"
-                        android:textAppearance="@style/subTitleWithe" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/blood"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                app:layout_constraintStart_toEndOf="@id/title_blood"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/birth"
-                        android:layout_width="0dp"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_columnWeight="2"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_race"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_race"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.15" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_blood"
-                        android:layout_width="0dp"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_blood"
-                        android:textAppearance="@style/subTitleWithe" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/race"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/title_race"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/blood"
-                        android:layout_width="0dp"
-                        android:layout_row="0"
-                        android:layout_column="3"
-                        android:layout_columnWeight="2"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_cv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/cv"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toEndOf="@id/race"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.15" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_race"
-                        android:layout_width="0dp"
-                        android:layout_row="1"
-                        android:layout_column="0"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_race"
-                        android:textAppearance="@style/subTitleWithe" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/cv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                app:layout_constraintStart_toEndOf="@id/title_cv"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.35"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="@string/test" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/race"
-                        android:layout_width="0dp"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_columnWeight="1"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_guide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_guide"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.15" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_cv"
-                        android:layout_width="0dp"
-                        android:layout_row="1"
-                        android:layout_column="2"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/cv"
-                        android:textAppearance="@style/subTitleWithe" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/guide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintStart_toEndOf="@id/title_guide"
+                app:layout_constraintTop_toTopOf="@id/title_guide"
+                app:layout_constraintWidth_percent="0.85"
+                tools:text="@string/test" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/cv"
-                        android:layout_width="0dp"
-                        android:layout_row="1"
-                        android:layout_column="3"
-                        android:layout_columnWeight="1"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_favorite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_fav"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_guide"
+                app:layout_constraintWidth_percent="0.15" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_guide"
-                        android:layout_width="0dp"
-                        android:layout_row="2"
-                        android:layout_column="0"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_guide"
-                        android:textAppearance="@style/subTitleWithe" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/favorite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/title_favorite"
+                app:layout_constraintTop_toTopOf="@id/title_favorite"
+                app:layout_constraintWidth_percent="0.85"
+                tools:text="@string/test" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/guide"
-                        android:layout_width="0dp"
-                        android:layout_row="2"
-                        android:layout_column="1"
-                        android:layout_columnSpan="3"
-                        android:layout_columnWeight="1"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_self"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_self"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_favorite"
+                app:layout_constraintWidth_percent="0.15" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_favorite"
-                        android:layout_width="0dp"
-                        android:layout_row="3"
-                        android:layout_column="0"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_fav"
-                        android:textAppearance="@style/subTitleWithe" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/self"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_self"
+                tools:text="@string/test" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/favorite"
-                        android:layout_width="0dp"
-                        android:layout_row="3"
-                        android:layout_column="1"
-                        android:layout_columnSpan="3"
-                        android:layout_columnWeight="1"
-                        android:gravity="end"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_comments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:text="@string/title_comments"
+                android:textColor="@color/colorWhite"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/self"
+                app:layout_constraintWidth_percent="0.15" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_self"
-                        android:layout_width="0dp"
-                        android:layout_row="4"
-                        android:layout_column="0"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="0dp"
-                        android:text="@string/title_self"
-                        android:textAppearance="@style/subTitleWithe" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/self"
-                        android:layout_width="0dp"
-                        android:layout_row="5"
-                        android:layout_column="0"
-                        android:layout_columnSpan="4"
-                        android:layout_columnWeight="1"
-                        android:gravity="start"
-                        android:padding="@dimen/s_padding"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/title_comments"
-                        android:layout_width="0dp"
-                        android:layout_row="8"
-                        android:layout_column="0"
-                        android:layout_columnSpan="1"
-                        android:layout_columnWeight="1"
-                        android:background="@drawable/title_background"
-                        android:paddingStart="@dimen/s_padding"
-                        android:paddingEnd="@dimen/s_padding"
-                        android:text="@string/title_comments"
-                        android:textAppearance="@style/subTitleWithe"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/self" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/comments"
-                        android:layout_width="0dp"
-                        android:layout_row="9"
-                        android:layout_column="0"
-                        android:layout_columnSpan="4"
-                        android:layout_columnWeight="1"
-                        android:gravity="start"
-                        android:padding="@dimen/s_padding"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textIsSelectable="true"
-                        tools:text="test" />
-                </GridLayout>
-            </LinearLayout>
-        </LinearLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textIsSelectable="true"
+                app:layout_constraintTop_toBottomOf="@id/title_comments"
+                tools:text="@string/test" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_love_cbi"
@@ -399,10 +354,9 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/tab_love"
-        android:src="@drawable/ic_love"
+        android:src="@drawable/ic_loved"
         app:borderWidth="0dp"
         app:fabSize="mini"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:tint="@color/colorAlphtBlack" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        app:layout_anchor="@id/character_pic"
+        app:tint="@color/alphaPrimary" />
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -33,7 +33,7 @@ class EquipmentAttrAdapter :
         fun bind(value: AttrValue) {
             binding.apply {
                 this.value.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
                 titleAttr.text = value.title
                 this.value.text = value.getIntValue().toString()
             }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.entity.SkillAction
+import cn.wthee.pcrtool.data.entity.SkillAction
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
 
 
@@ -33,7 +33,7 @@ class SkillActionAdapter :
         fun bind(act: SkillAction) {
             binding.apply {
                 action.animation =
-                    AnimationUtils.loadAnimation(MyApplication.getContext(), R.anim.anim_scale)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
                 action.text = act.getFixedDesc()
             }
         }

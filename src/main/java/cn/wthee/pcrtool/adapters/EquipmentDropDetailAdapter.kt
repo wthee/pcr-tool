@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropDetailBinding
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -28,23 +29,23 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), eid)
+        holder.bind(getItem(position))
 
     }
 
     inner class ViewHolder(private val binding: ItemEquipmentDropDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("ClickableViewAccessibility")
-        fun bind(equip: EquipmentIdWithOdd, eid: Int) {
+        fun bind(equip: EquipmentIdWithOdd) {
             //设置数据
             binding.apply {
                 //装备名称
-                odd.text = equip.odd.toString() + "%"
+                odd.text = MyApplication.context.getString(R.string.percent, equip.odd)
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.eid + WEBP
                 itemPic.load(picUrl) {
-                    error(R.drawable.unknow_gray)
-                    placeholder(R.drawable.load_mini)
+                    error(R.drawable.unknown_gray)
+                    placeholder(R.drawable.unknown_gray)
                 }
                 if (eid == equip.eid) {
                     odd.setTextColor(Color.RED)

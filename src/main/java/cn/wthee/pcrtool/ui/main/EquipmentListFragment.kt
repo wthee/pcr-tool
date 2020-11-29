@@ -7,20 +7,19 @@ import android.view.ViewGroup
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MainActivity.Companion.spSetting
-import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.EquipmentAdapter
+import cn.wthee.pcrtool.adapters.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -28,11 +27,10 @@ class EquipmentListFragment : Fragment() {
 
     companion object {
         lateinit var list: RecyclerView
-        lateinit var listAdapter: EquipmentAdapter
-        var isList = true
-        var equipfilterParams = FilterEquipment(true, "全部")
+        var equipFilterParams = FilterEquipment(true, "全部")
         var asc = false
         lateinit var equipTypes: ArrayList<String>
+        lateinit var pageAdapter: EquipmentPageAdapter
     }
 
     private lateinit var binding: FragmentEquipmentListBinding
@@ -43,17 +41,24 @@ class EquipmentListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
-        isList = spSetting.getBoolean("equip_is_list", true)
-        init(isList)
-        //设置监听
-        setListener()
+        binding.apply {
+            list = binding.equipPage
+            pageAdapter = EquipmentPageAdapter(parentFragmentManager)
+            binding.equipPage.adapter = pageAdapter
+            //重置
+            equipReset.apply {
+                setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
+                setColorSchemeResources(R.color.colorPrimary)
+                setOnRefreshListener {
+                    reset()
+                }
+            }
+        }
         //绑定观察
         setObserve()
-        loadData()
         //获取装备类型
-        //公会列表
         equipTypes = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
             equipTypes.add("全部")
@@ -61,83 +66,47 @@ class EquipmentListFragment : Fragment() {
                 equipTypes.add(it.type)
             }
         }
+        viewModel.getEquips("")
         return binding.root
     }
 
-    private fun init(isList: Boolean) {
-        binding.apply {
-            layoutRefresh.setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
-            list = recycler
-            if (isList) {
-                val linearLayoutManager = LinearLayoutManager(MyApplication.getContext())
-                linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-                recycler.layoutManager = linearLayoutManager
-            } else {
-                val gridLayoutManager =
-                    GridLayoutManager(MyApplication.getContext(), Constants.COLUMN_COUNT_EQUIP)
-                gridLayoutManager.orientation = GridLayoutManager.VERTICAL
-                recycler.layoutManager = gridLayoutManager
-            }
-            listAdapter = EquipmentAdapter(isList)
-            recycler.adapter = listAdapter
-            recycler.setItemViewCacheSize(100)
-        }
+    private fun reset() {
+        equipFilterParams.initData()
+        equipFilterParams.all = true
+        viewModel.getEquips("")
+        binding.equipReset.isRefreshing = false
     }
 
     private fun setObserve() {
-        viewModel.apply {
-            //加载
-            if (!isLoading.hasObservers()) {
-                isLoading.observe(viewLifecycleOwner, Observer {
-//                    MainPagerFragment.progress.visibility = if (it) View.VISIBLE else View.GONE
-                })
-            }
-            if (!isList.hasObservers()) {
-                isList.observe(viewLifecycleOwner, Observer {
-                    init(it)
-                    loadData()
-                })
-            }
-            //获取信息
-            if (!equipments.hasObservers()) {
-                equipments.observe(viewLifecycleOwner, Observer { data ->
-                    if (data != null && data.isNotEmpty()) {
-                        MainPagerFragment.tipText.visibility = View.GONE
-                        listAdapter.submitList(data) {
-                            listAdapter.filter.filter(equipfilterParams.toJsonString())
-                            MainActivity.sp.edit {
-                                putInt(Constants.SP_COUNT_EQUIP, data.size)
-                            }
-                            MainPagerFragment.tabLayout.getTabAt(1)?.text = data.size.toString()
-                        }
-                    } else {
-                        MainPagerFragment.tipText.visibility = View.VISIBLE
+
+        //装备数量
+        if (!viewModel.equipmentCounts.hasObservers()) {
+            viewModel.equipmentCounts.observe(viewLifecycleOwner, {
+                MainActivity.sp.edit {
+                    putInt(Constants.SP_COUNT_EQUIP, it)
+                }
+                MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
+                MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
+            })
+        }
+        //装备信息
+        if (!viewModel.updateEquip.hasActiveObservers()) {
+            viewModel.updateEquip.observe(viewLifecycleOwner, {
+                //装备信息
+                lifecycleScope.launch {
+                    @OptIn(ExperimentalCoroutinesApi::class)
+                    viewModel.equipments.collectLatest { data ->
+                        pageAdapter.submitData(data)
+                        binding.loading.root.visibility = View.GONE
                     }
-
-                })
-            }
-            //刷新
-            if (!refresh.hasObservers()) {
-                refresh.observe(viewLifecycleOwner, Observer {
-                    binding.layoutRefresh.isRefreshing = it
-                })
-            }
+                }
+            })
         }
-    }
-
-    private fun setListener() {
-        binding.apply {
-            //下拉刷新
-            layoutRefresh.setOnRefreshListener {
-                equipfilterParams.initData()
-                loadData()
-                layoutRefresh.isRefreshing = false
-            }
-
+        //重置
+        if (!viewModel.reset.hasActiveObservers()) {
+            viewModel.reset.observe(viewLifecycleOwner, {
+                reset()
+            })
         }
-    }
-
-    private fun loadData() {
-        viewModel.getEquips(asc, "")
     }
 }

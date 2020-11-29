@@ -8,18 +8,19 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+
 object FileUtil {
 
     //数据库所在文件夹
     fun getDatabaseDir() = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-        MyApplication.getContext().dataDir.absolutePath
+        MyApplication.context.dataDir.absolutePath
     else {
-        val path = MyApplication.getContext().filesDir.absolutePath
+        val path = MyApplication.context.filesDir.absolutePath
         path.substring(0, path.length - 6)
     } + "/databases"
 
     //数据库路径
-    public fun getDatabasePath(type: Int) =
+    fun getDatabasePath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_Name else Constants.DATABASE_Name_JP
 
     private fun getDatabaseWalPath(type: Int) =
@@ -28,16 +29,18 @@ object FileUtil {
     fun getDatabaseZipPath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP
 
+    fun getNewsDatabasePath() = getDatabaseDir() + Constants.DATABASE_NEWS
+
     //数据库判断
-    fun needUpadateDb(type: Int) =
+    fun needUpdate(type: Int) =
         !File(getDatabasePath(type)).exists()
                 || File(getDatabasePath(type)).length() < 1 * 1024 * 1024
                 || File(getDatabaseWalPath(type)).length() < 1 * 1024
 
-    //迭代删除文件夹里的内容(不包括文件夹)
-    fun deleteDir(dirPath: String, notDel: String) {
+    //迭代删除文件夹里的内容
+    fun deleteDir(dirPath: String, notDel: List<String>) {
         val file = File(dirPath)
-        if (file.isFile && file.path != notDel) {
+        if (file.isFile && !notDel.contains(file.path)) {
             Log.e(LOG_TAG, file.path)
             file.delete()
         } else {
@@ -50,8 +53,8 @@ object FileUtil {
         }
     }
 
-    fun save(input: InputStream, output: File){
-        //写入文件
+    //保存文件
+    fun save(input: InputStream, output: File) {
         val out = FileOutputStream(output)
         val byte = ByteArray(1024 * 4)
         var line: Int
@@ -62,4 +65,5 @@ object FileUtil {
         out.close()
         input.close()
     }
+
 }

@@ -5,69 +5,96 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.edit
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.CharacterInfoPro
-import cn.wthee.pcrtool.database.view.getPositionIcon
+import cn.wthee.pcrtool.data.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
+import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
+import cn.wthee.pcrtool.utils.*
 import coil.load
-import com.google.android.material.appbar.AppBarLayout
-import okhttp3.HttpUrl
-import kotlin.math.abs
+import com.google.android.material.transition.Hold
 
 
 class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
         var isLoved = false
-        fun getInstance(uid: Int): CharacterBasicInfoFragment {
-            val fragment = CharacterBasicInfoFragment()
-            val bundle = Bundle()
-            bundle.putInt("uid", uid)
-            fragment.arguments = bundle
-            return fragment
-        }
+        lateinit var binding: FragmentCharacterBasicInfoBinding
+
+        @Volatile
+        private var instance: CharacterBasicInfoFragment? = null
+
+        fun getInstance() =
+            instance ?: synchronized(this) {
+                instance ?: CharacterBasicInfoFragment().also { instance = it }
+            }
     }
 
     private var uid = -1
     private var urls = arrayListOf<String>()
-    private lateinit var binding: FragmentCharacterBasicInfoBinding
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
-    }
-    private val sharedCharacterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.providePromotionViewModelFactory()
-    }
-    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
-        InjectorUtil.provideCharacterSkillViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().let {
-            uid = it.getInt("uid")
-        }
-        isLoved = sp.getBoolean(uid.toString(), false)
+        uid = CharacterPagerFragment.uid
+        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
+        exitTransition = Hold()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
+        //初始化
+        init()
+        //点击事件
+        setListener()
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
+            setData(it)
+            urls = it.getAllUrl()
+        })
+        setHasOptionsMenu(true)
+        //初始收藏
+        setLove(isLoved)
+        return binding.root
+    }
+
+    //初始化
+    private fun init() {
+        //初始化数据
+        sharedCharacterViewModel.getCharacter(uid)
         //设置共享元素
         binding.root.transitionName = "item_${uid}"
+        //toolbar 背景
+        val picUrl =
+            Constants.CHARACTER_URL + (uid + if (CharacterListFragment.r6Ids.contains(uid)) 60 else 30) + Constants.WEBP
+        //角色图片
+        binding.characterPic.transitionName = picUrl
+        binding.characterPic.load(picUrl) {
+            error(R.drawable.error)
+            placeholder(R.drawable.load)
+            listener(
+                onStart = {
+                    MainActivity.canBack = true
+                    parentFragment?.startPostponedEnterTransition()
+                    postponeEnterTransition()
+                    //添加返回fab
+                    FabHelper.addBackFab()
+                },
+                onSuccess = { _, _ ->
+                    startPostponedEnterTransition()
+                }
+            )
+        }
         //开始动画
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
             override fun prev(view: View) {
@@ -79,81 +106,38 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             override fun end(view: View) {
-                sharedCharacterAttrViewModel.getMaxRankAndRarity(uid)
-                sharedSkillViewModel.getCharacterSkills(uid)
                 MainActivity.canBack = true
             }
         }, binding.fabLoveCbi, binding.basicInfo)
-        //点击事件
-        setListener()
-        //初始化数据
-        sharedCharacterViewModel.getCharacter(uid)
-        sharedCharacterViewModel.character.observe(viewLifecycleOwner, Observer {
-            setData(it)
-            urls = it.getAllUrl()
-        })
-        setHasOptionsMenu(true)
-        //初始收藏
-        setLove(isLoved)
-        return binding.root
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.root.layoutTransition.setAnimateParentHierarchy(false);
     }
 
 
     //点击事件
     private fun setListener() {
         binding.apply {
-            toolbar.setNavigationOnClickListener { view ->
-                view.findNavController().navigateUp()
-            }
-            rightIcon.setOnClickListener {
-                isLoved = !isLoved
-                setLove(isLoved)
-            }
             characterPic.setOnClickListener {
-                CharacterPicDialogFragment
-                    .getInstance(urls)
-                    .show(parentFragmentManager, "pic")
-            }
-            //toolbar 展开折叠监听
-            appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                when {
-                    //展开
-                    verticalOffset == 0 -> {
-                        rightIcon.visibility = View.GONE
-                        binding.toolTitle.setTextColor(
-                            resources.getColor(
-                                R.color.colorAlpha,
-                                null
-                            )
+                try {
+                    val bundle = Bundle()
+                    bundle.putStringArrayList("urls", urls)
+                    val extras =
+                        FragmentNavigatorExtras(
+                            it to it.transitionName
                         )
-                    }
-                    abs(verticalOffset) >= appBarLayout!!.totalScrollRange -> {
-                        rightIcon.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_love)
-                        rightIcon.visibility = View.VISIBLE
-                        binding.toolTitle.setTextColor(
-                            resources.getColor(
-                                R.color.colorPrimary,
-                                null
-                            )
-                        )
-                    }
-                    else -> {
-                        if (rightIcon.visibility == View.VISIBLE) rightIcon.visibility = View.GONE
-                        binding.toolTitle.setTextColor(
-                            resources.getColor(
-                                R.color.colorAlpha,
-                                null
-                            )
-                        )
-                    }
+                    findNavController().navigate(
+                        R.id.action_characterPagerFragment_to_characterPicListFragment,
+                        bundle,
+                        null,
+                        extras
+                    )
+                    //移除旧的单例，避免viewpager2重新添加fragment时异常
+                    parentFragmentManager.beginTransaction()
+                        .remove(getInstance())
+                        .commit()
+                } catch (e: Exception) {
+
                 }
-            })
+
+            }
 
             //fab点击监听
             fabLoveCbi.setOnClickListener {
@@ -166,53 +150,30 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //设置收藏
     private fun setLove(isLoved: Boolean) {
-        sp.edit {
-            putBoolean(
-                uid.toString(),
-                isLoved
-            )
-        }
-
-        val ic = if (isLoved) R.drawable.ic_loved else R.drawable.ic_love
-        binding.rightIcon.setImageResource(ic)
+        if (isLoved)
+            CharacterListFragment.characterFilterParams.add(uid)
+        else
+            CharacterListFragment.characterFilterParams.remove(uid)
 
         val icFabColor =
-            resources.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary, null)
+            ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)
 
-        val color = ResourcesCompat.getColor(
-            resources,
-            if (isLoved) R.color.colorPrimary else R.color.text,
-            null
-        )
+        val color = ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text)
         binding.name.setTextColor(color)
         binding.nameExtra.setTextColor(color)
-
         binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
-
     }
 
     //初始化角色基本数据
     private fun setData(characterPro: CharacterInfoPro) {
-        //toolbar 背景
-        val picUrl =
-            HttpUrl.get(Constants.CHARACTER_URL + characterPro.getAllStarId()[1] + Constants.WEBP)
-        //角色图片
-        binding.characterPic.load(picUrl) {
-            error(R.drawable.error)
-            placeholder(R.drawable.load)
-            listener(
-                onStart = {
-                    parentFragment?.startPostponedEnterTransition()
-                }
-            )
-        }
         //文本数据
         binding.apply {
-            toolTitle.text =
-                if (characterPro.actualName.isEmpty())
-                    characterPro.name
-                else
-                    characterPro.actualName
+            unitId.text = uid.toString()
+//            toolTitle.text =
+//                if (characterPro.actualName.isEmpty())
+//                    characterPro.name
+//                else
+//                    characterPro.actualName
             catah.text = characterPro.catchCopy
             name.text = characterPro.getNameF()
             nameExtra.text = characterPro.getNameL()
@@ -238,12 +199,9 @@ class CharacterBasicInfoFragment : Fragment() {
             cv.text = characterPro.voice
             self.text = characterPro.getSelf()
             positionType.background =
-                ResourcesCompat.getDrawable(
-                    resources,
-                    getPositionIcon(characterPro.position),
-                    null
-                )
+                ResourcesUtil.getDrawable(getPositionIcon(characterPro.position))
             comments.text = characterPro.getCommentsText()
         }
     }
+
 }

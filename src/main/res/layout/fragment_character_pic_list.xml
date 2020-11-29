@@ -5,24 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pics"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorAlpha"
-        android:orientation="horizontal"
-        android:scrollbars="horizontal"
-        android:scrollbarStyle="outsideOverlay"
-        android:fadeScrollbars="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_card_bg" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/pic_index"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="@dimen/l_margin"
+        android:gravity="center"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textColor="@color/colorPrimary"
         tools:text="1 / 3" />
@@ -32,30 +26,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:backgroundTint="@color/colorWhite"
-        android:src="@drawable/ic_download"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="@dimen/m_margin"
         android:layout_marginBottom="@dimen/xl_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/download_pic"
+        android:src="@drawable/ic_download"
         app:borderWidth="0dp"
         app:fabSize="mini"
-        app:tint="@color/colorPrimary" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/back"
-        android:src="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/m_margin"
-        android:layout_marginBottom="@dimen/m_margin"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
         app:tint="@color/colorPrimary" />
 
 </FrameLayout>

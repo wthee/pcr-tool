@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.database.view.EquipmentDropInfo
-import cn.wthee.pcrtool.database.view.EquipmentMaterial
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.view.EquipmentDropInfo
+import cn.wthee.pcrtool.data.view.EquipmentMaterial
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import kotlinx.coroutines.launch
 
 
@@ -16,7 +16,7 @@ class EquipmentDetailsViewModel(
 
     private var materials = arrayListOf<EquipmentMaterial>()
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    var isLoading = MutableLiveData<Boolean>()
+    private var isLoading = MutableLiveData<Boolean>()
 
     //获取装备制作材料信息
     fun getEquipInfos(equip: EquipmentMaxData) {

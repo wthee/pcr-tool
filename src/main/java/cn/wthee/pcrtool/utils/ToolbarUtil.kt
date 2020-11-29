@@ -8,60 +8,45 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ViewToolbarBinding
 
 
-class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
+class ToolbarUtil(toolbar: ViewToolbarBinding) {
 
     val leftIcon = toolbar.leftIcon
     val rightIcon = toolbar.rightIcon
     val title = toolbar.title
-    val resources: Resources = MyApplication.getContext().resources
+    val resources: Resources = MyApplication.context.resources
 
-    fun setLeftIcon(resId: Int){
+    fun setLeftIcon(resId: Int) {
+        leftIcon.visibility = View.VISIBLE
         leftIcon.setImageResource(resId)
     }
 
-    fun setRightIcon(resId: Int){
-        rightIcon.setImageResource(resId)
-    } 
-    
-    fun hideLeftIcon(){
-        leftIcon.visibility = View.GONE
-    }
-
-    fun showLeftIcon(){
-        leftIcon.visibility = View.VISIBLE
-    }
-
-    fun hideRightIcon(){
-        rightIcon.visibility = View.GONE
-    }
-
-    fun showRightIcon(){
+    fun setRightIcon(resId: Int): ToolbarUtil {
         rightIcon.visibility = View.VISIBLE
+        rightIcon.setImageResource(resId)
+        return this
     }
 
-    fun setTitle(text: String){
-        title.text = text
-    }
 
-    fun setTitleCenter(){
-        val params = title.layoutParams as ConstraintLayout.LayoutParams
-        params.startToStart = 0
-        params.endToEnd = 0
-        title.layoutParams = params
-    }
-
-    fun setTitleColor(resId: Int) {
+    private fun setTitleColor(resId: Int) {
         title.setTextColor(resources.getColor(resId, null))
     }
 
-    fun setBackground(resId: Int) {
-        toolbar.viewToolbar.setBackgroundColor(resources.getColor(resId, null))
-    }
 
-    fun setCenterStyle() {
-        setTitleCenter()
+    private fun setCenterStyle() {
+        val params = title.layoutParams as ConstraintLayout.LayoutParams
+        params.startToStart = 0
+        params.endToEnd = 0
+        params.topToTop = 0
+        params.bottomToBottom = 0
+        title.layoutParams = params
         setTitleColor(R.color.colorPrimary)
         setLeftIcon(R.drawable.ic_back)
-        setBackground(R.color.colorWhite)
     }
+
+    fun setCenterTitle(titleText: String): ToolbarUtil {
+        setCenterStyle()
+        title.text = titleText
+        return this
+    }
+
 }

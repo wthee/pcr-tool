@@ -4,35 +4,36 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.view.View
+import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+//TODO 优化扩展性
 object ObjectAnimatorHelper {
 
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
-        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.85f, 1f)
-        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.85f, 1f)
-        val holder3 = PropertyValuesHolder.ofFloat("translationY", 100f, 0f)
+        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.9f, 1f)
+        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.9f, 1f)
+        val holder3 = PropertyValuesHolder.ofFloat("translationY", 80f, 0f)
 
         view.forEach {
-            start(it, onAnimatorListener,  holder1, holder2, holder3)
+            start(it, onAnimatorListener, holder1, holder2, holder3)
         }
     }
 
-    fun alpha(vararg view: View) {
-        val holder = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
-        view.forEach {
-            start(it, holder)
-        }
-    }
-
-    private fun start(view: View, onAnimatorListener: OnAnimatorListener?, vararg holders: PropertyValuesHolder) {
+    private fun start(
+        view: View,
+        onAnimatorListener: OnAnimatorListener?,
+        vararg holders: PropertyValuesHolder
+    ) {
         onAnimatorListener?.prev(view)
         MainScope().launch {
             delay(200L)
             ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
-                duration = 600L
+                duration =
+                    MyApplication.context.resources.getInteger(R.integer.fragment_anim).toLong()
                 addListener(object : Animator.AnimatorListener {
                     override fun onAnimationEnd(animation: Animator?) {
                         onAnimatorListener?.end(view)
@@ -48,34 +49,6 @@ object ObjectAnimatorHelper {
 
                     override fun onAnimationStart(animation: Animator?) {
                         onAnimatorListener?.start(view)
-                    }
-                })
-                start()
-            }
-        }
-    }
-
-    private fun start(view: View, vararg holders: PropertyValuesHolder) {
-        view.visibility = View.GONE
-        MainScope().launch {
-            delay(300L)
-            ObjectAnimator.ofPropertyValuesHolder(view, *holders).apply {
-                duration = 300L
-                addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        view.visibility = View.VISIBLE
-                    }
-
-                    override fun onAnimationRepeat(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-                        view.visibility = View.VISIBLE
                     }
                 })
                 start()

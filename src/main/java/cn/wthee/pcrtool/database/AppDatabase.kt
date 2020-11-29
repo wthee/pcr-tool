@@ -5,9 +5,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.CharacterDao
-import cn.wthee.pcrtool.data.EnemyDao
 import cn.wthee.pcrtool.data.EquipmentDao
-import cn.wthee.pcrtool.database.entity.*
+import cn.wthee.pcrtool.data.EventDao
+import cn.wthee.pcrtool.data.GachaDao
+import cn.wthee.pcrtool.data.entity.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
 
 
@@ -33,21 +34,28 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         SkillAction::class,
         SkillData::class,
         WaveGroupData::class,
-        EnemyData::class,
         CharacterExperience::class,
         AttackPattern::class,
         GuildData::class,
         CharacterExperienceTeam::class,
         CharacterComments::class,
+        GachaData::class,
+        GachaExchange::class,
+        ItemData::class,
+        CharacterStoryStatus::class,
+        CharacterType::class,
+        EventStoryData::class,
+        EventStoryDetail::class,
     ],
-    version = 13,
+    version = 20,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCharacterDao(): CharacterDao
     abstract fun getEquipmentDao(): EquipmentDao
-    abstract fun getEnemyDao(): EnemyDao
+    abstract fun getGachaDao(): GachaDao
+    abstract fun getEventDao(): EventDao
 
     companion object {
 
@@ -65,7 +73,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         private fun buildDatabase(): AppDatabase {
             return Room.databaseBuilder(
-                MyApplication.getContext(),
+                MyApplication.context,
                 AppDatabase::class.java,
                 DATABASE_Name
             ).fallbackToDestructiveMigration().build()

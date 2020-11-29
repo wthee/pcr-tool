@@ -17,8 +17,10 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:background="@drawable/title_background"
-        tools:text="@string/atk"
-        android:textAppearance="@style/subTitleWithe" />
+        tools:text="@string/physical"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/colorWhite" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"

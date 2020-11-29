@@ -3,9 +3,14 @@ package cn.wthee.pcrtool.ui.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
-import cn.wthee.pcrtool.database.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 
@@ -13,27 +18,36 @@ class EquipmentViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    var equipments = MutableLiveData<List<EquipmentMaxData>>()
+    lateinit var equipments: Flow<PagingData<EquipmentMaxData>>
+    var updateEquip = MutableLiveData<Boolean>()
+    var reset = MutableLiveData<Boolean>()
+    var equipmentCounts = MutableLiveData<Int>()
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
-    var isLoading = MutableLiveData<Boolean>()
-    var refresh = MutableLiveData<Boolean>()
-    var isList = MutableLiveData<Boolean>()
 
     //获取装备列表
-    fun getEquips(asc: Boolean, name: String) {
-        isLoading.postValue(true)
+    fun getEquips(name: String) {
         viewModelScope.launch {
-            val data = equipmentRepository.getAllEquipments(name)
-            isLoading.postValue(false)
-            refresh.postValue(false)
-            if (asc) {
-                data.sortedBy { it.promotionLevel }
-            } else {
-                data.sortedByDescending { it.promotionLevel }
-            }
-            equipments.postValue(data)
+            equipments = Pager(
+                PagingConfig(
+                    pageSize = 10,
+                    enablePlaceholders = false
+                )
+            ) {
+                equipmentRepository.getPagingEquipments(
+                    name,
+                    EquipmentListFragment.equipFilterParams
+                )
+            }.flow.cachedIn(viewModelScope)
+            equipmentCounts.postValue(
+                equipmentRepository.getEquipmentCount(
+                    name,
+                    EquipmentListFragment.equipFilterParams
+                )
+            )
+            updateEquip.postValue(true)
         }
     }
+
 
     //专武信息
     fun getUniqueEquipInfos(uid: Int) {
@@ -45,4 +59,5 @@ class EquipmentViewModel(
 
     //获取装备类型
     suspend fun getTypes() = equipmentRepository.getEquipTypes()
+
 }

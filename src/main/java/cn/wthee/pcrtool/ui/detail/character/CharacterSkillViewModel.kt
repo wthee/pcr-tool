@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
+import cn.wthee.pcrtool.data.entity.AttackPattern
 import cn.wthee.pcrtool.data.model.CharacterSkillInfo
-import cn.wthee.pcrtool.database.entity.AttackPattern
 import kotlinx.coroutines.launch
 
 
@@ -56,6 +56,16 @@ class CharacterSkillViewModel(
 
             }
 
+        }
+    }
+
+    //角色技能循环
+    fun getCharacterSkillLoops(id: Int) {
+        isLoading.postValue(true)
+        viewModelScope.launch {
+            //技能循环
+            val pattern = repository.getAttackPattern(id)
+            acttackPattern.postValue(pattern)
         }
     }
 

@@ -5,20 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/m_margin"
-    android:background="@color/colorWhite"
-    android:elevation="@dimen/elevation_card"
-    android:padding="@dimen/m_padding">
+    android:elevation="@dimen/elevation_card">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
+        app:layout_constrainedWidth="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/type"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="毁灭之眼" />
+        tools:text="@string/test" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/type"
@@ -29,69 +32,58 @@
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        android:textAppearance="@style/subTitleWithe"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@id/name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/name"
         tools:text="必杀技" />
 
-    <LinearLayout
-        android:id="@+id/content"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/item_pic"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_marginTop="@dimen/m_margin"
+        android:adjustViewBounds="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:srcCompat="@drawable/unknown_gray"
+        tools:src="@drawable/unknown_gray" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/name">
+        android:layout_marginStart="@dimen/s_margin"
+        android:minHeight="@dimen/desc_height"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textIsSelectable="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_pic"
+        app:layout_constraintTop_toTopOf="@id/item_pic"
+        tools:text="道具详情道具详情道具详道具详情道具详情道具详情道具详情道具详情道具详道具详情道具详情道具详情道具详情道具详情道具详道具详情道具详情道具详情" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/item_pic"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/normal_icon"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/unknow_gray"
-            tools:src="@drawable/load_mini" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/m_margin"
-                android:layout_marginTop="@dimen/s_margin"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                android:textIsSelectable="true"
-                tools:text="道具详情道具详情道具详道具详情道具详情道具详情道具详情道具详情道具详道具详情道具详情道具详情道具详情道具详情道具详道具详情道具详情道具详情" />
-
-        </LinearLayout>
-
-    </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/skill_des"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginTop="@dimen/s_margin"
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:text="@string/skill_action"
-        android:textAppearance="@style/subTitleWithe"
+        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/content" />
+        app:layout_constraintTop_toBottomOf="@id/desc" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
-        android:isScrollContainer="false"
+        android:layout_marginBottom="@dimen/l_margin"
+        android:nestedScrollingEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/skill_des"
         tools:itemCount="5"

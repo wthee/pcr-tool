@@ -5,10 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.CharacterRepository
 import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.database.view.Attr
-import cn.wthee.pcrtool.database.view.EquipmentMaxData
-import cn.wthee.pcrtool.database.view.add
-import cn.wthee.pcrtool.database.view.multiply
+import cn.wthee.pcrtool.data.view.Attr
+import cn.wthee.pcrtool.data.view.CharacterStoryAttr.Companion.getAttr
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.view.add
+import cn.wthee.pcrtool.data.view.multiply
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class CharacterAttrViewModel(
 ) : ViewModel() {
 
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
+    var storyAttrs = MutableLiveData<Attr>()
     var sumInfo = MutableLiveData<Attr>()
     var maxData = MutableLiveData<List<Int>>()
 
@@ -54,6 +56,14 @@ class CharacterAttrViewModel(
                 if (uniqueEquip != null) {
                     info.add(uniqueEquip.attr)
                 }
+                //故事剧情
+                val storyAttr = Attr()
+                val storyInfo = characterRepository.getCharacterStoryStatus(unitId)
+                storyInfo.forEach {
+                    storyAttr.add(it.getAttr())
+                }
+                storyAttrs.postValue(storyAttr)
+                info.add(storyAttr)
                 sumInfo.postValue(info)
             } catch (e: Exception) {
                 ToastUtil.short("角色详细信息暂无~")
@@ -66,13 +76,25 @@ class CharacterAttrViewModel(
     //获取最大Rank和星级
     fun getMaxRankAndRarity(id: Int) {
         viewModelScope.launch {
-            val rank = characterRepository.getMaxRank(id)
-            val rarity = characterRepository.getMaxRarity(id)
-            val level = characterRepository.getMaxLevel()
+            try {
+                val rank = characterRepository.getMaxRank(id)
+                val rarity = characterRepository.getMaxRarity(id)
+                val level = characterRepository.getMaxLevel()
 
-            maxData.postValue(listOf(rank, rarity, level))
+                maxData.postValue(listOf(rank, rarity, level))
+            } catch (e: Exception) {
+
+            }
         }
     }
 
-    suspend fun isUnknow(id: Int) = characterRepository.getMaxRank(id)
+    suspend fun isUnknow(id: Int): Boolean {
+        try {
+            characterRepository.getMaxRank(id)
+            characterRepository.getMaxRarity(id)
+        } catch (e: Exception) {
+            return true
+        }
+        return false
+    }
 }

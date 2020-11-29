@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.data
 
+import cn.wthee.pcrtool.data.model.FilterEquipment
+
 
 //角色数据Repository
 
@@ -16,8 +18,21 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
     //所有装备信息
-    suspend fun getAllEquipments(name: String) = equipmentDao.getAllEquipments(name)
+    fun getPagingEquipments(name: String, filter: FilterEquipment) =
+        equipmentDao.getPagingEquipments(
+            filter.type, name,
+            if (filter.all) 1 else 0,
+            filter.starIds
+        )
 
+    suspend fun getEquipmentCount(name: String, filter: FilterEquipment) =
+        equipmentDao.getEquipmentCount(
+            filter.type, name,
+            if (filter.all) 1 else 0,
+            filter.starIds
+        )
+
+    //获取装备掉落区域
     suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)
 
     //装备碎片信息

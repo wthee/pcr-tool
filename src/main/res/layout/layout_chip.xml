@@ -4,6 +4,4 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     style="@style/Widget.MaterialComponents.Chip.Choice"
-    tools:text="@string/app_name">
-
-</com.google.android.material.chip.Chip>
+    tools:text="@string/app_name" />

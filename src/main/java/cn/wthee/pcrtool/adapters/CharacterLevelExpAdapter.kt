@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.CharacterExperienceAll
+import cn.wthee.pcrtool.data.view.CharacterExperienceAll
 import cn.wthee.pcrtool.databinding.ItemLevelExpBinding
 
 
-class CharacterLevelExpAdapter() :
+class CharacterLevelExpAdapter :
     ListAdapter<CharacterExperienceAll, CharacterLevelExpAdapter.ViewHolder>(LevelDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -34,7 +34,7 @@ class CharacterLevelExpAdapter() :
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(
-                        MyApplication.getContext(),
+                        MyApplication.context,
                         R.anim.anim_translate_y
                     )
                 level.text = data.level.toString()

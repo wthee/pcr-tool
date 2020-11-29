@@ -1,31 +1,38 @@
 package cn.wthee.pcrtool.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.view.PvpCharacterData
-import cn.wthee.pcrtool.databinding.ItemCharacterIconBinding
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpFragment
-import cn.wthee.pcrtool.ui.tool.pvp.ToolPvpService
+import cn.wthee.pcrtool.data.view.PvpCharacterData
+import cn.wthee.pcrtool.databinding.ItemCommonBinding
+import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.r6Ids
+import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment
+import cn.wthee.pcrtool.ui.tool.pvp.PvpService
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import coil.load
+import coil.Coil
+import coil.request.ImageRequest
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class PvpCharacterAdapter(
-    private val isFloatWindow: Boolean
+    private val isFloatWindow: Boolean,
+    private val activity: Activity
 ) :
     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemCharacterIconBinding.inflate(
+            ItemCommonBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -34,41 +41,57 @@ class PvpCharacterAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!, isFloatWindow)
+        val item = getItem(position)
+        holder.bind(item)
+//        val itemView = holder.itemView.findViewById<MaterialTextView>(R.id.name)
+//        val isSelected =
+//            ToolPvpFragment.selects.contains(PvpCharacterData(item.unitId, item.position))
+//                    && item.unitId != 0
+//        //选中变更
+//        if (isSelected) {
+////            itemView.background = ResourcesUtil.getDrawable(R.drawable.title_background)
+//            itemView.setTextColor(ResourcesUtil.getColor(R.color.red))
+//        } else {
+////            itemView.background = null
+//            itemView.setTextColor(ResourcesUtil.getColor(R.color.text))
+//        }
     }
 
-    inner class ViewHolder(private val binding: ItemCharacterIconBinding) :
+    inner class ViewHolder(private val binding: ItemCommonBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(
-            data: PvpCharacterData,
-            isFloatWindow: Boolean
-        ) {
+        fun bind(data: PvpCharacterData) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.getContext()
-                //加载动画
-                itemPic.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
-                if(isFloatWindow) {
+                if (isFloatWindow) {
                     name.visibility = View.GONE
+                    val params = pic.layoutParams as LinearLayout.LayoutParams
+                    params.width = RecyclerView.LayoutParams.WRAP_CONTENT
+                    params.height = RecyclerView.LayoutParams.WRAP_CONTENT
+                    pic.layoutParams = params
                 }
                 //名称
                 name.text = if (data.position == 999) "未选择" else data.position.toString()
                 //加载图片
                 if (data.unitId == 0) {
                     //默认
-                    itemPic.load(R.drawable.unknow_gray)
+                    val drawable = ResourcesUtil.getDrawable(R.drawable.unknown_gray)
+                    pic.setImageDrawable(drawable)
                 } else {
                     //角色
-                    val picUrl = UNIT_ICON_URL + data.getFixedId() + WEBP
-                    itemPic.load(picUrl) {
-                        error(R.drawable.unknow_gray)
-                        placeholder(R.drawable.load_mini)
+                    var id = data.unitId
+                    id += if (r6Ids.contains(id)) 60 else 30
+                    val picUrl = UNIT_ICON_URL + id + WEBP
+                    val coil = Coil.imageLoader(activity.applicationContext)
+                    val request = ImageRequest.Builder(activity.applicationContext)
+                        .data(picUrl)
+                        .build()
+                    MainScope().launch {
+                        pic.setImageDrawable(coil.execute(request).drawable)
                     }
                 }
                 //设置点击事件
                 root.setOnClickListener {
-                    ToolPvpFragment.selects.apply {
+                    PvpFragment.selects.apply {
                         val empty =
                             PvpCharacterData(
                                 0,
@@ -94,17 +117,28 @@ class PvpCharacterAdapter(
                         }
                         //按位置排序
                         sortByDescending { it.position }
-                    }
-                    //更新列表
-                    if (isFloatWindow) {
-                        ToolPvpService.selectedAdapter.apply {
-                            notifyDataSetChanged()
+                        //更新列表
+                        try {
+                            PvpFragment.selectedAdapter.apply {
+                                submitList(PvpFragment.selects) {
+                                    notifyDataSetChanged()
+                                }
+                            }
+                        } catch (e: Exception) {
+
                         }
-                    } else {
-                        ToolPvpFragment.selectedAdapter.apply {
-                            notifyDataSetChanged()
+                        try {
+                            PvpService.selectedAdapter.apply {
+                                submitList(PvpFragment.selects) {
+                                    notifyDataSetChanged()
+                                }
+                            }
+                        } catch (e: Exception) {
+
                         }
+
                     }
+//                    notifyDataSetChanged()
                 }
             }
         }
@@ -117,7 +151,7 @@ class PvpDiffCallback : DiffUtil.ItemCallback<PvpCharacterData>() {
         oldItem: PvpCharacterData,
         newItem: PvpCharacterData
     ): Boolean {
-        return oldItem.unitId == newItem.unitId
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(

@@ -1,11 +1,8 @@
 package cn.wthee.pcrtool.utils
 
 import android.content.Context
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.get
 import cn.wthee.pcrtool.R
@@ -42,12 +39,12 @@ object StarUtil {
             partent.addView(starView, i + num)
         }
         for(i in 0 until num){
-            partent.get(i).setOnClickListener {
-                for (j in 0 until  max){
-                    if(j > i){
-                        partent.get(j).setBackgroundResource(R.drawable.ic_star_dark)
-                    }else{
-                        partent.get(j).setBackgroundResource(R.drawable.ic_star)
+            partent[i].setOnClickListener {
+                for (j in 0 until max) {
+                    if (j > i) {
+                        partent[j].setBackgroundResource(R.drawable.ic_star_dark)
+                    } else {
+                        partent[j].setBackgroundResource(R.drawable.ic_star)
                     }
                 }
                 onSelect.select(i)

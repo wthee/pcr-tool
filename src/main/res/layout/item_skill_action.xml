@@ -5,30 +5,29 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/xs_margin"
     android:animateLayoutChanges="true"
+    android:gravity="top"
     android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        android:text="✦"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:text="@string/pre"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/action"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textColor="@color/colorBlack"
         android:textIsSelectable="true"
-        tools:text="@string/atk" />
+        tools:text="@string/test" />
 
 
 </LinearLayout>

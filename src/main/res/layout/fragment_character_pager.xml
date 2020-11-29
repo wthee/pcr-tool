@@ -6,6 +6,4 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.detail.character.CharacterBasicInfoFragment">
-
-</androidx.viewpager2.widget.ViewPager2>
+    tools:context=".ui.detail.character.CharacterBasicInfoFragment" />

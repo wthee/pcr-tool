@@ -4,36 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Filter
-import android.widget.Filterable
-import androidx.core.content.edit
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MainActivity.Companion.canBack
-import cn.wthee.pcrtool.MainActivity.Companion.sp
+import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.database.view.CharacterInfo
-import cn.wthee.pcrtool.database.view.getPositionIcon
+import cn.wthee.pcrtool.data.view.CharacterInfo
+import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
-import cn.wthee.pcrtool.ui.main.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.UID
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 
-class CharacterAdapter(private val fragment: Fragment) :
-    ListAdapter<CharacterInfo, CharacterAdapter.ViewHolder>(CharacterDiffCallback()),
-    Filterable {
+class CharacterListAdapter(
+    private val fragment: Fragment
+) : PagingDataAdapter<CharacterInfo, CharacterListAdapter.ViewHolder>(CharacterDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -46,54 +38,41 @@ class CharacterAdapter(private val fragment: Fragment) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), fragment)
+        holder.bind(getItem(position)!!)
     }
 
-    class ViewHolder(private val binding: ItemCharacterBinding) :
+    inner class ViewHolder(private val binding: ItemCharacterBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            character: CharacterInfo,
-            fragment: Fragment
+            character: CharacterInfo
         ) {
             //是否收藏
-            val isLoved = sp.getBoolean(character.id.toString(), false)
+            val isLoved = CharacterListFragment.characterFilterParams.starIds.contains(character.id)
 
             binding.apply {
-                (binding.root.parent as? ViewGroup)?.doOnPreDraw {
-                    // Parent has been drawn. Start transitioning!
-                    fragment.startPostponedEnterTransition()
-                }
-                name.setTextColor(
-                    ResourcesCompat.getColor(
-                        fragment.resources,
-                        if (isLoved) R.color.colorPrimary else R.color.text,
-                        null
-                    )
-                )
+                name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
                 //加载网络图片
-                val picUrl = Constants.CHARACTER_URL + (character.id + 30) + Constants.WEBP
+                var id = character.id
+                id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
+                val picUrl = Constants.CHARACTER_URL + id + Constants.WEBP
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)
                 }
                 //角色位置
                 positionType.background =
-                    ResourcesCompat.getDrawable(
-                        fragment.resources,
-                        getPositionIcon(character.position),
-                        null
-                    )
+                    ResourcesUtil.getDrawable(getPositionIcon(character.position))
                 //基本信息
                 name.text = character.getNameF()
                 nameExtra.text = character.getNameL()
                 three.text = fragment.resources.getString(
                     R.string.character_detail,
-                    character.age,
-                    character.height,
-                    character.weight,
+                    character.getFixedAge(),
+                    character.getFixedHeight(),
+                    character.getFixedWeight(),
                     character.position
                 )
                 //设置共享元素名称
@@ -102,15 +81,15 @@ class CharacterAdapter(private val fragment: Fragment) :
                     //避免同时点击两个
                     if (!MainPagerFragment.cListClick) {
                         MainPagerFragment.cListClick = true
-                        canBack = false
-                        MainActivity.currentCharaPosition = adapterPosition
+                        MainActivity.canBack = false
+                        MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
-                        bundle.putInt("uid", character.id)
+                        bundle.putInt(UID, character.id)
                         val extras =
                             FragmentNavigatorExtras(
                                 itemCharacter to itemCharacter.transitionName
                             )
-                        root.findNavController().navigate(
+                        fragment.findNavController().navigate(
                             R.id.action_containerFragment_to_characterPagerFragment,
                             bundle,
                             null,
@@ -120,81 +99,22 @@ class CharacterAdapter(private val fragment: Fragment) :
                 }
                 //长按事件
                 binding.root.setOnLongClickListener {
-                    sp.edit {
-                        putBoolean(
-                            character.id.toString(),
-                            !isLoved
-                        )
+                    //收藏或取消
+                    CharacterListFragment.characterFilterParams.apply {
+                        if (starIds.contains(character.id))
+                            remove(character.id)
+                        else
+                            add(character.id)
                     }
-                    CharacterListFragment.characterList.adapter?.notifyItemChanged(adapterPosition)
+                    CharacterListFragment.characterList.adapter?.notifyItemChanged(
+                        absoluteAdapterPosition
+                    )
                     return@setOnLongClickListener true
                 }
             }
         }
     }
-
-    @Suppress("UNCHECKED_CAST")
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val param: FilterCharacter = Gson().fromJson(
-                    constraint.toString(),
-                    object : TypeToken<FilterCharacter>() {}.type
-                )
-                val filterDatas = if (constraint == null) {
-                    //没有过滤的内容，则使用源数据
-                    currentList
-                } else {
-                    val filteredList = currentList.toMutableList()
-                    filteredList.toHashSet().forEachIndexed { _, data ->
-                        if (!param.all) {
-                            //过滤非收藏角色
-                            if (!sp.getBoolean(data.id.toString(), false)) {
-                                filteredList.remove(data)
-                            }
-                        }
-                        //位置筛选
-                        if (param.positon != 0) {
-                            val notInPositon = param.positon == 1 && data.position in 301..999
-                                    || param.positon == 2 && (data.position in 0..299 || data.position in 600..9999)
-                                    || param.positon == 3 && data.position in 0..599
-                            if (notInPositon) {
-                                filteredList.remove(data)
-                            }
-                        }
-                        //攻击类型筛选
-                        if (param.atk != 0) {
-                            if (param.atk != data.atkType) {
-                                filteredList.remove(data)
-                            }
-                        }
-                        //公会筛
-                        if (param.guild != "全部") {
-                            if (param.guild != data.guild) {
-                                filteredList.remove(data)
-                            }
-                        }
-                    }
-                    filteredList
-                }
-                val filterResults = FilterResults()
-                filterResults.values = filterDatas
-                filterResults.count = filterDatas.size
-                return filterResults
-            }
-
-
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                submitList(results?.values as List<CharacterInfo>)
-                sp.edit {
-                    putInt(Constants.SP_COUNT_CHARACTER, results.count)
-                }
-                MainPagerFragment.tabLayout.getTabAt(0)?.text = results.count.toString()
-            }
-        }
-    }
 }
-
 
 class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterInfo>() {
 

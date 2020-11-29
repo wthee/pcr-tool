@@ -3,10 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:elevation="@dimen/elevation_card"
-    android:layout_marginTop="@dimen/m_margin"
-    android:layout_marginBottom="@dimen/m_margin">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic6"
@@ -18,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="@+id/pic5"
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/unknow_gray" />
+        tools:src="@drawable/unknown_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic3"
@@ -30,7 +27,7 @@
         app:layout_constraintEnd_toStartOf="@+id/pic2"
         app:layout_constraintStart_toStartOf="@+id/pic2"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/unknow_gray" />
+        tools:src="@drawable/unknown_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic5"
@@ -43,7 +40,7 @@
         app:layout_constraintEnd_toStartOf="@+id/rank_add"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pic6"
-        tools:src="@drawable/unknow_gray" />
+        tools:src="@drawable/unknown_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic2"
@@ -56,7 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rank_reduce"
         app:layout_constraintTop_toBottomOf="@+id/pic3"
-        tools:src="@drawable/unknow_gray" />
+        tools:src="@drawable/unknown_gray" />
 
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -70,7 +67,7 @@
         app:layout_constraintEnd_toEndOf="@+id/pic5"
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toBottomOf="@+id/pic5"
-        tools:src="@drawable/unknow_gray" />
+        tools:src="@drawable/unknown_gray" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic1"
@@ -84,7 +81,7 @@
         app:layout_constraintEnd_toStartOf="@+id/pic2"
         app:layout_constraintStart_toStartOf="@+id/pic2"
         app:layout_constraintTop_toBottomOf="@id/pic2"
-        tools:src="@drawable/unknow_gray" />
+        tools:src="@drawable/unknown_gray" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rank_add"
@@ -143,7 +140,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/s_margin"
-            android:text="09"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
     </LinearLayout>

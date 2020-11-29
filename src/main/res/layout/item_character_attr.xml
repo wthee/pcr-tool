@@ -3,30 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/xs_margin"
-    android:layout_marginEnd="@dimen/xs_margin"
     android:layout_marginTop="@dimen/m_margin"
-    android:orientation="horizontal"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_attr"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
+        android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        android:background="@drawable/title_background"
-        tools:text="@string/atk"
-        android:textAppearance="@style/subTitleWithe" />
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/colorWhite"
+        tools:text="@string/physical" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"
-        android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/xs_margin"
         android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         tools:text="780" />
 
 </LinearLayout>

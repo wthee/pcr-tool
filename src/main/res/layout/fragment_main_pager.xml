@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorBg"
     android:fitsSystemWindows="true"
+    android:background="@color/colorGray"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -32,8 +32,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_height"
                     app:title="@string/app_name"
-                    app:navigationIcon="@mipmap/ic_logo"
+                    app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     app:titleTextColor="@color/colorWhite"
+                    app:navigationIcon="@mipmap/ic_logo"
+                    android:background="@color/colorPrimary"
                     app:contentInsetLeft="0dp"
                     app:contentInsetStartWithNavigation="0dp"
                     app:menu="@menu/menu_main" />
@@ -41,7 +43,7 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/layout_tab"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/tab_height_1"
                     app:layout_collapseMode="parallax"
                     app:tabInlineLabel="true"
                     app:tabMode="fixed" />
@@ -53,7 +55,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

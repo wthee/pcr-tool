@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/card_height"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/view_toolbar" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/drop_icon"
+        android:layout_gravity="center"
+        android:layout_width="@dimen/character_icon_size"
+        android:layout_height="@dimen/character_icon_size"
+        android:adjustViewBounds="true" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/drops"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="1"
+        tools:listitem="@layout/item_character_drop" />
+
+</LinearLayout>
