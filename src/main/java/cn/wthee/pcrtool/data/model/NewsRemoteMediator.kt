@@ -19,7 +19,7 @@ class NewsRemoteMediator(
     private val database: AppNewsDatabase,
 ) : RemoteMediator<Int, NewsTable>() {
 
-    val DEFAULT_PAGE_INDEX = 1
+    private val pageIndex = 1
 
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, NewsTable>
@@ -47,7 +47,7 @@ class NewsRemoteMediator(
                     database.getRemoteKeyDao().clearRemoteKeys("${region}-%")
                     database.getNewsDao().clearAll("${region}-%")
                 }
-                val prevKey = if (page == DEFAULT_PAGE_INDEX) null else page - 1
+                val prevKey = if (page == pageIndex) null else page - 1
                 val nextKey = if (isEndOfList) null else page + 1
                 val keys = list.map {
                     RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
@@ -70,7 +70,7 @@ class NewsRemoteMediator(
         return when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getClosestRemoteKey(state)
-                remoteKeys?.nextKey?.minus(1) ?: DEFAULT_PAGE_INDEX
+                remoteKeys?.nextKey?.minus(1) ?: pageIndex
             }
             LoadType.APPEND -> {
                 val remoteKeys = getLastRemoteKey(state)
@@ -102,7 +102,7 @@ class NewsRemoteMediator(
      */
     private suspend fun getFirstRemoteKey(state: PagingState<Int, NewsTable>): RemoteKey? {
         return state.pages
-            .firstOrNull() { it.data.isNotEmpty() }
+            .firstOrNull { it.data.isNotEmpty() }
             ?.data?.firstOrNull()
             ?.let { news -> database.getRemoteKeyDao().remoteKeys(news.id) }
     }

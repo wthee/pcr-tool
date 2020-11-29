@@ -81,10 +81,6 @@ class CharacterPicListFragment : Fragment() {
                 index = position + 1
             }
 
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-            }
-
             override fun onPageScrollStateChanged(state: Int) {
                 super.onPageScrollStateChanged(state)
                 picIndex.text = getString(R.string.pic_index, index, urls.size)

@@ -77,7 +77,7 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
                             $('.news-detail').css('top','0.3rem');
                             $('.top').css('display','none');
                         """.trimIndent()
-                        );
+                        )
                     }
                     if (region == 3) {
                         webView.loadUrl(
@@ -104,7 +104,7 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
                             $('header').css('display','none');
                             $('footer').css('display','none');
                         """.trimIndent()
-                        );
+                        )
                     }
                     loading.visibility = View.GONE
                     tip.visibility = View.GONE

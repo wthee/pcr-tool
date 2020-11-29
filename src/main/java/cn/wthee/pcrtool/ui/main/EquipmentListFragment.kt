@@ -41,7 +41,7 @@ class EquipmentListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
         binding.apply {
             list = binding.equipPage
@@ -72,6 +72,7 @@ class EquipmentListFragment : Fragment() {
 
     private fun reset() {
         equipFilterParams.initData()
+        equipFilterParams.all = true
         viewModel.getEquips("")
         binding.equipReset.isRefreshing = false
     }
@@ -96,6 +97,7 @@ class EquipmentListFragment : Fragment() {
                     @OptIn(ExperimentalCoroutinesApi::class)
                     viewModel.equipments.collectLatest { data ->
                         pageAdapter.submitData(data)
+                        binding.loading.root.visibility = View.GONE
                     }
                 }
             })

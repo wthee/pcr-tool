@@ -6,7 +6,7 @@ object Constants {
     const val WEBP = ".webp"
 
     //接口地址
-    const val RESOURCE_URL = "http://wthee.xyz/resource/"
+    private const val RESOURCE_URL = "http://wthee.xyz/resource/"
     const val DATABASE_URL = "http://wthee.xyz/db/"
     const val API_URL = "http://wthee.xyz:8847/api/"
 

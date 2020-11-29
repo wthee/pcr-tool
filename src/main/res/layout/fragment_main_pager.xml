@@ -32,6 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_height"
                     app:title="@string/app_name"
+                    app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     app:titleTextColor="@color/colorWhite"
                     app:navigationIcon="@mipmap/ic_logo"
                     android:background="@color/colorPrimary"

@@ -79,7 +79,7 @@ private class GachaListDiffCallback : DiffUtil.ItemCallback<UnitData>() {
     }
 }
 
-class UnitData(
+data class UnitData(
     val id: Int,
     val name: String
 )

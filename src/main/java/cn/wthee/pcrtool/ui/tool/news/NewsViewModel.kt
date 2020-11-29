@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.news
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -14,9 +13,6 @@ import kotlinx.coroutines.flow.Flow
 
 
 class NewsViewModel : ViewModel() {
-
-    lateinit var news: Flow<PagingData<NewsTable>>
-    var loadingMore = MutableLiveData<Boolean>()
 
     fun getNewsCN(): Flow<PagingData<NewsTable>> {
         val newsDao = AppNewsDatabase.getInstance().getNewsDao()

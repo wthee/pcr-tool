@@ -5,9 +5,9 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/colorBg"
     android:animateLayoutChanges="true"
+    android:background="@color/colorBg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:openDrawer="start">
 
@@ -30,79 +30,71 @@
         android:orientation="vertical"
         app:layoutDescription="@xml/motion_fab">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/setting"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/efa_width"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/m_margin"
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/setting"
-            android:src="@drawable/ic_settings"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
-            app:borderWidth="0dp"
+            android:ellipsize="end"
+            android:text="@string/setting"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/min_text"
             app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/love"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/tab_love"
-            android:src="@drawable/ic_love_hollow"
+            app:icon="@drawable/ic_settings"
+            app:iconTint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/search"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/efa_width"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/m_margin"
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/search"
-            android:src="@drawable/ic_search"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
-            app:borderWidth="0dp"
+            android:ellipsize="end"
+            android:text="@string/search"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/min_text"
             app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
+            app:icon="@drawable/ic_search"
+            app:iconTint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/filter"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/efa_width"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/m_margin"
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/filter"
-            android:src="@drawable/ic_filter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
-            app:borderWidth="0dp"
+            android:ellipsize="end"
+            android:text="@string/filter"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/min_text"
             app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
+            app:icon="@drawable/ic_filter"
+            app:iconTint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/m_margin"
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/function"
             android:src="@drawable/ic_function"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
             app:borderWidth="0dp"
             app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/colorPrimary" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -11,6 +11,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.CachePolicy
 import coil.util.CoilUtils
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 class MyApplication : Application(), ImageLoaderFactory {
 
@@ -39,6 +40,9 @@ class MyApplication : Application(), ImageLoaderFactory {
             .okHttpClient {
                 OkHttpClient.Builder()
                     .cache(CoilUtils.createDefaultCache(context))
+                    .readTimeout(90, TimeUnit.SECONDS)
+                    .connectTimeout(90, TimeUnit.SECONDS)
+                    .writeTimeout(90, TimeUnit.SECONDS)
                     .build()
             }
             .build()

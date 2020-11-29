@@ -39,13 +39,6 @@
             app:popEnterAnim="@anim/tool_close_enter"
             app:popExitAnim="@anim/tool_close_exit" />
         <action
-            android:id="@+id/action_containerFragment_to_enemyListFragment"
-            app:destination="@id/enemyListFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-        <action
             android:id="@+id/action_containerFragment_to_toolGachaFragment"
             app:destination="@id/toolGachaFragment"
             app:enterAnim="@anim/tool_open_enter"
@@ -88,11 +81,6 @@
     <action
         android:id="@+id/action_global_containerFragment"
         app:destination="@id/containerFragment" />
-    <fragment
-        android:id="@+id/enemyListFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.enemy.EnemyListFragment"
-        android:label="EnemyListFragment"
-        tools:layout="@layout/fragment_tool_enemy" />
     <fragment
         android:id="@+id/toolLevelFragment"
         android:name="cn.wthee.pcrtool.ui.tool.level.LevelFragment"

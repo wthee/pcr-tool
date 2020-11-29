@@ -102,10 +102,6 @@ class MainPagerFragment : Fragment() {
                             popupMenu.dismiss()
                             findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
                         }
-                        toolEnemy.setOnClickListener {
-                            popupMenu.dismiss()
-                            findNavController().navigate(R.id.action_containerFragment_to_enemyListFragment)
-                        }
                         toolGacha.setOnClickListener {
                             popupMenu.dismiss()
                             findNavController().navigate(R.id.action_containerFragment_to_toolGachaFragment)

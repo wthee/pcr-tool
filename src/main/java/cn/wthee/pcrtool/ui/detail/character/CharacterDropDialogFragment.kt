@@ -48,7 +48,7 @@ class CharacterDropDialogFragment : CommonBasicDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCharacterDropInfoBinding.inflate(inflater, container, false)
         //toolbar
         ToolbarUtil(binding.toolbar).setCenterTitle("角色碎片掉落")

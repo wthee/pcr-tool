@@ -16,7 +16,7 @@ class EquipmentDetailsViewModel(
 
     private var materials = arrayListOf<EquipmentMaterial>()
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    var isLoading = MutableLiveData<Boolean>()
+    private var isLoading = MutableLiveData<Boolean>()
 
     //获取装备制作材料信息
     fun getEquipInfos(equip: EquipmentMaxData) {

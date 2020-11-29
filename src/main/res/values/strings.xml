@@ -95,7 +95,7 @@
     <string name="tool_pvp">竞技场查询</string>
     <string name="ys">佑树</string>
     <string name="character">角色</string>
-    <string name="pvp_search">开始查询</string>
+    <string name="pvp_search">查询</string>
     <string name="game_version">切换数据</string>
     <string name="game_version_summary">可选择国服或日服数据</string>
     <string name="change_success">更新完成</string>
@@ -106,22 +106,17 @@
     <string name="title_material">所需装备：%d</string>
     <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
-    <string name="tool_enemy">怪物信息</string>
     <string name="tool_gacha">卡池记录</string>
     <string name="tool_event">活动记录</string>
     <string name="pre">✦ </string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
     <string name="pcrdfans_com">数据来源 pcrdfans</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
-    <string name="loop_skill">技能循环 > </string>
     <string name="share_app">分享应用</string>
     <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
-    <string name="skill_info">技能信息</string>
     <string name="more">更多</string>
-    <string name="atk_time">攻击时间间隔</string>
-    <string name="atk_dis">攻击距离</string>
     <string name="drop_info">- 掉落信息 -</string>
-    <string name="test">test</string>
+    <string name="test">testtesttesttesttesttesttestttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttestestesttesttesttesttesttesttesttesttesttestttesttest</string>
     <string name="title_all_attr_sub">- 已计算角色剧情属性 -</string>
     <string name="title_story_attr_sub">- 相同角色所有剧情属性 -</string>
     <string name="title_all_attr">- 人物属性 -</string>
@@ -130,5 +125,7 @@
     <string name="tool_news">最新消息</string>
     <string name="loading">加载中...</string>
     <string name="news_load_tip">网页加载较慢或无法加载，可尝试在浏览器中查看~</string>
+    <string name="loading_news">正在获取最新数据...</string>
+    <string name="stared">已收藏</string>
 
 </resources>

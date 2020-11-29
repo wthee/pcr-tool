@@ -35,7 +35,7 @@ class ToolNewsListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentToolNewsListBinding.inflate(inflater, container, false)
         adapter = NewsAdapter(parentFragmentManager, region)
         val loaderStateAdapter = LoaderStateAdapter { adapter.retry() }
@@ -52,30 +52,31 @@ class ToolNewsListFragment : Fragment() {
         }
         //新闻数据
         loadNews()
-        //加载更多进度显示
-        newsViewModel.loadingMore.observe(viewLifecycleOwner, {
-            binding.progress.visibility = if (it) View.VISIBLE else View.GONE
-        })
         return binding.root
     }
 
     private fun loadNews() {
+        binding.loading.loadingTip.text = getString(R.string.loading_news)
+        binding.loading.loadingTip.setTextColor(ResourcesUtil.getColor(R.color.colorWhite))
         lifecycleScope.launch {
             @OptIn(ExperimentalCoroutinesApi::class)
             when (region) {
                 2 -> {
                     newsViewModel.getNewsCN().collectLatest {
                         adapter.submitData(it)
+                        binding.loading.root.visibility = View.GONE
                     }
                 }
                 3 -> {
                     newsViewModel.getNewsTW().collectLatest {
                         adapter.submitData(it)
+                        binding.loading.root.visibility = View.GONE
                     }
                 }
                 4 -> {
                     newsViewModel.getNewsJP().collectLatest {
                         adapter.submitData(it)
+                        binding.loading.root.visibility = View.GONE
                     }
                 }
             }

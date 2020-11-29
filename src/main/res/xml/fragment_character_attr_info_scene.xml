@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end_attr"
+        motion:constraintSetStart="@id/start_attr">
+        <OnSwipe
+            app:dragDirection="dragUp"
+            app:touchAnchorId="@id/nestedScrollView"
+            app:touchAnchorSide="top" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start_attr">
+        <Constraint
+            android:id="@+id/icon"
+            android:layout_width="@dimen/character_icon_size"
+            android:layout_height="@dimen/character_icon_size"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+
+        <Constraint
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/level" />
+
+        <Constraint
+            android:id="@+id/level_seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/m_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/starts" />
+
+        <Constraint
+            android:id="@+id/starts"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/toolbar_height"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/icon" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end_attr">
+
+        <Constraint
+            android:id="@+id/icon"
+            android:layout_width="@dimen/character_icon_size"
+            android:layout_height="@dimen/character_icon_size"
+            app:layout_constraintBottom_toBottomOf="@id/starts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_margin"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/starts"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_marginStart="@dimen/s_margin"
+            app:layout_constraintBottom_toTopOf="@id/nestedScrollView"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toBottomOf="@id/level" />
+
+        <Constraint
+            android:id="@+id/level_seek_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/level"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/level"
+            app:layout_constraintTop_toTopOf="@id/level" />
+
+        <Constraint
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/icon" />
+    </ConstraintSet>
+</MotionScene>

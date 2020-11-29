@@ -40,7 +40,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         //获取控件
-        titleDatabase = findPreference<Preference>("title_database")!!
+        titleDatabase = findPreference("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
         val appUpdate = findPreference<Preference>("force_update_app")
         val shareApp = findPreference<Preference>("share_app")

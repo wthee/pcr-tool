@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.MainPagerFragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterPageAdapter
+import cn.wthee.pcrtool.adapters.CharacterListAdapter
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
@@ -39,7 +39,7 @@ class CharacterListFragment : Fragment() {
 
     companion object {
         lateinit var characterList: RecyclerView
-        lateinit var listAdapter: CharacterPageAdapter
+        lateinit var listAdapter: CharacterListAdapter
         var characterFilterParams = FilterCharacter(
             true, 0, 0, "全部"
         )
@@ -64,7 +64,6 @@ class CharacterListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
-        viewModel.isLoading.postValue(true)
         //公会列表
         guilds = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -167,7 +166,7 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
-        listAdapter = CharacterPageAdapter(this@CharacterListFragment)
+        listAdapter = CharacterListAdapter(this@CharacterListFragment)
         characterList = binding.characterList
         binding.characterList.apply {
             adapter = listAdapter
@@ -195,15 +194,9 @@ class CharacterListFragment : Fragment() {
                         @OptIn(ExperimentalCoroutinesApi::class)
                         viewModel.characters.collectLatest { data ->
                             listAdapter.submitData(data)
+                            binding.loading.root.visibility = View.GONE
                         }
                     }
-                    isLoading.postValue(false)
-                })
-            }
-            //加载
-            if (!isLoading.hasObservers()) {
-                isLoading.observe(viewLifecycleOwner, {
-                    binding.progress.visibility = if (it) View.VISIBLE else View.GONE
                 })
             }
             //重置

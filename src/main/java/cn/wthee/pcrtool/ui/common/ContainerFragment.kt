@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterSkillFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 
 
-class ContainerFragment() :
+class ContainerFragment :
     CommonBasicDialogFragment() {
 
     private val DIALOG = "dialog"

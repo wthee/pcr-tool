@@ -55,7 +55,7 @@ class CharacterSkillFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
 
         val viewModel = InjectorUtil.provideCharacterSkillViewModelFactory()

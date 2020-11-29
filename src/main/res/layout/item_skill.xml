@@ -15,11 +15,13 @@
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constrainedWidth="true"
+        android:ellipsize="end"
+        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@+id/type"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="毁灭之眼" />
+        tools:text="@string/test" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/type"

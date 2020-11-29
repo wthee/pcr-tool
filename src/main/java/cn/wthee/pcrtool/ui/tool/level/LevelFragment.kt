@@ -27,7 +27,7 @@ class LevelFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         FabHelper.addBackFab()
         binding = FragmentToolLevelBinding.inflate(inflater, container, false)
         MainScope().launch {

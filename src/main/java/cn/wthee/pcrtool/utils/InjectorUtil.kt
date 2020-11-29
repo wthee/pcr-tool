@@ -2,7 +2,10 @@ package cn.wthee.pcrtool.utils
 
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.*
+import cn.wthee.pcrtool.data.CharacterRepository
+import cn.wthee.pcrtool.data.EquipmentRepository
+import cn.wthee.pcrtool.data.EventRepository
+import cn.wthee.pcrtool.data.GachaRepository
 import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.ui.detail.character.CharacterAttrViewModelFactory
@@ -10,7 +13,6 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
 import cn.wthee.pcrtool.ui.main.CharacterViewModelFactory
 import cn.wthee.pcrtool.ui.main.EquipmentViewModelFactory
-import cn.wthee.pcrtool.ui.tool.enemy.EnemyViewModelFactory
 import cn.wthee.pcrtool.ui.tool.event.EventViewModelFactory
 import cn.wthee.pcrtool.ui.tool.gacha.GachaViewModelFactory
 
@@ -36,16 +38,6 @@ object InjectorUtil {
                 AppDatabase.getInstance().getEquipmentDao()
             } else {
                 AppDatabaseJP.getInstance().getEquipmentDao()
-            }
-        )
-    }
-
-    private fun getEnemyRepository(): EnemyRepository {
-        return EnemyRepository.getInstance(
-            if (getType() == 1) {
-                AppDatabase.getInstance().getEnemyDao()
-            } else {
-                AppDatabaseJP.getInstance().getEnemyDao()
             }
         )
     }
@@ -102,13 +94,6 @@ object InjectorUtil {
     fun provideCharacterSkillViewModelFactory(): CharacterSkillViewModelFactory {
         val repository = getCharacterRepository()
         return CharacterSkillViewModelFactory(
-            repository
-        )
-    }
-
-    fun provideEnemyViewModelFactory(): EnemyViewModelFactory {
-        val repository = getEnemyRepository()
-        return EnemyViewModelFactory(
             repository
         )
     }

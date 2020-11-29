@@ -53,7 +53,7 @@ data class CharacterInfoPro(
         }
     }
 
-    fun getStarId(star: Int): String {
+    private fun getStarId(star: Int): String {
         val idStr = id.toString()
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
     }

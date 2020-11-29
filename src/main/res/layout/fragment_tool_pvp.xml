@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@drawable/background_color"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include
@@ -21,7 +21,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/s_margin"
+            android:background="@color/colorWhite"
+            android:paddingTop="@dimen/s_padding"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -33,16 +34,18 @@
                 tools:itemCount="5"
                 tools:listitem="@layout/item_common" />
 
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pvp_search"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/pvp_search" />
-
-
+                android:layout_width="wrap_content"
+                android:padding="0dp"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:text="@string/pvp_search"
+                app:icon="@drawable/ic_search"
+                app:iconSize="@dimen/m_icon" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -53,8 +56,8 @@
         android:gravity="center"
         android:padding="@dimen/xs_padding"
         android:text="@string/pcrdfans_com"
-        android:textColor="@color/colorWhite"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/colorWhite" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

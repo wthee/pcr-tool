@@ -29,6 +29,7 @@
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toEndOf="@id/position_type"
         app:layout_constraintTop_toBottomOf="@id/character_pic"
+        app:layout_constraintEnd_toStartOf="@id/name_extra"
         tools:text="@string/app_name" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -44,9 +45,11 @@
         android:layout_marginStart="@dimen/s_margin"
         android:ellipsize="end"
         android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/name"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constrainedWidth="true"
-        tools:text="@string/app_name" />
+        tools:text="@string/test" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/three"
@@ -77,13 +80,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginEnd="@dimen/xm_margin"
+        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/three">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/basic_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:paddingBottom="@dimen/news_card_height">
 
             <com.google.android.material.textview.MaterialTextView
@@ -101,7 +104,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="your best friend" />
+                tools:text="@string/test" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/intro"
@@ -114,7 +117,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/catah"
-                tools:text="@string/app_name" />
+                tools:text="@string/test" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_birth"
@@ -137,6 +140,8 @@
                 android:gravity="end"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="@dimen/s_padding"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textIsSelectable="true"
                 app:layout_constrainedWidth="true"
@@ -163,6 +168,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textIsSelectable="true"
                 app:layout_constraintStart_toEndOf="@id/title_blood"
@@ -191,6 +198,8 @@
                 android:gravity="end"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="@dimen/s_padding"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textIsSelectable="true"
                 app:layout_constrainedWidth="true"
@@ -222,6 +231,8 @@
                 app:layout_constraintStart_toEndOf="@id/title_cv"
                 app:layout_constraintTop_toTopOf="@id/title_race"
                 app:layout_constraintWidth_percent="0.35"
+                android:ellipsize="end"
+                android:maxLines="1"
                 tools:text="@string/test" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -245,6 +256,8 @@
                 android:gravity="end"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textIsSelectable="true"
+                android:ellipsize="end"
+                android:maxLines="1"
                 app:layout_constraintStart_toEndOf="@id/title_guide"
                 app:layout_constraintTop_toTopOf="@id/title_guide"
                 app:layout_constraintWidth_percent="0.85"
@@ -259,6 +272,8 @@
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="0dp"
                 android:text="@string/title_fav"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_guide"

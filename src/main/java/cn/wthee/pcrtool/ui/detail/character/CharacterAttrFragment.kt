@@ -62,7 +62,7 @@ class CharacterAttrFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCharacterAttrInfoBinding.inflate(inflater, container, false)
         //点击事件
         setListener()
@@ -93,15 +93,6 @@ class CharacterAttrFragment : Fragment() {
                     } else {
                         ToastUtil.short("无掉落信息~")
                     }
-                }
-            }
-            //等级点击事件
-            level.setOnClickListener {
-                levelSeekBar.also {
-                    it.visibility = if (it.visibility == View.VISIBLE)
-                        View.GONE
-                    else
-                        View.VISIBLE
                 }
             }
             //等级滑动条

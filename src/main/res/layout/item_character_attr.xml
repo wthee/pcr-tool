@@ -15,6 +15,8 @@
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/colorWhite"
         tools:text="@string/physical" />
 
@@ -23,6 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_marginEnd="@dimen/xs_margin"
         android:gravity="end"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         tools:text="780" />

@@ -23,9 +23,9 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 
-class CharacterPageAdapter(
+class CharacterListAdapter(
     private val fragment: Fragment
-) : PagingDataAdapter<CharacterInfo, CharacterPageAdapter.ViewHolder>(CharacterDiffCallback()) {
+) : PagingDataAdapter<CharacterInfo, CharacterListAdapter.ViewHolder>(CharacterDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

@@ -16,10 +16,7 @@ import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ObjectAnimatorHelper
-import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.*
 import coil.load
 import com.google.android.material.transition.Hold
 
@@ -55,7 +52,7 @@ class CharacterBasicInfoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //初始化
         init()
@@ -90,6 +87,8 @@ class CharacterBasicInfoFragment : Fragment() {
                     MainActivity.canBack = true
                     parentFragment?.startPostponedEnterTransition()
                     postponeEnterTransition()
+                    //添加返回fab
+                    FabHelper.addBackFab()
                 },
                 onSuccess = { _, _ ->
                     startPostponedEnterTransition()

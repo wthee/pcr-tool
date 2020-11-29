@@ -31,9 +31,9 @@ class NewsTagAdapter :
         fun bind(tag: String) {
             //设置数据
             binding.apply {
-                val colorId = when {
-                    tag == "公告" || tag == "更新" || tag == "アップデート" -> R.color.news_update
-                    tag == "系統" || tag == "メンテナンス" -> R.color.news_system
+                val colorId = when (tag) {
+                    "公告", "更新", "アップデート" -> R.color.news_update
+                    "系統", "メンテナンス" -> R.color.news_system
                     else -> R.color.news_event
                 }
                 text1.text = tag

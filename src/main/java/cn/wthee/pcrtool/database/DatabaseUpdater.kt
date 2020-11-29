@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.util.Log
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.Data
@@ -28,8 +29,6 @@ import java.io.File
 
 object DatabaseUpdater {
 
-    private val mContext = MyApplication.context
-
     //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
         //提示开始
@@ -47,6 +46,7 @@ object DatabaseUpdater {
                 //更新判断
                 downloadDB(version, fromSetting, force)
             } catch (e: Exception) {
+                Log.e("error", e.message ?: "")
                 CharacterListFragment.handler.sendEmptyMessage(0)
             }
         }
@@ -90,7 +90,7 @@ object DatabaseUpdater {
                         .build()
                 )
                 .build()
-            WorkManager.getInstance(mContext).enqueueUniqueWork(
+            WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
                 "updateDatabase",
                 ExistingWorkPolicy.REPLACE,
                 uploadWorkRequest
@@ -112,8 +112,9 @@ object DatabaseUpdater {
     }
 
 
-    private fun getDatabaseType() = PreferenceManager.getDefaultSharedPreferences(mContext)
-        .getString("change_database", "1")?.toInt() ?: 1
+    private fun getDatabaseType() =
+        PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
+            .getString("change_database", "1")?.toInt() ?: 1
 
 
     private fun getLocalDatabaseVersion() = MainActivity.sp.getString(

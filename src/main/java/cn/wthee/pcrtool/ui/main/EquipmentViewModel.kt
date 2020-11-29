@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import cn.wthee.pcrtool.data.EquipmentRepository
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
@@ -28,16 +29,15 @@ class EquipmentViewModel(
         viewModelScope.launch {
             equipments = Pager(
                 PagingConfig(
-                    pageSize = 50,
-                    enablePlaceholders = false,
-                    maxSize = 500
+                    pageSize = 10,
+                    enablePlaceholders = false
                 )
             ) {
                 equipmentRepository.getPagingEquipments(
                     name,
                     EquipmentListFragment.equipFilterParams
                 )
-            }.flow
+            }.flow.cachedIn(viewModelScope)
             equipmentCounts.postValue(
                 equipmentRepository.getEquipmentCount(
                     name,

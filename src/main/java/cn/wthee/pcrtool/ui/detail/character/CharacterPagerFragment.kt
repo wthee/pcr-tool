@@ -15,7 +15,6 @@ import cn.wthee.pcrtool.adapters.viewpager.DepthPageTransformer
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
@@ -53,8 +52,6 @@ class CharacterPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
-        //添加返回fab
-        FabHelper.addBackFab()
         init()
         if (savedInstanceState == null) {
             postponeEnterTransition()

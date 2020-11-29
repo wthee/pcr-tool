@@ -14,7 +14,6 @@
     <dimen name="l_icon">24dp</dimen>
     <dimen name="xl_icon">36dp</dimen>
     <dimen name="menu_icon">24dp</dimen>
-    <dimen name="fab_icon">24dp</dimen>
     <dimen name="normal_icon">48dp</dimen>
     <dimen name="big_icon">64dp</dimen>
     <dimen name="character_icon_size">64dp</dimen>
@@ -26,9 +25,9 @@
     <dimen name="xm_margin">12dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
-    <dimen name="right_icon_margin">11dp</dimen>
     <dimen name="xs_padding">3dp</dimen>
     <dimen name="s_padding">6dp</dimen>
+    <dimen name="m_padding">9dp</dimen>
     <dimen name="xm_padding">12dp</dimen>
     <dimen name="l_padding">25dp</dimen>
 
@@ -37,8 +36,6 @@
     <dimen name="tab_height_2">22dp</dimen>
 
     <dimen name="elevation_card">2dp</dimen>
-    <dimen name="fab_circle_radius">120dp</dimen>
-    <dimen name="hr_height">4dp</dimen>
-    <dimen name="hr_width">36dp</dimen>
-    <dimen name="seek_bar_width">256dp</dimen>
+    <dimen name="efa_width">100dp</dimen>
+    <dimen name="min_text">10sp</dimen>
 </resources>

@@ -47,7 +47,7 @@ class PvpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         FabHelper.addBackFab()
         binding = FragmentToolPvpBinding.inflate(inflater, container, false)
         progressBar = binding.pvpProgressBar

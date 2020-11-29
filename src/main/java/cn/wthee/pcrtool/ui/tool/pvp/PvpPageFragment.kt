@@ -41,7 +41,7 @@ class PvpPageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
             val adapter = PvpCharacterAdapter(isFloatWindow, requireActivity())
