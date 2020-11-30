@@ -162,34 +162,36 @@ interface EquipmentDao {
             a.equipment_id,
             a.equipment_name,
             a.description,
-            (d.max_level + 1) as max_level,
             (
-            a.hp + b.hp * COALESCE( d.max_level, 0 )) AS hp,
-            ( a.atk + b.atk * COALESCE( d.max_level, 0 ) ) AS atk,
-            ( a.magic_str + b.magic_str * COALESCE( d.max_level, 0 ) ) AS magic_str,
-            ( a.def + b.def * COALESCE( d.max_level, 0 ) ) AS def,
-            ( a.magic_def + b.magic_def * COALESCE( d.max_level, 0 ) ) AS magic_def,
-            ( a.physical_critical + b.physical_critical * COALESCE( d.max_level, 0 ) ) AS physical_critical,
-            ( a.magic_critical + b.magic_critical * COALESCE( d.max_level, 0 ) ) AS magic_critical,
-            ( a.wave_hp_recovery + b.wave_hp_recovery * COALESCE( d.max_level, 0 ) ) AS wave_hp_recovery,
-            ( a.wave_energy_recovery + b.wave_energy_recovery * COALESCE( d.max_level, 0 ) ) AS wave_energy_recovery,
-            ( a.dodge + b.dodge * COALESCE( d.max_level, 0 ) ) AS dodge,
-            ( a.physical_penetrate + b.physical_penetrate * COALESCE( d.max_level, 0 ) ) AS physical_penetrate,
-            ( a.magic_penetrate + b.magic_penetrate * COALESCE( d.max_level, 0 ) ) AS magic_penetrate,
-            ( a.life_steal + b.life_steal * COALESCE( d.max_level, 0 ) ) AS life_steal,
-            ( a.hp_recovery_rate + b.hp_recovery_rate * COALESCE( d.max_level, 0 ) ) AS hp_recovery_rate,
-            ( a.energy_recovery_rate + b.energy_recovery_rate * COALESCE( d.max_level, 0 ) ) AS energy_recovery_rate,
-            ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( d.max_level, 0 ) ) AS energy_reduce_rate,
-            ( a.accuracy + b.accuracy * COALESCE( d.max_level, 0 ) ) AS accuracy 
+            a.hp + b.hp * COALESCE( :lv - 1, 0 )) AS hp,
+            ( a.atk + b.atk * COALESCE( :lv - 1, 0 ) ) AS atk,
+            ( a.magic_str + b.magic_str * COALESCE( :lv - 1, 0 ) ) AS magic_str,
+            ( a.def + b.def * COALESCE( :lv - 1, 0 ) ) AS def,
+            ( a.magic_def + b.magic_def * COALESCE( :lv - 1, 0 ) ) AS magic_def,
+            ( a.physical_critical + b.physical_critical * COALESCE( :lv - 1, 0 ) ) AS physical_critical,
+            ( a.magic_critical + b.magic_critical * COALESCE( :lv - 1, 0 ) ) AS magic_critical,
+            ( a.wave_hp_recovery + b.wave_hp_recovery * COALESCE( :lv - 1, 0 ) ) AS wave_hp_recovery,
+            ( a.wave_energy_recovery + b.wave_energy_recovery * COALESCE( :lv - 1, 0 ) ) AS wave_energy_recovery,
+            ( a.dodge + b.dodge * COALESCE( :lv - 1, 0 ) ) AS dodge,
+            ( a.physical_penetrate + b.physical_penetrate * COALESCE( :lv - 1, 0 ) ) AS physical_penetrate,
+            ( a.magic_penetrate + b.magic_penetrate * COALESCE( :lv - 1, 0 ) ) AS magic_penetrate,
+            ( a.life_steal + b.life_steal * COALESCE( :lv - 1, 0 ) ) AS life_steal,
+            ( a.hp_recovery_rate + b.hp_recovery_rate * COALESCE( :lv - 1, 0 ) ) AS hp_recovery_rate,
+            ( a.energy_recovery_rate + b.energy_recovery_rate * COALESCE( :lv - 1, 0 ) ) AS energy_recovery_rate,
+            ( a.energy_reduce_rate + b.energy_reduce_rate * COALESCE( :lv - 1, 0 ) ) AS energy_reduce_rate,
+            ( a.accuracy + b.accuracy * COALESCE( :lv - 1, 0 ) ) AS accuracy 
         FROM
             unit_data AS c
             LEFT OUTER JOIN unique_equipment_data AS a ON c.unit_id < 200000 
             AND SUBSTR( c.unit_id, 2, 3 ) = SUBSTR( a.equipment_id, 3, 3 )
             LEFT OUTER JOIN unique_equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
-            LEFT OUTER JOIN ( SELECT MAX( unique_equipment_enhance_data.enhance_level ) - 1 AS max_level FROM unique_equipment_enhance_data ) AS d 
         WHERE
             a.equipment_id IS NOT NULL AND unit_id =:uid
     """
     )
-    suspend fun getUniqueEquipInfos(uid: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfos(uid: Int, lv: Int): UniqueEquipmentMaxData?
+
+    @Transaction
+    @Query(" SELECT MAX( unique_equipment_enhance_data.enhance_level ) FROM unique_equipment_enhance_data")
+    suspend fun getUniqueEquipMaxLv(): Int
 }

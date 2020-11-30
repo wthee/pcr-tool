@@ -3,58 +3,85 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/equip_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/s_margin"
+        android:text="@string/equip_details"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/m_margin"
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/equip_name"
         tools:src="@drawable/unknown_gray" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/title_des"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/m_margin"
-        android:background="@drawable/title_background"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:text="@string/equip_details"
-        android:textColor="@color/colorWhite"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@id/item_pic"
-        app:layout_constraintTop_toTopOf="@id/item_pic" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginTop="@dimen/s_margin"
         android:minHeight="@dimen/desc_height"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textIsSelectable="true"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_pic"
-        app:layout_constraintTop_toBottomOf="@id/title_des"
+        app:layout_constraintTop_toTopOf="@id/item_pic"
         tools:text="@string/test" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/ue_lv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constrainedWidth="true"
+        android:layout_marginTop="@dimen/s_margin"
+        app:layout_constraintEnd_toEndOf="@id/item_pic"
+        app:layout_constraintStart_toStartOf="@id/item_pic"
+        app:layout_constraintTop_toBottomOf="@+id/item_pic"
+        tools:text="等级 999" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/ue_lv_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/l_margin"
+        android:layout_marginEnd="@dimen/l_margin"
+        android:stepSize="1"
+        android:visibility="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/desc"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/attrs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/s_margin"
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/desc"
+        app:layout_constraintTop_toBottomOf="@id/ue_lv_seek_bar"
         tools:itemCount="2"
         tools:listitem="@layout/item_equipment_attr" />
 

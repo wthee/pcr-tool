@@ -50,12 +50,14 @@ class EquipmentViewModel(
 
 
     //专武信息
-    fun getUniqueEquipInfos(uid: Int) {
+    fun getUniqueEquipInfos(uid: Int, lv: Int) {
         viewModelScope.launch {
-            val data = equipmentRepository.getUniqueEquipInfos(uid)
+            val data = equipmentRepository.getUniqueEquipInfos(uid, lv)
             uniqueEquip.postValue(data)
         }
     }
+
+    suspend fun getUEMaxLv() = equipmentRepository.getUniqueEquipMaxLv()
 
     //获取装备类型
     suspend fun getTypes() = equipmentRepository.getEquipTypes()

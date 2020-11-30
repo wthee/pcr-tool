@@ -43,6 +43,7 @@ class CharacterAttrFragment : Fragment() {
     private var selRatity = 1
     private var maxStar = 5
     private var lv = 85
+    private var ueLv = 1
 
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
@@ -99,7 +100,6 @@ class CharacterAttrFragment : Fragment() {
             levelSeekBar.addOnSliderTouchListener(object :
                 Slider.OnSliderTouchListener {
                 override fun onStartTrackingTouch(slider: Slider) {
-                    lv = slider.value.toInt()
                 }
 
                 override fun onStopTrackingTouch(slider: Slider) {
@@ -111,26 +111,40 @@ class CharacterAttrFragment : Fragment() {
                 lv = slider.value.toInt()
                 level.text = lv.toString()
             }
+            //专武等级滑动
+            uniqueEquip.ueLvSeekBar.addOnSliderTouchListener(object :
+                Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: Slider) {
+                }
+
+                override fun onStopTrackingTouch(slider: Slider) {
+                    loadData()
+                    sharedEquipViewModel.getUniqueEquipInfos(uid, ueLv)
+                }
+            })
+            uniqueEquip.ueLvSeekBar.addOnChangeListener { slider, _, _ ->
+                ueLv = slider.value.toInt()
+                uniqueEquip.ueLv.text = getString(R.string.unique_equip_lv, ueLv)
+            }
         }
     }
 
     private fun setObserve() {
-        //角色基本信息
-//        sharedCharacterViewModel.getCharacter(uid)
-//        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
-//            binding.name.text = it.name
-//        })
         //获取角色最大Rank后，加载数据
         characterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
             selRank = r[0]
             selRatity = r[1]
             maxStar = r[1]
             lv = r[2]
+            ueLv = r[3]
             binding.apply {
                 level.text = lv.toString()
                 levelSeekBar.valueFrom = 1.0f
                 levelSeekBar.valueTo = lv.toFloat()
                 levelSeekBar.value = lv.toFloat()
+                uniqueEquip.ueLvSeekBar.valueFrom = 1.0f
+                uniqueEquip.ueLvSeekBar.valueTo = ueLv.toFloat()
+                uniqueEquip.ueLvSeekBar.value = ueLv.toFloat()
                 loadData()
                 setRank(selRank)
                 setRatity(selRatity)
@@ -159,12 +173,15 @@ class CharacterAttrFragment : Fragment() {
                     }
                 }
             }
+            //获取专武
+            sharedEquipViewModel.getUniqueEquipInfos(uid, ueLv)
         })
         //专武
-        sharedEquipViewModel.getUniqueEquipInfos(uid)
         sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner, {
             binding.uniqueEquip.apply {
                 if (it != null) {
+                    binding.uniqueEquip.ueLv.visibility = View.VISIBLE
+                    binding.uniqueEquip.ueLvSeekBar.visibility = View.VISIBLE
                     binding.uniqueEquip.root.visibility = View.VISIBLE
                     val picUrl = Constants.EQUIPMENT_URL + it.equipmentId + Constants.WEBP
                     itemPic.load(picUrl) {
@@ -172,8 +189,8 @@ class CharacterAttrFragment : Fragment() {
                         error(R.drawable.unknown_gray)
                     }
                     //描述
-                    titleDes.text =
-                        getString(R.string.unique_equip_name, it.equipmentName, it.maxLevel)
+                    equipName.text =
+                        getString(R.string.unique_equip_name, it.equipmentName)
                     desc.text = it.getDesc()
                     //属性词条
                     val adapter = EquipmentAttrAdapter()
@@ -232,7 +249,7 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private fun loadData() {
-        characterAttrViewModel.getCharacterInfo(uid, selRank, selRatity, lv)
+        characterAttrViewModel.getCharacterInfo(uid, selRank, selRatity, lv, ueLv)
     }
 
     //设置rank

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.character
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,7 +27,7 @@ class CharacterAttrViewModel(
     var maxData = MutableLiveData<List<Int>>()
 
     //获取角色属性信息
-    fun getCharacterInfo(unitId: Int, rank: Int, rarity: Int, lv: Int) {
+    fun getCharacterInfo(unitId: Int, rank: Int, rarity: Int, lv: Int, ueLv: Int) {
         //计算属性
         viewModelScope.launch {
             try {
@@ -52,7 +53,7 @@ class CharacterAttrViewModel(
                     info.add(eq.attr)
                 }
                 //专武
-                val uniqueEquip = equipmentRepository.getUniqueEquipInfos(unitId)
+                val uniqueEquip = equipmentRepository.getUniqueEquipInfos(unitId, ueLv)
                 if (uniqueEquip != null) {
                     info.add(uniqueEquip.attr)
                 }
@@ -80,8 +81,9 @@ class CharacterAttrViewModel(
                 val rank = characterRepository.getMaxRank(id)
                 val rarity = characterRepository.getMaxRarity(id)
                 val level = characterRepository.getMaxLevel()
-
-                maxData.postValue(listOf(rank, rarity, level))
+                val ueLv = equipmentRepository.getUniqueEquipMaxLv()
+                Log.e("error", ueLv.toString())
+                maxData.postValue(listOf(rank, rarity, level, ueLv))
             } catch (e: Exception) {
 
             }

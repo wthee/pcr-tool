@@ -39,7 +39,9 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     suspend fun getEquipmentCraft(eid: Int) = equipmentDao.getEquipmentCraft(eid)
 
     //专武信息
-    suspend fun getUniqueEquipInfos(uid: Int) = equipmentDao.getUniqueEquipInfos(uid)
+    suspend fun getUniqueEquipInfos(uid: Int, lv: Int) = equipmentDao.getUniqueEquipInfos(uid, lv)
+
+    suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
 
     companion object {
 
