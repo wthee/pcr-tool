@@ -189,8 +189,7 @@ class CharacterAttrFragment : Fragment() {
                         error(R.drawable.unknown_gray)
                     }
                     //描述
-                    equipName.text =
-                        getString(R.string.unique_equip_name, it.equipmentName)
+                    equipName.text = it.equipmentName
                     desc.text = it.getDesc()
                     //属性词条
                     val adapter = EquipmentAttrAdapter()

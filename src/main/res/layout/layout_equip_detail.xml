@@ -12,8 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/s_margin"
         android:text="@string/equip_details"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimary"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,32 +47,6 @@
         app:layout_constraintTop_toTopOf="@id/item_pic"
         tools:text="@string/test" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/ue_lv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        app:layout_constrainedWidth="true"
-        android:layout_marginTop="@dimen/s_margin"
-        app:layout_constraintEnd_toEndOf="@id/item_pic"
-        app:layout_constraintStart_toStartOf="@id/item_pic"
-        app:layout_constraintTop_toBottomOf="@+id/item_pic"
-        tools:text="等级 999" />
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/ue_lv_seek_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/l_margin"
-        android:layout_marginEnd="@dimen/l_margin"
-        android:stepSize="1"
-        android:visibility="gone"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/desc"
-        tools:visibility="visible" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/attrs"
         android:layout_width="match_parent"
@@ -80,9 +55,43 @@
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ue_lv_seek_bar"
+        app:layout_constraintTop_toBottomOf="@id/desc"
         tools:itemCount="2"
         tools:listitem="@layout/item_equipment_attr" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/ue_lv_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
+        android:layout_marginEnd="@dimen/xl_margin"
+        android:scrollbarSize="10dp"
+        android:stepSize="1"
+        android:visibility="gone"
+        app:labelBehavior="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ue_lv"
+        app:layout_constraintTop_toBottomOf="@id/attrs"
+        app:layout_constraintWidth_percent="0.5"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/ue_lv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingStart="@dimen/xs_padding"
+        android:paddingEnd="@dimen/xs_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="@id/ue_lv_seek_bar"
+        app:layout_constraintEnd_toStartOf="@id/ue_lv_seek_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ue_lv_seek_bar"
+        app:layout_constraintWidth_percent="0.25"
+        tools:text="等级 999" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

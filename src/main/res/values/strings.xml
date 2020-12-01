@@ -4,7 +4,7 @@
     <string name="character_detail">%s / %sCM / %sKG / %d</string>
     <string name="blood">%s 型</string>
     <string name="unique_equip_name">%s</string>
-    <string name="unique_equip_lv">%d</string>
+    <string name="unique_equip_lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
     <string name="pic_index">%d / %d</string>
     <string name="percent">%d%%</string>
