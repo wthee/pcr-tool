@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.EventRepository
-import cn.wthee.pcrtool.data.entity.EventStoryData
+import cn.wthee.pcrtool.data.view.EventData
 import kotlinx.coroutines.launch
 
 
@@ -12,7 +12,7 @@ class EventViewModel(
     private val repository: EventRepository
 ) : ViewModel() {
 
-    var events = MutableLiveData<List<EventStoryData>>()
+    var events = MutableLiveData<List<EventData>>()
     var isLoading = MutableLiveData<Boolean>()
 
 
