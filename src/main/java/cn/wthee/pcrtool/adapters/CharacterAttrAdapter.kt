@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,7 +10,7 @@ import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.databinding.ItemCharacterAttrBinding
 
 
-class CharacterAttrAdapter :
+class CharacterAttrAdapter(private val hideTitle: Boolean = false) :
     ListAdapter<AttrValue, CharacterAttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -25,10 +26,13 @@ class CharacterAttrAdapter :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemCharacterAttrBinding) :
+    inner class ViewHolder(private val binding: ItemCharacterAttrBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(value: AttrValue) {
             binding.apply {
+                if (hideTitle) {
+                    titleAttr.visibility = View.GONE
+                }
                 titleAttr.text = value.title
                 this.value.text = value.getIntValue().toString()
             }

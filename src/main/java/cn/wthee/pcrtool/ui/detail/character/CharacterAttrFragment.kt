@@ -34,22 +34,26 @@ class CharacterAttrFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+
+        var selRatity = 1
+        var maxRank = 1
+        var maxStar = 5
+        var lv = 85
+        var ueLv = 1
+        var uid = 0
     }
 
-    private var uid = 0
+
     private lateinit var binding: FragmentCharacterAttrInfoBinding
     private lateinit var attrAdapter: CharacterAttrAdapter
     private var selRank = 2
-    private var selRatity = 1
-    private var maxStar = 5
-    private var lv = 85
-    private var ueLv = 1
 
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
     }
     private val characterAttrViewModel =
-        InjectorUtil.providePromotionViewModelFactory().create(CharacterAttrViewModel::class.java)
+        InjectorUtil.provideCharacterAttrViewModelFactory()
+            .create(CharacterAttrViewModel::class.java)
 
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
@@ -126,12 +130,17 @@ class CharacterAttrFragment : Fragment() {
                 ueLv = slider.value.toInt()
                 uniqueEquip.ueLv.text = getString(R.string.unique_equip_lv, ueLv)
             }
+            //rank对比
+            rankEquip.rankCompare.setOnClickListener {
+                CharacterRankCompareFragment().show(parentFragmentManager, "rank_compare")
+            }
         }
     }
 
     private fun setObserve() {
         //获取角色最大Rank后，加载数据
         characterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
+            maxRank = r[0]
             selRank = r[0]
             selRatity = r[1]
             maxStar = r[1]
@@ -148,25 +157,25 @@ class CharacterAttrFragment : Fragment() {
                 loadData()
                 setRank(selRank)
                 setRatity(selRatity)
-                rankEquip.rankAdd.setOnClickListener {
+                rankEquip.rankBtns.rankAdd.setOnClickListener {
                     if (selRank != r[0]) {
                         selRank++
                         if (selRank == r[0]) {
                             it.isEnabled = false
                         } else {
-                            rankEquip.rankReduce.isEnabled = true
+                            rankEquip.rankBtns.rankReduce.isEnabled = true
                         }
                         setRank(selRank)
                         loadData()
                     }
                 }
-                rankEquip.rankReduce.setOnClickListener {
+                rankEquip.rankBtns.rankReduce.setOnClickListener {
                     if (selRank != Constants.CHARACTER_MIN_RANK) {
                         selRank--
                         if (selRank == 2) {
                             it.isEnabled = false
                         } else {
-                            rankEquip.rankAdd.isEnabled = true
+                            rankEquip.rankBtns.rankAdd.isEnabled = true
                         }
                         setRank(selRank)
                         loadData()
@@ -254,9 +263,9 @@ class CharacterAttrFragment : Fragment() {
     //设置rank
     private fun setRank(num: Int) {
         binding.rankEquip.apply {
-            rank.text = num.toString()
-            rank.setTextColor(getRankColor(num))
-            rankTitle.setTextColor(getRankColor(num))
+            rankBtns.rank.text = num.toString()
+            rankBtns.rank.setTextColor(getRankColor(num))
+            rankBtns.rankTitle.setTextColor(getRankColor(num))
         }
     }
 

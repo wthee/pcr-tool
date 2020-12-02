@@ -14,12 +14,13 @@ import kotlinx.coroutines.launch
 object ObjectAnimatorHelper {
 
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
-        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.9f, 1f)
-        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.9f, 1f)
+        val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.95f, 1f)
+        val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.95f, 1f)
         val holder3 = PropertyValuesHolder.ofFloat("translationY", 80f, 0f)
+        val holder4 = PropertyValuesHolder.ofFloat("alpha", 0f, 1f)
 
         view.forEach {
-            start(it, onAnimatorListener, holder1, holder2, holder3)
+            start(it, onAnimatorListener, holder1, holder2, holder3, holder4)
         }
     }
 

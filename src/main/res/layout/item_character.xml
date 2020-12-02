@@ -5,7 +5,7 @@
     android:id="@+id/item_character"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin">
+    android:layout_margin="@dimen/m_margin">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -54,7 +54,6 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            android:textSize="9sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@id/three"
             app:layout_constraintStart_toStartOf="parent"
