@@ -128,5 +128,6 @@
     <string name="news_load_tip">网页加载较慢或无法加载，可尝试在浏览器中查看~</string>
     <string name="loading_news">正在获取最新数据...</string>
     <string name="stared">已收藏</string>
+    <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
 
 </resources>

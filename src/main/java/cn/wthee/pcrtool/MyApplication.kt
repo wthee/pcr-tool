@@ -2,6 +2,7 @@ package cn.wthee.pcrtool
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import cn.wthee.pcrtool.utils.LoggerUtil
 import coil.ImageLoader
@@ -25,7 +26,7 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(context)
             .componentRegistry {
-                if (SDK_INT >= 28) {
+                if (SDK_INT >= Build.VERSION_CODES.P) {
                     add(ImageDecoderDecoder())
                 } else {
                     add(GifDecoder())

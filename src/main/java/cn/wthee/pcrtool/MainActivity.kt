@@ -79,8 +79,10 @@ class MainActivity : AppCompatActivity() {
         //绑定活动
         ActivityUtil.instance.currentActivity = this
         mHeight = ScreenUtil.getWidth() - 48.dp
-
+        //应用版本校验
+        AppUpdateHelper.init(this, binding.root, layoutInflater)
     }
+
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         mHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)

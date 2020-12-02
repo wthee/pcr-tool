@@ -114,7 +114,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             shareIntent.type = "text/plain"
             shareIntent.putExtra(
                 Intent.EXTRA_TEXT,
-                "PCR Tool 下载地址: https://www.coolapk.com/apk/273453"
+                "PCR Tool 下载地址: ${getString(R.string.app_download_url)}"
             )
             shareIntent = Intent.createChooser(shareIntent, "分享到：")
             //将mipmap中图片转换成Uri

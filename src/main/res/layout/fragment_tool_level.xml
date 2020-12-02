@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_color"
     android:gravity="center"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include

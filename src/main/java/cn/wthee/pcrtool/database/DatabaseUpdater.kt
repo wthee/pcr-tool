@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.service.DatabaseService
+import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
@@ -34,14 +34,13 @@ object DatabaseUpdater {
         //提示开始
         if (fromSetting == 1) ToastUtil.short(NOTICE_TOAST_CHANGE)
         if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_CHECKING)
-        //创建服务
-        val service = ApiHelper.create(
-            DatabaseService::class.java,
-            API_URL
-        )
         //获取数据库最新版本
         MainScope().launch {
-            try {
+            try {//创建服务
+                val service = ApiHelper.create(
+                    MyAPIService::class.java,
+                    API_URL
+                )
                 val version = service.getDbVersion(getVersionFileName())
                 //更新判断
                 downloadDB(version, fromSetting, force)

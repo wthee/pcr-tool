@@ -61,6 +61,7 @@ class CharacterPagerFragment : Fragment() {
         return binding.root
     }
 
+
     private fun init() {
         //加载列表
         MainScope().launch {

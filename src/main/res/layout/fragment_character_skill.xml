@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true"
     android:minHeight="@dimen/card_height">
 
     <include
@@ -18,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBg"
-        android:fitsSystemWindows="true"
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginEnd="@dimen/xm_margin"
         android:layout_marginTop="@dimen/m_margin"

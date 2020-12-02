@@ -35,7 +35,7 @@
             app:title="@string/check_app_update">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://www.coolapk.com/apk/273453" />
+                android:data="@string/app_download_url" />
         </Preference>
 
         <SwitchPreferenceCompat

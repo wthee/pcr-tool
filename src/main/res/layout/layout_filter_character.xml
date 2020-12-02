@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:paddingStart="@dimen/xm_padding"
     android:paddingTop="@dimen/s_padding"
