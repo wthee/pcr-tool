@@ -63,9 +63,9 @@
                 android:id="@+id/tower"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/m_margin"
                 android:gravity="end"
                 android:text="露娜塔"
-                android:layout_marginEnd="@dimen/m_margin"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/clan"
@@ -79,7 +79,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/all"
+                android:paddingBottom="@dimen/s_padding"
                 tools:listitem="@layout/item_leader" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
