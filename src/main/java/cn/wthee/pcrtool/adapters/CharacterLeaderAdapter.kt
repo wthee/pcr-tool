@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.view.CharacterExperienceAll
-import cn.wthee.pcrtool.databinding.ItemLevelExpBinding
+import cn.wthee.pcrtool.data.model.LeaderboardInfo
+import cn.wthee.pcrtool.databinding.ItemLeaderBinding
 
 
-class CharacterLevelExpAdapter :
-    ListAdapter<CharacterExperienceAll, CharacterLevelExpAdapter.ViewHolder>(LevelDiffCallback()) {
+class CharacterLeaderAdapter :
+    ListAdapter<LeaderboardInfo, CharacterLeaderAdapter.ViewHolder>(LeaderDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemLevelExpBinding.inflate(
+            ItemLeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -28,37 +28,35 @@ class CharacterLevelExpAdapter :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemLevelExpBinding) :
+    class ViewHolder(private val binding: ItemLeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: CharacterExperienceAll) {
+        fun bind(data: LeaderboardInfo) {
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(
                         MyApplication.context,
                         R.anim.anim_translate_y
                     )
-                level.text = data.level.toString()
-                expAbs.text = data.expUnitAbs.toString()
-                expTeamAbs.text = data.expTeamAbs.toString()
+                level.text = data.name
             }
         }
     }
 
 }
 
-private class LevelDiffCallback : DiffUtil.ItemCallback<CharacterExperienceAll>() {
+private class LeaderDiffCallback : DiffUtil.ItemCallback<LeaderboardInfo>() {
 
     override fun areItemsTheSame(
-        oldItem: CharacterExperienceAll,
-        newItem: CharacterExperienceAll
+        oldItem: LeaderboardInfo,
+        newItem: LeaderboardInfo
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.name == newItem.name
     }
 
     override fun areContentsTheSame(
-        oldItem: CharacterExperienceAll,
-        newItem: CharacterExperienceAll
+        oldItem: LeaderboardInfo,
+        newItem: LeaderboardInfo
     ): Boolean {
-        return oldItem.level == newItem.level
+        return oldItem == newItem
     }
 }

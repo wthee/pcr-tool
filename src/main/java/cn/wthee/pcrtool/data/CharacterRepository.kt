@@ -80,9 +80,6 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     //公会信息
     suspend fun getGuilds() = characterDao.getGuilds()
 
-    //角色升级经验列表
-    suspend fun getLevelExp() = characterDao.getLevelExp()
-
     //获取已六星角色
     suspend fun getR6Ids() = characterDao.getR6Ids()
 

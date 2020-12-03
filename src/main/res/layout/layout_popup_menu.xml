@@ -23,7 +23,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/tool_level"
+                android:id="@+id/tool_leader"
                 style="@style/Ripple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/menu_icon"
                     android:layout_height="@dimen/menu_icon"
-                    android:src="@drawable/ic_level"
+                    android:src="@drawable/ic_leader"
                     android:tint="@color/colorPrimary" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/m_margin"
                     android:layout_weight="1"
-                    android:text="@string/tool_level"
+                    android:text="@string/tool_leader"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:textColor="@color/colorPrimary" />
 

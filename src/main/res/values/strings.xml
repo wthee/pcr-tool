@@ -92,7 +92,8 @@
     <string name="equip_type">装备类型</string>
 
     <!--  工具  -->
-    <string name="tool_level">等级经验</string>
+    <string name="tool_leader">角色排行
+    </string>
     <string name="tool_pvp">竞技场查询</string>
     <string name="ys">佑树</string>
     <string name="character">角色</string>

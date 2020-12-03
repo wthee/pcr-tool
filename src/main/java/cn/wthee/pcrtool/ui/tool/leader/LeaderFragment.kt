@@ -1,14 +1,16 @@
-package cn.wthee.pcrtool.ui.tool.level
+package cn.wthee.pcrtool.ui.tool.leader
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterLevelExpAdapter
-import cn.wthee.pcrtool.databinding.FragmentToolLevelBinding
+import cn.wthee.pcrtool.adapters.CharacterLeaderAdapter
+import cn.wthee.pcrtool.data.MyAPIRepository
+import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -17,9 +19,9 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class LevelFragment : Fragment() {
+class LeaderFragment : Fragment() {
 
-    private lateinit var binding: FragmentToolLevelBinding
+    private lateinit var binding: FragmentToolLeaderBinding
     private val sharedViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -29,17 +31,18 @@ class LevelFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         FabHelper.addBackFab()
-        binding = FragmentToolLevelBinding.inflate(inflater, container, false)
+        binding = FragmentToolLeaderBinding.inflate(inflater, container, false)
         MainScope().launch {
-            val list = sharedViewModel.getLevelExp() as MutableList
-            val adapter = CharacterLevelExpAdapter()
+            val list = MyAPIRepository.getLeader()
+            val adapter = CharacterLeaderAdapter()
             binding.listLevel.adapter = adapter
-            adapter.submitList(list)
+            Log.e("test", list.data[0].name)
+            adapter.submitList(list.data)
         }
         //设置头部
         binding.toolLevel.apply {
-            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_level))
-            toolTitle.text = getString(R.string.tool_level)
+            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_leader))
+            toolTitle.text = getString(R.string.tool_leader)
         }
 
         return binding.root

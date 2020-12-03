@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.data.service
 
-import cn.wthee.pcrtool.data.model.AppRemoteVersion
-import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.model.NewsData
-import cn.wthee.pcrtool.data.model.PVPData
+import cn.wthee.pcrtool.data.model.*
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -27,4 +24,8 @@ interface MyAPIService {
     //获取应用版本
     @GET("app.json")
     suspend fun getAppVersion(): AppRemoteVersion
+
+    //排行信息
+    @POST("leader")
+    suspend fun getLeader(): LeaderboardData
 }

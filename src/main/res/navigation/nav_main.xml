@@ -83,9 +83,9 @@
         app:destination="@id/containerFragment" />
     <fragment
         android:id="@+id/toolLevelFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.level.LevelFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.leader.LeaderFragment"
         android:label="ToolLevelFragment"
-        tools:layout="@layout/fragment_tool_level" />
+        tools:layout="@layout/fragment_tool_leader" />
     <fragment
         android:id="@+id/toolPvpFragment"
         android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpFragment"
