@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/tool_level"
+        android:id="@+id/tool_leader"
         layout="@layout/view_tool_head" />
 
     <com.google.android.material.card.MaterialCardView
@@ -35,26 +35,34 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="end"
+                    android:text="综合"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="@string/level"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                    android:text="竞技场"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="end"
-                    android:text="@string/ys"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                    android:text="公会战"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="end"
-                    android:text="@string/character"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                    android:text="露娜塔"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
             </LinearLayout>
 

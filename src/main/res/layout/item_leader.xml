@@ -1,43 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/xs_margin"
-    android:layout_marginEnd="@dimen/xs_margin"
     android:layout_marginTop="@dimen/m_margin"
-    android:orientation="horizontal"
+    android:layout_marginEnd="@dimen/xs_margin"
     android:animateLayoutChanges="true">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/level"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:background="@drawable/title_background"
-        android:gravity="center"
-        tools:text="123"
-        android:textColor="@color/colorWhite" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_margin="@dimen/s_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/unknown_gray" />
+
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/exp_team_abs"
-        android:layout_weight="2"
+        android:id="@+id/all"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
         tools:text="780" />
 
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/exp_abs"
-        android:layout_weight="2"
+        android:id="@+id/pvp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toEndOf="@id/all"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
         tools:text="780" />
 
-</LinearLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/clan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toEndOf="@id/pvp"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
+        tools:text="780" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tower"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toEndOf="@id/clan"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
+        tools:text="780" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
