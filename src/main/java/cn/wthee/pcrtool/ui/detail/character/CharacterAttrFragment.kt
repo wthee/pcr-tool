@@ -157,7 +157,7 @@ class CharacterAttrFragment : Fragment() {
                 loadData(selRank)
                 setRatity(selRatity)
                 //rank 选择
-                RankSelectBtnsHelper(binding.rankEquip.rankBtns, false).apply {
+                RankSelectBtnsHelper(binding.rankEquip.rankBtns).apply {
                     initRank(selRank)
                     setOnClickListener(maxRank, object : RankSelectBtnsHelper.OnClickListener {
                         override fun onChange(rank: Int) {

@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/m_margin"
+    android:paddingStart="@dimen/s_padding"
+    android:paddingEnd="@dimen/s_padding"
+    android:paddingBottom="@dimen/xs_padding"
     android:animateLayoutChanges="true"
     android:orientation="horizontal">
 
@@ -25,11 +28,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:layout_marginEnd="@dimen/xs_margin"
         android:maxLines="1"
         android:ellipsize="end"
         android:gravity="end"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="780" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -37,11 +39,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:layout_marginEnd="@dimen/xs_margin"
         android:maxLines="1"
         android:ellipsize="end"
         android:gravity="end"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="780" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -49,10 +50,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:layout_marginEnd="@dimen/xs_margin"
         android:maxLines="1"
         android:ellipsize="end"
+        android:textStyle="bold"
         android:gravity="end"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="780" />
 </LinearLayout>

@@ -4,7 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/xm_padding"
     tools:context=".ui.detail.character.CharacterRankCompareFragment">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/rank_title_0"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/current"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/rank_title_1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/rank_title_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/compare"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rank_title_0"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/rank_btns_0"
@@ -14,7 +41,7 @@
         app:layout_constraintEnd_toStartOf="@+id/rank_btns_1"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/rank_title_0" />
 
     <include
         android:id="@+id/rank_btns_1"
@@ -24,7 +51,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/rank_btns_0"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/rank_title_1" />
+
 
     <LinearLayout
         android:id="@+id/rank_compare_title"
@@ -32,44 +60,45 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         android:animateLayoutChanges="true"
-        app:layout_constraintTop_toBottomOf="@id/rank_btns_0"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/rank_btns_1">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/value_0"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
             android:layout_marginEnd="@dimen/xs_margin"
-            android:maxLines="1"
+            android:layout_weight="5"
             android:ellipsize="end"
             android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="780" />
+            android:maxLines="1"
+            android:text="@string/current"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/value_1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:layout_marginEnd="@dimen/xs_margin"
-            android:maxLines="1"
             android:ellipsize="end"
             android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="780" />
+            android:maxLines="1"
+            android:text="@string/compare"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/value_compare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/s_margin"
             android:layout_weight="2"
-            android:layout_marginEnd="@dimen/xs_margin"
-            android:maxLines="1"
             android:ellipsize="end"
             android:gravity="end"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="780" />
+            android:maxLines="1"
+            android:text="差值"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -77,7 +106,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
-        android:layout_margin="@dimen/m_margin"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rank_compare_title"

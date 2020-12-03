@@ -40,13 +40,15 @@ class RankCompareAdapter(private val hideTitle: Boolean = false) :
                 value0.text = data.attr0.int.toString()
                 value1.text = data.attr1.int.toString()
                 valueCompare.text = data.attrCompare.int.toString()
-                if (data.attrCompare < 0) {
-                    valueCompare.setTextColor(ResourcesUtil.getColor(R.color.red))
-                } else if (data.attrCompare > 0) {
-                    valueCompare.setTextColor(ResourcesUtil.getColor(R.color.cool_apk))
-                }
-
-
+                valueCompare.setTextColor(
+                    ResourcesUtil.getColor(
+                        when {
+                            data.attrCompare < 0 -> R.color.red
+                            data.attrCompare > 0 -> R.color.cool_apk
+                            else -> R.color.text
+                        }
+                    )
+                )
             }
         }
     }

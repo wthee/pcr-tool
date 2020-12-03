@@ -64,7 +64,7 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                     )
                 )
                 //选择按钮
-                RankSelectBtnsHelper(binding.rankBtns0, true).apply {
+                RankSelectBtnsHelper(binding.rankBtns0).apply {
                     initRank(selRank0)
                     setOnClickListener(
                         CharacterAttrFragment.maxRank,
@@ -83,7 +83,7 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                             }
                         })
                 }
-                RankSelectBtnsHelper(binding.rankBtns1, true).apply {
+                RankSelectBtnsHelper(binding.rankBtns1).apply {
                     initRank(selRank1)
                     setOnClickListener(
                         CharacterAttrFragment.maxRank,

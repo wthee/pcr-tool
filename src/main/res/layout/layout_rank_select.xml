@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rank_add"
@@ -14,8 +16,7 @@
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:icon="@drawable/ic_back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
@@ -24,23 +25,24 @@
         android:layout_width="@dimen/xl_icon"
         android:layout_height="@dimen/xl_icon"
         android:padding="0dp"
+        android:textSize="18sp"
+
         app:icon="@drawable/ic_next"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/m_margin"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/rank_add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rank_reduce"
+        app:layout_constraintStart_toEndOf="@id/rank_add"
         app:layout_constraintTop_toTopOf="@+id/rank_add">
 
         <com.google.android.material.textview.MaterialTextView
@@ -48,20 +50,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rank"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/rank"
-            android:layout_width="wrap_content"
+            android:layout_width="26dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+            android:gravity="end"
+            android:textSize="18sp"
+            tools:text="12" />
 
     </LinearLayout>
 

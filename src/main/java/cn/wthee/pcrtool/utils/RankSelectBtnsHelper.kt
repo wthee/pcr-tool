@@ -1,12 +1,10 @@
 package cn.wthee.pcrtool.utils
 
-import android.view.View
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.LayoutRankSelectBinding
 
 class RankSelectBtnsHelper(
-    private val binding: LayoutRankSelectBinding,
-    private val hideTitle: Boolean
+    private val binding: LayoutRankSelectBinding
 ) {
 
     fun initRank(selRank: Int) {
@@ -44,7 +42,6 @@ class RankSelectBtnsHelper(
     //设置rank
     private fun setRank(num: Int) {
         binding.apply {
-            if (hideTitle) rankTitle.visibility = View.GONE
             rank.text = num.toString()
             rank.setTextColor(getRankColor(num))
             rankTitle.setTextColor(getRankColor(num))
