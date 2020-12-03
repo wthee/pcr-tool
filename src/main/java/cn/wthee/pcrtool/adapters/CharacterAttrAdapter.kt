@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.model.AttrValue
+import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.ItemCharacterAttrBinding
 
 
@@ -28,13 +29,13 @@ class CharacterAttrAdapter(private val hideTitle: Boolean = false) :
 
     inner class ViewHolder(private val binding: ItemCharacterAttrBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(value: AttrValue) {
+        fun bind(data: AttrValue) {
             binding.apply {
                 if (hideTitle) {
                     titleAttr.visibility = View.GONE
                 }
-                titleAttr.text = value.title
-                this.value.text = value.getIntValue().toString()
+                titleAttr.text = data.title
+                this.value.text = data.value.int.toString()
             }
         }
     }

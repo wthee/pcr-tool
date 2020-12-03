@@ -154,32 +154,16 @@ class CharacterAttrFragment : Fragment() {
                 uniqueEquip.ueLvSeekBar.valueFrom = 1.0f
                 uniqueEquip.ueLvSeekBar.valueTo = ueLv.toFloat()
                 uniqueEquip.ueLvSeekBar.value = ueLv.toFloat()
-                loadData()
-                setRank(selRank)
+                loadData(selRank)
                 setRatity(selRatity)
-                rankEquip.rankBtns.rankAdd.setOnClickListener {
-                    if (selRank != r[0]) {
-                        selRank++
-                        if (selRank == r[0]) {
-                            it.isEnabled = false
-                        } else {
-                            rankEquip.rankBtns.rankReduce.isEnabled = true
+                //rank 选择
+                RankSelectBtnsHelper(binding.rankEquip.rankBtns, false).apply {
+                    initRank(selRank)
+                    setOnClickListener(maxRank, object : RankSelectBtnsHelper.OnClickListener {
+                        override fun onChange(rank: Int) {
+                            loadData(rank)
                         }
-                        setRank(selRank)
-                        loadData()
-                    }
-                }
-                rankEquip.rankBtns.rankReduce.setOnClickListener {
-                    if (selRank != Constants.CHARACTER_MIN_RANK) {
-                        selRank--
-                        if (selRank == 2) {
-                            it.isEnabled = false
-                        } else {
-                            rankEquip.rankBtns.rankAdd.isEnabled = true
-                        }
-                        setRank(selRank)
-                        loadData()
-                    }
+                    })
                 }
             }
             //获取专武
@@ -256,18 +240,10 @@ class CharacterAttrFragment : Fragment() {
         })
     }
 
-    private fun loadData() {
-        characterAttrViewModel.getCharacterInfo(uid, selRank, selRatity, lv, ueLv)
+    private fun loadData(rank: Int = selRank) {
+        characterAttrViewModel.getCharacterInfo(uid, rank, selRatity, lv, ueLv)
     }
 
-    //设置rank
-    private fun setRank(num: Int) {
-        binding.rankEquip.apply {
-            rankBtns.rank.text = num.toString()
-            rankBtns.rank.setTextColor(getRankColor(num))
-            rankBtns.rankTitle.setTextColor(getRankColor(num))
-        }
-    }
 
     //设置星级
     private fun setRatity(num: Int) {
@@ -285,18 +261,4 @@ class CharacterAttrFragment : Fragment() {
             })
     }
 
-    //rank 颜色
-    private fun getRankColor(rank: Int): Int {
-        val color = when (rank) {
-            in 2..3 -> R.color.color_rank_2_3
-            in 4..6 -> R.color.color_rank_4_6
-            in 7..10 -> R.color.color_rank_7_10
-            in 11..17 -> R.color.color_rank_11_17
-            in 18..99 -> R.color.color_rank_18
-            else -> {
-                R.color.color_rank_2_3
-            }
-        }
-        return ResourcesUtil.getColor(color)
-    }
 }

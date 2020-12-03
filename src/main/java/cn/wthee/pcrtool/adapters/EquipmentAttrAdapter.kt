@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AttrValue
+import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.ItemEquipmentAttrBinding
 
 
@@ -30,12 +31,12 @@ class EquipmentAttrAdapter :
 
     class ViewHolder(private val binding: ItemEquipmentAttrBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(value: AttrValue) {
+        fun bind(data: AttrValue) {
             binding.apply {
                 this.value.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
-                titleAttr.text = value.title
-                this.value.text = value.getIntValue().toString()
+                titleAttr.text = data.title
+                this.value.text = data.value.int.toString()
             }
         }
     }
@@ -48,7 +49,7 @@ private class AttrDiffCallback : DiffUtil.ItemCallback<AttrValue>() {
         oldItem: AttrValue,
         newItem: AttrValue
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.title == newItem.title
     }
 
     override fun areContentsTheSame(

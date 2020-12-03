@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/m_margin"
+    android:animateLayoutChanges="true"
+    android:orientation="horizontal">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_attr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:background="@drawable/title_background"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/colorWhite"
+        tools:text="@string/physical" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/value_0"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginEnd="@dimen/xs_margin"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        tools:text="780" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/value_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginEnd="@dimen/xs_margin"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        tools:text="780" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/value_compare"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginEnd="@dimen/xs_margin"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        tools:text="780" />
+</LinearLayout>
