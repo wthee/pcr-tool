@@ -7,31 +7,6 @@
     android:paddingTop="@dimen/xm_padding"
     tools:context=".ui.detail.character.CharacterRankCompareFragment">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/rank_title_0"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/current"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toStartOf="@+id/rank_title_1"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/rank_title_1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/compare"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/rank_title_0"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         android:id="@+id/rank_btns_0"
@@ -39,9 +14,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/rank_btns_1"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rank_title_0" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="—"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/rank_btns_0"
+        app:layout_constraintEnd_toStartOf="@id/rank_btns_1"
+        app:layout_constraintStart_toEndOf="@id/rank_btns_0"
+        app:layout_constraintTop_toTopOf="@id/rank_btns_0" />
+
 
     <include
         android:id="@+id/rank_btns_1"
@@ -49,9 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/rank_btns_0"
-        app:layout_constraintTop_toBottomOf="@id/rank_title_1" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <LinearLayout
@@ -76,10 +63,23 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingStart="@dimen/s_padding"
+            android:text="-"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textStyle="bold" />
+
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/value_1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:gravity="end"
             android:maxLines="1"
@@ -88,11 +88,24 @@
 
 
         <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingStart="@dimen/s_padding"
+            android:text="="
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textStyle="bold" />
+
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/value_compare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/s_margin"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:gravity="end"
             android:maxLines="1"

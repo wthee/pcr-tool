@@ -135,5 +135,9 @@
     <string name="rank_compare">对比</string>
     <string name="current">当前</string>
     <string name="compare">对比</string>
+    <string name="all">综合</string>
+    <string name="jjc">竞技场</string>
+    <string name="clan">公会战</string>
+    <string name="tower">露娜塔</string>
 
 </resources>

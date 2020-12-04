@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.leader
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,8 +38,9 @@ class LeaderFragment : Fragment() {
             if (list.status == Response.SUCCESS) {
                 val adapter = CharacterLeaderAdapter()
                 binding.listLevel.adapter = adapter
-                Log.e("test", list.data[0].name)
-                adapter.submitList(list.data)
+                adapter.submitList(list.data) {
+                    binding.loading.root.visibility = View.GONE
+                }
             } else {
                 ToastUtil.short(list.message)
             }
