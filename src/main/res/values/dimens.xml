@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_radius">6dp</dimen>
+    <dimen name="menu_item_card_radius">12dp</dimen>
     <dimen name="loading_dialog_width">100dp</dimen>
     <dimen name="loading_dialog_height">80dp</dimen>
     <dimen name="desc_height">70dp</dimen>
     <dimen name="card_height">150dp</dimen>
+    <dimen name="menu_item_card_height">130dp</dimen>
+    <dimen name="small_card_height">60dp</dimen>
     <dimen name="news_card_height">100dp</dimen>
     <dimen name="card_height_1">220dp</dimen>
     <dimen name="float_window_width">233dp</dimen>
@@ -36,6 +39,7 @@
     <dimen name="tab_height_2">22dp</dimen>
 
     <dimen name="elevation_card">2dp</dimen>
+    <dimen name="menu_item_elevation_card">8dp</dimen>
     <dimen name="efa_width">100dp</dimen>
     <dimen name="min_text">10sp</dimen>
 </resources>

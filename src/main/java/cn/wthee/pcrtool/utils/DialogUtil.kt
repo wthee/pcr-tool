@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
+
 //TODO 优化扩展性
 object DialogUtil {
 

@@ -25,7 +25,7 @@
             app:popEnterAnim="@anim/tool_close_enter"
             app:popExitAnim="@anim/tool_close_exit" />
         <action
-            android:id="@+id/action_containerFragment_to_toolLevelFragment"
+            android:id="@+id/action_containerFragment_to_toolLeaderFragment"
             app:destination="@id/toolLevelFragment"
             app:enterAnim="@anim/tool_open_enter"
             app:exitAnim="@anim/tool_open_exit"

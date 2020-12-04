@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/motionLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBg"
     android:animateLayoutChanges="true"
-    app:layoutDescription="@xml/motion_fab">
+    android:fitsSystemWindows="true"
+    android:background="@color/colorBg"
+    app:layoutDescription="@xml/activity_main_scene">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
@@ -14,75 +14,61 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
+        android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:navGraph="@navigation/nav_main" />
-
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/setting"
-        android:layout_width="@dimen/efa_width"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/m_margin"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/setting"
-        android:ellipsize="end"
-        android:text="@string/setting"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/min_text"
-        app:fabSize="mini"
-        app:icon="@drawable/ic_settings"
-        app:iconTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/search"
-        android:layout_width="@dimen/efa_width"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/m_margin"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/search"
-        android:ellipsize="end"
-        android:text="@string/search"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/min_text"
-        app:fabSize="mini"
-        app:icon="@drawable/ic_search"
-        app:iconTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/filter"
-        android:layout_width="@dimen/efa_width"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/m_margin"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/filter"
-        android:ellipsize="end"
-        android:text="@string/filter"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/min_text"
-        app:fabSize="mini"
-        app:icon="@drawable/ic_filter"
-        app:iconTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/m_margin"
-        android:layout_marginBottom="@dimen/m_margin"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/function"
         android:src="@drawable/ic_function"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/xm_margin"
         app:borderWidth="0dp"
         app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/colorPrimary" />
 
-</androidx.constraintlayout.motion.widget.MotionLayout>
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/motionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutDescription="@xml/activity_main_scene">
+
+        <include
+            android:id="@+id/setting"
+            layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/search"
+            layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/filter"
+            layout="@layout/view_menu_item" />
+        <!-- 新闻，排名，竞技，活动，卡池-->
+        <include
+            android:id="@+id/tool_pvp"
+            layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/tool_news"
+            layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/tool_leader"
+            layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/tool_event"
+            layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/tool_gacha"
+            layout="@layout/view_menu_item" />
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
