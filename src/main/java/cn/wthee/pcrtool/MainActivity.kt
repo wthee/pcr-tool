@@ -3,6 +3,8 @@ package cn.wthee.pcrtool
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -143,15 +145,19 @@ class MainActivity : AppCompatActivity() {
         //点击展开
         val motion = binding.motionLayout
         fabMain.setOnClickListener {
-            if (pageLevel > 0) {
-                goBack(this)
-            } else {
-                if (motion.currentState == R.id.start) {
-                    openFab()
-                } else {
-                    closeFab()
-                }
-            }
+//            if (pageLevel > 0) {
+//                goBack(this)
+//            } else {
+//                if (motion.currentState == R.id.start) {
+//                    openFab()
+//                } else {
+//                    closeFab()
+//                }
+//            }
+            val menuLayoutBinding = FragmentMenuBinding.inflate(layoutInflater)
+            val dialog = DialogUtil.create(this, menuLayoutBinding.root)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
         }
         //设置
         fabSetting.setOnClickListener {
