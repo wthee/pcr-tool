@@ -68,7 +68,7 @@ class SkillLoopAdapter :
                             //字体颜色
                             name.setTextColor(
                                 PaletteHelper.createPaletteSync(bitmap)
-                                    .getLightVibrantColor(Color.BLACK)
+                                    .getDarkVibrantColor(Color.BLACK)
                             )
                             pic.background = it
                         }

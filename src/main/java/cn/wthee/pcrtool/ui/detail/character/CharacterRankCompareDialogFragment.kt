@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.RankSelectBtnsHelper
+import cn.wthee.pcrtool.utils.getRankColor
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -63,6 +64,12 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                         attr1.Compare(attr0)
                     )
                 )
+                //列表头
+                value0.text = "R${CharacterAttrFragment.maxRank}"
+                value0.setTextColor(getRankColor(CharacterAttrFragment.maxRank))
+                value1.text = "R${CharacterAttrFragment.maxRank}"
+                value1.setTextColor(getRankColor(CharacterAttrFragment.maxRank))
+
                 //选择按钮
                 RankSelectBtnsHelper(binding.rankBtns0).apply {
                     initRank(selRank0)
@@ -78,6 +85,8 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                                         CharacterAttrFragment.ueLv
                                     )
                                     reload()
+                                    value0.text = "R$rank"
+                                    value0.setTextColor(getRankColor(rank))
                                 }
 
                             }
@@ -97,6 +106,8 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                                         CharacterAttrFragment.ueLv
                                     )
                                     reload()
+                                    value1.text = "R$rank"
+                                    value1.setTextColor(getRankColor(rank))
                                 }
                             }
                         })
@@ -109,6 +120,6 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
     }
 
     private fun reload() {
-        adapter.submitList(getRankCompareList(attr0.all(), attr1.all(), attr1.Compare(attr0)))
+        adapter.submitList(getRankCompareList(attr0.all(), attr1.all(), attr0.Compare(attr1)))
     }
 }

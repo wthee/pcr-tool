@@ -2,40 +2,41 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Ripple"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAlpha"
-    android:foreground="?selectableItemBackgroundBorderless"
-    app:cardCornerRadius="@dimen/menu_item_card_radius"
-    tools:layout_height="@dimen/card_height">
+    android:layout_margin="@dimen/m_margin"
+    android:elevation="@dimen/menu_item_elevation_card"
+    app:cardCornerRadius="@dimen/menu_item_card_radius">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/item_bg"
+        android:id="@+id/item_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        android:padding="@dimen/m_padding">
+        tools:background="@color/colorPrimary"
+        android:padding="@dimen/m_padding"
+        tools:layout_height="@dimen/card_height">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tool_leader"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             android:textColor="@color/colorWhite"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"
+            tools:text="@string/setting" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_icon"
-            android:layout_width="@dimen/big_icon"
-            android:layout_height="@dimen/big_icon"
-            android:src="@drawable/ic_leader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/big_icon"
+            android:maxHeight="@dimen/big_icon"
+            android:adjustViewBounds="true"
             android:tint="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:src="@drawable/ic_settings" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -18,10 +18,7 @@ import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import coil.Coil
-import coil.request.ImageRequest
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import coil.load
 
 
 class PvpCharacterAdapter(
@@ -81,12 +78,9 @@ class PvpCharacterAdapter(
                     var id = data.unitId
                     id += if (r6Ids.contains(id)) 60 else 30
                     val picUrl = UNIT_ICON_URL + id + WEBP
-                    val coil = Coil.imageLoader(activity.applicationContext)
-                    val request = ImageRequest.Builder(activity.applicationContext)
-                        .data(picUrl)
-                        .build()
-                    MainScope().launch {
-                        pic.setImageDrawable(coil.execute(request).drawable)
+                    pic.load(picUrl) {
+                        error(R.drawable.unknown_gray)
+                        placeholder(R.drawable.unknown_gray)
                     }
                 }
                 //设置点击事件

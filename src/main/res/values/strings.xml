@@ -92,9 +92,8 @@
     <string name="equip_type">装备类型</string>
 
     <!--  工具  -->
-    <string name="tool_leader">角色排行
-    </string>
-    <string name="tool_pvp">竞技场查询</string>
+    <string name="tool_leader">排行</string>
+    <string name="tool_pvp">竞技场</string>
     <string name="ys">佑树</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
@@ -108,8 +107,8 @@
     <string name="title_material">所需装备：%d</string>
     <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
-    <string name="tool_gacha">卡池记录</string>
-    <string name="tool_event">活动记录</string>
+    <string name="tool_gacha">卡池</string>
+    <string name="tool_event">活动</string>
     <string name="pre">✦ </string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
     <string name="pcrdfans_com">数据来源 pcrdfans</string>
@@ -124,7 +123,7 @@
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">- 剧情属性 -</string>
     <string name="download_pic">下载当前图片</string>
-    <string name="tool_news">最新消息</string>
+    <string name="tool_news">新闻</string>
     <string name="loading">加载中...</string>
     <string name="news_load_tip">网页加载较慢或无法加载，可尝试在浏览器中查看~</string>
     <string name="loading_news">正在获取最新数据...</string>
@@ -135,5 +134,9 @@
     <string name="rank_compare">对比</string>
     <string name="current">当前</string>
     <string name="compare">对比</string>
+    <string name="all">综合</string>
+    <string name="jjc">竞技场</string>
+    <string name="clan">公会战</string>
+    <string name="tower">露娜塔</string>
 
 </resources>
