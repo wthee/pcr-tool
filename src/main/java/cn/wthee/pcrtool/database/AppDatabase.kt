@@ -48,7 +48,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         EventStoryDetail::class,
         EventTopAdv::class,
     ],
-    version = 21,
+    version = 30,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

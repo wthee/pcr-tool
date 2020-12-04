@@ -24,6 +24,7 @@
             android:textColor="@color/colorWhite"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"
             tools:text="@string/setting" />
 
         <androidx.appcompat.widget.AppCompatImageView

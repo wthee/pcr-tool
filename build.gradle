@@ -11,8 +11,8 @@ android {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 21
-        versionName "0.2.1"
+        versionCode 30
+        versionName "0.3.0"
 
         ndk {
             //设置支持的SO库架构
@@ -71,7 +71,7 @@ dependencies {
     implementation "com.google.android.material:material:$material_version"
 
     //Navigation
-    def nav_version = "2.3.1"
+    def nav_version = "2.3.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
@@ -96,7 +96,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     //Paging3
-    def paging_version = "3.0.0-alpha09"
+    def paging_version = "3.0.0-alpha10"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     //Work
