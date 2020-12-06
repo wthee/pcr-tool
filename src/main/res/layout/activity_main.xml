@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBg"
     android:fitsSystemWindows="true"
     app:layoutDescription="@xml/activity_main_scene">
 
@@ -17,25 +17,28 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:navGraph="@navigation/nav_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/function"
-        android:src="@drawable/ic_function"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@dimen/xm_margin"
-        android:layout_marginBottom="@dimen/xm_margin"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
-        app:tint="@color/colorPrimary" />
-
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/motionLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutDescription="@xml/activity_main_scene">
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/xm_margin"
+            android:layout_marginBottom="@dimen/xm_margin"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="@string/function"
+            android:src="@drawable/ic_function"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/colorPrimary" />
 
         <include
             android:id="@+id/setting"

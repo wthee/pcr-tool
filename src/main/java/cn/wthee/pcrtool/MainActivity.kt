@@ -397,7 +397,7 @@ class MainActivity : AppCompatActivity() {
         binding.motionLayout.apply {
             MainScope().launch {
                 transitionToStart()
-                setBackgroundColor(getColor(R.color.colorAlpha))
+                binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlpha)
                 isClickable = false
                 isFocusable = false
             }
@@ -409,7 +409,7 @@ class MainActivity : AppCompatActivity() {
         fabMain.setImageResource(R.drawable.ic_cancel)
         binding.motionLayout.apply {
             transitionToEnd()
-            setBackgroundColor(getColor(R.color.colorAlphtBlack))
+            binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlphtBlack)
             isClickable = true
             isFocusable = true
             setOnClickListener {

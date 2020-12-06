@@ -22,19 +22,26 @@ class CrashUtil private constructor() {
     }
 
     private fun showDialog(e: Throwable) {
-        val builder = android.app.AlertDialog.Builder(ActivityUtil.instance.currentActivity)
-        val dialog = builder.create()
-        builder.setTitle("错误日志:")
         val error = e.message ?: "未获取异常信息"
-        builder.setMessage(error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error + error)
-        dialog.window?.attributes?.gravity = Gravity.BOTTOM
-        builder.setPositiveButton(
-            "复制信息"
-        ) { _, which ->
-            ClipboardUtli.add(error)
+        if (!error.contains("wthee.xyz") && !error.contains("Remote key")) {
+            val builder = android.app.AlertDialog.Builder(ActivityUtil.instance.currentActivity)
+            val dialog = builder.create()
+            builder.setTitle("错误日志:")
+            builder.setMessage(error)
+            dialog.window?.attributes?.gravity = Gravity.BOTTOM
+            builder.setPositiveButton(
+                "复制信息"
+            ) { _, which ->
+                ClipboardUtli.add(error)
+            }
+            builder.setNegativeButton(
+                "关闭"
+            ) { dl, which ->
+                dl.dismiss()
+            }
+            builder.setCancelable(false)
+            builder.show()
         }
-        builder.setCancelable(false)
-        builder.show()
     }
 
     companion object {
