@@ -103,6 +103,9 @@ class CharacterAttrViewModel(
         try {
             characterRepository.getMaxRank(id)
             characterRepository.getMaxRarity(id)
+            if (characterRepository.getEquipmentIds(id, 2).getAllIds().isEmpty()) {
+                return true
+            }
         } catch (e: Exception) {
             return true
         }

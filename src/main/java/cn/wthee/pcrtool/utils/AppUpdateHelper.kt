@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.utils
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
@@ -12,7 +11,7 @@ import kotlinx.coroutines.launch
 
 object AppUpdateHelper {
 
-    fun init(context: Context, view: View, inflater: LayoutInflater) {
+    fun init(context: Context, inflater: LayoutInflater, showToast: Boolean = false) {
         try {
             //本地版本
             val manager = context.packageManager
@@ -47,6 +46,8 @@ object AppUpdateHelper {
                             }
                         }).show()
 
+                } else if (showToast) {
+                    ToastUtil.short("应用已是最新版本~")
                 }
             }
         } catch (e: Exception) {

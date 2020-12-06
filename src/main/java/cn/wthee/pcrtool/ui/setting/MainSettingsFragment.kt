@@ -12,10 +12,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,6 +50,12 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             "0"
         )
         appUpdate?.summary = MainActivity.nowVersionName
+        appUpdate?.setOnPreferenceClickListener {
+            //应用版本校验
+            ToastUtil.short("应用版本检测中...")
+            AppUpdateHelper.init(requireContext(), layoutInflater, true)
+            return@setOnPreferenceClickListener true
+        }
         //设置监听
         //强制更新数据库
         forceUpdateDb?.setOnPreferenceClickListener {

@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         ActivityUtil.instance.currentActivity = this
         mHeight = ScreenUtil.getWidth() - 48.dp
         //应用版本校验
-        AppUpdateHelper.init(this, binding.root, layoutInflater)
+        AppUpdateHelper.init(this, layoutInflater)
         //菜单布局
         initMenuItems()
     }
