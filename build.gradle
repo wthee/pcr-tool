@@ -96,16 +96,15 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     //Paging3
-    def paging_version = "3.0.0-alpha10"
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-
-    //Work
-    def work_version = "2.4.0"
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha10"
 
     //Viewpager2
     def viewpager2_version = '1.0.0'
     implementation "androidx.viewpager2:viewpager2:$viewpager2_version"
+
+    //Work
+    def work_version = "2.4.0"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 
     //from lisbs
     implementation files('libs/commons-compress-1.19.jar')

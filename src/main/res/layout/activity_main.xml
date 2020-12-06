@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true"
     android:background="@color/colorBg"
+    android:fitsSystemWindows="true"
     app:layoutDescription="@xml/activity_main_scene">
 
     <androidx.fragment.app.FragmentContainerView
@@ -13,8 +12,8 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
         android:fitsSystemWindows="true"
+        app:defaultNavHost="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:navGraph="@navigation/nav_main" />
 
@@ -26,7 +25,8 @@
         android:contentDescription="@string/function"
         android:src="@drawable/ic_function"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginBottom="@dimen/xm_margin"
         app:borderWidth="0dp"
         app:fabSize="mini"
         app:tint="@color/colorPrimary" />

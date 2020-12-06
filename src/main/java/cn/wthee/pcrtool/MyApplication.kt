@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import cn.wthee.pcrtool.utils.LoggerUtil
+import cn.wthee.pcrtool.utils.CrashUtil
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -14,13 +14,15 @@ import coil.util.CoilUtils
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
+
 class MyApplication : Application(), ImageLoaderFactory {
+
 
     override fun onCreate() {
         super.onCreate()
         //获取Context
         context = applicationContext
-        LoggerUtil.init(this)
+        CrashUtil.init()
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -52,4 +54,6 @@ class MyApplication : Application(), ImageLoaderFactory {
     companion object {
         lateinit var context: Context
     }
+
+
 }

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.detail.character
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -93,7 +92,6 @@ class CharacterAttrViewModel(
                 val rarity = characterRepository.getMaxRarity(id)
                 val level = characterRepository.getMaxLevel()
                 val ueLv = equipmentRepository.getUniqueEquipMaxLv()
-                Log.e("error", ueLv.toString())
                 maxData.postValue(listOf(rank, rarity, level, ueLv))
             } catch (e: Exception) {
 

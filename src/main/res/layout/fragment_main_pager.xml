@@ -17,7 +17,7 @@
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="enterAlways|snap">
+            app:layout_scrollFlags="enterAlways|scroll">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:id="@+id/layout_tab"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/tab_height_1"
-                    app:layout_collapseMode="parallax"
+                    app:layout_collapseMode="pin"
                     app:tabInlineLabel="true"
                     app:tabMode="fixed" />
 

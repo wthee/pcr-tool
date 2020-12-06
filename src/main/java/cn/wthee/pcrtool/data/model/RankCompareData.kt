@@ -7,9 +7,7 @@ data class RankCompareData(
     val attr0: Double,
     val attr1: Double,
     val attrCompare: Double
-) {
-
-}
+)
 
 val Double.int: Int
     get() {

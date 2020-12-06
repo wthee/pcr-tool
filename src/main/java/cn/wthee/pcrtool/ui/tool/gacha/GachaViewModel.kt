@@ -13,15 +13,12 @@ class GachaViewModel(
 ) : ViewModel() {
 
     var gachas = MutableLiveData<List<GachaInfo>>()
-    var isLoading = MutableLiveData<Boolean>()
 
 
     //卡池信息
     fun getGachaHistory() {
-        isLoading.postValue(true)
         viewModelScope.launch {
             val data = repository.getGachaHistory()
-            isLoading.postValue(false)
             gachas.postValue(data)
         }
     }

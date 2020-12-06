@@ -13,31 +13,35 @@
         layout="@layout/layout_rank_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/rank_btns_1"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@+id/vs"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="0dp"
+        android:id="@+id/vs"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xs_margin"
         android:gravity="center"
-        android:text="—"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textStyle="bold"
+        android:layout_marginEnd="@dimen/xs_margin"
+        android:maxLines="1"
+        android:text="@string/reduce_0"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@id/rank_btns_0"
         app:layout_constraintEnd_toStartOf="@id/rank_btns_1"
         app:layout_constraintStart_toEndOf="@id/rank_btns_0"
         app:layout_constraintTop_toTopOf="@id/rank_btns_0" />
-
 
     <include
         android:id="@+id/rank_btns_1"
         layout="@layout/layout_rank_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rank_btns_0"
+        app:layout_constraintStart_toEndOf="@+id/vs"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -48,6 +52,7 @@
         android:layout_marginTop="@dimen/m_margin"
         android:animateLayoutChanges="true"
         android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/rank_btns_1">
 
         <com.google.android.material.textview.MaterialTextView
@@ -66,13 +71,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="end"
+            android:layout_marginStart="@dimen/xs_margin"
             android:gravity="center"
-            android:maxLines="1"
-            android:paddingStart="@dimen/s_padding"
-            android:text="-"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textStyle="bold" />
+            android:text="@string/rerduce_1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -91,13 +93,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="end"
             android:gravity="center"
-            android:maxLines="1"
-            android:paddingStart="@dimen/s_padding"
-            android:text="="
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textStyle="bold" />
+            android:text="@string/equal"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -109,8 +107,9 @@
             android:ellipsize="end"
             android:gravity="end"
             android:maxLines="1"
-            android:text="差值"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+            android:text="@string/result"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

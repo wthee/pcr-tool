@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.RankCompareAdapter
 import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.data.view.Attr
-import cn.wthee.pcrtool.data.view.Compare
 import cn.wthee.pcrtool.data.view.all
+import cn.wthee.pcrtool.data.view.compare
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -61,13 +62,13 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                     getRankCompareList(
                         attr0.all(),
                         attr1.all(),
-                        attr1.Compare(attr0)
+                        attr1.compare(attr0)
                     )
                 )
                 //列表头
-                value0.text = "R${CharacterAttrFragment.maxRank}"
+                value0.text = getString(R.string.rank_pre, CharacterAttrFragment.maxRank)
                 value0.setTextColor(getRankColor(CharacterAttrFragment.maxRank))
-                value1.text = "R${CharacterAttrFragment.maxRank}"
+                value1.text = getString(R.string.rank_pre, CharacterAttrFragment.maxRank)
                 value1.setTextColor(getRankColor(CharacterAttrFragment.maxRank))
 
                 //选择按钮
@@ -85,7 +86,7 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                                         CharacterAttrFragment.ueLv
                                     )
                                     reload()
-                                    value0.text = "R$rank"
+                                    value0.text = getString(R.string.rank_pre, rank)
                                     value0.setTextColor(getRankColor(rank))
                                 }
 
@@ -106,7 +107,7 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
                                         CharacterAttrFragment.ueLv
                                     )
                                     reload()
-                                    value1.text = "R$rank"
+                                    value1.text = getString(R.string.rank_pre, rank)
                                     value1.setTextColor(getRankColor(rank))
                                 }
                             }
@@ -120,6 +121,6 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
     }
 
     private fun reload() {
-        adapter.submitList(getRankCompareList(attr0.all(), attr1.all(), attr0.Compare(attr1)))
+        adapter.submitList(getRankCompareList(attr0.all(), attr1.all(), attr0.compare(attr1)))
     }
 }

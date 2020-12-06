@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.adapters.CharacterLeaderAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.enums.Response
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -46,12 +47,15 @@ class LeaderFragment : Fragment() {
             toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_leader))
             toolTitle.text = getString(R.string.tool_leader)
         }
-
+        //来源
+        binding.source.setOnClickListener {
+            BrowserUtil.open(requireContext(), getString(R.string.leader_source_url))
+        }
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStop() {
+        super.onStop()
         if (!job.isCancelled) {
             job.cancel()
         }

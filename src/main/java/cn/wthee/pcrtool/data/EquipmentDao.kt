@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.entity.EnemyRewardData
 import cn.wthee.pcrtool.data.entity.EquipmentCraft
 import cn.wthee.pcrtool.data.entity.EquipmentData
 import cn.wthee.pcrtool.data.entity.EquipmentEnhanceRate
@@ -104,9 +103,6 @@ interface EquipmentDao {
     //装备碎片信息
     @Query("SELECT * FROM equipment_craft WHERE equipment_craft.equipment_id = :eid ")
     suspend fun getEquipmentCraft(eid: Int): EquipmentCraft
-
-    @Query("SELECT * FROM enemy_reward_data WHERE drop_reward_id IN (:rids) AND reward_id_1 > 100000")
-    suspend fun getRewardDatas(rids: List<Int>): List<EnemyRewardData>
 
     //掉落区域
     @Transaction

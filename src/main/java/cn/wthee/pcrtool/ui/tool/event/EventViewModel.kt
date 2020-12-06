@@ -13,15 +13,12 @@ class EventViewModel(
 ) : ViewModel() {
 
     var events = MutableLiveData<List<EventData>>()
-    var isLoading = MutableLiveData<Boolean>()
 
 
     //活动
     fun getEventHistory() {
-        isLoading.postValue(true)
         viewModelScope.launch {
             val data = repository.getAllEvents()
-            isLoading.postValue(false)
             events.postValue(data)
         }
     }

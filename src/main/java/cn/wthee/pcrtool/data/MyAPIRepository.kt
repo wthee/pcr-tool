@@ -93,10 +93,3 @@ object MyAPIRepository {
     }
 
 }
-
-interface OnPostListener {
-
-    fun success(data: List<Result>)
-
-    fun error()
-}

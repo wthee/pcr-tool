@@ -165,7 +165,7 @@ interface CharacterDao {
     suspend fun getSkillActions(aid: List<Int>): List<SkillAction>
 
     //角色最大等级
-    @Query("SELECT MAX( unit_level ) FROM experience_unit")
+    @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
     suspend fun getMaxLevel(): Int
 
     //角色动作循环

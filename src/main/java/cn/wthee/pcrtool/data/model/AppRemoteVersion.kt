@@ -5,8 +5,4 @@ data class AppRemoteVersion(
     val versionCode: Int,
     val versionName: String,
     val content: String
-) {
-    fun getContentList(): List<String> {
-        return content.split("- ")
-    }
-}
+)

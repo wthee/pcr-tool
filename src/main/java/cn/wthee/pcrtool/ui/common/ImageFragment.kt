@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.common
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,6 @@ class ImageFragment : Fragment() {
     private var position = 0
     private var url: String? = null
     private lateinit var binding: FragmentImageBinding
-    private var mHeight = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +43,6 @@ class ImageFragment : Fragment() {
                     },
                     onSuccess = { _, _ ->
                         CharacterPicListFragment.hasLoaded[position] = true
-                        post {
-                            mHeight = measuredHeight
-                            Log.e("scale", "$height")
-
-                        }
                     }
                 )
             }

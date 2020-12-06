@@ -245,7 +245,7 @@ class PvpService : Service() {
 
     //初始化
     private fun loadDefault() {
-        selectedAdapter = PvpCharacterAdapter(true, activity)
+        selectedAdapter = PvpCharacterAdapter(true)
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()

@@ -1,6 +1,5 @@
-package cn.wthee.pcrtool.adapters
+ package cn.wthee.pcrtool.adapters
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +7,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
@@ -18,12 +18,14 @@ import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import coil.load
+import coil.Coil
+import coil.request.ImageRequest
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 class PvpCharacterAdapter(
-    private val isFloatWindow: Boolean,
-    private val activity: Activity
+    private val isFloatWindow: Boolean
 ) :
     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
 
@@ -78,9 +80,12 @@ class PvpCharacterAdapter(
                     var id = data.unitId
                     id += if (r6Ids.contains(id)) 60 else 30
                     val picUrl = UNIT_ICON_URL + id + WEBP
-                    pic.load(picUrl) {
-                        error(R.drawable.unknown_gray)
-                        placeholder(R.drawable.unknown_gray)
+                    val coil = Coil.imageLoader(MyApplication.context)
+                    val request = ImageRequest.Builder(MyApplication.context)
+                        .data(picUrl)
+                        .build()
+                    MainScope().launch {
+                        pic.setImageDrawable(coil.execute(request).drawable)
                     }
                 }
                 //设置点击事件
@@ -132,7 +137,6 @@ class PvpCharacterAdapter(
                         }
 
                     }
-//                    notifyDataSetChanged()
                 }
             }
         }

@@ -40,7 +40,7 @@ class ToolbarUtil(toolbar: ViewToolbarBinding) {
         params.bottomToBottom = 0
         title.layoutParams = params
         setTitleColor(R.color.colorPrimary)
-        setLeftIcon(R.drawable.ic_back)
+//        setLeftIcon(R.drawable.ic_back)
     }
 
     fun setCenterTitle(titleText: String): ToolbarUtil {

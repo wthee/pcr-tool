@@ -154,7 +154,7 @@ fun Attr.allNotZero(): List<AttrValue> {
 }
 
 //非零属性
-fun Attr.Compare(attr1: Attr): List<AttrValue> {
+fun Attr.compare(attr1: Attr): List<AttrValue> {
     val attrs = all()
     val attrs1 = attr1.all()
     val compareValue = arrayListOf<AttrValue>()

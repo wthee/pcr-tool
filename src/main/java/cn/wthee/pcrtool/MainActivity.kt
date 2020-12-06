@@ -3,8 +3,6 @@ package cn.wthee.pcrtool
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -129,6 +127,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setListener() {
+
         //长按回到顶部
         fabMain.setOnLongClickListener {
             when (currentMainPage) {
@@ -140,19 +139,15 @@ class MainActivity : AppCompatActivity() {
         //点击展开
         val motion = binding.motionLayout
         fabMain.setOnClickListener {
-//            if (pageLevel > 0) {
-//                goBack(this)
-//            } else {
-//                if (motion.currentState == R.id.start) {
-//                    openFab()
-//                } else {
-//                    closeFab()
-//                }
-//            }
-            val menuLayoutBinding = FragmentMenuBinding.inflate(layoutInflater)
-            val dialog = DialogUtil.create(this, menuLayoutBinding.root)
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.show()
+            if (pageLevel > 0) {
+                goBack(this)
+            } else {
+                if (motion.currentState == R.id.start) {
+                    openFab()
+                } else {
+                    closeFab()
+                }
+            }
         }
         //设置
         binding.setting.root.setOnClickListener {
@@ -411,7 +406,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openFab() {
-        fabMain.setImageResource(R.drawable.ic_back)
+        fabMain.setImageResource(R.drawable.ic_cancel)
         binding.motionLayout.apply {
             transitionToEnd()
             setBackgroundColor(getColor(R.color.colorAlphtBlack))

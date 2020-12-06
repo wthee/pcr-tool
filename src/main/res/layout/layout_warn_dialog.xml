@@ -35,12 +35,13 @@
         android:tag="beta_upgrade_feature"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textColor="@color/text"
-        tools:text="@string/test" />
+        tools:text="@string/app_name" />
 
     <include
         android:id="@+id/dialog_btns"
         layout="@layout/layout_dialog_btns"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

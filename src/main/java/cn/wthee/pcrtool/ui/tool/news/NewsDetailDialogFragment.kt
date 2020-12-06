@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.tool.news
 import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,14 +41,23 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
     ): View {
         binding = FragmentToolNewsDetailBinding.inflate(inflater, container, false)
         binding.apply {
-            Log.e("news", url)
-
             openBrowse.setOnClickListener {
 //                ClipboardUtli.add(url)
                 BrowserUtil.open(requireContext(), url)
             }
-
             //设置
+            webView.settings.apply {
+                domStorageEnabled = true
+                javaScriptEnabled = true
+                useWideViewPort = true //将图片调整到适合webview的大小
+                loadWithOverviewMode = true // 缩放至屏幕的大小
+                javaScriptCanOpenWindowsAutomatically = true
+                if (region == 3 || region == 4) {
+                    tip.visibility = View.VISIBLE
+                    blockNetworkImage = true
+                    loadsImagesAutomatically = false
+                }
+            }
             webView.webChromeClient = WebChromeClient()
             webView.webViewClient = object : WebViewClient() {
 
@@ -68,6 +76,8 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
+                    webView.settings.blockNetworkImage = false
+                    webView.settings.loadsImagesAutomatically = true
                     if (region == 2) {
                         //取消内部滑动
                         webView.loadUrl(
@@ -109,17 +119,6 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
                     loading.visibility = View.GONE
                     tip.visibility = View.GONE
                     webView.visibility = View.VISIBLE
-                }
-            }
-            webView.settings.apply {
-                domStorageEnabled = true
-                javaScriptEnabled = true
-                useWideViewPort = true //将图片调整到适合webview的大小
-                loadWithOverviewMode = true // 缩放至屏幕的大小
-                javaScriptCanOpenWindowsAutomatically = true
-                if (region == 3 || region == 4) {
-                    tip.visibility = View.VISIBLE
-                    loadsImagesAutomatically = false
                 }
             }
             //加载网页
