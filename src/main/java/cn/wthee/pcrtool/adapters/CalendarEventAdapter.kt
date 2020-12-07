@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CalendarData
 import cn.wthee.pcrtool.databinding.ItemCalendarEventBinding
+import cn.wthee.pcrtool.utils.ResourcesUtil
 
 
 class CalendarEventAdapter :
@@ -37,10 +38,13 @@ class CalendarEventAdapter :
                 root.animation =
                     AnimationUtils.loadAnimation(
                         MyApplication.context,
-                        R.anim.anim_translate_y
+                        R.anim.anim_scale
                     )
                 calendarEventTitle.text = data.title
-                date.text = data.startDate + "~" + data.endDate
+                if (data.endDate != "") {
+                    date.background = ResourcesUtil.getDrawable(R.drawable.title_background)
+                    date.text = data.startDate + " 至 " + data.endDate
+                }
 
             }
         }

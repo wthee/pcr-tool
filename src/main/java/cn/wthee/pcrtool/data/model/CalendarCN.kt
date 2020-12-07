@@ -8,8 +8,8 @@ data class CalendarCN(
 
 data class CalendarData(
     val date: String,
-    val endDate: String,
     val startDate: String,
+    val endDate: String,
     val title: String,
     val type: String
 )
