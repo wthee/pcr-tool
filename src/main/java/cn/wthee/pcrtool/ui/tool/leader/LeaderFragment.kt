@@ -12,8 +12,8 @@ import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.enums.Response
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -43,10 +43,10 @@ class LeaderFragment : Fragment() {
             }
         }
         //设置头部
-        binding.toolLeader.apply {
-            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_leader))
-            toolTitle.text = getString(R.string.tool_leader)
-        }
+        ToolbarUtil(binding.toolLeader).setToolHead(
+            R.drawable.ic_leader,
+            getString(R.string.tool_leader)
+        )
         //来源
         binding.source.setOnClickListener {
             BrowserUtil.open(requireContext(), getString(R.string.leader_source_url))

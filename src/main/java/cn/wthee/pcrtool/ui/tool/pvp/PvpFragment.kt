@@ -78,10 +78,10 @@ class PvpFragment : Fragment() {
                 BrowserUtil.open(requireContext(), getString(R.string.url_pcrdfans_com))
             }
             //设置头部
-            toolPvp.apply {
-                toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_pvp))
-                toolTitle.text = getString(R.string.tool_pvp)
-            }
+            ToolbarUtil(binding.toolPvp).setToolHead(
+                R.drawable.ic_pvp,
+                getString(R.string.tool_pvp)
+            )
             //悬浮窗
             pvpFloat.setOnClickListener {
                 //检查是否已经授予权限

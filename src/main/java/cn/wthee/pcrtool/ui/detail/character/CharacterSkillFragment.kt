@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.ui.main.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -87,9 +86,6 @@ class CharacterSkillFragment : Fragment() {
                     setRightIcon(R.drawable.ic_loop)
                     rightIcon.setOnClickListener {
                         fabSkillLoop.callOnClick()
-                    }
-                    leftIcon.setOnClickListener {
-                        (parentFragment as BottomSheetDialogFragment).dismiss()
                     }
                 }
             }

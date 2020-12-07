@@ -54,9 +54,6 @@ class PvpResultDialogFragment : CommonBasicDialogFragment() {
         }
         //toolbar
         ToolbarUtil(binding.pvpResultToolbar).setCenterTitle("进攻方信息")
-            .leftIcon.setOnClickListener {
-                dialog?.dismiss()
-            }
         return binding.root
     }
 

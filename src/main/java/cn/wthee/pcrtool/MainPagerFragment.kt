@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -82,7 +83,7 @@ class MainPagerFragment : Fragment() {
         //禁止连续点击
         cListClick = false
         //viewpager2 配置
-        viewPager2 = binding.viewPager
+        viewPager2 = binding.mainViewPager
         viewPager2.offscreenPageLimit = 2
         viewPager2.adapter = MainPagerAdapter(requireActivity())
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -92,10 +93,12 @@ class MainPagerFragment : Fragment() {
                 when (position) {
                     0 -> tipText.text = getString(R.string.data_null_character)
                     1 -> tipText.text = getString(R.string.data_null_equip)
-                    2 -> tipText.text = getString(R.string.data_null_enemy)
                 }
             }
         })
+        //toolbar
+        ToolbarUtil(binding.mainToolbar)
+            .setMainToolbar(getString(R.string.app_name))
         //tab 初始化
         tabLayout = binding.layoutTab
         //绑定tablayout
@@ -150,8 +153,8 @@ class MainPagerFragment : Fragment() {
                 names: MutableList<String>?,
                 sharedElements: MutableMap<String, View>?
             ) {
-                //返回时隐藏toolbar
-                binding.layoutToolbar.setExpanded(false)
+                //TODO 返回时隐藏toolbar
+//                binding.layoutToolbar.setExpanded(false)
                 try {
                     if (names!!.isNotEmpty()) {
                         sharedElements ?: return

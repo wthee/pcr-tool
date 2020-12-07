@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.adapters.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 
 class GachaFragment : Fragment() {
 
@@ -34,11 +34,10 @@ class GachaFragment : Fragment() {
         })
 
         //设置头部
-        binding.toolGacha.apply {
-            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_gacha))
-            toolTitle.text = getString(R.string.tool_gacha)
-        }
-
+        ToolbarUtil(binding.toolGacha).setToolHead(
+            R.drawable.ic_gacha,
+            getString(R.string.tool_gacha)
+        )
         return binding.root
     }
 
