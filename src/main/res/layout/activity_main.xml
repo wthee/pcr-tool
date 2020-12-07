@@ -69,6 +69,10 @@
         <include
             android:id="@+id/tool_gacha"
             layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/tool_calendar"
+            layout="@layout/view_menu_item" />
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
 

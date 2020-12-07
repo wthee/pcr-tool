@@ -62,6 +62,13 @@
             app:exitAnim="@anim/tool_open_exit"
             app:popEnterAnim="@anim/tool_close_enter"
             app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_containerFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
 
     </fragment>
 
@@ -112,5 +119,9 @@
         android:id="@+id/eventFragment"
         android:name="cn.wthee.pcrtool.ui.tool.event.EventFragment"
         android:label="EventFragment" />
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.calendar.CalendarFragment"
+        android:label="CalendarFragment" />
 
 </navigation>

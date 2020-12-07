@@ -8,18 +8,20 @@
             android:id="@+id/filter"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_card_height"
+            android:visibility="invisible"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/xl_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/setting"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.45" />
         <Constraint
             android:id="@+id/search"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="1dp"
             android:layout_marginStart="@dimen/m_margin"
+            android:visibility="invisible"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/xs_margin"
             app:layout_constraintBottom_toTopOf="@id/setting"
@@ -29,6 +31,7 @@
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
+            android:visibility="invisible"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/xl_margin"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,6 +39,7 @@
 
         <Constraint
             android:id="@+id/tool_leader"
+            android:visibility="invisible"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
@@ -47,6 +51,7 @@
         <Constraint
             android:id="@+id/tool_news"
             android:layout_width="@dimen/normal_icon"
+            android:visibility="invisible"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
@@ -58,6 +63,7 @@
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
+            android:visibility="invisible"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
             app:layout_constraintBottom_toTopOf="@id/filter"
@@ -69,6 +75,7 @@
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
+            android:visibility="invisible"
             android:layout_marginBottom="@dimen/m_margin"
             app:layout_constraintBottom_toTopOf="@id/tool_news"
             app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
@@ -79,8 +86,20 @@
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
+            android:visibility="invisible"
             android:layout_marginBottom="@dimen/m_margin"
             app:layout_constraintBottom_toTopOf="@id/tool_news"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_calendar"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:visibility="invisible"
+            android:layout_marginBottom="@dimen/m_margin"
+            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
             app:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
@@ -170,6 +189,17 @@
             app:layout_constraintBottom_toTopOf="@id/tool_news"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.45" />
+
+        <Constraint
+            android:id="@+id/tool_calendar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/m_margin"
+            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.45" />
     </ConstraintSet>
 
     <Transition
@@ -213,6 +243,18 @@
                 android:alpha="1.0"
                 app:framePosition="100"
                 app:motionTarget="@id/tool_gacha" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="0"
+                app:motionTarget="@id/tool_calendar" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="60"
+                app:motionTarget="@id/tool_calendar" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_calendar" />
             <KeyAttribute
                 android:alpha="0.0"
                 app:framePosition="0"
