@@ -41,6 +41,7 @@ class CharacterBasicInfoFragment : Fragment() {
 
     private var uid = -1
     private var urls = arrayListOf<String>()
+    private var iconUrls = arrayListOf<String>()
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -63,7 +64,11 @@ class CharacterBasicInfoFragment : Fragment() {
         setListener()
         sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
             setData(it)
-            urls = it.getAllUrl()
+            urls = it.getAllUrl(Constants.CHARACTER_URL)
+            val t = it.getAllUrl(Constants.UNIT_ICON_URL)
+            t.removeLast()
+            t.add(Constants.EQUIPMENT_URL + Constants.UNKNOW_EQUIP_ID + Constants.WEBP)
+            iconUrls = t
         })
         setHasOptionsMenu(true)
         //初始收藏
@@ -122,6 +127,7 @@ class CharacterBasicInfoFragment : Fragment() {
                 try {
                     val bundle = Bundle()
                     bundle.putStringArrayList("urls", urls)
+                    bundle.putStringArrayList("iconUrls", iconUrls)
                     val extras =
                         FragmentNavigatorExtras(
                             it to it.transitionName

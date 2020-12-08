@@ -58,16 +58,17 @@ data class CharacterInfoPro(
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
     }
 
-    fun getAllUrl(): ArrayList<String> {
+    fun getAllUrl(type: String): ArrayList<String> {
         val list = arrayListOf<String>()
         if (this.r6Id != 0) {
-            list.add(Constants.CHARACTER_URL + getStarId(6) + Constants.WEBP)
+            list.add(type + getStarId(6) + Constants.WEBP)
         }
-        list.add(Constants.CHARACTER_URL + getStarId(3) + Constants.WEBP)
-        list.add(Constants.CHARACTER_URL + getStarId(1) + Constants.WEBP)
+        list.add(type + getStarId(3) + Constants.WEBP)
+        list.add(type + getStarId(1) + Constants.WEBP)
         list.add(Constants.Reality_CHARACTER_URL + getFixedId() + Constants.WEBP)
         return list
     }
+
 
     //去除无效id
     private fun getFixedId() = id + if (Constants.errorIDs.contains(id)) 31 else 30

@@ -5,6 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/icons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:orientation="vertical"
+        app:spanCount="4"
+        tools:listitem="@layout/item_common" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pics"
         android:layout_width="match_parent"

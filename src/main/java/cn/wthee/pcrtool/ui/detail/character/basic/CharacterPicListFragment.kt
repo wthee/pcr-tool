@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CharacterIconAdapter
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPicPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 import cn.wthee.pcrtool.utils.FabHelper
@@ -32,12 +33,14 @@ class CharacterPicListFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPicListBinding
     private lateinit var urls: ArrayList<String>
+    private lateinit var iconUrls: ArrayList<String>
     private lateinit var endlessScrollAdapter: CharacterPicPagerAdapter
     private var index = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         urls = requireArguments().getStringArrayList("urls") as ArrayList<String>
+        iconUrls = requireArguments().getStringArrayList("iconUrls") as ArrayList<String>
         //过渡
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
@@ -61,6 +64,10 @@ class CharacterPicListFragment : Fragment() {
                 updateList(urls)
             }
             setListener()
+            val iconAdapter = CharacterIconAdapter()
+            icons.adapter = iconAdapter
+            iconAdapter.submitList(iconUrls)
+
         }
 
         if (savedInstanceState == null) {
