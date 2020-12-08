@@ -112,7 +112,7 @@
         android:label="CharacterPicListFragment" />
     <fragment
         android:id="@+id/toolNewsFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.news.NewsFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment"
         android:label="fragment_tool_news"
         tools:layout="@layout/fragment_tool_news" />
     <fragment

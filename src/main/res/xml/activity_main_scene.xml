@@ -177,7 +177,7 @@
             android:layout_marginBottom="@dimen/m_margin"
             app:layout_constraintBottom_toTopOf="@id/tool_news"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.45" />
+            app:layout_constraintWidth_percent="0.35" />
 
         <Constraint
             android:id="@+id/tool_gacha"
@@ -188,7 +188,7 @@
             android:layout_marginBottom="@dimen/m_margin"
             app:layout_constraintBottom_toTopOf="@id/tool_news"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.45" />
+            app:layout_constraintWidth_percent="0.35" />
 
         <Constraint
             android:id="@+id/tool_calendar"
@@ -197,9 +197,10 @@
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.45" />
+            app:layout_constraintBottom_toTopOf="@id/tool_news"
+            app:layout_constraintStart_toEndOf="@id/tool_event"
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha"
+            app:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
     <Transition

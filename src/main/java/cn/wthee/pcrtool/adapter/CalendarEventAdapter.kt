@@ -93,6 +93,8 @@ class CalendarEventAdapter :
                         calendarEventTitle.text = item.data.title
                         if (item.data.endDate != "") {
                             date.text = item.data.startDate + " 至 " + item.data.endDate
+                        } else {
+                            date.text = ""
                         }
                     }
                 }

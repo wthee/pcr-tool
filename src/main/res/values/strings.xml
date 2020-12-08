@@ -90,7 +90,7 @@
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
-    <string name="tool_calendar">日历</string>
+    <string name="tool_calendar">日历-国服</string>
     <string name="tool_pvp">竞技场</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>

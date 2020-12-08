@@ -485,10 +485,10 @@ class MainActivity : AppCompatActivity() {
                 R.color.colorPrimary
             )
             MenuItemViewHelper(toolCalendar).setItem(
-                getString(R.string.tool_calendar),
-                R.drawable.ic_gacha,
+                "",
+                R.drawable.ic_calender,
                 R.color.colorPrimary
-            )
+            ).setCenterIcon()
         }
     }
 }

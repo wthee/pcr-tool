@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import androidx.constraintlayout.widget.ConstraintLayout
 import cn.wthee.pcrtool.databinding.ViewMenuItemBinding
 
 /**
@@ -7,13 +8,23 @@ import cn.wthee.pcrtool.databinding.ViewMenuItemBinding
  */
 class MenuItemViewHelper(private val binding: ViewMenuItemBinding) {
 
-    fun setItem(title: String, iconId: Int, bgColorId: Int) {
+    fun setItem(title: String, iconId: Int, bgColorId: Int): MenuItemViewHelper {
         binding.apply {
             itemTitle.text = title
             itemIcon.setImageDrawable(ResourcesUtil.getDrawable(iconId))
             itemBackground.setBackgroundColor(
                 ResourcesUtil.getColor(bgColorId)
             )
+        }
+        return this
+    }
+
+    fun setCenterIcon() {
+        binding.itemIcon.apply {
+            val params = layoutParams as ConstraintLayout.LayoutParams
+            params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            layoutParams = params
         }
     }
 }
