@@ -37,10 +37,10 @@ class NewsRemoteMediator(
         try {
             val response = MyAPIRepository.getNews(region, page).data
             val list = arrayListOf<NewsTable>()
-            response.forEach {
+            response?.forEach {
                 list.add(NewsTable("${region}-${it.id}", it.title, it.getTags(), it.url, it.date))
             }
-            val isEndOfList = response.isEmpty()
+            val isEndOfList = response?.isEmpty() ?: true
             database.withTransaction {
                 // clear all tables in the database
                 if (loadType == LoadType.REFRESH) {

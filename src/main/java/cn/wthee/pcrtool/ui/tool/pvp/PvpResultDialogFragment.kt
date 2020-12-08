@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
-import cn.wthee.pcrtool.enums.Response
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
@@ -35,18 +34,18 @@ class PvpResultDialogFragment : CommonBasicDialogFragment() {
             try {
                 binding.pvpNoData.visibility = View.GONE
                 val result = MyAPIRepository.getPVPData()
-                if (result.status == Response.FAILURE) {
-                    ToastUtil.short(result.message)
-                    dialog?.dismiss()
-                } else {
-                    if (result.data.isEmpty()) {
+                if (result.status == 0) {
+                    if (result.data!!.isEmpty()) {
                         binding.pvpNoData.visibility = View.VISIBLE
                     }
                     val adapter = PvpCharacterResultAdapter(requireActivity())
                     binding.list.adapter = adapter
-                    adapter.submitList(result.data.sortedByDescending {
+                    adapter.submitList(result.data!!.sortedByDescending {
                         it.up
                     })
+                } else if (result.status == -1) {
+                    ToastUtil.short(result.message)
+                    dialog?.dismiss()
                 }
                 binding.loading.root.visibility = View.GONE
             } catch (e: Exception) {

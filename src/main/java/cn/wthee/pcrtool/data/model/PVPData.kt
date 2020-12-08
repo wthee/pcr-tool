@@ -3,25 +3,7 @@ package cn.wthee.pcrtool.data.model
 import java.io.Serializable
 
 
-data class PVPData(
-    val code: Int,
-    val `data`: Data,
-    val message: String,
-    val version: String
-) : Serializable
-
-
-data class Data(
-    val page: Page,
-    val result: List<Result>?
-) : Serializable
-
-data class Page(
-    val hasMore: Boolean,
-    val page: Int
-) : Serializable
-
-data class Result(
+data class PvpData(
     val atk: List<Atk>,
     val comment: Any,
     val def: List<Def>,

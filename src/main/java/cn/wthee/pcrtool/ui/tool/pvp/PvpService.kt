@@ -19,7 +19,6 @@ import cn.wthee.pcrtool.adapters.viewpager.PvpCharacterPagerAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
-import cn.wthee.pcrtool.enums.Response
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.NotificationUtil
@@ -128,15 +127,15 @@ class PvpService : Service() {
                     job = MainScope().launch {
                         resultContent.pvpNoData.visibility = View.GONE
                         val result = MyAPIRepository.getPVPData()
-                        if (result.status == Response.FAILURE) {
-                            ToastUtil.short(result.message)
-                        } else {
-                            if (result.data.isEmpty()) {
+                        if (result.status == 0) {
+                            if (result.data!!.isEmpty()) {
                                 resultContent.pvpNoData.visibility = View.VISIBLE
                             }
-                            adapter.submitList(result.data.sortedByDescending {
+                            adapter.submitList(result.data!!.sortedByDescending {
                                 it.up
                             })
+                        } else if (result.status == -1) {
+                            ToastUtil.short(result.message)
                         }
                         resultContent.loading.root.visibility = View.GONE
                     }

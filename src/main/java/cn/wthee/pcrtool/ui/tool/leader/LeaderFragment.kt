@@ -9,7 +9,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.CharacterLeaderAdapter
 import cn.wthee.pcrtool.data.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
-import cn.wthee.pcrtool.enums.Response
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -32,13 +31,13 @@ class LeaderFragment : Fragment() {
         binding = FragmentToolLeaderBinding.inflate(inflater, container, false)
         job = MainScope().launch {
             val list = MyAPIRepository.getLeader()
-            if (list.status == Response.SUCCESS) {
+            if (list.status == 0) {
                 val adapter = CharacterLeaderAdapter()
                 binding.listLevel.adapter = adapter
                 adapter.submitList(list.data) {
                     binding.loading.root.visibility = View.GONE
                 }
-            } else if (list.status == Response.FAILURE) {
+            } else if (list.status == -1) {
                 ToastUtil.short(list.message)
             }
         }

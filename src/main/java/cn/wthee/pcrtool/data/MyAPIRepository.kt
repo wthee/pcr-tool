@@ -5,7 +5,6 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.data.view.getIds
-import cn.wthee.pcrtool.enums.Response
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
@@ -19,7 +18,7 @@ object MyAPIRepository {
     //创建服务
     private val service = ApiHelper.create(MyAPIService::class.java, Constants.API_URL)
 
-    suspend fun getPVPData(): ResultData<List<Result>> {
+    suspend fun getPVPData(): ResponseData<List<PvpData>> {
         //接口参数
         val json = JsonObject()
         val databaseType = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
@@ -34,21 +33,21 @@ object MyAPIRepository {
         //发送请求
         try {
             val response = service.getPVPData(body)
-            if (response.code != 0 || response.data.result == null) {
-                return ResultData(Response.FAILURE, arrayListOf(), "未正常获取数据，请重新查询~")
+            if (response.status != 0 || response.data == null) {
+                return error()
             }
-            return ResultData(Response.SUCCESS, response.data.result)
+            return response
         } catch (e: Exception) {
             if (e is CancellationException) {
-                return ResultData(Response.CANCEL, arrayListOf())
+                return cancel()
             }
         }
-        return ResultData(Response.FAILURE, arrayListOf(), "查询失败，请重新查询~")
+        return error()
 
     }
 
     //官网信息
-    suspend fun getNews(region: Int, page: Int): ResultData<List<News>> {
+    suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsData>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)
@@ -60,51 +59,61 @@ object MyAPIRepository {
         //请求
         try {
             val response = service.getNewsData(body)
-            if (response.status != 0 || response.data.isEmpty()) {
-                return ResultData(Response.FAILURE, arrayListOf(), "未正常获取数据，请重新查询~")
+            if (response.status != 0 || response.data == null || response.data!!.isEmpty()) {
+                return error()
             }
-            return ResultData(Response.SUCCESS, response.data)
+            return response
         } catch (e: Exception) {
             if (e is CancellationException) {
-                return ResultData(Response.CANCEL, arrayListOf())
+                return cancel()
             }
         }
-        return ResultData(Response.FAILURE, arrayListOf(), "获取数据失败，请稍后重新查询~")
+        return error()
     }
 
     //排名信息
-    suspend fun getLeader(): ResultData<List<LeaderboardInfo>> {
+    suspend fun getLeader(): ResponseData<List<LeaderboardData>> {
         //请求
         try {
             val response = service.getLeader()
-            if (response.status != 0 || response.data.isEmpty()) {
-                return ResultData(Response.FAILURE, arrayListOf(), "未正常获取数据，请重新查询~")
+            if (response.status != 0 || response.data == null || response.data!!.isEmpty()) {
+                return error()
             }
-            return ResultData(Response.SUCCESS, response.data)
+            return response
         } catch (e: Exception) {
             if (e is CancellationException) {
-                return ResultData(Response.CANCEL, arrayListOf())
+                return cancel()
             }
         }
-        return ResultData(Response.FAILURE, arrayListOf(), "获取数据失败，请稍后重新查询~")
+        return error()
     }
 
 
     //日历信息
-    suspend fun getCalendar(): ResultData<List<CalendarData>> {
+    suspend fun getCalendar(year: Int, month: Int, day: Int): ResponseData<List<CalendarData>> {
         //请求
         try {
-            val response = service.getCalendar()
-            if (response.status != 0 || response.data.isEmpty()) {
-                return ResultData(Response.FAILURE, arrayListOf(), "未正常获取数据，请重新查询~")
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("year", year)
+            json.addProperty("month", month)
+            json.addProperty("day", day)
+            val body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                json.toString()
+            )
+            val response = service.getCalendar(body)
+            if (response.status != 0 || response.data == null) {
+                return error()
             }
-            return ResultData(Response.SUCCESS, response.data)
+            return response
         } catch (e: Exception) {
             if (e is CancellationException) {
-                return ResultData(Response.CANCEL, arrayListOf())
+                return cancel()
             }
         }
-        return ResultData(Response.FAILURE, arrayListOf(), "获取数据失败，请稍后重新查询~")
+        return error()
     }
+
 
 }

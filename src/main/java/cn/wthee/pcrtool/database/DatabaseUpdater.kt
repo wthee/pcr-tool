@@ -43,7 +43,7 @@ object DatabaseUpdater {
                 )
                 val version = service.getDbVersion(getVersionFileName())
                 //更新判断
-                downloadDB(version, fromSetting, force)
+                downloadDB(version.data!!, fromSetting, force)
             } catch (e: Exception) {
                 Log.e("error", e.message ?: "")
                 CharacterListFragment.handler.sendEmptyMessage(0)

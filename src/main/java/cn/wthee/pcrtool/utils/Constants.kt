@@ -8,7 +8,9 @@ object Constants {
     //接口地址
     private const val RESOURCE_URL = "http://wthee.xyz/resource/"
     const val DATABASE_URL = "http://wthee.xyz/db/"
-    const val API_URL = "http://wthee.xyz:8847/api/"
+
+    //正式
+    const val API_URL = "http://wthee.xyz:8846/api/"
 
     //数据库中版
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"

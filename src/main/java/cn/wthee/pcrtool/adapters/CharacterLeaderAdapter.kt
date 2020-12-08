@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.LeaderboardInfo
+import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.databinding.ItemLeaderBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 
 class CharacterLeaderAdapter :
-    ListAdapter<LeaderboardInfo, CharacterLeaderAdapter.ViewHolder>(LeaderDiffCallback()) {
+    ListAdapter<LeaderboardData, CharacterLeaderAdapter.ViewHolder>(LeaderDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemLeaderBinding.inflate(
@@ -32,7 +32,7 @@ class CharacterLeaderAdapter :
 
     class ViewHolder(private val binding: ItemLeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: LeaderboardInfo) {
+        fun bind(data: LeaderboardData) {
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(
@@ -72,18 +72,18 @@ class CharacterLeaderAdapter :
 
 }
 
-private class LeaderDiffCallback : DiffUtil.ItemCallback<LeaderboardInfo>() {
+private class LeaderDiffCallback : DiffUtil.ItemCallback<LeaderboardData>() {
 
     override fun areItemsTheSame(
-        oldItem: LeaderboardInfo,
-        newItem: LeaderboardInfo
+        oldItem: LeaderboardData,
+        newItem: LeaderboardData
     ): Boolean {
         return oldItem.name == newItem.name
     }
 
     override fun areContentsTheSame(
-        oldItem: LeaderboardInfo,
-        newItem: LeaderboardInfo
+        oldItem: LeaderboardData,
+        newItem: LeaderboardData
     ): Boolean {
         return oldItem == newItem
     }

@@ -6,28 +6,27 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/xs_padding">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/calendar_event_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/unknown_gray" />
+
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/calendar_event_title"
-        android:layout_width="match_parent"
+        android:id="@+id/calendar_type"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
-        android:gravity="start"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/title_background"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/app_name" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/xs_margin"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        app:layout_constraintTop_toBottomOf="@id/calendar_event_title"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="@string/app_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,25 +11,25 @@ import retrofit2.http.Url
 interface MyAPIService {
 
     @POST("pvp/search")
-    suspend fun getPVPData(@Body body: RequestBody): PVPData
-
-
-    @POST("news")
-    suspend fun getNewsData(@Body body: RequestBody): NewsData
+    suspend fun getPVPData(@Body body: RequestBody): ResponseData<List<PvpData>>
 
     //获取数据库版本
     @GET
-    suspend fun getDbVersion(@Url url: String): DatabaseVersion
+    suspend fun getDbVersion(@Url url: String): ResponseData<DatabaseVersion>
 
     //获取应用版本
     @GET("app.json")
-    suspend fun getAppVersion(): AppRemoteVersion
+    suspend fun getAppVersion(): ResponseData<AppRemoteVersion>
+
+    //公告
+    @POST("news")
+    suspend fun getNewsData(@Body body: RequestBody): ResponseData<List<NewsData>>
 
     //排行信息
     @POST("leader")
-    suspend fun getLeader(): LeaderboardData
+    suspend fun getLeader(): ResponseData<List<LeaderboardData>>
 
     //国服日历
     @POST("calendar")
-    suspend fun getCalendar(): CalendarCN
+    suspend fun getCalendar(@Body body: RequestBody): ResponseData<List<CalendarData>>
 }

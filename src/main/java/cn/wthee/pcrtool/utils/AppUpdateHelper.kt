@@ -28,12 +28,13 @@ object AppUpdateHelper {
             )
             MainScope().launch {
                 val version = service.getAppVersion()
-                if (localVersion < version.versionCode) {
+                if (localVersion < version.data!!.versionCode) {
                     //有新版本发布，弹窗
-                    DialogUtil.create(context,
+                    DialogUtil.create(
+                        context,
                         LayoutWarnDialogBinding.inflate(inflater),
-                        "版本更新：${info.versionName} > ${version.versionName} ",
-                        version.content,
+                        "版本更新：${info.versionName} > ${version.data!!.versionName} ",
+                        version.data!!.content,
                         "暂不更新",
                         "前往下载",
                         object : DialogListener {
@@ -42,7 +43,7 @@ object AppUpdateHelper {
                             }
 
                             override fun onConfirm(dialog: AlertDialog) {
-                                BrowserUtil.open(context, version.url)
+                                BrowserUtil.open(context, version.data!!.url)
                             }
                         }).show()
 

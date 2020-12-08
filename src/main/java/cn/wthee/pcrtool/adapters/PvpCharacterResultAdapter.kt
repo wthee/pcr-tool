@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.data.model.Result
+import cn.wthee.pcrtool.data.model.PvpData
 import cn.wthee.pcrtool.databinding.ItemPvpResultBinding
 
 
 class PvpCharacterResultAdapter(
     private val activity: Activity
 ) :
-    ListAdapter<Result, PvpCharacterResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
+    ListAdapter<PvpData, PvpCharacterResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemPvpResultBinding.inflate(
@@ -30,7 +30,7 @@ class PvpCharacterResultAdapter(
 
     inner class ViewHolder(private val binding: ItemPvpResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: Result) {
+        fun bind(data: PvpData) {
             //设置数据
             binding.apply {
                 val adapter = PvpCharacterResultItemAdapter(activity)
@@ -43,18 +43,18 @@ class PvpCharacterResultAdapter(
     }
 }
 
-class PvpResultDiffCallback : DiffUtil.ItemCallback<Result>() {
+class PvpResultDiffCallback : DiffUtil.ItemCallback<PvpData>() {
 
     override fun areItemsTheSame(
-        oldItem: Result,
-        newItem: Result
+        oldItem: PvpData,
+        newItem: PvpData
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: Result,
-        newItem: Result
+        oldItem: PvpData,
+        newItem: PvpData
     ): Boolean {
         return oldItem == newItem
     }
