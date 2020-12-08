@@ -2,6 +2,9 @@ package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.databinding.ViewMenuItemBinding
 
+/**
+ * 菜单
+ */
 class MenuItemViewHelper(private val binding: ViewMenuItemBinding) {
 
     fun setItem(title: String, iconId: Int, bgColorId: Int) {

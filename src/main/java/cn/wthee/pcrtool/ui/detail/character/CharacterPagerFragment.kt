@@ -10,9 +10,11 @@ import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.viewpager.CharacterPagerAdapter
-import cn.wthee.pcrtool.adapters.viewpager.DepthPageTransformer
+import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
+import cn.wthee.pcrtool.adapter.viewpager.DepthPageTransformer
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
+import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModel
+import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -20,7 +22,9 @@ import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 角色信息 ViewPager
+ */
 class CharacterPagerFragment : Fragment() {
 
     companion object {

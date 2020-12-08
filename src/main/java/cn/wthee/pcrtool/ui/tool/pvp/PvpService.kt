@@ -13,11 +13,11 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import cn.wthee.pcrtool.MainActivity.Companion.mHeight
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
-import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
-import cn.wthee.pcrtool.adapters.viewpager.PvpCharacterPagerAdapter
-import cn.wthee.pcrtool.data.MyAPIRepository
-import cn.wthee.pcrtool.data.view.PvpCharacterData
+import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
+import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ActivityUtil
@@ -29,7 +29,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 悬浮窗
+ */
 class PvpService : Service() {
 
     companion object {

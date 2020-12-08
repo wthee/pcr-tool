@@ -8,14 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.viewpager.NewsListPagerAdapter
+import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.tabs.TabLayoutMediator
 
-
-class NewsFragment : Fragment() {
+/**
+ * 官网公告ViewPager
+ */
+class NewsPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentToolNewsBinding
 

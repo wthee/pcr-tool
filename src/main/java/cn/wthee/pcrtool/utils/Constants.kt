@@ -1,18 +1,23 @@
 package cn.wthee.pcrtool.utils
 
+/**
+ * 常量
+ */
 object Constants {
 
     //图片格式
     const val WEBP = ".webp"
 
-    //接口地址
+    //图片资源地址
     private const val RESOURCE_URL = "http://wthee.xyz/resource/"
+
+    //数据库资源地址
     const val DATABASE_URL = "http://wthee.xyz/db/"
 
-    //正式
+    //接口正式地址
     const val API_URL = "http://wthee.xyz:8846/api/"
 
-    //数据库中版
+    //数据库
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
     const val DATABASE_Name_JP = "redive_jp.db"
     const val DATABASE_WAL_JP = "redive_jp.db-wal"

@@ -17,7 +17,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-
+/**
+ * 图片保存到本地
+ */
 class ImageDownloadUtil(
     private val activity: FragmentActivity
 ) {

@@ -8,7 +8,9 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ViewToolbarBinding
 
-
+/**
+ * toolbar 设置
+ */
 class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
 
     val leftIcon = toolbar.leftIcon

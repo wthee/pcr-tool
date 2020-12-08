@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.CharacterLeaderAdapter
-import cn.wthee.pcrtool.data.MyAPIRepository
+import cn.wthee.pcrtool.adapter.CharacterLeaderAdapter
+import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
@@ -17,7 +17,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 角色排行
+ */
 class LeaderFragment : Fragment() {
 
     private lateinit var binding: FragmentToolLeaderBinding

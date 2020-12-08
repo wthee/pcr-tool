@@ -4,12 +4,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.CharacterDao
-import cn.wthee.pcrtool.data.EquipmentDao
-import cn.wthee.pcrtool.data.EventDao
-import cn.wthee.pcrtool.data.GachaDao
-import cn.wthee.pcrtool.data.entity.*
-import cn.wthee.pcrtool.data.entityjp.*
+import cn.wthee.pcrtool.data.db.dao.CharacterDao
+import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.dao.EventDao
+import cn.wthee.pcrtool.data.db.dao.GachaDao
+import cn.wthee.pcrtool.data.db.entity.*
+import cn.wthee.pcrtool.data.db.entityjp.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
 
 

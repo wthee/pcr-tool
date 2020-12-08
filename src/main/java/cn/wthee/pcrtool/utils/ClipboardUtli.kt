@@ -5,6 +5,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import cn.wthee.pcrtool.MyApplication
 
+/**
+ * 剪切板
+ */
 object ClipboardUtli {
 
     fun add(str: String) {

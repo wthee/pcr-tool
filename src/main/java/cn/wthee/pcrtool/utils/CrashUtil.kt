@@ -4,6 +4,9 @@ import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
 
+/**
+ * 异常捕获
+ */
 class CrashUtil private constructor() {
 
     private fun setCrashHandler() {
@@ -22,8 +25,10 @@ class CrashUtil private constructor() {
     }
 
     private fun showDialog(e: Throwable) {
-        val error = e.message ?: "未获取异常信息"
-        if (!error.contains("wthee.xyz") && !error.contains("Remote key")) {
+        var error = e.message ?: return
+        if (error.contains("wthee.xyz"))
+            error = "无法访问服务器，请稍后重试~"
+        if (!error.contains("Remote key")) {
             val builder = android.app.AlertDialog.Builder(ActivityUtil.instance.currentActivity)
             val dialog = builder.create()
             builder.setTitle("错误日志:")

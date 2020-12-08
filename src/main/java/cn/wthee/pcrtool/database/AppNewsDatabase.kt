@@ -4,10 +4,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.NewsDao
-import cn.wthee.pcrtool.data.RemoteKeyDao
-import cn.wthee.pcrtool.data.entity.NewsTable
-import cn.wthee.pcrtool.data.entity.RemoteKey
+import cn.wthee.pcrtool.data.db.dao.NewsDao
+import cn.wthee.pcrtool.data.db.dao.RemoteKeyDao
+import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
 
 

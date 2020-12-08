@@ -9,7 +9,9 @@ import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
-//TODO 优化扩展性
+/**
+ * 弹窗
+ */
 object DialogUtil {
 
     //创建 dialog

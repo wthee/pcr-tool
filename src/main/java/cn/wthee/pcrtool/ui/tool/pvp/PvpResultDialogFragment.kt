@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import cn.wthee.pcrtool.adapters.PvpCharacterResultAdapter
-import cn.wthee.pcrtool.data.MyAPIRepository
+import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -16,7 +16,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 查询结果
+ */
 class PvpResultDialogFragment : CommonBasicDialogFragment() {
 
     private lateinit var binding: FragmentToolPvpResultBinding

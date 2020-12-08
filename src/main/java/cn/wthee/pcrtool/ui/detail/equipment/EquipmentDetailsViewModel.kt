@@ -3,10 +3,10 @@ package cn.wthee.pcrtool.ui.detail.equipment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.view.EquipmentDropInfo
-import cn.wthee.pcrtool.data.view.EquipmentMaterial
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
+import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
+import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import kotlinx.coroutines.launch
 
 

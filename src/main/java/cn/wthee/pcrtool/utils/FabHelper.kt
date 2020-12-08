@@ -4,6 +4,9 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
 import cn.wthee.pcrtool.R
 
+/**
+ * 悬浮按钮
+ */
 object FabHelper {
 
     fun addBackFab(level: Int = 1) {

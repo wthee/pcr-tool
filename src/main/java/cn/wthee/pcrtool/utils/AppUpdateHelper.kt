@@ -4,11 +4,14 @@ import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import cn.wthee.pcrtool.data.service.MyAPIService
+import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * 应用更新
+ */
 object AppUpdateHelper {
 
     fun init(context: Context, inflater: LayoutInflater, showToast: Boolean = false) {

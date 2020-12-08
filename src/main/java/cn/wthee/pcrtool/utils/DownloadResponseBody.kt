@@ -5,7 +5,9 @@ import okhttp3.ResponseBody
 import okio.*
 import java.io.IOException
 
-
+/**
+ * 带进度下载
+ */
 class DownloadResponseBody(
     private val responseBody: ResponseBody,
     private val downloadListener: DownloadListener?

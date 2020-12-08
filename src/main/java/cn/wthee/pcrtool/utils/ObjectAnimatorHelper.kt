@@ -10,7 +10,9 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-//TODO 优化扩展性
+/**
+ * 动画
+ */
 object ObjectAnimatorHelper {
 
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {

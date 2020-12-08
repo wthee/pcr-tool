@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.data.entity.SkillAction
+import cn.wthee.pcrtool.data.db.entity.SkillAction
 
 
 data class CharacterSkillInfo(

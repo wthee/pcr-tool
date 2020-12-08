@@ -19,18 +19,17 @@ import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.enums.SortType
-import cn.wthee.pcrtool.ui.main.CharacterListFragment
-import cn.wthee.pcrtool.ui.main.CharacterListFragment.Companion.guilds
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.ui.main.EquipmentListFragment
-import cn.wthee.pcrtool.ui.main.EquipmentViewModel
+import cn.wthee.pcrtool.ui.home.*
+import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.guilds
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 主活动
+ */
 class MainActivity : AppCompatActivity() {
 
     companion object {
@@ -45,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var pageLevel = 0
-        var isForeground = true
         var mHeight = 0
 
         //fab 默认隐藏
@@ -63,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        // 全屏显示
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false)
         } else {
@@ -83,12 +82,15 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
+        //数据库版本检查
         DatabaseUpdater.checkDBVersion()
         //悬浮按钮
         setFab()
+        //监听
         setListener()
         //绑定活动
         ActivityUtil.instance.currentActivity = this
+        //悬浮穿高度
         mHeight = ScreenUtil.getWidth() - 48.dp
         //应用版本校验
         AppUpdateHelper.init(this, layoutInflater)
@@ -103,17 +105,6 @@ class MainActivity : AppCompatActivity() {
         else
             ScreenUtil.getWidth() - 48.dp
         super.onConfigurationChanged(newConfig)
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-        isForeground = false
-    }
-
-    override fun onResume() {
-        super.onResume()
-        isForeground = true
     }
 
     //动画执行完之前，禁止直接返回
@@ -413,6 +404,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 关闭菜单
     private fun closeFab() {
         binding.motionLayout.apply {
             MainScope().launch {
@@ -426,6 +418,7 @@ class MainActivity : AppCompatActivity() {
         fabMain.setImageResource(R.drawable.ic_function)
     }
 
+    // 打开菜单
     private fun openFab() {
         fabMain.setImageResource(R.drawable.ic_cancel)
         binding.motionLayout.apply {
@@ -439,6 +432,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //返回
     private fun goBack(activity: FragmentActivity) {
         if (canBack && pageLevel > 0) {
             if (pageLevel == 1) FabHelper.setIcon(R.drawable.ic_function)
@@ -447,6 +441,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 菜单初始
     private fun initMenuItems() {
         binding.apply {
             MenuItemViewHelper(setting).setItem(

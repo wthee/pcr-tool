@@ -6,8 +6,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import cn.wthee.pcrtool.data.entity.NewsTable
-import cn.wthee.pcrtool.data.model.NewsRemoteMediator
+import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.network.model.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import kotlinx.coroutines.flow.Flow
 

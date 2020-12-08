@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.EventHistoryAdapter
+import cn.wthee.pcrtool.adapter.EventHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 
+/**
+ * 活动
+ */
 class EventFragment : Fragment() {
 
     private lateinit var viewModel: EventViewModel

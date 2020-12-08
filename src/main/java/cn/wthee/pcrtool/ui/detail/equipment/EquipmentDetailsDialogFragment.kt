@@ -8,16 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
-import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
+import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import coil.load
 
+/**
+ * 装备详情页面
+ */
 class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
 
     private val EQUIP = "equip"
