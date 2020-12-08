@@ -9,9 +9,9 @@
         android:id="@+id/pic6"
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
-        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="@+id/pic5"
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,9 +21,9 @@
         android:id="@+id/pic3"
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
-        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toStartOf="@+id/pic2"
         app:layout_constraintStart_toStartOf="@+id/pic2"
         app:layout_constraintTop_toTopOf="parent"
@@ -33,11 +33,14 @@
         android:id="@+id/pic5"
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
-        android:layout_margin="@dimen/l_margin"
-        android:scaleType="fitCenter"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/l_margin"
+        android:layout_marginBottom="@dimen/l_margin"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        app:layout_constraintEnd_toStartOf="@+id/rank_add"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/rank_btns"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pic6"
         tools:src="@drawable/unknown_gray" />
@@ -46,12 +49,15 @@
         android:id="@+id/pic2"
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
-        android:layout_margin="@dimen/l_margin"
-        android:scaleType="fitCenter"
+        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/l_margin"
+        android:layout_marginBottom="@dimen/l_margin"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rank_reduce"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rank_btns"
         app:layout_constraintTop_toBottomOf="@+id/pic3"
         tools:src="@drawable/unknown_gray" />
 
@@ -61,9 +67,9 @@
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
         android:layout_margin="@dimen/l_margin"
-        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="@+id/pic5"
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toBottomOf="@+id/pic5"
@@ -74,74 +80,36 @@
         android:layout_width="@dimen/big_icon"
         android:layout_height="@dimen/big_icon"
         android:layout_margin="@dimen/l_margin"
-        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:padding="0dp"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toStartOf="@+id/pic2"
         app:layout_constraintStart_toStartOf="@+id/pic2"
         app:layout_constraintTop_toBottomOf="@id/pic2"
         tools:src="@drawable/unknown_gray" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/rank_add"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="@dimen/xl_icon"
-        android:layout_height="@dimen/xl_icon"
-        android:enabled="false"
-        android:padding="0dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        app:icon="@drawable/ic_back"
-        app:layout_constraintBottom_toBottomOf="@+id/pic5"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintTop_toTopOf="@+id/pic5" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/rank_reduce"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="@dimen/xl_icon"
-        android:layout_height="@dimen/xl_icon"
-        android:padding="0dp"
-        app:icon="@drawable/ic_next"
-        app:layout_constraintBottom_toBottomOf="@+id/pic2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
-        app:layout_constraintTop_toTopOf="@+id/pic2" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="100dp"
+    <include
+        android:id="@+id/rank_btns"
+        layout="@layout/layout_rank_select"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/m_margin"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/rank_add"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/pic5"
+        app:layout_constraintEnd_toStartOf="@+id/pic2"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rank_add">
+        app:layout_constraintStart_toEndOf="@+id/pic5"
+        app:layout_constraintTop_toTopOf="@id/pic5" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/rank_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rank"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/rank_compare"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/rank_compare"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/rank_btns"
+        app:layout_constraintStart_toStartOf="@id/rank_btns"
+        app:layout_constraintTop_toBottomOf="@id/rank_btns" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

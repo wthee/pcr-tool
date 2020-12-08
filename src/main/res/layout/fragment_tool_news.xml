@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_color"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".ui.tool.news.NewsFragment">
 
     <include
         android:id="@+id/tool_news"
-        layout="@layout/view_tool_head" />
+        layout="@layout/view_toolbar" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

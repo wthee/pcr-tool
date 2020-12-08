@@ -44,7 +44,7 @@ class PvpPageFragment : Fragment() {
     ): View {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
-            val adapter = PvpCharacterAdapter(isFloatWindow, requireActivity())
+            val adapter = PvpCharacterAdapter(isFloatWindow)
 //            adapter.setHasStableIds(!isFloatWindow)
             binding.icons.adapter = adapter
 

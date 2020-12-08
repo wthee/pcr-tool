@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.entity.EventStoryData
+import cn.wthee.pcrtool.data.view.EventData
 import cn.wthee.pcrtool.databinding.ItemEventDataBinding
 
 
 class EventHistoryAdapter :
-    ListAdapter<EventStoryData, EventHistoryAdapter.ViewHolder>(EventDiffCallback()) {
+    ListAdapter<EventData, EventHistoryAdapter.ViewHolder>(EventDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemEventDataBinding.inflate(
@@ -33,7 +33,7 @@ class EventHistoryAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(event: EventStoryData) {
+        fun bind(event: EventData) {
             //设置数据
             binding.apply {
                 root.animation =
@@ -48,18 +48,18 @@ class EventHistoryAdapter :
 
 }
 
-private class EventDiffCallback : DiffUtil.ItemCallback<EventStoryData>() {
+private class EventDiffCallback : DiffUtil.ItemCallback<EventData>() {
 
     override fun areItemsTheSame(
-        oldItem: EventStoryData,
-        newItem: EventStoryData
+        oldItem: EventData,
+        newItem: EventData
     ): Boolean {
-        return oldItem.story_group_id == newItem.story_group_id
+        return oldItem.start_time == newItem.start_time
     }
 
     override fun areContentsTheSame(
-        oldItem: EventStoryData,
-        newItem: EventStoryData
+        oldItem: EventData,
+        newItem: EventData
     ): Boolean {
         return oldItem == newItem
     }

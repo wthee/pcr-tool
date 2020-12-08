@@ -69,7 +69,7 @@ object InjectorUtil {
         )
     }
 
-    fun providePromotionViewModelFactory(): CharacterAttrViewModelFactory {
+    fun provideCharacterAttrViewModelFactory(): CharacterAttrViewModelFactory {
         val repository1 = getCharacterRepository()
         val repository2 = getEquipmentRepository()
         return CharacterAttrViewModelFactory(

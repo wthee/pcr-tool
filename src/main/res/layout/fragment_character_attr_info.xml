@@ -142,10 +142,8 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="@dimen/l_padding"
                 android:text="@string/sorry_ue"
                 android:textColor="@color/colorAlpha"
                 android:textIsSelectable="true"

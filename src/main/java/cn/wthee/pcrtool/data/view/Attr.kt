@@ -25,7 +25,7 @@ data class Attr(
     @ColumnInfo(name = "energy_recovery_rate") var energyRecoveryRate: Double,
     @ColumnInfo(name = "energy_reduce_rate") var energyReduceRate: Double,
     @ColumnInfo(name = "accuracy") var accuracy: Double
-) : Serializable{
+) : Serializable {
     companion object {
 
         fun setGrowthValue(rarityGrowth: CharacterRarity): Attr {
@@ -52,7 +52,8 @@ data class Attr(
 
     }
 
-    constructor(): this(0.0,
+    constructor() : this(
+        0.0,
         0.0,
         0.0,
         0.0,
@@ -150,4 +151,15 @@ fun Attr.allNotZero(): List<AttrValue> {
     val attrs = all()
     attrs.removeAll { it.value == 0.0 }
     return attrs
+}
+
+//非零属性
+fun Attr.compare(attr1: Attr): List<AttrValue> {
+    val attrs = all()
+    val attrs1 = attr1.all()
+    val compareValue = arrayListOf<AttrValue>()
+    attrs.forEachIndexed { index, attrValue ->
+        compareValue.add(AttrValue(attrValue.title, attrValue.value - attrs1[index].value))
+    }
+    return compareValue
 }

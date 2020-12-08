@@ -5,12 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_color"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include
         android:id="@+id/tool_pvp"
-        layout="@layout/view_tool_head" />
+        layout="@layout/view_toolbar" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -18,18 +17,33 @@
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginEnd="@dimen/xm_margin">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
-            android:paddingTop="@dimen/s_padding"
             android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pcrfan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/xs_margin"
+                android:background="@drawable/title_background"
+                android:padding="@dimen/xs_padding"
+                android:paddingStart="@dimen/xs_padding"
+                android:paddingEnd="@dimen/xs_padding"
+                android:text="@string/pcrdfans_com"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/select_characters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/pcrfan"
                 app:spanCount="5"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_common" />
@@ -37,31 +51,36 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pvp_search"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
                 android:padding="0dp"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="@dimen/s_padding"
                 android:text="@string/pvp_search"
                 app:icon="@drawable/ic_search"
-                app:iconSize="@dimen/m_icon" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                app:iconSize="@dimen/m_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/select_characters" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/pcrfan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/xs_padding"
-        android:text="@string/pcrdfans_com"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/colorWhite" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/pvp_float"
+                android:layout_width="@dimen/menu_icon"
+                android:layout_height="@dimen/menu_icon"
+                android:layout_marginEnd="@dimen/s_margin"
+                android:src="@drawable/ic_float"
+                android:tint="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@id/pvp_search"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/pvp_search" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/m_margin"
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginEnd="@dimen/xm_margin"
         android:padding="@dimen/s_padding"

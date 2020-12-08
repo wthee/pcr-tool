@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_color"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/tool_calendar"
+        layout="@layout/view_toolbar" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:layout_constraintTop_toBottomOf="@id/tool_calendar">
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tool_calendar" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
+        app:cardCornerRadius="@dimen/card_radius">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/loading"
+                layout="@layout/layout_loading" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/events"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/m_margin"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/calendarView"
+                tools:listitem="@layout/item_calendar_event" />
+
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

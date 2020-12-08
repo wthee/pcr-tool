@@ -138,13 +138,16 @@ class CharacterBasicInfoFragment : Fragment() {
                 }
 
             }
-
             //fab点击监听
             fabLoveCbi.setOnClickListener {
                 isLoved = !isLoved
                 setLove(isLoved)
             }
-
+            //角色编号
+            unitId.setOnLongClickListener {
+                ToastUtil.short(unitId.text.toString())
+                return@setOnLongClickListener true
+            }
         }
     }
 
@@ -169,11 +172,6 @@ class CharacterBasicInfoFragment : Fragment() {
         //文本数据
         binding.apply {
             unitId.text = uid.toString()
-//            toolTitle.text =
-//                if (characterPro.actualName.isEmpty())
-//                    characterPro.name
-//                else
-//                    characterPro.actualName
             catah.text = characterPro.catchCopy
             name.text = characterPro.getNameF()
             nameExtra.text = characterPro.getNameL()

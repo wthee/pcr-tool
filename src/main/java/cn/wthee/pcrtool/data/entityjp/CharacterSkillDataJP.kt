@@ -40,31 +40,4 @@ data class CharacterSkillDataJP(
     //jp
     @ColumnInfo(name = "sp_skill_evolution_1") var sp_skill_evolution_1: Int = 0,
     @ColumnInfo(name = "sp_skill_evolution_2") var sp_skill_evolution_2: Int = 0
-) {
-    fun getAllSkillId(): ArrayList<Int> {
-        val list = arrayListOf<Int>()
-        union_burst.also {
-            if (it != 0) list.add(it)
-        }
-        union_burst_evolution.also {
-            if (it != 0) list.add(it)
-        }
-        main_skill_1.also {
-            if (it != 0) list.add(it)
-        }
-        main_skill_evolution_1.also {
-            if (it != 0) list.add(it)
-        }
-        main_skill_2.also {
-            if (it != 0) list.add(it)
-        }
-        ex_skill_1.also {
-            if (it != 0) list.add(it)
-        }
-        ex_skill_evolution_1.also {
-            if (it != 0) list.add(it)
-        }
-
-        return list
-    }
-}
+)

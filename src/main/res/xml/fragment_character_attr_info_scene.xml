@@ -30,6 +30,7 @@
             android:id="@+id/level_seek_bar"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/l_margin"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Constraint
@@ -66,7 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/s_margin"
             app:layout_constraintStart_toEndOf="@+id/icon"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/starts" />
 
         <Constraint
             android:id="@+id/starts"
@@ -82,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constrainedWidth="true"
+            android:layout_marginEnd="@dimen/l_margin"
             app:layout_constraintBottom_toBottomOf="@id/level"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/level"

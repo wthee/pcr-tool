@@ -30,7 +30,8 @@ class CharacterPagerFragment : Fragment() {
     private lateinit var binding: FragmentCharacterPagerBinding
     private lateinit var viewPager: ViewPager2
     private val characterAttrViewModel =
-        InjectorUtil.providePromotionViewModelFactory().create(CharacterAttrViewModel::class.java)
+        InjectorUtil.provideCharacterAttrViewModelFactory()
+            .create(CharacterAttrViewModel::class.java)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +61,7 @@ class CharacterPagerFragment : Fragment() {
         prepareTransitions()
         return binding.root
     }
+
 
     private fun init() {
         //加载列表

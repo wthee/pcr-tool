@@ -58,16 +58,6 @@ data class CharacterInfoPro(
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
     }
 
-    fun getAllStarId(): List<String> {
-        val list = arrayListOf<String>()
-        list.add(this.getStarId(1))
-        list.add(this.getStarId(3))
-        if (this.r6Id != 0) {
-            list.add(this.getStarId(6))
-        }
-        return list
-    }
-
     fun getAllUrl(): ArrayList<String> {
         val list = arrayListOf<String>()
         if (this.r6Id != 0) {

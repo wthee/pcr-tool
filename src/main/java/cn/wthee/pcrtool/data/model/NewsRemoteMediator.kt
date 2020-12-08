@@ -66,7 +66,10 @@ class NewsRemoteMediator(
     /**
      * this returns the page key or the final end of list success result
      */
-    suspend fun getKeyPageData(loadType: LoadType, state: PagingState<Int, NewsTable>): Any? {
+    private suspend fun getKeyPageData(
+        loadType: LoadType,
+        state: PagingState<Int, NewsTable>
+    ): Any? {
         return when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getClosestRemoteKey(state)

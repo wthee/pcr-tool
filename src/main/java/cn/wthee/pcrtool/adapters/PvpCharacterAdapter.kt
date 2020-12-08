@@ -1,6 +1,5 @@
-package cn.wthee.pcrtool.adapters
+ package cn.wthee.pcrtool.adapters
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +7,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
@@ -25,8 +25,7 @@ import kotlinx.coroutines.launch
 
 
 class PvpCharacterAdapter(
-    private val isFloatWindow: Boolean,
-    private val activity: Activity
+    private val isFloatWindow: Boolean
 ) :
     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
 
@@ -81,8 +80,8 @@ class PvpCharacterAdapter(
                     var id = data.unitId
                     id += if (r6Ids.contains(id)) 60 else 30
                     val picUrl = UNIT_ICON_URL + id + WEBP
-                    val coil = Coil.imageLoader(activity.applicationContext)
-                    val request = ImageRequest.Builder(activity.applicationContext)
+                    val coil = Coil.imageLoader(MyApplication.context)
+                    val request = ImageRequest.Builder(MyApplication.context)
                         .data(picUrl)
                         .build()
                     MainScope().launch {
@@ -138,7 +137,6 @@ class PvpCharacterAdapter(
                         }
 
                     }
-//                    notifyDataSetChanged()
                 }
             }
         }

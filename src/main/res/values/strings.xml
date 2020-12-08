@@ -3,13 +3,12 @@
     <string name="birth">%s 月 %s 日</string>
     <string name="character_detail">%s / %sCM / %sKG / %d</string>
     <string name="blood">%s 型</string>
-    <string name="unique_equip_name">%s 等级%d</string>
+    <string name="unique_equip_lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
     <string name="pic_index">%d / %d</string>
     <string name="percent">%d%%</string>
     <string name="equip_count">%s …x%d</string>
     <!-- 角色 & 装备  -->
-    <string name="level">等级</string>
     <string name="rank">RANK</string>
     <string name="title_quest">什么地方</string>
     <string name="age">年龄</string>
@@ -62,8 +61,7 @@
     <string name="db_jp_value">2</string>
 
     <!--筛选  -->
-    <string name="filter">筛选</string>
-    <string name="sort">排序</string>
+    <string name="filter">筛选排序</string>
     <string name="title_sort">排序类型</string>
     <string name="next">确认</string>
     <string name="reset">重置</string>
@@ -91,9 +89,9 @@
     <string name="equip_type">装备类型</string>
 
     <!--  工具  -->
-    <string name="tool_level">等级经验</string>
-    <string name="tool_pvp">竞技场查询</string>
-    <string name="ys">佑树</string>
+    <string name="tool_leader">排行</string>
+    <string name="tool_calendar">日历</string>
+    <string name="tool_pvp">竞技场</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
     <string name="game_version">切换数据</string>
@@ -106,26 +104,42 @@
     <string name="title_material">所需装备：%d</string>
     <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
-    <string name="tool_gacha">卡池记录</string>
-    <string name="tool_event">活动记录</string>
+    <string name="tool_gacha">卡池</string>
+    <string name="tool_event">活动</string>
     <string name="pre">✦ </string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
-    <string name="pcrdfans_com">数据来源 pcrdfans</string>
+    <string name="pcrdfans_com">来源 pcrdfans.com</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
     <string name="share_app">分享应用</string>
     <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
-    <string name="more">更多</string>
     <string name="drop_info">- 掉落信息 -</string>
     <string name="test">testtesttesttesttesttesttestttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttesttesttesttesttesttesttesttesttestesttesttesttesttesttesttesttesttesttestttesttestestesttesttesttesttesttesttesttesttesttestttesttest</string>
-    <string name="title_all_attr_sub">- 已计算角色剧情属性 -</string>
-    <string name="title_story_attr_sub">- 相同角色所有剧情属性 -</string>
+    <string name="title_all_attr_sub">已计算角色剧情属性</string>
+    <string name="title_story_attr_sub">相同角色所有剧情属性</string>
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">- 剧情属性 -</string>
     <string name="download_pic">下载当前图片</string>
-    <string name="tool_news">最新消息</string>
-    <string name="loading">加载中...</string>
+    <string name="tool_news">公告</string>
+    <string name="loading">加载中…</string>
     <string name="news_load_tip">网页加载较慢或无法加载，可尝试在浏览器中查看~</string>
-    <string name="loading_news">正在获取最新数据...</string>
+    <string name="loading_news">正在获取最新数据…</string>
     <string name="stared">已收藏</string>
+    <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
+    <string name="rank_compare">对比</string>
+    <string name="current">当前</string>
+    <string name="compare">对比</string>
+    <string name="all">综合</string>
+    <string name="jjc">竞技场</string>
+    <string name="clan">公会战</string>
+    <string name="tower">露娜塔</string>
+    <string name="leader_source">来源 AppMedia</string>
+    <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
+    <string name="result">差值</string>
+    <string name="reduce_0">  VS  </string>
+    <string name="rerduce_1">-</string>
+    <string name="equal">=</string>
+    <string name="rank_pre">R%d</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

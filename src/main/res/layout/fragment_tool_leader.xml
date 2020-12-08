@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_color"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/tool_leader"
+        layout="@layout/view_toolbar" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
+        app:cardCornerRadius="@dimen/card_radius">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/xs_margin"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/xs_padding"
+                android:paddingEnd="@dimen/xs_padding"
+                android:text="@string/leader_source"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/character"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/character"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:layout_constraintEnd_toStartOf="@id/all"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/all"
+                app:layout_constraintWidth_percent="0.2" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/all"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_margin"
+                android:gravity="center"
+                android:text="@string/all"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:layout_constraintEnd_toStartOf="@id/pvp"
+                app:layout_constraintTop_toBottomOf="@id/source"
+                app:layout_constraintWidth_percent="0.2" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pvp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/jjc"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:layout_constraintStart_toEndOf="@id/all"
+                app:layout_constraintTop_toTopOf="@id/all"
+                app:layout_constraintWidth_percent="0.2" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/clan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/clan"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:layout_constraintStart_toEndOf="@id/pvp"
+                app:layout_constraintTop_toTopOf="@id/all"
+                app:layout_constraintWidth_percent="0.2" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tower"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/tower"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/clan"
+                app:layout_constraintTop_toTopOf="@id/all"
+                app:layout_constraintWidth_percent="0.2" />
+
+            <include
+                android:id="@+id/loading"
+                layout="@layout/layout_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                tools:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/all" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/loading"
+                tools:listitem="@layout/item_leader" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

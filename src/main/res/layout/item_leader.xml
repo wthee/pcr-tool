@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/xs_margin"
+    android:layout_marginTop="@dimen/m_margin"
+    android:layout_marginEnd="@dimen/xs_margin"
+    android:animateLayoutChanges="true">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_margin="@dimen/s_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/unknown_gray" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/all"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/pvp"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
+        tools:text="780" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/pvp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/clan"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
+        tools:text="780" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/clan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintEnd_toStartOf="@id/tower"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
+        tools:text="780" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tower"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        app:layout_constraintWidth_percent="0.2"
+        tools:text="780" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

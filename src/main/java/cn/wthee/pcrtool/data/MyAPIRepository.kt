@@ -2,9 +2,7 @@ package cn.wthee.pcrtool.data
 
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.model.News
-import cn.wthee.pcrtool.data.model.Result
-import cn.wthee.pcrtool.data.model.ResultData
+import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.data.service.MyAPIService
 import cn.wthee.pcrtool.data.view.getIds
 import cn.wthee.pcrtool.enums.Response
@@ -74,11 +72,39 @@ object MyAPIRepository {
         return ResultData(Response.FAILURE, arrayListOf(), "获取数据失败，请稍后重新查询~")
     }
 
-}
+    //排名信息
+    suspend fun getLeader(): ResultData<List<LeaderboardInfo>> {
+        //请求
+        try {
+            val response = service.getLeader()
+            if (response.status != 0 || response.data.isEmpty()) {
+                return ResultData(Response.FAILURE, arrayListOf(), "未正常获取数据，请重新查询~")
+            }
+            return ResultData(Response.SUCCESS, response.data)
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return ResultData(Response.CANCEL, arrayListOf())
+            }
+        }
+        return ResultData(Response.FAILURE, arrayListOf(), "获取数据失败，请稍后重新查询~")
+    }
 
-interface OnPostListener {
 
-    fun success(data: List<Result>)
+    //日历信息
+    suspend fun getCalendar(): ResultData<List<CalendarData>> {
+        //请求
+        try {
+            val response = service.getCalendar()
+            if (response.status != 0 || response.data.isEmpty()) {
+                return ResultData(Response.FAILURE, arrayListOf(), "未正常获取数据，请重新查询~")
+            }
+            return ResultData(Response.SUCCESS, response.data)
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return ResultData(Response.CANCEL, arrayListOf())
+            }
+        }
+        return ResultData(Response.FAILURE, arrayListOf(), "获取数据失败，请稍后重新查询~")
+    }
 
-    fun error()
 }

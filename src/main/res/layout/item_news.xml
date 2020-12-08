@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/xm_margin"
-    android:layout_marginEnd="@dimen/xm_margin"
-    android:layout_marginBottom="@dimen/m_margin"
+    android:layout_marginStart="@dimen/m_padding"
+    android:layout_marginEnd="@dimen/m_padding"
+    android:layout_marginBottom="@dimen/m_padding"
     app:cardCornerRadius="@dimen/card_radius">
 
     <LinearLayout

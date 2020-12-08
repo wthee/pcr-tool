@@ -26,7 +26,6 @@ import cn.wthee.pcrtool.ui.main.EquipmentListFragment
 import cn.wthee.pcrtool.ui.main.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -51,9 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
-        lateinit var fabSetting: ExtendedFloatingActionButton
-        lateinit var fabSearch: ExtendedFloatingActionButton
-        lateinit var fabFilter: ExtendedFloatingActionButton
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -67,6 +63,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                    // Set the content to appear under the system bars so that the
+                    // content doesn't resize when the system bars hide and show.
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    // Hide the nav bar and status bar
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
+        }
+
         setContentView(binding.root)
         //取消其它任务
         WorkManager.getInstance(this).cancelAllWork()
@@ -79,8 +90,12 @@ class MainActivity : AppCompatActivity() {
         //绑定活动
         ActivityUtil.instance.currentActivity = this
         mHeight = ScreenUtil.getWidth() - 48.dp
-
+        //应用版本校验
+        AppUpdateHelper.init(this, layoutInflater)
+        //菜单布局
+        initMenuItems()
     }
+
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         mHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -124,12 +139,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFab() {
         fabMain = binding.fab
-        fabSetting = binding.setting
-        fabSearch = binding.search
-        fabFilter = binding.filter
     }
 
     private fun setListener() {
+
         //长按回到顶部
         fabMain.setOnLongClickListener {
             when (currentMainPage) {
@@ -152,12 +165,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //设置
-        fabSetting.setOnClickListener {
+        binding.setting.root.setOnClickListener {
             closeFab()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_settingsFragment)
         }
         //搜索
-        fabSearch.setOnClickListener {
+        binding.search.root.setOnClickListener {
             closeFab()
             //显示搜索布局
             val layout = LayoutSearchBinding.inflate(layoutInflater)
@@ -215,7 +228,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //筛选
-        fabFilter.setOnClickListener {
+        binding.filter.root.setOnClickListener {
             closeFab()
             when (currentMainPage) {
                 //角色筛选
@@ -368,24 +381,56 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        //pvp
+        binding.toolPvp.root.setOnClickListener {
+            closeFab()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolPvpFragment)
+        }
+        //新闻
+        binding.toolNews.root.setOnClickListener {
+            closeFab()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolNewsFragment)
+        }
+        //排名
+        binding.toolLeader.root.setOnClickListener {
+            closeFab()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolLeaderFragment)
+        }
+        //活动
+        binding.toolEvent.root.setOnClickListener {
+            closeFab()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_eventFragment)
+        }
+        //卡池
+        binding.toolGacha.root.setOnClickListener {
+            closeFab()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolGachaFragment)
+        }
+        //日历
+        binding.toolCalendar.root.setOnClickListener {
+            closeFab()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_calendarFragment)
+        }
     }
 
     private fun closeFab() {
         binding.motionLayout.apply {
             MainScope().launch {
                 transitionToStart()
-                setBackgroundColor(getColor(R.color.colorAlpha))
+                binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlpha)
                 isClickable = false
                 isFocusable = false
+
             }
         }
         fabMain.setImageResource(R.drawable.ic_function)
     }
 
     private fun openFab() {
+        fabMain.setImageResource(R.drawable.ic_cancel)
         binding.motionLayout.apply {
             transitionToEnd()
-            setBackgroundColor(getColor(R.color.colorAlphtBlack))
+            binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlphtBlack)
             isClickable = true
             isFocusable = true
             setOnClickListener {
@@ -402,4 +447,53 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initMenuItems() {
+        binding.apply {
+            MenuItemViewHelper(setting).setItem(
+                getString(R.string.setting),
+                R.drawable.ic_settings,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(search).setItem(
+                getString(R.string.search),
+                R.drawable.ic_search,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(filter).setItem(
+                getString(R.string.filter),
+                R.drawable.ic_filter,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(toolPvp).setItem(
+                getString(R.string.tool_pvp),
+                R.drawable.ic_pvp,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(toolNews).setItem(
+                getString(R.string.tool_news),
+                R.drawable.ic_news,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(toolLeader).setItem(
+                getString(R.string.tool_leader),
+                R.drawable.ic_leader,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(toolEvent).setItem(
+                getString(R.string.tool_event),
+                R.drawable.ic_event,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(toolGacha).setItem(
+                getString(R.string.tool_gacha),
+                R.drawable.ic_gacha,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(toolCalendar).setItem(
+                getString(R.string.tool_calendar),
+                R.drawable.ic_gacha,
+                R.color.colorPrimary
+            )
+        }
+    }
 }

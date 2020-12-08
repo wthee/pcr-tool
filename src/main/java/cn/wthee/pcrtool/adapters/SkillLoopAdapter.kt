@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.adapters
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,10 +12,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModel.Companion.iconType1
 import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModel.Companion.iconType2
+import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
+import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteHelper
-import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 
@@ -42,15 +42,11 @@ class SkillLoopAdapter :
             //设置数据
             binding.apply {
                 val ctx = MyApplication.context
-                //加载图片 TODO 优化判断
-                Log.e("skill", atkId.toString())
+                //加载图片
                 if (atkId == 1) {
                     name.text = "普攻"
                     name.setTextColor(ctx.getColor(R.color.colorAccent))
-                    pic.setBackgroundResource(R.drawable.unknown_gray)
-                    val drawable = ResourcesUtil.getDrawable(R.drawable.ic_pvp)
-                    drawable?.setTint(ResourcesUtil.getColor(R.color.colorAccent))
-                    pic.foreground = drawable
+                    pic.load(EQUIPMENT_URL + UNKNOW_EQUIP_ID + WEBP)
                 } else {
                     //技能图标
                     val iconType = if (atkId == 1001 || atkId == 2001) {
@@ -68,7 +64,7 @@ class SkillLoopAdapter :
                             //字体颜色
                             name.setTextColor(
                                 PaletteHelper.createPaletteSync(bitmap)
-                                    .getLightVibrantColor(Color.BLACK)
+                                    .getDarkVibrantColor(Color.BLACK)
                             )
                             pic.background = it
                         }

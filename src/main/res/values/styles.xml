@@ -5,11 +5,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="windowNoTitle">true</item>
+        <!--        <item name="android:windowContentTransitions">true</item>-->
+        <!--        <item name="windowNoTitle">true</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
-        <item name="android:actionButtonStyle">@style/myActionButtonStyle</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--        <item name="android:windowContentOverlay">@null</item>-->
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
@@ -17,15 +19,6 @@
     <style name="Ripple">
         <item name="android:colorControlHighlight">@color/colorFg</item>
         <item name="android:radius">18dp</item>
-    </style>
-
-    <style name="OverflowButtonStyle" parent="@android:style/Widget.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_more</item>
-    </style>
-
-    <!--menu items 间隔设置-->
-    <style name="myActionButtonStyle" parent="Widget.AppCompat.ActionButton">
-        <item name="android:padding">0dp</item>
     </style>
 
     <!-- 自定义弹出/关闭动画   -->

@@ -32,11 +32,7 @@
             app:iconSpaceReserved="false"
             app:key="force_update_app"
             app:summary="0.0.3-beta"
-            app:title="@string/check_app_update">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://www.coolapk.com/apk/273453" />
-        </Preference>
+            app:title="@string/check_app_update" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"

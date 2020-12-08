@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -8,7 +9,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ViewToolbarBinding
 
 
-class ToolbarUtil(toolbar: ViewToolbarBinding) {
+class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
 
     val leftIcon = toolbar.leftIcon
     val rightIcon = toolbar.rightIcon
@@ -20,17 +21,19 @@ class ToolbarUtil(toolbar: ViewToolbarBinding) {
         leftIcon.setImageResource(resId)
     }
 
+    //主页面toolbar
+    fun setMainToolbar(titleText: String) {
+        setLeftIcon(R.mipmap.ic_logo)
+        title.text = titleText
+        toolbar.root.setBackgroundColor(ResourcesUtil.getColor(R.color.colorPrimary))
+
+    }
+
     fun setRightIcon(resId: Int): ToolbarUtil {
         rightIcon.visibility = View.VISIBLE
         rightIcon.setImageResource(resId)
         return this
     }
-
-
-    private fun setTitleColor(resId: Int) {
-        title.setTextColor(resources.getColor(resId, null))
-    }
-
 
     private fun setCenterStyle() {
         val params = title.layoutParams as ConstraintLayout.LayoutParams
@@ -39,8 +42,7 @@ class ToolbarUtil(toolbar: ViewToolbarBinding) {
         params.topToTop = 0
         params.bottomToBottom = 0
         title.layoutParams = params
-        setTitleColor(R.color.colorPrimary)
-        setLeftIcon(R.drawable.ic_back)
+        title.setTextColor(ResourcesUtil.getColor(R.color.colorPrimary))
     }
 
     fun setCenterTitle(titleText: String): ToolbarUtil {
@@ -49,4 +51,9 @@ class ToolbarUtil(toolbar: ViewToolbarBinding) {
         return this
     }
 
+    fun setToolHead(iconId: Int, titleText: String) {
+        leftIcon.imageTintList = ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorWhite))
+        setLeftIcon(iconId)
+        title.text = titleText
+    }
 }

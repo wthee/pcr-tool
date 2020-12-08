@@ -53,15 +53,14 @@ object Constants {
     //本地储存
     const val SP_DATABASE_VERSION = "database_version"
     const val SP_DATABASE_HASH = "database_hash"
-    const val SP_DATABASE_VERSION_JP = "database_hash_jp"
-    const val SP_DATABASE_HASH_JP = "database_version_jp"
+    const val SP_DATABASE_VERSION_JP = "database_version_jp"
+    const val SP_DATABASE_HASH_JP = "database_hash_jp"
     const val SP_STAR_CHARACTER = "star_character"
     const val SP_STAR_EQUIP = "star_equip"
 
     //数量
     const val SP_COUNT_CHARACTER = "count_character"
     const val SP_COUNT_EQUIP = "count_equip"
-    const val SP_COUNT_ENEMY = "count_enemy"
 
     //弹框
     const val BTN_OPERATE_FORCE_UPDATE_DB = "强制更新"
@@ -77,7 +76,6 @@ object Constants {
     const val NOTICE_TOAST_TITLE_DB_DOWNLOAD = "数据下载中\n请稍等..."
     const val NOTICE_TOAST_TIMEOUT = "若内容正常显示，请点击${BTN_NOT_UPDATE_DB}，直接进入应用"
     const val NOTICE_TOAST_CHANGE = "数据切换中......"
-    const val NOTICE_TOAST_TODO = "功能暂未实装"
     const val NOTICE_TOAST_CHECKING = "正在获取数据版本信息"
     const val NOTICE_TOAST_LASTEST = "数据已是最新版本"
 

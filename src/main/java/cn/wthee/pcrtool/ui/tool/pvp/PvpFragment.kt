@@ -19,10 +19,7 @@ import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.data.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
-import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import java.io.Serializable
@@ -78,25 +75,15 @@ class PvpFragment : Fragment() {
             }
             pcrfan.setOnClickListener {
                 //从其他浏览器打开
-                val intent = Intent()
-                intent.action = Intent.ACTION_VIEW
-                intent.data = Uri.parse(getString(R.string.url_pcrdfans_com))
-                startActivity(
-                    Intent.createChooser(
-                        intent,
-                        "访问：${getString(R.string.url_pcrdfans_com)}"
-                    )
-                )
+                BrowserUtil.open(requireContext(), getString(R.string.url_pcrdfans_com))
             }
             //设置头部
-            toolPvp.apply {
-                toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_pvp))
-                toolTitle.text = getString(R.string.tool_pvp)
-                rightIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_float))
-                rightIcon.visibility = View.VISIBLE
-            }
+            ToolbarUtil(binding.toolPvp).setToolHead(
+                R.drawable.ic_pvp,
+                getString(R.string.tool_pvp)
+            )
             //悬浮窗
-            toolPvp.rightIcon.setOnClickListener {
+            pvpFloat.setOnClickListener {
                 //检查是否已经授予权限
                 if (!canDrawOverlays(requireContext())) {
                     //若未授权则请求权限
@@ -141,7 +128,7 @@ class PvpFragment : Fragment() {
 
     //已选择角色
     private fun loadDefault() {
-        selectedAdapter = PvpCharacterAdapter(false, requireActivity())
+        selectedAdapter = PvpCharacterAdapter(false)
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()

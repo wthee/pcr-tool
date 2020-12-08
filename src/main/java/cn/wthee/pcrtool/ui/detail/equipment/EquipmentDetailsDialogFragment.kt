@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
 import coil.load
 
 class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
@@ -68,17 +67,14 @@ class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun init() {
         binding.apply {
-            //toolbar
-            ToolbarUtil(toolbar).setCenterTitle(equip.equipmentName)
-                .leftIcon.setOnClickListener {
-                    goBack()
-                }
             detail.apply {
                 //图标
                 val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
                 itemPic.load(picUrl) {
                     error(R.drawable.unknown_gray)
                 }
+                //名称
+                equipName.text = equip.equipmentName
                 //描述
                 desc.text = equip.getDesc()
                 //属性词条
@@ -108,9 +104,4 @@ class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
             }
         })
     }
-
-    private fun goBack() {
-        dialog?.dismiss()
-    }
-
 }

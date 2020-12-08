@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_color"
-    android:fitsSystemWindows="true"
     android:gravity="center"
     android:orientation="vertical">
 
     <include
         android:id="@+id/tool_event"
-        layout="@layout/view_tool_head" />
+        layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/event_list"

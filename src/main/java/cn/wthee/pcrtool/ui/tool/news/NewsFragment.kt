@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapters.viewpager.NewsListPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.tabs.TabLayoutMediator
 
 
@@ -30,10 +30,10 @@ class NewsFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolNewsBinding.inflate(inflater, container, false)
         //设置头部
-        binding.toolNews.apply {
-            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_news))
-            toolTitle.text = getString(R.string.tool_news)
-        }
+        ToolbarUtil(binding.toolNews).setToolHead(
+            R.drawable.ic_news,
+            getString(R.string.tool_news)
+        )
         //viewpager
         val adapter = NewsListPagerAdapter(requireActivity())
         binding.viewPager.adapter = adapter

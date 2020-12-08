@@ -2,21 +2,17 @@ package cn.wthee.pcrtool
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.adapters.viewpager.MainPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
-import cn.wthee.pcrtool.databinding.LayoutPopupMenuBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.ui.main.CharacterViewModel
@@ -26,6 +22,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -83,42 +80,10 @@ class MainPagerFragment : Fragment() {
 
     private fun init() {
         tipText = binding.noDataTip
-        //menu
-        binding.mainToolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.menu_tool_news -> {
-                    findNavController().navigate(R.id.action_containerFragment_to_toolNewsFragment)
-                }
-                R.id.menu_tool_pvp -> {
-                    findNavController().navigate(R.id.action_containerFragment_to_toolPvpFragment)
-                }
-                R.id.show_more -> {
-                    //显示
-                    showPopupMenu().apply {
-                        root.setOnClickListener {
-                            popupMenu.dismiss()
-                        }
-                        toolLevel.setOnClickListener {
-                            popupMenu.dismiss()
-                            findNavController().navigate(R.id.action_containerFragment_to_toolLevelFragment)
-                        }
-                        toolGacha.setOnClickListener {
-                            popupMenu.dismiss()
-                            findNavController().navigate(R.id.action_containerFragment_to_toolGachaFragment)
-                        }
-                        toolEvent.setOnClickListener {
-                            popupMenu.dismiss()
-                            findNavController().navigate(R.id.action_containerFragment_to_eventFragment)
-                        }
-                    }
-                }
-            }
-            return@setOnMenuItemClickListener true
-        }
         //禁止连续点击
         cListClick = false
         //viewpager2 配置
-        viewPager2 = binding.viewPager
+        viewPager2 = binding.mainViewPager
         viewPager2.offscreenPageLimit = 2
         viewPager2.adapter = MainPagerAdapter(requireActivity())
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -128,10 +93,12 @@ class MainPagerFragment : Fragment() {
                 when (position) {
                     0 -> tipText.text = getString(R.string.data_null_character)
                     1 -> tipText.text = getString(R.string.data_null_equip)
-                    2 -> tipText.text = getString(R.string.data_null_enemy)
                 }
             }
         })
+        //toolbar
+        ToolbarUtil(binding.mainToolbar)
+            .setMainToolbar(getString(R.string.app_name))
         //tab 初始化
         tabLayout = binding.layoutTab
         //绑定tablayout
@@ -178,21 +145,6 @@ class MainPagerFragment : Fragment() {
 
     }
 
-    private fun showPopupMenu(): LayoutPopupMenuBinding {
-
-        val menuBinding = LayoutPopupMenuBinding.inflate(layoutInflater)
-
-        popupMenu = PopupWindow(context)
-        popupMenu.contentView = menuBinding.root
-        popupMenu.width = LinearLayout.LayoutParams.MATCH_PARENT
-        popupMenu.height = LinearLayout.LayoutParams.MATCH_PARENT
-        popupMenu.isFocusable = true
-        popupMenu.setBackgroundDrawable(ResourcesUtil.getDrawable(R.color.colorAlphtBlack))
-        popupMenu.showAtLocation(menuBinding.root, Gravity.NO_GRAVITY, 0, 0)
-
-        return menuBinding
-    }
-
     //配置共享元素动画
     private fun prepareTransitions() {
 
@@ -201,8 +153,8 @@ class MainPagerFragment : Fragment() {
                 names: MutableList<String>?,
                 sharedElements: MutableMap<String, View>?
             ) {
-                //返回时隐藏toolbar
-                binding.layoutToolbar.setExpanded(false)
+                //TODO 返回时隐藏toolbar
+//                binding.layoutToolbar.setExpanded(false)
                 try {
                     if (names!!.isNotEmpty()) {
                         sharedElements ?: return

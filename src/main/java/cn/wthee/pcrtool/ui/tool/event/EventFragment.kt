@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.adapters.EventHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 
 class EventFragment : Fragment() {
 
@@ -34,11 +34,10 @@ class EventFragment : Fragment() {
         })
 
         //设置头部
-        binding.toolEvent.apply {
-            toolIcon.setImageDrawable(ResourcesUtil.getDrawable(R.drawable.ic_event))
-            toolTitle.text = getString(R.string.tool_event)
-        }
-
+        ToolbarUtil(binding.toolEvent).setToolHead(
+            R.drawable.ic_event,
+            getString(R.string.tool_event)
+        )
         return binding.root
     }
 

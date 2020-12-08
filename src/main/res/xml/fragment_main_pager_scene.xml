@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="0.01dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+
+    <Transition
+        app:constraintSetEnd="@id/end"
+        app:constraintSetStart="@+id/start">
+        <KeyFrameSet>
+            <KeyAttribute
+                app:framePosition="0"
+                app:motionTarget="@id/main_toolbar"
+                android:alpha="1.0" />
+            <KeyAttribute
+                app:framePosition="100"
+                app:motionTarget="@id/main_toolbar"
+                android:alpha="0.0" />
+        </KeyFrameSet>
+        <OnSwipe
+            app:dragDirection="dragUp"
+            app:touchAnchorId="@id/main_view_pager"
+            app:touchAnchorSide="top" />
+    </Transition>
+</MotionScene>

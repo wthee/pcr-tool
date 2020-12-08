@@ -12,6 +12,6 @@ object ClipboardUtli {
             MyApplication.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val mClipData = ClipData.newPlainText("OcrText", str)
         clipboardManager.setPrimaryClip(mClipData)
-        ToastUtil.short("已复制链接~")
+        ToastUtil.short("内容已复制~")
     }
 }

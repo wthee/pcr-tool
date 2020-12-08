@@ -69,7 +69,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
         android:textColor="@color/colorAlpha"
-        android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="@id/three"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/three" />
@@ -80,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/s_margin"
         android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/three">
 
@@ -93,7 +93,7 @@
                 android:id="@+id/catah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/xm_margin"
                 android:layout_marginBottom="@dimen/s_margin"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
@@ -110,7 +110,7 @@
                 android:id="@+id/intro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s_margin"
+                android:layout_marginTop="@dimen/m_margin"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textIsSelectable="true"
                 app:layout_constrainedWidth="true"
