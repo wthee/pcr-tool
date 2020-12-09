@@ -5,11 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
-import cn.wthee.pcrtool.data.db.view.Attr
-import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr.Companion.getAttr
-import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.add
-import cn.wthee.pcrtool.data.db.view.multiply
+import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.launch

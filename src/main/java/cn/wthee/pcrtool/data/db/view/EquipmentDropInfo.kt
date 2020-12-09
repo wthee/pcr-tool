@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 
 
-//最终信息
+//最终掉落信息
 data class EquipmentDropInfo(
     @ColumnInfo(name = "eid") val eid: Int,
     @ColumnInfo(name = "quest_id") val questId: Int,

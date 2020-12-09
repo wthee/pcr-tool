@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.data.db.view.Attr
 
-//装备提升
+//装备强化提升属性
 @Entity(tableName = "equipment_enhance_rate")
 data class EquipmentEnhanceRate(
     @PrimaryKey

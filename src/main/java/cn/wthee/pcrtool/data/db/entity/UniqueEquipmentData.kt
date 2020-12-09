@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.data.db.view.Attr
 import java.io.Serializable
 
+//专武信息
 @Entity(tableName = "unique_equipment_data")
 class UniqueEquipmentData(
     @PrimaryKey

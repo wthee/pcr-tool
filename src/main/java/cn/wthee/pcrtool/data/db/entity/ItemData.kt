@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
+//道具信息
 @Entity(tableName = "item_data")
 data class ItemData(
     @PrimaryKey

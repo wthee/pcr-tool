@@ -5,7 +5,7 @@ import androidx.room.Embedded
 import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
-
+//装备最大强化后属性
 data class EquipmentMaxData(
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,

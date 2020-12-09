@@ -64,7 +64,7 @@ class EquipmentListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             equipTypes.add("全部")
             viewModel.getTypes().forEach {
-                equipTypes.add(it.type)
+                equipTypes.add(it)
             }
         }
         viewModel.getEquips("")

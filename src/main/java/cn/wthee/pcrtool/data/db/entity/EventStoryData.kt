@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+//剧情活动
 @Entity(
     tableName = "event_story_data",
     indices = [Index(

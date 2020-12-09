@@ -5,9 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.entity.EquipmentCraft
-import cn.wthee.pcrtool.data.db.entity.EquipmentData
 import cn.wthee.pcrtool.data.db.entity.EquipmentEnhanceRate
-import cn.wthee.pcrtool.data.db.view.EquipType
 import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
@@ -65,13 +63,9 @@ const val equipWhere = """
 @Dao
 interface EquipmentDao {
 
-    //角色Rank所需装备信息
-    @Query("SELECT * FROM equipment_data WHERE equipment_data.equipment_id IN (:eids) ")
-    suspend fun getEquipmentDatas(eids: List<Int>): List<EquipmentData>
-
     //装备类型
     @Query("""SELECT description as type FROM equipment_enhance_rate GROUP BY description""")
-    suspend fun getEquipTypes(): List<EquipType>
+    suspend fun getEquipTypes(): List<String>
 
     //所有装备信息
     @Transaction

@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.data.db.repository
 import cn.wthee.pcrtool.data.db.dao.EventDao
 
 
-//怪物数据Repository
+//剧情活动数据Repository
 class EventRepository(private val eventDao: EventDao) {
 
     //获取活动事件信息

@@ -2,9 +2,9 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
-import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
 import java.io.Serializable
 
+//专武最大强化
 data class UniqueEquipmentMaxData(
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
@@ -14,17 +14,5 @@ data class UniqueEquipmentMaxData(
 ) : Serializable {
 
     fun getDesc() = description.replace("\\n", "")
-
-    companion object {
-        fun unknow() =
-            UniqueEquipmentMaxData(
-                0,
-                UNKNOW_EQUIP_ID,
-                "？？？",
-                "",
-                Attr()
-            )
-
-    }
 
 }

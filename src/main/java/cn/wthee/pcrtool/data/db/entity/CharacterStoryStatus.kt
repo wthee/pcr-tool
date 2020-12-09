@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
+//角色剧情属性
 @Entity(tableName = "chara_story_status")
 data class CharacterStoryStatus(
     @PrimaryKey

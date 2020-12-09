@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+//卡池可交换角色信息
 @Entity(tableName = "gacha_exchange_lineup")
 data class GachaExchange(
     @PrimaryKey

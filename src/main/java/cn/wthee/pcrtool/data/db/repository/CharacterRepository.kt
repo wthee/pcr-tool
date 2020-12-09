@@ -7,7 +7,6 @@ import cn.wthee.pcrtool.enums.value
 
 
 //角色数据Repository
-
 class CharacterRepository(private val characterDao: CharacterDao) {
 
     //获取角色列表所需数据
@@ -29,7 +28,7 @@ class CharacterRepository(private val characterDao: CharacterDao) {
         filter.starIds
     )
 
-    //获取角色列表所需数据
+    //获取角色列数量
     suspend fun getInfoAndDataCount(name: String, filter: FilterCharacter) =
         characterDao.getInfoAndDataCount(
             name,

@@ -4,13 +4,8 @@ import cn.wthee.pcrtool.data.db.dao.EquipmentDao
 import cn.wthee.pcrtool.data.model.FilterEquipment
 
 
-//角色数据Repository
-
+//装备数据Repository
 class EquipmentRepository(private val equipmentDao: EquipmentDao) {
-
-
-    //获取角色Rank所需装备具体属性
-    suspend fun getEquipmentDatas(eids: List<Int>) = equipmentDao.getEquipmentDatas(eids)
 
     //获取装备具体属性
     suspend fun getEquipmentData(eid: Int) = equipmentDao.getEquipInfos(eid)
@@ -26,6 +21,7 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
             filter.starIds
         )
 
+    // 装备数量
     suspend fun getEquipmentCount(name: String, filter: FilterEquipment) =
         equipmentDao.getEquipmentCount(
             filter.type, name,

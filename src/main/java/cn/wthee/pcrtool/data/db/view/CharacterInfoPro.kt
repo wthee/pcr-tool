@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import java.io.Serializable
 
 
-//多表查询结果保存
+//角色详情信息
 data class CharacterInfoPro(
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,

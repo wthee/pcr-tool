@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import java.io.Serializable
 
+//道具掉落
 data class ItemDropInfo(
     @ColumnInfo(name = "quest_id") val quest_id: Int,
     @ColumnInfo(name = "quest_name") val quest_name: String,

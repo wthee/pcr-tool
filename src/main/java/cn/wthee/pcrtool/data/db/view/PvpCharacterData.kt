@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import com.google.gson.JsonArray
 import java.io.Serializable
 
+// 角色位置
 data class PvpCharacterData(
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "position") val position: Int

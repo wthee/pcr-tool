@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//角色属性状态
+//公会信息
 @Entity(tableName = "guild")
 data class GuildData(
     @PrimaryKey

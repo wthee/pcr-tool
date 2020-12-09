@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import java.io.Serializable
 
+//专武强化
 @Entity(
     tableName = "unique_equipment_enhance_data",
     primaryKeys = ["equip_slot", "enhance_level"]
