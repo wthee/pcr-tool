@@ -57,7 +57,7 @@ class CharacterListAdapter(
                 //加载网络图片
                 var id = character.id
                 id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
-                val picUrl = Constants.CHARACTER_URL + id + Constants.WEBP
+                val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)
@@ -76,7 +76,7 @@ class CharacterListAdapter(
                     character.position
                 )
                 //设置共享元素名称
-                itemCharacter.transitionName = "item_${character.id}"
+                root.transitionName = "item_${character.id}"
                 root.setOnClickListener {
                     //避免同时点击两个
                     if (!MainPagerFragment.cListClick) {
@@ -87,7 +87,7 @@ class CharacterListAdapter(
                         bundle.putInt(UID, character.id)
                         val extras =
                             FragmentNavigatorExtras(
-                                itemCharacter to itemCharacter.transitionName
+                                root to root.transitionName
                             )
                         fragment.findNavController().navigate(
                             R.id.action_containerFragment_to_characterPagerFragment,

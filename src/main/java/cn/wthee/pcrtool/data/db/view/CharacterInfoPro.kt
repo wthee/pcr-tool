@@ -58,14 +58,27 @@ data class CharacterInfoPro(
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
     }
 
-    fun getAllUrl(type: String): ArrayList<String> {
+    fun getAllPicUrl(): ArrayList<String> {
         val list = arrayListOf<String>()
         if (this.r6Id != 0) {
-            list.add(type + getStarId(6) + Constants.WEBP)
+            list.add(Constants.CHARACTER_FULL_URL + getStarId(6) + Constants.WEBP)
         }
-        list.add(type + getStarId(3) + Constants.WEBP)
-        list.add(type + getStarId(1) + Constants.WEBP)
-        list.add(Constants.Reality_CHARACTER_URL + getFixedId() + Constants.WEBP)
+        list.add(Constants.CHARACTER_FULL_URL + getStarId(3) + Constants.WEBP)
+        list.add(Constants.CHARACTER_URL + getStarId(1) + Constants.WEBP)
+        if (!Constants.notExistsIDs.contains(getFixedId())) {
+            list.add(Constants.Reality_CHARACTER_URL + getFixedId() + Constants.WEBP)
+        }
+        return list
+    }
+
+    fun getAllIconUrl(): ArrayList<String> {
+        val list = arrayListOf<String>()
+
+        if (this.r6Id != 0) {
+            list.add(Constants.UNIT_ICON_URL + getStarId(6) + Constants.WEBP)
+        }
+        list.add(Constants.UNIT_ICON_URL + getStarId(3) + Constants.WEBP)
+        list.add(Constants.UNIT_ICON_URL + getStarId(1) + Constants.WEBP)
         return list
     }
 

@@ -40,8 +40,6 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     private var uid = -1
-    private var urls = arrayListOf<String>()
-    private var iconUrls = arrayListOf<String>()
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -64,11 +62,6 @@ class CharacterBasicInfoFragment : Fragment() {
         setListener()
         sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
             setData(it)
-            urls = it.getAllUrl(Constants.CHARACTER_URL)
-            val t = it.getAllUrl(Constants.UNIT_ICON_URL)
-            t.removeLast()
-            t.add(Constants.EQUIPMENT_URL + Constants.UNKNOW_EQUIP_ID + Constants.WEBP)
-            iconUrls = t
         })
         setHasOptionsMenu(true)
         //初始收藏
@@ -80,12 +73,12 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun init() {
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
-        //设置共享元素
+        //打开页面共享元素
         binding.root.transitionName = "item_${uid}"
         //toolbar 背景
         val picUrl =
-            Constants.CHARACTER_URL + (uid + if (CharacterListFragment.r6Ids.contains(uid)) 60 else 30) + Constants.WEBP
-        //角色图片
+            Constants.CHARACTER_FULL_URL + (uid + if (CharacterListFragment.r6Ids.contains(uid)) 60 else 30) + Constants.WEBP
+        //角色图片共享元素
         binding.characterPic.transitionName = picUrl
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
@@ -125,16 +118,13 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.apply {
             characterPic.setOnClickListener {
                 try {
-                    val bundle = Bundle()
-                    bundle.putStringArrayList("urls", urls)
-                    bundle.putStringArrayList("iconUrls", iconUrls)
                     val extras =
                         FragmentNavigatorExtras(
-                            it to it.transitionName
+                            it to it.transitionName,
                         )
                     findNavController().navigate(
                         R.id.action_characterPagerFragment_to_characterPicListFragment,
-                        bundle,
+                        null,
                         null,
                         extras
                     )

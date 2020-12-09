@@ -37,7 +37,7 @@ class CrashUtil private constructor() {
             builder.setPositiveButton(
                 "复制信息"
             ) { _, which ->
-                ClipboardUtli.add(error)
+                ClipboardUtli.add(error + "\n" + e.stackTraceToString())
             }
             builder.setNegativeButton(
                 "关闭"

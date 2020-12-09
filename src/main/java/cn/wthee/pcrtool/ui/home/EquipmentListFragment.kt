@@ -98,6 +98,7 @@ class EquipmentListFragment : Fragment() {
                     @OptIn(ExperimentalCoroutinesApi::class)
                     viewModel.equipments.collectLatest { data ->
                         pageAdapter.submitData(data)
+                        pageAdapter.notifyDataSetChanged()
                         binding.loading.root.visibility = View.GONE
                     }
                 }

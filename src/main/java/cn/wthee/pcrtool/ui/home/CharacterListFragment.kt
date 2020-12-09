@@ -195,6 +195,7 @@ class CharacterListFragment : Fragment() {
                         @OptIn(ExperimentalCoroutinesApi::class)
                         viewModel.characters.collectLatest { data ->
                             listAdapter.submitData(data)
+                            listAdapter.notifyDataSetChanged()
                             binding.loading.root.visibility = View.GONE
                         }
                     }

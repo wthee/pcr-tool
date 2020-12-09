@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.detail.character.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
-import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.ui.home.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
@@ -51,6 +50,8 @@ class CharacterAttrFragment : Fragment() {
     private lateinit var binding: FragmentCharacterAttrInfoBinding
     private lateinit var attrAdapter: CharacterAttrAdapter
     private var selRank = 2
+    private var index = 0
+    private var iconUrls = arrayListOf<String>()
 
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
@@ -77,16 +78,16 @@ class CharacterAttrFragment : Fragment() {
         setListener()
         //数据监听
         setObserve()
-        //加载icon
-        var id = uid
-        id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
-        val picUrl = Constants.UNIT_ICON_URL + id + Constants.WEBP
-        binding.icon.load(picUrl) {
+
+        characterAttrViewModel.getMaxRankAndRarity(uid)
+        return binding.root
+    }
+
+    private fun loadIcon(url: String) {
+        binding.icon.load(url) {
             error(R.drawable.unknown_gray)
             placeholder(R.drawable.unknown_gray)
         }
-        characterAttrViewModel.getMaxRankAndRarity(uid)
-        return binding.root
     }
 
     //点击事件
@@ -103,6 +104,12 @@ class CharacterAttrFragment : Fragment() {
                         ToastUtil.short("无掉落信息~")
                     }
                 }
+            }
+            //长按更换
+            icon.setOnLongClickListener {
+                index = (++index) % iconUrls.size
+                loadIcon(iconUrls[index])
+                return@setOnLongClickListener true
             }
             //等级滑动条
             levelSeekBar.addOnSliderTouchListener(object :
@@ -142,6 +149,11 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private fun setObserve() {
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
+            iconUrls = CharacterIdUtil.getAllIconUrl(uid, it.r6Id)
+            //加载icon
+            loadIcon(iconUrls[index])
+        })
         //获取角色最大Rank后，加载数据
         characterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
             maxRank = r[0]

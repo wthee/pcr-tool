@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
@@ -11,7 +10,7 @@ import coil.load
 
 
 class CharacterIconAdapter :
-    ListAdapter<String, CharacterIconAdapter.ViewHolder>(CharacterIconDiffCallback()) {
+    ListAdapter<String, CharacterIconAdapter.ViewHolder>(CharacterImageDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -39,22 +38,5 @@ class CharacterIconAdapter :
                 }
             }
         }
-    }
-}
-
-class CharacterIconDiffCallback : DiffUtil.ItemCallback<String>() {
-
-    override fun areItemsTheSame(
-        oldItem: String,
-        newItem: String
-    ): Boolean {
-        return oldItem == newItem
-    }
-
-    override fun areContentsTheSame(
-        oldItem: String,
-        newItem: String
-    ): Boolean {
-        return oldItem == newItem
     }
 }

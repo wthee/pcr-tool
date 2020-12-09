@@ -5,7 +5,7 @@
     android:id="@+id/item_character"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/m_margin">
+    android:layout_margin="@dimen/s_margin">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:layout_marginTop="@dimen/s_margin"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@id/three"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +55,8 @@
             android:layout_marginTop="@dimen/xs_margin"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+            android:textColor="@color/textGray"
             android:textStyle="italic"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@id/three"

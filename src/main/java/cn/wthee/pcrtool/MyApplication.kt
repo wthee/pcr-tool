@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import cn.wthee.pcrtool.utils.CrashUtil
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -22,7 +21,7 @@ class MyApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         //获取Context
         context = applicationContext
-        CrashUtil.init()
+//        CrashUtil.init()
     }
 
     override fun newImageLoader(): ImageLoader {

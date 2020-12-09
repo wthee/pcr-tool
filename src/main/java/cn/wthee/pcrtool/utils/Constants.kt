@@ -31,6 +31,7 @@ object Constants {
 
     //角色卡片接口
     const val CHARACTER_URL = RESOURCE_URL + "card/profile/"
+    const val CHARACTER_FULL_URL = RESOURCE_URL + "card/full/"
 
     //现实角色卡片接口
     const val Reality_CHARACTER_URL = RESOURCE_URL + "card/actual_profile/"
@@ -88,6 +89,7 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
+    const val R6ID = "r6id"
 
     val ATTR = arrayListOf(
         "HP",
@@ -110,6 +112,18 @@ object Constants {
     )
 
     val errorIDs = arrayListOf(
-        101301, 105401, 101501, 101001, 102201, 102801, 103801, 104501, 104601
+        101001,
+        101301,
+        101501,
+        102201,
+        102801,
+        103801,
+        104501,
+        104601,
+        105401,
+    )
+
+    val notExistsIDs = arrayListOf(
+        109731, 109831, 109931,
     )
 }

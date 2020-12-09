@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupWindow
 import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -21,7 +20,6 @@ import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
@@ -40,7 +38,6 @@ class MainPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentMainPagerBinding
     private lateinit var viewPager2: ViewPager2
-    private lateinit var popupMenu: PopupWindow
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -153,8 +150,6 @@ class MainPagerFragment : Fragment() {
                 names: MutableList<String>?,
                 sharedElements: MutableMap<String, View>?
             ) {
-                //TODO 返回时隐藏toolbar
-//                binding.layoutToolbar.setExpanded(false)
                 try {
                     if (names!!.isNotEmpty()) {
                         sharedElements ?: return
@@ -163,8 +158,7 @@ class MainPagerFragment : Fragment() {
                             CharacterListFragment.characterList.findViewHolderForAdapterPosition(
                                 MainActivity.currentCharaPosition
                             ) ?: return
-                        val v0 =
-                            vh.itemView.findViewById<MaterialCardView>(R.id.item_character)
+                        val v0 = vh.itemView
                         sharedElements[names[0]] = v0
                     }
                 } catch (e: Exception) {
