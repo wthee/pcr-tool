@@ -25,6 +25,7 @@ class CharacterRepository(private val characterDao: CharacterDao) {
         filter.atk,
         filter.guild,
         if (filter.all) 1 else 0,
+        if (filter.r6) 1 else 0,
         filter.starIds
     )
 
@@ -37,6 +38,7 @@ class CharacterRepository(private val characterDao: CharacterDao) {
             filter.atk,
             filter.guild,
             if (filter.all) 1 else 0,
+            if (filter.r6) 1 else 0,
             filter.starIds
         )
 

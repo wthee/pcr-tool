@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
 
 
@@ -52,39 +51,6 @@ data class CharacterInfoPro(
             sp[1].substring(0, sp[1].lastIndex)
         }
     }
-
-    private fun getStarId(star: Int): String {
-        val idStr = id.toString()
-        return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
-    }
-
-    fun getAllPicUrl(): ArrayList<String> {
-        val list = arrayListOf<String>()
-        if (this.r6Id != 0) {
-            list.add(Constants.CHARACTER_FULL_URL + getStarId(6) + Constants.WEBP)
-        }
-        list.add(Constants.CHARACTER_FULL_URL + getStarId(3) + Constants.WEBP)
-        list.add(Constants.CHARACTER_URL + getStarId(1) + Constants.WEBP)
-        if (!Constants.notExistsIDs.contains(getFixedId())) {
-            list.add(Constants.Reality_CHARACTER_URL + getFixedId() + Constants.WEBP)
-        }
-        return list
-    }
-
-    fun getAllIconUrl(): ArrayList<String> {
-        val list = arrayListOf<String>()
-
-        if (this.r6Id != 0) {
-            list.add(Constants.UNIT_ICON_URL + getStarId(6) + Constants.WEBP)
-        }
-        list.add(Constants.UNIT_ICON_URL + getStarId(3) + Constants.WEBP)
-        list.add(Constants.UNIT_ICON_URL + getStarId(1) + Constants.WEBP)
-        return list
-    }
-
-
-    //去除无效id
-    private fun getFixedId() = id + if (Constants.errorIDs.contains(id)) 31 else 30
 
     //角色自我介绍
     fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {

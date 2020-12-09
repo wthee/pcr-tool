@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModel
 import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.transition.MaterialContainerTransform
@@ -29,6 +30,7 @@ class CharacterPagerFragment : Fragment() {
 
     companion object {
         var uid = -1
+        var r6Id = -1
     }
 
     private lateinit var binding: FragmentCharacterPagerBinding
@@ -42,6 +44,7 @@ class CharacterPagerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requireArguments().let {
             uid = it.getInt(UID)
+            r6Id = it.getInt(R6ID)
         }
         //从 MainPagerFragment CharacterListFragment过渡至次页面
         sharedElementEnterTransition = MaterialContainerTransform().apply {

@@ -18,6 +18,7 @@ data class CharacterInfo(
     @ColumnInfo(name = "search_area_width") val position: Int,
     @ColumnInfo(name = "atk_type") val atkType: Int,
     @ColumnInfo(name = "start_time") val startTime: String,
+    @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
 ) : Serializable {
 
     fun getFixedAge() = if (age == "999") "??" else age

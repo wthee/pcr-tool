@@ -17,6 +17,10 @@ const val characterWhere =
             OR 
             (1 = CASE WHEN  1 = :showAll  THEN 1 END)
         )
+        AND 1 = CASE
+            WHEN  0 = :r6  THEN 1
+            WHEN  rarity_6_quest_id != 0 AND 1 = :r6  THEN 1 
+        END
         AND unit_profile.unit_id NOT IN (106701,110201,113801,900103,906601)
         AND 1 = CASE
             WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
@@ -50,10 +54,13 @@ interface CharacterDao {
             CAST((CASE WHEN unit_profile.weight ='??' OR  unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
             unit_data.search_area_width,
             unit_data.atk_type,
+            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
             COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
+
         $characterWhere
         ORDER BY 
         CASE WHEN :sortType = 0 AND :asc = 'asc'  THEN start_time END ASC,
@@ -70,7 +77,7 @@ interface CharacterDao {
     )
     fun getInfoAndData(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guild: String, showAll: Int, starIds: List<Int>
+        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>
     ): PagingSource<Int, CharacterInfo>
 
     //角色数量
@@ -82,12 +89,13 @@ interface CharacterDao {
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
         $characterWhere
             """
     )
     suspend fun getInfoAndDataCount(
         unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guild: String, showAll: Int, starIds: List<Int>
+        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>
     ): Int
 
     //获取角色详情数据

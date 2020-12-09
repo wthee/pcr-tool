@@ -42,7 +42,7 @@ class CharacterListFragment : Fragment() {
         lateinit var characterList: RecyclerView
         lateinit var listAdapter: CharacterListAdapter
         var characterFilterParams = FilterCharacter(
-            true, 0, 0, "全部"
+            true, 0, 0, false, "全部"
         )
         lateinit var handler: Handler
         lateinit var guilds: ArrayList<String>
@@ -155,7 +155,6 @@ class CharacterListFragment : Fragment() {
 
     private fun reset() {
         characterFilterParams.initData()
-        characterFilterParams.all = true
         sortType = SortType.SORT_DATE
         sortAsc = false
         viewModel.getCharacters(

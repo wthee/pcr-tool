@@ -257,6 +257,15 @@ class MainActivity : AppCompatActivity() {
                                     || (!CharacterListFragment.characterFilterParams.all
                                     && index == 1)
                     }
+                    //星级初始
+                    layout.chipsRaritys.forEachIndexed { index, view ->
+                        val chip = view as Chip
+                        chip.isChecked =
+                            (CharacterListFragment.characterFilterParams.r6
+                                    && index == 1)
+                                    || (!CharacterListFragment.characterFilterParams.r6
+                                    && index == 0)
+                    }
                     //位置初始
                     layout.chipsPosition.forEachIndexed { index, view ->
                         val chip = view as Chip
@@ -292,6 +301,13 @@ class MainActivity : AppCompatActivity() {
                                         R.id.star_0 -> true
                                         R.id.star_1 -> false
                                         else -> true
+                                    }
+                                //星级
+                                CharacterListFragment.characterFilterParams.r6 =
+                                    when (layout.chipsRaritys.checkedChipId) {
+                                        R.id.rarity_0 -> false
+                                        R.id.rarity_1 -> true
+                                        else -> false
                                     }
                                 //位置
                                 CharacterListFragment.characterFilterParams.positon =

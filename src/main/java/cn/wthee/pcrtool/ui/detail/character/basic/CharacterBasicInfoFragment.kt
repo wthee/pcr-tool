@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
+import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
@@ -77,7 +78,7 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.root.transitionName = "item_${uid}"
         //toolbar 背景
         val picUrl =
-            Constants.CHARACTER_FULL_URL + (uid + if (CharacterListFragment.r6Ids.contains(uid)) 60 else 30) + Constants.WEBP
+            Constants.CHARACTER_FULL_URL + (uid + if (r6Id != 0) 60 else 30) + Constants.WEBP
         //角色图片共享元素
         binding.characterPic.transitionName = picUrl
         binding.characterPic.load(picUrl) {

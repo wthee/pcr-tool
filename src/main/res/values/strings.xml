@@ -141,5 +141,7 @@
     <string name="rank_pre">R%d</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_rarity">角色星级</string>
+    <string name="six_unlock">六星</string>
 
 </resources>

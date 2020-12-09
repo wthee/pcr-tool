@@ -9,13 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
+import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.uid
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -39,9 +38,6 @@ class CharacterPicListFragment : Fragment() {
     private lateinit var urls: ArrayList<String>
     private lateinit var adapter: CharacterPicAdapter
 
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,12 +62,8 @@ class CharacterPicListFragment : Fragment() {
             //初始化列表
             adapter = CharacterPicAdapter(this@CharacterPicListFragment)
             pics.adapter = adapter
-
-            sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
-                urls = CharacterIdUtil.getAllPicUrl(uid, it.r6Id)
-                adapter.submitList(urls)
-            })
-
+            urls = CharacterIdUtil.getAllPicUrl(uid, r6Id)
+            adapter.submitList(urls)
             setListener()
         }
 

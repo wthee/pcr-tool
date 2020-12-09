@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
@@ -56,7 +57,7 @@ class CharacterListAdapter(
                     AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
                 //加载网络图片
                 var id = character.id
-                id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
+                id += if (character.r6Id != 0) 60 else 30
                 val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
@@ -85,6 +86,7 @@ class CharacterListAdapter(
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
                         bundle.putInt(UID, character.id)
+                        bundle.putInt(R6ID, character.r6Id)
                         val extras =
                             FragmentNavigatorExtras(
                                 root to root.transitionName

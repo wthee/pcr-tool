@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
+import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
 import cn.wthee.pcrtool.ui.detail.character.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
@@ -78,7 +79,9 @@ class CharacterAttrFragment : Fragment() {
         setListener()
         //数据监听
         setObserve()
-
+        iconUrls = CharacterIdUtil.getAllIconUrl(uid, r6Id)
+        //加载icon
+        loadIcon(iconUrls[index])
         characterAttrViewModel.getMaxRankAndRarity(uid)
         return binding.root
     }
@@ -149,11 +152,6 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private fun setObserve() {
-        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
-            iconUrls = CharacterIdUtil.getAllIconUrl(uid, it.r6Id)
-            //加载icon
-            loadIcon(iconUrls[index])
-        })
         //获取角色最大Rank后，加载数据
         characterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
             maxRank = r[0]
