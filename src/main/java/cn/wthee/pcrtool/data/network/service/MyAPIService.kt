@@ -31,5 +31,5 @@ interface MyAPIService {
 
     //国服日历
     @POST("calendar")
-    suspend fun getCalendar(@Body body: RequestBody): ResponseData<List<CalendarData>>
+    suspend fun getCalendar(): ResponseData<CalendarData>
 }

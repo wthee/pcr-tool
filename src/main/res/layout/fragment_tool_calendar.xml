@@ -42,6 +42,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/current_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                tools:text="@string/app_name" />
+
             <include
                 android:id="@+id/loading"
                 layout="@layout/layout_loading" />

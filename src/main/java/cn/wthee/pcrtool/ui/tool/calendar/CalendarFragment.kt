@@ -8,13 +8,14 @@ import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CalendarEventAdapter
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.data.network.model.CalendarData
+import cn.wthee.pcrtool.data.network.model.CalendarDay
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -25,8 +26,7 @@ class CalendarFragment : Fragment() {
 
     private lateinit var binding: FragmentToolCalendarBinding
     private lateinit var adapter: CalendarEventAdapter
-    private var mMonth = 1
-    private var events = listOf<CalendarData>()
+    private var events = listOf<CalendarDay>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,31 +39,33 @@ class CalendarFragment : Fragment() {
         binding.events.adapter = adapter
         //选择监听显示数据
         binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            MainScope().launch {
-                if (mMonth != month + 1) {
-                    binding.loading.root.visibility = View.VISIBLE
-                    getMonthEvents(year, month + 1, object : OnLoadFinish {
-                        override fun finish() {
-                            showDayEvents(dayOfMonth)
-                        }
-                    })
-                } else {
-                    showDayEvents(dayOfMonth)
-                }
-            }
-
-
+            showDayEvents(year, month + 1, dayOfMonth)
+            binding.currentDate.text = "${month + 1} 月 $dayOfMonth 日"
+            binding.events.smoothScrollToPosition(0)
         }
         //默认
         val cal = Calendar.getInstance()
         cal.time = Date(System.currentTimeMillis())
         val year = cal.get(Calendar.YEAR)
-        mMonth = cal.get(Calendar.MONTH) + 1
+        val month = cal.get(Calendar.MONTH) + 1
         val day = cal.get(Calendar.DAY_OF_MONTH)
+        binding.currentDate.text = "${month} 月 $day 日"
+        binding.calendarView.minDate =
+            SimpleDateFormat("yyyy/MM/dd")
+                .parse("2020/06/06")
+                .time
+        binding.calendarView.maxDate =
+            SimpleDateFormat("yyyy/MM/dd")
+                .parse("$year/$month/${cal.getActualMaximum(Calendar.DATE)}")
+                .time
         MainScope().launch {
-            getMonthEvents(year, mMonth, object : OnLoadFinish {
-                override fun finish() {
-                    showDayEvents(day)
+            getMonthEvents(object : OnLoadFinish {
+                override fun finish(maxDate: String) {
+                    binding.calendarView.maxDate =
+                        SimpleDateFormat("yyyy/MM/dd")
+                            .parse(maxDate)
+                            .time
+                    showDayEvents(year, month, day)
                 }
             })
         }
@@ -79,27 +81,29 @@ class CalendarFragment : Fragment() {
     }
 
     //一次获取当月全部的
-    private suspend fun getMonthEvents(year: Int, month: Int, onLoadFinish: OnLoadFinish) {
-        val list = MyAPIRepository.getCalendar(year, month, 0)
+    private suspend fun getMonthEvents(onLoadFinish: OnLoadFinish) {
+        val list = MyAPIRepository.getCalendar()
         if (list.status == 0) {
-            mMonth = month
-            events = list.data!!
-            onLoadFinish.finish()
+            events = list.data!!.days
+            onLoadFinish.finish(list.data!!.maxDate)
         } else if (list.status == -1) {
             ToastUtil.short(list.message)
         }
     }
 
-    private fun showDayEvents(dayOfMonth: Int) {
+    private fun showDayEvents(year: Int, month: Int, dayOfMonth: Int) {
         val eventData = events.filter {
-            it.date.split("/")[2].toInt() == dayOfMonth
+            it.date.split("/")[0].toInt() == year
+                    && it.date.split("/")[1].toInt() == month
+                    && it.date.split("/")[2].toInt() == dayOfMonth
+
         }
         adapter.addHeaderAndSubmitList(eventData)
         binding.loading.root.visibility = View.GONE
     }
 
     interface OnLoadFinish {
-        fun finish()
+        fun finish(maxDate: String)
     }
 
 }

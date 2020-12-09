@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.network.model.CalendarData
 import cn.wthee.pcrtool.data.network.model.CalendarDataItem
+import cn.wthee.pcrtool.data.network.model.CalendarDay
 import cn.wthee.pcrtool.data.network.model.CalendarEvent
 import cn.wthee.pcrtool.databinding.ItemCalendarEventBinding
 import cn.wthee.pcrtool.databinding.ItemCalendarEventHeaderBinding
@@ -28,7 +28,7 @@ class CalendarEventAdapter :
     private val ITEM_VIEW_TYPE_ITEM = 1
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    fun addHeaderAndSubmitList(list: List<CalendarData>) {
+    fun addHeaderAndSubmitList(list: List<CalendarDay>) {
         adapterScope.launch {
             val items = when {
                 list.isEmpty() -> listOf(CalendarDataItem.Header("无活动")) + listOf(

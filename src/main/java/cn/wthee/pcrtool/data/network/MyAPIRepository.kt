@@ -90,19 +90,10 @@ object MyAPIRepository {
 
 
     //日历信息
-    suspend fun getCalendar(year: Int, month: Int, day: Int): ResponseData<List<CalendarData>> {
+    suspend fun getCalendar(): ResponseData<CalendarData> {
         //请求
         try {
-            //接口参数
-            val json = JsonObject()
-            json.addProperty("year", year)
-            json.addProperty("month", month)
-            json.addProperty("day", day)
-            val body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                json.toString()
-            )
-            val response = service.getCalendar(body)
+            val response = service.getCalendar()
             if (response.status != 0 || response.data == null) {
                 return error()
             }
