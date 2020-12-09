@@ -12,7 +12,6 @@ import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.io.OutputStream
 
 /**
@@ -53,9 +52,11 @@ class ImageDownloadUtil(
                     bitmap.compress(CompressFormat.PNG, 100, stream)
                     contentValues.put(MediaStore.Images.Media.IS_PENDING, false)
                     resolver.update(uri, contentValues, null, null)
-                } catch (e: IOException) {
+                } catch (e: Exception) {
                     if (uri != null) {
                         resolver.delete(uri, null, null)
+                    } else {
+                        ToastUtil.short("图片已存在~\n$path/$displayName")
                     }
                 }
             } else {

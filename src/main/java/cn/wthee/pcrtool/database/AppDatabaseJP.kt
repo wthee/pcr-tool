@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         CharacterDataJP::class,
         CharacterPromotion::class,
         CharacterPromotionStatus::class,
+        CharacterExperience::class,
         CharacterRarity::class,
         CharacterSkillDataJP::class,
         EnemyRewardData::class,
