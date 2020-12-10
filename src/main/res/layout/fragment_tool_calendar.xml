@@ -24,7 +24,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:firstDayOfWeek="2"
-            app:layout_constraintTop_toBottomOf="@id/tool_calendar" />
+            app:type="one_day_picker"
+            app:eventsEnabled="true"
+            app:forwardButtonSrc="@drawable/ic_next"
+            app:headerColor="@color/colorWhite"
+            app:headerLabelColor="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/tool_calendar"
+            app:previousButtonSrc="@drawable/ic_back" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -36,7 +42,6 @@
         android:layout_marginTop="@dimen/m_margin"
         android:layout_marginEnd="@dimen/xm_margin"
         app:cardCornerRadius="@dimen/card_radius">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,9 +65,8 @@
                 android:id="@+id/events"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/m_margin"
                 android:layout_marginStart="@dimen/s_margin"
-                android:layout_marginEnd="@dimen/s_margin"
+                android:layout_marginTop="@dimen/m_margin"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -71,5 +75,20 @@
 
 
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/xl_margin"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="@string/tool_calendar"
+            android:src="@drawable/ic_calender"
+            app:tint="@color/colorPrimary"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

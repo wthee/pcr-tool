@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 
 android {
 
@@ -84,7 +83,6 @@ dependencies {
 
     //Material CalendarView
     implementation 'com.applandeo:material-calendar-view:1.8.0-rc01'
-
     //Navigation
     def nav_version = "2.3.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

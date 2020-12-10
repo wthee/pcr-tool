@@ -52,10 +52,11 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_arrow_left"
             app:borderWidth="0dp"
             app:fabSize="mini"
             android:visibility="gone"
+            tools:visibility="visible"
             app:tint="@color/colorPrimary" />
 
     </LinearLayout>

@@ -139,9 +139,33 @@
     <string name="rerduce_1">-</string>
     <string name="equal">=</string>
     <string name="rank_pre">R%d</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="title_rarity">角色星级</string>
     <string name="six_unlock">六星</string>
+
+
+    <!-- 日历    -->
+    <string name="material_calendar_monday">一</string>
+    <string name="material_calendar_tuesday">二</string>
+    <string name="material_calendar_wednesday">三</string>
+    <string name="material_calendar_thursday">四</string>
+    <string name="material_calendar_friday">五</string>
+    <string name="material_calendar_saturday">六</string>
+    <string name="material_calendar_sunday">日</string>
+
+    <array name="material_calendar_months_array">
+        <item>"01"</item>
+        <item>"02"</item>
+        <item>"03"</item>
+        <item>"04"</item>
+        <item>"05"</item>
+        <item>"06"</item>
+        <item>"07"</item>
+        <item>"08"</item>
+        <item>"09"</item>
+        <item>"10"</item>
+        <item>"11"</item>
+        <item>"12"</item>
+    </array>
 
 </resources>
