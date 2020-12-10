@@ -10,7 +10,7 @@
 
     <include
         android:id="@+id/tool_news"
-        layout="@layout/view_tool_head" />
+        layout="@layout/view_toolbar" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

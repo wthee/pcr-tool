@@ -90,6 +90,7 @@
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
+    <string name="tool_calendar">日历</string>
     <string name="tool_pvp">竞技场</string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
@@ -138,5 +139,7 @@
     <string name="rerduce_1">-</string>
     <string name="equal">=</string>
     <string name="rank_pre">R%d</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

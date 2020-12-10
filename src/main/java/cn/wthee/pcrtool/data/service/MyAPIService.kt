@@ -28,4 +28,8 @@ interface MyAPIService {
     //排行信息
     @POST("leader")
     suspend fun getLeader(): LeaderboardData
+
+    //国服日历
+    @POST("calendar")
+    suspend fun getCalendar(): CalendarCN
 }

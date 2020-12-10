@@ -63,6 +63,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                    // Set the content to appear under the system bars so that the
+                    // content doesn't resize when the system bars hide and show.
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    // Hide the nav bar and status bar
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
+        }
+
         setContentView(binding.root)
         //取消其它任务
         WorkManager.getInstance(this).cancelAllWork()
@@ -391,6 +406,11 @@ class MainActivity : AppCompatActivity() {
             closeFab()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolGachaFragment)
         }
+        //日历
+        binding.toolCalendar.root.setOnClickListener {
+            closeFab()
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_calendarFragment)
+        }
     }
 
     private fun closeFab() {
@@ -400,6 +420,7 @@ class MainActivity : AppCompatActivity() {
                 binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlpha)
                 isClickable = false
                 isFocusable = false
+
             }
         }
         fabMain.setImageResource(R.drawable.ic_function)
@@ -465,6 +486,11 @@ class MainActivity : AppCompatActivity() {
             )
             MenuItemViewHelper(toolGacha).setItem(
                 getString(R.string.tool_gacha),
+                R.drawable.ic_gacha,
+                R.color.colorPrimary
+            )
+            MenuItemViewHelper(toolCalendar).setItem(
+                getString(R.string.tool_calendar),
                 R.drawable.ic_gacha,
                 R.color.colorPrimary
             )

@@ -73,6 +73,7 @@ object DatabaseUpdater {
         val databaseType = getDatabaseType()
         //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
         val toDownload = databaseHash != ver.hash  //有版本更新
+                || getLocalDatabaseVersion() != ver.TruthVersion
                 || force
                 || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || databaseVersion == "0"))  //打开应用，数据库wal被清空
                 || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在时更新

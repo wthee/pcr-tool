@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.ui.main.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import coil.load
 
 
 class CharacterListAdapter(
@@ -58,10 +57,11 @@ class CharacterListAdapter(
                 var id = character.id
                 id += if (CharacterListFragment.r6Ids.contains(id)) 60 else 30
                 val picUrl = Constants.CHARACTER_URL + id + Constants.WEBP
-                characterPic.load(picUrl) {
-                    error(R.drawable.error)
-                    placeholder(R.drawable.load)
-                }
+                //TODO
+//                characterPic.load(picUrl) {
+//                    error(R.drawable.error)
+//                    placeholder(R.drawable.load)
+//                }
                 //角色位置
                 positionType.background =
                     ResourcesUtil.getDrawable(getPositionIcon(character.position))

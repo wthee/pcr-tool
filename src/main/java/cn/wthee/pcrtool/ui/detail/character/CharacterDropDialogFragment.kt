@@ -52,9 +52,6 @@ class CharacterDropDialogFragment : CommonBasicDialogFragment() {
         binding = FragmentCharacterDropInfoBinding.inflate(inflater, container, false)
         //toolbar
         ToolbarUtil(binding.toolbar).setCenterTitle("角色碎片掉落")
-            .leftIcon.setOnClickListener {
-                dialog?.dismiss()
-            }
         val picUrl = Constants.ITEM_URL + (uid / 100 + 30000) + Constants.WEBP
         binding.dropIcon.load(picUrl) {
             placeholder(R.drawable.unknown_gray)

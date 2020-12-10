@@ -53,8 +53,8 @@ object Constants {
     //本地储存
     const val SP_DATABASE_VERSION = "database_version"
     const val SP_DATABASE_HASH = "database_hash"
-    const val SP_DATABASE_VERSION_JP = "database_hash_jp"
-    const val SP_DATABASE_HASH_JP = "database_version_jp"
+    const val SP_DATABASE_VERSION_JP = "database_version_jp"
+    const val SP_DATABASE_HASH_JP = "database_hash_jp"
     const val SP_STAR_CHARACTER = "star_character"
     const val SP_STAR_EQUIP = "star_equip"
 

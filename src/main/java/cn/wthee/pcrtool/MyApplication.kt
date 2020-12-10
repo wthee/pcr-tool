@@ -43,9 +43,9 @@ class MyApplication : Application(), ImageLoaderFactory {
             .okHttpClient {
                 OkHttpClient.Builder()
                     .cache(CoilUtils.createDefaultCache(context))
-                    .readTimeout(90, TimeUnit.SECONDS)
-                    .connectTimeout(90, TimeUnit.SECONDS)
-                    .writeTimeout(90, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
                     .build()
             }
             .build()
