@@ -36,8 +36,9 @@ class CrashUtil private constructor() {
             dialog.window?.attributes?.gravity = Gravity.BOTTOM
             builder.setPositiveButton(
                 "复制异常信息"
-            ) { _, which ->
+            ) { dl, which ->
                 ClipboardUtli.add(error + "\n" + e.stackTraceToString())
+                dl.dismiss()
             }
             builder.setNegativeButton(
                 "关闭"

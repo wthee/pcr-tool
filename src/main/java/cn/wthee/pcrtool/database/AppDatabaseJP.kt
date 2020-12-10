@@ -35,7 +35,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         QuestDataJP::class,
         SkillAction::class,
         SkillData::class,
-        WaveGroupData::class,
+        WaveGroupDataJP::class,
         AttackPattern::class,
         GuildData::class,
         CharacterComments::class,

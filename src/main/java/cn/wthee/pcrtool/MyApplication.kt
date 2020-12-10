@@ -20,7 +20,6 @@ class MyApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
-        //获取Context
         context = applicationContext
         CrashUtil.init()
     }
