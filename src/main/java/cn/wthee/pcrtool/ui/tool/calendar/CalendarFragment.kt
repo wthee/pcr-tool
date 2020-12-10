@@ -141,25 +141,29 @@ class CalendarFragment : Fragment() {
 
     //显示事件
     private fun showDayEvents(calendar: Calendar) {
-        binding.calendarView.setDate(calendar)
-        //获取年月日
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH) + 1
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        mMonth = month
-        addIcon(year, month)
-        //筛选点击的日期
-        val eventData = events.find {
-            it.date.split("/")[0].toInt() == year
-                    && it.date.split("/")[1].toInt() == month
-                    && it.date.split("/")[2].toInt() == dayOfMonth
-        }?.content
-        //显示数据
-        adapter.addHeaderAndSubmitList(eventData)
-        binding.loading.root.visibility = View.GONE
-        //设置标题
-        binding.currentDate.text = "$month 月 $dayOfMonth 日"
-        binding.events.smoothScrollToPosition(0)
+        if (calendar.time <= maxCal.time && calendar.time >= minCal.time) {
+            binding.calendarView.setDate(calendar)
+            //获取年月日
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH) + 1
+            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+            mMonth = month
+            addIcon(year, month)
+            //筛选点击的日期
+            val eventData = events.find {
+                it.date.split("/")[0].toInt() == year
+                        && it.date.split("/")[1].toInt() == month
+                        && it.date.split("/")[2].toInt() == dayOfMonth
+            }?.content
+            //显示数据
+            adapter.addHeaderAndSubmitList(eventData)
+            binding.loading.root.visibility = View.GONE
+            //设置标题
+            binding.currentDate.text = "$month 月 $dayOfMonth 日"
+            binding.events.smoothScrollToPosition(0)
+        } else {
+            ToastUtil.short("所选日期无活动信息~")
+        }
     }
 
     //添加事件图标

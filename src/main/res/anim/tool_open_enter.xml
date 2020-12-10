@@ -9,7 +9,7 @@
         android:fillAfter="true"
         android:interpolator="@android:anim/linear_interpolator"
         android:startOffset="35"
-        android:fromAlpha="0.5" />
+        android:fromAlpha="0" />
     <!--    <scale-->
     <!--        android:fromXScale="0.95"-->
     <!--        android:toXScale="1"-->
