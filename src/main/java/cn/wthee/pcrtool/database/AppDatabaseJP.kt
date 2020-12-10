@@ -34,7 +34,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         QuestDataJP::class,
         SkillAction::class,
         SkillData::class,
-        WaveGroupData::class,
+        WaveGroupDataJP::class,
         CharacterExperience::class,
         AttackPattern::class,
         GuildData::class,
@@ -49,7 +49,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         EventStoryDetail::class,
         EventTopAdvJP::class,
     ],
-    version = 30,
+    version = 31,
     exportSchema = false
 )
 abstract class AppDatabaseJP : RoomDatabase() {

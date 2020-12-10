@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.entity
+package cn.wthee.pcrtool.data.entityjp
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 //关卡波次掉落信息
 @Entity(tableName = "wave_group_data")
-class WaveGroupData(
+class WaveGroupDataJP(
     @PrimaryKey
     @ColumnInfo(name = "id") val id: Int,
     @ColumnInfo(name = "wave_group_id") val wave_group_id: Int,
@@ -26,5 +26,5 @@ class WaveGroupData(
     @ColumnInfo(name = "enemy_id_5") val enemy_id_5: Int,
     @ColumnInfo(name = "drop_gold_5") val drop_gold_5: Int,
     @ColumnInfo(name = "drop_reward_id_5") val drop_reward_id_5: Int,
-//    @ColumnInfo(name = "guest_enemy_id") val guest_enemy_id: Int,
+    @ColumnInfo(name = "guest_enemy_id") val guest_enemy_id: Int,
 )
