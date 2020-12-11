@@ -24,24 +24,23 @@
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:firstDayOfWeek="2"
-            app:type="one_day_picker"
             app:eventsEnabled="true"
-            app:forwardButtonSrc="@drawable/ic_next"
+            app:firstDayOfWeek="2"
             app:headerColor="@color/colorWhite"
             app:headerLabelColor="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/tool_calendar"
-            app:previousButtonSrc="@drawable/ic_back" />
+            app:type="one_day_picker" />
 
     </com.google.android.material.card.MaterialCardView>
 
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginTop="@dimen/m_margin"
         android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_weight="1"
         app:cardCornerRadius="@dimen/card_radius">
 
         <LinearLayout
@@ -86,10 +85,10 @@
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/tool_calendar"
             android:src="@drawable/ic_calender"
-            app:tint="@color/colorPrimary"
             app:borderWidth="0dp"
             app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/colorPrimary" />
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
