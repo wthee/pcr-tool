@@ -43,6 +43,15 @@ class ImageDownloadUtil(
             path = Environment.DIRECTORY_PICTURES
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, path)
+            }
+            // 判断是否已存在
+            path = "/storage/emulated/0" + File.separator + path
+            val file = File("$path/$displayName")
+            if (file.exists()) {
+                ToastUtil.short("图片已存在~")
+                return
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 var uri: Uri? = null
                 val resolver = context.contentResolver
                 try {
@@ -55,27 +64,18 @@ class ImageDownloadUtil(
                 } catch (e: Exception) {
                     if (uri != null) {
                         resolver.delete(uri, null, null)
-                    } else {
-                        ToastUtil.short("图片已存在~\n$path/$displayName")
                     }
                 }
             } else {
-                path = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                    .toString() + File.separator
-                val directory = File(path)
-                if (!directory.exists()) {
-                    directory.mkdirs()
-                }
-                val file = File(directory, displayName)
                 stream = FileOutputStream(file)
-                contentValues.put(MediaStore.Images.Media.DATA, file.absolutePath)
+                contentValues.put(MediaStore.Images.Media.DATE_ADDED, file.absolutePath)
                 bitmap.compress(CompressFormat.PNG, 100, stream)
                 context.contentResolver.insert(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     contentValues
                 )
             }
-            ToastUtil.short("图片保存成功~\n$path/$displayName")
+            ToastUtil.short("图片保存成功~$displayName")
         } catch (e: Exception) {
             Log.e("save", e.message ?: "")
             ToastUtil.short("图片保存失败")

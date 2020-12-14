@@ -13,8 +13,7 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/xl_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/setting"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/setting"
             app:layout_constraintWidth_percent="0.45" />
         <Constraint
             android:id="@+id/search"
@@ -99,8 +98,9 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:visibility="invisible"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/tool_news"
+            app:layout_constraintStart_toEndOf="@id/tool_event"
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -199,8 +199,7 @@
             android:layout_marginBottom="@dimen/m_margin"
             app:layout_constraintBottom_toTopOf="@id/tool_news"
             app:layout_constraintStart_toEndOf="@id/tool_event"
-            app:layout_constraintEnd_toStartOf="@id/tool_gacha"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
     </ConstraintSet>
 
     <Transition
@@ -214,7 +213,7 @@
                 app:motionTarget="@id/filter" />
             <KeyAttribute
                 android:alpha="0.0"
-                app:framePosition="30"
+                app:framePosition="70"
                 app:motionTarget="@id/filter" />
             <KeyAttribute
                 android:alpha="1.0"
@@ -235,6 +234,18 @@
             <KeyAttribute
                 android:alpha="0.0"
                 app:framePosition="0"
+                app:motionTarget="@id/tool_calendar" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="65"
+                app:motionTarget="@id/tool_calendar" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_calendar" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="0"
                 app:motionTarget="@id/tool_gacha" />
             <KeyAttribute
                 android:alpha="0.0"
@@ -262,7 +273,7 @@
                 app:motionTarget="@id/tool_leader" />
             <KeyAttribute
                 android:alpha="0.0"
-                app:framePosition="50"
+                app:framePosition="70"
                 app:motionTarget="@id/tool_leader" />
             <KeyAttribute
                 android:alpha="1.0"
@@ -274,7 +285,7 @@
                 app:motionTarget="@id/tool_news" />
             <KeyAttribute
                 android:alpha="0.0"
-                app:framePosition="45"
+                app:framePosition="65"
                 app:motionTarget="@id/tool_news" />
             <KeyAttribute
                 android:alpha="1.0"
@@ -286,7 +297,7 @@
                 app:motionTarget="@id/tool_pvp" />
             <KeyAttribute
                 android:alpha="0.0"
-                app:framePosition="40"
+                app:framePosition="60"
                 app:motionTarget="@id/tool_pvp" />
             <KeyAttribute
                 android:alpha="1.0"
