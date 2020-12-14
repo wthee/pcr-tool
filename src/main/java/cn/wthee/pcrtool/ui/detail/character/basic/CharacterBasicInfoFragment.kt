@@ -184,6 +184,10 @@ class CharacterBasicInfoFragment : Fragment() {
             )
             intro.text = characterPro.getIntroText()
             if (intro.text.isEmpty()) intro.visibility = View.GONE
+            trueName.text = if (characterPro.actualName.isEmpty())
+                characterPro.name
+            else
+                characterPro.actualName
             birth.text = requireActivity().resources.getString(
                 R.string.birth,
                 characterPro.birthMonth,

@@ -121,6 +121,36 @@
                 tools:text="@string/test" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/name"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/true_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/title_name"
+                app:layout_constraintTop_toTopOf="@id/title_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="@string/test" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_birth"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -131,7 +161,7 @@
                 android:text="@string/title_birth"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/intro"
+                app:layout_constraintTop_toBottomOf="@id/title_name"
                 app:layout_constraintWidth_percent="0.15" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -150,6 +180,7 @@
                 app:layout_constraintTop_toTopOf="@id/title_birth"
                 app:layout_constraintWidth_percent="0.35"
                 tools:text="@string/test" />
+
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_blood"
