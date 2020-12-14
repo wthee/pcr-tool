@@ -437,9 +437,9 @@ class MainActivity : AppCompatActivity() {
             transitionToEnd()
             isClickable = true
             isFocusable = true
-            setOnClickListener {
-                closeFab()
-            }
+        }
+        binding.layoutBg.setOnClickListener {
+            closeFab()
         }
     }
 

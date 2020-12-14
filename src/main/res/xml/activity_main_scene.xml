@@ -223,4 +223,5 @@
         app:constraintSetEnd="@id/end"
         app:constraintSetStart="@+id/start"
         app:duration="@integer/menu_item" />
+
 </MotionScene>

@@ -10,17 +10,4 @@
         android:interpolator="@android:anim/linear_interpolator"
         android:startOffset="35"
         android:fromAlpha="0" />
-    <!--    <scale-->
-    <!--        android:fromXScale="0.95"-->
-    <!--        android:toXScale="1"-->
-    <!--        android:fromYScale="0.95"-->
-    <!--        android:toYScale="1"-->
-    <!--        android:pivotX="50%"-->
-    <!--        android:pivotY="50%"-->
-    <!--        android:fillEnabled="true"-->
-    <!--        android:fillBefore="true"-->
-    <!--        android:fillAfter="true"-->
-    <!--        android:interpolator="@anim/fragment_fast_out_extra_slow_in"-->
-    <!--        android:duration="@integer/fragment_anim"-->
-    <!--        tools:targetApi="lollipop" />-->
 </set>
