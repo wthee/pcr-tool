@@ -10,6 +10,7 @@
     <dimen name="small_card_height">60dp</dimen>
     <dimen name="news_card_height">100dp</dimen>
     <dimen name="card_height_1">220dp</dimen>
+    <dimen name="calendar_height">360dp</dimen>
     <dimen name="float_window_width">233dp</dimen>
     <!-- icon-->
     <dimen name="m_icon">16dp</dimen>

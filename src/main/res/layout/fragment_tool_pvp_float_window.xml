@@ -5,6 +5,7 @@
     android:id="@+id/float_window"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:orientation="horizontal"
     tools:background="@color/colorBlack">
 

@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -33,6 +34,8 @@ class CalendarFragment : Fragment() {
     private var mMonth = 0
     lateinit var minCal: Calendar
     lateinit var maxCal: Calendar
+    lateinit var cal: Calendar
+    lateinit var job: Job
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,22 +44,28 @@ class CalendarFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolCalendarBinding.inflate(inflater, container, false)
 
-        //默认
-        val cal = Calendar.getInstance()
-        cal.time = Date(System.currentTimeMillis())
-        val year = cal.get(Calendar.YEAR)
-        mYear = year
-        val month = cal.get(Calendar.MONTH) + 1
-        mMonth = month
-        val day = cal.get(Calendar.DAY_OF_MONTH)
-        maxCal = cal
-        //默认选中
-        binding.currentDate.text = "${month} 月 $day 日"
+        //初始值
+        init()
+        //监听
+        setListener()
+        //设置头部
+        ToolbarUtil(binding.toolCalendar).setToolHead(
+            R.drawable.ic_calender,
+            getString(R.string.tool_calendar)
+        )
 
-        //列表
-        adapter = CalendarEventAdapter()
-        binding.events.adapter = adapter
-        //选择监听显示数据
+        return binding.root
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!job.isCancelled) {
+            job.cancel()
+        }
+    }
+
+    private fun setListener() {
         binding.calendarView.apply {
             setDate(cal)
             //最大日期
@@ -89,10 +98,27 @@ class CalendarFragment : Fragment() {
         binding.fabToday.setOnClickListener {
             showDayEvents(cal)
         }
+    }
 
-        MainScope().launch {
+    private fun init() {
+        cal = Calendar.getInstance()
+        cal.time = Date(System.currentTimeMillis())
+        val year = cal.get(Calendar.YEAR)
+        mYear = year
+        val month = cal.get(Calendar.MONTH) + 1
+        mMonth = month
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+        maxCal = cal
+        //默认选中
+        binding.currentDate.text = "${month} 月 $day 日"
+        //列表
+        adapter = CalendarEventAdapter()
+        binding.events.adapter = adapter
+        //初始加载
+        job = MainScope().launch {
             getEvents(object : OnLoadFinish {
                 override fun finish(maxDate: String) {
+                    binding.calendarView.visibility = View.VISIBLE
                     //设置最大值
                     maxCal = Calendar.getInstance()
                     val date = maxDate.split("/")
@@ -103,15 +129,6 @@ class CalendarFragment : Fragment() {
                 }
             })
         }
-
-        //设置头部
-        ToolbarUtil(binding.toolCalendar).setToolHead(
-            R.drawable.ic_calender,
-            getString(R.string.tool_calendar)
-        )
-
-        return binding.root
-
     }
 
     //一次获取全部

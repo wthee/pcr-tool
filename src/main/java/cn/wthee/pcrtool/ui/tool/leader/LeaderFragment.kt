@@ -55,10 +55,11 @@ class LeaderFragment : Fragment() {
         return binding.root
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         if (!job.isCancelled) {
             job.cancel()
         }
     }
+
 }

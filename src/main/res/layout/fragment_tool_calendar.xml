@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@drawable/background_color"
     android:orientation="vertical">
 
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             app:eventsEnabled="true"
             app:firstDayOfWeek="2"
+            app:swipeEnabled="false"
             app:headerColor="@color/colorWhite"
             app:headerLabelColor="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/tool_calendar"

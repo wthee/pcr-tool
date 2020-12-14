@@ -6,4 +6,5 @@
     android:layout_height="match_parent"
     android:paddingStart="@dimen/s_padding"
     android:paddingEnd="@dimen/s_padding"
+    android:animateLayoutChanges="true"
     tools:context=".ui.common.ContainerFragment" />
