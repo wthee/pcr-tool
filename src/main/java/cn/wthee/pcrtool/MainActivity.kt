@@ -3,6 +3,7 @@ package cn.wthee.pcrtool
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -24,6 +25,9 @@ import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.guilds
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * 主活动
@@ -60,7 +64,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         // 全屏显示
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        setFullScreen()
+        setContentView(binding.root)
+        //取消其它任务
+        WorkManager.getInstance(this).cancelAllWork()
+        //初始化
+        init()
+        //数据库版本检查
+        DatabaseUpdater.checkDBVersion()
+        //监听
+        setListener()
+        //应用版本校验
+        AppUpdateHelper.init(this, layoutInflater)
+        //菜单布局
+        initMenuItems()
+    }
+
+    // 全屏显示
+    private fun setFullScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false)
         } else {
             @Suppress("DEPRECATION")
@@ -74,26 +96,6 @@ class MainActivity : AppCompatActivity() {
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
         }
-
-        setContentView(binding.root)
-        //取消其它任务
-        WorkManager.getInstance(this).cancelAllWork()
-        //初始化
-        init()
-        //数据库版本检查
-        DatabaseUpdater.checkDBVersion()
-        //悬浮按钮
-        setFab()
-        //监听
-        setListener()
-        //绑定活动
-        ActivityUtil.instance.currentActivity = this
-        //悬浮穿高度
-        mHeight = ScreenUtil.getWidth() - 48.dp
-        //应用版本校验
-        AppUpdateHelper.init(this, layoutInflater)
-        //菜单布局
-        initMenuItems()
     }
 
 
@@ -116,6 +118,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        fabMain = binding.fab
         //获取版本名
         nowVersionName = packageManager.getPackageInfo(
             packageName,
@@ -124,11 +127,13 @@ class MainActivity : AppCompatActivity() {
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
         spSetting = PreferenceManager.getDefaultSharedPreferences(this)
+        //绑定活动
+        ActivityUtil.instance.currentActivity = this
+        //悬浮穿高度
+        mHeight = ScreenUtil.getWidth() - 48.dp
     }
 
-    private fun setFab() {
-        fabMain = binding.fab
-    }
+
 
     private fun setListener() {
 
@@ -422,11 +427,10 @@ class MainActivity : AppCompatActivity() {
     private fun closeFab() {
         binding.motionLayout.apply {
             transitionToStart()
-            binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlpha)
             isClickable = false
             isFocusable = false
         }
-        fabMain.setImageResource(R.drawable.ic_function)
+        binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlpha)
     }
 
     // 打开菜单
@@ -434,7 +438,6 @@ class MainActivity : AppCompatActivity() {
         fabMain.setImageResource(R.drawable.ic_cancel)
         binding.motionLayout.apply {
             transitionToEnd()
-            binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlphtBlack)
             isClickable = true
             isFocusable = true
             setOnClickListener {
