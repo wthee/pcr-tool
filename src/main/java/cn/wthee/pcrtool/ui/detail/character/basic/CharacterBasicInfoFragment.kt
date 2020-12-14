@@ -177,9 +177,9 @@ class CharacterBasicInfoFragment : Fragment() {
             nameExtra.text = characterPro.getNameL()
             three.text = requireActivity().resources.getString(
                 R.string.character_detail,
-                characterPro.age,
-                characterPro.height,
-                characterPro.weight,
+                characterPro.getFixedAge(),
+                characterPro.getFixedHeight(),
+                characterPro.getFixedWeight(),
                 characterPro.position
             )
             intro.text = characterPro.getIntroText()

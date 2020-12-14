@@ -21,9 +21,9 @@ data class CharacterInfo(
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
 ) : Serializable {
 
-    fun getFixedAge() = if (age == "999") "??" else age
-    fun getFixedHeight() = if (height == "999") "??" else height
-    fun getFixedWeight() = if (weight == "999") "??" else weight
+    fun getFixedAge() = if (age == "999") "?" else age
+    fun getFixedHeight() = if (height == "999") "?" else height
+    fun getFixedWeight() = if (weight == "999") "?" else weight
 
     //获取名字，去除限定类型
     fun getNameF(): String {
