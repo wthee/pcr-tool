@@ -25,9 +25,6 @@ import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.guilds
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  * 主活动
@@ -425,12 +422,12 @@ class MainActivity : AppCompatActivity() {
 
     // 关闭菜单
     private fun closeFab() {
+        fabMain.setImageResource(R.drawable.ic_function)
         binding.motionLayout.apply {
             transitionToStart()
             isClickable = false
             isFocusable = false
         }
-        binding.navHostFragment.foreground = ResourcesUtil.getDrawable(R.color.colorAlpha)
     }
 
     // 打开菜单

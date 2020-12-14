@@ -33,7 +33,7 @@
                 android:paddingStart="@dimen/xs_padding"
                 android:paddingEnd="@dimen/xs_padding"
                 android:text="@string/leader_source"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

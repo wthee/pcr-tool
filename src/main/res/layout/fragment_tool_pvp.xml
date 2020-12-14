@@ -30,11 +30,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/xs_margin"
                 android:background="@drawable/title_background"
-                android:padding="@dimen/xs_padding"
                 android:paddingStart="@dimen/xs_padding"
                 android:paddingEnd="@dimen/xs_padding"
                 android:text="@string/pcrdfans_com"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

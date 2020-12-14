@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <include
@@ -77,7 +76,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drops"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorWhite"
         android:focusable="true"
         android:orientation="vertical"
