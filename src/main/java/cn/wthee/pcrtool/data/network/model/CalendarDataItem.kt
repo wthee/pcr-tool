@@ -9,6 +9,6 @@ sealed class CalendarDataItem {
     }
 
     data class Header(val title: String) : CalendarDataItem() {
-        override val id = Long.MIN_VALUE.toString()
+        override val id = title
     }
 }

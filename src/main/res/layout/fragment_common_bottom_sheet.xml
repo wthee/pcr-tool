@@ -4,7 +4,6 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="@dimen/s_padding"
-    android:paddingEnd="@dimen/s_padding"
     android:animateLayoutChanges="true"
+    android:background="@color/colorAlpha"
     tools:context=".ui.common.ContainerFragment" />

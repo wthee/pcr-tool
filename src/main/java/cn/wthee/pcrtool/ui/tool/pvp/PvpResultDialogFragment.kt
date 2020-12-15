@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +28,6 @@ class PvpResultDialogFragment : CommonBasicDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolPvpResultBinding.inflate(inflater, container, false)
-        binding.loading.root.setBackgroundColor(Color.TRANSPARENT)
         //创建服务
         //展示查询结果
         job = MainScope().launch {
@@ -49,7 +47,7 @@ class PvpResultDialogFragment : CommonBasicDialogFragment() {
                     ToastUtil.short(result.message)
                     dialog?.dismiss()
                 }
-                binding.loading.root.visibility = View.GONE
+                binding.progress.visibility = View.GONE
             } catch (e: Exception) {
             }
         }

@@ -13,8 +13,7 @@ import cn.wthee.pcrtool.utils.Constants.UID
 /**
  * 底部弹窗容器
  */
-class ContainerFragment :
-    CommonBasicDialogFragment() {
+class ContainerFragment : CommonBasicDialogFragment() {
 
     private val DIALOG = "dialog"
 

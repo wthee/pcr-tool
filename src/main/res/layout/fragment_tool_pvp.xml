@@ -48,41 +48,16 @@
                 tools:itemCount="5"
                 tools:listitem="@layout/item_common" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/pvp_search"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="0dp"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="@dimen/s_padding"
-                android:text="@string/pvp_search"
-                app:icon="@drawable/ic_search"
-                app:iconSize="@dimen/m_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/select_characters" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/pvp_float"
-                android:layout_width="@dimen/menu_icon"
-                android:layout_height="@dimen/menu_icon"
-                android:layout_marginEnd="@dimen/s_margin"
-                android:src="@drawable/ic_float"
-                android:tint="@color/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="@id/pvp_search"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/pvp_search" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/m_margin"
+        android:layout_height="0dp"
         android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/m_margin"
         android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_weight="1"
         android:padding="@dimen/s_padding"
         app:cardCornerRadius="@dimen/card_radius">
 
@@ -135,4 +110,46 @@
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/efab_margin"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/pvp_float"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginEnd="@dimen/xm_margin"
+            android:layout_marginBottom="@dimen/efab_margin"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="@string/pvp_float"
+            android:text="@string/pvp_float"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/fab_text_size"
+            app:borderWidth="0dp"
+            app:icon="@drawable/ic_float"
+            app:iconSize="@dimen/menu_icon"
+            app:iconTint="@color/colorPrimary" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/pvp_search"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginEnd="@dimen/xl_margin"
+            android:layout_marginBottom="@dimen/efab_margin"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="@string/pvp_search"
+            android:text="@string/pvp_search"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/fab_text_size"
+            app:borderWidth="0dp"
+            app:icon="@drawable/ic_search"
+            app:iconSize="@dimen/menu_icon"
+            app:iconTint="@color/colorPrimary" />
+
+    </LinearLayout>
+
 </LinearLayout>

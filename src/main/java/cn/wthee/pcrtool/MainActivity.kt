@@ -16,6 +16,7 @@ import androidx.core.view.forEachIndexed
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
+import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var fabMain: FloatingActionButton
     }
 
+    private var menuItems = arrayListOf<ViewBinding>()
     private lateinit var binding: ActivityMainBinding
     private val sharedCharacterViewModel by viewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
@@ -115,6 +117,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        menuItems = arrayListOf(
+            binding.filter,
+            binding.search,
+            binding.setting,
+            binding.toolLeader,
+            binding.toolNews,
+            binding.toolPvp,
+            binding.toolEvent,
+            binding.toolCalendar,
+            binding.toolGacha,
+        )
         fabMain = binding.fab
         //获取版本名
         nowVersionName = packageManager.getPackageInfo(
@@ -129,7 +142,6 @@ class MainActivity : AppCompatActivity() {
         //悬浮穿高度
         mHeight = ScreenUtil.getWidth() - 48.dp
     }
-
 
 
     private fun setListener() {
@@ -157,12 +169,12 @@ class MainActivity : AppCompatActivity() {
         }
         //设置
         binding.setting.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_settingsFragment)
         }
         //搜索
         binding.search.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             //显示搜索布局
             val layout = LayoutSearchBinding.inflate(layoutInflater)
             val dialog = DialogUtil.create(this, layout.root)
@@ -214,13 +226,14 @@ class MainActivity : AppCompatActivity() {
             dialog.setOnDismissListener {
                 try {
                     MainPagerFragment.tipText.visibility = View.GONE
+                    closeFab()
                 } catch (e: Exception) {
                 }
             }
         }
         //筛选
         binding.filter.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             when (currentMainPage) {
                 //角色筛选
                 0 -> {
@@ -278,7 +291,7 @@ class MainActivity : AppCompatActivity() {
                         chip.isChecked = CharacterListFragment.characterFilterParams.atk == index
                     }
                     //显示弹窗
-                    DialogUtil.create(this, layout.root, getString(R.string.reset),
+                    val dialog = DialogUtil.create(this, layout.root, getString(R.string.reset),
                         getString(R.string.next), object : DialogListener {
                             override fun onCancel(dialog: AlertDialog) {
                                 sharedCharacterViewModel.reset.postValue(true)
@@ -335,7 +348,11 @@ class MainActivity : AppCompatActivity() {
                                     sortAsc, ""
                                 )
                             }
-                        }).show()
+                        })
+                    dialog.show()
+                    dialog.setOnDismissListener {
+                        closeFab()
+                    }
                 }
                 //装备筛选
                 1 -> {
@@ -364,7 +381,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     //显示弹窗
-                    DialogUtil.create(this, layout.root, getString(R.string.reset),
+                    val dialog = DialogUtil.create(this, layout.root, getString(R.string.reset),
                         getString(R.string.next), object : DialogListener {
                             override fun onCancel(dialog: AlertDialog) {
                                 sharedEquipViewModel.reset.postValue(true)
@@ -384,38 +401,42 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 sharedEquipViewModel.getEquips("")
                             }
-                        }).show()
+                        })
+                    dialog.show()
+                    dialog.setOnDismissListener {
+                        closeFab()
+                    }
                 }
             }
         }
         //pvp
         binding.toolPvp.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolPvpFragment)
         }
         //新闻
         binding.toolNews.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolNewsFragment)
         }
         //排名
         binding.toolLeader.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolLeaderFragment)
         }
         //活动
         binding.toolEvent.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_eventFragment)
         }
         //卡池
         binding.toolGacha.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolGachaFragment)
         }
         //日历
         binding.toolCalendar.root.setOnClickListener {
-            closeFab()
+            closeMenus()
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_calendarFragment)
         }
     }
@@ -430,9 +451,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun closeMenus() {
+        fabMain.setImageResource(R.drawable.ic_left)
+        menuItems.forEach {
+            it.root.isClickable = false
+            it.root.isFocusable = false
+        }
+        binding.layoutBg.apply {
+            isClickable = false
+            isFocusable = false
+        }
+        binding.motionLayout.apply {
+            transitionToStart()
+            isClickable = false
+            isFocusable = false
+        }
+    }
+
     // 打开菜单
     private fun openFab() {
-        fabMain.setImageResource(R.drawable.ic_cancel)
+        fabMain.setImageResource(R.drawable.ic_left)
+        menuItems.forEach {
+            it.root.isClickable = true
+            it.root.isFocusable = true
+        }
+        binding.layoutBg.apply {
+            isClickable = true
+            isFocusable = true
+        }
         binding.motionLayout.apply {
             transitionToEnd()
             isClickable = true

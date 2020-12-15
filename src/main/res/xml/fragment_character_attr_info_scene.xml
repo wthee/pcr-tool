@@ -15,8 +15,8 @@
     <ConstraintSet android:id="@+id/start_attr">
         <Constraint
             android:id="@+id/icon"
-            android:layout_width="@dimen/character_icon_size"
-            android:layout_height="@dimen/character_icon_size"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/normal_icon"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
 

@@ -11,7 +11,7 @@ object FabHelper {
 
     fun addBackFab(level: Int = 1) {
         //添加返回
-        setIcon(R.drawable.ic_arrow_left)
+        setIcon(R.drawable.ic_left)
         pageLevel = level
     }
 

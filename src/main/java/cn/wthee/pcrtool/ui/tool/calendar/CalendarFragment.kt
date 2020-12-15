@@ -74,7 +74,9 @@ class CalendarFragment : Fragment() {
             minCal = Calendar.getInstance()
             minCal.set(2020, 6 - 1, 6)
             setMinimumDate(minCal)
-            setOnDayClickListener { eventDay -> showDayEvents(eventDay.calendar) }
+            setOnDayClickListener { eventDay ->
+                showDayEvents(eventDay.calendar)
+            }
             //月份切换监听
             setOnForwardPageChangeListener {
                 mMonth++
@@ -101,6 +103,7 @@ class CalendarFragment : Fragment() {
     }
 
     private fun init() {
+        binding.fabToday.hide()
         cal = Calendar.getInstance()
         cal.time = Date(System.currentTimeMillis())
         val year = cal.get(Calendar.YEAR)
@@ -145,11 +148,18 @@ class CalendarFragment : Fragment() {
     //显示事件
     private fun showDayEvents(calendar: Calendar) {
         if (calendar.time <= maxCal.time && calendar.time >= minCal.time) {
-            binding.calendarView.setDate(calendar)
             //获取年月日
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH) + 1
             val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+            if (!(year == cal.get(Calendar.YEAR)
+                        && month == cal.get(Calendar.MONTH) + 1
+                        && dayOfMonth == cal.get(Calendar.DAY_OF_MONTH))
+            ) {
+                binding.fabToday.show()
+            } else {
+                binding.fabToday.hide()
+            }
             mMonth = month
             addIcon(year, month)
             //筛选点击的日期

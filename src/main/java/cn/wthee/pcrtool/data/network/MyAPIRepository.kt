@@ -33,7 +33,7 @@ object MyAPIRepository {
         //发送请求
         try {
             val response = service.getPVPData(body)
-            if (response.status != 0 || response.data == null) {
+            if (response.message == "failure" || response.data == null) {
                 return error()
             }
             return response
@@ -59,7 +59,7 @@ object MyAPIRepository {
         //请求
         try {
             val response = service.getNewsData(body)
-            if (response.status != 0 || response.data == null || response.data!!.isEmpty()) {
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
                 return error()
             }
             return response
@@ -76,7 +76,7 @@ object MyAPIRepository {
         //请求
         try {
             val response = service.getLeader()
-            if (response.status != 0 || response.data == null || response.data!!.isEmpty()) {
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
                 return error()
             }
             return response
@@ -94,7 +94,7 @@ object MyAPIRepository {
         //请求
         try {
             val response = service.getCalendar()
-            if (response.status != 0 || response.data == null) {
+            if (response.message == "failure" || response.data == null) {
                 return error()
             }
             return response

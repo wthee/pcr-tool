@@ -15,10 +15,6 @@ import cn.wthee.pcrtool.data.network.model.CalendarDataItem
 import cn.wthee.pcrtool.data.network.model.CalendarEvent
 import cn.wthee.pcrtool.databinding.ItemCalendarEventBinding
 import cn.wthee.pcrtool.databinding.ItemCalendarEventHeaderBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class CalendarEventAdapter :
@@ -26,31 +22,26 @@ class CalendarEventAdapter :
 
     private val ITEM_VIEW_TYPE_HEADER = 0
     private val ITEM_VIEW_TYPE_ITEM = 1
-    private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     fun addHeaderAndSubmitList(list: List<CalendarContent>?) {
-        adapterScope.launch {
-            val items = when {
-                list == null || list.isEmpty() -> listOf(CalendarDataItem.Header("无活动")) + listOf(
-                    CalendarDataItem.Item(
-                        CalendarEvent("", "", "暂无")
-                    )
+        val items = when {
+            list == null || list.isEmpty() -> listOf(CalendarDataItem.Header("无活动")) + listOf(
+                CalendarDataItem.Item(
+                    CalendarEvent("", "", "暂无")
                 )
-                else -> {
-                    val datas = arrayListOf<CalendarDataItem>()
-                    list.forEach {
-                        datas.add(CalendarDataItem.Header(it.type))
-                        it.events.forEach { event ->
-                            datas.add(CalendarDataItem.Item(event))
-                        }
+            )
+            else -> {
+                val datas = arrayListOf<CalendarDataItem>()
+                list.forEach {
+                    datas.add(CalendarDataItem.Header(it.type))
+                    it.events.forEach { event ->
+                        datas.add(CalendarDataItem.Item(event))
                     }
-                    datas
                 }
-            }
-            withContext(Dispatchers.Main) {
-                submitList(items)
+                datas
             }
         }
+        submitList(items)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

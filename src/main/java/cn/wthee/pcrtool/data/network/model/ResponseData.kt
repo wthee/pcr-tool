@@ -3,9 +3,9 @@ package cn.wthee.pcrtool.data.network.model
 import java.io.Serializable
 
 class ResponseData<T>(
-    var status: Int,
+    var status: Int = -1,
     var data: T?,
-    @Transient var message: String
+    var message: String
 ) : Serializable {
 
 
