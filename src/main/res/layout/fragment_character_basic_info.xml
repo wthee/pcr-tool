@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/error" />
+        tools:src="@drawable/unknown_gray" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
@@ -28,9 +28,9 @@
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@id/name_extra"
         app:layout_constraintStart_toEndOf="@id/position_type"
         app:layout_constraintTop_toBottomOf="@id/character_pic"
-        app:layout_constraintEnd_toStartOf="@id/name_extra"
         tools:text="@string/app_name" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -46,10 +46,10 @@
         android:layout_marginStart="@dimen/s_margin"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/name"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/name"
         tools:text="@string/test" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -79,8 +79,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
         android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
         android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/three">
 
@@ -138,16 +138,17 @@
                 android:id="@+id/true_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="start"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="@dimen/s_padding"
                 android:ellipsize="end"
+                android:gravity="end"
                 android:maxLines="1"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_name"
                 app:layout_constraintTop_toTopOf="@id/title_name"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/title_name"
                 tools:text="@string/test" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -169,13 +170,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="@dimen/s_padding"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textIsSelectable="true"
+                app:layout_constrainedHeight="true"
                 app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_birth"
+                app:layout_constraintEnd_toStartOf="@id/title_blood"
                 app:layout_constraintStart_toEndOf="@id/title_birth"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
                 app:layout_constraintWidth_percent="0.35"
@@ -199,11 +202,10 @@
                 android:id="@+id/blood"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="end"
                 android:ellipsize="end"
+                android:gravity="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textIsSelectable="true"
                 app:layout_constraintStart_toEndOf="@id/title_blood"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
                 app:layout_constraintWidth_percent="0.35"
@@ -228,10 +230,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:maxLines="1"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="@dimen/s_padding"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textIsSelectable="true"
                 app:layout_constrainedWidth="true"
@@ -258,13 +259,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textIsSelectable="true"
                 app:layout_constraintStart_toEndOf="@id/title_cv"
                 app:layout_constraintTop_toTopOf="@id/title_race"
                 app:layout_constraintWidth_percent="0.35"
-                android:ellipsize="end"
-                android:maxLines="1"
                 tools:text="@string/test" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -288,8 +288,6 @@
                 android:gravity="end"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textIsSelectable="true"
-                android:ellipsize="end"
-                android:maxLines="1"
                 app:layout_constraintStart_toEndOf="@id/title_guide"
                 app:layout_constraintTop_toTopOf="@id/title_guide"
                 app:layout_constraintWidth_percent="0.85"
@@ -301,11 +299,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/m_margin"
                 android:background="@drawable/title_background"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:paddingStart="@dimen/s_padding"
                 android:paddingEnd="0dp"
                 android:text="@string/title_fav"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_guide"
