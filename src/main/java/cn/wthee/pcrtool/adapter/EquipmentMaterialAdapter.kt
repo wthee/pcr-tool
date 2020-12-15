@@ -82,14 +82,14 @@ class EquipmentMaterialAdapter(
                         //掉落列表
                         val data = viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()
-                        partentBinding.drops.adapter = adapter
+                        partentBinding.equipDrops.adapter = adapter
                         //动态限制只有一个列表可滚动
-                        partentBinding.drops.isNestedScrollingEnabled = true
+                        partentBinding.equipDrops.isNestedScrollingEnabled = true
                         partentBinding.material.isNestedScrollingEnabled = false
                         adapter.submitList(data) {
                             partentBinding.progressBar.visibility = View.INVISIBLE
                         }
-                        partentBinding.drops.setItemViewCacheSize(50)
+                        partentBinding.equipDrops.setItemViewCacheSize(50)
                     }
                 }
             }

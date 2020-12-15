@@ -66,7 +66,7 @@ class CharacterSkillFragment : Fragment() {
         binding.apply {
             //技能信息
             adapter = SkillAdapter()
-            recycler.adapter = adapter
+            skillList.adapter = adapter
             //点击查看
             fabSkillLoop.setOnClickListener {
                 CharacterSkillLoopDialogFragment.getInstance(uid)

@@ -62,7 +62,7 @@ class CharacterDropDialogFragment : CommonBasicDialogFragment() {
         lifecycleScope.launch {
             //初始化列表
             val adapter = CharacterDropAdapter()
-            binding.drops.adapter = adapter
+            binding.characterDrops.adapter = adapter
             adapter.submitList(sharedViewModel.getDrops(uid))
         }
         return binding.root

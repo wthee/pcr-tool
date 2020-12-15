@@ -32,7 +32,7 @@
         tools:text="@string/title_quest" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/drops"
+        android:id="@+id/quest_equip_drops"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"

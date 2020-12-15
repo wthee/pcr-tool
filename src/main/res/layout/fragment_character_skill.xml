@@ -13,7 +13,7 @@
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+        android:id="@+id/skill_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBg"

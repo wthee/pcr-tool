@@ -35,7 +35,7 @@ class LeaderFragment : Fragment() {
             val list = MyAPIRepository.getLeader()
             if (list.status == 0) {
                 val adapter = CharacterLeaderAdapter()
-                binding.listLevel.adapter = adapter
+                binding.leaderList.adapter = adapter
                 adapter.submitList(list.data) {
                     binding.loading.root.visibility = View.GONE
                 }

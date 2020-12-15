@@ -51,9 +51,9 @@ class EquipmentDropAdapter :
                 }
                 questNum.setTextColor(ResourcesUtil.getColor(color))
                 val adapter = EquipmentDropDetailAdapter(info.eid)
-                drops.adapter = adapter
+                questEquipDrops.adapter = adapter
                 adapter.submitList(info.getAllOdd())
-                drops.setItemViewCacheSize(20)
+                questEquipDrops.setItemViewCacheSize(20)
             }
         }
     }

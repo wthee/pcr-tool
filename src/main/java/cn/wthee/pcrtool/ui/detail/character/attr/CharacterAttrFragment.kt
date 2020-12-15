@@ -200,7 +200,7 @@ class CharacterAttrFragment : Fragment() {
                     desc.text = it.getDesc()
                     //属性词条
                     val adapter = EquipmentAttrAdapter()
-                    attrs.adapter = adapter
+                    equipAttrs.adapter = adapter
                     adapter.submitList(it.attr.allNotZero())
                 } else {
                     binding.uniqueEquip.root.visibility = View.GONE

@@ -82,13 +82,13 @@ class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
                 desc.text = equip.getDesc()
                 //属性词条
                 val adapter = EquipmentAttrAdapter()
-                attrs.adapter = adapter
+                equipAttrs.adapter = adapter
                 adapter.submitList(equip.attr.allNotZero())
             }
             //动态限制只有一个列表可滚动
             material.setOnTouchListener { _, _ ->
                 if (!material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = true
-                if (drops.isNestedScrollingEnabled) drops.isNestedScrollingEnabled = false
+                if (equipDrops.isNestedScrollingEnabled) equipDrops.isNestedScrollingEnabled = false
                 return@setOnTouchListener false
             }
         }

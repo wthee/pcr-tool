@@ -41,7 +41,7 @@ class PvpResultDialogFragment : CommonBasicDialogFragment() {
                         binding.pvpNoData.visibility = View.VISIBLE
                     }
                     val adapter = PvpCharacterResultAdapter(requireActivity())
-                    binding.list.adapter = adapter
+                    binding.pvpResultList.adapter = adapter
                     adapter.submitList(result.data!!.sortedByDescending {
                         it.up
                     })
