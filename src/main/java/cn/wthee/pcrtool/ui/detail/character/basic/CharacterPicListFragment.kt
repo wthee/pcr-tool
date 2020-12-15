@@ -82,10 +82,7 @@ class CharacterPicListFragment : Fragment() {
     private fun setListener() {
         //下载
         downLoadFab.setOnClickListener {
-            if (!hasSelected.contains(true)) {
-                downLoadFab.text = "未选择图片"
-                downLoadFab.extend()
-            } else {
+            if (hasSelected.contains(true)) {
                 PermissionX.init(activity).permissions(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE

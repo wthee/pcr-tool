@@ -15,7 +15,6 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -42,6 +41,9 @@ class CharacterSkillFragment : Fragment() {
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
+    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
+        InjectorUtil.provideCharacterSkillViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,48 +62,46 @@ class CharacterSkillFragment : Fragment() {
     ): View {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
 
-        val viewModel = InjectorUtil.provideCharacterSkillViewModelFactory()
-            .create(CharacterSkillViewModel::class.java)
+        init()
+        //以悬浮窗显示时
+        if (isDialog) {
+            setDialogLayout()
+        }
 
+        sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
+            adapter.submitList(it)
+        })
+
+        return binding.root
+    }
+
+    private fun init() {
         binding.apply {
             //技能信息
             adapter = SkillAdapter()
             skillList.adapter = adapter
-            //点击查看
-            fabSkillLoop.setOnClickListener {
-                CharacterSkillLoopDialogFragment.getInstance(uid)
-                    .show(parentFragmentManager, "loop")
-            }
         }
-        //以悬浮窗显示时
-        if (isDialog) {
-            lifecycleScope.launch {
-                binding.layoutLoopTitle.title.text =
-                    sharedCharacterViewModel.getCharacterData(uid).name
-            }
-            adapter.submitList(null)
-            //修改fab位置
-            binding.apply {
-                fabSkillLoop.visibility = View.GONE
-                layoutLoopTitle.root.visibility = View.VISIBLE
-                ToolbarUtil(layoutLoopTitle).apply {
-                    setCenterTitle("")
-                    setRightIcon(R.drawable.ic_loop)
-                    rightIcon.setOnClickListener {
-                        fabSkillLoop.callOnClick()
-                    }
+        sharedSkillViewModel.getCharacterSkills(uid)
+    }
+
+    private fun setDialogLayout() {
+        lifecycleScope.launch {
+            binding.layoutLoopTitle.title.text =
+                sharedCharacterViewModel.getCharacterData(uid).name
+        }
+        adapter.submitList(null)
+        //修改fab位置
+        binding.apply {
+            layoutLoopTitle.root.visibility = View.VISIBLE
+            ToolbarUtil(layoutLoopTitle).apply {
+                setCenterTitle("")
+                setRightIcon(R.drawable.ic_loop)
+                rightIcon.setOnClickListener {
+                    CharacterSkillLoopDialogFragment.getInstance(CharacterPagerFragment.uid)
+                        .show(parentFragmentManager, "loop")
                 }
             }
         }
-
-        viewModel.skills.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
-        lifecycleScope.launch {
-            delay(400L)
-            viewModel.getCharacterSkills(uid)
-        }
-        return binding.root
     }
 
 }

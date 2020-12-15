@@ -61,12 +61,10 @@ class CharacterPicAdapter(private val parentFragment: Fragment) :
                             text = "已选择" + CharacterPicListFragment.hasSelected.filter {
                                 it
                             }.size.toString()
-                            extend()
                         }
                     } else {
                         CharacterPicListFragment.downLoadFab.apply {
-                            shrink()
-                            text = ""
+                            text = "未选择图片"
                         }
                     }
                 }

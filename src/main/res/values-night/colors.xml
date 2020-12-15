@@ -8,4 +8,6 @@
     <color name="colorWhite">#000000</color>
     <color name="colorBlack">#C1C1C1</color>
     <color name="text">#E6E6E6</color>
+    <color name="colorAlphtWhite">#75000000</color>
+
 </resources>

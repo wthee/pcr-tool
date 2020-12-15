@@ -183,7 +183,9 @@ class CharacterListFragment : Fragment() {
                     MainActivity.sp.edit {
                         putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
-                    MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
+                    if (MainPagerFragment.Companion::tabLayout.isLateinit) {
+                        MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
+                    }
                     MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
                 })
             }

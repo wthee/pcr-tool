@@ -15,7 +15,6 @@ import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
-import cn.wthee.pcrtool.ui.detail.character.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.ui.home.EquipmentViewModel
@@ -143,10 +142,6 @@ class CharacterAttrFragment : Fragment() {
             uniqueEquip.ueLvSeekBar.addOnChangeListener { slider, _, _ ->
                 ueLv = slider.value.toInt()
                 uniqueEquip.ueLv.text = getString(R.string.unique_equip_lv, ueLv)
-            }
-            //rank对比
-            rankEquip.rankCompare.setOnClickListener {
-                CharacterRankCompareFragment().show(parentFragmentManager, "rank_compare")
             }
         }
     }

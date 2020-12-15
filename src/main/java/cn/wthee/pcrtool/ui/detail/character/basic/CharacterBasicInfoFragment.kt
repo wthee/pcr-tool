@@ -1,10 +1,13 @@
 package cn.wthee.pcrtool.ui.detail.character.basic
 
 import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -30,6 +33,7 @@ class CharacterBasicInfoFragment : Fragment() {
     companion object {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
+        lateinit var characterPic: AppCompatImageView
 
         @Volatile
         private var instance: CharacterBasicInfoFragment? = null
@@ -72,6 +76,7 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //初始化
     private fun init() {
+        characterPic = binding.characterPic
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
         //打开页面共享元素
@@ -84,6 +89,15 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
             placeholder(R.drawable.load)
+            target {
+                val bitmap = (it as BitmapDrawable).bitmap
+                //字体颜色
+                val color = PaletteHelper.createPaletteSync(bitmap)
+                    .getDarkVibrantColor(Color.DKGRAY)
+                Color.argb(75, Color.red(color), Color.green(color), Color.blue(color))
+                CharacterPagerFragment.viewPager.setBackgroundColor(color)
+                binding.characterPic.setImageDrawable(it)
+            }
             listener(
                 onStart = {
                     MainActivity.canBack = true
@@ -91,9 +105,6 @@ class CharacterBasicInfoFragment : Fragment() {
                     postponeEnterTransition()
                     //添加返回fab
                     FabHelper.addBackFab()
-                },
-                onSuccess = { _, _ ->
-                    startPostponedEnterTransition()
                 }
             )
         }

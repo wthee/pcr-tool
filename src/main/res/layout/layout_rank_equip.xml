@@ -101,15 +101,4 @@
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toTopOf="@id/pic5" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/rank_compare"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rank_compare"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@id/rank_btns"
-        app:layout_constraintStart_toStartOf="@id/rank_btns"
-        app:layout_constraintTop_toBottomOf="@id/rank_btns" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

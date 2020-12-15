@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_radius">6dp</dimen>
+    <dimen name="page_radius">10dp</dimen>
     <dimen name="menu_item_card_radius">12dp</dimen>
     <dimen name="loading_dialog_width">100dp</dimen>
     <dimen name="loading_dialog_height">80dp</dimen>
@@ -29,6 +30,7 @@
     <dimen name="m_margin">9dp</dimen>
     <dimen name="xm_margin">12dp</dimen>
     <dimen name="efab_margin">13dp</dimen>
+    <dimen name="efab_margin_bottom">15dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
     <dimen name="xs_padding">3dp</dimen>
@@ -36,6 +38,7 @@
     <dimen name="m_padding">9dp</dimen>
     <dimen name="xm_padding">12dp</dimen>
     <dimen name="l_padding">25dp</dimen>
+    <dimen name="page_padding">65dp</dimen>
 
     <dimen name="toolbar_height">38dp</dimen>
     <dimen name="tab_height_1">36dp</dimen>
@@ -43,4 +46,8 @@
 
     <dimen name="elevation_card">2dp</dimen>
     <dimen name="menu_item_elevation_card">8dp</dimen>
+
+    <dimen name="viewpager_next_item_visible">12dp</dimen>
+    <dimen name="viewpager_current_item_horizontal_margin">20dp</dimen>
+    <dimen name="fab_text_size">12sp</dimen>
 </resources>

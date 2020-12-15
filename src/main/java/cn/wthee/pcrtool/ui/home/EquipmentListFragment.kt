@@ -86,7 +86,9 @@ class EquipmentListFragment : Fragment() {
                 MainActivity.sp.edit {
                     putInt(Constants.SP_COUNT_EQUIP, it)
                 }
-                MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
+                if (MainPagerFragment.Companion::tabLayout.isLateinit) {
+                    MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
+                }
                 MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
             })
         }
