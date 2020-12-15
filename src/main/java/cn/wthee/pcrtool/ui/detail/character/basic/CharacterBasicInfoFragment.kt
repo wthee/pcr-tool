@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.detail.character.basic
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.MainActivity
@@ -22,8 +24,11 @@ import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6I
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
+import coil.imageLoader
 import coil.load
+import coil.request.ImageRequest
 import com.google.android.material.transition.Hold
+import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息页面
@@ -89,15 +94,6 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
             placeholder(R.drawable.load)
-            target {
-                val bitmap = (it as BitmapDrawable).bitmap
-                //字体颜色
-                val color = PaletteHelper.createPaletteSync(bitmap)
-                    .getDarkVibrantColor(Color.DKGRAY)
-                Color.argb(75, Color.red(color), Color.green(color), Color.blue(color))
-                CharacterPagerFragment.viewPager.setBackgroundColor(color)
-                binding.characterPic.setImageDrawable(it)
-            }
             listener(
                 onStart = {
                     MainActivity.canBack = true
@@ -105,6 +101,38 @@ class CharacterBasicInfoFragment : Fragment() {
                     postponeEnterTransition()
                     //添加返回fab
                     FabHelper.addBackFab()
+                },
+                onSuccess = { _, _ ->
+                    startPostponedEnterTransition()
+                    //设置背景
+                    val request = ImageRequest.Builder(requireContext())
+                        .data(picUrl)
+                        .size(500, 200)
+                        .transformations(Blur(requireContext(), 1))
+                        .build()
+                    lifecycleScope.launch {
+                        //TODO 优化背景颜色选取
+//                        val drawable = requireContext().imageLoader.execute(request).drawable
+                        val bitmap =
+                            (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
+                        val color0 = PaletteHelper.createPaletteSync(bitmap)
+                            .getDarkVibrantColor(Color.DKGRAY)
+                        val color1 = PaletteHelper.createPaletteSync(bitmap)
+                            .getDarkMutedColor(Color.DKGRAY)
+                        val gd = GradientDrawable(
+                            GradientDrawable.Orientation.TL_BR,
+                            intArrayOf(
+                                color0,
+                                color1,
+                                ResourcesUtil.getColor(R.color.colorBlack)
+                            )
+                        )
+                        gd.gradientType = GradientDrawable.RADIAL_GRADIENT
+                        gd.setGradientCenter(0f, 0.5f)
+                        gd.gradientRadius = 1000f
+                        CharacterPagerFragment.viewPager.background = gd
+                    }
+
                 }
             )
         }
