@@ -107,29 +107,29 @@ class CharacterBasicInfoFragment : Fragment() {
                     //设置背景
                     val request = ImageRequest.Builder(requireContext())
                         .data(picUrl)
-                        .size(500, 200)
-                        .transformations(Blur(requireContext(), 1))
                         .build()
                     lifecycleScope.launch {
-                        //TODO 优化背景颜色选取
-//                        val drawable = requireContext().imageLoader.execute(request).drawable
+                        //背景颜色选取
                         val bitmap =
                             (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
-                        val color0 = PaletteHelper.createPaletteSync(bitmap)
-                            .getDarkVibrantColor(Color.DKGRAY)
                         val color1 = PaletteHelper.createPaletteSync(bitmap)
+                            .getLightMutedColor(Color.DKGRAY)
+                        val color2 = PaletteHelper.createPaletteSync(bitmap)
+                            .getDarkVibrantColor(Color.DKGRAY)
+                        val color3 = PaletteHelper.createPaletteSync(bitmap)
                             .getDarkMutedColor(Color.DKGRAY)
                         val gd = GradientDrawable(
                             GradientDrawable.Orientation.TL_BR,
                             intArrayOf(
-                                color0,
                                 color1,
-                                ResourcesUtil.getColor(R.color.colorBlack)
+                                color2,
+                                color3,
+                                ResourcesUtil.getColor(R.color.viewpager_bg)
                             )
                         )
                         gd.gradientType = GradientDrawable.RADIAL_GRADIENT
-                        gd.setGradientCenter(0f, 0.5f)
-                        gd.gradientRadius = 1000f
+                        gd.setGradientCenter(0.5f, 0.5f)
+                        gd.gradientRadius = 998f
                         CharacterPagerFragment.viewPager.background = gd
                     }
 

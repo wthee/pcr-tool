@@ -30,7 +30,7 @@
     <dimen name="m_margin">9dp</dimen>
     <dimen name="xm_margin">12dp</dimen>
     <dimen name="efab_margin">13dp</dimen>
-    <dimen name="efab_margin_bottom">15dp</dimen>
+    <dimen name="efab_margin_bottom">16dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
     <dimen name="xs_padding">3dp</dimen>
