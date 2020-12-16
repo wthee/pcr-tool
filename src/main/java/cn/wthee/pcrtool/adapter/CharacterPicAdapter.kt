@@ -53,14 +53,15 @@ class CharacterPicAdapter(private val parentFragment: Fragment) :
                     val selected = !CharacterPicListFragment.hasSelected[absoluteAdapterPosition]
                     CharacterPicListFragment.hasSelected[absoluteAdapterPosition] = selected
                     pic.foreground = ResourcesUtil.getDrawable(
-                        if (selected) R.color.colorAlphtBlack else R.color.colorAlpha
+                        if (selected) R.color.colorAlphaBlack else R.color.colorAlpha
                     )
 
                     if (CharacterPicListFragment.hasSelected.contains(true)) {
                         CharacterPicListFragment.downLoadFab.apply {
-                            text = "已选择" + CharacterPicListFragment.hasSelected.filter {
-                                it
-                            }.size.toString()
+                            text = parentFragment.resources.getString(
+                                R.string.select_pic_count,
+                                CharacterPicListFragment.hasSelected.filter { it }.size
+                            )
                         }
                     } else {
                         CharacterPicListFragment.downLoadFab.apply {

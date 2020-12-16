@@ -37,7 +37,7 @@ class CrashUtil private constructor() {
             builder.setPositiveButton(
                 "复制异常信息"
             ) { dl, which ->
-                ClipboardUtli.add(error + "\n" + e.stackTraceToString())
+                ClipboardUtil.add(error + "\n" + e.stackTraceToString())
                 dl.dismiss()
             }
             builder.setNegativeButton(

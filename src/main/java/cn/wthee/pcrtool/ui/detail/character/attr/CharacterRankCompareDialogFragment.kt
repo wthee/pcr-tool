@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.character
+package cn.wthee.pcrtool.ui.detail.character.attr
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,8 +13,6 @@ import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
-import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrFragment
-import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.RankSelectBtnsHelper
 import cn.wthee.pcrtool.utils.getRankColor

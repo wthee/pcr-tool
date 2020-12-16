@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/xm_padding"
-    tools:context=".ui.detail.character.CharacterRankCompareFragment">
+    tools:context=".ui.detail.character.attr.CharacterRankCompareFragment">
 
 
     <include

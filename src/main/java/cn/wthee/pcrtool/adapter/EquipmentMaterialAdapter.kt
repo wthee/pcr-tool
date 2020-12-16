@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 
 class EquipmentMaterialAdapter(
-    private val partentBinding: FragmentEquipmentDetailsBinding,
+    private val parentBinding: FragmentEquipmentDetailsBinding,
     private val viewModel: EquipmentDetailsViewModel
 ) :
     ListAdapter<EquipmentMaterial, EquipmentMaterialAdapter.ViewHolder>(MaterialDiffCallback()) {
@@ -72,24 +72,24 @@ class EquipmentMaterialAdapter(
                 root.setOnClickListener {
                     EquipmentDetailsDialogFragment.materialClickPosition = absoluteAdapterPosition
                     notifyDataSetChanged()
-                    partentBinding.progressBar.visibility = View.VISIBLE
+                    parentBinding.progressBar.visibility = View.VISIBLE
                     //掉落地区
                     MainScope().launch {
                         //显示当前查看掉落的装备名称
-                        partentBinding.materialName.visibility = View.VISIBLE
-                        partentBinding.materialTip.visibility = View.VISIBLE
-                        partentBinding.materialName.text = info.name
+                        parentBinding.materialName.visibility = View.VISIBLE
+                        parentBinding.materialTip.visibility = View.VISIBLE
+                        parentBinding.materialName.text = info.name
                         //掉落列表
                         val data = viewModel.getDropInfos(info.id)
                         val adapter = EquipmentDropAdapter()
-                        partentBinding.equipDrops.adapter = adapter
+                        parentBinding.equipDrops.adapter = adapter
                         //动态限制只有一个列表可滚动
-                        partentBinding.equipDrops.isNestedScrollingEnabled = true
-                        partentBinding.material.isNestedScrollingEnabled = false
+                        parentBinding.equipDrops.isNestedScrollingEnabled = true
+                        parentBinding.material.isNestedScrollingEnabled = false
                         adapter.submitList(data) {
-                            partentBinding.progressBar.visibility = View.INVISIBLE
+                            parentBinding.progressBar.visibility = View.INVISIBLE
                         }
-                        partentBinding.equipDrops.setItemViewCacheSize(50)
+                        parentBinding.equipDrops.setItemViewCacheSize(50)
                     }
                 }
             }

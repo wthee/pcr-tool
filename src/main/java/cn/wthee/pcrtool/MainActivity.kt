@@ -512,7 +512,7 @@ class MainActivity : AppCompatActivity() {
                 R.color.colorPrimary
             )
             MenuItemViewHelper(filter).setItem(
-                getString(R.string.filter),
+                getString(R.string.filter_sort),
                 R.drawable.ic_filter,
                 R.color.colorPrimary
             )

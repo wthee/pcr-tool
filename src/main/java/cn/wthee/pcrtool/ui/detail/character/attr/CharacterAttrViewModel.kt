@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.*
-import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
+import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ class CharacterAttrViewModel(
     //获取角色属性信息
     suspend fun getAttrs(unitId: Int, rank: Int, rarity: Int, lv: Int, ueLv: Int): Attr {
         try {
-            val rankData = characterRepository.getRankStutas(unitId, rank)
+            val rankData = characterRepository.getRankStatus(unitId, rank)
             val rarityData = characterRepository.getRarity(unitId, rarity)
             val ids = characterRepository.getEquipmentIds(unitId, rank).getAllIds()
             //计算指定rank星级下的角色属性
@@ -43,8 +43,8 @@ class CharacterAttrViewModel(
                 .add(Attr.setGrowthValue(rarityData).multiply(lv + rank))
             val eqs = arrayListOf<EquipmentMaxData>()
             ids.forEach {
-                if (it == UNKNOW_EQUIP_ID)
-                    eqs.add(EquipmentMaxData.unknow())
+                if (it == UNKNOWN_EQUIP_ID)
+                    eqs.add(EquipmentMaxData.unknown())
                 else
                     eqs.add(equipmentRepository.getEquipmentData(it))
             }
@@ -52,7 +52,7 @@ class CharacterAttrViewModel(
             equipments.postValue(eqs)
             //计算穿戴装备后属性
             eqs.forEach { eq ->
-                if (eq.equipmentId == UNKNOW_EQUIP_ID) return@forEach
+                if (eq.equipmentId == UNKNOWN_EQUIP_ID) return@forEach
                 info.add(eq.attr)
             }
             //专武
@@ -95,7 +95,7 @@ class CharacterAttrViewModel(
         }
     }
 
-    suspend fun isUnknow(id: Int): Boolean {
+    suspend fun isUnknown(id: Int): Boolean {
         try {
             characterRepository.getMaxRank(id)
             characterRepository.getMaxRarity(id)

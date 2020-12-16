@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.MyApplication
 /**
  * 剪切板
  */
-object ClipboardUtli {
+object ClipboardUtil {
 
     fun add(str: String) {
         val clipboardManager =

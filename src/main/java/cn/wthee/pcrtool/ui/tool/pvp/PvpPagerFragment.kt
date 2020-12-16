@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 /**
  * 竞技场角色ViewPager
  */
-class PvpPagerFragment : Fragment() {
+private const val POSITION = "positon"
+private val FLOAT = "float"
 
-    private val POSITION = "positon"
-    private val FLOAT = "float"
+class PvpPagerFragment : Fragment() {
 
     companion object {
         fun getInstance(position: Int, isFloatWindow: Boolean) =

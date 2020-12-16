@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.HorizontalMarginItemDecoration
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModel
+import cn.wthee.pcrtool.ui.detail.character.attr.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.Constants
@@ -78,7 +79,7 @@ class CharacterPagerFragment : Fragment() {
     private fun init() {
         //加载列表
         MainScope().launch {
-            val noData = characterAttrViewModel.isUnknow(uid)
+            val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
             fab = binding.characterFab
             viewPager.adapter =

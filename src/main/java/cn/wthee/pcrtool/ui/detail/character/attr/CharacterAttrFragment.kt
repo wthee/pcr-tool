@@ -223,7 +223,7 @@ class CharacterAttrFragment : Fragment() {
                     }
                     //点击跳转
                     setOnClickListener {
-                        if (equip.equipmentId != Constants.UNKNOW_EQUIP_ID) {
+                        if (equip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                             EquipmentDetailsDialogFragment.getInstance(equip)
                                 .show(parentFragmentManager, "details")
                         }

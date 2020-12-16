@@ -19,7 +19,7 @@ class CharacterSkillViewModel(
     }
 
     var skills = MutableLiveData<List<CharacterSkillInfo>>()
-    var acttackPattern = MutableLiveData<List<AttackPattern>>()
+    var atlPattern = MutableLiveData<List<AttackPattern>>()
     private var refresh = MutableLiveData<Boolean>()
     private var isLoading = MutableLiveData<Boolean>()
 
@@ -51,7 +51,7 @@ class CharacterSkillViewModel(
                 isLoading.postValue(false)
                 refresh.postValue(false)
                 skills.postValue(infos)
-                acttackPattern.postValue(pattern)
+                atlPattern.postValue(pattern)
             } catch (e: Exception) {
 
             }
@@ -65,7 +65,7 @@ class CharacterSkillViewModel(
         viewModelScope.launch {
             //技能循环
             val pattern = repository.getAttackPattern(id)
-            acttackPattern.postValue(pattern)
+            atlPattern.postValue(pattern)
         }
     }
 

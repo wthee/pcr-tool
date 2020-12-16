@@ -6,10 +6,7 @@ class ResponseData<T>(
     var status: Int = -1,
     var data: T?,
     var message: String
-) : Serializable {
-
-
-}
+) : Serializable
 
 fun <T> error(): ResponseData<T> = ResponseData(-1, null, "未正常获取数据，请重新查询~")
 

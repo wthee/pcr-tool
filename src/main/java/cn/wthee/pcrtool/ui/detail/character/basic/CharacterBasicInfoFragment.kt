@@ -228,7 +228,7 @@ class CharacterBasicInfoFragment : Fragment() {
             else
                 characterPro.actualName
             birth.text = requireActivity().resources.getString(
-                R.string.birth,
+                R.string.date_m_d,
                 characterPro.birthMonth,
                 characterPro.birthDay
             )

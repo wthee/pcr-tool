@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
-import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
+import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import java.io.Serializable
 
 //装备最大强化后属性
@@ -20,9 +20,9 @@ data class EquipmentMaxData(
     fun getDesc() = description.replace("\\n", "")
 
     companion object {
-        fun unknow() =
+        fun unknown() =
             EquipmentMaxData(
-                UNKNOW_EQUIP_ID,
+                UNKNOWN_EQUIP_ID,
                 "？？？",
                 "",
                 "",

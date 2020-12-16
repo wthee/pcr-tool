@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillViewModel.Compan
 import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillViewModel.Companion.iconType2
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
-import cn.wthee.pcrtool.utils.Constants.UNKNOW_EQUIP_ID
+import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteHelper
 import coil.load
@@ -46,7 +46,7 @@ class SkillLoopAdapter :
                 if (atkId == 1) {
                     name.text = "普攻"
                     name.setTextColor(ctx.getColor(R.color.colorAccent))
-                    pic.load(EQUIPMENT_URL + UNKNOW_EQUIP_ID + WEBP)
+                    pic.load(EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP)
                 } else {
                     //技能图标
                     val iconType = if (atkId == 1001 || atkId == 2001) {

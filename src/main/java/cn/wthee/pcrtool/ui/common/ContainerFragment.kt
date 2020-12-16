@@ -13,9 +13,10 @@ import cn.wthee.pcrtool.utils.Constants.UID
 /**
  * 底部弹窗容器
  */
-class ContainerFragment : CommonBasicDialogFragment() {
 
-    private val DIALOG = "dialog"
+private const val DIALOG = "dialog"
+
+class ContainerFragment : CommonBasicDialogFragment() {
 
     companion object {
         fun getInstance(uid: Int, page: PageType) =

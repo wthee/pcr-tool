@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.databinding.ItemNewsBinding
 import cn.wthee.pcrtool.ui.tool.news.NewsDetailDialogFragment
-import cn.wthee.pcrtool.utils.ClipboardUtli
+import cn.wthee.pcrtool.utils.ClipboardUtil
 
 
 class NewsAdapter(
@@ -56,7 +56,7 @@ class NewsAdapter(
                     ).show(fragmentManager, "detail$data.id")
                 }
                 root.setOnLongClickListener {
-                    ClipboardUtli.add(data.url)
+                    ClipboardUtil.add(data.url)
                     return@setOnLongClickListener true
                 }
             }

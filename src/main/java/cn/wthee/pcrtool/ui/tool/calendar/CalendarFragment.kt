@@ -32,10 +32,10 @@ class CalendarFragment : Fragment() {
     private var events = listOf<CalendarDay>()
     private var mYear = 0
     private var mMonth = 0
-    lateinit var minCal: Calendar
-    lateinit var maxCal: Calendar
-    lateinit var cal: Calendar
-    lateinit var job: Job
+    private lateinit var minCal: Calendar
+    private lateinit var maxCal: Calendar
+    private lateinit var cal: Calendar
+    private lateinit var job: Job
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -113,7 +113,8 @@ class CalendarFragment : Fragment() {
         val day = cal.get(Calendar.DAY_OF_MONTH)
         maxCal = cal
         //默认选中
-        binding.currentDate.text = "${month} 月 $day 日"
+        binding.currentDate.text =
+            resources.getString(R.string.date_m_d, month.toString(), day.toString())
         //列表
         adapter = CalendarEventAdapter()
         binding.events.adapter = adapter
@@ -173,7 +174,8 @@ class CalendarFragment : Fragment() {
             adapter.addHeaderAndSubmitList(eventData)
             binding.loading.root.visibility = View.GONE
             //设置标题
-            binding.currentDate.text = "$month 月 $dayOfMonth 日"
+            binding.currentDate.text =
+                resources.getString(R.string.date_m_d, month.toString(), dayOfMonth.toString())
             binding.events.smoothScrollToPosition(0)
         } else {
             ToastUtil.short("所选日期无活动信息~")

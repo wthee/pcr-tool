@@ -99,9 +99,18 @@
 
     </com.google.android.material.chip.ChipGroup>
 
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_height_1"
+        android:layout_height="@dimen/filter_scroller_height"
+        android:layout_marginTop="@dimen/xs_margin"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -114,9 +123,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab_love"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chips_stars"
@@ -149,9 +157,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_rarity"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chips_raritys"
@@ -184,9 +191,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_position"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chips_position"
@@ -233,9 +239,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/s_margin"
                 android:text="@string/atk_type"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chips_atk"
@@ -274,9 +279,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/s_margin"
                 android:text="@string/title_guide"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chips_guild"

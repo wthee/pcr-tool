@@ -76,7 +76,7 @@ object Constants {
 
     //默认值
     const val SORT_ASC = false
-    const val UNKNOW_EQUIP_ID = 999999
+    const val UNKNOWN_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在下载数据..."
     const val NOTICE_TITLE_ERROR = "数据信息获取失败"
     const val NOTICE_TOAST_SUCCESS = "数据更新完成"

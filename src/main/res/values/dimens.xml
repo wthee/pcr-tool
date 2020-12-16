@@ -3,15 +3,13 @@
     <dimen name="card_radius">6dp</dimen>
     <dimen name="page_radius">10dp</dimen>
     <dimen name="menu_item_card_radius">12dp</dimen>
-    <dimen name="loading_dialog_width">100dp</dimen>
     <dimen name="loading_dialog_height">80dp</dimen>
     <dimen name="desc_height">70dp</dimen>
     <dimen name="card_height">150dp</dimen>
     <dimen name="menu_item_card_height">130dp</dimen>
     <dimen name="small_card_height">60dp</dimen>
     <dimen name="news_card_height">100dp</dimen>
-    <dimen name="card_height_1">220dp</dimen>
-    <dimen name="calendar_height">360dp</dimen>
+    <dimen name="filter_scroller_height">250dp</dimen>
     <dimen name="float_window_width">233dp</dimen>
     <!-- icon-->
     <dimen name="m_icon">16dp</dimen>
@@ -24,7 +22,7 @@
     <dimen name="big_icon">64dp</dimen>
     <dimen name="character_icon_size">64dp</dimen>
 
-    <!-- magrin & padding-->
+    <!-- margin & padding-->
     <dimen name="xs_margin">3dp</dimen>
     <dimen name="s_margin">6dp</dimen>
     <dimen name="m_margin">9dp</dimen>

@@ -49,7 +49,7 @@ class CharacterSkillLoopDialogFragment : CommonBasicDialogFragment() {
 
         viewModel.getCharacterSkillLoops(uid)
         //技能动作循环
-        viewModel.acttackPattern.observe(viewLifecycleOwner, {
+        viewModel.atlPattern.observe(viewLifecycleOwner, {
             val loops = arrayListOf<SkillLoop>()
             if (it.size > 1) {
                 loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))

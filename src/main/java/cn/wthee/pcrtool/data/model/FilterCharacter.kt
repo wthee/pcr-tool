@@ -58,7 +58,7 @@ class FilterCharacter(
         this.guild = "全部"
     }
 
-    fun getPositon() = when (this.positon) {
+    fun position() = when (this.positon) {
         1 -> arrayListOf(0, 299)
         2 -> arrayListOf(300, 599)
         3 -> arrayListOf(600, 9999)

@@ -17,10 +17,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 /**
  * 公告详情
  */
+private const val REGION = "region"
+private const val NEWSID = "news_id"
+private const val URL = "url"
+
 class NewsDetailDialogFragment : BottomSheetDialogFragment() {
-    private val REGION = "region"
-    private val NEWSID = "news_id"
-    private val URL = "url"
 
     private var region = 0
     private var newsId = 0
@@ -44,7 +45,6 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
         binding = FragmentToolNewsDetailBinding.inflate(inflater, container, false)
         binding.apply {
             openBrowse.setOnClickListener {
-//                ClipboardUtli.add(url)
                 BrowserUtil.open(requireContext(), url)
             }
             fabTop.setOnClickListener {
@@ -54,7 +54,7 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
             webView.settings.apply {
                 domStorageEnabled = true
                 javaScriptEnabled = true
-                useWideViewPort = true //将图片调整到适合webview的大小
+                useWideViewPort = true //将图片调整到适合webView的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
                 javaScriptCanOpenWindowsAutomatically = true
             }

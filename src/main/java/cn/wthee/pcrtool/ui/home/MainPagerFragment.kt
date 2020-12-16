@@ -56,11 +56,11 @@ class MainPagerFragment : Fragment() {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         prepareTransitions()
-        sethandler()
+        setHandler()
         return binding.root
     }
 
-    private fun sethandler() {
+    private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
             when (it.what) {
@@ -166,7 +166,7 @@ class MainPagerFragment : Fragment() {
             .setMainToolbar(getString(R.string.app_name))
         //tab 初始化
         tabLayout = binding.layoutTab
-        //绑定tablayout
+        //绑定tabLayout
         TabLayoutMediator(
             tabLayout,
             viewPager2

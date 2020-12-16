@@ -19,8 +19,8 @@ class CharacterRepository(private val characterDao: CharacterDao) {
         sortType.value,
         if (asc) "asc" else "desc",
         name,
-        filter.getPositon()[0],
-        filter.getPositon()[1],
+        filter.position()[0],
+        filter.position()[1],
         filter.atk,
         filter.guild,
         if (filter.all) 1 else 0,
@@ -32,8 +32,8 @@ class CharacterRepository(private val characterDao: CharacterDao) {
     suspend fun getInfoAndDataCount(name: String, filter: FilterCharacter) =
         characterDao.getInfoAndDataCount(
             name,
-            filter.getPositon()[0],
-            filter.getPositon()[1],
+            filter.position()[0],
+            filter.position()[1],
             filter.atk,
             filter.guild,
             if (filter.all) 1 else 0,
@@ -53,7 +53,7 @@ class CharacterRepository(private val characterDao: CharacterDao) {
         characterDao.getRankEquipment(unitId, rank)
 
     //角色Rank属性状态
-    suspend fun getRankStutas(unitId: Int, rank: Int) = characterDao.getRankStatus(unitId, rank)
+    suspend fun getRankStatus(unitId: Int, rank: Int) = characterDao.getRankStatus(unitId, rank)
 
     //角色星级信息
     suspend fun getRarity(unitId: Int, rarity: Int) = characterDao.getRarity(unitId, rarity)

@@ -120,7 +120,7 @@ dependencies {
     def work_version = "2.4.0"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
-    //from lisbs
+    //from libs
     implementation files('libs/commons-compress-1.19.jar')
     implementation files('libs/dec-0.1.2.jar')
 }

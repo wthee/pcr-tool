@@ -20,9 +20,11 @@ import kotlinx.coroutines.launch
 /**
  * 角色技能页面
  */
+
+private const val DIALOG = "isDialog"
+
 class CharacterSkillFragment : Fragment() {
 
-    private val DIALOG = "isDialog"
 
     companion object {
         fun getInstance(uid: Int, isDialog: Boolean = false) =
