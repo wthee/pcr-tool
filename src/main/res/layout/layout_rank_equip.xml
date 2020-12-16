@@ -7,8 +7,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic6"
-        android:layout_width="@dimen/big_icon"
-        android:layout_height="@dimen/big_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:scaleType="fitCenter"
@@ -19,8 +19,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic3"
-        android:layout_width="@dimen/big_icon"
-        android:layout_height="@dimen/big_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
         android:scaleType="fitCenter"
@@ -31,8 +31,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic5"
-        android:layout_width="@dimen/big_icon"
-        android:layout_height="@dimen/big_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginTop="@dimen/l_margin"
         android:layout_marginBottom="@dimen/l_margin"
@@ -47,8 +47,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic2"
-        android:layout_width="@dimen/big_icon"
-        android:layout_height="@dimen/big_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:layout_marginEnd="@dimen/xm_margin"
         android:layout_marginTop="@dimen/l_margin"
         android:layout_marginBottom="@dimen/l_margin"
@@ -64,8 +64,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic4"
-        android:layout_width="@dimen/big_icon"
-        android:layout_height="@dimen/big_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:layout_margin="@dimen/l_margin"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
@@ -77,8 +77,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/pic1"
-        android:layout_width="@dimen/big_icon"
-        android:layout_height="@dimen/big_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:layout_margin="@dimen/l_margin"
         android:adjustViewBounds="true"
         android:foreground="?android:attr/selectableItemBackgroundBorderless"
@@ -100,16 +100,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/pic5"
         app:layout_constraintTop_toTopOf="@id/pic5" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/rank_compare"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rank_compare"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@id/rank_btns"
-        app:layout_constraintStart_toStartOf="@id/rank_btns"
-        app:layout_constraintTop_toBottomOf="@id/rank_btns" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

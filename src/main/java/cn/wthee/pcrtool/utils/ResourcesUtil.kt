@@ -4,6 +4,9 @@ import android.content.res.Resources
 import androidx.core.content.res.ResourcesCompat
 import cn.wthee.pcrtool.MyApplication
 
+/**
+ * 应用内资源获取
+ */
 object ResourcesUtil {
 
     private val resource: Resources = MyApplication.context.resources

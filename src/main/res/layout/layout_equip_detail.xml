@@ -24,8 +24,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
-        android:layout_width="@dimen/big_icon"
-        android:layout_height="@dimen/big_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/m_margin"
         android:scaleType="fitCenter"
@@ -48,7 +48,7 @@
         tools:text="@string/test" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/attrs"
+        android:id="@+id/equip_attrs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
@@ -72,7 +72,7 @@
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ue_lv"
-        app:layout_constraintTop_toBottomOf="@id/attrs"
+        app:layout_constraintTop_toBottomOf="@id/equip_attrs"
         app:layout_constraintWidth_percent="0.5"
         tools:visibility="visible" />
 

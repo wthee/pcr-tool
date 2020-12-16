@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.ui.detail.equipment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import cn.wthee.pcrtool.data.EquipmentRepository
+import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 
 class EquipmentDetailsViewModelFactory(
     private val equipmentRepository: EquipmentRepository

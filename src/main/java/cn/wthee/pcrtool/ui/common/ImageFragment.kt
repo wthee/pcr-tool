@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentImageBinding
-import cn.wthee.pcrtool.ui.detail.character.CharacterPicListFragment
+import cn.wthee.pcrtool.ui.detail.character.basic.CharacterPicListFragment
 import coil.load
 
-
+/**
+ * 图片展示页面
+ */
 class ImageFragment : Fragment() {
 
     private val URL = "url"

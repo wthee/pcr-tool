@@ -4,11 +4,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.CharacterDao
-import cn.wthee.pcrtool.data.EquipmentDao
-import cn.wthee.pcrtool.data.EventDao
-import cn.wthee.pcrtool.data.GachaDao
-import cn.wthee.pcrtool.data.entity.*
+import cn.wthee.pcrtool.data.db.dao.CharacterDao
+import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.dao.EventDao
+import cn.wthee.pcrtool.data.db.dao.GachaDao
+import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
 
 
@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         CharacterData::class,
         CharacterPromotion::class,
         CharacterPromotionStatus::class,
+        CharacterExperience::class,
         CharacterRarity::class,
         CharacterSkillData::class,
         EnemyRewardData::class,
@@ -34,10 +35,8 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         SkillAction::class,
         SkillData::class,
         WaveGroupData::class,
-        CharacterExperience::class,
         AttackPattern::class,
         GuildData::class,
-        CharacterExperienceTeam::class,
         CharacterComments::class,
         GachaData::class,
         GachaExchange::class,
@@ -48,7 +47,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         EventStoryDetail::class,
         EventTopAdv::class,
     ],
-    version = 31,
+    version = 40,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -57,12 +56,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
-
+    
     companion object {
-
+    
         @Volatile
         private var instance: AppDatabase? = null
-
+    
         fun getInstance(): AppDatabase {
             return instance ?: synchronized(this) {
                 instance

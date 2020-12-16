@@ -74,9 +74,9 @@
         tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/drops"
+        android:id="@+id/equip_drops"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorWhite"
         android:focusable="true"
         android:orientation="vertical"

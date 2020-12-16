@@ -4,12 +4,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.CharacterDao
-import cn.wthee.pcrtool.data.EquipmentDao
-import cn.wthee.pcrtool.data.EventDao
-import cn.wthee.pcrtool.data.GachaDao
-import cn.wthee.pcrtool.data.entity.*
-import cn.wthee.pcrtool.data.entityjp.*
+import cn.wthee.pcrtool.data.db.dao.CharacterDao
+import cn.wthee.pcrtool.data.db.dao.EquipmentDao
+import cn.wthee.pcrtool.data.db.dao.EventDao
+import cn.wthee.pcrtool.data.db.dao.GachaDao
+import cn.wthee.pcrtool.data.db.entity.*
+import cn.wthee.pcrtool.data.db.entityjp.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
 
 
@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         CharacterDataJP::class,
         CharacterPromotion::class,
         CharacterPromotionStatus::class,
+        CharacterExperience::class,
         CharacterRarity::class,
         CharacterSkillDataJP::class,
         EnemyRewardData::class,
@@ -38,7 +39,6 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         CharacterExperience::class,
         AttackPattern::class,
         GuildData::class,
-        CharacterExperienceTeam::class,
         CharacterComments::class,
         GachaDataJP::class,
         GachaExchangeJP::class,
@@ -49,7 +49,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         EventStoryDetail::class,
         EventTopAdvJP::class,
     ],
-    version = 31,
+    version = 40,
     exportSchema = false
 )
 abstract class AppDatabaseJP : RoomDatabase() {
@@ -58,12 +58,12 @@ abstract class AppDatabaseJP : RoomDatabase() {
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
-
+    
     companion object {
-
+    
         @Volatile
         private var instance: AppDatabaseJP? = null
-
+    
         fun getInstance(): AppDatabaseJP {
             return instance ?: synchronized(this) {
                 instance

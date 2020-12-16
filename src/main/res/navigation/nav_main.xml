@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/containerFragment"
-        android:name="cn.wthee.pcrtool.MainPagerFragment"
+        android:name="cn.wthee.pcrtool.ui.home.MainPagerFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_character_list">
         <action
@@ -80,10 +80,10 @@
         <action
             android:id="@+id/action_characterPagerFragment_to_characterPicListFragment"
             app:destination="@id/characterPicListFragment"
-            app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit"
-            app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
+            app:enterAnim="@anim/fragment_enter_pic"
+            app:exitAnim="@anim/fragment_exit_pic"
+            app:popEnterAnim="@anim/fragment_popenter_pic"
+            app:popExitAnim="@anim/fragment_popexit_pic" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -108,11 +108,11 @@
         android:label="ToolGachaFragment" />
     <fragment
         android:id="@+id/characterPicListFragment"
-        android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPicListFragment"
+        android:name="cn.wthee.pcrtool.ui.detail.character.basic.CharacterPicListFragment"
         android:label="CharacterPicListFragment" />
     <fragment
         android:id="@+id/toolNewsFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.news.NewsFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment"
         android:label="fragment_tool_news"
         tools:layout="@layout/fragment_tool_news" />
     <fragment

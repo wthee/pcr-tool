@@ -14,7 +14,9 @@ import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
 import cn.wthee.pcrtool.utils.BrowserUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-
+/**
+ * 公告详情
+ */
 class NewsDetailDialogFragment : BottomSheetDialogFragment() {
     private val REGION = "region"
     private val NEWSID = "news_id"

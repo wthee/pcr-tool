@@ -3,6 +3,9 @@ package cn.wthee.pcrtool.utils
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.LayoutRankSelectBinding
 
+/**
+ * Rank 选择
+ */
 class RankSelectBtnsHelper(
     private val binding: LayoutRankSelectBinding
 ) {

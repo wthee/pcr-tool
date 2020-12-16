@@ -7,7 +7,9 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.get
 import cn.wthee.pcrtool.R
 
-//星级选择
+/**
+ * 星级选择
+ */
 object StarUtil {
 
     //显示星数

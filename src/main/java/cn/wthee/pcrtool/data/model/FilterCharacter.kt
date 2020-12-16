@@ -11,6 +11,7 @@ class FilterCharacter(
     var all: Boolean,
     var positon: Int,
     var atk: Int,
+    var r6: Boolean,
     var guild: String
 ) : Serializable {
     var starIds = arrayListOf<Int>()
@@ -50,8 +51,10 @@ class FilterCharacter(
 
 
     fun initData() {
+        this.all = true
         this.positon = 0
         this.atk = 0
+        this.r6 = false
         this.guild = "全部"
     }
 

@@ -7,6 +7,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+/**
+ * Retrofit2 创建服务
+ */
 object ApiHelper {
 
     fun downloadClientBuild(listener: DownloadListener): OkHttpClient {

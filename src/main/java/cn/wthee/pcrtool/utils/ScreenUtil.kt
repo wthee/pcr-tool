@@ -3,7 +3,9 @@ package cn.wthee.pcrtool.utils
 import android.util.DisplayMetrics
 import cn.wthee.pcrtool.MyApplication
 
-
+/**
+ * 屏幕参数获取
+ */
 object ScreenUtil {
 
     private fun getDm(): DisplayMetrics {

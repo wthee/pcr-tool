@@ -69,8 +69,8 @@
             app:summary="@string/data_from_hint"
             app:title="@string/data_from">
             <intent
-                app:action="android.intent.action.VIEW"
-                app:data="https://redive.estertion.win/" />
+                android:action="android.intent.action.VIEW"
+                android:data="https://redive.estertion.win/" />
         </Preference>
 
         <Preference

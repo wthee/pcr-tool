@@ -1,16 +1,23 @@
 package cn.wthee.pcrtool.utils
 
+/**
+ * 常量
+ */
 object Constants {
 
     //图片格式
     const val WEBP = ".webp"
 
-    //接口地址
+    //图片资源地址
     private const val RESOURCE_URL = "http://wthee.xyz/resource/"
-    const val DATABASE_URL = "http://wthee.xyz/db/"
-    const val API_URL = "http://wthee.xyz:8847/api/"
 
-    //数据库中版
+    //数据库资源地址
+    const val DATABASE_URL = "http://wthee.xyz/db/"
+
+    //接口正式地址
+    const val API_URL = "http://wthee.xyz:8846/api/"
+
+    //数据库
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
     const val DATABASE_Name_JP = "redive_jp.db"
     const val DATABASE_WAL_JP = "redive_jp.db-wal"
@@ -24,6 +31,7 @@ object Constants {
 
     //角色卡片接口
     const val CHARACTER_URL = RESOURCE_URL + "card/profile/"
+    const val CHARACTER_FULL_URL = RESOURCE_URL + "card/full/"
 
     //现实角色卡片接口
     const val Reality_CHARACTER_URL = RESOURCE_URL + "card/actual_profile/"
@@ -81,6 +89,7 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
+    const val R6ID = "r6id"
 
     val ATTR = arrayListOf(
         "HP",
@@ -103,6 +112,18 @@ object Constants {
     )
 
     val errorIDs = arrayListOf(
-        101301, 105401, 101501, 101001, 102201, 102801, 103801, 104501, 104601
+        101001,
+        101301,
+        101501,
+        102201,
+        102801,
+        103801,
+        104501,
+        104601,
+        105401,
+    )
+
+    val notExistsIDs = arrayListOf(
+        109731, 109831, 109931,
     )
 }

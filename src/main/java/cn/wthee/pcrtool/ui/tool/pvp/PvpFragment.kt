@@ -13,18 +13,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.PvpCharacterAdapter
-import cn.wthee.pcrtool.adapters.viewpager.PvpCharacterPagerAdapter
-import cn.wthee.pcrtool.data.view.PvpCharacterData
-import cn.wthee.pcrtool.data.view.getDefault
+import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
+import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.db.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
-import cn.wthee.pcrtool.ui.main.CharacterViewModel
+import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
-
+/**
+ * 竞技场查询
+ */
 class PvpFragment : Fragment() {
 
     companion object {

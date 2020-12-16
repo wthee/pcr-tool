@@ -8,7 +8,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
-
+/**
+ * 文件路径获取等
+ */
 object FileUtil {
 
     //数据库所在文件夹

@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 
-
+/**
+ * 浏览器打开
+ */
 object BrowserUtil {
 
     fun open(context: Context, url: String) {

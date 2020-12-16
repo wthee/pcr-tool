@@ -2,21 +2,23 @@ package cn.wthee.pcrtool.utils
 
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.CharacterRepository
-import cn.wthee.pcrtool.data.EquipmentRepository
-import cn.wthee.pcrtool.data.EventRepository
-import cn.wthee.pcrtool.data.GachaRepository
+import cn.wthee.pcrtool.data.db.repository.CharacterRepository
+import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
+import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.database.AppDatabaseJP
-import cn.wthee.pcrtool.ui.detail.character.CharacterAttrViewModelFactory
-import cn.wthee.pcrtool.ui.detail.character.CharacterSkillViewModelFactory
+import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModelFactory
+import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
-import cn.wthee.pcrtool.ui.main.CharacterViewModelFactory
-import cn.wthee.pcrtool.ui.main.EquipmentViewModelFactory
+import cn.wthee.pcrtool.ui.home.CharacterViewModelFactory
+import cn.wthee.pcrtool.ui.home.EquipmentViewModelFactory
 import cn.wthee.pcrtool.ui.tool.event.EventViewModelFactory
 import cn.wthee.pcrtool.ui.tool.gacha.GachaViewModelFactory
 
-
+/**
+ * viewModel
+ */
 object InjectorUtil {
     private fun getType() =
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)

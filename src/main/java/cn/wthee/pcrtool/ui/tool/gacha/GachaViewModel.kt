@@ -3,8 +3,8 @@ package cn.wthee.pcrtool.ui.tool.gacha
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.GachaRepository
-import cn.wthee.pcrtool.data.view.GachaInfo
+import cn.wthee.pcrtool.data.db.repository.GachaRepository
+import cn.wthee.pcrtool.data.db.view.GachaInfo
 import kotlinx.coroutines.launch
 
 

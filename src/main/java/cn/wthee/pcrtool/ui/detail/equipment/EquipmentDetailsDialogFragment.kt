@@ -8,16 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.EquipmentAttrAdapter
-import cn.wthee.pcrtool.adapters.EquipmentMaterialAdapter
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
+import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import coil.load
 
+/**
+ * 装备详情页面
+ */
 class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
 
     private val EQUIP = "equip"
@@ -79,13 +82,13 @@ class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
                 desc.text = equip.getDesc()
                 //属性词条
                 val adapter = EquipmentAttrAdapter()
-                attrs.adapter = adapter
+                equipAttrs.adapter = adapter
                 adapter.submitList(equip.attr.allNotZero())
             }
             //动态限制只有一个列表可滚动
             material.setOnTouchListener { _, _ ->
                 if (!material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = true
-                if (drops.isNestedScrollingEnabled) drops.isNestedScrollingEnabled = false
+                if (equipDrops.isNestedScrollingEnabled) equipDrops.isNestedScrollingEnabled = false
                 return@setOnTouchListener false
             }
         }

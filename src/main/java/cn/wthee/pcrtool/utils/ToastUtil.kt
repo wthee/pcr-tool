@@ -3,6 +3,9 @@ package cn.wthee.pcrtool.utils
 import android.widget.Toast
 import cn.wthee.pcrtool.MyApplication
 
+/**
+ * Toast 工具
+ */
 object ToastUtil {
 
     fun short(message: String?) {

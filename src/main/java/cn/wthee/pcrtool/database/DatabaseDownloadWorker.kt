@@ -13,9 +13,9 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.service.DatabaseService
-import cn.wthee.pcrtool.ui.main.CharacterListFragment
+import cn.wthee.pcrtool.data.network.model.DatabaseVersion
+import cn.wthee.pcrtool.data.network.service.DatabaseService
+import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope

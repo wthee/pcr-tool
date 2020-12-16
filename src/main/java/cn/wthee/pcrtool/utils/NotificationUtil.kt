@@ -9,6 +9,9 @@ import androidx.core.app.NotificationCompat
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 
+/**
+ * 发送通知
+ */
 object NotificationUtil {
 
     private const val channelId = "1"

@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapters.NewsAdapter
-import cn.wthee.pcrtool.adapters.load.LoaderStateAdapter
+import cn.wthee.pcrtool.adapter.NewsAdapter
+import cn.wthee.pcrtool.adapter.load.LoaderStateAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsListBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +18,9 @@ import kotlinx.coroutines.launch
 
 private const val REGION = "region"
 
+/**
+ * 公告列表
+ */
 class ToolNewsListFragment : Fragment() {
 
     private var region = 0

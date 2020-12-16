@@ -52,10 +52,11 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_left"
             app:borderWidth="0dp"
             app:fabSize="mini"
             android:visibility="gone"
+            tools:visibility="visible"
             app:tint="@color/colorPrimary" />
 
     </LinearLayout>
@@ -123,18 +124,11 @@
 
                 </LinearLayout>
 
-                <FrameLayout
-                    android:id="@+id/result_content_bg"
+                <include
+                    android:id="@+id/result_content"
+                    layout="@layout/fragment_tool_pvp_result"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorWhite">
-
-                    <include
-                        android:id="@+id/result_content"
-                        layout="@layout/fragment_tool_pvp_result"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </FrameLayout>
+                    android:layout_height="match_parent" />
 
 
             </FrameLayout>

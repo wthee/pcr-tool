@@ -3,8 +3,8 @@ package cn.wthee.pcrtool.ui.tool.event
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.EventRepository
-import cn.wthee.pcrtool.data.view.EventData
+import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.data.db.view.EventData
 import kotlinx.coroutines.launch
 
 

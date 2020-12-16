@@ -6,6 +6,9 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 
+/**
+ * 解压工具
+ */
 object UnzippedUtil {
 
     private const val BUFFER = 1024
