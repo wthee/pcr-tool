@@ -67,6 +67,9 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation "androidx.activity:activity-ktx:1.1.0"
 
+    //Bugly
+    implementation 'com.tencent.bugly:crashreport:3.2.3'
+
     //coil
     def coil_version = '1.1.0'
     implementation "io.coil-kt:coil:$coil_version"
