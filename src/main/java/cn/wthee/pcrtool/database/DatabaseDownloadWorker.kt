@@ -15,7 +15,7 @@ import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.DatabaseService
-import cn.wthee.pcrtool.ui.home.CharacterListFragment
+import cn.wthee.pcrtool.ui.home.MainPagerFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
@@ -118,14 +118,14 @@ class DatabaseDownloadWorker(
             DatabaseUpdater.updateLocalDataBaseVersion(version)
             //通知更新数据
             if (fromSetting == 0 || fromSetting == 1) {
-                CharacterListFragment.handler.sendEmptyMessage(2)
+                MainPagerFragment.handler.sendEmptyMessage(2)
             } else {
                 MainScope().launch {
                     ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                 }
             }
             //跳转
-            CharacterListFragment.handler.sendEmptyMessage(1)
+            MainPagerFragment.handler.sendEmptyMessage(1)
             return Result.success()
         } catch (e: Exception) {
             MainScope().launch {

@@ -47,6 +47,9 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
 //                ClipboardUtli.add(url)
                 BrowserUtil.open(requireContext(), url)
             }
+            fabTop.setOnClickListener {
+                scrollView.smoothScrollTo(0, 0)
+            }
             //设置
             webView.settings.apply {
                 domStorageEnabled = true
@@ -54,11 +57,6 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
                 useWideViewPort = true //将图片调整到适合webview的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
                 javaScriptCanOpenWindowsAutomatically = true
-                if (region == 3 || region == 4) {
-                    tip.visibility = View.VISIBLE
-                    blockNetworkImage = true
-                    loadsImagesAutomatically = false
-                }
             }
             webView.webChromeClient = WebChromeClient()
             webView.webViewClient = object : WebViewClient() {
@@ -78,8 +76,6 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    webView.settings.blockNetworkImage = false
-                    webView.settings.loadsImagesAutomatically = true
                     if (region == 2) {
                         //取消内部滑动
                         webView.loadUrl(
@@ -119,8 +115,8 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
                         )
                     }
                     loading.visibility = View.GONE
-                    tip.visibility = View.GONE
                     webView.visibility = View.VISIBLE
+                    fabTop.show()
                 }
             }
             //加载网页

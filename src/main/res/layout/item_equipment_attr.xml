@@ -6,8 +6,7 @@
     android:layout_marginStart="@dimen/xs_margin"
     android:layout_marginEnd="@dimen/xs_margin"
     android:layout_marginTop="@dimen/m_margin"
-    android:orientation="horizontal"
-    android:animateLayoutChanges="true">
+    android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_attr"

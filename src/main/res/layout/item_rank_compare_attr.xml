@@ -7,7 +7,6 @@
     android:paddingStart="@dimen/s_padding"
     android:paddingEnd="@dimen/s_padding"
     android:paddingBottom="@dimen/xs_padding"
-    android:animateLayoutChanges="true"
     android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView

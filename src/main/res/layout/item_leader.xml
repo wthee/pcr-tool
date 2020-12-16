@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/xs_margin"
     android:layout_marginTop="@dimen/m_margin"
-    android:layout_marginEnd="@dimen/xs_margin"
-    android:animateLayoutChanges="true">
+    android:layout_marginEnd="@dimen/xs_margin">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"

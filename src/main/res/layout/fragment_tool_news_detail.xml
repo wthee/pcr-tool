@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="@dimen/card_height"
-    android:orientation="vertical"
-    android:animateLayoutChanges="true">
+    android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/loading"
@@ -12,18 +12,6 @@
         android:layout_height="@dimen/progress_bar_size"
         android:layout_gravity="center"
         android:layout_margin="@dimen/xl_margin" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/l_margin"
-        android:gravity="center"
-        android:text="@string/news_load_tip"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/colorPrimary"
-        android:visibility="gone" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
@@ -34,7 +22,7 @@
             android:id="@+id/web_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
     </androidx.core.widget.NestedScrollView>
 
@@ -47,4 +35,22 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_browser"
         android:theme="@style/Ripple" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:visibility="invisible"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:layout_marginBottom="@dimen/m_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/function"
+        android:src="@drawable/ic_top"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/colorPrimary" />
+
 </FrameLayout>
