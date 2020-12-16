@@ -148,6 +148,7 @@ class CalendarFragment : Fragment() {
     //显示事件
     private fun showDayEvents(calendar: Calendar) {
         if (calendar.time <= maxCal.time && calendar.time >= minCal.time) {
+            binding.calendarView.setDate(cal)
             //获取年月日
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH) + 1
