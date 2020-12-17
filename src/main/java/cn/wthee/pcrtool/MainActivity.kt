@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         var sortAsc = Constants.SORT_ASC
         var canBack = true
         var pageLevel = 0
-        var mHeight = 0
+        var mFloatingWindowHeight = 0
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -86,20 +86,15 @@ class MainActivity : AppCompatActivity() {
         } else {
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
-                    // Set the content to appear under the system bars so that the
-                    // content doesn't resize when the system bars hide and show.
                     or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    // Hide the nav bar and status bar
-//                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN)
         }
     }
 
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        mHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        mFloatingWindowHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
             ScreenUtil.getHeight() - 48.dp
         else
             ScreenUtil.getWidth() - 48.dp
@@ -140,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         //绑定活动
         ActivityUtil.instance.currentActivity = this
         //悬浮穿高度
-        mHeight = ScreenUtil.getWidth() - 48.dp
+        mFloatingWindowHeight = ScreenUtil.getWidth() - 48.dp
     }
 
 

@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.gms.google-services'
 
 android {
 
@@ -68,17 +67,13 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.1.0"
 
     //Bugly
-    implementation 'com.tencent.bugly:crashreport:3.2.3'
+    implementation 'com.tencent.bugly:crashreport:3.3.3'
+    implementation 'com.tencent.bugly:nativecrashreport:3.7.7'
 
     //coil
     def coil_version = '1.1.0'
     implementation "io.coil-kt:coil:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"
-
-
-    // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:26.1.1')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //Lifecycle
     def lifecycle_version = "2.2.0"

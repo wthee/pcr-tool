@@ -11,7 +11,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import cn.wthee.pcrtool.MainActivity.Companion.mHeight
+import cn.wthee.pcrtool.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
@@ -62,7 +62,7 @@ class PvpService : Service() {
         character1 = intent?.getSerializableExtra("character1") as List<PvpCharacterData>
         character2 = intent.getSerializableExtra("character2") as List<PvpCharacterData>
         character3 = intent.getSerializableExtra("character3") as List<PvpCharacterData>
-        if (mHeight > 300.dp) mHeight = 300.dp
+        if (mFloatingWindowHeight > 300.dp) mFloatingWindowHeight = 300.dp
         //窗口设置
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager?
         params = WindowManager.LayoutParams().apply {
@@ -75,7 +75,7 @@ class PvpService : Service() {
             }
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
-            height = mHeight
+            height = mFloatingWindowHeight
             x = 6.dp
             y = 36.dp
         }
@@ -200,7 +200,7 @@ class PvpService : Service() {
                 search.visibility = View.VISIBLE
                 floatRight.visibility = View.VISIBLE
                 params!!.width = WindowManager.LayoutParams.WRAP_CONTENT
-                params!!.height = mHeight
+                params!!.height = mFloatingWindowHeight
             } else {
                 search.visibility = View.GONE
                 floatRight.visibility = View.GONE
