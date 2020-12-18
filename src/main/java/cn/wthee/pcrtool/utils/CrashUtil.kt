@@ -1,71 +1,44 @@
 package cn.wthee.pcrtool.utils
 
-import android.os.Handler
-import android.os.Looper
-import android.view.Gravity
-
 /**
- * 异常捕获
+ * 异常回调
  */
-class CrashUtil private constructor() {
+abstract class CrashHandleCallback {
+    /**
+     * Crash处理.
+     *
+     * @param crashType 错误类型：CRASHTYPE_JAVA，CRASHTYPE_NATIVE，CRASHTYPE_U3D ,CRASHTYPE_ANR
+     * @param errorType 错误的类型名
+     * @param errorMessage 错误的消息
+     * @param errorStack 错误的堆栈
+     * @return 返回额外的自定义信息上报
+     */
+    abstract fun onCrashHandleStart(
+        crashType: Int, errorType: String?,
+        errorMessage: String?, errorStack: String?
+    ): Map<String?, String?>?
 
-    private fun setCrashHandler() {
-        Handler(Looper.getMainLooper()).post {
-            while (true) {
-                try {
-                    Looper.loop()
-                } catch (e: Throwable) {
-                    showDialog(e)
-                }
-            }
-        }
-        Thread.setDefaultUncaughtExceptionHandler { t, e ->
-            showDialog(e)
-        }
-    }
-
-    private fun showDialog(e: Throwable) {
-        var error = e.message ?: return
-        if (error.contains("wthee.xyz"))
-            error = "无法访问服务器，请稍后重试~"
-        if (!error.contains("Remote key")) {
-            val builder = android.app.AlertDialog.Builder(ActivityUtil.instance.currentActivity)
-            val dialog = builder.create()
-            builder.setTitle("错误日志:")
-            builder.setMessage(error)
-            dialog.window?.attributes?.gravity = Gravity.BOTTOM
-            builder.setPositiveButton(
-                "复制异常信息"
-            ) { dl, which ->
-                ClipboardUtil.add(error + "\n" + e.stackTraceToString())
-                dl.dismiss()
-            }
-            builder.setNegativeButton(
-                "关闭"
-            ) { dl, which ->
-                dl.dismiss()
-            }
-            builder.setCancelable(false)
-            builder.show()
-        }
-    }
+    /**
+     * Crash处理.
+     *
+     * @param crashType 错误类型：CRASHTYPE_JAVA，CRASHTYPE_NATIVE，CRASHTYPE_U3D ,CRASHTYPE_ANR
+     * @param errorType 错误的类型名
+     * @param errorMessage 错误的消息
+     * @param errorStack 错误的堆栈
+     * @return byte[] 额外的2进制内容进行上报
+     */
+    abstract fun onCrashHandleStart2GetExtraDatas(
+        crashType: Int, errorType: String?,
+        errorMessage: String?, errorStack: String?
+    ): ByteArray?
 
     companion object {
-        private var mInstance: CrashUtil? = null
-        private val instance: CrashUtil?
-            get() {
-                if (mInstance == null) {
-                    synchronized(CrashUtil::class.java) {
-                        if (mInstance == null) {
-                            mInstance = CrashUtil()
-                        }
-                    }
-                }
-                return mInstance
-            }
-
-        fun init() {
-            instance!!.setCrashHandler()
-        }
+        const val CRASHTYPE_JAVA_CRASH = 0 // Java crash
+        const val CRASHTYPE_JAVA_CATCH = 1 // Java caught exception
+        const val CRASHTYPE_NATIVE = 2 // Native crash
+        const val CRASHTYPE_U3D = 3 // Unity error
+        const val CRASHTYPE_ANR = 4 // ANR
+        const val CRASHTYPE_COCOS2DX_JS = 5 // Cocos JS error
+        const val CRASHTYPE_COCOS2DX_LUA = 6 // Cocos Lua error
     }
 }

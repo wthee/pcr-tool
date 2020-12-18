@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import cn.wthee.pcrtool.utils.CrashUtil
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -12,6 +11,8 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.CachePolicy
 import coil.util.CoilUtils
 import com.tencent.bugly.Bugly
+import com.tencent.bugly.crashreport.CrashReport
+import com.tencent.bugly.crashreport.CrashReport.UserStrategy
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -22,8 +23,30 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        CrashUtil.init()
-        Bugly.init(this, "97f5e02e71", false)
+        val strategy = UserStrategy(this)
+        strategy.setCrashHandleCallback(object : CrashReport.CrashHandleCallback() {
+            override fun onCrashHandleStart(
+                crashType: Int, errorType: String,
+                errorMessage: String, errorStack: String
+            ): Map<String, String> {
+                //捕获异常
+                val map = LinkedHashMap<String, String>()
+                map["Key"] = "Value"
+                return map
+            }
+
+            override fun onCrashHandleStart2GetExtraDatas(
+                crashType: Int, errorType: String,
+                errorMessage: String, errorStack: String
+            ): ByteArray {
+                return try {
+                    "Extra data.".toByteArray(charset("UTF-8"))
+                } catch (e: Exception) {
+                    "Extra data.".toByteArray(charset("UTF-8"))
+                }
+            }
+        })
+        Bugly.init(this, "97f5e02e71", false, strategy)
     }
 
     override fun newImageLoader(): ImageLoader {

@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
+import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        CrashReport.testJavaCrash()
         //获取控件
         titleDatabase = findPreference("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
