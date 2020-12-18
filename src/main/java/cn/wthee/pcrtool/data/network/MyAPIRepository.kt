@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.network
 
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.getIds
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
@@ -47,7 +48,7 @@ object MyAPIRepository {
     }
 
     //官网信息
-    suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsData>> {
+    suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsTable>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)

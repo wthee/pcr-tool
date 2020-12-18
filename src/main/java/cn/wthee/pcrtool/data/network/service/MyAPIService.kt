@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.network.service
 
+import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.network.model.*
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -23,7 +24,7 @@ interface MyAPIService {
 
     //公告
     @POST("news")
-    suspend fun getNewsData(@Body body: RequestBody): ResponseData<List<NewsData>>
+    suspend fun getNewsData(@Body body: RequestBody): ResponseData<List<NewsTable>>
 
     //排行信息
     @POST("leader")

@@ -11,8 +11,8 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
+import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
  * 公告详情
@@ -21,7 +21,7 @@ private const val REGION = "region"
 private const val NEWSID = "news_id"
 private const val URL = "url"
 
-class NewsDetailDialogFragment : BottomSheetDialogFragment() {
+class NewsDetailDialogFragment : CommonBasicDialogFragment() {
 
     private var region = 0
     private var newsId = 0

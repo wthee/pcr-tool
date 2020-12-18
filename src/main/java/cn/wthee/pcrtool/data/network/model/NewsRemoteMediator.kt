@@ -24,8 +24,8 @@ class NewsRemoteMediator(
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, NewsTable>
     ): MediatorResult {
-
-        val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
+        val pageKeyData = getKeyPageData(loadType, state)
+        val page = when (pageKeyData) {
             is MediatorResult.Success -> {
                 return pageKeyData
             }
@@ -38,7 +38,7 @@ class NewsRemoteMediator(
             val response = MyAPIRepository.getNews(region, page).data
             val list = arrayListOf<NewsTable>()
             response?.forEach {
-                list.add(NewsTable("${region}-${it.id}", it.title, it.getTags(), it.url, it.date))
+                list.add(NewsTable("${region}-${it.id}", it.title, it.tags, it.url, it.date))
             }
             val isEndOfList = response?.isEmpty() ?: true
             database.withTransaction {
@@ -52,6 +52,7 @@ class NewsRemoteMediator(
                 val keys = list.map {
                     RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
+
                 database.getRemoteKeyDao().insertAll(keys)
                 database.getNewsDao().insertAll(list)
             }
@@ -94,10 +95,11 @@ class NewsRemoteMediator(
      * get the last remote key inserted which had the data
      */
     private suspend fun getLastRemoteKey(state: PagingState<Int, NewsTable>): RemoteKey? {
-        return state.pages
-            .lastOrNull { it.data.isNotEmpty() }
-            ?.data?.lastOrNull()
-            ?.let { news -> database.getRemoteKeyDao().remoteKeys(news.id) }
+        val lastData = state.pages.lastOrNull { it.data.isNotEmpty() }?.data
+        return lastData?.lastOrNull()
+            ?.let { news ->
+                database.getRemoteKeyDao().remoteKeys(news.id)
+            }
     }
 
     /**

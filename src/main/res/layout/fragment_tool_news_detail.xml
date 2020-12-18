@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minHeight="@dimen/card_height"
     android:orientation="vertical">
 
@@ -41,12 +41,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:visibility="invisible"
         android:layout_marginEnd="@dimen/m_margin"
         android:layout_marginBottom="@dimen/m_margin"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/function"
         android:src="@drawable/ic_top"
+        android:visibility="invisible"
         app:borderWidth="0dp"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -14,8 +14,10 @@ import kotlinx.coroutines.flow.Flow
 
 class NewsViewModel : ViewModel() {
 
+    val newsDao = AppNewsDatabase.getInstance().getNewsDao()
+
+
     fun getNewsCN(): Flow<PagingData<NewsTable>> {
-        val newsDao = AppNewsDatabase.getInstance().getNewsDao()
         return Pager(
             config = PagingConfig(pageSize = 10),
             remoteMediator = NewsRemoteMediator(2, AppNewsDatabase.getInstance())
@@ -25,7 +27,6 @@ class NewsViewModel : ViewModel() {
     }
 
     fun getNewsTW(): Flow<PagingData<NewsTable>> {
-        val newsDao = AppNewsDatabase.getInstance().getNewsDao()
         return Pager(
             config = PagingConfig(pageSize = 10),
             remoteMediator = NewsRemoteMediator(3, AppNewsDatabase.getInstance())
@@ -35,7 +36,6 @@ class NewsViewModel : ViewModel() {
     }
 
     fun getNewsJP(): Flow<PagingData<NewsTable>> {
-        val newsDao = AppNewsDatabase.getInstance().getNewsDao()
         return Pager(
             config = PagingConfig(pageSize = 10),
             remoteMediator = NewsRemoteMediator(4, AppNewsDatabase.getInstance())

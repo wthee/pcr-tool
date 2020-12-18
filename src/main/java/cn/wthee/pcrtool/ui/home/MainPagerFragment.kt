@@ -106,12 +106,10 @@ class MainPagerFragment : Fragment() {
                         getString(R.string.close_app_too),
                         object : DialogListener {
                             override fun onCancel(dialog: AlertDialog) {
-                                requireActivity().finish()
                                 exitProcess(0)
                             }
 
                             override fun onConfirm(dialog: AlertDialog) {
-                                requireActivity().finish()
                                 exitProcess(0)
                             }
                         }
