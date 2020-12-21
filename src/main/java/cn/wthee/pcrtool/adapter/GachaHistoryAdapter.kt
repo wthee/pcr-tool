@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
@@ -56,6 +57,13 @@ class GachaHistoryAdapter(
                 }"
                 //卡池描述
                 gachaDesc.text = gacha.getDesc()
+                if (gacha.getUnits().contains(0)) {
+                    gachaDesc.visibility = View.VISIBLE
+                    gachaIcons.visibility = View.GONE
+                } else {
+                    gachaDesc.visibility = View.GONE
+                    gachaIcons.visibility = View.VISIBLE
+                }
             }
         }
     }

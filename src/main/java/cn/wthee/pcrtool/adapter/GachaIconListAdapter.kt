@@ -17,7 +17,7 @@ import coil.load
 
 class GachaListAdapter(
     private val manager: FragmentManager
-) : ListAdapter<UnitData, GachaListAdapter.ViewHolder>(GachaListDiffCallback()) {
+) : ListAdapter<Int, GachaListAdapter.ViewHolder>(GachaListDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -34,24 +34,22 @@ class GachaListAdapter(
 
     inner class ViewHolder(private val binding: ItemCommonBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: UnitData) {
+        fun bind(uid: Int) {
             //设置数据
             binding.apply {
                 val itemParams = root.layoutParams
                 itemParams.width = RecyclerView.LayoutParams.WRAP_CONTENT
                 root.layoutParams = itemParams
                 //角色图片
-                val picUrl = Constants.UNIT_ICON_URL + (data.id + 30) + Constants.WEBP
+                val picUrl = Constants.UNIT_ICON_URL + (uid + 30) + Constants.WEBP
                 pic.load(picUrl) {
                     placeholder(R.drawable.unknown_gray)
                     error(R.drawable.error)
                 }
                 //角色名
                 name.visibility = View.GONE
-//                name.text = data.name
-//                name.setTextColor(ResourcesUtil.getColor(R.color.colorPrimary))
                 pic.setOnClickListener {
-                    ContainerFragment.getInstance(data.id, PageType.CAHRACTER_SKILL).show(
+                    ContainerFragment.getInstance(uid, PageType.CAHRACTER_SKILL).show(
                         manager,
                         "skill"
                     )
@@ -62,24 +60,19 @@ class GachaListAdapter(
 
 }
 
-private class GachaListDiffCallback : DiffUtil.ItemCallback<UnitData>() {
+private class GachaListDiffCallback : DiffUtil.ItemCallback<Int>() {
 
     override fun areItemsTheSame(
-        oldItem: UnitData,
-        newItem: UnitData
+        oldItem: Int,
+        newItem: Int
     ): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(
-        oldItem: UnitData,
-        newItem: UnitData
+        oldItem: Int,
+        newItem: Int
     ): Boolean {
         return oldItem == newItem
     }
 }
-
-data class UnitData(
-    val id: Int,
-    val name: String
-)
