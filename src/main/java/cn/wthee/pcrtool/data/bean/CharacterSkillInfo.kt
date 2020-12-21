@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.bean
 
 import cn.wthee.pcrtool.data.db.entity.SkillAction
 

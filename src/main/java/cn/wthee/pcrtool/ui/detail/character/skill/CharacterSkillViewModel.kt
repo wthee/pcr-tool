@@ -3,9 +3,9 @@ package cn.wthee.pcrtool.ui.detail.character.skill
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.data.bean.CharacterSkillInfo
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.repository.CharacterRepository
-import cn.wthee.pcrtool.data.model.CharacterSkillInfo
 import kotlinx.coroutines.launch
 
 

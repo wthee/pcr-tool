@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.data.model.int
+import cn.wthee.pcrtool.data.bean.AttrValue
+import cn.wthee.pcrtool.data.bean.int
 import cn.wthee.pcrtool.databinding.ItemEquipmentAttrBinding
 
 

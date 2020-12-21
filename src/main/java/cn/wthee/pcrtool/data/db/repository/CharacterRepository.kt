@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
+import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.data.db.dao.CharacterDao
-import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.enums.value
 

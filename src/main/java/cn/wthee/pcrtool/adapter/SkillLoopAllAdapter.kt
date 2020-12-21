@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.data.model.SkillLoop
+import cn.wthee.pcrtool.data.bean.SkillLoop
 import cn.wthee.pcrtool.databinding.ItemSkillLoopBinding
 
 

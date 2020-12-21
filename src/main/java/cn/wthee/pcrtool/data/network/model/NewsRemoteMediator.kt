@@ -52,7 +52,6 @@ class NewsRemoteMediator(
                 val keys = list.map {
                     RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
-
                 database.getRemoteKeyDao().insertAll(keys)
                 database.getNewsDao().insertAll(list)
             }

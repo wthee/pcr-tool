@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
-import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.utils.*
