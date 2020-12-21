@@ -110,7 +110,7 @@ class PvpService : Service() {
 
         binding.apply {
             //查询结果列表
-            adapter = PvpCharacterResultAdapter(activity)
+            adapter = PvpCharacterResultAdapter(activity, true)
             resultContent.pvpResultList.adapter = adapter
 
             resultContent.root.visibility = View.GONE

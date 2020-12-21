@@ -28,6 +28,7 @@
     <dimen name="m_margin">9dp</dimen>
     <dimen name="xm_margin">12dp</dimen>
     <dimen name="efab_margin">13dp</dimen>
+    <dimen name="pvp_liked_title_margin">22dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
     <dimen name="xs_padding">3dp</dimen>
@@ -47,4 +48,6 @@
     <dimen name="viewpager_next_item_visible">8dp</dimen>
     <dimen name="viewpager_current_item_horizontal_margin">14dp</dimen>
     <dimen name="fab_text_size">10sp</dimen>
+    <dimen name="fab_text_2">90dp</dimen>
+    <dimen name="fab_text_3">100dp</dimen>
 </resources>

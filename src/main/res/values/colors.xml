@@ -13,6 +13,7 @@
     <color name="colorFg">#15000000</color>
     <color name="colorBg">#FEFEFE</color>
     <color name="colorAlphaBlack">#75000000</color>
+    <color name="colorHalfAlpha">#50ffffff</color>
     <color name="alphaPrimary">#8E9CB1</color>
     <color name="color_map_n">@color/colorPrimary</color>
     <color name="color_map_h">#C94C5D</color>

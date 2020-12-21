@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 
 //角色技能信息
 @Entity(tableName = "unit_skill_data")
-data class CharacterSkillData(
+data class
+CharacterSkillData(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val unit_id: Int,
     @ColumnInfo(name = "union_burst") val union_burst: Int,

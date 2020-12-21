@@ -2,12 +2,10 @@ package cn.wthee.pcrtool.utils
 
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.db.repository.CharacterRepository
-import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
-import cn.wthee.pcrtool.data.db.repository.EventRepository
-import cn.wthee.pcrtool.data.db.repository.GachaRepository
+import cn.wthee.pcrtool.data.db.repository.*
 import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.database.AppDatabaseJP
+import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModelFactory
 import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
@@ -15,6 +13,7 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModelFactory
 import cn.wthee.pcrtool.ui.home.EquipmentViewModelFactory
 import cn.wthee.pcrtool.ui.tool.event.EventViewModelFactory
 import cn.wthee.pcrtool.ui.tool.gacha.GachaViewModelFactory
+import cn.wthee.pcrtool.ui.tool.pvp.PvpLikedViewModelFactory
 
 /**
  * viewModel
@@ -51,6 +50,12 @@ object InjectorUtil {
             } else {
                 AppDatabaseJP.getInstance().getGachaDao()
             }
+        )
+    }
+
+    private fun getPvpRepository(): PvpRepository {
+        return PvpRepository.getInstance(
+            AppPvpDatabase.getInstance().getPvpDao()
         )
     }
 
@@ -108,5 +113,12 @@ object InjectorUtil {
     fun provideEventViewModelFactory(): EventViewModelFactory {
         val repository = getEventRepository()
         return EventViewModelFactory(repository)
+    }
+
+    fun providePvpViewModelFactory(): PvpLikedViewModelFactory {
+        val repository = getPvpRepository()
+        return PvpLikedViewModelFactory(
+            repository
+        )
     }
 }

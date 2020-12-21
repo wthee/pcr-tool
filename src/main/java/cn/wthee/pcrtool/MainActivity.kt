@@ -15,7 +15,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEachIndexed
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
-import androidx.preference.PreferenceManager
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         var currentMainPage: Int = 0
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
-        lateinit var spSetting: SharedPreferences
         var sortType = SortType.SORT_DATE
         var sortAsc = Constants.SORT_ASC
         var canBack = true
@@ -131,7 +129,6 @@ class MainActivity : AppCompatActivity() {
         ).versionName
         //本地储存
         sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-        spSetting = PreferenceManager.getDefaultSharedPreferences(this)
         //绑定活动
         ActivityUtil.instance.currentActivity = this
         //悬浮穿高度

@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/m_padding"
+    android:paddingStart="@dimen/m_padding">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/atk_characters"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_margin"
-        android:layout_marginTop="@dimen/s_margin"
-        android:layout_marginBottom="@dimen/s_margin"
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/xs_margin"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.75"
         app:spanCount="5"
         tools:itemCount="5"
         tools:listitem="@layout/item_pvp_result_icon" />
@@ -35,10 +35,9 @@
         android:paddingEnd="@dimen/xs_padding"
         android:textColor="@color/colorPrimary"
         app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toTopOf="@id/down"
-        app:layout_constraintStart_toEndOf="@id/atk_characters"
-        app:layout_constraintTop_toTopOf="@id/atk_characters"
-        app:layout_constraintWidth_percent="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/atk_characters"
+        app:layout_constraintWidth_percent="0.25"
         tools:text="100" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -48,23 +47,23 @@
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="1"
-        android:paddingEnd="@dimen/xs_padding"
         android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/xs_padding"
         android:textColor="@color/red"
         app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="@id/atk_characters"
-        app:layout_constraintStart_toEndOf="@id/atk_characters"
-        app:layout_constraintTop_toBottomOf="@id/up"
-        app:layout_constraintWidth_percent="0.15"
+        app:layout_constraintStart_toEndOf="@id/up"
+        app:layout_constraintTop_toTopOf="@id/up"
+        app:layout_constraintWidth_percent="0.25"
         tools:text="10" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/star"
-        android:layout_width="@dimen/l_icon"
-        android:layout_height="@dimen/l_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/up"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="@dimen/m_icon"
+        android:layout_height="@dimen/m_icon"
+        android:src="@drawable/ic_loved"
         android:tint="@color/textGray"
-        android:src="@drawable/ic_loved" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/up" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

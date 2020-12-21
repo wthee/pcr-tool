@@ -83,6 +83,8 @@ class PvpCharacterAdapter(
                     val coil = Coil.imageLoader(MyApplication.context)
                     val request = ImageRequest.Builder(MyApplication.context)
                         .data(picUrl)
+                        .placeholder(R.drawable.unknown_gray)
+                        .error(R.drawable.unknown_gray)
                         .build()
                     MainScope().launch {
                         pic.setImageDrawable(coil.execute(request).drawable)

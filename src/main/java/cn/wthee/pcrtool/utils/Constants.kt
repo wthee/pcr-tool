@@ -28,6 +28,7 @@ object Constants {
     const val DATABASE_WAL = "redive_cn.db-wal"
     const val DATABASE_VERSION_URL = "last_version_cn.json"
     const val DATABASE_NEWS = "news.db"
+    const val DATABASE_PVP = "pvp.db"
 
     //角色卡片接口
     const val CHARACTER_URL = RESOURCE_URL + "card/profile/"

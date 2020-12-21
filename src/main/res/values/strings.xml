@@ -93,9 +93,10 @@
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历-国服</string>
     <string name="tool_pvp">竞技场</string>
+    <string name="tool_pvp_liked">竞技场-收藏</string>
     <string name="character">角色</string>
-    <string name="pvp_search">查询进攻队伍</string>
-    <string name="pvp_float">打开悬浮窗</string>
+    <string name="pvp_search">查询</string>
+    <string name="pvp_float">悬浮窗</string>
     <string name="game_version">切换数据</string>
     <string name="game_version_summary">可选择国服或日服数据</string>
     <string name="change_success">更新完成</string>

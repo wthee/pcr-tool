@@ -12,6 +12,7 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
@@ -84,6 +85,10 @@ class PvpFragment : Fragment() {
                 R.drawable.ic_pvp,
                 getString(R.string.tool_pvp)
             )
+            //收藏页面
+            pvpLike.setOnClickListener {
+                findNavController().navigate(R.id.action_toolPvpFragment_to_pvpLikedFragment)
+            }
             //悬浮窗
             pvpFloat.setOnClickListener {
                 //检查是否已经授予权限

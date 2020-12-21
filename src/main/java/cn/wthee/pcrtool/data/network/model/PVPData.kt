@@ -16,7 +16,33 @@ data class PvpData(
     val `private`: Boolean,
     val up: Int,
     val updated: String
-) : Serializable
+) : Serializable {
+
+    fun getAtkIdList(): List<Int> {
+        val ids = arrayListOf<Int>()
+        atk.forEach {
+            ids.add(it.id)
+        }
+        return ids
+    }
+
+    fun getAtkIdStr(): String {
+        var ids = ""
+        atk.forEach {
+            ids += "${it.id}-"
+        }
+        return ids
+    }
+
+    fun getDefIdStr(): String {
+        var ids = ""
+        def.forEach {
+            ids += "${it.id}-"
+        }
+        return ids
+    }
+
+}
 
 data class Atk(
     val equip: Boolean,
