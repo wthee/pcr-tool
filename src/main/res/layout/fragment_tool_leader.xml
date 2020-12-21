@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@drawable/background_color"
     android:orientation="vertical">
 
@@ -13,9 +14,10 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_weight="1"
         app:cardCornerRadius="@dimen/card_radius">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -101,10 +103,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/m_margin"
-                tools:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/all" />
+                app:layout_constraintTop_toBottomOf="@id/all"
+                tools:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/leader_list"
@@ -118,5 +120,23 @@
                 tools:listitem="@layout/item_leader" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_top"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fab_size"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/efab_margin"
+        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/back_today"
+        android:text="@string/back_top"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/fab_text_size"
+        app:borderWidth="0dp"
+        app:icon="@drawable/ic_top"
+        app:iconSize="@dimen/menu_icon"
+        app:iconTint="@color/colorPrimary" />
 
 </LinearLayout>

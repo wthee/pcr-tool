@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/s_padding"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            app:layout_constraintStart_toStartOf="@id/gacha_date"
+            app:layout_constraintStart_toStartOf="@id/gacha_name"
             app:layout_constraintTop_toBottomOf="@+id/gacha_name"
             tools:text="@string/app_name" />
 

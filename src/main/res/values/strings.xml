@@ -148,5 +148,6 @@
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
     <string name="unselect_pic">未选择图片</string>
+    <string name="back_top">回到顶部</string>
 
 </resources>
