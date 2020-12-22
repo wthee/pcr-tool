@@ -13,8 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.utils.*
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -32,12 +30,20 @@ class CharacterPicListFragment : Fragment() {
         var hasLoaded = arrayListOf(false, false, false, false)
         var hasSelected = arrayListOf(false, false, false, false)
         lateinit var downLoadFab: ExtendedFloatingActionButton
+
+        fun getInstance(uid: Int, r6Id: Int) = CharacterPicListFragment().apply {
+            arguments = Bundle().apply {
+                putInt(Constants.UID, uid)
+                putInt(Constants.R6ID, r6Id)
+            }
+        }
     }
 
     private lateinit var binding: FragmentCharacterPicListBinding
     private lateinit var urls: ArrayList<String>
     private lateinit var adapter: CharacterPicAdapter
-
+    private var uid = -1
+    private var r6Id = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +52,10 @@ class CharacterPicListFragment : Fragment() {
             scrimColor = Color.TRANSPARENT
             duration = resources.getInteger(R.integer.fragment_anim).toLong()
             setAllContainerColors(Color.TRANSPARENT)
+        }
+        requireArguments().apply {
+            uid = getInt(Constants.UID)
+            r6Id = getInt(Constants.R6ID)
         }
     }
 

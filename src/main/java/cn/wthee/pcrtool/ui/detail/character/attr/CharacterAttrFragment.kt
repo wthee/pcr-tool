@@ -13,8 +13,6 @@ import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
 import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
 import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.ui.home.EquipmentViewModel
@@ -30,12 +28,12 @@ import kotlinx.coroutines.launch
 class CharacterAttrFragment : Fragment() {
 
     companion object {
-        fun getInstance(uid: Int): CharacterAttrFragment {
-            val fragment = CharacterAttrFragment()
-            val bundle = Bundle()
-            bundle.putInt(UID, uid)
-            fragment.arguments = bundle
-            return fragment
+
+        fun getInstance(uid: Int, r6Id: Int) = CharacterAttrFragment().apply {
+            arguments = Bundle().apply {
+                putInt(UID, uid)
+                putInt(Constants.R6ID, r6Id)
+            }
         }
 
         var selRatity = 1
@@ -46,7 +44,7 @@ class CharacterAttrFragment : Fragment() {
         var uid = 0
     }
 
-
+    private var r6Id = -1
     private lateinit var binding: FragmentCharacterAttrInfoBinding
     private lateinit var attrAdapter: CharacterAttrAdapter
     private var selRank = 2
@@ -66,7 +64,10 @@ class CharacterAttrFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        uid = CharacterPagerFragment.uid
+        requireArguments().apply {
+            uid = getInt(UID)
+            r6Id = getInt(Constants.R6ID)
+        }
     }
 
     override fun onCreateView(

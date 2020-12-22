@@ -58,31 +58,11 @@ class CharacterListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
-        //公会列表
-        guilds = arrayListOf()
-        viewLifecycleOwner.lifecycleScope.launch {
-            guilds.add("全部")
-            val list = viewModel.getGuilds()
-            list.forEach {
-                guilds.add(it.guild_name)
-            }
-            guilds.add("？？？")
-            r6Ids = viewModel.getR6Ids()
-        }
         //加载数据
         init()
-        //刷新
-        binding.characterReset.apply {
-            setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
-            setColorSchemeResources(R.color.colorPrimary)
-            setOnRefreshListener {
-                reset()
-            }
-        }
         //监听数据变化
         setObserve()
-        //获取角色
-        viewModel.getCharacters(sortType, sortAsc, "")
+
         return binding.root
     }
 
@@ -99,10 +79,31 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
+        //获取角色
+        viewModel.getCharacters(sortType, sortAsc, "")
+        //公会列表
+        guilds = arrayListOf()
+        viewLifecycleOwner.lifecycleScope.launch {
+            guilds.add("全部")
+            val list = viewModel.getGuilds()
+            list.forEach {
+                guilds.add(it.guild_name)
+            }
+            guilds.add("？？？")
+            r6Ids = viewModel.getR6Ids()
+        }
         listAdapter = CharacterListAdapter(this@CharacterListFragment)
         characterList = binding.characterList
         binding.characterList.apply {
             adapter = listAdapter
+        }
+        //刷新
+        binding.characterReset.apply {
+            setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
+            setColorSchemeResources(R.color.colorPrimary)
+            setOnRefreshListener {
+                reset()
+            }
         }
     }
 

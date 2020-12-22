@@ -44,6 +44,13 @@ class EquipmentListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
+        init()
+        //绑定观察
+        setObserve()
+        return binding.root
+    }
+
+    private fun init() {
         binding.apply {
             list = binding.equipPage
             pageAdapter = EquipmentPageAdapter(parentFragmentManager)
@@ -57,8 +64,6 @@ class EquipmentListFragment : Fragment() {
                 }
             }
         }
-        //绑定观察
-        setObserve()
         //获取装备类型
         equipTypes = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -68,7 +73,6 @@ class EquipmentListFragment : Fragment() {
             }
         }
         viewModel.getEquips("")
-        return binding.root
     }
 
     private fun reset() {

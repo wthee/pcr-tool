@@ -34,13 +34,13 @@ import kotlinx.coroutines.launch
 class CharacterPagerFragment : Fragment() {
 
     companion object {
-        var uid = -1
-        var r6Id = -1
         lateinit var viewPager: ViewPager2
         lateinit var fab: ExtendedFloatingActionButton
 
     }
 
+    private var uid = -1
+    private var r6Id = -1
     private lateinit var binding: FragmentCharacterPagerBinding
     private val characterAttrViewModel =
         InjectorUtil.provideCharacterAttrViewModelFactory()
@@ -83,9 +83,8 @@ class CharacterPagerFragment : Fragment() {
             viewPager = binding.characterPager
             fab = binding.characterFab
             viewPager.adapter =
-                CharacterPagerAdapter(childFragmentManager, lifecycle, noData)
+                CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid, r6Id)
             viewPager.adjustViewPager(requireContext())
-//            viewPager.currentItem = 1
             viewPager.offscreenPageLimit = 3
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {

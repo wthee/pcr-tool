@@ -20,10 +20,11 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants.R6ID
+import cn.wthee.pcrtool.utils.Constants.UID
 import coil.imageLoader
 import coil.load
 import coil.request.ImageRequest
@@ -40,23 +41,26 @@ class CharacterBasicInfoFragment : Fragment() {
         lateinit var binding: FragmentCharacterBasicInfoBinding
         lateinit var characterPic: AppCompatImageView
 
-        @Volatile
-        private var instance: CharacterBasicInfoFragment? = null
-
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: CharacterBasicInfoFragment().also { instance = it }
+        fun getInstance(uid: Int, r6Id: Int) = CharacterBasicInfoFragment().apply {
+            arguments = Bundle().apply {
+                putInt(UID, uid)
+                putInt(R6ID, r6Id)
             }
+        }
     }
 
     private var uid = -1
+    private var r6Id = -1
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        uid = CharacterPagerFragment.uid
+        requireArguments().apply {
+            uid = getInt(UID)
+            r6Id = getInt(R6ID)
+        }
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
         exitTransition = Hold()
     }
@@ -169,9 +173,9 @@ class CharacterBasicInfoFragment : Fragment() {
                         extras
                     )
                     //移除旧的单例，避免viewpager2重新添加fragment时异常
-                    parentFragmentManager.beginTransaction()
-                        .remove(getInstance())
-                        .commit()
+//                    parentFragmentManager.beginTransaction()
+//                        .remove(getInstance())
+//                        .commit()
                 } catch (e: Exception) {
 
                 }
