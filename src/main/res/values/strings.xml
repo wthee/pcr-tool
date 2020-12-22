@@ -93,7 +93,8 @@
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历-国服</string>
     <string name="tool_pvp">竞技场</string>
-    <string name="tool_pvp_liked">竞技场-收藏</string>
+    <string name="tool_pvp_liked">收藏</string>
+    <string name="liked_count">已收藏： %d </string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_float">悬浮窗</string>
@@ -150,5 +151,8 @@
     <string name="back_today">回到今天</string>
     <string name="unselect_pic">未选择图片</string>
     <string name="back_top">回到顶部</string>
+    <string name="team_atk">进攻方</string>
+    <string name="team_def">防守方</string>
+    <string name="no_liked_data">无收藏信息~</string>
 
 </resources>

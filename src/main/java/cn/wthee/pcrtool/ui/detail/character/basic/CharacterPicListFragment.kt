@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.character.basic
 
 import android.Manifest
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
@@ -49,9 +48,7 @@ class CharacterPicListFragment : Fragment() {
         super.onCreate(savedInstanceState)
         //过渡
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            scrimColor = Color.TRANSPARENT
             duration = resources.getInteger(R.integer.fragment_anim).toLong()
-            setAllContainerColors(Color.TRANSPARENT)
         }
         requireArguments().apply {
             uid = getInt(Constants.UID)

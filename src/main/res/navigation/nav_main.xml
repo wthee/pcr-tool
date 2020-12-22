@@ -104,11 +104,7 @@
         tools:layout="@layout/fragment_tool_pvp">
         <action
             android:id="@+id/action_toolPvpFragment_to_pvpLikedFragment"
-            app:destination="@id/pvpLikedFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
+            app:destination="@id/pvpLikedFragment" />
     </fragment>
     <fragment
         android:id="@+id/toolGachaFragment"
@@ -135,6 +131,6 @@
         android:id="@+id/pvpLikedFragment"
         android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedFragment"
         android:label="fragment_pvp_liked"
-        tools:layout="@layout/fragment_pvp_liked" />
+        tools:layout="@layout/fragment_tool_pvp_liked" />
 
 </navigation>

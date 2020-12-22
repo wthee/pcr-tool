@@ -15,15 +15,14 @@ import cn.wthee.pcrtool.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.adapter.PvpLikedAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.database.DatabaseUpdater.getRegion
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.selects
-import cn.wthee.pcrtool.utils.ActivityUtil
-import cn.wthee.pcrtool.utils.NotificationUtil
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.dp
+import cn.wthee.pcrtool.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -167,6 +166,29 @@ class PvpService : Service() {
                 stopForeground(true)
                 NotificationUtil.notificationManager.cancelAll()
                 onDestroy()
+            }
+            //收藏
+            liked.setOnClickListener {
+                if (likedBg.visibility == View.VISIBLE) {
+                    searchBg.visibility = View.VISIBLE
+                    likedBg.visibility = View.INVISIBLE
+                    liked.setImageResource(R.drawable.ic_loved_line)
+                } else {
+                    liked.setImageResource(R.drawable.ic_loved)
+                    searchBg.visibility = View.INVISIBLE
+                    likedBg.visibility = View.VISIBLE
+                    //初始化
+                    //获取数据版本
+                    val viewModel = InjectorUtil.providePvpViewModelFactory()
+                        .create(PvpLikedViewModel::class.java)
+                    MainScope().launch {
+                        val data = viewModel.getLikedData(getRegion())
+                        //初始化适配器
+                        val likedAdapter = PvpLikedAdapter(activity, true)
+                        binding.listLiked.adapter = likedAdapter
+                        likedAdapter.submitList(data)
+                    }
+                }
             }
         }
     }

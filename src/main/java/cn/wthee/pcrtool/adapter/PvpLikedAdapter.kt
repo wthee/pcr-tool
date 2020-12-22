@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,7 +11,10 @@ import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.databinding.ItemPvpLikedBinding
 
 
-class PvpLikedAdapter(private val activity: Activity) :
+class PvpLikedAdapter(
+    private val activity: Activity,
+    private val isFloat: Boolean
+) :
     ListAdapter<PvpLikedData, PvpLikedAdapter.ViewHolder>(PvpLikedDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,9 +37,16 @@ class PvpLikedAdapter(private val activity: Activity) :
         fun bind(data: PvpLikedData) {
             //设置数据
             binding.apply {
+                atkIds.text = data.atks
+                defIds.text = data.defs
                 val adapter = PvpCharacterResultItemAdapter(activity)
                 likedCharacters.adapter = adapter
                 adapter.submitList(data.getIds())
+                if (isFloat) {
+                    rightTitle.visibility = View.GONE
+                } else {
+                    rightTitle.visibility = View.VISIBLE
+                }
             }
         }
     }

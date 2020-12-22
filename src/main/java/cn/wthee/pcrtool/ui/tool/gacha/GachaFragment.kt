@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScollToTopListener
 import cn.wthee.pcrtool.utils.ToolbarUtil
 
 /**
@@ -44,21 +44,8 @@ class GachaFragment : Fragment() {
         )
 
         //滚动监听
-        binding.gachaList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.canScrollVertically(-1)) {
-                    //滚动到顶部之前，显示回到顶部按钮
-                    binding.fabTop.show()
-                } else {
-                    binding.fabTop.hide()
-                }
-            }
-        })
-        //回到顶部
-        binding.fabTop.setOnClickListener {
-            binding.gachaList.scrollToPosition(0)
-        }
+        binding.gachaList.setScollToTopListener(binding.fabTop)
+
         return binding.root
     }
 

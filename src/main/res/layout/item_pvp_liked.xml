@@ -4,50 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/s_margin"
+    android:layout_marginTop="@dimen/xs_margin"
+    android:layout_marginBottom="@dimen/m_margin"
     app:cardCornerRadius="@dimen/card_radius">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/atk_ids"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/def_ids"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/liked_characters"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:nestedScrollingEnabled="false"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.75"
             app:spanCount="5"
             tools:itemCount="10"
             tools:listitem="@layout/item_pvp_result_icon" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/right_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pvp_liked_title_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/liked_characters"
-            app:layout_constraintTop_toTopOf="@id/liked_characters"
-            android:textColor="@color/colorPrimary"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:text="进攻方" />
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:layout_marginBottom="@dimen/pvp_liked_title_margin"
-            app:layout_constraintBottom_toBottomOf="@id/liked_characters"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/liked_characters"
-            android:textColor="@color/red"
-            android:text="防守方" />
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/team_atk"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@id/center_gl"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/team_def"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/red"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="@id/center_gl" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/center_gl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

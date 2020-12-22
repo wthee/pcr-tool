@@ -15,11 +15,14 @@ class PvpLikedViewModel(
     var data = MutableLiveData<List<PvpLikedData>>()
 
 
-    //卡池信息
+    //收藏队伍信息
     fun getLiked(region: Int) {
         viewModelScope.launch {
             data.postValue(repository.getLiked(region))
         }
     }
+
+    //收藏队伍信息
+    suspend fun getLikedData(region: Int) = repository.getLiked(region)
 
 }

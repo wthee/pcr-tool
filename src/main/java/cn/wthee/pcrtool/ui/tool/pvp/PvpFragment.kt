@@ -5,13 +5,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION
 import android.provider.Settings.canDrawOverlays
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
@@ -22,6 +25,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.transition.Hold
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
@@ -44,6 +48,11 @@ class PvpFragment : Fragment() {
         InjectorUtil.provideCharacterViewModelFactory()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = Hold()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,6 +60,7 @@ class PvpFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolPvpBinding.inflate(inflater, container, false)
         progressBar = binding.pvpProgressBar
+        binding.pvpLike.transitionName = "liked"
         //已选择角色
         loadDefault()
         //角色页面 绑定tab viewpager
@@ -62,7 +72,7 @@ class PvpFragment : Fragment() {
         }
         //监听
         setListener()
-
+        prepareTransitions()
         return binding.root
     }
 
@@ -87,7 +97,14 @@ class PvpFragment : Fragment() {
             )
             //收藏页面
             pvpLike.setOnClickListener {
-                findNavController().navigate(R.id.action_toolPvpFragment_to_pvpLikedFragment)
+                val extras = FragmentNavigatorExtras(
+                    pvpLike to pvpLike.transitionName
+                )
+                findNavController().navigate(
+                    R.id.action_toolPvpFragment_to_pvpLikedFragment, null,
+                    null,
+                    extras
+                )
             }
             //悬浮窗
             pvpFloat.setOnClickListener {
@@ -148,4 +165,25 @@ class PvpFragment : Fragment() {
         startActivityForResult(intent, 0)
     }
 
+    //配置共享元素动画
+    private fun prepareTransitions() {
+
+        setExitSharedElementCallback(object : SharedElementCallback() {
+            override fun onMapSharedElements(
+                names: MutableList<String>?,
+                sharedElements: MutableMap<String, View>?
+            ) {
+                try {
+                    if (names!!.isNotEmpty()) {
+                        sharedElements ?: return
+                        //角色图片
+                        val v0 = binding.pvpLike
+                        sharedElements[names[0]] = v0
+                    }
+                } catch (e: Exception) {
+                    Log.e(Constants.LOG_TAG, e.message ?: "")
+                }
+            }
+        })
+    }
 }

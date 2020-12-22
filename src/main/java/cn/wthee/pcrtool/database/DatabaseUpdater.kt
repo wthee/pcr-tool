@@ -116,6 +116,7 @@ object DatabaseUpdater {
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
+    fun getRegion() = if (getDatabaseType() == 1) 2 else 4
 
     private fun getLocalDatabaseVersion() = MainActivity.sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
