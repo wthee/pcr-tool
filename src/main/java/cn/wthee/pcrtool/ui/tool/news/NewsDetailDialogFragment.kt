@@ -6,10 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.SslErrorHandler
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
+import androidx.core.widget.NestedScrollView
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
@@ -47,16 +46,41 @@ class NewsDetailDialogFragment : CommonBasicDialogFragment() {
             openBrowse.setOnClickListener {
                 BrowserUtil.open(requireContext(), url)
             }
+            fabTop.setImageResource(R.drawable.ic_left)
             fabTop.setOnClickListener {
-                scrollView.smoothScrollTo(0, 0)
+                dialog?.dismiss()
             }
+            scrollView.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
+                override fun onScrollChange(
+                    v: NestedScrollView?,
+                    scrollX: Int,
+                    scrollY: Int,
+                    oldScrollX: Int,
+                    oldScrollY: Int
+                ) {
+                    if (scrollView.canScrollVertically(-1)) {
+                        fabTop.setImageResource(R.drawable.ic_top)
+                        fabTop.setOnClickListener {
+                            scrollView.smoothScrollTo(0, 0)
+                        }
+                    } else {
+                        fabTop.setImageResource(R.drawable.ic_left)
+                        fabTop.setOnClickListener {
+                            dialog?.dismiss()
+                        }
+                    }
+                }
+            })
             //设置
             webView.settings.apply {
                 domStorageEnabled = true
                 javaScriptEnabled = true
+                cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
                 useWideViewPort = true //将图片调整到适合webView的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
                 javaScriptCanOpenWindowsAutomatically = true
+                loadsImagesAutomatically = false
+                blockNetworkImage = true
             }
             webView.webChromeClient = WebChromeClient()
             webView.webViewClient = object : WebViewClient() {
@@ -76,6 +100,10 @@ class NewsDetailDialogFragment : CommonBasicDialogFragment() {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
+                    webView.settings.apply {
+                        loadsImagesAutomatically = true
+                        blockNetworkImage = false
+                    }
                     if (region == 2) {
                         //取消内部滑动
                         webView.loadUrl(

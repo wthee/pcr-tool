@@ -36,7 +36,16 @@ class NewsTagAdapter :
                     "系統", "メンテナンス" -> R.color.news_system
                     else -> R.color.news_event
                 }
-                text1.text = tag
+                val fTag = when (tag) {
+                    "アップデート" -> "更新"
+                    "系統", "メンテナンス" -> "系统"
+                    "お知らせ" -> "新闻"
+                    "活動", "イベント" -> "活动"
+                    "グッズ" -> "周边"
+                    else -> tag
+                }
+
+                text1.text = fTag
                 val drawable = ResourcesUtil.getDrawable(R.drawable.title_background)
                 drawable?.setTint(ResourcesUtil.getColor(colorId))
                 text1.background = drawable

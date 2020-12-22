@@ -41,12 +41,18 @@ class CharacterBasicInfoFragment : Fragment() {
         lateinit var binding: FragmentCharacterBasicInfoBinding
         lateinit var characterPic: AppCompatImageView
 
-        fun getInstance(uid: Int, r6Id: Int) = CharacterBasicInfoFragment().apply {
-            arguments = Bundle().apply {
-                putInt(UID, uid)
-                putInt(R6ID, r6Id)
+        @Volatile
+        private var instance: CharacterBasicInfoFragment? = null
+
+        fun getInstance(uid: Int, r6Id: Int) =
+            instance ?: synchronized(this) {
+                instance ?: CharacterBasicInfoFragment().apply {
+                    arguments = Bundle().apply {
+                        putInt(UID, uid)
+                        putInt(R6ID, r6Id)
+                    }
+                }.also { instance = it }
             }
-        }
     }
 
     private var uid = -1
@@ -162,20 +168,24 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.apply {
             characterPic.setOnClickListener {
                 try {
+                    val bundle = Bundle().apply {
+                        putInt(UID, uid)
+                        putInt(R6ID, r6Id)
+                    }
                     val extras =
                         FragmentNavigatorExtras(
                             it to it.transitionName,
                         )
                     findNavController().navigate(
                         R.id.action_characterPagerFragment_to_characterPicListFragment,
-                        null,
+                        bundle,
                         null,
                         extras
                     )
                     //移除旧的单例，避免viewpager2重新添加fragment时异常
-//                    parentFragmentManager.beginTransaction()
-//                        .remove(getInstance())
-//                        .commit()
+                    parentFragmentManager.beginTransaction()
+                        .remove(getInstance(uid, r6Id))
+                        .commit()
                 } catch (e: Exception) {
 
                 }

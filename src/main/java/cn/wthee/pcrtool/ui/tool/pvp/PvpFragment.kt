@@ -5,12 +5,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION
 import android.provider.Settings.canDrawOverlays
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -72,7 +70,6 @@ class PvpFragment : Fragment() {
         }
         //监听
         setListener()
-        prepareTransitions()
         return binding.root
     }
 
@@ -165,25 +162,4 @@ class PvpFragment : Fragment() {
         startActivityForResult(intent, 0)
     }
 
-    //配置共享元素动画
-    private fun prepareTransitions() {
-
-        setExitSharedElementCallback(object : SharedElementCallback() {
-            override fun onMapSharedElements(
-                names: MutableList<String>?,
-                sharedElements: MutableMap<String, View>?
-            ) {
-                try {
-                    if (names!!.isNotEmpty()) {
-                        sharedElements ?: return
-                        //角色图片
-                        val v0 = binding.pvpLike
-                        sharedElements[names[0]] = v0
-                    }
-                } catch (e: Exception) {
-                    Log.e(Constants.LOG_TAG, e.message ?: "")
-                }
-            }
-        })
-    }
 }

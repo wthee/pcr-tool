@@ -2,12 +2,7 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:shareInterpolator="false">
     <alpha
-        android:duration="@integer/menu_item"
-        android:toAlpha="1.0"
-        android:fillEnabled="true"
-        android:fillBefore="true"
-        android:fillAfter="true"
-        android:interpolator="@android:anim/linear_interpolator"
-        android:startOffset="35"
-        android:fromAlpha="0" />
+        android:duration="@integer/fragment_anim"
+        android:fromAlpha="0"
+        android:toAlpha="1.0" />
 </set>

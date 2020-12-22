@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android">
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@integer/fragment_anim">
     <alpha
-        android:fromAlpha="0"
+        android:fromAlpha="0.5"
         android:toAlpha="0" />
-
 </set>
