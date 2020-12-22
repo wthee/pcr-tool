@@ -11,6 +11,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
@@ -19,11 +21,13 @@ import cn.wthee.pcrtool.adapter.PvpLikedAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater.getRegion
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.selects
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -156,6 +160,7 @@ class PvpService : Service() {
                 binding.select.visibility = View.VISIBLE
                 resultContent.pvpNoData.visibility = View.GONE
                 back.visibility = View.GONE
+                likedBg.visibility = View.GONE
             }
             //移动
             move.setOnClickListener {
@@ -187,6 +192,41 @@ class PvpService : Service() {
                         val likedAdapter = PvpLikedAdapter(activity, true)
                         binding.listLiked.adapter = likedAdapter
                         likedAdapter.submitList(data)
+
+                        //列表设置左右滑动
+                        ItemTouchHelper(object :
+                            ItemTouchHelper.SimpleCallback(
+                                0,
+                                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                            ) {
+                            override fun onMove(
+                                recyclerView: RecyclerView,
+                                viewHolder: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder
+                            ): Boolean {
+                                return true
+                            }
+
+                            @SuppressLint("SimpleDateFormat")
+                            override fun onSwiped(
+                                viewHolder: RecyclerView.ViewHolder,
+                                direction: Int
+                            ) {
+                                MainScope().launch {
+                                    val dao = AppPvpDatabase.getInstance().getPvpDao()
+                                    val atks =
+                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
+                                    val defs =
+                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
+                                    val atkIds = atks.text.toString()
+                                    val defIds = defs.text.toString()
+                                    val region = getRegion()
+                                    //删除记录
+                                    dao.delete(dao.get(atkIds, defIds, region)!!)
+                                    likedAdapter.submitList(dao.getAll(region))
+                                }
+                            }
+                        }).attachToRecyclerView(binding.listLiked)
                     }
                 }
             }

@@ -6,7 +6,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:animateLayoutChanges="true"
     tools:background="@color/colorBlack">
 
     <LinearLayout
@@ -65,11 +64,11 @@
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_left"
+            android:visibility="gone"
             app:borderWidth="0dp"
             app:fabSize="mini"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:tint="@color/colorPrimary" />
+            app:tint="@color/colorPrimary"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
@@ -96,9 +95,16 @@
                 tools:itemCount="5"
                 tools:listitem="@layout/item_common" />
 
+            <View
+                android:layout_width="@dimen/progress_bar_size"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/colorPrimary" />
+
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/s_margin">
 
                 <LinearLayout
                     android:id="@+id/select"
@@ -143,25 +149,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-
             </FrameLayout>
 
         </LinearLayout>
 
         <FrameLayout
             android:id="@+id/liked_bg"
-            android:visibility="invisible"
-            android:background="@color/colorWhite"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="@drawable/background_color"
+            android:visibility="invisible">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list_liked"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/s_margin"
+                android:layout_marginEnd="@dimen/s_margin"
                 android:orientation="vertical"
-                tools:itemCount="3"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="3"
                 tools:listitem="@layout/item_pvp_liked" />
         </FrameLayout>
     </com.google.android.material.card.MaterialCardView>
