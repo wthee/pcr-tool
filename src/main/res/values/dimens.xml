@@ -50,4 +50,5 @@
     <dimen name="fab_text_size">10sp</dimen>
     <dimen name="fab_text_2">90dp</dimen>
     <dimen name="fab_text_3">100dp</dimen>
+    <dimen name="icon_size">48dp</dimen>
 </resources>
