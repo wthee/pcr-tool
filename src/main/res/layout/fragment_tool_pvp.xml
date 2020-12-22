@@ -124,7 +124,7 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/s_margin"
             android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/function"
+            android:contentDescription="@string/tool_pvp_liked"
             android:src="@drawable/ic_loved_line"
             app:borderWidth="0dp"
             app:fabSize="mini"

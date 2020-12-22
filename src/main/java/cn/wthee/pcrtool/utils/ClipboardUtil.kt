@@ -10,11 +10,11 @@ import cn.wthee.pcrtool.MyApplication
  */
 object ClipboardUtil {
 
-    fun add(str: String) {
+    fun add(str: String, tipText: String = "内容已复制~") {
         val clipboardManager =
             MyApplication.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val mClipData = ClipData.newPlainText("OcrText", str)
         clipboardManager.setPrimaryClip(mClipData)
-        ToastUtil.short("内容已复制~")
+        ToastUtil.short(tipText)
     }
 }

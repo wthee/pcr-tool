@@ -32,7 +32,7 @@
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
         android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/back_today"
+        android:contentDescription="@string/back_top"
         android:text="@string/back_top"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/fab_text_size"

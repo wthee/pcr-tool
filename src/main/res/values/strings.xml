@@ -154,5 +154,8 @@
     <string name="team_atk">进攻方</string>
     <string name="team_def">防守方</string>
     <string name="no_liked_data">无收藏信息~</string>
+    <string name="copy">复制</string>
+    <string name="open_browser">浏览器中打开</string>
+    <string name="min">最小化</string>
 
 </resources>

@@ -7,16 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
+import android.widget.FrameLayout
 import androidx.core.widget.NestedScrollView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.Constants.REGION
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+
 
 /**
  * 公告详情
  */
-private const val REGION = "region"
 private const val NEWSID = "news_id"
 private const val URL = "url"
 
@@ -42,35 +45,15 @@ class NewsDetailDialogFragment : CommonBasicDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolNewsDetailBinding.inflate(inflater, container, false)
+        initWebview()
+        setListener()
+        return binding.root
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initWebview() {
         binding.apply {
-            openBrowse.setOnClickListener {
-                BrowserUtil.open(requireContext(), url)
-            }
-            fabTop.setImageResource(R.drawable.ic_left)
-            fabTop.setOnClickListener {
-                dialog?.dismiss()
-            }
-            scrollView.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
-                override fun onScrollChange(
-                    v: NestedScrollView?,
-                    scrollX: Int,
-                    scrollY: Int,
-                    oldScrollX: Int,
-                    oldScrollY: Int
-                ) {
-                    if (scrollView.canScrollVertically(-1)) {
-                        fabTop.setImageResource(R.drawable.ic_top)
-                        fabTop.setOnClickListener {
-                            scrollView.smoothScrollTo(0, 0)
-                        }
-                    } else {
-                        fabTop.setImageResource(R.drawable.ic_left)
-                        fabTop.setOnClickListener {
-                            dialog?.dismiss()
-                        }
-                    }
-                }
-            })
+            if (region == 4) webView.visibility = View.VISIBLE
             //设置
             webView.settings.apply {
                 domStorageEnabled = true
@@ -108,50 +91,88 @@ class NewsDetailDialogFragment : CommonBasicDialogFragment() {
                         //取消内部滑动
                         webView.loadUrl(
                             """
-                            javascript:
-                            $('#news-content').css('overflow','inherit');
-                            $('.news-detail').css('top','0.3rem');
-                            $('.top').css('display','none');
-                        """.trimIndent()
+                                javascript:
+                                $('#news-content').css('overflow','inherit');
+                                $('.news-detail').css('top','0.3rem');
+                                $('.top').css('display','none');
+                                $('.title').css('font-size','16px');
+                                $('.title').css('color','#2c94e4');
+                            """.trimIndent()
                         )
                     }
                     if (region == 3) {
                         webView.loadUrl(
                             """
-                            javascript:
-                            $('.menu').css('display','none');
-                            $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-                            $('.title').css('display','none');
-                            $('header').css('display','none');
-                            $('footer').css('display','none');
-                            $('aside').css('display','none');
-                            $('.paging').css('display','none');
-                        """.trimIndent()
+                                javascript:
+                                $('.menu').css('display','none');
+                                $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                $('.title').css('display','none');
+                                $('header').css('display','none');
+                                $('footer').css('display','none');
+                                $('aside').css('display','none');
+                                $('.paging').css('display','none');
+                                $('h3').css('font-size','16px');
+                            """.trimIndent()
                         )
                     }
                     if (region == 4) {
                         webView.loadUrl(
                             """
-                            javascript:
-                            $('#main_area').css('display','none');
-                            $('.bg-gray').css('display','none');
-                            $('.news_prev').css('display','none');
-                            $('.news_next').css('display','none');
-                            $('header').css('display','none');
-                            $('footer').css('display','none');
-                        """.trimIndent()
+                                javascript:
+                                $('#main_area').css('display','none');
+                                $('.bg-gray').css('display','none');
+                                $('.news_prev').css('display','none');
+                                $('.news_next').css('display','none');
+                                $('header').css('display','none');
+                                $('footer').css('display','none');
+                            """.trimIndent()
                         )
                     }
                     loading.visibility = View.GONE
                     webView.visibility = View.VISIBLE
-                    fabTop.show()
                 }
             }
             //加载网页
             webView.loadUrl(url)
         }
-        return binding.root
     }
+
+    private fun setListener() {
+        binding.apply {
+            fabBrowser.setOnClickListener {
+                BrowserUtil.open(requireContext(), url)
+            }
+            fabTop.setImageResource(R.drawable.ic_left)
+            fabTop.setOnClickListener {
+                dialog?.dismiss()
+            }
+            scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ ->
+                if (scrollView.canScrollVertically(-1)) {
+                    fabTop.setImageResource(R.drawable.ic_top)
+                    fabTop.setOnClickListener {
+                        scrollView.smoothScrollTo(0, 0)
+                    }
+                } else {
+                    fabTop.setImageResource(R.drawable.ic_left)
+                    fabTop.setOnClickListener {
+                        dialog?.dismiss()
+                    }
+                }
+            })
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val bottomSheet =
+            dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheet?.let {
+            val behavior = BottomSheetBehavior.from(it)
+            //默认展开
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
 
     companion object {
         @JvmStatic
