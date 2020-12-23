@@ -63,6 +63,7 @@ class ToolNewsListFragment : Fragment() {
                 selecteds.forEach {
                     contents += it.content
                 }
+                contents += getString(R.string.from, getString(R.string.app_name))
                 ShareIntentUtil.text(contents)
             } else {
                 ToastUtil.short("未选择公告~")

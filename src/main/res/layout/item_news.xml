@@ -5,9 +5,9 @@
     android:id="@+id/news_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/m_padding"
-    android:layout_marginEnd="@dimen/m_padding"
-    android:layout_marginBottom="@dimen/m_padding"
+    android:layout_marginStart="@dimen/m_margin"
+    android:layout_marginEnd="@dimen/m_margin"
+    android:layout_marginBottom="@dimen/m_margin"
     app:cardCornerRadius="@dimen/card_radius">
 
     <LinearLayout
