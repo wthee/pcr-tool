@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.adapter.PvpLikedAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
+import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppPvpDatabase
@@ -180,11 +181,7 @@ class PvpService : Service() {
             val likedAdapter = PvpLikedAdapter(activity, true)
             binding.listLiked.adapter = likedAdapter
             likedAdapter.submitList(data) {
-                binding.likeTip.text =
-                    if (data.isNotEmpty())
-                        getString(R.string.liked_count, data.size)
-                    else
-                        getString(R.string.no_liked_data)
+                updateTip(data)
             }
 
             //列表设置左右滑动
@@ -217,11 +214,22 @@ class PvpService : Service() {
                         val region = getRegion()
                         //删除记录
                         dao.delete(dao.get(atkIds, defIds, region)!!)
-                        likedAdapter.submitList(dao.getAll(region))
+                        val result = dao.getAll(region)
+                        likedAdapter.submitList(result) {
+                            updateTip(result)
+                        }
                     }
                 }
             }).attachToRecyclerView(binding.listLiked)
         }
+    }
+
+    private fun updateTip(data: List<PvpLikedData>) {
+        binding.likeTip.text =
+            if (data.isNotEmpty())
+                getString(R.string.liked_count, data.size)
+            else
+                getString(R.string.no_liked_data)
     }
 
     private fun showResult() {

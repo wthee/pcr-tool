@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpLikedAdapter
+import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedBinding
@@ -51,14 +52,18 @@ class PvpLikedFragment : Fragment() {
         setListener(adapter)
         viewModel.data.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it) {
-                binding.likeTip.text =
-                    if (it.isNotEmpty())
-                        getString(R.string.liked_count, it.size)
-                    else
-                        getString(R.string.no_liked_data)
+                updateTip(it)
             }
         })
         return binding.root
+    }
+
+    private fun updateTip(it: List<PvpLikedData>) {
+        binding.likeTip.text =
+            if (it.isNotEmpty())
+                getString(R.string.liked_count, it.size)
+            else
+                getString(R.string.no_liked_data)
     }
 
     private fun init() {
@@ -94,7 +99,10 @@ class PvpLikedFragment : Fragment() {
                     val data = dao.get(atkIds, defIds, region)!!
                     //删除记录
                     dao.delete(data)
-                    adapter.submitList(dao.getAll(region))
+                    val result = dao.getAll(region)
+                    adapter.submitList(result) {
+                        updateTip(result)
+                    }
                     //显示撤回
                     Snackbar.make(binding.root, "已取消收藏~", Snackbar.LENGTH_LONG)
                         .setAction("撤回") {
@@ -103,7 +111,9 @@ class PvpLikedFragment : Fragment() {
                                 dao.insert(data)
                                 val list = dao.getAll(region)
                                 val position = list.indexOf(data)
-                                adapter.submitList(list)
+                                adapter.submitList(list) {
+                                    updateTip(list)
+                                }
                                 delay(500L)
                                 binding.listLiked.smoothScrollToPosition(position)
                             }
