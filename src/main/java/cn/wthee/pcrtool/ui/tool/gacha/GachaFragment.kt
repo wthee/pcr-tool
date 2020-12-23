@@ -27,7 +27,7 @@ class GachaFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolGachaBinding.inflate(inflater, container, false)
-        val adapter = GachaHistoryAdapter(parentFragmentManager)
+        val adapter = GachaHistoryAdapter()
         binding.gachaList.adapter = adapter
 
         viewModel = InjectorUtil.provideGachaViewModelFactory().create(GachaViewModel::class.java)

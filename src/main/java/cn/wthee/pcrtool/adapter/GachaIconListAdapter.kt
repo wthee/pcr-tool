@@ -1,23 +1,20 @@
 package cn.wthee.pcrtool.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.enums.PageType
-import cn.wthee.pcrtool.ui.common.ContainerFragment
 import cn.wthee.pcrtool.utils.Constants
 import coil.load
 
 
-class GachaListAdapter(
-    private val manager: FragmentManager
-) : ListAdapter<Int, GachaListAdapter.ViewHolder>(GachaListDiffCallback()) {
+class GachaListAdapter : ListAdapter<Int, GachaListAdapter.ViewHolder>(GachaListDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -49,9 +46,15 @@ class GachaListAdapter(
                 //角色名
                 name.visibility = View.GONE
                 pic.setOnClickListener {
-                    ContainerFragment.getInstance(uid, PageType.CAHRACTER_SKILL).show(
-                        manager,
-                        "skill"
+                    val bundle = Bundle()
+                    bundle.putInt(Constants.UID, uid)
+                    bundle.putInt(Constants.R6ID, 0)
+
+                    root.findNavController().navigate(
+                        R.id.action_toolGachaFragment_to_characterPagerFragment,
+                        bundle,
+                        null,
+                        null
                     )
                 }
             }

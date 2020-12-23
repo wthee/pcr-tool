@@ -44,14 +44,9 @@ class CharacterBasicInfoFragment : Fragment() {
         @Volatile
         private var instance: CharacterBasicInfoFragment? = null
 
-        fun getInstance(uid: Int, r6Id: Int) =
+        fun getInstance() =
             instance ?: synchronized(this) {
-                instance ?: CharacterBasicInfoFragment().apply {
-                    arguments = Bundle().apply {
-                        putInt(UID, uid)
-                        putInt(R6ID, r6Id)
-                    }
-                }.also { instance = it }
+                instance ?: CharacterBasicInfoFragment().also { instance = it }
             }
     }
 
@@ -63,10 +58,8 @@ class CharacterBasicInfoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().apply {
-            uid = getInt(UID)
-            r6Id = getInt(R6ID)
-        }
+        uid = CharacterPagerFragment.uid
+        r6Id = CharacterPagerFragment.r6Id
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
         exitTransition = Hold()
     }
@@ -184,7 +177,7 @@ class CharacterBasicInfoFragment : Fragment() {
                     )
                     //移除旧的单例，避免viewpager2重新添加fragment时异常
                     parentFragmentManager.beginTransaction()
-                        .remove(getInstance(uid, r6Id))
+                        .remove(getInstance())
                         .commit()
                 } catch (e: Exception) {
 

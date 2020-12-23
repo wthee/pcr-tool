@@ -24,7 +24,7 @@ class CharacterPagerAdapter(
     private val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
-        mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid, r6Id))
+        mFragments.put(0, CharacterBasicInfoFragment.getInstance())
         if (!noData) {
             mFragments.put(1, CharacterAttrFragment.getInstance(uid, r6Id))
             mFragments.put(2, CharacterSkillFragment.getInstance(uid))

@@ -35,11 +35,11 @@ class CharacterPagerFragment : Fragment() {
     companion object {
         lateinit var viewPager: ViewPager2
         lateinit var fab: ExtendedFloatingActionButton
-
+        var uid = -1
+        var r6Id = -1
     }
 
-    private var uid = -1
-    private var r6Id = -1
+
     private lateinit var binding: FragmentCharacterPagerBinding
     private val characterAttrViewModel =
         InjectorUtil.provideCharacterAttrViewModelFactory()

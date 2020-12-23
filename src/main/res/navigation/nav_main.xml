@@ -104,12 +104,24 @@
         tools:layout="@layout/fragment_tool_pvp">
         <action
             android:id="@+id/action_toolPvpFragment_to_pvpLikedFragment"
-            app:destination="@id/pvpLikedFragment" />
+            app:destination="@id/pvpLikedFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
     </fragment>
     <fragment
         android:id="@+id/toolGachaFragment"
         android:name="cn.wthee.pcrtool.ui.tool.gacha.GachaFragment"
-        android:label="ToolGachaFragment" />
+        android:label="ToolGachaFragment">
+        <action
+            android:id="@+id/action_toolGachaFragment_to_characterPagerFragment"
+            app:destination="@id/characterPagerFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+    </fragment>
     <fragment
         android:id="@+id/characterPicListFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.basic.CharacterPicListFragment"
