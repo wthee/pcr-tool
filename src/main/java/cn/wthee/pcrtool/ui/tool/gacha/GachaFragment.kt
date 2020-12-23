@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.adapter.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToolbarUtil
 
 /**
@@ -26,7 +27,7 @@ class GachaFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolGachaBinding.inflate(inflater, container, false)
-        val adapter = GachaHistoryAdapter(parentFragmentManager)
+        val adapter = GachaHistoryAdapter()
         binding.gachaList.adapter = adapter
 
         viewModel = InjectorUtil.provideGachaViewModelFactory().create(GachaViewModel::class.java)
@@ -41,6 +42,10 @@ class GachaFragment : Fragment() {
             R.drawable.ic_gacha,
             getString(R.string.tool_gacha)
         )
+
+        //滚动监听
+        binding.gachaList.setScrollToTopListener(binding.fabTop)
+
         return binding.root
     }
 

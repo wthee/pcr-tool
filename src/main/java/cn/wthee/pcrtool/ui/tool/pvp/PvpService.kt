@@ -11,20 +11,24 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import cn.wthee.pcrtool.MainActivity.Companion.mHeight
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.adapter.PvpLikedAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
+import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.database.AppPvpDatabase
+import cn.wthee.pcrtool.database.DatabaseUpdater.getRegion
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.selects
-import cn.wthee.pcrtool.utils.ActivityUtil
-import cn.wthee.pcrtool.utils.NotificationUtil
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.dp
+import cn.wthee.pcrtool.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -62,7 +66,7 @@ class PvpService : Service() {
         character1 = intent?.getSerializableExtra("character1") as List<PvpCharacterData>
         character2 = intent.getSerializableExtra("character2") as List<PvpCharacterData>
         character3 = intent.getSerializableExtra("character3") as List<PvpCharacterData>
-        if (mHeight > 300.dp) mHeight = 300.dp
+        if (mFloatingWindowHeight > 300.dp) mFloatingWindowHeight = 300.dp
         //窗口设置
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager?
         params = WindowManager.LayoutParams().apply {
@@ -75,7 +79,7 @@ class PvpService : Service() {
             }
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
-            height = mHeight
+            height = mFloatingWindowHeight
             x = 6.dp
             y = 36.dp
         }
@@ -107,40 +111,19 @@ class PvpService : Service() {
         //初始化
         loadDefault()
         setPager()
+        setListener()
+    }
 
+    private fun setListener() {
         binding.apply {
-            //查询结果列表
-            adapter = PvpCharacterResultAdapter(activity)
-            resultContent.pvpResultList.adapter = adapter
-
-            resultContent.root.visibility = View.GONE
-            resultContent.pvpResultToolbar.root.visibility = View.GONE
             //搜索按钮
             search.setOnClickListener {
-                binding.resultContent.progress.visibility = View.VISIBLE
+                resultContent.progress.visibility = View.VISIBLE
                 if (selects.contains(PvpCharacterData(0, 999))) {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
-                    binding.select.visibility = View.INVISIBLE
-                    back.visibility = View.VISIBLE
-                    resultContent.root.visibility = View.VISIBLE
-                    job = MainScope().launch {
-                        resultContent.pvpNoData.visibility = View.GONE
-                        val result = MyAPIRepository.getPVPData()
-                        if (result.status == 0) {
-                            if (result.data!!.isEmpty()) {
-                                resultContent.pvpNoData.visibility = View.VISIBLE
-                            }
-                            adapter.submitList(result.data!!.sortedByDescending {
-                                it.up
-                            })
-                        } else if (result.status == -1) {
-                            ToastUtil.short(result.message)
-                            binding.select.visibility = View.VISIBLE
-                        }
-                        binding.resultContent.progress.visibility = View.GONE
-                    }
+                    showResult()
                 }
             }
             //返回
@@ -150,13 +133,18 @@ class PvpService : Service() {
                         job.cancel()
                     }
                 }
-                if (resultContent.root.visibility == View.VISIBLE) {
-                    resultContent.root.visibility = View.GONE
-                    adapter.submitList(null)
-                }
-                binding.select.visibility = View.VISIBLE
+                //隐藏查询结果页面
+                resultContent.root.visibility = View.GONE
                 resultContent.pvpNoData.visibility = View.GONE
+                adapter.submitList(null)
+
+                //隐藏返回键和收藏页面
                 back.visibility = View.GONE
+                likedBg.visibility = View.GONE
+                liked.setImageResource(R.drawable.ic_loved_line)
+                //显示选择页面
+                binding.select.visibility = View.VISIBLE
+                searchBg.visibility = View.VISIBLE
             }
             //移动
             move.setOnClickListener {
@@ -167,6 +155,103 @@ class PvpService : Service() {
                 stopForeground(true)
                 NotificationUtil.notificationManager.cancelAll()
                 onDestroy()
+            }
+            //收藏
+            liked.setOnClickListener {
+                if (likedBg.visibility == View.VISIBLE) {
+                    searchBg.visibility = View.VISIBLE
+                    likedBg.visibility = View.INVISIBLE
+                    liked.setImageResource(R.drawable.ic_loved_line)
+                } else {
+                    liked.setImageResource(R.drawable.ic_loved)
+                    searchBg.visibility = View.INVISIBLE
+                    likedBg.visibility = View.VISIBLE
+                    showLiked()
+                }
+            }
+        }
+    }
+
+    private fun showLiked() {
+        val viewModel = InjectorUtil.providePvpViewModelFactory()
+            .create(PvpLikedViewModel::class.java)
+        MainScope().launch {
+            val data = viewModel.getLikedData(getRegion())
+            //初始化适配器
+            val likedAdapter = PvpLikedAdapter(activity, true)
+            binding.listLiked.adapter = likedAdapter
+            likedAdapter.submitList(data) {
+                updateTip(data)
+            }
+
+            //列表设置左右滑动
+            ItemTouchHelper(object :
+                ItemTouchHelper.SimpleCallback(
+                    0,
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return true
+                }
+
+                @SuppressLint("SimpleDateFormat")
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
+                    MainScope().launch {
+                        val dao = AppPvpDatabase.getInstance().getPvpDao()
+                        val atks =
+                            viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
+                        val defs =
+                            viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
+                        val atkIds = atks.text.toString()
+                        val defIds = defs.text.toString()
+                        val region = getRegion()
+                        //删除记录
+                        dao.delete(dao.get(atkIds, defIds, region)!!)
+                        val result = dao.getAll(region)
+                        likedAdapter.submitList(result) {
+                            updateTip(result)
+                        }
+                    }
+                }
+            }).attachToRecyclerView(binding.listLiked)
+        }
+    }
+
+    private fun updateTip(data: List<PvpLikedData>) {
+        binding.likeTip.text =
+            if (data.isNotEmpty())
+                getString(R.string.liked_count, data.size)
+            else
+                getString(R.string.no_liked_data)
+    }
+
+    private fun showResult() {
+        binding.apply {
+            select.visibility = View.INVISIBLE
+            back.visibility = View.VISIBLE
+            resultContent.root.visibility = View.VISIBLE
+            job = MainScope().launch {
+                resultContent.pvpNoData.visibility = View.GONE
+                val result = MyAPIRepository.getPVPData()
+                if (result.status == 0) {
+                    if (result.data!!.isEmpty()) {
+                        resultContent.pvpNoData.visibility = View.VISIBLE
+                    }
+                    adapter.submitList(result.data!!.sortedByDescending {
+                        it.up
+                    })
+                } else if (result.status == -1) {
+                    ToastUtil.short(result.message)
+                    select.visibility = View.VISIBLE
+                }
+                resultContent.progress.visibility = View.GONE
             }
         }
     }
@@ -200,7 +285,7 @@ class PvpService : Service() {
                 search.visibility = View.VISIBLE
                 floatRight.visibility = View.VISIBLE
                 params!!.width = WindowManager.LayoutParams.WRAP_CONTENT
-                params!!.height = mHeight
+                params!!.height = mFloatingWindowHeight
             } else {
                 search.visibility = View.GONE
                 floatRight.visibility = View.GONE
@@ -218,5 +303,13 @@ class PvpService : Service() {
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()
+
+        binding.apply {
+            //查询结果列表
+            adapter = PvpCharacterResultAdapter(activity, true)
+            resultContent.pvpResultList.adapter = adapter
+            resultContent.root.visibility = View.GONE
+            resultContent.pvpResultToolbar.root.visibility = View.GONE
+        }
     }
 }

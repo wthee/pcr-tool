@@ -1,20 +1,21 @@
 package cn.wthee.pcrtool.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.LeaderboardData
 import cn.wthee.pcrtool.databinding.ItemLeaderBinding
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 
-class CharacterLeaderAdapter :
+class CharacterLeaderAdapter(private val context: Context) :
     ListAdapter<LeaderboardData, CharacterLeaderAdapter.ViewHolder>(LeaderDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -30,15 +31,12 @@ class CharacterLeaderAdapter :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemLeaderBinding) :
+    inner class ViewHolder(private val binding: ItemLeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: LeaderboardData) {
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(
-                        MyApplication.context,
-                        R.anim.anim_translate_y
-                    )
+                    AnimationUtils.loadAnimation(context, R.anim.anim_translate_y)
                 icon.load(data.icon) {
                     placeholder(R.drawable.unknown_gray)
                     error(R.drawable.unknown_gray)
@@ -53,6 +51,9 @@ class CharacterLeaderAdapter :
                 tower.text = data.tower
                 tower.setTextColor(getColor(data.tower))
 
+                root.setOnClickListener {
+                    BrowserUtil.open(context, data.url)
+                }
             }
         }
 

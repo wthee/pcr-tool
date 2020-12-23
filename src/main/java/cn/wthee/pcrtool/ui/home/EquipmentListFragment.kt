@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentPageAdapter
-import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -44,6 +44,13 @@ class EquipmentListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
+        init()
+        //绑定观察
+        setObserve()
+        return binding.root
+    }
+
+    private fun init() {
         binding.apply {
             list = binding.equipPage
             pageAdapter = EquipmentPageAdapter(parentFragmentManager)
@@ -57,8 +64,6 @@ class EquipmentListFragment : Fragment() {
                 }
             }
         }
-        //绑定观察
-        setObserve()
         //获取装备类型
         equipTypes = arrayListOf()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -68,7 +73,6 @@ class EquipmentListFragment : Fragment() {
             }
         }
         viewModel.getEquips("")
-        return binding.root
     }
 
     private fun reset() {

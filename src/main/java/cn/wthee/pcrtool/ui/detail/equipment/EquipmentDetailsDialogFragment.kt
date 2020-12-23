@@ -21,9 +21,10 @@ import coil.load
 /**
  * 装备详情页面
  */
+private const val EQUIP = "equip"
+
 class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
 
-    private val EQUIP = "equip"
 
     companion object {
         fun getInstance(equip: EquipmentMaxData) =

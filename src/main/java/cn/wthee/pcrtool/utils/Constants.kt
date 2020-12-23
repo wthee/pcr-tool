@@ -28,6 +28,7 @@ object Constants {
     const val DATABASE_WAL = "redive_cn.db-wal"
     const val DATABASE_VERSION_URL = "last_version_cn.json"
     const val DATABASE_NEWS = "news.db"
+    const val DATABASE_PVP = "pvp.db"
 
     //角色卡片接口
     const val CHARACTER_URL = RESOURCE_URL + "card/profile/"
@@ -76,7 +77,7 @@ object Constants {
 
     //默认值
     const val SORT_ASC = false
-    const val UNKNOW_EQUIP_ID = 999999
+    const val UNKNOWN_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在下载数据..."
     const val NOTICE_TITLE_ERROR = "数据信息获取失败"
     const val NOTICE_TOAST_SUCCESS = "数据更新完成"
@@ -90,6 +91,7 @@ object Constants {
     //常量值
     const val UID = "unit_id"
     const val R6ID = "r6id"
+    const val REGION = "region"
 
     val ATTR = arrayListOf(
         "HP",

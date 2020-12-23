@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.SkillLoopAllAdapter
-import cn.wthee.pcrtool.data.model.SkillLoop
+import cn.wthee.pcrtool.data.bean.SkillLoop
 import cn.wthee.pcrtool.databinding.FragmentSkillLoopBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
@@ -49,7 +49,7 @@ class CharacterSkillLoopDialogFragment : CommonBasicDialogFragment() {
 
         viewModel.getCharacterSkillLoops(uid)
         //技能动作循环
-        viewModel.acttackPattern.observe(viewLifecycleOwner, {
+        viewModel.atlPattern.observe(viewLifecycleOwner, {
             val loops = arrayListOf<SkillLoop>()
             if (it.size > 1) {
                 loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))

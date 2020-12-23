@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 /**
  * 竞技场角色ViewPager
  */
-class PvpPagerFragment : Fragment() {
+private const val POSITION = "positon"
+private val FLOAT = "float"
 
-    private val POSITION = "positon"
-    private val FLOAT = "float"
+class PvpPagerFragment : Fragment() {
 
     companion object {
         fun getInstance(position: Int, isFloatWindow: Boolean) =
@@ -46,6 +46,8 @@ class PvpPagerFragment : Fragment() {
     ): View {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
+            PvpFragment.progressBar.visibility = View.VISIBLE
+
             val adapter = PvpCharacterAdapter(isFloatWindow)
 //            adapter.setHasStableIds(!isFloatWindow)
             binding.icons.adapter = adapter

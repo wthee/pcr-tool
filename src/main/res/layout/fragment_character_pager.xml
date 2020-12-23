@@ -9,7 +9,7 @@
         android:id="@+id/character_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAlphtBlack"
+        android:background="@color/colorAlphaBlack"
         android:paddingTop="@dimen/xm_padding"
         android:paddingBottom="@dimen/page_padding"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

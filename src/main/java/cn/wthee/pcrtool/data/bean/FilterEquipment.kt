@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.bean
 
 import androidx.core.content.edit
 import cn.wthee.pcrtool.MainActivity

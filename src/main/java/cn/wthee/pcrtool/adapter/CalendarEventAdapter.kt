@@ -16,12 +16,13 @@ import cn.wthee.pcrtool.data.network.model.CalendarEvent
 import cn.wthee.pcrtool.databinding.ItemCalendarEventBinding
 import cn.wthee.pcrtool.databinding.ItemCalendarEventHeaderBinding
 
+private const val ITEM_VIEW_TYPE_HEADER = 0
+private const val ITEM_VIEW_TYPE_ITEM = 1
+
 
 class CalendarEventAdapter :
     ListAdapter<CalendarDataItem, CalendarEventAdapter.ViewHolder>(CalendarDiffCallback()) {
 
-    private val ITEM_VIEW_TYPE_HEADER = 0
-    private val ITEM_VIEW_TYPE_ITEM = 1
 
     fun addHeaderAndSubmitList(list: List<CalendarContent>?) {
         val items = when {

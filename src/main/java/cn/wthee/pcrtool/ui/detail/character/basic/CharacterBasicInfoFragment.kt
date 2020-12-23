@@ -20,10 +20,11 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment.Companion.r6Id
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants.R6ID
+import cn.wthee.pcrtool.utils.Constants.UID
 import coil.imageLoader
 import coil.load
 import coil.request.ImageRequest
@@ -50,6 +51,7 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     private var uid = -1
+    private var r6Id = -1
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -57,6 +59,7 @@ class CharacterBasicInfoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         uid = CharacterPagerFragment.uid
+        r6Id = CharacterPagerFragment.r6Id
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
         exitTransition = Hold()
     }
@@ -158,13 +161,17 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.apply {
             characterPic.setOnClickListener {
                 try {
+                    val bundle = Bundle().apply {
+                        putInt(UID, uid)
+                        putInt(R6ID, r6Id)
+                    }
                     val extras =
                         FragmentNavigatorExtras(
                             it to it.transitionName,
                         )
                     findNavController().navigate(
                         R.id.action_characterPagerFragment_to_characterPicListFragment,
-                        null,
+                        bundle,
                         null,
                         extras
                     )
@@ -228,7 +235,7 @@ class CharacterBasicInfoFragment : Fragment() {
             else
                 characterPro.actualName
             birth.text = requireActivity().resources.getString(
-                R.string.birth,
+                R.string.date_m_d,
                 characterPro.birthMonth,
                 characterPro.birthDay
             )

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/background_color"
+    tools:context=".ui.tool.pvp.PvpLikedFragment">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/like_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/colorWhite"
+        android:layout_marginTop="@dimen/m_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:text="@string/no_liked_data" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_liked"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:orientation="vertical"
+        tools:itemCount="4"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_pvp_liked" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_top"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fab_size"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/efab_margin"
+        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/back_top"
+        android:text="@string/back_top"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/fab_text_size"
+        app:borderWidth="0dp"
+        app:icon="@drawable/ic_top"
+        app:iconSize="@dimen/menu_icon"
+        app:iconTint="@color/colorPrimary" />
+
+</LinearLayout>

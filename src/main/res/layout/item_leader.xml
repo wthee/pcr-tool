@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackgroundBorderless"
     android:layout_marginStart="@dimen/xs_margin"
     android:layout_marginTop="@dimen/m_margin"
-    android:layout_marginEnd="@dimen/xs_margin"
-    android:animateLayoutChanges="true">
+    android:layout_marginEnd="@dimen/xs_margin">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"

@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
+import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
-import cn.wthee.pcrtool.data.model.FilterEquipment
 
 
 //装备数据Repository

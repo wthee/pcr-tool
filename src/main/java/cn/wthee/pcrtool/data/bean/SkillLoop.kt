@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.bean
 
 data class SkillLoop(
     val loopTitle: String,

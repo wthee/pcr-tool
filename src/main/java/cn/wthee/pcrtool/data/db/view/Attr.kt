@@ -1,8 +1,8 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.data.bean.AttrValue
 import cn.wthee.pcrtool.data.db.entity.CharacterRarity
-import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
 

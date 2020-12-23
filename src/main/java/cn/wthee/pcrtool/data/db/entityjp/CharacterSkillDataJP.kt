@@ -38,6 +38,8 @@ data class CharacterSkillDataJP(
     @ColumnInfo(name = "main_skill_evolution_1") var main_skill_evolution_1: Int = 0,
     @ColumnInfo(name = "main_skill_evolution_2") var main_skill_evolution_2: Int = 0,
     //jp
+//    @Ignore
     @ColumnInfo(name = "sp_skill_evolution_1") var sp_skill_evolution_1: Int = 0,
+//    @Ignore
     @ColumnInfo(name = "sp_skill_evolution_2") var sp_skill_evolution_2: Int = 0
 )

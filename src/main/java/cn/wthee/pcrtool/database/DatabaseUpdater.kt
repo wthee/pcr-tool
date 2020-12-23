@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
-import cn.wthee.pcrtool.ui.home.CharacterListFragment
+import cn.wthee.pcrtool.ui.home.MainPagerFragment
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
@@ -46,7 +46,7 @@ object DatabaseUpdater {
                 downloadDB(version.data!!, fromSetting, force)
             } catch (e: Exception) {
                 Log.e("error", e.message ?: "")
-                CharacterListFragment.handler.sendEmptyMessage(0)
+                MainPagerFragment.handler.sendEmptyMessage(0)
             }
         }
     }
@@ -57,7 +57,7 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(DatabaseVersion("0", "hash"), force = true)
         } catch (e: Exception) {
-            CharacterListFragment.handler.sendEmptyMessage(0)
+            MainPagerFragment.handler.sendEmptyMessage(0)
         }
     }
 
@@ -97,7 +97,7 @@ object DatabaseUpdater {
             )
         } else {
             //切换成功
-            if (fromSetting == 1) CharacterListFragment.handler.sendEmptyMessage(2)
+            if (fromSetting == 1) MainPagerFragment.handler.sendEmptyMessage(2)
             //无需更新
             if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_LASTEST)
             //更新数据库版本号
@@ -116,6 +116,7 @@ object DatabaseUpdater {
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
+    fun getRegion() = if (getDatabaseType() == 1) 2 else 4
 
     private fun getLocalDatabaseVersion() = MainActivity.sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,

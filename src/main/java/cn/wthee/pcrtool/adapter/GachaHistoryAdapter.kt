@@ -2,9 +2,9 @@ package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,9 +14,7 @@ import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.databinding.ItemGachaBinding
 
 
-class GachaHistoryAdapter(
-    private val manager: FragmentManager
-) :
+class GachaHistoryAdapter :
     ListAdapter<GachaInfo, GachaHistoryAdapter.ViewHolder>(GachaDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -44,7 +42,7 @@ class GachaHistoryAdapter(
                 //卡池名
                 gachaName.text = gacha.gacha_name
                 //角色图片
-                val adapter = GachaListAdapter(manager)
+                val adapter = GachaListAdapter()
                 gachaIcons.adapter = adapter
                 adapter.submitList(gacha.getUnits())
                 //起止日期
@@ -56,6 +54,13 @@ class GachaHistoryAdapter(
                 }"
                 //卡池描述
                 gachaDesc.text = gacha.getDesc()
+                if (gacha.getUnits().contains(0)) {
+                    gachaDesc.visibility = View.VISIBLE
+                    gachaIcons.visibility = View.GONE
+                } else {
+                    gachaDesc.visibility = View.GONE
+                    gachaIcons.visibility = View.VISIBLE
+                }
             }
         }
     }

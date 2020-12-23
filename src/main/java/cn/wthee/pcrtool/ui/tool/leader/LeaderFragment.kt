@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import kotlinx.coroutines.Job
@@ -31,10 +32,11 @@ class LeaderFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolLeaderBinding.inflate(inflater, container, false)
+        binding.fabTop.hide()
         job = MainScope().launch {
             val list = MyAPIRepository.getLeader()
             if (list.status == 0) {
-                val adapter = CharacterLeaderAdapter()
+                val adapter = CharacterLeaderAdapter(requireContext())
                 binding.leaderList.adapter = adapter
                 adapter.submitList(list.data) {
                     binding.loading.root.visibility = View.GONE
@@ -52,6 +54,9 @@ class LeaderFragment : Fragment() {
         binding.source.setOnClickListener {
             BrowserUtil.open(requireContext(), getString(R.string.leader_source_url))
         }
+        //滚动监听
+        binding.leaderList.setScrollToTopListener(binding.fabTop)
+
         return binding.root
     }
 

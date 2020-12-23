@@ -1,10 +1,13 @@
 package cn.wthee.pcrtool.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -13,17 +16,17 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.sp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.MainPagerAdapter
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentMainPagerBinding
+import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
 import kotlin.collections.set
+import kotlin.system.exitProcess
 
 /**
  * 主页面 ViewPager
@@ -34,6 +37,7 @@ class MainPagerFragment : Fragment() {
         var cListClick = false
         lateinit var tabLayout: TabLayout
         lateinit var tipText: MaterialTextView
+        lateinit var handler: Handler
     }
 
     private lateinit var binding: FragmentMainPagerBinding
@@ -52,7 +56,69 @@ class MainPagerFragment : Fragment() {
         binding = FragmentMainPagerBinding.inflate(inflater, container, false)
         init()
         prepareTransitions()
+        setHandler()
         return binding.root
+    }
+
+    private fun setHandler() {
+        //接收消息
+        handler = Handler(Looper.getMainLooper(), Handler.Callback {
+            when (it.what) {
+                //获取版本失败
+                0 -> {
+                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
+                    DialogUtil.create(
+                        requireContext(),
+                        layout,
+                        Constants.NOTICE_TITLE_ERROR,
+                        Constants.NOTICE_TOAST_TIMEOUT,
+                        Constants.BTN_OPERATE_FORCE_UPDATE_DB,
+                        Constants.BTN_NOT_UPDATE_DB,
+                        object : DialogListener {
+                            override fun onCancel(dialog: AlertDialog) {
+                                //强制更新数据库
+                                DatabaseUpdater.forceUpdate()
+                                ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
+                                dialog.dismiss()
+                            }
+
+                            override fun onConfirm(dialog: AlertDialog) {
+                                dialog.dismiss()
+                            }
+                        }
+                    ).show()
+                }
+                //正常执行
+                1 -> {
+                    sharedCharacterViewModel.reload.postValue(true)
+                }
+                //数据切换
+                2 -> {
+                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
+                    DialogUtil.create(
+                        requireContext(),
+                        layout,
+                        getString(R.string.change_success),
+                        getString(R.string.change_success_tip),
+                        getString(R.string.close_app),
+                        getString(R.string.close_app_too),
+                        object : DialogListener {
+                            override fun onCancel(dialog: AlertDialog) {
+                                exitProcess(0)
+                            }
+
+                            override fun onConfirm(dialog: AlertDialog) {
+                                exitProcess(0)
+                            }
+                        }
+                    ).show()
+                }
+            }
+
+            return@Callback true
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -98,7 +164,7 @@ class MainPagerFragment : Fragment() {
             .setMainToolbar(getString(R.string.app_name))
         //tab 初始化
         tabLayout = binding.layoutTab
-        //绑定tablayout
+        //绑定tabLayout
         TabLayoutMediator(
             tabLayout,
             viewPager2

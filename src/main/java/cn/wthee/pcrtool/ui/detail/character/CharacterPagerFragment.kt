@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +14,7 @@ import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.HorizontalMarginItemDecoration
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModel
+import cn.wthee.pcrtool.ui.detail.character.attr.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.Constants
@@ -33,12 +33,12 @@ import kotlinx.coroutines.launch
 class CharacterPagerFragment : Fragment() {
 
     companion object {
-        var uid = -1
-        var r6Id = -1
         lateinit var viewPager: ViewPager2
         lateinit var fab: ExtendedFloatingActionButton
-
+        var uid = -1
+        var r6Id = -1
     }
+
 
     private lateinit var binding: FragmentCharacterPagerBinding
     private val characterAttrViewModel =
@@ -54,9 +54,7 @@ class CharacterPagerFragment : Fragment() {
         }
         //从 MainPagerFragment CharacterListFragment过渡至次页面
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            scrimColor = Color.TRANSPARENT
             duration = resources.getInteger(R.integer.fragment_anim).toLong()
-            setAllContainerColors(Color.TRANSPARENT)
         }
     }
 
@@ -78,13 +76,12 @@ class CharacterPagerFragment : Fragment() {
     private fun init() {
         //加载列表
         MainScope().launch {
-            val noData = characterAttrViewModel.isUnknow(uid)
+            val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
             fab = binding.characterFab
             viewPager.adapter =
-                CharacterPagerAdapter(childFragmentManager, lifecycle, noData)
+                CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid, r6Id)
             viewPager.adjustViewPager(requireContext())
-//            viewPager.currentItem = 1
             viewPager.offscreenPageLimit = 3
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {

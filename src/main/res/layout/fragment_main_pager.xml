@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorGray"
     android:orientation="vertical"
+    android:background="@color/colorBg"
     app:layoutDescription="@xml/fragment_main_pager_scene">
 
 

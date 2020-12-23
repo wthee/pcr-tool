@@ -6,21 +6,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.SslErrorHandler
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
+import android.widget.FrameLayout
+import androidx.core.widget.NestedScrollView
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
+import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import cn.wthee.pcrtool.utils.Constants.REGION
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+
 
 /**
  * 公告详情
  */
-class NewsDetailDialogFragment : BottomSheetDialogFragment() {
-    private val REGION = "region"
-    private val NEWSID = "news_id"
-    private val URL = "url"
+private const val NEWSID = "news_id"
+private const val URL = "url"
+
+class NewsDetailDialogFragment : CommonBasicDialogFragment() {
 
     private var region = 0
     private var newsId = 0
@@ -42,23 +45,25 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolNewsDetailBinding.inflate(inflater, container, false)
+        initWebview()
+        setListener()
+        return binding.root
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initWebview() {
         binding.apply {
-            openBrowse.setOnClickListener {
-//                ClipboardUtli.add(url)
-                BrowserUtil.open(requireContext(), url)
-            }
+            if (region == 4) webView.visibility = View.VISIBLE
             //设置
             webView.settings.apply {
                 domStorageEnabled = true
                 javaScriptEnabled = true
-                useWideViewPort = true //将图片调整到适合webview的大小
+                cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                useWideViewPort = true //将图片调整到适合webView的大小
                 loadWithOverviewMode = true // 缩放至屏幕的大小
                 javaScriptCanOpenWindowsAutomatically = true
-                if (region == 3 || region == 4) {
-                    tip.visibility = View.VISIBLE
-                    blockNetworkImage = true
-                    loadsImagesAutomatically = false
-                }
+                loadsImagesAutomatically = false
+                blockNetworkImage = true
             }
             webView.webChromeClient = WebChromeClient()
             webView.webViewClient = object : WebViewClient() {
@@ -78,56 +83,96 @@ class NewsDetailDialogFragment : BottomSheetDialogFragment() {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    webView.settings.blockNetworkImage = false
-                    webView.settings.loadsImagesAutomatically = true
+                    webView.settings.apply {
+                        loadsImagesAutomatically = true
+                        blockNetworkImage = false
+                    }
                     if (region == 2) {
                         //取消内部滑动
                         webView.loadUrl(
                             """
-                            javascript:
-                            $('#news-content').css('overflow','inherit');
-                            $('.news-detail').css('top','0.3rem');
-                            $('.top').css('display','none');
-                        """.trimIndent()
+                                javascript:
+                                $('#news-content').css('overflow','inherit');
+                                $('.news-detail').css('top','0.3rem');
+                                $('.top').css('display','none');
+                                $('.title').css('font-size','16px');
+                                $('.title').css('color','#2c94e4');
+                            """.trimIndent()
                         )
                     }
                     if (region == 3) {
                         webView.loadUrl(
                             """
-                            javascript:
-                            $('.menu').css('display','none');
-                            $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-                            $('.title').css('display','none');
-                            $('header').css('display','none');
-                            $('footer').css('display','none');
-                            $('aside').css('display','none');
-                            $('.paging').css('display','none');
-                        """.trimIndent()
+                                javascript:
+                                $('.menu').css('display','none');
+                                $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                $('.title').css('display','none');
+                                $('header').css('display','none');
+                                $('footer').css('display','none');
+                                $('aside').css('display','none');
+                                $('.paging').css('display','none');
+                                $('h3').css('font-size','16px');
+                            """.trimIndent()
                         )
                     }
                     if (region == 4) {
                         webView.loadUrl(
                             """
-                            javascript:
-                            $('#main_area').css('display','none');
-                            $('.bg-gray').css('display','none');
-                            $('.news_prev').css('display','none');
-                            $('.news_next').css('display','none');
-                            $('header').css('display','none');
-                            $('footer').css('display','none');
-                        """.trimIndent()
+                                javascript:
+                                $('#main_area').css('display','none');
+                                $('.bg-gray').css('display','none');
+                                $('.news_prev').css('display','none');
+                                $('.news_next').css('display','none');
+                                $('header').css('display','none');
+                                $('footer').css('display','none');
+                            """.trimIndent()
                         )
                     }
                     loading.visibility = View.GONE
-                    tip.visibility = View.GONE
                     webView.visibility = View.VISIBLE
                 }
             }
             //加载网页
             webView.loadUrl(url)
         }
-        return binding.root
     }
+
+    private fun setListener() {
+        binding.apply {
+            fabBrowser.setOnClickListener {
+                BrowserUtil.open(requireContext(), url)
+            }
+            fabTop.setImageResource(R.drawable.ic_left)
+            fabTop.setOnClickListener {
+                dialog?.dismiss()
+            }
+            scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, _, _, _ ->
+                if (scrollView.canScrollVertically(-1)) {
+                    fabTop.setImageResource(R.drawable.ic_top)
+                    fabTop.setOnClickListener {
+                        scrollView.smoothScrollTo(0, 0)
+                    }
+                } else {
+                    fabTop.setImageResource(R.drawable.ic_left)
+                    fabTop.setOnClickListener {
+                        dialog?.dismiss()
+                    }
+                }
+            })
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val bottomSheet =
+            dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheet?.let {
+            val behavior = BottomSheetBehavior.from(it)
+            //默认展开
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
 
     companion object {
         @JvmStatic

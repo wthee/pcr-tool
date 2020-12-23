@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_color"
     android:animateLayoutChanges="true"
+    android:background="@drawable/background_color"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -16,11 +16,31 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/event_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@color/colorAlpha"
         android:orientation="vertical"
         android:scrollbars="vertical"
+        android:padding="@dimen/xs_padding"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_event_data" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_top"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fab_size"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/efab_margin"
+        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/back_top"
+        android:text="@string/back_top"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/fab_text_size"
+        app:borderWidth="0dp"
+        app:icon="@drawable/ic_top"
+        app:iconSize="@dimen/menu_icon"
+        app:iconTint="@color/colorPrimary" />
 
 </LinearLayout>

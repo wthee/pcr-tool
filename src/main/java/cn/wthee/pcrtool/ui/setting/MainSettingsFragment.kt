@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.setting
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import androidx.preference.ListPreference
@@ -114,21 +113,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
         //分享应用
         shareApp?.setOnPreferenceClickListener {
-            var shareIntent = Intent()
-            shareIntent.action = Intent.ACTION_SEND
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(
-                Intent.EXTRA_TEXT,
-                "PCR Tool 下载地址: ${getString(R.string.app_download_url)}"
-            )
-            shareIntent = Intent.createChooser(shareIntent, "分享到：")
-            //将mipmap中图片转换成Uri
-//            val imgUri = FileUtil.getUriFromDrawableRes(MyApplication.context, R.drawable.app_code)
-//            shareIntent.action = Intent.ACTION_SEND
-//            shareIntent.putExtra(Intent.EXTRA_STREAM, imgUri)
-//            shareIntent.type = "image/*"
-//            shareIntent = Intent.createChooser(shareIntent, "分享下载二维码")
-            startActivity(shareIntent)
+            ShareIntentUtil.text("PCR Tool 下载地址: ${getString(R.string.app_download_url)}")
             return@setOnPreferenceClickListener true
         }
     }

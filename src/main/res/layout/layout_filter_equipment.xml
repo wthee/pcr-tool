@@ -61,7 +61,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:scrollbars="vertical"
-        android:layout_height="@dimen/card_height">
+        android:layout_height="@dimen/filter_scroller_height">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chips_type"

@@ -3,15 +3,13 @@
     <dimen name="card_radius">6dp</dimen>
     <dimen name="page_radius">10dp</dimen>
     <dimen name="menu_item_card_radius">12dp</dimen>
-    <dimen name="loading_dialog_width">100dp</dimen>
     <dimen name="loading_dialog_height">80dp</dimen>
     <dimen name="desc_height">70dp</dimen>
     <dimen name="card_height">150dp</dimen>
     <dimen name="menu_item_card_height">130dp</dimen>
     <dimen name="small_card_height">60dp</dimen>
     <dimen name="news_card_height">100dp</dimen>
-    <dimen name="card_height_1">220dp</dimen>
-    <dimen name="calendar_height">360dp</dimen>
+    <dimen name="filter_scroller_height">250dp</dimen>
     <dimen name="float_window_width">233dp</dimen>
     <!-- icon-->
     <dimen name="m_icon">16dp</dimen>
@@ -24,12 +22,13 @@
     <dimen name="big_icon">64dp</dimen>
     <dimen name="character_icon_size">64dp</dimen>
 
-    <!-- magrin & padding-->
+    <!-- margin & padding-->
     <dimen name="xs_margin">3dp</dimen>
     <dimen name="s_margin">6dp</dimen>
     <dimen name="m_margin">9dp</dimen>
     <dimen name="xm_margin">12dp</dimen>
     <dimen name="efab_margin">13dp</dimen>
+    <dimen name="pvp_liked_title_margin">22dp</dimen>
     <dimen name="l_margin">25dp</dimen>
     <dimen name="xl_margin">65dp</dimen>
     <dimen name="xs_padding">3dp</dimen>
@@ -49,4 +48,7 @@
     <dimen name="viewpager_next_item_visible">8dp</dimen>
     <dimen name="viewpager_current_item_horizontal_margin">14dp</dimen>
     <dimen name="fab_text_size">10sp</dimen>
+    <dimen name="fab_text_2">90dp</dimen>
+    <dimen name="fab_text_3">100dp</dimen>
+    <dimen name="icon_size">48dp</dimen>
 </resources>

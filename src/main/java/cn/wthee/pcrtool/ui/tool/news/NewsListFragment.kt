@@ -11,12 +11,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.NewsAdapter
 import cn.wthee.pcrtool.adapter.load.LoaderStateAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsListBinding
+import cn.wthee.pcrtool.utils.Constants.REGION
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ShareIntentUtil
+import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
-private const val REGION = "region"
 
 /**
  * 公告列表
@@ -40,7 +41,7 @@ class ToolNewsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolNewsListBinding.inflate(inflater, container, false)
-        adapter = NewsAdapter(parentFragmentManager, region)
+        adapter = NewsAdapter(parentFragmentManager, region, binding.fabCopy)
         val loaderStateAdapter = LoaderStateAdapter { adapter.retry() }
         binding.newsList.adapter = adapter.withLoadStateFooter(loaderStateAdapter)
 
@@ -51,6 +52,21 @@ class ToolNewsListFragment : Fragment() {
             setOnRefreshListener {
                 loadNews()
                 isRefreshing = false
+            }
+        }
+        //复制
+        binding.fabCopy.hide()
+        binding.fabCopy.setOnClickListener {
+            val selecteds = adapter.getSelected()
+            if (selecteds.isNotEmpty()) {
+                var contents = ""
+                selecteds.forEach {
+                    contents += it.content
+                }
+                contents += getString(R.string.from, getString(R.string.app_name))
+                ShareIntentUtil.text(contents)
+            } else {
+                ToastUtil.short("未选择公告~")
             }
         }
         //新闻数据

@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -20,9 +19,11 @@ import kotlinx.coroutines.launch
 /**
  * 角色技能页面
  */
+
+private const val DIALOG = "isDialog"
+
 class CharacterSkillFragment : Fragment() {
 
-    private val DIALOG = "isDialog"
 
     companion object {
         fun getInstance(uid: Int, isDialog: Boolean = false) =
@@ -47,12 +48,9 @@ class CharacterSkillFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.apply {
+        requireArguments().apply {
             uid = getInt(UID)
             isDialog = getBoolean(DIALOG)
-        }
-        if (!isDialog) {
-            uid = CharacterPagerFragment.uid
         }
     }
 
@@ -97,7 +95,7 @@ class CharacterSkillFragment : Fragment() {
                 setCenterTitle("")
                 setRightIcon(R.drawable.ic_loop)
                 rightIcon.setOnClickListener {
-                    CharacterSkillLoopDialogFragment.getInstance(CharacterPagerFragment.uid)
+                    CharacterSkillLoopDialogFragment.getInstance(uid)
                         .show(parentFragmentManager, "loop")
                 }
             }

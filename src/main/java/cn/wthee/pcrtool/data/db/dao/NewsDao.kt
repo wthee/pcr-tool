@@ -13,7 +13,7 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(news: List<NewsTable>)
 
-    @Query("SELECT * FROM news WHERE id LIKE :query ORDER BY date DESC")
+    @Query("SELECT * FROM news WHERE id LIKE :query")
     fun pagingSource(query: String): PagingSource<Int, NewsTable>
 
     @Query("DELETE FROM news WHERE id LIKE :region")

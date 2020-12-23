@@ -120,7 +120,7 @@
             android:layout_height="match_parent">
             <CustomAttribute
                 app:attributeName="backgroundColor"
-                app:customColorValue="@color/colorAlphtBlack" />
+                app:customColorValue="@color/colorAlphaBlack" />
         </Constraint>
 
         <Constraint

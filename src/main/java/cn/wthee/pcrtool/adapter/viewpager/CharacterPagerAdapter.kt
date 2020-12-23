@@ -17,7 +17,8 @@ import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillFragment
 class CharacterPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    noData: Boolean
+    noData: Boolean,
+    uid: Int, r6Id: Int
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     private val mFragments: SparseArray<Fragment> = SparseArray()
@@ -25,8 +26,8 @@ class CharacterPagerAdapter(
     init {
         mFragments.put(0, CharacterBasicInfoFragment.getInstance())
         if (!noData) {
-            mFragments.put(1, CharacterAttrFragment())
-            mFragments.put(2, CharacterSkillFragment())
+            mFragments.put(1, CharacterAttrFragment.getInstance(uid, r6Id))
+            mFragments.put(2, CharacterSkillFragment.getInstance(uid))
         }
     }
 

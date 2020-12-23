@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.adapter
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -12,13 +13,21 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.databinding.ItemNewsBinding
 import cn.wthee.pcrtool.ui.tool.news.NewsDetailDialogFragment
-import cn.wthee.pcrtool.utils.ClipboardUtli
+import cn.wthee.pcrtool.utils.ResourcesUtil
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 
 class NewsAdapter(
     private val fragmentManager: FragmentManager,
-    private val region: Int
+    private val region: Int,
+    private val fabCopy: ExtendedFloatingActionButton
 ) : PagingDataAdapter<NewsTable, NewsAdapter.ViewHolder>(NewsListDiffCallback()) {
+
+    private val selectItems = arrayListOf<SelectedItem>()
+
+    fun getSelected() = selectItems
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemNewsBinding.inflate(
@@ -30,7 +39,14 @@ class NewsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!)
+        val item = getItem(position)!!
+        val view = holder.itemView.findViewById<MaterialCardView>(R.id.news_item)
+        if (selectItems.find { it.id == item.id } != null) {
+            view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlphaBlack)))
+        } else {
+            view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlpha)))
+        }
+        holder.bind(item)
     }
 
     inner class ViewHolder(private val binding: ItemNewsBinding) :
@@ -56,7 +72,16 @@ class NewsAdapter(
                     ).show(fragmentManager, "detail$data.id")
                 }
                 root.setOnLongClickListener {
-                    ClipboardUtli.add(data.url)
+                    if (selectItems.find { it.id == data.id } != null) {
+                        selectItems.removeAll {
+                            it.id == data.id
+                        }
+                    } else {
+                        selectItems.add(SelectedItem(data.id, data.title + "\n" + data.url + "\n"))
+                    }
+                    //显示/隐藏复制按钮
+                    if (selectItems.isNotEmpty()) fabCopy.show() else fabCopy.hide()
+                    notifyDataSetChanged()
                     return@setOnLongClickListener true
                 }
             }
@@ -81,3 +106,8 @@ private class NewsListDiffCallback : DiffUtil.ItemCallback<NewsTable>() {
         return oldItem == newItem
     }
 }
+
+class SelectedItem(
+    val id: String,
+    val content: String
+)

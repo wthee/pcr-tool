@@ -1,10 +1,10 @@
 package cn.wthee.pcrtool.data.network
 
-import androidx.preference.PreferenceManager
-import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.view.getIds
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
@@ -21,10 +21,7 @@ object MyAPIRepository {
     suspend fun getPVPData(): ResponseData<List<PvpData>> {
         //接口参数
         val json = JsonObject()
-        val databaseType = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
-            .getString("change_database", "1")?.toInt() ?: 1
-        val region = if (databaseType == 1) 2 else 4
-        json.addProperty("region", region)
+        json.addProperty("region", DatabaseUpdater.getRegion())
         json.add("ids", PvpFragment.selects.getIds())
         val body = RequestBody.create(
             MediaType.parse("application/json; charset=utf-8"),
@@ -47,7 +44,7 @@ object MyAPIRepository {
     }
 
     //官网信息
-    suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsData>> {
+    suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsTable>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)

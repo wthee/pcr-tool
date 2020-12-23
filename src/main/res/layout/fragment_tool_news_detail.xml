@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minHeight="@dimen/card_height"
-    android:orientation="vertical"
-    android:animateLayoutChanges="true">
+    android:focusable="true"
+    android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/loading"
@@ -12,18 +13,6 @@
         android:layout_height="@dimen/progress_bar_size"
         android:layout_gravity="center"
         android:layout_margin="@dimen/xl_margin" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/l_margin"
-        android:gravity="center"
-        android:text="@string/news_load_tip"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/colorPrimary"
-        android:visibility="gone" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
@@ -34,17 +23,42 @@
             android:id="@+id/web_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
     </androidx.core.widget.NestedScrollView>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/open_browse"
-        android:layout_width="@dimen/menu_icon"
-        android:layout_height="@dimen/menu_icon"
-        android:layout_gravity="end"
-        android:layout_margin="@dimen/s_margin"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_browser"
-        android:theme="@style/Ripple" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:layout_marginBottom="@dimen/m_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/function"
+        android:src="@drawable/ic_top"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/colorPrimary" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_browser"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fab_size"
+        android:layout_gravity="end|bottom"
+        android:layout_marginTop="@dimen/efab_margin"
+        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/open_browser"
+        android:text="@string/open_browser"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/fab_text_size"
+        app:borderWidth="0dp"
+        app:icon="@drawable/ic_browser"
+        app:iconSize="@dimen/menu_icon"
+        app:iconTint="@color/colorPrimary" />
+
 </FrameLayout>

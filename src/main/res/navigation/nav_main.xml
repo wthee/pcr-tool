@@ -101,11 +101,27 @@
         android:id="@+id/toolPvpFragment"
         android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpFragment"
         android:label="ToolPvpFragment"
-        tools:layout="@layout/fragment_tool_pvp" />
+        tools:layout="@layout/fragment_tool_pvp">
+        <action
+            android:id="@+id/action_toolPvpFragment_to_pvpLikedFragment"
+            app:destination="@id/pvpLikedFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+    </fragment>
     <fragment
         android:id="@+id/toolGachaFragment"
         android:name="cn.wthee.pcrtool.ui.tool.gacha.GachaFragment"
-        android:label="ToolGachaFragment" />
+        android:label="ToolGachaFragment">
+        <action
+            android:id="@+id/action_toolGachaFragment_to_characterPagerFragment"
+            app:destination="@id/characterPagerFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+    </fragment>
     <fragment
         android:id="@+id/characterPicListFragment"
         android:name="cn.wthee.pcrtool.ui.detail.character.basic.CharacterPicListFragment"
@@ -123,5 +139,10 @@
         android:id="@+id/calendarFragment"
         android:name="cn.wthee.pcrtool.ui.tool.calendar.CalendarFragment"
         android:label="CalendarFragment" />
+    <fragment
+        android:id="@+id/pvpLikedFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedFragment"
+        android:label="fragment_pvp_liked"
+        tools:layout="@layout/fragment_tool_pvp_liked" />
 
 </navigation>

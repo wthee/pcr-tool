@@ -22,7 +22,6 @@
         android:id="@+id/character_drops"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
         android:focusable="true"
         android:orientation="vertical"
         android:scrollbars="vertical"

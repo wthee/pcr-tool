@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">PCR Tool</string>
-    <string name="birth">%s 月 %s 日</string>
+    <string name="date_m_d">%s 月 %s 日</string>
     <string name="character_detail">%s / %sCM / %sKG / %d</string>
     <string name="blood">%s 型</string>
     <string name="unique_equip_lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
-    <string name="pic_index">%d / %d</string>
     <string name="percent">%d%%</string>
     <string name="equip_count">%s …x%d</string>
+    <string name="select_pic_count">已选择 %d</string>
     <!-- 角色 & 装备  -->
     <string name="rank">RANK</string>
     <string name="title_quest">什么地方</string>
@@ -40,7 +40,6 @@
     <string name="function">功能</string>
     <string name="data_null_character">未找到角色信息~</string>
     <string name="data_null_equip">未找到装备信息~</string>
-    <string name="data_null_enemy">未找到怪物信息~</string>
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
@@ -62,7 +61,8 @@
     <string name="db_jp_value">2</string>
 
     <!--筛选  -->
-    <string name="filter">筛选排序</string>
+    <string name="filter_sort">筛选排序</string>
+    <string name="filter">筛选</string>
     <string name="title_sort">排序类型</string>
     <string name="next">确认</string>
     <string name="reset">重置</string>
@@ -93,9 +93,11 @@
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历-国服</string>
     <string name="tool_pvp">竞技场</string>
+    <string name="tool_pvp_liked">收藏</string>
+    <string name="liked_count">已收藏： %d </string>
     <string name="character">角色</string>
-    <string name="pvp_search">查询进攻队伍</string>
-    <string name="pvp_float">打开悬浮窗</string>
+    <string name="pvp_search">查询</string>
+    <string name="pvp_float">悬浮窗</string>
     <string name="game_version">切换数据</string>
     <string name="game_version_summary">可选择国服或日服数据</string>
     <string name="change_success">更新完成</string>
@@ -123,7 +125,6 @@
     <string name="download_pic">下载当前图片</string>
     <string name="tool_news">公告</string>
     <string name="loading">加载中…</string>
-    <string name="news_load_tip">网页加载较慢或无法加载，可尝试在浏览器中查看~</string>
     <string name="loading_news">正在获取最新数据…</string>
     <string name="stared">已收藏</string>
     <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
@@ -148,5 +149,14 @@
 
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
+    <string name="unselect_pic">未选择图片</string>
+    <string name="back_top">回到顶部</string>
+    <string name="team_atk">进攻方</string>
+    <string name="team_def">防守方</string>
+    <string name="no_liked_data">无收藏信息~</string>
+    <string name="share">分享</string>
+    <string name="open_browser">浏览器中打开</string>
+    <string name="min">最小化</string>
+    <string name="from">From %s</string>
 
 </resources>

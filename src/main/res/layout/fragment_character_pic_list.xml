@@ -29,7 +29,7 @@
         android:layout_marginBottom="@dimen/efab_margin"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/download_pic"
-        android:text="未选择图片"
+        android:text="@string/unselect_pic"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/fab_text_size"
         app:borderWidth="0dp"

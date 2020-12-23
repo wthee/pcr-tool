@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.adapter.EventHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToolbarUtil
 
 /**
@@ -41,6 +42,9 @@ class EventFragment : Fragment() {
             R.drawable.ic_event,
             getString(R.string.tool_event)
         )
+
+        //滚动监听
+        binding.eventList.setScrollToTopListener(binding.fabTop)
         return binding.root
     }
 
