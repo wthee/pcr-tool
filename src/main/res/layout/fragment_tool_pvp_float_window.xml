@@ -153,24 +153,37 @@
 
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/liked_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_color"
-            android:visibility="invisible">
+            android:orientation="vertical"
+            android:visibility="invisible"
+            tools:visibility="visible">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/like_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="@dimen/m_margin"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:text="@string/no_liked_data" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list_liked"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
                 android:layout_marginStart="@dimen/s_margin"
                 android:layout_marginEnd="@dimen/s_margin"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_pvp_liked" />
-        </FrameLayout>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

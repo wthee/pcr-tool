@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScollToTopListener
+import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import kotlinx.coroutines.Job
@@ -55,7 +55,7 @@ class LeaderFragment : Fragment() {
             BrowserUtil.open(requireContext(), getString(R.string.leader_source_url))
         }
         //滚动监听
-        binding.leaderList.setScollToTopListener(binding.fabTop)
+        binding.leaderList.setScrollToTopListener(binding.fabTop)
 
         return binding.root
     }

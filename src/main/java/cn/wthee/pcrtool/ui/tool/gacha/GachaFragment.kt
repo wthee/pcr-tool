@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.adapter.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScollToTopListener
+import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToolbarUtil
 
 /**
@@ -44,7 +44,7 @@ class GachaFragment : Fragment() {
         )
 
         //滚动监听
-        binding.gachaList.setScollToTopListener(binding.fabTop)
+        binding.gachaList.setScrollToTopListener(binding.fabTop)
 
         return binding.root
     }

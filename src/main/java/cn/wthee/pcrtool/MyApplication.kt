@@ -21,29 +21,6 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-//        val strategy = UserStrategy(this)
-//        strategy.setCrashHandleCallback(object : CrashReport.CrashHandleCallback() {
-//            override fun onCrashHandleStart(
-//                crashType: Int, errorType: String,
-//                errorMessage: String, errorStack: String
-//            ): Map<String, String> {
-//                //捕获异常
-//                val map = LinkedHashMap<String, String>()
-//                map["Key"] = "Value"
-//                return map
-//            }
-//
-//            override fun onCrashHandleStart2GetExtraDatas(
-//                crashType: Int, errorType: String,
-//                errorMessage: String, errorStack: String
-//            ): ByteArray {
-//                return try {
-//                    "Extra data.".toByteArray(charset("UTF-8"))
-//                } catch (e: Exception) {
-//                    "Extra data.".toByteArray(charset("UTF-8"))
-//                }
-//            }
-//        })
         Bugly.init(this, "97f5e02e71", false)
     }
 

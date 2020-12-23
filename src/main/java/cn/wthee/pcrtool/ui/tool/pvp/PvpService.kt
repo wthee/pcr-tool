@@ -110,40 +110,19 @@ class PvpService : Service() {
         //初始化
         loadDefault()
         setPager()
+        setListener()
+    }
 
+    private fun setListener() {
         binding.apply {
-            //查询结果列表
-            adapter = PvpCharacterResultAdapter(activity, true)
-            resultContent.pvpResultList.adapter = adapter
-
-            resultContent.root.visibility = View.GONE
-            resultContent.pvpResultToolbar.root.visibility = View.GONE
             //搜索按钮
             search.setOnClickListener {
-                binding.resultContent.progress.visibility = View.VISIBLE
+                resultContent.progress.visibility = View.VISIBLE
                 if (selects.contains(PvpCharacterData(0, 999))) {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
-                    binding.select.visibility = View.INVISIBLE
-                    back.visibility = View.VISIBLE
-                    resultContent.root.visibility = View.VISIBLE
-                    job = MainScope().launch {
-                        resultContent.pvpNoData.visibility = View.GONE
-                        val result = MyAPIRepository.getPVPData()
-                        if (result.status == 0) {
-                            if (result.data!!.isEmpty()) {
-                                resultContent.pvpNoData.visibility = View.VISIBLE
-                            }
-                            adapter.submitList(result.data!!.sortedByDescending {
-                                it.up
-                            })
-                        } else if (result.status == -1) {
-                            ToastUtil.short(result.message)
-                            binding.select.visibility = View.VISIBLE
-                        }
-                        binding.resultContent.progress.visibility = View.GONE
-                    }
+                    showResult()
                 }
             }
             //返回
@@ -153,14 +132,18 @@ class PvpService : Service() {
                         job.cancel()
                     }
                 }
-                if (resultContent.root.visibility == View.VISIBLE) {
-                    resultContent.root.visibility = View.GONE
-                    adapter.submitList(null)
-                }
-                binding.select.visibility = View.VISIBLE
+                //隐藏查询结果页面
+                resultContent.root.visibility = View.GONE
                 resultContent.pvpNoData.visibility = View.GONE
+                adapter.submitList(null)
+
+                //隐藏返回键和收藏页面
                 back.visibility = View.GONE
                 likedBg.visibility = View.GONE
+                liked.setImageResource(R.drawable.ic_loved_line)
+                //显示选择页面
+                binding.select.visibility = View.VISIBLE
+                searchBg.visibility = View.VISIBLE
             }
             //移动
             move.setOnClickListener {
@@ -182,53 +165,85 @@ class PvpService : Service() {
                     liked.setImageResource(R.drawable.ic_loved)
                     searchBg.visibility = View.INVISIBLE
                     likedBg.visibility = View.VISIBLE
-                    //初始化
-                    //获取数据版本
-                    val viewModel = InjectorUtil.providePvpViewModelFactory()
-                        .create(PvpLikedViewModel::class.java)
+                    showLiked()
+                }
+            }
+        }
+    }
+
+    private fun showLiked() {
+        val viewModel = InjectorUtil.providePvpViewModelFactory()
+            .create(PvpLikedViewModel::class.java)
+        MainScope().launch {
+            val data = viewModel.getLikedData(getRegion())
+            //初始化适配器
+            val likedAdapter = PvpLikedAdapter(activity, true)
+            binding.listLiked.adapter = likedAdapter
+            likedAdapter.submitList(data) {
+                binding.likeTip.text =
+                    if (data.isNotEmpty())
+                        getString(R.string.liked_count, data.size)
+                    else
+                        getString(R.string.no_liked_data)
+            }
+
+            //列表设置左右滑动
+            ItemTouchHelper(object :
+                ItemTouchHelper.SimpleCallback(
+                    0,
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return true
+                }
+
+                @SuppressLint("SimpleDateFormat")
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
                     MainScope().launch {
-                        val data = viewModel.getLikedData(getRegion())
-                        //初始化适配器
-                        val likedAdapter = PvpLikedAdapter(activity, true)
-                        binding.listLiked.adapter = likedAdapter
-                        likedAdapter.submitList(data)
-
-                        //列表设置左右滑动
-                        ItemTouchHelper(object :
-                            ItemTouchHelper.SimpleCallback(
-                                0,
-                                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                            ) {
-                            override fun onMove(
-                                recyclerView: RecyclerView,
-                                viewHolder: RecyclerView.ViewHolder,
-                                target: RecyclerView.ViewHolder
-                            ): Boolean {
-                                return true
-                            }
-
-                            @SuppressLint("SimpleDateFormat")
-                            override fun onSwiped(
-                                viewHolder: RecyclerView.ViewHolder,
-                                direction: Int
-                            ) {
-                                MainScope().launch {
-                                    val dao = AppPvpDatabase.getInstance().getPvpDao()
-                                    val atks =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
-                                    val defs =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
-                                    val atkIds = atks.text.toString()
-                                    val defIds = defs.text.toString()
-                                    val region = getRegion()
-                                    //删除记录
-                                    dao.delete(dao.get(atkIds, defIds, region)!!)
-                                    likedAdapter.submitList(dao.getAll(region))
-                                }
-                            }
-                        }).attachToRecyclerView(binding.listLiked)
+                        val dao = AppPvpDatabase.getInstance().getPvpDao()
+                        val atks =
+                            viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
+                        val defs =
+                            viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
+                        val atkIds = atks.text.toString()
+                        val defIds = defs.text.toString()
+                        val region = getRegion()
+                        //删除记录
+                        dao.delete(dao.get(atkIds, defIds, region)!!)
+                        likedAdapter.submitList(dao.getAll(region))
                     }
                 }
+            }).attachToRecyclerView(binding.listLiked)
+        }
+    }
+
+    private fun showResult() {
+        binding.apply {
+            select.visibility = View.INVISIBLE
+            back.visibility = View.VISIBLE
+            resultContent.root.visibility = View.VISIBLE
+            job = MainScope().launch {
+                resultContent.pvpNoData.visibility = View.GONE
+                val result = MyAPIRepository.getPVPData()
+                if (result.status == 0) {
+                    if (result.data!!.isEmpty()) {
+                        resultContent.pvpNoData.visibility = View.VISIBLE
+                    }
+                    adapter.submitList(result.data!!.sortedByDescending {
+                        it.up
+                    })
+                } else if (result.status == -1) {
+                    ToastUtil.short(result.message)
+                    select.visibility = View.VISIBLE
+                }
+                resultContent.progress.visibility = View.GONE
             }
         }
     }
@@ -280,5 +295,13 @@ class PvpService : Service() {
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()
+
+        binding.apply {
+            //查询结果列表
+            adapter = PvpCharacterResultAdapter(activity, true)
+            resultContent.pvpResultList.adapter = adapter
+            resultContent.root.visibility = View.GONE
+            resultContent.pvpResultToolbar.root.visibility = View.GONE
+        }
     }
 }

@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScollToTopListener
+import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.MaterialContainerTransform
@@ -113,7 +113,7 @@ class PvpLikedFragment : Fragment() {
             }
         }).attachToRecyclerView(binding.listLiked)
         //滚动监听
-        binding.listLiked.setScollToTopListener(binding.fabTop)
+        binding.listLiked.setScrollToTopListener(binding.fabTop)
 
     }
 

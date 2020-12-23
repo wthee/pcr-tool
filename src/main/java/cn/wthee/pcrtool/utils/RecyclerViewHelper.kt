@@ -5,7 +5,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 
 object RecyclerViewHelper {
 
-    fun RecyclerView.setScollToTopListener(fab: ExtendedFloatingActionButton) {
+    fun RecyclerView.setScrollToTopListener(fab: ExtendedFloatingActionButton) {
         fab.hide()
         //滚动监听
         addOnScrollListener(object : RecyclerView.OnScrollListener() {
