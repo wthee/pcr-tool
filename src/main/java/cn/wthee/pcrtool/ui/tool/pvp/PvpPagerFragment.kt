@@ -46,6 +46,8 @@ class PvpPagerFragment : Fragment() {
     ): View {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
+            PvpFragment.progressBar.visibility = View.VISIBLE
+
             val adapter = PvpCharacterAdapter(isFloatWindow)
 //            adapter.setHasStableIds(!isFloatWindow)
             binding.icons.adapter = adapter
