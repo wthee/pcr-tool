@@ -8,6 +8,7 @@
     android:layout_marginBottom="@dimen/m_margin"
     app:cardCornerRadius="@dimen/card_radius">
 
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/atk_ids"
         android:layout_width="wrap_content"
@@ -20,58 +21,58 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/s_margin"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/liked_characters"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:nestedScrollingEnabled="false"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.9"
             app:spanCount="5"
             tools:itemCount="10"
             tools:listitem="@layout/item_pvp_result_icon" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/right_title"
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/atk"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:src="@drawable/ic_pvp"
+            app:layout_constraintBottom_toBottomOf="@id/center_gl"
+            app:layout_constraintEnd_toStartOf="@id/liked_characters"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/def"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:src="@drawable/ic_def"
+            android:tint="@color/red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/liked_characters"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/center_gl" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/center_gl"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/team_atk"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:textColor="@color/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="@id/center_gl"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/team_def"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:textColor="@color/red"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="@id/center_gl" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/center_gl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.5" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

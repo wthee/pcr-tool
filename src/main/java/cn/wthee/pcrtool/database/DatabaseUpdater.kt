@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.database
 
-import android.util.Log
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.Data
@@ -45,7 +44,6 @@ object DatabaseUpdater {
                 //更新判断
                 downloadDB(version.data!!, fromSetting, force)
             } catch (e: Exception) {
-                Log.e("error", e.message ?: "")
                 MainPagerFragment.handler.sendEmptyMessage(0)
             }
         }

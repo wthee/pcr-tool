@@ -4,7 +4,6 @@ import android.Manifest
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -157,7 +156,6 @@ class CharacterPicListFragment : CommonBasicDialogFragment(true) {
                                         ImageDownloadUtil(requireActivity()).save(bitmap, name)
                                     }
                                 } catch (e: Exception) {
-                                    Log.e("save", e.message ?: "")
                                     ToastUtil.short("第${index + 1}张图片未保存成功，请重试~")
                                 }
                             }

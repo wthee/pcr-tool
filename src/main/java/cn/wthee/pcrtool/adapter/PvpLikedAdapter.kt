@@ -2,13 +2,13 @@ package cn.wthee.pcrtool.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.databinding.ItemPvpLikedBinding
+import cn.wthee.pcrtool.utils.dp
 
 
 class PvpLikedAdapter(
@@ -42,11 +42,21 @@ class PvpLikedAdapter(
                 val adapter = PvpCharacterResultItemAdapter(activity)
                 likedCharacters.adapter = adapter
                 adapter.submitList(data.getIds())
+                val params0 = atk.layoutParams
+                val params1 = def.layoutParams
                 if (isFloat) {
-                    rightTitle.visibility = View.GONE
+                    params0.width = 14.dp
+                    params0.height = 14.dp
+                    params1.width = 14.dp
+                    params1.height = 14.dp
                 } else {
-                    rightTitle.visibility = View.VISIBLE
+                    params0.width = 24.dp
+                    params0.height = 24.dp
+                    params1.width = 24.dp
+                    params1.height = 24.dp
                 }
+                atk.layoutParams = params0
+                def.layoutParams = params1
             }
         }
     }

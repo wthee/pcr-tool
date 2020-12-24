@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.detail.character
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +61,6 @@ class CharacterPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.e("character", "page create")
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         init()
         if (savedInstanceState == null) {

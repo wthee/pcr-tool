@@ -10,8 +10,8 @@ android {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 50
-        versionName "0.5.0"
+        versionCode 51
+        versionName "0.5.1"
 
         ndk {
             //设置支持的SO库架构

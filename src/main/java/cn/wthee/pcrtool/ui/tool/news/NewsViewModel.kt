@@ -16,8 +16,8 @@ class NewsViewModel : ViewModel() {
 
     val newsDao = AppNewsDatabase.getInstance().getNewsDao()
 
-    private val pageSize = 8
-    private val initSize = 16
+    private val pageSize = 10
+    private val initSize = 20
 
     fun getNewsCN(): Flow<PagingData<NewsTable>> {
         return Pager(
