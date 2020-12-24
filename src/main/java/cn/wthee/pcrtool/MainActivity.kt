@@ -535,7 +535,7 @@ class MainActivity : AppCompatActivity() {
             )
             MenuItemViewHelper(toolCalendar).setItem(
                 "",
-                R.drawable.ic_calender,
+                R.drawable.ic_calendar,
                 R.color.colorPrimary
             ).setCenterIcon()
         }

@@ -50,6 +50,7 @@
             android:layout_width="@dimen/l_icon"
             android:layout_height="@dimen/l_icon"
             android:src="@drawable/ic_pvp"
+            android:tint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@id/center_gl"
             app:layout_constraintEnd_toStartOf="@id/liked_characters"
             app:layout_constraintStart_toStartOf="parent"

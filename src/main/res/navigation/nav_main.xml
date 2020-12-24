@@ -102,6 +102,7 @@
         android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpFragment"
         android:label="ToolPvpFragment"
         tools:layout="@layout/fragment_tool_pvp">
+        <deepLink app:uri="tool://pvp" />
         <action
             android:id="@+id/action_toolPvpFragment_to_pvpLikedFragment"
             app:destination="@id/pvpLikedFragment"
@@ -130,7 +131,9 @@
         android:id="@+id/toolNewsFragment"
         android:name="cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment"
         android:label="fragment_tool_news"
-        tools:layout="@layout/fragment_tool_news" />
+        tools:layout="@layout/fragment_tool_news">
+        <deepLink app:uri="tool://news" />
+    </fragment>
     <fragment
         android:id="@+id/eventFragment"
         android:name="cn.wthee.pcrtool.ui.tool.event.EventFragment"
@@ -138,7 +141,9 @@
     <fragment
         android:id="@+id/calendarFragment"
         android:name="cn.wthee.pcrtool.ui.tool.calendar.CalendarFragment"
-        android:label="CalendarFragment" />
+        android:label="CalendarFragment">
+        <deepLink app:uri="tool://calendar" />
+    </fragment>
     <fragment
         android:id="@+id/pvpLikedFragment"
         android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedFragment"
