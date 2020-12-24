@@ -39,14 +39,16 @@ class NewsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)!!
-        val view = holder.itemView.findViewById<MaterialCardView>(R.id.news_item)
-        if (selectItems.find { it.id == item.id } != null) {
-            view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlphaBlack)))
-        } else {
-            view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlpha)))
+        val item = getItem(position)
+        item?.let { data ->
+            val view = holder.itemView.findViewById<MaterialCardView>(R.id.news_item)
+            if (selectItems.find { it.id == data.id } != null) {
+                view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlphaBlack)))
+            } else {
+                view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlpha)))
+            }
+            holder.bind(data)
         }
-        holder.bind(item)
     }
 
     inner class ViewHolder(private val binding: ItemNewsBinding) :

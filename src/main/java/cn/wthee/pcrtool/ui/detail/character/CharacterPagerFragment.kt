@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.SharedElementCallback
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
@@ -17,7 +16,6 @@ import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModel
 import cn.wthee.pcrtool.ui.detail.character.attr.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillLoopDialogFragment
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -41,6 +39,8 @@ class CharacterPagerFragment : Fragment() {
 
 
     private lateinit var binding: FragmentCharacterPagerBinding
+    private lateinit var adapter: CharacterPagerAdapter
+
     private val characterAttrViewModel =
         InjectorUtil.provideCharacterAttrViewModelFactory()
             .create(CharacterAttrViewModel::class.java)
@@ -52,7 +52,6 @@ class CharacterPagerFragment : Fragment() {
             uid = it.getInt(UID)
             r6Id = it.getInt(R6ID)
         }
-        //从 MainPagerFragment CharacterListFragment过渡至次页面
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             duration = resources.getInteger(R.integer.fragment_anim).toLong()
         }
@@ -63,14 +62,18 @@ class CharacterPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.e("character", "page create")
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         init()
         if (savedInstanceState == null) {
             postponeEnterTransition()
         }
-        //共享元素
-        prepareTransitions()
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.characterPager.adapter = null
     }
 
     private fun init() {
@@ -79,9 +82,11 @@ class CharacterPagerFragment : Fragment() {
             val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
             fab = binding.characterFab
-            viewPager.adapter =
-                CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid, r6Id)
-            viewPager.adjustViewPager(requireContext())
+            if (viewPager.adapter == null) {
+                adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid, r6Id)
+                viewPager.adapter = adapter
+                viewPager.adjustViewPager(requireContext())
+            }
             viewPager.offscreenPageLimit = 3
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
@@ -147,25 +152,5 @@ class CharacterPagerFragment : Fragment() {
         this.addItemDecoration(itemDecoration)
     }
 
-    //配置共享元素动画
-    private fun prepareTransitions() {
 
-        setExitSharedElementCallback(object : SharedElementCallback() {
-            override fun onMapSharedElements(
-                names: MutableList<String>?,
-                sharedElements: MutableMap<String, View>?
-            ) {
-                try {
-                    if (names!!.isNotEmpty()) {
-                        sharedElements ?: return
-                        //角色图片
-                        val v0 = CharacterBasicInfoFragment.binding.characterPic
-                        sharedElements[names[0]] = v0
-                    }
-                } catch (e: Exception) {
-                    Log.e(Constants.LOG_TAG, e.message ?: "")
-                }
-            }
-        })
-    }
 }

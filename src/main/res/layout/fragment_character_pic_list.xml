@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
+    <include
+        android:id="@+id/title_view_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pics"
@@ -14,7 +19,8 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="@dimen/m_margin"
+        app:layout_constraintTop_toBottomOf="@id/title_view_pic"
         app:spanCount="1"
         tools:itemCount="5"
         tools:listitem="@layout/item_pic" />
@@ -37,5 +43,21 @@
         app:iconTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:layout_marginBottom="@dimen/m_margin"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/function"
+        android:src="@drawable/ic_top"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/colorPrimary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

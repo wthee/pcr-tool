@@ -8,11 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
+import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.*
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色图片展示页面
  */
-class CharacterPicListFragment : Fragment() {
+class CharacterPicListFragment : CommonBasicDialogFragment(true) {
 
     companion object {
         var hasLoaded = arrayListOf(false, false, false, false)
@@ -66,9 +67,9 @@ class CharacterPicListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
-        FabHelper.addBackFab(2)
         binding.apply {
             downLoadFab = fabDownload
+            ToolbarUtil(titleViewPic).setCenterTitle(getString(R.string.view_pic))
             //初始化列表
             adapter = CharacterPicAdapter(this@CharacterPicListFragment)
             pics.adapter = adapter
@@ -90,6 +91,29 @@ class CharacterPicListFragment : Fragment() {
     }
 
     private fun setListener() {
+        binding.apply {
+            fabTop.setImageResource(R.drawable.ic_left)
+            fabTop.setOnClickListener {
+                dialog?.dismiss()
+            }
+            pics.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (pics.canScrollVertically(-1)) {
+                        fabTop.setImageResource(R.drawable.ic_top)
+                        fabTop.setOnClickListener {
+                            pics.smoothScrollToPosition(0)
+                        }
+                    } else {
+                        fabTop.setImageResource(R.drawable.ic_left)
+                        fabTop.setOnClickListener {
+                            dialog?.dismiss()
+                        }
+                    }
+                }
+            })
+        }
+
         //下载
         downLoadFab.setOnClickListener {
             if (hasSelected.contains(true)) {

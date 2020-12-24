@@ -16,10 +16,12 @@ class NewsViewModel : ViewModel() {
 
     val newsDao = AppNewsDatabase.getInstance().getNewsDao()
 
+    private val pageSize = 8
+    private val initSize = 16
 
     fun getNewsCN(): Flow<PagingData<NewsTable>> {
         return Pager(
-            config = PagingConfig(pageSize = 10),
+            config = PagingConfig(pageSize = pageSize, initialLoadSize = initSize),
             remoteMediator = NewsRemoteMediator(2, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${2}-%")
@@ -28,7 +30,7 @@ class NewsViewModel : ViewModel() {
 
     fun getNewsTW(): Flow<PagingData<NewsTable>> {
         return Pager(
-            config = PagingConfig(pageSize = 10),
+            config = PagingConfig(pageSize = pageSize, initialLoadSize = initSize),
             remoteMediator = NewsRemoteMediator(3, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${3}-%")
@@ -37,7 +39,7 @@ class NewsViewModel : ViewModel() {
 
     fun getNewsJP(): Flow<PagingData<NewsTable>> {
         return Pager(
-            config = PagingConfig(pageSize = 10),
+            config = PagingConfig(pageSize = pageSize, initialLoadSize = initSize),
             remoteMediator = NewsRemoteMediator(4, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${4}-%")

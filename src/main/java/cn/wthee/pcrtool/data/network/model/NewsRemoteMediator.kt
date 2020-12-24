@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.network.model
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -52,6 +53,7 @@ class NewsRemoteMediator(
                 val keys = list.map {
                     RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
+                Log.e("load_news", "$region - $page")
                 database.getRemoteKeyDao().insertAll(keys)
                 database.getNewsDao().insertAll(list)
             }

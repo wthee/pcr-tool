@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool.news
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ class ToolNewsListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.e("load_news", "create")
         binding = FragmentToolNewsListBinding.inflate(inflater, container, false)
         adapter = NewsAdapter(parentFragmentManager, region, binding.fabCopy)
         val loaderStateAdapter = LoaderStateAdapter { adapter.retry() }
@@ -103,7 +105,6 @@ class ToolNewsListFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(region: Int) =
             ToolNewsListFragment().apply {
                 arguments = Bundle().apply {
