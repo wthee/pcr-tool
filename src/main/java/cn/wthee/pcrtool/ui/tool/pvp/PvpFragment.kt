@@ -50,7 +50,7 @@ class PvpFragment : Fragment() {
         )
         //监听
         setListener()
-        //TODO replace
+        //显示选择角色布局
         childFragmentManager.beginTransaction()
             .replace(R.id.layout_select, PvpSelectFragment())
             .commit()
