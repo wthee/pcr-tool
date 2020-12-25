@@ -10,7 +10,6 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.CachePolicy
 import coil.util.CoilUtils
-import com.tencent.bugly.Bugly
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +20,6 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        Bugly.init(this, "97f5e02e71", false)
     }
 
     override fun newImageLoader(): ImageLoader {

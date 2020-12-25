@@ -67,8 +67,8 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.1.0"
 
     //Bugly
-    implementation 'com.tencent.bugly:crashreport:3.3.3'
-    implementation 'com.tencent.bugly:nativecrashreport:3.7.7'
+//    implementation 'com.tencent.bugly:crashreport:3.3.3'
+//    implementation 'com.tencent.bugly:nativecrashreport:3.7.7'
 
     //coil
     def coil_version = '1.1.0'
@@ -115,6 +115,11 @@ dependencies {
 
     //Paging3
     implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha10"
+
+    //umeng
+    implementation "com.umeng.umsdk:common:9.1.0"
+    implementation "com.umeng.umsdk:asms:1.1.3" // asms包依赖(必选)
+    implementation "com.umeng.umsdk:crash:0.0.4" // native crash包依赖(必选)
 
     //Viewpager2
     def viewpager2_version = '1.0.0'
