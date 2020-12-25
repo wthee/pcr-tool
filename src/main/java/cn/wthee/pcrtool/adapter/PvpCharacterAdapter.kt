@@ -12,7 +12,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.r6Ids
-import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selectedAdapter
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.ui.tool.pvp.PvpService
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -24,19 +25,19 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class PvpCharacterAdapter(
-    private val isFloatWindow: Boolean
-) :
-    ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
+ class PvpCharacterAdapter(
+     private val isFloatWindow: Boolean
+ ) :
+     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            ItemCommonBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+         return ViewHolder(
+             ItemCommonBinding.inflate(
+                 LayoutInflater.from(parent.context),
+                 parent,
+                 false
+             )
+         )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -92,7 +93,7 @@ class PvpCharacterAdapter(
                 }
                 //设置点击事件
                 root.setOnClickListener {
-                    PvpFragment.selects.apply {
+                    selects.apply {
                         val empty =
                             PvpCharacterData(
                                 0,
@@ -120,8 +121,8 @@ class PvpCharacterAdapter(
                         sortByDescending { it.position }
                         //更新列表
                         try {
-                            PvpFragment.selectedAdapter.apply {
-                                submitList(PvpFragment.selects) {
+                            selectedAdapter.apply {
+                                submitList(selects) {
                                     notifyDataSetChanged()
                                 }
                             }
@@ -130,7 +131,7 @@ class PvpCharacterAdapter(
                         }
                         try {
                             PvpService.selectedAdapter.apply {
-                                submitList(PvpFragment.selects) {
+                                submitList(selects) {
                                     notifyDataSetChanged()
                                 }
                             }

@@ -148,6 +148,14 @@
         android:id="@+id/pvpLikedFragment"
         android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedFragment"
         android:label="fragment_pvp_liked"
-        tools:layout="@layout/fragment_tool_pvp_liked" />
+        tools:layout="@layout/fragment_tool_pvp_liked">
+        <action
+            android:id="@+id/action_pvpLikedFragment_to_pvpLikedCustomize"
+            app:destination="@id/pvpLikedCustomize" />
+    </fragment>
+    <fragment
+        android:id="@+id/pvpLikedCustomize"
+        android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedCusFragment"
+        android:label="PvpLikedCustomize" />
 
 </navigation>

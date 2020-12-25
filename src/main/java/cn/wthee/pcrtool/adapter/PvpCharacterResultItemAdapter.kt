@@ -1,11 +1,11 @@
 package cn.wthee.pcrtool.adapter
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.databinding.ItemPvpResultIconBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.r6Ids
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
@@ -16,9 +16,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class PvpCharacterResultItemAdapter(
-    private val activity: Activity
-) :
+class PvpCharacterResultItemAdapter :
     ListAdapter<Int, PvpCharacterResultItemAdapter.ViewHolder>(PvpResultItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -42,8 +40,8 @@ class PvpCharacterResultItemAdapter(
                 var id = uid
                 id += if (r6Ids.contains(id)) 60 else 30
                 val picUrl = UNIT_ICON_URL + id + WEBP
-                val coil = Coil.imageLoader(activity.applicationContext)
-                val request = ImageRequest.Builder(activity.applicationContext)
+                val coil = Coil.imageLoader(MyApplication.context)
+                val request = ImageRequest.Builder(MyApplication.context)
                     .data(picUrl)
                     .build()
                 MainScope().launch {

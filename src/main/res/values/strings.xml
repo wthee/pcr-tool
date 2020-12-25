@@ -157,5 +157,7 @@
     <string name="open_browser">浏览器中打开</string>
     <string name="min">最小化</string>
     <string name="from">From %s</string>
+    <string name="customize">自定义</string>
+    <string name="add">添加</string>
 
 </resources>

@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.utils.Constants
     entities = [
         PvpLikedData::class
     ],
-    version = 50,
+    version = 51,
     exportSchema = false
 )
 abstract class AppPvpDatabase() : RoomDatabase() {

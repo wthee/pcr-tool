@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.adapter
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,7 +11,6 @@ import cn.wthee.pcrtool.utils.dp
 
 
 class PvpLikedAdapter(
-    private val activity: Activity,
     private val isFloat: Boolean
 ) :
     ListAdapter<PvpLikedData, PvpLikedAdapter.ViewHolder>(PvpLikedDiffCallback()) {
@@ -39,7 +37,8 @@ class PvpLikedAdapter(
             binding.apply {
                 atkIds.text = data.atks
                 defIds.text = data.defs
-                val adapter = PvpCharacterResultItemAdapter(activity)
+                type.text = data.type.toString()
+                val adapter = PvpCharacterResultItemAdapter()
                 likedCharacters.adapter = adapter
                 adapter.submitList(data.getIds())
                 val params0 = atk.layoutParams
