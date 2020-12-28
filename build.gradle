@@ -117,9 +117,9 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha10"
 
     //umeng
-    implementation "com.umeng.umsdk:common:9.1.0"
-    implementation "com.umeng.umsdk:asms:1.1.3" // asms包依赖(必选)
-    implementation "com.umeng.umsdk:crash:0.0.4" // native crash包依赖(必选)
+    implementation "com.umeng.umsdk:common:9.3.3"
+    implementation "com.umeng.umsdk:asms:1.1.4" // asms包依赖(必选)
+    implementation 'com.umeng.umsdk:apm:1.1.0' // U-APM产品包依赖(必选)
 
     //Viewpager2
     def viewpager2_version = '1.0.0'

@@ -41,7 +41,12 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
     ): View {
         binding = LayoutPvpSelectBinding.inflate(layoutInflater, container, false)
         if (customize != -1) binding.pcrfan.visibility = View.GONE
-
+        if (customize == 0) {
+            selects = PvpLikedCusFragment.atkSelected
+        }
+        if (customize == 1) {
+            selects = PvpLikedCusFragment.defSelected
+        }
         //已选择角色
         loadDefault()
         //角色页面 绑定tab viewpager
@@ -60,6 +65,7 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
         }
         return binding.root
     }
+
 
     //已选择角色
     private fun loadDefault() {

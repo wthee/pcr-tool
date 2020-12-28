@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
-import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,7 +48,6 @@ class PvpLikedFragment : Fragment() {
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(Color.TRANSPARENT)
         }
-        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -65,16 +63,17 @@ class PvpLikedFragment : Fragment() {
             adapter.submitList(it) {
                 updateTip(it)
             }
-            startPostponedEnterTransition()
         })
         ToolbarUtil(binding.toolPvpLike).setToolHead(
             R.drawable.ic_loved_line,
             "收藏信息"
         )
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
-        }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.listLiked.smoothScrollToPosition(0)
     }
 
     @SuppressLint("SetTextI18n")
@@ -99,14 +98,11 @@ class PvpLikedFragment : Fragment() {
     private fun setListener(adapter: PvpLikedAdapter) {
         //自定义
         binding.fabAdd.setOnClickListener {
-            val bundle = Bundle().apply {
-                putInt("customize", 0)
-            }
             val extras = FragmentNavigatorExtras(
                 it to it.transitionName
             )
             findNavController().navigate(
-                R.id.action_pvpLikedFragment_to_pvpLikedCustomize, bundle,
+                R.id.action_pvpLikedFragment_to_pvpLikedCustomize, null,
                 null, extras
             )
         }

@@ -21,7 +21,6 @@ import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
-import com.google.android.material.transition.Hold
 import java.io.Serializable
 
 /**
@@ -33,7 +32,7 @@ class PvpFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        exitTransition = Hold()
+//        exitTransition = Hold()
     }
 
     override fun onCreateView(
