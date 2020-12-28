@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -18,7 +17,6 @@ import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater.getRegion
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedCustomizeBinding
-import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
@@ -50,13 +48,20 @@ class PvpLikedCusFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        atkSelected = getDefault()
+        defSelected = getDefault()
+        atks = ""
+        defs = ""
+    }
+
     @SuppressLint("SimpleDateFormat")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        FabHelper.addBackFab(2)
         binding = FragmentToolPvpLikedCustomizeBinding.inflate(layoutInflater, container, false)
         binding.root.transitionName = "liked_add"
         initAtkPage()
@@ -102,15 +107,11 @@ class PvpLikedCusFragment : Fragment() {
             }
         }
         //返回进攻方选择
-        MainActivity.fabMain.setOnClickListener {
-            if (customize == 0) {
-                findNavController().navigateUp()
-            } else if (customize == 1) {
-                //返回进攻选择
-                customize = 0
-                defSelected = PvpSelectFragment.selects
-                initAtkPage()
-            }
+        binding.pvpPre.setOnClickListener {
+            //返回进攻选择
+            customize = 0
+            defSelected = PvpSelectFragment.selects
+            initAtkPage()
         }
         return binding.root
     }
@@ -123,6 +124,7 @@ class PvpLikedCusFragment : Fragment() {
             .commit()
         binding.pvpNext.icon = ResourcesUtil.getDrawable(R.drawable.ic_loved)
         binding.pvpNext.text = "保存"
+        binding.pvpPre.show()
         ToolbarUtil(binding.toolPvp).setToolHead(
             R.drawable.ic_def,
             "请添加防守方队伍信息"
@@ -135,6 +137,7 @@ class PvpLikedCusFragment : Fragment() {
         PvpSelectFragment.selectedAdapter.submitList(atkSelected)
         binding.pvpNext.icon = ResourcesUtil.getDrawable(R.drawable.ic_def)
         binding.pvpNext.text = "防守方"
+        binding.pvpPre.hide()
         childFragmentManager.beginTransaction()
             .replace(R.id.layout_select, PvpSelectFragment(0))
             .commit()

@@ -57,29 +57,28 @@ class PvpLikedFragment : Fragment() {
         binding = FragmentToolPvpLikedBinding.inflate(inflater, container, false)
         init()
         setListener(adapter)
-        viewModel.data.observe(viewLifecycleOwner, Observer {
+        viewModel.data.observe(viewLifecycleOwner, Observer { it ->
             allData.clear()
             allData.addAll(it)
-            adapter.submitList(it) {
-                updateTip(it)
+            adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == 1 }) {
+                updateTip()
+                startPostponedEnterTransition()
             }
         })
         ToolbarUtil(binding.toolPvpLike).setToolHead(
-            R.drawable.ic_loved_line,
+            R.drawable.ic_loved,
             "收藏信息"
         )
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+        }
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.listLiked.smoothScrollToPosition(0)
-    }
-
     @SuppressLint("SetTextI18n")
-    private fun updateTip(it: List<PvpLikedData>) {
-        binding.pvpAll.text = getString(R.string.tab_all) + " " + it.size
-        binding.pvpCus.text = getString(R.string.customize) + " " + it.filter {
+    private fun updateTip() {
+        binding.pvpAll.text = getString(R.string.tab_all) + " " + allData.size
+        binding.pvpCus.text = getString(R.string.customize) + " " + allData.filter {
             it.type == 1
         }.size
     }
@@ -111,13 +110,13 @@ class PvpLikedFragment : Fragment() {
             when (checkedId) {
                 R.id.pvp_all -> {
                     adapter.submitList(allData) {
-                        updateTip(allData)
+                        updateTip()
                     }
                 }
                 R.id.pvp_cus -> {
                     val cus = allData.filter { it.type == 1 }
                     adapter.submitList(cus) {
-                        updateTip(cus)
+                        updateTip()
                     }
                 }
             }
@@ -146,9 +145,9 @@ class PvpLikedFragment : Fragment() {
                     val data = dao.getLiked(atkIds, defIds, region, typeInt)!!
                     //删除记录
                     dao.delete(data)
-                    val result = dao.getAll(region)
-                    adapter.submitList(result) {
-                        updateTip(result)
+                    allData = dao.getAll(region) as ArrayList<PvpLikedData>
+                    adapter.submitList(if (typeInt == 0) allData else allData.filter { it.type == typeInt }) {
+                        updateTip()
                     }
                     //显示撤回
                     Snackbar.make(binding.root, "已取消收藏~", Snackbar.LENGTH_LONG)
@@ -156,10 +155,10 @@ class PvpLikedFragment : Fragment() {
                             //添加记录
                             lifecycleScope.launch {
                                 dao.insert(data)
-                                val list = dao.getAll(region)
-                                val position = list.indexOf(data)
-                                adapter.submitList(list) {
-                                    updateTip(list)
+                                allData = dao.getAll(region) as ArrayList<PvpLikedData>
+                                val position = allData.indexOf(data)
+                                adapter.submitList(if (typeInt == 0) allData else allData.filter { it.type == typeInt }) {
+                                    updateTip()
                                 }
                                 delay(500L)
                                 binding.listLiked.smoothScrollToPosition(position)
