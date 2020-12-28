@@ -146,7 +146,7 @@ class PvpLikedFragment : Fragment() {
                     //删除记录
                     dao.delete(data)
                     allData = dao.getAll(region) as ArrayList<PvpLikedData>
-                    adapter.submitList(if (typeInt == 0) allData else allData.filter { it.type == typeInt }) {
+                    adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == typeInt }) {
                         updateTip()
                     }
                     //显示撤回
@@ -157,7 +157,7 @@ class PvpLikedFragment : Fragment() {
                                 dao.insert(data)
                                 allData = dao.getAll(region) as ArrayList<PvpLikedData>
                                 val position = allData.indexOf(data)
-                                adapter.submitList(if (typeInt == 0) allData else allData.filter { it.type == typeInt }) {
+                                adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == typeInt }) {
                                     updateTip()
                                 }
                                 delay(500L)
