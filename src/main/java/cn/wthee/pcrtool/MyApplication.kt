@@ -28,7 +28,7 @@ class MyApplication : Application(), ImageLoaderFactory {
             "Umeng",
             UMConfigure.DEVICE_TYPE_PHONE,
             ""
-        );
+        )
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
     }
 

@@ -26,7 +26,6 @@ import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.MaterialContainerTransform
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -62,6 +61,7 @@ class PvpLikedFragment : Fragment() {
             allData.addAll(it)
             adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == 1 }) {
                 updateTip()
+                adapter.notifyDataSetChanged()
                 startPostponedEnterTransition()
             }
         })
@@ -73,6 +73,11 @@ class PvpLikedFragment : Fragment() {
             postponeEnterTransition()
         }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getLiked(region)
     }
 
     @SuppressLint("SetTextI18n")
@@ -145,23 +150,14 @@ class PvpLikedFragment : Fragment() {
                     val data = dao.getLiked(atkIds, defIds, region, typeInt)!!
                     //删除记录
                     dao.delete(data)
-                    allData = dao.getAll(region) as ArrayList<PvpLikedData>
-                    adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == typeInt }) {
-                        updateTip()
-                    }
+                    viewModel.getLiked(region)
                     //显示撤回
                     Snackbar.make(binding.root, "已取消收藏~", Snackbar.LENGTH_LONG)
                         .setAction("撤回") {
                             //添加记录
                             lifecycleScope.launch {
                                 dao.insert(data)
-                                allData = dao.getAll(region) as ArrayList<PvpLikedData>
-                                val position = allData.indexOf(data)
-                                adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == typeInt }) {
-                                    updateTip()
-                                }
-                                delay(500L)
-                                binding.listLiked.smoothScrollToPosition(position)
+                                viewModel.getLiked(region)
                             }
                         }
                         .show()
