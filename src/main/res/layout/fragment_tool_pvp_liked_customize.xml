@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_color"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <include
@@ -22,47 +23,35 @@
         android:gravity="end|center_vertical"
         android:orientation="horizontal">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/pvp_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/tool_pvp_liked"
-            android:src="@drawable/ic_loved_line"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/colorPrimary" />
-
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/pvp_float"
+            android:id="@+id/pvp_pre"
             android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/m_margin"
             android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/pvp_float"
-            android:text="@string/pvp_float"
+            android:contentDescription="@string/team_atk"
+            android:text="@string/team_atk"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/fab_text_size"
+            android:visibility="invisible"
             app:borderWidth="0dp"
-            app:icon="@drawable/ic_float"
+            app:icon="@drawable/ic_pvp"
             app:iconSize="@dimen/menu_icon"
             app:iconTint="@color/colorPrimary" />
 
+
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/pvp_search"
-            android:layout_width="@dimen/fab_text_2"
+            android:id="@+id/pvp_next"
+            android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"
             android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/pvp_search"
-            android:text="@string/pvp_search"
+            android:contentDescription="@string/team_def"
+            android:text="@string/team_def"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/fab_text_size"
             app:borderWidth="0dp"
-            app:icon="@drawable/ic_search"
+            app:icon="@drawable/ic_def"
             app:iconSize="@dimen/menu_icon"
             app:iconTint="@color/colorPrimary" />
 

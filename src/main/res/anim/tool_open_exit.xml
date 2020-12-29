@@ -2,6 +2,6 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@integer/fragment_anim">
     <alpha
-        android:fromAlpha="0.5"
+        android:fromAlpha="1"
         android:toAlpha="0" />
 </set>

@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class NewsPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentToolNewsBinding
+    private lateinit var adapter: NewsListPagerAdapter
 
     companion object {
         var currentPage = 0
@@ -37,9 +38,12 @@ class NewsPagerFragment : Fragment() {
             getString(R.string.tool_news)
         )
         //viewpager
-        val adapter = NewsListPagerAdapter(requireActivity())
-        binding.viewPager.adapter = adapter
-        binding.viewPager.offscreenPageLimit = 3
+        if (binding.viewPager.adapter == null) {
+            adapter = NewsListPagerAdapter(requireActivity())
+            binding.viewPager.adapter = adapter
+            binding.viewPager.offscreenPageLimit = 3
+        }
+
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -85,4 +89,8 @@ class NewsPagerFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.viewPager.adapter = null
+    }
 }

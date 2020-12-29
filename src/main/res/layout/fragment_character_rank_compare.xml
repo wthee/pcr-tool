@@ -4,13 +4,77 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/xm_padding"
     android:orientation="vertical"
     tools:context=".ui.detail.character.attr.CharacterRankCompareFragment">
+
+    <include
+        android:id="@+id/title_rank_compare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/view_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/rank_compare_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/value_0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:text="@string/current"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/value_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:text="@string/compare"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/value_compare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/xs_margin"
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:maxLines="1"
+            android:text="@string/result"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rank_compare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        android:nestedScrollingEnabled="false"
+        app:layout_constraintTop_toBottomOf="@id/rank_compare_title"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_rank_compare_attr" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginBottom="@dimen/m_margin"
         android:orientation="horizontal"
         android:gravity="center">
 
@@ -32,7 +96,7 @@
             android:gravity="center"
             android:layout_marginEnd="@dimen/xs_margin"
             android:maxLines="1"
-            android:text="@string/reduce_0"
+            android:text="@string/rerduce_1"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@id/rank_btns_0"
@@ -51,84 +115,4 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/rank_compare_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/rank_btns_1">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/value_0"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/xs_margin"
-            android:layout_weight="5"
-            android:ellipsize="end"
-            android:gravity="end"
-            android:maxLines="1"
-            android:text="@string/current"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/xs_margin"
-            android:gravity="center"
-            android:text="@string/rerduce_1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/value_1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="end"
-            android:maxLines="1"
-            android:text="@string/compare"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/equal"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/value_compare"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/s_margin"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="end"
-            android:maxLines="1"
-            android:text="@string/result"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rank_compare"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rank_compare_title"
-        tools:itemCount="5"
-        tools:listitem="@layout/item_rank_compare_attr" />
-
-
 </LinearLayout>

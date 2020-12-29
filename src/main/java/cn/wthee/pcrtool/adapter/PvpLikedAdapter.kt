@@ -1,18 +1,16 @@
 package cn.wthee.pcrtool.adapter
 
-import android.app.Activity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.databinding.ItemPvpLikedBinding
+import cn.wthee.pcrtool.utils.dp
 
 
 class PvpLikedAdapter(
-    private val activity: Activity,
     private val isFloat: Boolean
 ) :
     ListAdapter<PvpLikedData, PvpLikedAdapter.ViewHolder>(PvpLikedDiffCallback()) {
@@ -39,14 +37,25 @@ class PvpLikedAdapter(
             binding.apply {
                 atkIds.text = data.atks
                 defIds.text = data.defs
-                val adapter = PvpCharacterResultItemAdapter(activity)
+                type.text = data.type.toString()
+                val adapter = PvpCharacterResultItemAdapter()
                 likedCharacters.adapter = adapter
                 adapter.submitList(data.getIds())
+                val params0 = atk.layoutParams
+                val params1 = def.layoutParams
                 if (isFloat) {
-                    rightTitle.visibility = View.GONE
+                    params0.width = 14.dp
+                    params0.height = 14.dp
+                    params1.width = 14.dp
+                    params1.height = 14.dp
                 } else {
-                    rightTitle.visibility = View.VISIBLE
+                    params0.width = 24.dp
+                    params0.height = 24.dp
+                    params1.width = 24.dp
+                    params1.height = 24.dp
                 }
+                atk.layoutParams = params0
+                def.layoutParams = params1
             }
         }
     }

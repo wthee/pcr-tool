@@ -8,23 +8,19 @@ import android.provider.Settings.canDrawOverlays
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
-import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
-import cn.wthee.pcrtool.data.db.view.getDefault
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
-import cn.wthee.pcrtool.utils.*
-import com.google.android.material.tabs.TabLayoutMediator
-import com.google.android.material.transition.Hold
-import kotlinx.coroutines.launch
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character1
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character2
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character3
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
+import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import java.io.Serializable
 
 /**
@@ -32,23 +28,11 @@ import java.io.Serializable
  */
 class PvpFragment : Fragment() {
 
-    companion object {
-        var selects = getDefault()
-        var character1 = listOf<PvpCharacterData>()
-        var character2 = listOf<PvpCharacterData>()
-        var character3 = listOf<PvpCharacterData>()
-        lateinit var progressBar: ProgressBar
-        lateinit var selectedAdapter: PvpCharacterAdapter
-    }
-
     private lateinit var binding: FragmentToolPvpBinding
-    private val viewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        exitTransition = Hold()
+//        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -57,19 +41,18 @@ class PvpFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolPvpBinding.inflate(inflater, container, false)
-        progressBar = binding.pvpProgressBar
-        binding.pvpLike.transitionName = "liked"
-        //已选择角色
-        loadDefault()
-        //角色页面 绑定tab viewpager
-        lifecycleScope.launch {
-            character1 = viewModel.getCharacterByPosition(1)
-            character2 = viewModel.getCharacterByPosition(2)
-            character3 = viewModel.getCharacterByPosition(3)
-            setPager()
-        }
+        binding.pvpLike.transitionName = "liked_add"
+        //设置头部
+        ToolbarUtil(binding.toolPvp).setToolHead(
+            R.drawable.ic_pvp,
+            getString(R.string.tool_pvp)
+        )
         //监听
         setListener()
+        //显示选择角色布局
+        childFragmentManager.beginTransaction()
+            .replace(R.id.layout_select, PvpSelectFragment())
+            .commit()
         return binding.root
     }
 
@@ -83,15 +66,6 @@ class PvpFragment : Fragment() {
                     PvpResultDialogFragment().show(parentFragmentManager, "pvp")
                 }
             }
-            pcrfan.setOnClickListener {
-                //从其他浏览器打开
-                BrowserUtil.open(requireContext(), getString(R.string.url_pcrdfans_com))
-            }
-            //设置头部
-            ToolbarUtil(binding.toolPvp).setToolHead(
-                R.drawable.ic_pvp,
-                getString(R.string.tool_pvp)
-            )
             //收藏页面
             pvpLike.setOnClickListener {
                 val extras = FragmentNavigatorExtras(
@@ -126,34 +100,7 @@ class PvpFragment : Fragment() {
         }
     }
 
-    private fun setPager() {
-        binding.pvpPager.offscreenPageLimit = 3
-        binding.pvpPager.adapter = PvpCharacterPagerAdapter(requireActivity(), false)
-        TabLayoutMediator(
-            binding.tablayoutPosition,
-            binding.pvpPager
-        ) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = getString(R.string.position_1)
-                }
-                1 -> {
-                    tab.text = getString(R.string.position_2)
-                }
-                2 -> {
-                    tab.text = getString(R.string.position_3)
-                }
-            }
-        }.attach()
-    }
 
-    //已选择角色
-    private fun loadDefault() {
-        selectedAdapter = PvpCharacterAdapter(false)
-        binding.selectCharacters.adapter = selectedAdapter
-        selectedAdapter.submitList(selects)
-        selectedAdapter.notifyDataSetChanged()
-    }
 
     //请求悬浮窗权限
     private fun getOverlayPermission() {

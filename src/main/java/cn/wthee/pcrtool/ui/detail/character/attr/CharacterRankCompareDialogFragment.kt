@@ -15,12 +15,13 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.RankSelectBtnsHelper
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import cn.wthee.pcrtool.utils.getRankColor
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class CharacterRankCompareFragment : CommonBasicDialogFragment() {
+class CharacterRankCompareFragment : CommonBasicDialogFragment(true) {
 
     private lateinit var binding: FragmentCharacterRankCompareBinding
     private val sharedAttrViewModel: CharacterAttrViewModel by activityViewModels {
@@ -56,6 +57,7 @@ class CharacterRankCompareFragment : CommonBasicDialogFragment() {
             adapter = RankCompareAdapter()
 
             binding.apply {
+                ToolbarUtil(titleRankCompare).setCenterTitle(getString(R.string.rank_compare))
                 //初始化数据
                 rankCompare.adapter = adapter
                 adapter.submitList(

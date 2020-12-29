@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
-import android.widget.FrameLayout
 import androidx.core.widget.NestedScrollView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants.REGION
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
 /**
@@ -23,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 private const val NEWSID = "news_id"
 private const val URL = "url"
 
-class NewsDetailDialogFragment : CommonBasicDialogFragment() {
+class NewsDetailDialogFragment : CommonBasicDialogFragment(true) {
 
     private var region = 0
     private var newsId = 0
@@ -161,18 +159,6 @@ class NewsDetailDialogFragment : CommonBasicDialogFragment() {
             })
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        val bottomSheet =
-            dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-        bottomSheet?.let {
-            val behavior = BottomSheetBehavior.from(it)
-            //默认展开
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-    }
-
 
     companion object {
         @JvmStatic

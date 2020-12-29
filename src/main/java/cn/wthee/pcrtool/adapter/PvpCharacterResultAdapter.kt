@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -26,7 +25,6 @@ import java.util.*
 
 
 class PvpCharacterResultAdapter(
-    private val activity: Activity,
     private val isFloat: Boolean
 ) :
     ListAdapter<PvpData, PvpCharacterResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
@@ -66,7 +64,7 @@ class PvpCharacterResultAdapter(
             val down = binding.root.findViewById<MaterialTextView>(R.id.down)
             //初始化颜色
             MainScope().launch {
-                if (dao.get(data.getAtkIdStr(), data.getDefIdStr(), region) != null) {
+                if (dao.getLiked(data.getAtkIdStr(), data.getDefIdStr(), region, 0) != null) {
                     star.imageTintList =
                         ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorPrimary))
                 } else {
@@ -75,7 +73,7 @@ class PvpCharacterResultAdapter(
                 }
             }
             //进攻角色列表
-            val adapter = PvpCharacterResultItemAdapter(activity)
+            val adapter = PvpCharacterResultItemAdapter()
             atkCharacters.adapter = adapter
             adapter.submitList(data.getAtkIdList())
             //顶/踩信息
@@ -84,7 +82,7 @@ class PvpCharacterResultAdapter(
             //收藏监听
             star.setOnClickListener {
                 MainScope().launch {
-                    if (dao.get(data.getAtkIdStr(), data.getDefIdStr(), region) != null) {
+                    if (dao.getLiked(data.getAtkIdStr(), data.getDefIdStr(), region, 0) != null) {
                         //已收藏，取消收藏
                         dao.delete(data.getAtkIdStr(), data.getDefIdStr(), region)
                         star.imageTintList =

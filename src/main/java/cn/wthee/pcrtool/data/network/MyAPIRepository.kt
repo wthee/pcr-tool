@@ -1,13 +1,12 @@
 package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.view.getIds
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
 import okhttp3.MediaType
@@ -18,11 +17,11 @@ object MyAPIRepository {
     //创建服务
     private val service = ApiHelper.create(MyAPIService::class.java, Constants.API_URL)
 
-    suspend fun getPVPData(): ResponseData<List<PvpData>> {
+    suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpData>> {
         //接口参数
         val json = JsonObject()
         json.addProperty("region", DatabaseUpdater.getRegion())
-        json.add("ids", PvpFragment.selects.getIds())
+        json.add("ids", ids)
         val body = RequestBody.create(
             MediaType.parse("application/json; charset=utf-8"),
             json.toString()

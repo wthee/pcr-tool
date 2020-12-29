@@ -22,7 +22,4 @@ class PvpLikedViewModel(
         }
     }
 
-    //收藏队伍信息
-    suspend fun getLikedData(region: Int) = repository.getLiked(region)
-
 }

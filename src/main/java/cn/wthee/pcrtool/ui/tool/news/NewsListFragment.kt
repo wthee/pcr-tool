@@ -103,7 +103,6 @@ class ToolNewsListFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(region: Int) =
             ToolNewsListFragment().apply {
                 arguments = Bundle().apply {

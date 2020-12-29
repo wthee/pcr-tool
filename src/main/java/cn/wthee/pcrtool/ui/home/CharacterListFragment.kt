@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import com.google.android.material.transition.Hold
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,12 +44,6 @@ class CharacterListFragment : Fragment() {
     private lateinit var binding: FragmentCharacterListBinding
     private val viewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //从次页面至CharacterPagerFragment过渡开始
-        exitTransition = Hold()
     }
 
     override fun onCreateView(

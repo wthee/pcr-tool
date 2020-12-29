@@ -12,6 +12,8 @@ data class PvpLikedData(
     @ColumnInfo(name = "defs") val defs: String,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "region") val region: Int,
+    // 0:默认 1:用户添加
+    @ColumnInfo(name = "type") val type: Int = 0,
 ) {
     fun getIds(): List<Int> {
         val atkIds = atks.split("-")

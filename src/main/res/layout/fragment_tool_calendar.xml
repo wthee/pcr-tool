@@ -92,7 +92,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/fab_text_size"
         app:borderWidth="0dp"
-        app:icon="@drawable/ic_calender"
+        app:icon="@drawable/ic_calendar"
         app:iconSize="@dimen/menu_icon"
         app:iconTint="@color/colorPrimary" />
 </LinearLayout>

@@ -25,3 +25,11 @@ fun ArrayList<PvpCharacterData>.getIds(): JsonArray {
     }
     return ids
 }
+
+fun ArrayList<PvpCharacterData>.getIdStr(): String {
+    var ids = ""
+    for (character in this) {
+        ids += "${character.unitId}-"
+    }
+    return ids
+}

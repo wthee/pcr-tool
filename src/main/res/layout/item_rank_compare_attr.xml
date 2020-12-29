@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/m_margin"
+    android:layout_marginTop="@dimen/xs_margin"
     android:paddingStart="@dimen/s_padding"
     android:paddingEnd="@dimen/s_padding"
-    android:paddingBottom="@dimen/xs_padding"
     android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView

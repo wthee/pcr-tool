@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.data.db.view.getIds
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import kotlinx.coroutines.Job
@@ -33,12 +35,12 @@ class PvpResultDialogFragment : CommonBasicDialogFragment() {
         job = MainScope().launch {
             try {
                 binding.pvpNoData.visibility = View.GONE
-                val result = MyAPIRepository.getPVPData()
+                val result = MyAPIRepository.getPVPData(selects.getIds())
                 if (result.status == 0) {
                     if (result.data!!.isEmpty()) {
                         binding.pvpNoData.visibility = View.VISIBLE
                     }
-                    val adapter = PvpCharacterResultAdapter(requireActivity(), false)
+                    val adapter = PvpCharacterResultAdapter(false)
                     binding.pvpResultList.adapter = adapter
                     adapter.submitList(result.data!!.sortedByDescending {
                         it.up

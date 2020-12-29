@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolPvpCharacterBinding
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character1
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character2
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character3
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -46,7 +49,6 @@ class PvpPagerFragment : Fragment() {
     ): View {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         MainScope().launch {
-            PvpFragment.progressBar.visibility = View.VISIBLE
 
             val adapter = PvpCharacterAdapter(isFloatWindow)
 //            adapter.setHasStableIds(!isFloatWindow)
@@ -54,21 +56,12 @@ class PvpPagerFragment : Fragment() {
 
             adapter.submitList(
                 when (position) {
-                    1 -> PvpFragment.character1
-                    2 -> PvpFragment.character2
-                    3 -> PvpFragment.character3
+                    1 -> character1
+                    2 -> character2
+                    3 -> character3
                     else -> null
                 }
-            ) {
-                try {
-                    PvpFragment.progressBar.visibility = View.GONE
-                } catch (e: Exception) {
-                }
-                try {
-                    PvpService.progressBar.visibility = View.GONE
-                } catch (e: Exception) {
-                }
-            }
+            )
         }
         return binding.root
     }

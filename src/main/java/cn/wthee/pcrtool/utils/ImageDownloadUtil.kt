@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import java.io.File
 import java.io.FileOutputStream
@@ -77,7 +76,6 @@ class ImageDownloadUtil(
             }
             ToastUtil.short("图片保存成功~$displayName")
         } catch (e: Exception) {
-            Log.e("save", e.message ?: "")
             ToastUtil.short("图片保存失败")
         } finally {
             stream?.close()

@@ -50,7 +50,7 @@ class CalendarFragment : Fragment() {
         setListener()
         //设置头部
         ToolbarUtil(binding.toolCalendar).setToolHead(
-            R.drawable.ic_calender,
+            R.drawable.ic_calendar,
             getString(R.string.tool_calendar)
         )
 

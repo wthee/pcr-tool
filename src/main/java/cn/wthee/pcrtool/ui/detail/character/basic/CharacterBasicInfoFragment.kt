@@ -12,8 +12,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
@@ -28,7 +26,6 @@ import cn.wthee.pcrtool.utils.Constants.UID
 import coil.imageLoader
 import coil.load
 import coil.request.ImageRequest
-import com.google.android.material.transition.Hold
 import kotlinx.coroutines.launch
 
 /**
@@ -41,13 +38,12 @@ class CharacterBasicInfoFragment : Fragment() {
         lateinit var binding: FragmentCharacterBasicInfoBinding
         lateinit var characterPic: AppCompatImageView
 
-        @Volatile
-        private var instance: CharacterBasicInfoFragment? = null
-
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: CharacterBasicInfoFragment().also { instance = it }
+        fun getInstance(uid: Int, r6Id: Int) = CharacterBasicInfoFragment().apply {
+            arguments = Bundle().apply {
+                putInt(UID, uid)
+                putInt(R6ID, r6Id)
             }
+        }
     }
 
     private var uid = -1
@@ -58,10 +54,11 @@ class CharacterBasicInfoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        uid = CharacterPagerFragment.uid
-        r6Id = CharacterPagerFragment.r6Id
+        requireArguments().apply {
+            uid = getInt(UID)
+            r6Id = getInt(R6ID)
+        }
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
-        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -76,7 +73,6 @@ class CharacterBasicInfoFragment : Fragment() {
         sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
             setData(it)
         })
-        setHasOptionsMenu(true)
         //初始收藏
         setLove(isLoved)
         return binding.root
@@ -100,13 +96,11 @@ class CharacterBasicInfoFragment : Fragment() {
             listener(
                 onStart = {
                     MainActivity.canBack = true
-                    parentFragment?.startPostponedEnterTransition()
-                    postponeEnterTransition()
                     //添加返回fab
                     FabHelper.addBackFab()
+                    parentFragment?.startPostponedEnterTransition()
                 },
                 onSuccess = { _, _ ->
-                    startPostponedEnterTransition()
                     //设置背景
                     val request = ImageRequest.Builder(requireContext())
                         .data(picUrl)
@@ -160,29 +154,8 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun setListener() {
         binding.apply {
             characterPic.setOnClickListener {
-                try {
-                    val bundle = Bundle().apply {
-                        putInt(UID, uid)
-                        putInt(R6ID, r6Id)
-                    }
-                    val extras =
-                        FragmentNavigatorExtras(
-                            it to it.transitionName,
-                        )
-                    findNavController().navigate(
-                        R.id.action_characterPagerFragment_to_characterPicListFragment,
-                        bundle,
-                        null,
-                        extras
-                    )
-                    //移除旧的单例，避免viewpager2重新添加fragment时异常
-                    parentFragmentManager.beginTransaction()
-                        .remove(getInstance())
-                        .commit()
-                } catch (e: Exception) {
-
-                }
-
+                CharacterPicListFragment.getInstance(uid, r6Id)
+                    .show(parentFragmentManager, "pic_list")
             }
             //fab点击监听
             fabLoveCbi.setOnClickListener {
@@ -251,5 +224,4 @@ class CharacterBasicInfoFragment : Fragment() {
             comments.text = characterPro.getCommentsText()
         }
     }
-
 }

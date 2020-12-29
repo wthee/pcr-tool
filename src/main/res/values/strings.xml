@@ -138,7 +138,6 @@
     <string name="leader_source">来源 AppMedia</string>
     <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
     <string name="result">差值</string>
-    <string name="reduce_0">  VS  </string>
     <string name="rerduce_1">-</string>
     <string name="equal">=</string>
     <string name="rank_pre">R%d</string>
@@ -158,5 +157,7 @@
     <string name="open_browser">浏览器中打开</string>
     <string name="min">最小化</string>
     <string name="from">From %s</string>
+    <string name="customize">自定义</string>
+    <string name="add">添加</string>
 
 </resources>
