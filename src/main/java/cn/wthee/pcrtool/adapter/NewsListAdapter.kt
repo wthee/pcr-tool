@@ -1,9 +1,9 @@
 package cn.wthee.pcrtool.adapter
 
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
 import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.databinding.ItemNewsBinding
 import cn.wthee.pcrtool.ui.tool.news.NewsDetailDialogFragment
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 
@@ -41,11 +40,11 @@ class NewsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         item?.let { data ->
-            val view = holder.itemView.findViewById<MaterialCardView>(R.id.news_item)
+            val view = holder.itemView.findViewById<LinearLayout>(R.id.news_item)
             if (selectItems.find { it.id == data.id } != null) {
-                view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlphaBlack)))
+                view.background = ResourcesUtil.getDrawable(R.drawable.card_background_select)
             } else {
-                view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlpha)))
+                view.background = ResourcesUtil.getDrawable(R.drawable.card_background)
             }
             holder.bind(data)
         }

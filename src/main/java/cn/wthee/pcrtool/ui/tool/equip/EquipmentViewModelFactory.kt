@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.home
+package cn.wthee.pcrtool.ui.tool.equip
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.character.attr
+package cn.wthee.pcrtool.ui.character.attr
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +13,9 @@ import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
 import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
-import cn.wthee.pcrtool.ui.home.EquipmentViewModel
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import coil.load
@@ -54,9 +54,10 @@ class CharacterAttrFragment : Fragment() {
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
     }
-    private val characterAttrViewModel =
+
+    private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
-            .create(CharacterAttrViewModel::class.java)
+    }
 
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.character.skill
+package cn.wthee.pcrtool.ui.character.skill
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -9,8 +9,6 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
@@ -22,6 +20,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
+import com.google.android.material.transition.Hold
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,18 +31,20 @@ import kotlinx.coroutines.launch
 class CharacterListFragment : Fragment() {
 
     companion object {
-        lateinit var characterList: RecyclerView
-        lateinit var listAdapter: CharacterListAdapter
         var characterFilterParams = FilterCharacter(
             true, 0, 0, false, "全部"
         )
-        lateinit var guilds: ArrayList<String>
-        var r6Ids = listOf<Int>()
     }
 
     private lateinit var binding: FragmentCharacterListBinding
+    private lateinit var listAdapter: CharacterListAdapter
     private val viewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = Hold()
     }
 
     override fun onCreateView(
@@ -55,9 +56,29 @@ class CharacterListFragment : Fragment() {
         init()
         //监听数据变化
         setObserve()
-
         return binding.root
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        try {
+            pageLevel = 0
+            MainActivity.canClick = true
+            //刷新收藏
+//            val vh = characterList.findViewHolderForAdapterPosition(
+//                MainActivity.currentCharaPosition
+//            )?.itemView?.findViewById<MaterialTextView>(R.id.name)
+//            val color = if (CharacterBasicInfoFragment.isLoved)
+//                ResourcesUtil.getColor(R.color.colorPrimary)
+//            else
+//                ResourcesUtil.getColor(R.color.text)
+//            vh?.setTextColor(color)
+
+        } catch (e: java.lang.Exception) {
+        }
+    }
+
 
     private fun reset() {
         characterFilterParams.initData()
@@ -72,24 +93,12 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
+        //toolbar
+        ToolbarUtil(binding.toolBar).setMainToolbar(getString(R.string.app_name))
         //获取角色
         viewModel.getCharacters(sortType, sortAsc, "")
-        //公会列表
-        guilds = arrayListOf()
-        viewLifecycleOwner.lifecycleScope.launch {
-            guilds.add("全部")
-            val list = viewModel.getGuilds()
-            list.forEach {
-                guilds.add(it.guild_name)
-            }
-            guilds.add("？？？")
-            r6Ids = viewModel.getR6Ids()
-        }
         listAdapter = CharacterListAdapter(this@CharacterListFragment)
-        characterList = binding.characterList
-        binding.characterList.apply {
-            adapter = listAdapter
-        }
+        binding.characterList.adapter = listAdapter
         //刷新
         binding.characterReset.apply {
             setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
@@ -110,10 +119,6 @@ class CharacterListFragment : Fragment() {
                     MainActivity.sp.edit {
                         putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
-                    if (MainPagerFragment.Companion::tabLayout.isLateinit) {
-                        MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
-                    }
-                    MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
                 })
             }
             //角色信息
@@ -124,7 +129,6 @@ class CharacterListFragment : Fragment() {
                         viewModel.characters.collectLatest { data ->
                             listAdapter.submitData(data)
                             listAdapter.notifyDataSetChanged()
-                            binding.loading.root.visibility = View.GONE
                         }
                     }
                 })
@@ -139,10 +143,12 @@ class CharacterListFragment : Fragment() {
             if (!reload.hasObservers()) {
                 reload.observe(viewLifecycleOwner, {
                     try {
-                        findNavController().popBackStack(R.id.containerFragment, true)
-                        findNavController().navigate(R.id.containerFragment)
-                        pageLevel = 0
-                        MainActivity.fabMain.setImageResource(R.drawable.ic_function)
+                        if (it) {
+                            requireActivity().recreate()
+                            pageLevel = 0
+                            MainActivity.fabMain.setImageResource(R.drawable.ic_function)
+                        }
+                        reload.postValue(false)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())
                     }

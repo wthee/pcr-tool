@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.character
+package cn.wthee.pcrtool.ui.character
 
 import android.content.Context
 import android.os.Bundle
@@ -6,15 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.HorizontalMarginItemDecoration
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
-import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModel
-import cn.wthee.pcrtool.ui.detail.character.attr.CharacterRankCompareFragment
-import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
-import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillLoopDialogFragment
+import cn.wthee.pcrtool.ui.character.attr.CharacterAttrViewModel
+import cn.wthee.pcrtool.ui.character.attr.CharacterRankCompareFragment
+import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -40,9 +41,9 @@ class CharacterPagerFragment : Fragment() {
     private lateinit var binding: FragmentCharacterPagerBinding
     private lateinit var adapter: CharacterPagerAdapter
 
-    private val characterAttrViewModel =
+    private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
-            .create(CharacterAttrViewModel::class.java)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

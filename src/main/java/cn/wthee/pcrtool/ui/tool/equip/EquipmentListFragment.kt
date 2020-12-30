@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.home
+package cn.wthee.pcrtool.ui.tool.equip
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -90,10 +90,6 @@ class EquipmentListFragment : Fragment() {
                 MainActivity.sp.edit {
                     putInt(Constants.SP_COUNT_EQUIP, it)
                 }
-                if (MainPagerFragment.Companion::tabLayout.isLateinit) {
-                    MainPagerFragment.tabLayout.getTabAt(1)?.text = it.toString()
-                }
-                MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
             })
         }
         //装备信息
@@ -105,7 +101,6 @@ class EquipmentListFragment : Fragment() {
                     viewModel.equipments.collectLatest { data ->
                         pageAdapter.submitData(data)
                         pageAdapter.notifyDataSetChanged()
-                        binding.loading.root.visibility = View.GONE
                     }
                 }
             })

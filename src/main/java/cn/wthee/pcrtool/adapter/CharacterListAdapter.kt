@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
-import cn.wthee.pcrtool.ui.home.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
@@ -79,9 +78,8 @@ class CharacterListAdapter(
                 //设置共享元素名称
                 root.transitionName = "item_${character.id}"
                 root.setOnClickListener {
-                    //避免同时点击两个
-                    if (!MainPagerFragment.cListClick) {
-                        MainPagerFragment.cListClick = true
+                    if (MainActivity.canClick) {
+                        MainActivity.canClick = false
                         MainActivity.canBack = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
@@ -91,8 +89,8 @@ class CharacterListAdapter(
                             FragmentNavigatorExtras(
                                 root to root.transitionName
                             )
-                        fragment.findNavController().navigate(
-                            R.id.action_containerFragment_to_characterPagerFragment,
+                        findNavController(fragment).navigate(
+                            R.id.action_characterListFragment_to_characterPagerFragment,
                             bundle,
                             null,
                             extras
@@ -108,7 +106,7 @@ class CharacterListAdapter(
                         else
                             add(character.id)
                     }
-                    CharacterListFragment.characterList.adapter?.notifyItemChanged(
+                    notifyItemChanged(
                         absoluteAdapterPosition
                     )
                     return@setOnLongClickListener true

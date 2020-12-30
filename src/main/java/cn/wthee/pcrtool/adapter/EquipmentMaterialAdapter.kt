@@ -11,8 +11,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsDialogFragment
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModel
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load

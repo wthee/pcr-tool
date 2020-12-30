@@ -1,21 +1,16 @@
-package cn.wthee.pcrtool.ui.detail.character.attr
+package cn.wthee.pcrtool.ui.tool.equip
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 
-class CharacterAttrViewModelFactory(
-    private val repository: CharacterRepository,
+class EquipmentDetailsViewModelFactory(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CharacterAttrViewModel(
-            repository,
-            equipmentRepository
-        ) as T
+        return EquipmentDetailsViewModel(equipmentRepository) as T
     }
 }

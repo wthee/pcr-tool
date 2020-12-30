@@ -5,7 +5,7 @@
     android:layout_height="@dimen/loading_dialog_height"
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
-    android:elevation="@dimen/elevation_card"
+    android:elevation="@dimen/card_elevation"
     android:gravity="center"
     android:orientation="vertical">
 

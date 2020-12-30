@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.character.attr
+package cn.wthee.pcrtool.ui.character.attr
 
 import android.os.Bundle
 import android.view.LayoutInflater

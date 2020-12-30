@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.character.basic
+package cn.wthee.pcrtool.ui.character.basic
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -17,7 +17,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
-import cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*

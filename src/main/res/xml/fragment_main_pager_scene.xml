@@ -37,7 +37,7 @@
         </KeyFrameSet>
         <OnSwipe
             app:dragDirection="dragUp"
-            app:touchAnchorId="@id/main_view_pager"
+            app:touchAnchorId="@id/character_list"
             app:touchAnchorSide="top" />
     </Transition>
 </MotionScene>

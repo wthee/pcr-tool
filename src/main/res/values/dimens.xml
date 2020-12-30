@@ -43,7 +43,7 @@
     <dimen name="tab_height_1">36dp</dimen>
     <dimen name="tab_height_2">22dp</dimen>
 
-    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
     <dimen name="menu_item_elevation_card">8dp</dimen>
 
     <dimen name="viewpager_next_item_visible">8dp</dimen>

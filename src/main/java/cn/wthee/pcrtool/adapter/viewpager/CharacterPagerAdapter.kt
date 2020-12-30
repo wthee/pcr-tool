@@ -10,9 +10,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrFragment
-import cn.wthee.pcrtool.ui.detail.character.basic.CharacterBasicInfoFragment
-import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillFragment
+import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
+import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillFragment
 
 class CharacterPagerAdapter(
     fragmentManager: FragmentManager,

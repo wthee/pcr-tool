@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentCommonBottomSheetBinding
 import cn.wthee.pcrtool.enums.PageType
-import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillFragment
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 
 /**

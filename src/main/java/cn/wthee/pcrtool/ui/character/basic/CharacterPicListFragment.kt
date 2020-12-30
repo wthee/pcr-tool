@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.detail.character.basic
+package cn.wthee.pcrtool.ui.character.basic
 
 import android.Manifest
 import android.graphics.Color

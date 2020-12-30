@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,61 +7,55 @@
     android:layout_marginStart="@dimen/m_margin"
     android:layout_marginEnd="@dimen/m_margin"
     android:layout_marginBottom="@dimen/m_margin"
-    android:orientation="vertical"
-    app:cardCornerRadius="@dimen/card_radius">
+    android:background="@drawable/card_background"
+    android:padding="@dimen/s_padding">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/gacha_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_background"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/app_name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/gacha_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/s_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:layout_constraintStart_toStartOf="@id/gacha_name"
+        app:layout_constraintTop_toBottomOf="@+id/gacha_name"
+        tools:text="@string/app_name" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gacha_icons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/s_padding">
+        android:layout_marginTop="@dimen/xs_margin"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gacha_date"
+        app:spanCount="2"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_common" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gacha_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/title_background"
-            android:paddingStart="@dimen/s_padding"
-            android:paddingEnd="@dimen/s_padding"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:textColor="@color/colorWhite"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/app_name" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/gacha_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/gacha_icons"
+        tools:text="@string/app_name" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gacha_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/s_padding"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            app:layout_constraintStart_toStartOf="@id/gacha_name"
-            app:layout_constraintTop_toBottomOf="@+id/gacha_name"
-            tools:text="@string/app_name" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/gacha_icons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/xs_margin"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gacha_date"
-            app:spanCount="2"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_common" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/gacha_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/gacha_icons"
-            tools:text="@string/app_name" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</com.google.android.material.card.MaterialCardView>

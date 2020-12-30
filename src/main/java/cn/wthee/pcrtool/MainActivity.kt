@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -14,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.forEachIndexed
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
@@ -21,10 +24,13 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.home.*
-import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.guilds
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 /**
  * 主活动
@@ -32,6 +38,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class MainActivity : AppCompatActivity() {
 
     companion object {
+        var canClick = true
+
         @JvmField
         var currentCharaPosition: Int = 0
         var currentEquipPosition: Int = 0
@@ -43,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         var canBack = true
         var pageLevel = 0
         var mFloatingWindowHeight = 0
+        lateinit var handler: Handler
+        lateinit var guilds: ArrayList<String>
+        var r6Ids = listOf<Int>()
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -60,6 +71,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setHandler()
         // 全屏显示
         setFullScreen()
         setContentView(binding.root)
@@ -109,7 +121,80 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setHandler() {
+        //接收消息
+        handler = Handler(Looper.getMainLooper(), Handler.Callback {
+            when (it.what) {
+                //获取版本失败
+                0 -> {
+                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
+                    DialogUtil.create(
+                        this,
+                        layout,
+                        Constants.NOTICE_TITLE_ERROR,
+                        Constants.NOTICE_TOAST_TIMEOUT,
+                        Constants.BTN_OPERATE_FORCE_UPDATE_DB,
+                        Constants.BTN_NOT_UPDATE_DB,
+                        object : DialogListener {
+                            override fun onCancel(dialog: AlertDialog) {
+                                //强制更新数据库
+                                DatabaseUpdater.forceUpdate()
+                                ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
+                                dialog.dismiss()
+                            }
+
+                            override fun onConfirm(dialog: AlertDialog) {
+                                dialog.dismiss()
+                            }
+                        }
+                    ).show()
+                }
+                //正常执行
+                1 -> {
+                    sharedCharacterViewModel.reload.postValue(true)
+                }
+                //数据切换
+                2 -> {
+                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
+                    //弹窗
+                    DialogUtil.create(
+                        this,
+                        layout,
+                        getString(R.string.change_success),
+                        getString(R.string.change_success_tip),
+                        getString(R.string.close_app),
+                        getString(R.string.close_app_too),
+                        object : DialogListener {
+                            override fun onCancel(dialog: AlertDialog) {
+                                exitProcess(0)
+                            }
+
+                            override fun onConfirm(dialog: AlertDialog) {
+                                exitProcess(0)
+                            }
+                        }
+                    ).show()
+                }
+            }
+
+            return@Callback true
+        })
+    }
+
     private fun init() {
+        //获取数据
+        //公会列表
+        guilds = arrayListOf()
+        lifecycleScope.launch {
+            guilds.add("全部")
+            val list = sharedCharacterViewModel.getGuilds()
+            list.forEach {
+                guilds.add(it.guild_name)
+            }
+            guilds.add("？？？")
+            r6Ids = sharedCharacterViewModel.getR6Ids()
+        }
         menuItems = arrayListOf(
             binding.filter,
             binding.search,
@@ -138,14 +223,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setListener() {
 
-        //长按回到顶部
-        fabMain.setOnLongClickListener {
-            when (currentMainPage) {
-                0 -> CharacterListFragment.characterList.scrollToPosition(0)
-                1 -> EquipmentListFragment.list.scrollToPosition(0)
-            }
-            return@setOnLongClickListener true
-        }
         //点击展开
         val motion = binding.motionLayout
         fabMain.setOnClickListener {
@@ -162,7 +239,7 @@ class MainActivity : AppCompatActivity() {
         //设置
         binding.setting.root.setOnClickListener {
             closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_settingsFragment)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_settingsFragment)
         }
         //搜索
         binding.search.root.setOnClickListener {
@@ -217,7 +294,6 @@ class MainActivity : AppCompatActivity() {
             //关闭搜索监听
             dialog.setOnDismissListener {
                 try {
-                    MainPagerFragment.tipText.visibility = View.GONE
                     closeFab()
                 } catch (e: Exception) {
                 }
@@ -404,32 +480,32 @@ class MainActivity : AppCompatActivity() {
         //pvp
         binding.toolPvp.root.setOnClickListener {
             closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolPvpFragment)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolPvpFragment)
         }
         //新闻
         binding.toolNews.root.setOnClickListener {
             closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolNewsFragment)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolNewsFragment)
         }
         //排名
         binding.toolLeader.root.setOnClickListener {
             closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolLeaderFragment)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolleaderFragment)
         }
         //活动
         binding.toolEvent.root.setOnClickListener {
             closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_eventFragment)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_eventFragment)
         }
         //卡池
         binding.toolGacha.root.setOnClickListener {
             closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_toolGachaFragment)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolGachaFragment)
         }
         //日历
         binding.toolCalendar.root.setOnClickListener {
             closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_calendarFragment)
+            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_calendarFragment)
         }
     }
 

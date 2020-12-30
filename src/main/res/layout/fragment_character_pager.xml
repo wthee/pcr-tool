@@ -13,7 +13,7 @@
         android:paddingTop="@dimen/xm_padding"
         android:paddingBottom="@dimen/page_padding"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".ui.detail.character.basic.CharacterBasicInfoFragment" />
+        tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/character_fab"

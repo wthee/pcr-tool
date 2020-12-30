@@ -8,6 +8,10 @@
     android:orientation="vertical">
 
     <include
+        android:id="@+id/tool_bar"
+        layout="@layout/view_toolbar" />
+
+    <include
         android:id="@+id/loading"
         layout="@layout/layout_loading"
         android:visibility="gone" />

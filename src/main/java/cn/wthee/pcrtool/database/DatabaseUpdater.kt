@@ -7,11 +7,11 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.handler
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
-import cn.wthee.pcrtool.ui.home.MainPagerFragment
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
@@ -44,7 +44,7 @@ object DatabaseUpdater {
                 //更新判断
                 downloadDB(version.data!!, fromSetting, force)
             } catch (e: Exception) {
-                MainPagerFragment.handler.sendEmptyMessage(0)
+                handler.sendEmptyMessage(0)
             }
         }
     }
@@ -55,7 +55,7 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(DatabaseVersion("0", "hash"), force = true)
         } catch (e: Exception) {
-            MainPagerFragment.handler.sendEmptyMessage(0)
+            handler.sendEmptyMessage(0)
         }
     }
 
@@ -95,7 +95,7 @@ object DatabaseUpdater {
             )
         } else {
             //切换成功
-            if (fromSetting == 1) MainPagerFragment.handler.sendEmptyMessage(2)
+            if (fromSetting == 1) handler.sendEmptyMessage(2)
             //无需更新
             if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_LASTEST)
             //更新数据库版本号
