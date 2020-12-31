@@ -9,27 +9,19 @@ import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
-import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.core.view.forEachIndexed
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
-import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.home.*
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
-import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 /**
@@ -47,14 +39,11 @@ class MainActivity : AppCompatActivity() {
         var currentMainPage: Int = 0
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
-        var sortType = SortType.SORT_DATE
-        var sortAsc = Constants.SORT_ASC
+
         var canBack = true
         var pageLevel = 0
         var mFloatingWindowHeight = 0
         lateinit var handler: Handler
-        lateinit var guilds: ArrayList<String>
-        var r6Ids = listOf<Int>()
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -185,20 +174,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         //获取数据
-        //公会列表
-        guilds = arrayListOf()
-        lifecycleScope.launch {
-            guilds.add("全部")
-            val list = sharedCharacterViewModel.getGuilds()
-            list.forEach {
-                guilds.add(it.guild_name)
-            }
-            guilds.add("？？？")
-            r6Ids = sharedCharacterViewModel.getR6Ids()
-        }
         menuItems = arrayListOf(
-            binding.filter,
-            binding.search,
+            binding.toolEquip,
             binding.setting,
             binding.toolLeader,
             binding.toolNews,
@@ -243,241 +220,122 @@ class MainActivity : AppCompatActivity() {
             findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_settingsFragment)
         }
         //搜索
-        binding.search.root.setOnClickListener {
-            closeMenus()
-            //显示搜索布局
-            val layout = LayoutSearchBinding.inflate(layoutInflater)
-            val dialog = DialogUtil.create(this, layout.root)
-            dialog.show()
-            //搜索框
-            val searchView = layout.searchInput
-            searchView.onActionViewExpanded()
-            searchView.isSubmitButtonEnabled = true
-            when (currentMainPage) {
-                0 -> searchView.queryHint = "角色名"
-                1 -> searchView.queryHint = "装备名"
-            }
-            //搜索监听
-            searchView.setOnQueryTextListener(object :
-                SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    when (currentMainPage) {
-                        0 -> query?.let {
-                            sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
-                        }
-                        1 -> query?.let {
-                            sharedEquipViewModel.getEquips(query)
-                        }
-                    }
-
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    return false
-                }
-
-            })
-            //清空监听
-            val closeBtn =
-                searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
-            closeBtn.setOnClickListener {
-                when (currentMainPage) {
-                    0 -> sharedCharacterViewModel.getCharacters(
-                        sortType,
-                        sortAsc, ""
-                    )
-                    1 -> sharedEquipViewModel.getEquips("")
-
-                }
-                searchView.setQuery("", false)
-            }
-            //关闭搜索监听
-            dialog.setOnDismissListener {
-                try {
-                    closeFab()
-                } catch (e: Exception) {
-                }
-            }
-        }
+//        binding.root.setOnClickListener {
+//            closeMenus()
+//            //显示搜索布局
+//            val layout = LayoutSearchBinding.inflate(layoutInflater)
+//            val dialog = DialogUtil.create(this, layout.root)
+//            dialog.show()
+//            //搜索框
+//            val searchView = layout.searchInput
+//            searchView.onActionViewExpanded()
+//            searchView.isSubmitButtonEnabled = true
+//            when (currentMainPage) {
+//                0 -> searchView.queryHint = "角色名"
+//                1 -> searchView.queryHint = "装备名"
+//            }
+//            //搜索监听
+//            searchView.setOnQueryTextListener(object :
+//                SearchView.OnQueryTextListener {
+//                override fun onQueryTextSubmit(query: String?): Boolean {
+//                    when (currentMainPage) {
+//                        0 -> query?.let {
+//                            sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
+//                        }
+//                        1 -> query?.let {
+//                            sharedEquipViewModel.getEquips(query)
+//                        }
+//                    }
+//
+//                    return false
+//                }
+//
+//                override fun onQueryTextChange(newText: String?): Boolean {
+//                    return false
+//                }
+//
+//            })
+//            //清空监听
+//            val closeBtn =
+//                searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+//            closeBtn.setOnClickListener {
+//                when (currentMainPage) {
+//                    0 -> sharedCharacterViewModel.getCharacters(
+//                        sortType,
+//                        sortAsc, ""
+//                    )
+//                    1 -> sharedEquipViewModel.getEquips("")
+//
+//                }
+//                searchView.setQuery("", false)
+//            }
+//            //关闭搜索监听
+//            dialog.setOnDismissListener {
+//                try {
+//                    closeFab()
+//                } catch (e: Exception) {
+//                }
+//            }
+//        }
         //筛选
-        binding.filter.root.setOnClickListener {
-            closeMenus()
-            when (currentMainPage) {
-                //角色筛选
-                0 -> {
-                    //筛选
-                    val layout = LayoutFilterCharacterBinding.inflate(layoutInflater)
-                    val chips = layout.chipsGuild
-                    //添加公会信息
-                    guilds.forEachIndexed { _, guild ->
-                        val chip = LayoutChipBinding.inflate(layoutInflater).root
-                        chip.text = guild
-                        chip.isCheckable = true
-                        chip.isClickable = true
-                        chips.addView(chip)
-                        if (CharacterListFragment.characterFilterParams.guild == guild) {
-                            chip.isChecked = true
-                        }
-                    }
-                    //排序类型
-                    when (sortType) {
-                        SortType.SORT_DATE -> layout.sortChip0.isChecked = true
-                        SortType.SORT_AGE -> layout.sortChip1.isChecked = true
-                        SortType.SORT_HEIGHT -> layout.sortChip2.isChecked = true
-                        SortType.SORT_POSITION -> layout.sortChip3.isChecked = true
-                        SortType.SORT_WEIGHT -> layout.sortChip4.isChecked = true
-                    }
-                    //排序规则
-                    if (sortAsc) layout.asc.isChecked = true else layout.desc.isChecked = true
-                    //收藏初始
-                    layout.chipsStars.forEachIndexed { index, view ->
-                        val chip = view as Chip
-                        chip.isChecked =
-                            (CharacterListFragment.characterFilterParams.all
-                                    && index == 0)
-                                    || (!CharacterListFragment.characterFilterParams.all
-                                    && index == 1)
-                    }
-                    //星级初始
-                    layout.chipsRaritys.forEachIndexed { index, view ->
-                        val chip = view as Chip
-                        chip.isChecked =
-                            (CharacterListFragment.characterFilterParams.r6
-                                    && index == 1)
-                                    || (!CharacterListFragment.characterFilterParams.r6
-                                    && index == 0)
-                    }
-                    //位置初始
-                    layout.chipsPosition.forEachIndexed { index, view ->
-                        val chip = view as Chip
-                        chip.isChecked =
-                            CharacterListFragment.characterFilterParams.positon == index
-                    }
-                    //攻击类型初始
-                    layout.chipsAtk.forEachIndexed { index, view ->
-                        val chip = view as Chip
-                        chip.isChecked = CharacterListFragment.characterFilterParams.atk == index
-                    }
-                    //显示弹窗
-                    val dialog = DialogUtil.create(this, layout.root, getString(R.string.reset),
-                        getString(R.string.next), object : DialogListener {
-                            override fun onCancel(dialog: AlertDialog) {
-                                sharedCharacterViewModel.reset.postValue(true)
-                            }
-
-                            override fun onConfirm(dialog: AlertDialog) {
-                                //排序选项
-                                sortType = when (layout.sortTypeChips.checkedChipId) {
-                                    R.id.sort_chip_0 -> SortType.SORT_DATE
-                                    R.id.sort_chip_1 -> SortType.SORT_AGE
-                                    R.id.sort_chip_2 -> SortType.SORT_HEIGHT
-                                    R.id.sort_chip_3 -> SortType.SORT_WEIGHT
-                                    R.id.sort_chip_4 -> SortType.SORT_POSITION
-                                    else -> SortType.SORT_DATE
-                                }
-                                sortAsc = layout.ascChips.checkedChipId == R.id.asc
-                                //收藏
-                                CharacterListFragment.characterFilterParams.all =
-                                    when (layout.chipsStars.checkedChipId) {
-                                        R.id.star_0 -> true
-                                        R.id.star_1 -> false
-                                        else -> true
-                                    }
-                                //星级
-                                CharacterListFragment.characterFilterParams.r6 =
-                                    when (layout.chipsRaritys.checkedChipId) {
-                                        R.id.rarity_0 -> false
-                                        R.id.rarity_1 -> true
-                                        else -> false
-                                    }
-                                //位置
-                                CharacterListFragment.characterFilterParams.positon =
-                                    when (layout.chipsPosition.checkedChipId) {
-                                        R.id.position_chip_1 -> 1
-                                        R.id.position_chip_2 -> 2
-                                        R.id.position_chip_3 -> 3
-                                        else -> 0
-                                    }
-                                //攻击类型
-                                CharacterListFragment.characterFilterParams.atk =
-                                    when (layout.chipsAtk.checkedChipId) {
-                                        R.id.atk_chip_1 -> 1
-                                        R.id.atk_chip_2 -> 2
-                                        else -> 0
-                                    }
-                                //公会筛选
-                                val chip =
-                                    layout.root.findViewById<Chip>(layout.chipsGuild.checkedChipId)
-                                CharacterListFragment.characterFilterParams.guild =
-                                    chip.text.toString()
-                                //筛选
-                                sharedCharacterViewModel.getCharacters(
-                                    sortType,
-                                    sortAsc, ""
-                                )
-                            }
-                        })
-                    dialog.show()
-                    dialog.setOnDismissListener {
-                        closeFab()
-                    }
-                }
-                //装备筛选
-                1 -> {
-                    //筛选
-                    val layout = LayoutFilterEquipmentBinding.inflate(layoutInflater)
-                    //添加类型信息
-                    val chips = layout.chipsType
-                    //收藏初始
-                    layout.chipsStars.forEachIndexed { index, view ->
-                        val chip = view as Chip
-                        chip.isChecked =
-                            (EquipmentListFragment.equipFilterParams.all
-                                    && index == 0)
-                                    || (!EquipmentListFragment.equipFilterParams.all
-                                    && index == 1)
-                    }
-                    //类型
-                    EquipmentListFragment.equipTypes.forEachIndexed { _, type ->
-                        val chip = LayoutChipBinding.inflate(layoutInflater).root
-                        chip.text = type
-                        chip.isCheckable = true
-                        chip.isClickable = true
-                        chips.addView(chip)
-                        if (EquipmentListFragment.equipFilterParams.type == type) {
-                            chip.isChecked = true
-                        }
-                    }
-                    //显示弹窗
-                    val dialog = DialogUtil.create(this, layout.root, getString(R.string.reset),
-                        getString(R.string.next), object : DialogListener {
-                            override fun onCancel(dialog: AlertDialog) {
-                                sharedEquipViewModel.reset.postValue(true)
-                            }
-
-                            override fun onConfirm(dialog: AlertDialog) {
-                                //筛选选项
-                                val chip =
-                                    layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
-                                EquipmentListFragment.equipFilterParams.type = chip.text.toString()
-                                //收藏
-                                EquipmentListFragment.equipFilterParams.all =
-                                    when (layout.chipsStars.checkedChipId) {
-                                        R.id.star_0 -> true
-                                        R.id.star_1 -> false
-                                        else -> true
-                                    }
-                                sharedEquipViewModel.getEquips("")
-                            }
-                        })
-                    dialog.show()
-                    dialog.setOnDismissListener {
-                        closeFab()
-                    }
-                }
-            }
-        }
+//        binding.filter.root.setOnClickListener {
+//            closeMenus()
+//            when (currentMainPage) {
+//                //装备筛选
+//                1 -> {
+//                    //筛选
+//                    val layout = LayoutFilterEquipmentBinding.inflate(layoutInflater)
+//                    //添加类型信息
+//                    val chips = layout.chipsType
+//                    //收藏初始
+//                    layout.chipsStars.forEachIndexed { index, view ->
+//                        val chip = view as Chip
+//                        chip.isChecked =
+//                            (EquipmentListFragment.equipFilterParams.all
+//                                    && index == 0)
+//                                    || (!EquipmentListFragment.equipFilterParams.all
+//                                    && index == 1)
+//                    }
+//                    //类型
+//                    EquipmentListFragment.equipTypes.forEachIndexed { _, type ->
+//                        val chip = LayoutChipBinding.inflate(layoutInflater).root
+//                        chip.text = type
+//                        chip.isCheckable = true
+//                        chip.isClickable = true
+//                        chips.addView(chip)
+//                        if (EquipmentListFragment.equipFilterParams.type == type) {
+//                            chip.isChecked = true
+//                        }
+//                    }
+//                    //显示弹窗
+//                    val dialog = DialogUtil.create(this, layout.root, getString(R.string.reset),
+//                        getString(R.string.next), object : DialogListener {
+//                            override fun onCancel(dialog: AlertDialog) {
+//                                sharedEquipViewModel.reset.postValue(true)
+//                            }
+//
+//                            override fun onConfirm(dialog: AlertDialog) {
+//                                //筛选选项
+//                                val chip =
+//                                    layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
+//                                EquipmentListFragment.equipFilterParams.type = chip.text.toString()
+//                                //收藏
+//                                EquipmentListFragment.equipFilterParams.all =
+//                                    when (layout.chipsStars.checkedChipId) {
+//                                        R.id.star_0 -> true
+//                                        R.id.star_1 -> false
+//                                        else -> true
+//                                    }
+//                                sharedEquipViewModel.getEquips("")
+//                            }
+//                        })
+//                    dialog.show()
+//                    dialog.setOnDismissListener {
+//                        closeFab()
+//                    }
+//                }
+//            }
+//        }
         //pvp
         binding.toolPvp.root.setOnClickListener {
             closeMenus()
@@ -575,14 +433,9 @@ class MainActivity : AppCompatActivity() {
                 R.drawable.ic_settings,
                 R.color.colorPrimary
             )
-            MenuItemViewHelper(search).setItem(
-                getString(R.string.search),
-                R.drawable.ic_search,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(filter).setItem(
-                getString(R.string.filter_sort),
-                R.drawable.ic_filter,
+            MenuItemViewHelper(toolEquip).setItem(
+                getString(R.string.tool_equip),
+                R.drawable.ic_equip,
                 R.color.colorPrimary
             )
             MenuItemViewHelper(toolPvp).setItem(

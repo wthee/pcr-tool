@@ -14,27 +14,7 @@
                 app:customColorValue="@color/colorAlpha" />
         </Constraint>
 
-        <Constraint
-            android:id="@+id/filter"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/menu_item_card_height"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/xl_margin"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/setting"
-            app:layout_constraintWidth_percent="0.45" />
-        <Constraint
-            android:id="@+id/search"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/small_card_height"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/xs_margin"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/setting"
-            app:layout_constraintEnd_toEndOf="parent" />
+
         <Constraint
             android:id="@+id/setting"
             android:layout_width="@dimen/normal_icon"
@@ -47,6 +27,17 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Constraint
+            android:id="@+id/tool_equip"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/xl_margin"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/setting" />
+
+        <Constraint
             android:id="@+id/tool_leader"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/small_card_height"
@@ -54,7 +45,7 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/search"
+            app:layout_constraintBottom_toTopOf="@id/setting"
             app:layout_constraintEnd_toStartOf="@id/tool_news" />
 
         <Constraint
@@ -64,7 +55,7 @@
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/search"
+            app:layout_constraintBottom_toTopOf="@id/setting"
             app:layout_constraintEnd_toStartOf="@id/tool_pvp" />
 
         <Constraint
@@ -75,7 +66,7 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/search"
+            app:layout_constraintBottom_toTopOf="@id/setting"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.28" />
 
@@ -124,26 +115,6 @@
         </Constraint>
 
         <Constraint
-            android:id="@+id/filter"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/menu_item_card_height"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/xl_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.45" />
-        <Constraint
-            android:id="@+id/search"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/small_card_height"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/l_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/filter"
-            app:layout_constraintWidth_percent="0.45" />
-        <Constraint
             android:id="@+id/setting"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_card_height"
@@ -155,13 +126,24 @@
             app:layout_constraintWidth_percent="0.45" />
 
         <Constraint
+            android:id="@+id/tool_equip"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/xl_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.45" />
+
+        <Constraint
             android:id="@+id/tool_leader"
             android:layout_width="0dp"
             android:layout_height="@dimen/menu_item_card_height"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/filter"
+            app:layout_constraintBottom_toTopOf="@id/tool_equip"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.3" />
 
@@ -171,7 +153,7 @@
             android:layout_height="@dimen/menu_item_card_height"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/filter"
+            app:layout_constraintBottom_toTopOf="@id/tool_equip"
             app:layout_constraintStart_toEndOf="@id/tool_leader"
             app:layout_constraintWidth_percent="0.3" />
 
@@ -182,7 +164,7 @@
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/filter"
+            app:layout_constraintBottom_toTopOf="@id/tool_equip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.3" />
 

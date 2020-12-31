@@ -13,18 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
-import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
-import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.transition.Hold
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -39,6 +34,11 @@ class CharacterListFragment : Fragment() {
         var characterFilterParams = FilterCharacter(
             true, 0, 0, false, "全部"
         )
+        var sortType = SortType.SORT_DATE
+        var sortAsc = Constants.SORT_ASC
+        var characterName = ""
+        lateinit var guilds: ArrayList<String>
+        var r6Ids = listOf<Int>()
     }
 
     var listAdapter = CharacterListAdapter(this)
@@ -80,11 +80,11 @@ class CharacterListFragment : Fragment() {
         characterFilterParams.initData()
         sortType = SortType.SORT_DATE
         sortAsc = false
+        characterName = ""
         viewModel.getCharacters(
             sortType,
-            sortAsc, ""
+            sortAsc, characterName
         )
-        binding.characterReset.isRefreshing = false
     }
 
     //加载数据
@@ -92,17 +92,33 @@ class CharacterListFragment : Fragment() {
         //toolbar
         ToolbarUtil(binding.toolBar).setMainToolbar(getString(R.string.app_name))
         //获取角色
-        viewModel.getCharacters(sortType, sortAsc, "", false)
-        binding.characterList.adapter = listAdapter
-        //刷新
-        binding.characterReset.apply {
-            setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
-            setColorSchemeResources(R.color.colorPrimary)
-            setOnRefreshListener {
-                reset()
+        viewModel.getCharacters(sortType, sortAsc, characterName, false)
+        lifecycleScope.launch {
+            //公会列表
+            guilds = arrayListOf()
+            lifecycleScope.launch {
+                guilds.add("全部")
+                val list = viewModel.getGuilds()
+                list.forEach {
+                    guilds.add(it.guild_name)
+                }
+                guilds.add("？？？")
             }
+            r6Ids = viewModel.getR6Ids()
         }
+        binding.characterList.adapter = listAdapter
+        //回到顶部
+        binding.characterCount.setOnLongClickListener {
+            binding.characterList.smoothScrollToPosition(0)
+            return@setOnLongClickListener true
+        }
+        //筛选、搜索
+        binding.characterCount.setOnClickListener {
+            CharacterFilterDialogFragment().show(parentFragmentManager, "filter_character")
+        }
+
     }
+
 
     //绑定observe
     private fun setObserve() {
@@ -113,6 +129,7 @@ class CharacterListFragment : Fragment() {
                     MainActivity.sp.edit {
                         putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
+                    binding.characterCount.text = it.toString()
                 })
             }
             //角色信息

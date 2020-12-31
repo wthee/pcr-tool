@@ -7,6 +7,8 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
+import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortAsc
+import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortType
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
@@ -96,8 +98,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                     .remove(106001, 107801, 112001)
                 CharacterListFragment.characterFilterParams.initData()
                 sharedCharacterViewModel.getCharacters(
-                    MainActivity.sortType,
-                    MainActivity.sortAsc,
+                    sortType,
+                    sortAsc,
                     ""
                 )
             } else {

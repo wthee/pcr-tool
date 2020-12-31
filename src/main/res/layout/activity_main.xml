@@ -43,16 +43,13 @@
             app:tint="@color/colorPrimary" />
 
         <include
+            android:id="@+id/tool_equip"
+            layout="@layout/view_menu_item" />
+
+        <include
             android:id="@+id/setting"
             layout="@layout/view_menu_item" />
 
-        <include
-            android:id="@+id/search"
-            layout="@layout/view_menu_item" />
-
-        <include
-            android:id="@+id/filter"
-            layout="@layout/view_menu_item" />
         <!-- 新闻，排名，竞技，活动，卡池-->
         <include
             android:id="@+id/tool_pvp"

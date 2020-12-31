@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.databinding.ItemPvpResultIconBinding
+import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.r6Ids
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import coil.Coil

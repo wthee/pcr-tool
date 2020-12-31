@@ -161,5 +161,7 @@
     <string name="add">添加</string>
     <string name="pvp_search_jp">日版竞技场查询</string>
     <string name="pvp_search_summary">查询台服信息</string>
+    <string name="tool_equip">装备</string>
+    <string name="character_name">角色名</string>
 
 </resources>

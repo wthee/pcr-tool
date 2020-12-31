@@ -24,4 +24,5 @@ object RecyclerViewHelper {
             smoothScrollToPosition(0)
         }
     }
+
 }

@@ -7,11 +7,11 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
+import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.r6Ids
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selectedAdapter
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.ui.tool.pvp.PvpService
