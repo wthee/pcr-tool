@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
 import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
 import cn.wthee.pcrtool.MainActivity.Companion.sortType
@@ -18,8 +20,11 @@ import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.transition.Hold
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -36,8 +41,8 @@ class CharacterListFragment : Fragment() {
         )
     }
 
+    var listAdapter = CharacterListAdapter(this)
     private lateinit var binding: FragmentCharacterListBinding
-    private lateinit var listAdapter: CharacterListAdapter
     private val viewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -51,34 +56,25 @@ class CharacterListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.e("create", "FragmentCharacterListBinding")
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         //加载数据
         init()
         //监听数据变化
         setObserve()
+        postponeEnterTransition()
         return binding.root
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        try {
-            pageLevel = 0
-            MainActivity.canClick = true
-            //刷新收藏
-//            val vh = characterList.findViewHolderForAdapterPosition(
-//                MainActivity.currentCharaPosition
-//            )?.itemView?.findViewById<MaterialTextView>(R.id.name)
-//            val color = if (CharacterBasicInfoFragment.isLoved)
-//                ResourcesUtil.getColor(R.color.colorPrimary)
-//            else
-//                ResourcesUtil.getColor(R.color.text)
-//            vh?.setTextColor(color)
-
-        } catch (e: java.lang.Exception) {
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        canClick = true
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        retainInstance = true
+    }
 
     private fun reset() {
         characterFilterParams.initData()
@@ -96,8 +92,7 @@ class CharacterListFragment : Fragment() {
         //toolbar
         ToolbarUtil(binding.toolBar).setMainToolbar(getString(R.string.app_name))
         //获取角色
-        viewModel.getCharacters(sortType, sortAsc, "")
-        listAdapter = CharacterListAdapter(this@CharacterListFragment)
+        viewModel.getCharacters(sortType, sortAsc, "", false)
         binding.characterList.adapter = listAdapter
         //刷新
         binding.characterReset.apply {
@@ -108,7 +103,6 @@ class CharacterListFragment : Fragment() {
             }
         }
     }
-
 
     //绑定observe
     private fun setObserve() {
@@ -128,7 +122,6 @@ class CharacterListFragment : Fragment() {
                         @OptIn(ExperimentalCoroutinesApi::class)
                         viewModel.characters.collectLatest { data ->
                             listAdapter.submitData(data)
-                            listAdapter.notifyDataSetChanged()
                         }
                     }
                 })

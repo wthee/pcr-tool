@@ -75,11 +75,15 @@ class CharacterBasicInfoFragment : Fragment() {
         })
         //初始收藏
         setLove(isLoved)
+        //开始过渡动画
+        parentFragment?.startPostponedEnterTransition()
         return binding.root
     }
 
     //初始化
     private fun init() {
+        //添加返回fab
+        FabHelper.addBackFab()
         characterPic = binding.characterPic
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
@@ -90,16 +94,11 @@ class CharacterBasicInfoFragment : Fragment() {
             Constants.CHARACTER_FULL_URL + (uid + if (r6Id != 0) 60 else 30) + Constants.WEBP
         //角色图片共享元素
         binding.characterPic.transitionName = picUrl
+        //加载图片
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
             placeholder(R.drawable.load)
             listener(
-                onStart = {
-                    MainActivity.canBack = true
-                    //添加返回fab
-                    FabHelper.addBackFab()
-                    parentFragment?.startPostponedEnterTransition()
-                },
                 onSuccess = { _, _ ->
                     //设置背景
                     val request = ImageRequest.Builder(requireContext())

@@ -10,12 +10,11 @@
     android:foreground="?selectableItemBackgroundBorderless"
     android:background="@drawable/card_background">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/character_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        app:shapeAppearanceOverlay="@style/roundedCornerStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

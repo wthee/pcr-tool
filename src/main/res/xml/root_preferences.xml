@@ -21,6 +21,11 @@
             app:summary="@string/game_version_summary"
             app:title="@string/game_version" />
 
+        <SwitchPreference
+            app:key="pvp_region"
+            app:iconSpaceReserved="false"
+            app:title="@string/pvp_search_jp"
+            app:summary="@string/pvp_search_summary" />
     </PreferenceCategory>
 
 

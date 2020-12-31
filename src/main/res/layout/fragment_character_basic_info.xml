@@ -8,7 +8,7 @@
     android:background="@drawable/card_background"
     app:layoutDescription="@xml/fragment_character_basic_info_scene">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/character_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,8 +17,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/roundedCornerStyle" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"

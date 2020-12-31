@@ -159,5 +159,7 @@
     <string name="from">From %s</string>
     <string name="customize">自定义</string>
     <string name="add">添加</string>
+    <string name="pvp_search_jp">日版竞技场查询</string>
+    <string name="pvp_search_summary">查询台服信息</string>
 
 </resources>

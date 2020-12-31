@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         @JvmField
         var currentCharaPosition: Int = 0
+        var errorPicIds = arrayListOf<Int>()
         var currentEquipPosition: Int = 0
         var currentMainPage: Int = 0
         var nowVersionName = "0.0.0"

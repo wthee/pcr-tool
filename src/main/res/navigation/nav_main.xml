@@ -9,15 +9,7 @@
         android:id="@+id/characterPagerFragment"
         android:name="cn.wthee.pcrtool.ui.character.CharacterPagerFragment"
         android:label="CharacterPagerFragment"
-        tools:layout="@layout/fragment_character_basic_info">
-        <action
-            android:id="@+id/action_characterPagerFragment_to_characterPicListFragment"
-            app:destination="@id/characterPicListFragment"
-            app:enterAnim="@anim/fragment_enter_pic"
-            app:exitAnim="@anim/fragment_exit_pic"
-            app:popEnterAnim="@anim/fragment_popenter_pic"
-            app:popExitAnim="@anim/fragment_popexit_pic" />
-    </fragment>
+        tools:layout="@layout/fragment_character_basic_info" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="cn.wthee.pcrtool.ui.setting.MainSettingsFragment"
@@ -104,29 +96,60 @@
             app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_toolNewsFragment"
-            app:destination="@id/toolNewsFragment" />
+            app:destination="@id/toolNewsFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_toolPvpFragment"
-            app:destination="@id/toolPvpFragment" />
+            app:destination="@id/toolPvpFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_toolGachaFragment"
-            app:destination="@id/toolGachaFragment" />
+            app:destination="@id/toolGachaFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_toolleaderFragment"
-            app:destination="@id/toolleaderFragment" />
+            app:destination="@id/toolleaderFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_eventFragment"
-            app:destination="@id/eventFragment" />
+            app:destination="@id/eventFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_calendarFragment"
-            app:destination="@id/calendarFragment" />
+            app:destination="@id/calendarFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_equipmentListFragment"
-            app:destination="@id/equipmentListFragment" />
+            app:destination="@id/equipmentListFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
         <action
             android:id="@+id/action_characterListFragment_to_characterPagerFragment"
             app:destination="@id/characterPagerFragment"
-            app:popUpToInclusive="true" />
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/equipmentListFragment"
