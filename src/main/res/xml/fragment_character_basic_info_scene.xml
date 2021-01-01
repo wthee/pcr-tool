@@ -11,8 +11,8 @@
 
         <Constraint
             android:id="@id/position_type"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
+            android:layout_width="@dimen/menu_icon"
+            android:layout_height="@dimen/menu_icon"
             android:layout_marginStart="@dimen/xm_margin"
             app:layout_constraintBottom_toBottomOf="@id/name"
             app:layout_constraintStart_toStartOf="parent"

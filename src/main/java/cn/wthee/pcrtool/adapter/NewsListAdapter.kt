@@ -64,7 +64,7 @@ class NewsAdapter(
                 adapter.submitList(tags)
 
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
 
                 //点击查看
                 root.setOnClickListener {

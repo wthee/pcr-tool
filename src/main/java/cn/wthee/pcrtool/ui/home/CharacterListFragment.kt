@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.LOG_TAG
-import com.google.android.material.transition.Hold
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,6 +38,8 @@ class CharacterListFragment : Fragment() {
         var characterName = ""
         lateinit var guilds: ArrayList<String>
         var r6Ids = listOf<Int>()
+        var isPostponeEnterTransition = false
+        lateinit var characterList: RecyclerView
     }
 
     var listAdapter = CharacterListAdapter(this)
@@ -47,33 +48,24 @@ class CharacterListFragment : Fragment() {
         InjectorUtil.provideCharacterViewModelFactory()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        exitTransition = Hold()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.e("create", "FragmentCharacterListBinding")
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         //加载数据
         init()
         //监听数据变化
         setObserve()
-        postponeEnterTransition()
+        if (isPostponeEnterTransition) {
+            postponeEnterTransition()
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         canClick = true
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        retainInstance = true
     }
 
     private fun reset() {
@@ -89,6 +81,7 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
+        characterList = binding.characterList
         //toolbar
         ToolbarUtil(binding.toolBar).setMainToolbar(getString(R.string.app_name))
         //获取角色
@@ -107,9 +100,9 @@ class CharacterListFragment : Fragment() {
             r6Ids = viewModel.getR6Ids()
         }
         binding.characterList.adapter = listAdapter
-        //回到顶部
+        //重置
         binding.characterCount.setOnLongClickListener {
-            binding.characterList.smoothScrollToPosition(0)
+            reset()
             return@setOnLongClickListener true
         }
         //筛选、搜索
@@ -118,7 +111,6 @@ class CharacterListFragment : Fragment() {
         }
 
     }
-
 
     //绑定observe
     private fun setObserve() {

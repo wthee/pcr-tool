@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
-import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import coil.load
@@ -23,7 +23,7 @@ import coil.load
  */
 private const val EQUIP = "equip"
 
-class EquipmentDetailsDialogFragment : CommonBasicDialogFragment() {
+class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
 
 
     companion object {

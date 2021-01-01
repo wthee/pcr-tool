@@ -53,7 +53,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                 //加载动画
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
                 //设置共享元素名称
                 root.transitionName = "item_${character.id}"
                 //加载网络图片
@@ -96,7 +96,6 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 root.setOnClickListener {
                     if (MainActivity.canClick) {
                         MainActivity.canClick = false
-                        MainActivity.canBack = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
                         bundle.putInt(UID, character.id)

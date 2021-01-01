@@ -38,7 +38,7 @@ class GachaHistoryAdapter :
             //设置数据
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
                 //卡池名
                 gachaName.text = gacha.gacha_name
                 //角色图片

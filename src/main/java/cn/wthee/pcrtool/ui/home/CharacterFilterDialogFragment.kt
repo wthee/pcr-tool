@@ -1,22 +1,20 @@
 package cn.wthee.pcrtool.ui.home
 
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.forEachIndexed
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentFilterCharacterBinding
 import cn.wthee.pcrtool.databinding.LayoutChipBinding
 import cn.wthee.pcrtool.enums.SortType
+import cn.wthee.pcrtool.ui.common.CommonDialogFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
-class CharacterFilterDialogFragment : DialogFragment() {
+
+class CharacterFilterDialogFragment : CommonDialogFragment() {
 
     private lateinit var binding: FragmentFilterCharacterBinding
     private val viewModel by activityViewModels<CharacterViewModel> {
@@ -32,21 +30,15 @@ class CharacterFilterDialogFragment : DialogFragment() {
         //筛选
         val chips = binding.chipsGuild
         initFilter(chips, binding)
-//       viewModel.reset.postValue(true)
+        binding.reset.setOnClickListener {
+            viewModel.reset.postValue(true)
+            dialog?.dismiss()
+        }
         binding.next.setOnClickListener {
             filterData(binding)
+            dialog?.dismiss()
         }
         return binding.root
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.apply {
-            setLayout(ScreenUtil.getWidth() - 32.dp, ViewGroup.LayoutParams.WRAP_CONTENT)
-            setGravity(Gravity.BOTTOM)
-
-        }
     }
 
     private fun filterData(binding: FragmentFilterCharacterBinding) {

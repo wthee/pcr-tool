@@ -86,7 +86,7 @@ class CharacterPagerFragment : Fragment() {
                 viewPager.adapter = adapter
                 viewPager.adjustViewPager(requireContext())
             }
-            viewPager.offscreenPageLimit = 3
+            viewPager.offscreenPageLimit = 2
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)

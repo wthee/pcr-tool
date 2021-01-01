@@ -4,28 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_color"
     android:orientation="vertical">
 
     <include
-        android:id="@+id/loading"
-        layout="@layout/layout_loading"
-        android:visibility="gone" />
+        android:id="@+id/tool_equip"
+        layout="@layout/view_toolbar" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/equip_reset"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
+        android:layout_weight="1"
+        android:background="@drawable/card_background"
+        android:orientation="vertical"
+        android:padding="@dimen/xs_padding">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/equip_page"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
+            android:padding="@dimen/xs_padding"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="4"
             tools:listitem="@layout/item_common" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>

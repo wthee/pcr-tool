@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterDropAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterDropInfoBinding
-import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色碎片掉落页面
  */
-class CharacterDropDialogFragment : CommonBasicDialogFragment() {
+class CharacterDropDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
         fun getInstance(uid: Int) =

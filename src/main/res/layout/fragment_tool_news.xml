@@ -12,8 +12,8 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
-        android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
         android:background="@drawable/card_background"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_height_1" />

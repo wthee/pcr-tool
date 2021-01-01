@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data.network
 
-import android.util.Log
 import androidx.preference.PreferenceManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.entity.NewsTable
@@ -30,7 +29,6 @@ object MyAPIRepository {
                 region = 3
             }
         }
-        Log.e("pvp", "$region")
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)

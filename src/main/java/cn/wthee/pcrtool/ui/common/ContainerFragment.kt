@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.utils.Constants.UID
 
 private const val DIALOG = "dialog"
 
-class ContainerFragment : CommonBasicDialogFragment() {
+class ContainerFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
         fun getInstance(uid: Int, page: PageType) =

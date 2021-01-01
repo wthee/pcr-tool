@@ -12,7 +12,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
@@ -37,7 +36,6 @@ class CharacterBasicInfoFragment : Fragment() {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
         lateinit var characterPic: AppCompatImageView
-
         fun getInstance(uid: Int, r6Id: Int) = CharacterBasicInfoFragment().apply {
             arguments = Bundle().apply {
                 putInt(UID, uid)
@@ -83,7 +81,7 @@ class CharacterBasicInfoFragment : Fragment() {
     //初始化
     private fun init() {
         //添加返回fab
-        FabHelper.addBackFab()
+        FabHelper.addBackFab(1, true)
         characterPic = binding.characterPic
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
@@ -106,27 +104,7 @@ class CharacterBasicInfoFragment : Fragment() {
                         .build()
                     lifecycleScope.launch {
                         //背景颜色选取
-                        val bitmap =
-                            (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
-                        val color1 = PaletteHelper.createPaletteSync(bitmap)
-                            .getLightMutedColor(Color.DKGRAY)
-                        val color2 = PaletteHelper.createPaletteSync(bitmap)
-                            .getDarkVibrantColor(Color.DKGRAY)
-                        val color3 = PaletteHelper.createPaletteSync(bitmap)
-                            .getDarkMutedColor(Color.DKGRAY)
-                        val gd = GradientDrawable(
-                            GradientDrawable.Orientation.TL_BR,
-                            intArrayOf(
-                                color1,
-                                color2,
-                                color3,
-                                ResourcesUtil.getColor(R.color.viewpager_bg)
-                            )
-                        )
-                        gd.gradientType = GradientDrawable.RADIAL_GRADIENT
-                        gd.setGradientCenter(0.5f, 0.5f)
-                        gd.gradientRadius = 998f
-                        CharacterPagerFragment.viewPager.background = gd
+//                        setBackground(request)
                     }
 
                 }
@@ -143,9 +121,32 @@ class CharacterBasicInfoFragment : Fragment() {
             }
 
             override fun end(view: View) {
-                MainActivity.canBack = true
             }
         }, binding.fabLoveCbi, binding.basicInfo)
+    }
+
+    private suspend fun setBackground(request: ImageRequest) {
+        val bitmap =
+            (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
+        val color1 = PaletteHelper.createPaletteSync(bitmap)
+            .getLightMutedColor(Color.DKGRAY)
+        val color2 = PaletteHelper.createPaletteSync(bitmap)
+            .getDarkVibrantColor(Color.DKGRAY)
+        val color3 = PaletteHelper.createPaletteSync(bitmap)
+            .getDarkMutedColor(Color.DKGRAY)
+        val gd = GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            intArrayOf(
+                color1,
+                color2,
+                color3,
+                ResourcesUtil.getColor(R.color.viewpager_bg)
+            )
+        )
+        gd.gradientType = GradientDrawable.RADIAL_GRADIENT
+        gd.setGradientCenter(0.5f, 0.5f)
+        gd.gradientRadius = 998f
+        CharacterPagerFragment.viewPager.background = gd
     }
 
 

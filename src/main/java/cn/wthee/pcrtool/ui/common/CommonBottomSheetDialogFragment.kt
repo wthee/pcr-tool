@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 /**
  * 底部弹窗基类
  */
-open class CommonBasicDialogFragment(private val expend: Boolean = false) :
+open class CommonBottomSheetDialogFragment(private val expend: Boolean = false) :
     BottomSheetDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

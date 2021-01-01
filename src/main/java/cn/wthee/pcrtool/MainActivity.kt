@@ -14,12 +14,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.home.*
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlin.system.exitProcess
@@ -36,11 +36,9 @@ class MainActivity : AppCompatActivity() {
         var currentCharaPosition: Int = 0
         var errorPicIds = arrayListOf<Int>()
         var currentEquipPosition: Int = 0
-        var currentMainPage: Int = 0
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
 
-        var canBack = true
         var pageLevel = 0
         var mFloatingWindowHeight = 0
         lateinit var handler: Handler
@@ -50,12 +48,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var menuItems = arrayListOf<ViewBinding>()
+    private var menuItemIds = arrayListOf<Int>()
+    private var menuItemDrawable = arrayListOf<Int>()
+    private var menuItemTitles = arrayListOf<Int>()
     private lateinit var binding: ActivityMainBinding
     private val sharedCharacterViewModel by viewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
-    }
-    private val sharedEquipViewModel by viewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +73,6 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //应用版本校验
         AppUpdateHelper.init(this, layoutInflater)
-        //菜单布局
-        initMenuItems()
     }
 
     // 全屏显示
@@ -103,12 +99,9 @@ class MainActivity : AppCompatActivity() {
 
     //动画执行完之前，禁止直接返回
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        return if (!canBack && event.keyCode == KeyEvent.KEYCODE_BACK) {
-            true
-        } else {
-            binding.fab.setImageResource(R.drawable.ic_function)
-            super.dispatchKeyEvent(event)
-        }
+        super.dispatchKeyEvent(event)
+        binding.fab.setImageResource(R.drawable.ic_function)
+        return true
     }
 
     private fun setHandler() {
@@ -173,7 +166,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        //获取数据
+        //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
             binding.setting,
@@ -183,6 +176,39 @@ class MainActivity : AppCompatActivity() {
             binding.toolEvent,
             binding.toolCalendar,
             binding.toolGacha,
+        )
+        //菜单跳转
+        menuItemIds = arrayListOf(
+            R.id.action_characterListFragment_to_equipmentListFragment,
+            R.id.action_characterListFragment_to_settingsFragment,
+            R.id.action_characterListFragment_to_toolleaderFragment,
+            R.id.action_characterListFragment_to_toolNewsFragment,
+            R.id.action_characterListFragment_to_toolPvpFragment,
+            R.id.action_characterListFragment_to_eventFragment,
+            R.id.action_characterListFragment_to_calendarFragment,
+            R.id.action_characterListFragment_to_toolGachaFragment,
+        )
+        //菜单标题
+        menuItemTitles = arrayListOf(
+            R.string.tool_equip,
+            R.string.setting,
+            R.string.tool_leader,
+            R.string.tool_news,
+            R.string.tool_pvp,
+            R.string.tool_event,
+            R.string.tool_calendar_hide,
+            R.string.tool_gacha,
+        )
+        //菜单图标
+        menuItemDrawable = arrayListOf(
+            R.drawable.ic_equip,
+            R.drawable.ic_settings,
+            R.drawable.ic_leader,
+            R.drawable.ic_news,
+            R.drawable.ic_pvp,
+            R.drawable.ic_event,
+            R.drawable.ic_calendar,
+            R.drawable.ic_gacha,
         )
         fabMain = binding.fab
         //获取版本名
@@ -200,7 +226,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setListener() {
-
         //点击展开
         val motion = binding.motionLayout
         fabMain.setOnClickListener {
@@ -214,10 +239,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        //设置
-        binding.setting.root.setOnClickListener {
-            closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_settingsFragment)
+        //长按回到顶部
+        fabMain.setOnLongClickListener {
+            CharacterListFragment.characterList.smoothScrollToPosition(0)
+            return@setOnLongClickListener true
         }
         //搜索
 //        binding.root.setOnClickListener {
@@ -336,35 +361,28 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        }
-        //pvp
-        binding.toolPvp.root.setOnClickListener {
-            closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolPvpFragment)
-        }
-        //新闻
-        binding.toolNews.root.setOnClickListener {
-            closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolNewsFragment)
-        }
-        //排名
-        binding.toolLeader.root.setOnClickListener {
-            closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolleaderFragment)
-        }
-        //活动
-        binding.toolEvent.root.setOnClickListener {
-            closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_eventFragment)
-        }
-        //卡池
-        binding.toolGacha.root.setOnClickListener {
-            closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_toolGachaFragment)
-        }
-        //日历
-        binding.toolCalendar.root.setOnClickListener {
-            closeMenus()
-            findNavController(R.id.nav_host_fragment).navigate(R.id.action_characterListFragment_to_calendarFragment)
+        //初始化菜单
+        menuItems.forEachIndexed { index, viewBinding ->
+            //标题、图标
+            MenuItemViewHelper(viewBinding as ViewMenuItemBinding).setItem(
+                getString(menuItemTitles[index]),
+                menuItemDrawable[index]
+            )
+            //点击事件
+            viewBinding.root.setOnClickListener {
+                closeMenus()
+                it.transitionName = getString(menuItemTitles[index])
+                val extras = FragmentNavigatorExtras(
+                    it to it.transitionName
+                )
+                //页面跳转
+                findNavController(R.id.nav_host_fragment).navigate(
+                    menuItemIds[index],
+                    null,
+                    null,
+                    extras
+                )
+            }
         }
     }
 
@@ -418,56 +436,11 @@ class MainActivity : AppCompatActivity() {
 
     //返回
     private fun goBack(activity: FragmentActivity) {
-        if (canBack && pageLevel > 0) {
+        if (pageLevel > 0) {
             if (pageLevel == 1) FabHelper.setIcon(R.drawable.ic_function)
             activity.findNavController(R.id.nav_host_fragment).navigateUp()
             pageLevel--
         }
     }
 
-    // 菜单初始
-    private fun initMenuItems() {
-        binding.apply {
-            MenuItemViewHelper(setting).setItem(
-                getString(R.string.setting),
-                R.drawable.ic_settings,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(toolEquip).setItem(
-                getString(R.string.tool_equip),
-                R.drawable.ic_equip,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(toolPvp).setItem(
-                getString(R.string.tool_pvp),
-                R.drawable.ic_pvp,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(toolNews).setItem(
-                getString(R.string.tool_news),
-                R.drawable.ic_news,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(toolLeader).setItem(
-                getString(R.string.tool_leader),
-                R.drawable.ic_leader,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(toolEvent).setItem(
-                getString(R.string.tool_event),
-                R.drawable.ic_event,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(toolGacha).setItem(
-                getString(R.string.tool_gacha),
-                R.drawable.ic_gacha,
-                R.color.colorPrimary
-            )
-            MenuItemViewHelper(toolCalendar).setItem(
-                "",
-                R.drawable.ic_calendar,
-                R.color.colorPrimary
-            ).setCenterIcon()
-        }
-    }
 }

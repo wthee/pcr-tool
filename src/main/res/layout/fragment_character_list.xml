@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:padding="@dimen/xs_padding"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedHeight="true"
@@ -24,7 +25,6 @@
         app:layout_constraintVertical_weight="1"
         app:spanCount="2"
         tools:listitem="@layout/item_character" />
-
 
     <LinearLayout
         android:id="@+id/character_fabs"
@@ -41,16 +41,17 @@
             android:layout_marginEnd="@dimen/xl_margin"
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/pvp_search"
+            android:elevation="@dimen/home_fab_elevation"
+            android:text="0"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/fab_text_size"
-            android:text="0"
             app:borderWidth="0dp"
             app:elevation="@dimen/home_fab_elevation"
-            android:elevation="@dimen/home_fab_elevation"
             app:icon="@drawable/ic_character"
             app:iconSize="@dimen/menu_icon"
             app:iconTint="@color/colorPrimary" />
 
     </LinearLayout>
+
 </androidx.constraintlayout.motion.widget.MotionLayout>
 

@@ -31,7 +31,8 @@ class CharacterViewModel(
             if (!this@CharacterViewModel::characters.isInitialized || reload) {
                 characters = Pager(
                     PagingConfig(
-                        pageSize = 20,
+                        pageSize = Int.MAX_VALUE,
+                        initialLoadSize = Int.MAX_VALUE,
                         enablePlaceholders = false
                     )
                 ) {

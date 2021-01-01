@@ -74,10 +74,10 @@
         <action
             android:id="@+id/action_pvpLikedFragment_to_pvpLikedCustomize"
             app:destination="@id/pvpLikedCustomize"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/pvpLikedCustomize"

@@ -15,8 +15,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
         android:layout_weight="1"
         android:background="@drawable/card_background"
         android:orientation="vertical"

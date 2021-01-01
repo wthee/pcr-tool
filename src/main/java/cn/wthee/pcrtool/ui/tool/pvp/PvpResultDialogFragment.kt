@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.db.view.getIds
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
-import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 /**
  * 查询结果
  */
-class PvpResultDialogFragment : CommonBasicDialogFragment() {
+class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentToolPvpResultBinding
     private lateinit var job: Job

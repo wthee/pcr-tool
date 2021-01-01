@@ -8,7 +8,7 @@
     android:background="@drawable/card_background"
     app:layoutDescription="@xml/fragment_character_basic_info_scene">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/character_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,8 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/roundedCornerStyle" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
@@ -27,6 +28,7 @@
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:layout_constrainedWidth="true"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/name_extra"
         app:layout_constraintStart_toEndOf="@id/position_type"
         app:layout_constraintTop_toBottomOf="@id/character_pic"
@@ -34,8 +36,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/position_type"
-        android:layout_width="@dimen/l_icon"
-        android:layout_height="@dimen/l_icon"
+        android:layout_width="@dimen/menu_icon"
+        android:layout_height="@dimen/menu_icon"
         tools:background="@drawable/ic_position_front" />
 
     <com.google.android.material.textview.MaterialTextView

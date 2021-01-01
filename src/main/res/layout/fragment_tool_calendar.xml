@@ -15,8 +15,8 @@
         android:id="@+id/layout_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
         app:cardCornerRadius="@dimen/card_radius"
         app:layout_constraintTop_toBottomOf="@id/tool_calendar">
 
@@ -38,9 +38,9 @@
         android:id="@+id/layout_event"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginStart="@dimen/m_margin"
         android:layout_marginTop="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/m_margin"
         android:layout_weight="1"
         android:background="@drawable/card_background"
         android:orientation="vertical">

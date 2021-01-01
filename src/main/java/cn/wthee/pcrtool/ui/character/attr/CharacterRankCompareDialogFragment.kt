@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
-import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.RankSelectBtnsHelper
 import cn.wthee.pcrtool.utils.ToolbarUtil
@@ -21,7 +21,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class CharacterRankCompareFragment : CommonBasicDialogFragment(true) {
+class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
 
     private lateinit var binding: FragmentCharacterRankCompareBinding
     private val sharedAttrViewModel: CharacterAttrViewModel by activityViewModels {

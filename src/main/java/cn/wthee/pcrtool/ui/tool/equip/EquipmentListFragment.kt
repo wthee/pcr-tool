@@ -15,8 +15,9 @@ import cn.wthee.pcrtool.adapter.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToolbarUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ class EquipmentListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        FabHelper.addBackFab()
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
         init()
         //绑定观察
@@ -51,18 +53,15 @@ class EquipmentListFragment : Fragment() {
     }
 
     private fun init() {
+        //设置头部
+        ToolbarUtil(binding.toolEquip).setToolHead(
+            R.drawable.ic_equip,
+            getString(R.string.tool_equip)
+        )
         binding.apply {
             list = binding.equipPage
             pageAdapter = EquipmentPageAdapter(parentFragmentManager)
             binding.equipPage.adapter = pageAdapter
-            //重置
-            equipReset.apply {
-                setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
-                setColorSchemeResources(R.color.colorPrimary)
-                setOnRefreshListener {
-                    reset()
-                }
-            }
         }
         //获取装备类型
         equipTypes = arrayListOf()
@@ -79,7 +78,6 @@ class EquipmentListFragment : Fragment() {
         equipFilterParams.initData()
         equipFilterParams.all = true
         viewModel.getEquips("")
-        binding.equipReset.isRefreshing = false
     }
 
     private fun setObserve() {

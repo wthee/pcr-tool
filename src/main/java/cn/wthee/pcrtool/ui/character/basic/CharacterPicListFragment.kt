@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
-import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.*
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色图片展示页面
  */
-class CharacterPicListFragment : CommonBasicDialogFragment(true) {
+class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
 
     companion object {
         var hasLoaded = arrayListOf(false, false, false, false)

@@ -8,7 +8,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.SkillLoopAllAdapter
 import cn.wthee.pcrtool.data.bean.SkillLoop
 import cn.wthee.pcrtool.databinding.FragmentSkillLoopBinding
-import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.utils.ToolbarUtil
 /**
  * 角色技能循环页面
  */
-class CharacterSkillLoopDialogFragment : CommonBasicDialogFragment(true) {
+class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
     companion object {
         fun getInstance(uid: Int) =

@@ -5,12 +5,14 @@
     android:id="@+id/item_character"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin"
+    android:layout_marginStart="@dimen/s_margin"
+    android:layout_marginEnd="@dimen/s_margin"
+    android:layout_marginBottom="@dimen/m_margin"
+    android:background="@drawable/card_background"
     android:elevation="@dimen/card_elevation"
-    android:foreground="?selectableItemBackgroundBorderless"
-    android:background="@drawable/card_background">
+    android:foreground="?selectableItemBackgroundBorderless">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/character_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/roundedCornerStyle"
         tools:src="@drawable/error" />
 
     <androidx.appcompat.widget.AppCompatImageView
