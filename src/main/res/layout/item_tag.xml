@@ -8,6 +8,6 @@
     android:background="@drawable/title_background"
     android:paddingStart="@dimen/s_padding"
     android:paddingEnd="@dimen/s_padding"
-    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
     android:textColor="@color/colorWhite"
     tools:text="@string/app_name" />

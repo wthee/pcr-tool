@@ -65,17 +65,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                     placeholder(R.drawable.load)
                     listener(
                         onStart = {
-                            if (MainActivity.errorPicIds.contains(id)) {
-                                startEnter()
-                            }
-                        },
-                        onError = { _, _ ->
-                            MainActivity.errorPicIds.add(id)
                             startEnter()
-                        },
-                        onSuccess = { _, _ ->
-                            startEnter()
-                            MainActivity.errorPicIds.remove(id)
                         }
                     )
                 }

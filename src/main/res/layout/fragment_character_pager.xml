@@ -3,27 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/viewpager_bg">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/character_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAlphaBlack"
         android:paddingTop="@dimen/xm_padding"
         android:paddingBottom="@dimen/page_padding"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/character_fab"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/function"
-        android:layout_gravity="bottom|end"
         android:text="@string/app_name"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/fab_text_size"

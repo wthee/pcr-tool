@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
+import android.view.View
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -12,6 +13,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.handler
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
@@ -19,6 +21,7 @@ import cn.wthee.pcrtool.data.network.service.DatabaseService
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -53,6 +56,12 @@ class DatabaseDownloadWorker(
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         val fromSetting = inputData.getInt(KEY_FROM_SETTING, -1)
         setForegroundAsync(createForegroundInfo())
+        //显示加载图片
+        MainScope().launch {
+            MainActivity.layoutDownload.visibility = View.VISIBLE
+            MainActivity.textDownload.text = Constants.NOTICE_TITLE
+
+        }
         return@coroutineScope download(DatabaseVersion(version, hash), type, fromSetting)
     }
 
@@ -74,6 +83,7 @@ class DatabaseDownloadWorker(
                             .setContentTitle(
                                 "${Constants.NOTICE_TITLE} $currSize  / $totalSize"
                             )
+                        MainActivity.progressDownload.setProgress(progress)
                         notificationManager.notify(noticeId, notification.build())
                     }
 
@@ -118,14 +128,19 @@ class DatabaseDownloadWorker(
             DatabaseUpdater.updateLocalDataBaseVersion(version)
             //通知更新数据
             if (fromSetting == 0 || fromSetting == 1) {
+                //自动关闭应用
                 handler.sendEmptyMessage(2)
-            } else {
+            }
+            if (fromSetting == -1) {
+                //跳转
                 MainScope().launch {
-                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
+                    delay(1000L)
+                    handler.sendEmptyMessage(1)
                 }
             }
-            //跳转
-            handler.sendEmptyMessage(1)
+            MainScope().launch {
+                MainActivity.textDownload.text = Constants.NOTICE_TOAST_SUCCESS
+            }
             return Result.success()
         } catch (e: Exception) {
             MainScope().launch {

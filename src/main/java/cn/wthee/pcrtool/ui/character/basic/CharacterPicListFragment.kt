@@ -50,7 +50,7 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
         //过渡
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
-            duration = resources.getInteger(R.integer.fragment_anim).toLong()
+            duration = 500L
             setAllContainerColors(Color.TRANSPARENT)
         }
         requireArguments().apply {

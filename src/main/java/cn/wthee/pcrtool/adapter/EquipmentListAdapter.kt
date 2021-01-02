@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
@@ -75,7 +74,6 @@ class EquipmentPageAdapter(
         }
 
         private fun click(equip: EquipmentMaxData) {
-            MainActivity.currentEquipPosition = absoluteAdapterPosition
             EquipmentDetailsDialogFragment.getInstance(equip).show(fragmentManager, "details")
         }
     }

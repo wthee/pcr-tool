@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#5690EF</color>
-    <color name="colorPrimaryDark">#C4165FDA</color>
+    <color name="colorPrimaryDark">#165FDA</color>
     <color name="colorAccent">#8BBBF1</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorAlpha">#00FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="text">#454545</color>
-    <color name="viewpager_bg">#323232</color>
     <color name="textGray">#848484</color>
     <color name="colorGray">#86EEEEEE</color>
     <color name="colorFg">#15000000</color>
     <color name="colorBg">#F5F5F5</color>
     <color name="colorAlphaBlack">#75000000</color>
+    <color name="colorSelected">#C2C2C2</color>
     <color name="colorHalfAlpha">#50ffffff</color>
     <color name="alphaPrimary">#8E9CB1</color>
     <color name="color_map_n">@color/colorPrimary</color>
@@ -28,4 +28,5 @@
     <color name="news_system">#a067c5</color>
     <color name="news_event">#399be6</color>
     <color name="cool_apk">#4caf50</color>
+    <color name="viewpager_bg">#636363</color>
 </resources>

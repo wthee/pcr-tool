@@ -8,7 +8,7 @@
     android:layout_marginEnd="@dimen/s_margin"
     android:layout_marginBottom="@dimen/m_margin"
     android:background="@drawable/card_background"
-    android:padding="@dimen/s_padding">
+    android:padding="@dimen/xs_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gacha_name"
@@ -17,7 +17,7 @@
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -43,7 +43,7 @@ class PvpLikedFragment : Fragment() {
         super.onCreate(savedInstanceState)
         //过渡
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            duration = resources.getInteger(R.integer.fragment_anim).toLong()
+            duration = 500L
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(Color.TRANSPARENT)
         }

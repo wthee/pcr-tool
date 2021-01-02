@@ -40,6 +40,7 @@ class CharacterListFragment : Fragment() {
         var r6Ids = listOf<Int>()
         var isPostponeEnterTransition = false
         lateinit var characterList: RecyclerView
+
     }
 
     var listAdapter = CharacterListAdapter(this)
@@ -55,6 +56,7 @@ class CharacterListFragment : Fragment() {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         //加载数据
         init()
+        setListener()
         //监听数据变化
         setObserve()
         if (isPostponeEnterTransition) {
@@ -82,8 +84,12 @@ class CharacterListFragment : Fragment() {
     //加载数据
     private fun init() {
         characterList = binding.characterList
+
         //toolbar
-        ToolbarUtil(binding.toolBar).setMainToolbar(getString(R.string.app_name))
+        ToolbarUtil(binding.toolBar).setMainToolbar(
+            R.mipmap.ic_logo,
+            getString(R.string.app_name)
+        )
         //获取角色
         viewModel.getCharacters(sortType, sortAsc, characterName, false)
         lifecycleScope.launch {
@@ -100,6 +106,9 @@ class CharacterListFragment : Fragment() {
             r6Ids = viewModel.getR6Ids()
         }
         binding.characterList.adapter = listAdapter
+    }
+
+    private fun setListener() {
         //重置
         binding.characterCount.setOnLongClickListener {
             reset()
@@ -109,7 +118,6 @@ class CharacterListFragment : Fragment() {
         binding.characterCount.setOnClickListener {
             CharacterFilterDialogFragment().show(parentFragmentManager, "filter_character")
         }
-
     }
 
     //绑定observe

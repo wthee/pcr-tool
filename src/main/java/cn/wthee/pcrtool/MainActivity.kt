@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,8 +21,13 @@ import androidx.work.WorkManager
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.home.*
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textview.MaterialTextView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 /**
@@ -34,8 +40,6 @@ class MainActivity : AppCompatActivity() {
 
         @JvmField
         var currentCharaPosition: Int = 0
-        var errorPicIds = arrayListOf<Int>()
-        var currentEquipPosition: Int = 0
         var nowVersionName = "0.0.0"
         lateinit var sp: SharedPreferences
 
@@ -45,6 +49,9 @@ class MainActivity : AppCompatActivity() {
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
+        lateinit var layoutDownload: FrameLayout
+        lateinit var progressDownload: TasksCompletedView
+        lateinit var textDownload: MaterialTextView
     }
 
     private var menuItems = arrayListOf<ViewBinding>()
@@ -123,7 +130,6 @@ class MainActivity : AppCompatActivity() {
                             override fun onCancel(dialog: AlertDialog) {
                                 //强制更新数据库
                                 DatabaseUpdater.forceUpdate()
-                                ToastUtil.short(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
                                 dialog.dismiss()
                             }
 
@@ -139,25 +145,17 @@ class MainActivity : AppCompatActivity() {
                 }
                 //数据切换
                 2 -> {
-                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
-                    //弹窗
-                    DialogUtil.create(
-                        this,
-                        layout,
-                        getString(R.string.change_success),
-                        getString(R.string.change_success_tip),
-                        getString(R.string.close_app),
-                        getString(R.string.close_app_too),
-                        object : DialogListener {
-                            override fun onCancel(dialog: AlertDialog) {
-                                exitProcess(0)
-                            }
-
-                            override fun onConfirm(dialog: AlertDialog) {
-                                exitProcess(0)
-                            }
+                    MainScope().launch {
+                        delay(500L)
+                        layoutDownload.setOnClickListener {
+                            exitProcess(0)
                         }
-                    ).show()
+                        for (i in 3 downTo 1) {
+                            textDownload.text = "应用将在 ${i} 秒后关闭!"
+                            delay(1000L)
+                        }
+                        exitProcess(0)
+                    }
                 }
             }
 
@@ -166,6 +164,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        layoutDownload = binding.layoutDownload
+        progressDownload = binding.progress
+        textDownload = binding.downloadText
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
@@ -241,126 +242,14 @@ class MainActivity : AppCompatActivity() {
         }
         //长按回到顶部
         fabMain.setOnLongClickListener {
-            CharacterListFragment.characterList.smoothScrollToPosition(0)
+            try {
+                CharacterListFragment.characterList.smoothScrollToPosition(0)
+                EquipmentListFragment.list.smoothScrollToPosition(0)
+            } catch (e: Exception) {
+
+            }
             return@setOnLongClickListener true
         }
-        //搜索
-//        binding.root.setOnClickListener {
-//            closeMenus()
-//            //显示搜索布局
-//            val layout = LayoutSearchBinding.inflate(layoutInflater)
-//            val dialog = DialogUtil.create(this, layout.root)
-//            dialog.show()
-//            //搜索框
-//            val searchView = layout.searchInput
-//            searchView.onActionViewExpanded()
-//            searchView.isSubmitButtonEnabled = true
-//            when (currentMainPage) {
-//                0 -> searchView.queryHint = "角色名"
-//                1 -> searchView.queryHint = "装备名"
-//            }
-//            //搜索监听
-//            searchView.setOnQueryTextListener(object :
-//                SearchView.OnQueryTextListener {
-//                override fun onQueryTextSubmit(query: String?): Boolean {
-//                    when (currentMainPage) {
-//                        0 -> query?.let {
-//                            sharedCharacterViewModel.getCharacters(sortType, sortAsc, query)
-//                        }
-//                        1 -> query?.let {
-//                            sharedEquipViewModel.getEquips(query)
-//                        }
-//                    }
-//
-//                    return false
-//                }
-//
-//                override fun onQueryTextChange(newText: String?): Boolean {
-//                    return false
-//                }
-//
-//            })
-//            //清空监听
-//            val closeBtn =
-//                searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
-//            closeBtn.setOnClickListener {
-//                when (currentMainPage) {
-//                    0 -> sharedCharacterViewModel.getCharacters(
-//                        sortType,
-//                        sortAsc, ""
-//                    )
-//                    1 -> sharedEquipViewModel.getEquips("")
-//
-//                }
-//                searchView.setQuery("", false)
-//            }
-//            //关闭搜索监听
-//            dialog.setOnDismissListener {
-//                try {
-//                    closeFab()
-//                } catch (e: Exception) {
-//                }
-//            }
-//        }
-        //筛选
-//        binding.filter.root.setOnClickListener {
-//            closeMenus()
-//            when (currentMainPage) {
-//                //装备筛选
-//                1 -> {
-//                    //筛选
-//                    val layout = LayoutFilterEquipmentBinding.inflate(layoutInflater)
-//                    //添加类型信息
-//                    val chips = layout.chipsType
-//                    //收藏初始
-//                    layout.chipsStars.forEachIndexed { index, view ->
-//                        val chip = view as Chip
-//                        chip.isChecked =
-//                            (EquipmentListFragment.equipFilterParams.all
-//                                    && index == 0)
-//                                    || (!EquipmentListFragment.equipFilterParams.all
-//                                    && index == 1)
-//                    }
-//                    //类型
-//                    EquipmentListFragment.equipTypes.forEachIndexed { _, type ->
-//                        val chip = LayoutChipBinding.inflate(layoutInflater).root
-//                        chip.text = type
-//                        chip.isCheckable = true
-//                        chip.isClickable = true
-//                        chips.addView(chip)
-//                        if (EquipmentListFragment.equipFilterParams.type == type) {
-//                            chip.isChecked = true
-//                        }
-//                    }
-//                    //显示弹窗
-//                    val dialog = DialogUtil.create(this, layout.root, getString(R.string.reset),
-//                        getString(R.string.next), object : DialogListener {
-//                            override fun onCancel(dialog: AlertDialog) {
-//                                sharedEquipViewModel.reset.postValue(true)
-//                            }
-//
-//                            override fun onConfirm(dialog: AlertDialog) {
-//                                //筛选选项
-//                                val chip =
-//                                    layout.root.findViewById<Chip>(layout.chipsType.checkedChipId)
-//                                EquipmentListFragment.equipFilterParams.type = chip.text.toString()
-//                                //收藏
-//                                EquipmentListFragment.equipFilterParams.all =
-//                                    when (layout.chipsStars.checkedChipId) {
-//                                        R.id.star_0 -> true
-//                                        R.id.star_1 -> false
-//                                        else -> true
-//                                    }
-//                                sharedEquipViewModel.getEquips("")
-//                            }
-//                        })
-//                    dialog.show()
-//                    dialog.setOnDismissListener {
-//                        closeFab()
-//                    }
-//                }
-//            }
-//        }
         //初始化菜单
         menuItems.forEachIndexed { index, viewBinding ->
             //标题、图标

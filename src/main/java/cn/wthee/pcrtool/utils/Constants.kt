@@ -78,15 +78,14 @@ object Constants {
     //默认值
     const val SORT_ASC = false
     const val UNKNOWN_EQUIP_ID = 999999
-    const val NOTICE_TITLE = "正在下载数据..."
-    const val NOTICE_TITLE_ERROR = "数据信息获取失败"
-    const val NOTICE_TOAST_SUCCESS = "数据更新完成"
+    const val NOTICE_TITLE = "正在下载数据"
+    const val NOTICE_TITLE_ERROR = "数据获取失败"
+    const val NOTICE_TOAST_SUCCESS = "数据更新完成！"
     const val NOTICE_TOAST_NO_FILE = "数据文件下载失败，请稍后重试~"
-    const val NOTICE_TOAST_TITLE_DB_DOWNLOAD = "数据下载中\n请稍等..."
     const val NOTICE_TOAST_TIMEOUT = "若内容正常显示，请点击${BTN_NOT_UPDATE_DB}，直接进入应用"
-    const val NOTICE_TOAST_CHANGE = "数据切换中......"
-    const val NOTICE_TOAST_CHECKING = "正在获取数据版本信息"
-    const val NOTICE_TOAST_LASTEST = "数据已是最新版本"
+    const val NOTICE_TOAST_CHANGE = "数据切换中..."
+    const val NOTICE_TOAST_CHECKING = "正在获取信息"
+    const val NOTICE_TOAST_LASTEST = "数据已是最新版本~"
 
     //常量值
     const val UID = "unit_id"

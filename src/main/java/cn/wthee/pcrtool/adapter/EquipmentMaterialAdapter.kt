@@ -60,10 +60,17 @@ class EquipmentMaterialAdapter(
                 params.width = RecyclerView.LayoutParams.WRAP_CONTENT
                 root.layoutParams = params
                 //加载数据
-                val subName = if (info.name.length > 8) info.name.substring(0, 7) else
-                    info.name
-                name.text =
-                    MyApplication.context.getString(R.string.equip_count, subName, info.count)
+                name.text = if (info.name.length > 8) {
+                    MyApplication.context.getString(
+                        R.string.equip_count_dot,
+                        info.name.substring(0, 7),
+                        info.count
+                    )
+                } else {
+                    MyApplication.context.getString(R.string.equip_count, info.name, info.count)
+                }
+
+
                 pic.load(Constants.EQUIPMENT_URL + info.id + Constants.WEBP) {
                     error(R.drawable.unknown_gray)
                     placeholder(R.drawable.unknown_gray)

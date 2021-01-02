@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +54,9 @@ class CharacterPagerFragment : Fragment() {
             r6Id = it.getInt(R6ID)
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            duration = resources.getInteger(R.integer.fragment_anim).toLong()
+            scrimColor = Color.TRANSPARENT
+            duration = 500L
+            setAllContainerColors(Color.TRANSPARENT)
         }
     }
 

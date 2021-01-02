@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.Data
@@ -31,8 +32,14 @@ object DatabaseUpdater {
     //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
         //提示开始
-        if (fromSetting == 1) ToastUtil.short(NOTICE_TOAST_CHANGE)
-        if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_CHECKING)
+        if (fromSetting == 1) {
+            MainActivity.layoutDownload.visibility = View.VISIBLE
+            MainActivity.textDownload.text = NOTICE_TOAST_CHANGE
+        }
+        if (fromSetting == 0) {
+            MainActivity.layoutDownload.visibility = View.VISIBLE
+            MainActivity.textDownload.text = NOTICE_TOAST_CHECKING
+        }
         //获取数据库最新版本
         MainScope().launch {
             try {//创建服务
@@ -76,7 +83,6 @@ object DatabaseUpdater {
                 || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || databaseVersion == "0"))  //打开应用，数据库wal被清空
                 || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在时更新
         if (toDownload) {
-            ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
             //开始下载
             val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
                 .setInputData(

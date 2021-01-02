@@ -33,6 +33,7 @@ class EquipmentListFragment : Fragment() {
         var asc = false
         lateinit var equipTypes: ArrayList<String>
         lateinit var pageAdapter: EquipmentPageAdapter
+        var equipName = ""
     }
 
     private lateinit var binding: FragmentEquipmentListBinding
@@ -47,14 +48,27 @@ class EquipmentListFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentEquipmentListBinding.inflate(inflater, container, false)
         init()
+        setListener()
         //绑定观察
         setObserve()
         return binding.root
     }
 
+    private fun setListener() {
+        //重置
+        binding.equipCount.setOnLongClickListener {
+            reset()
+            return@setOnLongClickListener true
+        }
+        //筛选、搜索
+        binding.equipCount.setOnClickListener {
+            EquipmentFilterDialogFragment().show(parentFragmentManager, "filter_character")
+        }
+    }
+
     private fun init() {
         //设置头部
-        ToolbarUtil(binding.toolEquip).setToolHead(
+        ToolbarUtil(binding.toolEquip).setMainToolbar(
             R.drawable.ic_equip,
             getString(R.string.tool_equip)
         )
@@ -77,7 +91,8 @@ class EquipmentListFragment : Fragment() {
     private fun reset() {
         equipFilterParams.initData()
         equipFilterParams.all = true
-        viewModel.getEquips("")
+        equipName = ""
+        viewModel.getEquips(equipName)
     }
 
     private fun setObserve() {
@@ -88,6 +103,7 @@ class EquipmentListFragment : Fragment() {
                 MainActivity.sp.edit {
                     putInt(Constants.SP_COUNT_EQUIP, it)
                 }
+                binding.equipCount.text = it.toString()
             })
         }
         //装备信息

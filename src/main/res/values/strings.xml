@@ -6,7 +6,8 @@
     <string name="unique_equip_lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
     <string name="percent">%d%%</string>
-    <string name="equip_count">%s …x%d</string>
+    <string name="equip_count_dot">%s …x%d</string>
+    <string name="equip_count">%s x%d</string>
     <string name="select_pic_count">已选择 %d</string>
     <!-- 角色 & 装备  -->
     <string name="rank">RANK</string>
@@ -164,5 +165,6 @@
     <string name="pvp_search_summary">查询台服信息</string>
     <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
+    <string name="equip_name">装备名</string>
 
 </resources>
