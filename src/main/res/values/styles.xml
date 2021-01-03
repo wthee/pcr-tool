@@ -44,4 +44,9 @@
         <item name="cornerSizeTopRight">@dimen/card_radius</item>
     </style>
 
+    <!-- 圆形图片  -->
+    <style name="circleStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/card_radius</item>
+    </style>
 </resources>

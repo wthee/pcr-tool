@@ -19,9 +19,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
-import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_LASTEST
 import cn.wthee.pcrtool.utils.FileUtil
-import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -102,8 +100,6 @@ object DatabaseUpdater {
         } else {
             //切换成功
             if (fromSetting == 1) handler.sendEmptyMessage(2)
-            //无需更新
-            if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_LASTEST)
             //更新数据库版本号
             try {
                 MainSettingsFragment.titleDatabase.title =

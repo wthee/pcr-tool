@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.ui.character.basic
 
 import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,21 +8,16 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
-import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
-import coil.imageLoader
 import coil.load
-import coil.request.ImageRequest
-import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息页面
@@ -96,19 +88,6 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.characterPic.load(picUrl) {
             error(R.drawable.error)
             placeholder(R.drawable.load)
-            listener(
-                onSuccess = { _, _ ->
-                    //设置背景
-                    val request = ImageRequest.Builder(requireContext())
-                        .data(picUrl)
-                        .build()
-                    lifecycleScope.launch {
-                        //背景颜色选取
-//                        setBackground(request)
-                    }
-
-                }
-            )
         }
         //开始动画
         ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
@@ -124,31 +103,6 @@ class CharacterBasicInfoFragment : Fragment() {
             }
         }, binding.fabLoveCbi, binding.basicInfo)
     }
-
-    private suspend fun setBackground(request: ImageRequest) {
-        val bitmap =
-            (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
-        val color1 = PaletteHelper.createPaletteSync(bitmap)
-            .getLightMutedColor(Color.DKGRAY)
-        val color2 = PaletteHelper.createPaletteSync(bitmap)
-            .getDarkVibrantColor(Color.DKGRAY)
-        val color3 = PaletteHelper.createPaletteSync(bitmap)
-            .getDarkMutedColor(Color.DKGRAY)
-        val gd = GradientDrawable(
-            GradientDrawable.Orientation.TL_BR,
-            intArrayOf(
-                color1,
-                color2,
-                color3,
-                ResourcesUtil.getColor(R.color.viewpager_bg)
-            )
-        )
-        gd.gradientType = GradientDrawable.RADIAL_GRADIENT
-        gd.setGradientCenter(0.5f, 0.5f)
-        gd.gradientRadius = 998f
-        CharacterPagerFragment.viewPager.background = gd
-    }
-
 
     //点击事件
     private fun setListener() {

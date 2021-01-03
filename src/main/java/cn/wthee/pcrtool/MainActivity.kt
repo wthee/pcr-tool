@@ -10,8 +10,8 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ProgressBar
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var fabMain: FloatingActionButton
         lateinit var layoutDownload: FrameLayout
         lateinit var progressDownload: TasksCompletedView
+        lateinit var progressDownloadHint: ProgressBar
         lateinit var textDownload: MaterialTextView
     }
 
@@ -117,27 +118,16 @@ class MainActivity : AppCompatActivity() {
             when (it.what) {
                 //获取版本失败
                 0 -> {
-                    val layout = LayoutWarnDialogBinding.inflate(layoutInflater)
-                    //弹窗
-                    DialogUtil.create(
-                        this,
-                        layout,
-                        Constants.NOTICE_TITLE_ERROR,
-                        Constants.NOTICE_TOAST_TIMEOUT,
-                        Constants.BTN_OPERATE_FORCE_UPDATE_DB,
-                        Constants.BTN_NOT_UPDATE_DB,
-                        object : DialogListener {
-                            override fun onCancel(dialog: AlertDialog) {
-                                //强制更新数据库
-                                DatabaseUpdater.forceUpdate()
-                                dialog.dismiss()
-                            }
-
-                            override fun onConfirm(dialog: AlertDialog) {
-                                dialog.dismiss()
-                            }
+                    MainScope().launch {
+                        layoutDownload.visibility = View.VISIBLE
+                        textDownload.text = "点击重试"
+                        layoutDownload.setOnClickListener {
+                            DatabaseUpdater.checkDBVersion()
+                            layoutDownload.visibility = View.GONE
                         }
-                    ).show()
+                        delay(5000L)
+                        layoutDownload.visibility = View.GONE
+                    }
                 }
                 //正常执行
                 1 -> {
@@ -147,6 +137,9 @@ class MainActivity : AppCompatActivity() {
                 2 -> {
                     MainScope().launch {
                         delay(500L)
+                        progressDownloadHint.visibility = View.GONE
+                        progressDownload.visibility = View.VISIBLE
+                        progressDownload.setProgress(100)
                         layoutDownload.setOnClickListener {
                             exitProcess(0)
                         }
@@ -167,6 +160,7 @@ class MainActivity : AppCompatActivity() {
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
+        progressDownloadHint = binding.progressHint
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,

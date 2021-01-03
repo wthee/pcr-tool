@@ -28,6 +28,7 @@
         android:clickable="true"
         android:elevation="@dimen/card_elevation"
         android:focusable="true"
+        android:animateLayoutChanges="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -38,10 +39,20 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
-            app:circleColor="@color/colorAccent"
-            app:radius="10dp"
+            android:visibility="invisible"
+            app:circleColor="@color/colorGray"
+            app:radius="9dp"
             app:ringColor="@color/colorPrimary"
-            app:strokeWidth="2dp" />
+            app:strokeWidth="3dp"
+            app:textColor="@color/colorPrimary" />
+
+        <ProgressBar
+            android:id="@+id/progress_hint"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/download_text"
@@ -51,7 +62,8 @@
             android:layout_marginStart="@dimen/fab_size"
             android:layout_marginEnd="@dimen/m_margin"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size" />
+            android:textSize="@dimen/fab_text_size"
+            android:textStyle="bold" />
     </FrameLayout>
 
     <androidx.constraintlayout.motion.widget.MotionLayout

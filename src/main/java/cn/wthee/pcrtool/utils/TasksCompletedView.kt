@@ -37,6 +37,9 @@ class TasksCompletedView : View {
     // 圆环颜色
     private var mRingColor = 0
 
+    //字体颜色
+    private var mTextColor = 0
+
     // 半径
     private var mRadius = 0f
 
@@ -72,6 +75,7 @@ class TasksCompletedView : View {
         mStrokeWidth = typeArray.getDimension(R.styleable.TasksCompletedView_strokeWidth, 10f)
         mCircleColor = typeArray.getColor(R.styleable.TasksCompletedView_circleColor, -0x1)
         mRingColor = typeArray.getColor(R.styleable.TasksCompletedView_ringColor, -0x1)
+        mTextColor = typeArray.getColor(R.styleable.TasksCompletedView_textColor, -0x1)
         mRingRadius = mRadius + mStrokeWidth / 2
     }
 
@@ -88,7 +92,7 @@ class TasksCompletedView : View {
         mTextPaint = Paint()
         mTextPaint!!.isAntiAlias = true
         mTextPaint!!.style = Paint.Style.FILL
-        mTextPaint!!.setARGB(255, 255, 255, 255)
+        mTextPaint!!.color = mTextColor
         mTextPaint!!.textSize = mRadius / 2
         val fm = mTextPaint!!.fontMetrics
         mTxtHeight = ceil((fm.descent - fm.ascent).toDouble()).toFloat()
