@@ -10,7 +10,7 @@ import android.webkit.*
 import androidx.core.widget.NestedScrollView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
-import cn.wthee.pcrtool.ui.common.CommonBasicDialogFragment
+import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants.REGION
 
@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.utils.Constants.REGION
 private const val NEWSID = "news_id"
 private const val URL = "url"
 
-class NewsDetailDialogFragment : CommonBasicDialogFragment(true) {
+class NewsDetailDialogFragment : CommonBottomSheetDialogFragment(true) {
 
     private var region = 0
     private var newsId = 0

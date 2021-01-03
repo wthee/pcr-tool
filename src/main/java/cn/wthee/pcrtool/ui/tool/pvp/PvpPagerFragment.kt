@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
  * 竞技场角色ViewPager
  */
 private const val POSITION = "positon"
-private val FLOAT = "float"
+private const val FLOAT = "float"
 
 class PvpPagerFragment : Fragment() {
 

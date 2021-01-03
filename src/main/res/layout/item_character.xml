@@ -5,12 +5,14 @@
     android:id="@+id/item_character"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin">
+    android:layout_marginStart="@dimen/s_margin"
+    android:layout_marginEnd="@dimen/s_margin"
+    android:layout_marginBottom="@dimen/m_margin"
+    app:cardCornerRadius="@dimen/card_radius">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/character_pic"
@@ -55,10 +57,10 @@
             android:layout_marginTop="@dimen/xs_margin"
             android:ellipsize="end"
             android:maxLines="1"
-            android:visibility="gone"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
             android:textColor="@color/textGray"
             android:textStyle="italic"
+            android:visibility="gone"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@id/three"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,11 +76,10 @@
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="@color/colorAccent"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name"
             tools:text="10 / 110 / 56" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </com.google.android.material.card.MaterialCardView>

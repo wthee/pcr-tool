@@ -12,6 +12,7 @@ import coil.request.CachePolicy
 import coil.util.CoilUtils
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
+import com.umeng.umcrash.UMCrash
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -29,7 +30,8 @@ class MyApplication : Application(), ImageLoaderFactory {
             UMConfigure.DEVICE_TYPE_PHONE,
             ""
         )
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        UMCrash.setDebug(false)
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
     }
 
     override fun newImageLoader(): ImageLoader {

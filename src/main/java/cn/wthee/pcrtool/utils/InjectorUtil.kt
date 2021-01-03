@@ -6,11 +6,11 @@ import cn.wthee.pcrtool.data.db.repository.*
 import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.AppPvpDatabase
-import cn.wthee.pcrtool.ui.detail.character.attr.CharacterAttrViewModelFactory
-import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillViewModelFactory
-import cn.wthee.pcrtool.ui.detail.equipment.EquipmentDetailsViewModelFactory
+import cn.wthee.pcrtool.ui.character.attr.CharacterAttrViewModelFactory
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.home.CharacterViewModelFactory
-import cn.wthee.pcrtool.ui.home.EquipmentViewModelFactory
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsViewModelFactory
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModelFactory
 import cn.wthee.pcrtool.ui.tool.event.EventViewModelFactory
 import cn.wthee.pcrtool.ui.tool.gacha.GachaViewModelFactory
 import cn.wthee.pcrtool.ui.tool.pvp.PvpLikedViewModelFactory

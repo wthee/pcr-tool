@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/m_margin"
-    android:elevation="@dimen/elevation_card">
+    android:layout_marginBottom="@dimen/xm_margin"
+    android:elevation="@dimen/card_elevation">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constrainedWidth="true"
-        android:ellipsize="end"
-        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@+id/type"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +32,7 @@
         android:background="@drawable/title_background"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@id/name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,6 +74,7 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:text="@string/skill_action"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/desc" />
@@ -82,7 +84,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
-        android:layout_marginBottom="@dimen/l_margin"
         android:nestedScrollingEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/skill_des"

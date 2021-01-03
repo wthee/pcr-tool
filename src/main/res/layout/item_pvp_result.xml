@@ -65,6 +65,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/up"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:foreground="?selectableItemBackgroundBorderless"
         android:tint="@color/textGray"
         android:src="@drawable/ic_loved" />
 </androidx.constraintlayout.widget.ConstraintLayout>

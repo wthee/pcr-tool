@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemPicBinding
-import cn.wthee.pcrtool.ui.detail.character.basic.CharacterPicListFragment
+import cn.wthee.pcrtool.ui.character.basic.CharacterPicListFragment
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 

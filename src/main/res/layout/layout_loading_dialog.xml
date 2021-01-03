@@ -4,7 +4,7 @@
     android:id="@+id/loading_dialog"
     android:layout_width="match_parent"
     android:layout_height="@dimen/loading_dialog_height"
-    android:elevation="@dimen/elevation_card"
+    android:elevation="@dimen/card_elevation"
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
     app:cardCornerRadius="@dimen/card_radius">

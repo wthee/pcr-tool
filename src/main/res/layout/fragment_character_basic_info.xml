@@ -1,391 +1,396 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    app:cardCornerRadius="@dimen/page_radius">
+    android:background="@drawable/card_background"
+    app:layoutDescription="@xml/fragment_character_basic_info_scene">
 
-    <androidx.constraintlayout.motion.widget.MotionLayout
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/character_pic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutDescription="@xml/fragment_character_basic_info_scene">
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/roundedCornerStyle" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/character_pic"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textStyle="bold"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toStartOf="@id/name_extra"
+        app:layout_constraintStart_toEndOf="@id/position_type"
+        app:layout_constraintTop_toBottomOf="@id/character_pic"
+        tools:text="@string/app_name" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/position_type"
+        android:layout_width="@dimen/menu_icon"
+        android:layout_height="@dimen/menu_icon"
+        tools:background="@drawable/ic_position_front" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name_extra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toEndOf="@id/name"
+        tools:text="@string/test" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/three"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="@color/colorAccent"
+        tools:text="10 / 110 / 56" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/unit_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/colorAlpha"
+        app:layout_constraintBottom_toBottomOf="@id/three"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/three" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/three">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/basic_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/news_card_height">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@id/name_extra"
-            app:layout_constraintStart_toEndOf="@id/position_type"
-            app:layout_constraintTop_toBottomOf="@id/character_pic"
-            tools:text="@string/app_name" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/position_type"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
-            tools:background="@drawable/ic_position_front" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/name_extra"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/xm_margin"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintStart_toEndOf="@id/name"
-            tools:text="@string/test" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
-            tools:text="10 / 110 / 56" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/unit_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-            android:textColor="@color/colorAlpha"
-            app:layout_constraintBottom_toBottomOf="@id/three"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/three" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/xm_margin"
-            android:layout_marginTop="@dimen/s_margin"
-            android:layout_marginEnd="@dimen/xm_margin"
-            android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@id/three">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/basic_info"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/catah"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/news_card_height">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_margin"
+                android:layout_marginBottom="@dimen/s_margin"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary"
+                android:textIsSelectable="true"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/catah"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/xm_margin"
-                    android:layout_marginBottom="@dimen/s_margin"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                    android:textColor="@color/colorPrimary"
-                    android:textIsSelectable="true"
-                    android:textStyle="bold"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/intro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/catah"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/intro"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                    android:textIsSelectable="true"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/catah"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/name"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/xm_margin"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/name"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/intro"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/true_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/title_name"
+                app:layout_constraintTop_toTopOf="@id/title_name"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/true_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="end"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    app:layout_constrainedWidth="true"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/title_name"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/title_name"
-                    app:layout_constraintTop_toTopOf="@id/title_name"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_birth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_birth"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_name"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_birth"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/xm_margin"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/title_birth"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_name"
-                    app:layout_constraintWidth_percent="0.15" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/birth"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="end"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="@dimen/s_padding"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    app:layout_constrainedHeight="true"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintBottom_toBottomOf="@id/title_birth"
-                    app:layout_constraintEnd_toStartOf="@id/title_blood"
-                    app:layout_constraintStart_toEndOf="@id/title_birth"
-                    app:layout_constraintTop_toTopOf="@id/title_birth"
-                    app:layout_constraintWidth_percent="0.35"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/birth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_birth"
+                app:layout_constraintEnd_toStartOf="@id/title_blood"
+                app:layout_constraintStart_toEndOf="@id/title_birth"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_blood"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/title_blood"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toEndOf="@id/birth"
-                    app:layout_constraintTop_toTopOf="@id/title_birth"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_blood"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_blood"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toEndOf="@id/birth"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/blood"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    app:layout_constraintStart_toEndOf="@id/title_blood"
-                    app:layout_constraintTop_toTopOf="@id/title_birth"
-                    app:layout_constraintWidth_percent="0.35"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/blood"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constraintStart_toEndOf="@id/title_blood"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_race"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/title_race"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_birth"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_race"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_race"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/race"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="@dimen/s_padding"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textIsSelectable="true"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintStart_toEndOf="@id/title_race"
-                    app:layout_constraintTop_toTopOf="@id/title_race"
-                    app:layout_constraintWidth_percent="0.35"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/race"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/title_race"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_cv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/cv"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toEndOf="@id/race"
-                    app:layout_constraintTop_toTopOf="@id/title_race"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_cv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/cv"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toEndOf="@id/race"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/cv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textIsSelectable="true"
-                    app:layout_constraintStart_toEndOf="@id/title_cv"
-                    app:layout_constraintTop_toTopOf="@id/title_race"
-                    app:layout_constraintWidth_percent="0.35"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/cv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constraintStart_toEndOf="@id/title_cv"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_guide"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m_margin"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/title_guide"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_race"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_guide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/m_margin"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_guide"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/guide"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textIsSelectable="true"
-                    android:padding="@dimen/s_padding"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_guide"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/guide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_guide"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_favorite"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_background"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/title_fav"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/guide"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_favorite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_fav"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guide"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/favorite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textIsSelectable="true"
-                    app:layout_constrainedWidth="true"
-                    android:padding="@dimen/s_padding"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_favorite"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_favorite"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_self"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="0dp"
-                    android:text="@string/title_self"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/favorite"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_self"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="0dp"
+                android:text="@string/title_self"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/favorite"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/self"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:padding="@dimen/s_padding"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textIsSelectable="true"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title_self"
-                    tools:text="@string/test" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/self"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_self"
+                tools:text="@string/test" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/title_comments"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_background"
-                    android:paddingStart="@dimen/s_padding"
-                    android:paddingEnd="@dimen/s_padding"
-                    android:text="@string/title_comments"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constrainedWidth="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/self"
-                    app:layout_constraintWidth_percent="0.15" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_comments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_background"
+                android:paddingStart="@dimen/s_padding"
+                android:paddingEnd="@dimen/s_padding"
+                android:text="@string/title_comments"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="@color/colorWhite"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/self"
+                app:layout_constraintWidth_percent="0.15" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/comments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:padding="@dimen/s_padding"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-                    android:textIsSelectable="true"
-                    app:layout_constraintTop_toBottomOf="@id/title_comments"
-                    tools:text="@string/test" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constraintTop_toBottomOf="@id/title_comments"
+                tools:text="@string/test" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_love_cbi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/tab_love"
-            android:src="@drawable/ic_loved"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:layout_anchor="@id/character_pic"
-            app:tint="@color/alphaPrimary" />
-    </androidx.constraintlayout.motion.widget.MotionLayout>
-</com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_love_cbi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorWhite"
+        android:contentDescription="@string/tab_love"
+        android:src="@drawable/ic_loved"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_anchor="@id/character_pic"
+        app:tint="@color/alphaPrimary" />
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -15,8 +15,8 @@
         android:id="@+id/layout_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginStart="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_margin"
         app:cardCornerRadius="@dimen/card_radius"
         app:layout_constraintTop_toBottomOf="@id/tool_calendar">
 
@@ -34,49 +34,40 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:id="@+id/layout_event"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginStart="@dimen/m_margin"
         android:layout_marginTop="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginEnd="@dimen/m_margin"
         android:layout_weight="1"
-        app:cardCornerRadius="@dimen/card_radius"
-        app:layout_constraintBottom_toTopOf="@id/fab_today"
-        app:layout_constraintTop_toBottomOf="@id/layout_calendar">
+        android:background="@drawable/card_background"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/current_date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/s_margin"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            tools:text="@string/app_name" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/current_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/s_margin"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                tools:text="@string/app_name" />
+        <include
+            android:id="@+id/loading"
+            layout="@layout/layout_loading" />
 
-            <include
-                android:id="@+id/loading"
-                layout="@layout/layout_loading" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/events"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/s_margin"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_calendar_event" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/events"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/s_margin"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_calendar_event" />
-
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_today"

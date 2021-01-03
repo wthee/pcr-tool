@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 
 class NewsViewModel : ViewModel() {
 
-    val newsDao = AppNewsDatabase.getInstance().getNewsDao()
+    private val newsDao = AppNewsDatabase.getInstance().getNewsDao()
 
     private val pageSize = 10
     private val initSize = 20

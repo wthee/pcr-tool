@@ -24,11 +24,10 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     }
 
     //主页面toolbar
-    fun setMainToolbar(titleText: String) {
-        setLeftIcon(R.mipmap.ic_logo)
+    fun setMainToolbar(iconId: Int, titleText: String) {
+        setLeftIcon(iconId)
         title.text = titleText
         toolbar.root.setBackgroundColor(ResourcesUtil.getColor(R.color.colorPrimary))
-
     }
 
     fun setRightIcon(resId: Int): ToolbarUtil {

@@ -24,8 +24,7 @@ class NewsRemoteMediator(
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, NewsTable>
     ): MediatorResult {
-        val pageKeyData = getKeyPageData(loadType, state)
-        val page = when (pageKeyData) {
+        val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
             is MediatorResult.Success -> {
                 return pageKeyData
             }

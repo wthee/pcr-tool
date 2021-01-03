@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.Data
@@ -7,20 +8,18 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.handler
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
-import cn.wthee.pcrtool.ui.home.MainPagerFragment
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
-import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_LASTEST
 import cn.wthee.pcrtool.utils.FileUtil
-import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -31,8 +30,14 @@ object DatabaseUpdater {
     //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
         //提示开始
-        if (fromSetting == 1) ToastUtil.short(NOTICE_TOAST_CHANGE)
-        if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_CHECKING)
+        if (fromSetting == 1) {
+            MainActivity.layoutDownload.visibility = View.VISIBLE
+            MainActivity.textDownload.text = NOTICE_TOAST_CHANGE
+        }
+        if (fromSetting == 0) {
+            MainActivity.layoutDownload.visibility = View.VISIBLE
+            MainActivity.textDownload.text = NOTICE_TOAST_CHECKING
+        }
         //获取数据库最新版本
         MainScope().launch {
             try {//创建服务
@@ -44,7 +49,7 @@ object DatabaseUpdater {
                 //更新判断
                 downloadDB(version.data!!, fromSetting, force)
             } catch (e: Exception) {
-                MainPagerFragment.handler.sendEmptyMessage(0)
+                handler.sendEmptyMessage(0)
             }
         }
     }
@@ -55,7 +60,7 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(DatabaseVersion("0", "hash"), force = true)
         } catch (e: Exception) {
-            MainPagerFragment.handler.sendEmptyMessage(0)
+            handler.sendEmptyMessage(0)
         }
     }
 
@@ -76,7 +81,6 @@ object DatabaseUpdater {
                 || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || databaseVersion == "0"))  //打开应用，数据库wal被清空
                 || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，切换至的版本，文件不存在时更新
         if (toDownload) {
-            ToastUtil.long(Constants.NOTICE_TOAST_TITLE_DB_DOWNLOAD)
             //开始下载
             val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
                 .setInputData(
@@ -95,9 +99,7 @@ object DatabaseUpdater {
             )
         } else {
             //切换成功
-            if (fromSetting == 1) MainPagerFragment.handler.sendEmptyMessage(2)
-            //无需更新
-            if (fromSetting == 0) ToastUtil.short(NOTICE_TOAST_LASTEST)
+            if (fromSetting == 1) handler.sendEmptyMessage(2)
             //更新数据库版本号
             try {
                 MainSettingsFragment.titleDatabase.title =

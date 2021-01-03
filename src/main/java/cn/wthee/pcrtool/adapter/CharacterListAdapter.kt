@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
-import cn.wthee.pcrtool.ui.home.MainPagerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
@@ -24,9 +23,8 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 
-class CharacterListAdapter(
-    private val fragment: Fragment
-) : PagingDataAdapter<CharacterInfo, CharacterListAdapter.ViewHolder>(CharacterDiffCallback()) {
+class CharacterListAdapter(private val fragment: CharacterListFragment) :
+    PagingDataAdapter<CharacterInfo, CharacterListAdapter.ViewHolder>(CharacterDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -40,6 +38,7 @@ class CharacterListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position)!!)
+
     }
 
     inner class ViewHolder(private val binding: ItemCharacterBinding) :
@@ -54,7 +53,9 @@ class CharacterListAdapter(
                 name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                 //加载动画
                 root.animation =
-                    AnimationUtils.loadAnimation(fragment.context, R.anim.anim_translate_y)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
+                //设置共享元素名称
+                root.transitionName = "item_${character.id}"
                 //加载网络图片
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
@@ -62,6 +63,11 @@ class CharacterListAdapter(
                 characterPic.load(picUrl) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)
+                    listener(
+                        onStart = {
+                            startEnter()
+                        }
+                    )
                 }
                 //角色位置
                 positionType.background =
@@ -69,20 +75,17 @@ class CharacterListAdapter(
                 //基本信息
                 name.text = character.getNameF()
                 nameExtra.text = character.getNameL()
-                three.text = fragment.resources.getString(
+                three.text = MyApplication.context.resources.getString(
                     R.string.character_detail,
                     character.getFixedAge(),
                     character.getFixedHeight(),
                     character.getFixedWeight(),
                     character.position
                 )
-                //设置共享元素名称
-                root.transitionName = "item_${character.id}"
+
                 root.setOnClickListener {
-                    //避免同时点击两个
-                    if (!MainPagerFragment.cListClick) {
-                        MainPagerFragment.cListClick = true
-                        MainActivity.canBack = false
+                    if (MainActivity.canClick) {
+                        MainActivity.canClick = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
                         bundle.putInt(UID, character.id)
@@ -91,8 +94,8 @@ class CharacterListAdapter(
                             FragmentNavigatorExtras(
                                 root to root.transitionName
                             )
-                        fragment.findNavController().navigate(
-                            R.id.action_containerFragment_to_characterPagerFragment,
+                        root.findNavController().navigate(
+                            R.id.action_characterListFragment_to_characterPagerFragment,
                             bundle,
                             null,
                             extras
@@ -108,11 +111,17 @@ class CharacterListAdapter(
                         else
                             add(character.id)
                     }
-                    CharacterListFragment.characterList.adapter?.notifyItemChanged(
+                    notifyItemChanged(
                         absoluteAdapterPosition
                     )
                     return@setOnLongClickListener true
                 }
+            }
+        }
+
+        private fun startEnter() {
+            if (absoluteAdapterPosition == MainActivity.currentCharaPosition) {
+                fragment.startPostponedEnterTransition()
             }
         }
     }

@@ -1,37 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:orientation="vertical">
+    app:layoutDescription="@xml/fragment_main_pager_scene">
 
     <include
-        android:id="@+id/loading"
-        layout="@layout/layout_loading"
-        android:visibility="gone" />
+        android:id="@+id/tool_bar"
+        layout="@layout/view_toolbar" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/character_reset"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/character_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="@dimen/xs_padding"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        app:layout_constraintVertical_weight="1"
+        app:spanCount="2"
+        tools:listitem="@layout/item_character" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/character_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_character" />
+    <LinearLayout
+        android:id="@+id/character_fabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_toolbar_height"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/character_count"
+            android:layout_width="@dimen/fab_text_2"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginEnd="@dimen/xl_margin"
+            android:backgroundTint="@color/colorWhite"
+            android:contentDescription="@string/character"
+            android:elevation="@dimen/home_fab_elevation"
+            android:text="0"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/fab_text_size"
+            app:borderWidth="0dp"
+            app:elevation="@dimen/home_fab_elevation"
+            app:icon="@drawable/ic_character"
+            app:iconSize="@dimen/menu_icon"
+            app:iconTint="@color/colorPrimary" />
 
+    </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
 

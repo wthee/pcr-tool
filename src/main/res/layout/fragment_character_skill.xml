@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="@dimen/page_radius">
+    android:background="@drawable/card_background"
+    android:minHeight="@dimen/card_height">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
+        android:id="@+id/layout_loop_title"
+        layout="@layout/view_toolbar"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/skill_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minHeight="@dimen/card_height">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_margin"
+        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/xm_margin"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@id/layout_loop_title"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_skill" />
 
-        <include
-            android:id="@+id/layout_loop_title"
-            layout="@layout/view_toolbar"
-            android:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/skill_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/xm_margin"
-            android:layout_marginEnd="@dimen/xm_margin"
-            android:layout_marginTop="@dimen/m_margin"
-            android:orientation="vertical"
-            tools:itemCount="3"
-            android:scrollbars="none"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintTop_toBottomOf="@id/layout_loop_title"
-            tools:listitem="@layout/item_skill" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

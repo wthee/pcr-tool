@@ -12,10 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:background="@drawable/title_background"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
         android:ellipsize="end"
         android:maxLines="1"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/s_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:textColor="@color/colorWhite"
         tools:text="@string/physical" />
 
@@ -23,11 +24,11 @@
         android:id="@+id/value"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
         android:layout_marginEnd="@dimen/xs_margin"
-        android:maxLines="1"
+        android:layout_weight="2"
         android:ellipsize="end"
         android:gravity="end"
+        android:maxLines="1"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         tools:text="780" />
 

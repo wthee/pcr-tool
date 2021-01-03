@@ -2,14 +2,13 @@ package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
+import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortAsc
+import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortType
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
@@ -43,8 +42,10 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val appUpdate = findPreference<Preference>("force_update_app")
         val shareApp = findPreference<Preference>("share_app")
         val changeDbType = findPreference<ListPreference>("change_database")
+        val switchPvpRegion = findPreference<SwitchPreference>("pvp_region")
         changeDbType?.title =
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
+        switchPvpRegion?.isVisible = changeDbType?.value != "1"
         //数据版本
         titleDatabase.title = getString(R.string.data) + MainActivity.sp.getString(
             if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
@@ -66,10 +67,13 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //切换数据库版本
         changeDbType?.setOnPreferenceChangeListener { _, newValue ->
             if (changeDbType.value != newValue as String) {
-                changeDbType.title =
-                    "游戏版本 - " + if (newValue == "1") getString(R.string.db_cn) else getString(
-                        R.string.db_jp
-                    )
+                if (newValue == "1") {
+                    changeDbType.title = "游戏版本 - " + getString(R.string.db_cn)
+                    switchPvpRegion?.isVisible = false
+                } else {
+                    changeDbType.title = "游戏版本 - " + getString(R.string.db_jp)
+                    switchPvpRegion?.isVisible = true
+                }
                 MainScope().launch {
                     delay(800L)
                     DatabaseUpdater.checkDBVersion(1)
@@ -94,8 +98,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                     .remove(106001, 107801, 112001)
                 CharacterListFragment.characterFilterParams.initData()
                 sharedCharacterViewModel.getCharacters(
-                    MainActivity.sortType,
-                    MainActivity.sortAsc,
+                    sortType,
+                    sortAsc,
                     ""
                 )
             } else {

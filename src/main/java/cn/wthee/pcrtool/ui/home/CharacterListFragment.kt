@@ -9,12 +9,10 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
-import cn.wthee.pcrtool.MainActivity.Companion.sortAsc
-import cn.wthee.pcrtool.MainActivity.Companion.sortType
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.bean.FilterCharacter
@@ -32,15 +30,20 @@ import kotlinx.coroutines.launch
 class CharacterListFragment : Fragment() {
 
     companion object {
-        lateinit var characterList: RecyclerView
-        lateinit var listAdapter: CharacterListAdapter
         var characterFilterParams = FilterCharacter(
             true, 0, 0, false, "全部"
         )
+        var sortType = SortType.SORT_DATE
+        var sortAsc = Constants.SORT_ASC
+        var characterName = ""
         lateinit var guilds: ArrayList<String>
         var r6Ids = listOf<Int>()
+        var isPostponeEnterTransition = false
+        lateinit var characterList: RecyclerView
+
     }
 
+    private var listAdapter = CharacterListAdapter(this)
     private lateinit var binding: FragmentCharacterListBinding
     private val viewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
@@ -53,53 +56,69 @@ class CharacterListFragment : Fragment() {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
         //加载数据
         init()
+        setListener()
         //监听数据变化
         setObserve()
-
+        if (isPostponeEnterTransition) {
+            postponeEnterTransition()
+        }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        canClick = true
     }
 
     private fun reset() {
         characterFilterParams.initData()
         sortType = SortType.SORT_DATE
         sortAsc = false
+        characterName = ""
         viewModel.getCharacters(
             sortType,
-            sortAsc, ""
+            sortAsc, characterName
         )
-        binding.characterReset.isRefreshing = false
     }
 
     //加载数据
     private fun init() {
+        characterList = binding.characterList
+
+        //toolbar
+        ToolbarUtil(binding.toolBar).setMainToolbar(
+            R.mipmap.ic_logo,
+            getString(R.string.app_name)
+        )
         //获取角色
-        viewModel.getCharacters(sortType, sortAsc, "")
-        //公会列表
-        guilds = arrayListOf()
-        viewLifecycleOwner.lifecycleScope.launch {
-            guilds.add("全部")
-            val list = viewModel.getGuilds()
-            list.forEach {
-                guilds.add(it.guild_name)
+        viewModel.getCharacters(sortType, sortAsc, characterName, false)
+        lifecycleScope.launch {
+            //公会列表
+            guilds = arrayListOf()
+            lifecycleScope.launch {
+                guilds.add("全部")
+                val list = viewModel.getGuilds()
+                list.forEach {
+                    guilds.add(it.guild_name)
+                }
+                guilds.add("？？？")
             }
-            guilds.add("？？？")
             r6Ids = viewModel.getR6Ids()
         }
-        listAdapter = CharacterListAdapter(this@CharacterListFragment)
-        characterList = binding.characterList
-        binding.characterList.apply {
-            adapter = listAdapter
-        }
-        //刷新
-        binding.characterReset.apply {
-            setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
-            setColorSchemeResources(R.color.colorPrimary)
-            setOnRefreshListener {
-                reset()
-            }
-        }
+        binding.characterList.adapter = listAdapter
     }
 
+    private fun setListener() {
+        //重置
+        binding.characterCount.setOnLongClickListener {
+            reset()
+            return@setOnLongClickListener true
+        }
+        //筛选、搜索
+        binding.characterCount.setOnClickListener {
+            CharacterFilterDialogFragment().show(parentFragmentManager, "filter_character")
+        }
+    }
 
     //绑定observe
     private fun setObserve() {
@@ -110,10 +129,7 @@ class CharacterListFragment : Fragment() {
                     MainActivity.sp.edit {
                         putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
-                    if (MainPagerFragment.Companion::tabLayout.isLateinit) {
-                        MainPagerFragment.tabLayout.getTabAt(0)?.text = it.toString()
-                    }
-                    MainPagerFragment.tipText.visibility = if (it > 0) View.GONE else View.VISIBLE
+                    binding.characterCount.text = it.toString()
                 })
             }
             //角色信息
@@ -123,8 +139,6 @@ class CharacterListFragment : Fragment() {
                         @OptIn(ExperimentalCoroutinesApi::class)
                         viewModel.characters.collectLatest { data ->
                             listAdapter.submitData(data)
-                            listAdapter.notifyDataSetChanged()
-                            binding.loading.root.visibility = View.GONE
                         }
                     }
                 })
@@ -139,10 +153,12 @@ class CharacterListFragment : Fragment() {
             if (!reload.hasObservers()) {
                 reload.observe(viewLifecycleOwner, {
                     try {
-                        findNavController().popBackStack(R.id.containerFragment, true)
-                        findNavController().navigate(R.id.containerFragment)
-                        pageLevel = 0
-                        MainActivity.fabMain.setImageResource(R.drawable.ic_function)
+                        if (it) {
+                            requireActivity().recreate()
+                            pageLevel = 0
+                            MainActivity.fabMain.setImageResource(R.drawable.ic_function)
+                        }
+                        reload.postValue(false)
                     } catch (e: Exception) {
                         Log.e(LOG_TAG, e.message.toString())
                     }

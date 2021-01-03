@@ -31,27 +31,29 @@ object AppUpdateHelper {
             )
             MainScope().launch {
                 val version = service.getAppVersion()
-                if (localVersion < version.data!!.versionCode) {
-                    //有新版本发布，弹窗
-                    DialogUtil.create(
-                        context,
-                        LayoutWarnDialogBinding.inflate(inflater),
-                        "版本更新：${info.versionName} > ${version.data!!.versionName} ",
-                        version.data!!.content,
-                        "暂不更新",
-                        "前往下载",
-                        object : DialogListener {
-                            override fun onCancel(dialog: AlertDialog) {
-                                dialog.dismiss()
-                            }
+                if (version.message == "success") {
+                    if (localVersion < version.data!!.versionCode) {
+                        //有新版本发布，弹窗
+                        DialogUtil.create(
+                            context,
+                            LayoutWarnDialogBinding.inflate(inflater),
+                            "版本更新：${info.versionName} > ${version.data!!.versionName} ",
+                            version.data!!.content,
+                            "暂不更新",
+                            "前往下载",
+                            object : DialogListener {
+                                override fun onCancel(dialog: AlertDialog) {
+                                    dialog.dismiss()
+                                }
 
-                            override fun onConfirm(dialog: AlertDialog) {
-                                BrowserUtil.open(context, version.data!!.url)
-                            }
-                        }).show()
+                                override fun onConfirm(dialog: AlertDialog) {
+                                    BrowserUtil.open(context, version.data!!.url)
+                                }
+                            }).show()
 
-                } else if (showToast) {
-                    ToastUtil.short("应用已是最新版本~")
+                    } else if (showToast) {
+                        ToastUtil.short("应用已是最新版本~")
+                    }
                 }
             }
         } catch (e: Exception) {

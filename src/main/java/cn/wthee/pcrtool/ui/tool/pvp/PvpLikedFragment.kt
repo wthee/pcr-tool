@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -43,7 +42,7 @@ class PvpLikedFragment : Fragment() {
         super.onCreate(savedInstanceState)
         //过渡
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            duration = resources.getInteger(R.integer.fragment_anim).toLong()
+            duration = 500L
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(Color.TRANSPARENT)
         }
@@ -56,7 +55,7 @@ class PvpLikedFragment : Fragment() {
         binding = FragmentToolPvpLikedBinding.inflate(inflater, container, false)
         init()
         setListener(adapter)
-        viewModel.data.observe(viewLifecycleOwner, Observer { it ->
+        viewModel.data.observe(viewLifecycleOwner, { it ->
             allData.clear()
             allData.addAll(it)
             adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == 1 }) {

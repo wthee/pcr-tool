@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.adapter
 
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -43,9 +42,9 @@ class NewsAdapter(
         item?.let { data ->
             val view = holder.itemView.findViewById<MaterialCardView>(R.id.news_item)
             if (selectItems.find { it.id == data.id } != null) {
-                view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlphaBlack)))
+                view.background = ResourcesUtil.getDrawable(R.drawable.card_background_select)
             } else {
-                view.setCardForegroundColor(ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorAlpha)))
+                view.background = ResourcesUtil.getDrawable(R.drawable.card_background)
             }
             holder.bind(data)
         }
@@ -65,7 +64,7 @@ class NewsAdapter(
                 adapter.submitList(tags)
 
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
 
                 //点击查看
                 root.setOnClickListener {

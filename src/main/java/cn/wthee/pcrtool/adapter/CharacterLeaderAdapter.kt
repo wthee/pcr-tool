@@ -36,7 +36,7 @@ class CharacterLeaderAdapter(private val context: Context) :
         fun bind(data: LeaderboardData) {
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(context, R.anim.anim_translate_y)
+                    AnimationUtils.loadAnimation(context, R.anim.anim_list_item)
                 icon.load(data.icon) {
                     placeholder(R.drawable.unknown_gray)
                     error(R.drawable.unknown_gray)

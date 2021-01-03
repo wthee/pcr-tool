@@ -3,99 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/containerFragment">
-
-    <fragment
-        android:id="@+id/containerFragment"
-        android:name="cn.wthee.pcrtool.ui.home.MainPagerFragment"
-        android:label="@string/app_name"
-        tools:layout="@layout/fragment_character_list">
-        <action
-            android:id="@+id/action_containerFragment_to_characterPagerFragment"
-            app:destination="@id/characterPagerFragment"
-            app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit"
-            app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
-        <action
-            android:id="@+id/action_containerFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-        <action
-            android:id="@+id/action_containerFragment_to_toolLeaderFragment"
-            app:destination="@id/toolLevelFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-        <action
-            android:id="@+id/action_containerFragment_to_toolPvpFragment"
-            app:destination="@id/toolPvpFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-        <action
-            android:id="@+id/action_containerFragment_to_toolGachaFragment"
-            app:destination="@id/toolGachaFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-        <action
-            android:id="@+id/action_containerFragment_self"
-            app:destination="@id/containerFragment" />
-        <action
-            android:id="@+id/action_containerFragment_to_toolNewsFragment"
-            app:destination="@id/toolNewsFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-        <action
-            android:id="@+id/action_containerFragment_to_eventFragment"
-            app:destination="@id/eventFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-        <action
-            android:id="@+id/action_containerFragment_to_calendarFragment"
-            app:destination="@id/calendarFragment"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
-
-    </fragment>
+    app:startDestination="@id/characterListFragment">
 
     <fragment
         android:id="@+id/characterPagerFragment"
-        android:name="cn.wthee.pcrtool.ui.detail.character.CharacterPagerFragment"
+        android:name="cn.wthee.pcrtool.ui.character.CharacterPagerFragment"
         android:label="CharacterPagerFragment"
-        tools:layout="@layout/fragment_character_basic_info">
-        <action
-            android:id="@+id/action_characterPagerFragment_to_characterPicListFragment"
-            app:destination="@id/characterPicListFragment"
-            app:enterAnim="@anim/fragment_enter_pic"
-            app:exitAnim="@anim/fragment_exit_pic"
-            app:popEnterAnim="@anim/fragment_popenter_pic"
-            app:popExitAnim="@anim/fragment_popexit_pic" />
-    </fragment>
+        tools:layout="@layout/fragment_character_basic_info" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="cn.wthee.pcrtool.ui.setting.MainSettingsFragment"
         android:label="SettingsFragment" />
-    <action
-        android:id="@+id/action_global_containerFragment"
-        app:destination="@id/containerFragment" />
     <fragment
-        android:id="@+id/toolLevelFragment"
+        android:id="@+id/toolleaderFragment"
         android:name="cn.wthee.pcrtool.ui.tool.leader.LeaderFragment"
-        android:label="ToolLevelFragment"
+        android:label="ToolleaderFragment"
         tools:layout="@layout/fragment_tool_leader" />
     <fragment
         android:id="@+id/toolPvpFragment"
@@ -125,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/characterPicListFragment"
-        android:name="cn.wthee.pcrtool.ui.detail.character.basic.CharacterPicListFragment"
+        android:name="cn.wthee.pcrtool.ui.character.basic.CharacterPicListFragment"
         android:label="CharacterPicListFragment" />
     <fragment
         android:id="@+id/toolNewsFragment"
@@ -152,14 +74,86 @@
         <action
             android:id="@+id/action_pvpLikedFragment_to_pvpLikedCustomize"
             app:destination="@id/pvpLikedCustomize"
-            app:enterAnim="@anim/tool_open_enter"
-            app:exitAnim="@anim/tool_open_exit"
-            app:popEnterAnim="@anim/tool_close_enter"
-            app:popExitAnim="@anim/tool_close_exit" />
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/pvpLikedCustomize"
         android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedCusFragment"
         android:label="PvpLikedCustomize" />
+    <fragment
+        android:id="@+id/characterListFragment"
+        android:name="cn.wthee.pcrtool.ui.home.CharacterListFragment"
+        android:label="CharacterListFragment">
+        <action
+            android:id="@+id/action_characterListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_toolNewsFragment"
+            app:destination="@id/toolNewsFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_toolPvpFragment"
+            app:destination="@id/toolPvpFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_toolGachaFragment"
+            app:destination="@id/toolGachaFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_toolleaderFragment"
+            app:destination="@id/toolleaderFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_eventFragment"
+            app:destination="@id/eventFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_equipmentListFragment"
+            app:destination="@id/equipmentListFragment"
+            app:enterAnim="@anim/tool_open_enter"
+            app:exitAnim="@anim/tool_open_exit"
+            app:popEnterAnim="@anim/tool_close_enter"
+            app:popExitAnim="@anim/tool_close_exit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_characterPagerFragment"
+            app:destination="@id/characterPagerFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
+            app:popExitAnim="@anim/fragment_popexit" />
+    </fragment>
+    <fragment
+        android:id="@+id/equipmentListFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment"
+        android:label="EquipmentListFragment" />
 
 </navigation>

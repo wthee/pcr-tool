@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/colorGray"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:background="@color/colorBg">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
@@ -15,6 +16,55 @@
         app:defaultNavHost="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:navGraph="@navigation/nav_main" />
+
+    <FrameLayout
+        android:id="@+id/layout_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="@dimen/efab_margin"
+        android:layout_marginBottom="@dimen/xl_margin"
+        android:background="@drawable/efab_selected_background"
+        android:clickable="true"
+        android:elevation="@dimen/card_elevation"
+        android:focusable="true"
+        android:animateLayoutChanges="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <cn.wthee.pcrtool.utils.TasksCompletedView
+            android:id="@+id/progress"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:visibility="invisible"
+            app:circleColor="@color/colorGray"
+            app:radius="9dp"
+            app:ringColor="@color/colorPrimary"
+            app:strokeWidth="3dp"
+            app:textColor="@color/colorPrimary" />
+
+        <ProgressBar
+            android:id="@+id/progress_hint"
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/download_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginStart="@dimen/fab_size"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/fab_text_size"
+            android:textStyle="bold" />
+    </FrameLayout>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/motionLayout"
@@ -44,16 +94,13 @@
             app:tint="@color/colorPrimary" />
 
         <include
+            android:id="@+id/tool_equip"
+            layout="@layout/view_menu_item" />
+
+        <include
             android:id="@+id/setting"
             layout="@layout/view_menu_item" />
 
-        <include
-            android:id="@+id/search"
-            layout="@layout/view_menu_item" />
-
-        <include
-            android:id="@+id/filter"
-            layout="@layout/view_menu_item" />
         <!-- 新闻，排名，竞技，活动，卡池-->
         <include
             android:id="@+id/tool_pvp"

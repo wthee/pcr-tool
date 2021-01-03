@@ -26,21 +26,24 @@ class CharacterViewModel(
     var reload = MutableLiveData<Boolean>()
 
     //角色基本资料
-    fun getCharacters(sortType: SortType, asc: Boolean, name: String) {
+    fun getCharacters(sortType: SortType, asc: Boolean, name: String, reload: Boolean = true) {
         viewModelScope.launch {
-            characters = Pager(
-                PagingConfig(
-                    pageSize = 10,
-                    enablePlaceholders = false
-                )
-            ) {
-                repository.getInfoAndData(
-                    sortType,
-                    asc,
-                    name,
-                    CharacterListFragment.characterFilterParams
-                )
-            }.flow
+            if (!this@CharacterViewModel::characters.isInitialized || reload) {
+                characters = Pager(
+                    PagingConfig(
+                        pageSize = Int.MAX_VALUE,
+                        initialLoadSize = Int.MAX_VALUE,
+                        enablePlaceholders = false
+                    )
+                ) {
+                    repository.getInfoAndData(
+                        sortType,
+                        asc,
+                        name,
+                        CharacterListFragment.characterFilterParams
+                    )
+                }.flow
+            }
             //角色数量
             characterCount.postValue(
                 repository.getInfoAndDataCount(name, CharacterListFragment.characterFilterParams)

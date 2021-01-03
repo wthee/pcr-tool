@@ -37,7 +37,7 @@ class EventHistoryAdapter :
             //设置数据
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_translate_y)
+                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
                 //卡池名
                 eventName.text = event.title
                 //起止日期

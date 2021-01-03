@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillViewModel.Companion.iconType1
-import cn.wthee.pcrtool.ui.detail.character.skill.CharacterSkillViewModel.Companion.iconType2
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModel.Companion.iconType1
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModel.Companion.iconType2
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID

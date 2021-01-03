@@ -4,7 +4,7 @@
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
-            android:id="@+id/main_toolbar"
+            android:id="@+id/tool_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             app:layout_constraintEnd_toEndOf="parent"
@@ -14,7 +14,7 @@
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@id/main_toolbar"
+            android:id="@id/tool_bar"
             android:layout_width="match_parent"
             android:layout_height="0.01dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,16 +28,16 @@
         <KeyFrameSet>
             <KeyAttribute
                 app:framePosition="0"
-                app:motionTarget="@id/main_toolbar"
+                app:motionTarget="@id/tool_bar"
                 android:alpha="1.0" />
             <KeyAttribute
                 app:framePosition="100"
-                app:motionTarget="@id/main_toolbar"
+                app:motionTarget="@id/tool_bar"
                 android:alpha="0.0" />
         </KeyFrameSet>
         <OnSwipe
             app:dragDirection="dragUp"
-            app:touchAnchorId="@id/main_view_pager"
+            app:touchAnchorId="@id/character_list"
             app:touchAnchorSide="top" />
     </Transition>
 </MotionScene>

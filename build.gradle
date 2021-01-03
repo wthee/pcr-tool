@@ -10,8 +10,8 @@ android {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 51
-        versionName "0.5.1"
+        versionCode 60
+        versionName "0.6.0"
 
     }
 
