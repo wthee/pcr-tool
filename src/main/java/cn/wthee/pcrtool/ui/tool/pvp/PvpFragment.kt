@@ -30,11 +30,6 @@ class PvpFragment : Fragment() {
 
     private lateinit var binding: FragmentToolPvpBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        exitTransition = Hold()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -35,8 +35,8 @@ class PvpLikedCusFragment : Fragment() {
     private lateinit var binding: FragmentToolPvpLikedCustomizeBinding
     private var customize = 0
 
-    var atks = ""
-    var defs = ""
+    private var atks = ""
+    private var defs = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

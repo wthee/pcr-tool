@@ -43,7 +43,7 @@ class CharacterListFragment : Fragment() {
 
     }
 
-    var listAdapter = CharacterListAdapter(this)
+    private var listAdapter = CharacterListAdapter(this)
     private lateinit var binding: FragmentCharacterListBinding
     private val viewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()

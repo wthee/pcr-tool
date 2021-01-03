@@ -12,9 +12,7 @@ import kotlin.math.ceil
 
 class TasksCompletedView : View {
 
-    constructor(context: Context) : super(context) {
-
-    }
+    constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         // 获取自定义的属性

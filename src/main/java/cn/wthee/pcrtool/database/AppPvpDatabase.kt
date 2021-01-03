@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.utils.Constants
     version = 51,
     exportSchema = false
 )
-abstract class AppPvpDatabase() : RoomDatabase() {
+abstract class AppPvpDatabase : RoomDatabase() {
 
     abstract fun getPvpDao(): PvpDao
 

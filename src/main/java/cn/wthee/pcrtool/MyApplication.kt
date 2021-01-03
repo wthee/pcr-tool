@@ -31,7 +31,7 @@ class MyApplication : Application(), ImageLoaderFactory {
             ""
         )
         UMCrash.setDebug(false)
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
     }
 
     override fun newImageLoader(): ImageLoader {

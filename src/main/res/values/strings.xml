@@ -65,8 +65,6 @@
     <string name="filter_sort">筛选排序</string>
     <string name="filter">筛选</string>
     <string name="title_sort">排序类型</string>
-    <string name="next">确认</string>
-    <string name="reset">重置</string>
     <string name="title_tip">信息提示</string>
     <string name="position_3">后卫</string>
     <string name="pos_3">后</string>
@@ -166,5 +164,7 @@
     <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
     <string name="equip_name">装备名</string>
+    <string name="reset">重置</string>
+    <string name="ok">确认</string>
 
 </resources>
