@@ -50,9 +50,9 @@ class SkillLoopAdapter :
                 } else {
                     //技能图标
                     name.text = if (atkId == 1001 || atkId == 2001)
-                        "技能1"
-                    else
                         "技能2"
+                    else
+                        "技能1"
 
                     val iconType = when (atkId) {
                         2001 -> iconTypes[101]
