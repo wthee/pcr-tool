@@ -36,7 +36,7 @@ object StarViewUtil {
         //TODO 替换成粉星
         for (i in 0 until num) {
             val starView = AppCompatImageView(context)
-            starView.setBackgroundResource(if (i < 5) R.drawable.ic_star else R.drawable.ic_loved)
+            starView.setBackgroundResource(if (i < 5) R.drawable.ic_star else R.drawable.ic_star_pink)
             val params = LinearLayout.LayoutParams(size, size)
             starView.layoutParams = params
             partent.addView(starView, i)
@@ -54,7 +54,7 @@ object StarViewUtil {
                     if (j > i) {
                         partent[j].setBackgroundResource(R.drawable.ic_star_dark)
                     } else {
-                        partent[j].setBackgroundResource(if (j < 5) R.drawable.ic_star else R.drawable.ic_loved)
+                        partent[j].setBackgroundResource(if (j < 5) R.drawable.ic_star else R.drawable.ic_star_pink)
                     }
                 }
                 onSelect.select(i)

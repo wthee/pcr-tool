@@ -127,7 +127,7 @@
             <include
                 android:id="@+id/rank_equip"
                 layout="@layout/layout_rank_equip"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/l_margin"
                 app:layout_constraintTop_toBottomOf="@id/charcter_story_attrs" />
