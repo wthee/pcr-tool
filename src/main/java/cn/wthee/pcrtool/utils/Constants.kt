@@ -15,7 +15,7 @@ object Constants {
     const val DATABASE_URL = "http://wthee.xyz/db/"
 
     //接口正式地址
-    const val API_URL = "http://wthee.xyz:8846/api/"
+    const val API_URL = "http://wthee.xyz:8844/api/"
 
     //数据库
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"

@@ -64,7 +64,7 @@ class PvpCharacterResultAdapter(
             val down = binding.root.findViewById<MaterialTextView>(R.id.down)
             //初始化颜色
             MainScope().launch {
-                if (dao.getLiked(data.getAtkIdStr(), data.getDefIdStr(), region, 0) != null) {
+                if (dao.getLiked(data.atk, data.def, region, 0) != null) {
                     star.imageTintList =
                         ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorPrimary))
                 } else {
@@ -82,9 +82,9 @@ class PvpCharacterResultAdapter(
             //收藏监听
             star.setOnClickListener {
                 MainScope().launch {
-                    if (dao.getLiked(data.getAtkIdStr(), data.getDefIdStr(), region, 0) != null) {
+                    if (dao.getLiked(data.atk, data.def, region, 0) != null) {
                         //已收藏，取消收藏
-                        dao.delete(data.getAtkIdStr(), data.getDefIdStr(), region)
+                        dao.delete(data.atk, data.def, region)
                         star.imageTintList =
                             ColorStateList.valueOf(ResourcesUtil.getColor(R.color.textGray))
                     } else {
@@ -95,8 +95,8 @@ class PvpCharacterResultAdapter(
                         dao.insert(
                             PvpLikedData(
                                 data.id,
-                                data.getAtkIdStr(),
-                                data.getDefIdStr(),
+                                data.atk,
+                                data.def,
                                 simpleDateFormat.format(date),
                                 region
                             )
