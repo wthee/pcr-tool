@@ -8,7 +8,6 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
@@ -47,8 +46,7 @@ class MainActivity : AppCompatActivity() {
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
         lateinit var layoutDownload: FrameLayout
-        lateinit var progressDownload: TasksCompletedView
-        lateinit var progressDownloadHint: ProgressBar
+        lateinit var progressDownload: CircleProgressView
         lateinit var textDownload: MaterialTextView
     }
 
@@ -128,14 +126,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 //正常执行
                 1 -> {
-                    sharedCharacterViewModel.reload.postValue(true)
+                    recreate()
                 }
                 //数据切换
                 2 -> {
                     MainScope().launch {
                         delay(500L)
-                        progressDownloadHint.visibility = View.GONE
-                        progressDownload.visibility = View.VISIBLE
                         progressDownload.setProgress(100)
                         layoutDownload.setOnClickListener {
                             exitProcess(0)
@@ -157,7 +153,6 @@ class MainActivity : AppCompatActivity() {
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
-        progressDownloadHint = binding.progressHint
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,

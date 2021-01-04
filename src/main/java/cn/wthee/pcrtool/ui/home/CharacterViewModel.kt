@@ -23,7 +23,6 @@ class CharacterViewModel(
     var character = MutableLiveData<CharacterInfoPro>()
     var reset = MutableLiveData<Boolean>()
     var updateCharacter = MutableLiveData<Boolean>()
-    var reload = MutableLiveData<Boolean>()
 
     //角色基本资料
     fun getCharacters(sortType: SortType, asc: Boolean, name: String, reload: Boolean = true) {

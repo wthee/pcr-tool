@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="TasksCompletedView">
+    <declare-styleable name="CircleProgressView">
         <attr name="radius" format="dimension" />
         <attr name="strokeWidth" format="dimension" />
         <attr name="circleColor" format="color" />
         <attr name="ringColor" format="color" />
+        <attr name="ringBackgroundColor" format="color" />
         <attr name="textColor" format="color" />
+        <attr name="ringType" />
     </declare-styleable>
+
+    <attr name="ringType" format="enum">
+        <enum name="classic" value="0" />
+        <enum name="flyme" value="1" />
+    </attr>
 </resources>

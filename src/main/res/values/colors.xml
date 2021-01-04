@@ -4,6 +4,7 @@
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="colorPrimaryDark">#165FDA</color>
     <color name="colorAccent">#8BBBF1</color>
+    <color name="colorHalfAccent">#808BBBF1</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorAlpha">#00FFFFFF</color>
     <color name="colorBlack">#000000</color>

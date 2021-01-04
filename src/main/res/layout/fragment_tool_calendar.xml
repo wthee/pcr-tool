@@ -29,8 +29,7 @@
             app:headerColor="@color/colorWhite"
             app:headerLabelColor="@color/colorPrimary"
             app:layout_constraintTop_toBottomOf="@id/tool_calendar"
-            app:swipeEnabled="true"
-            app:type="one_day_picker" />
+            app:swipeEnabled="true" />
 
     </com.google.android.material.card.MaterialCardView>
 

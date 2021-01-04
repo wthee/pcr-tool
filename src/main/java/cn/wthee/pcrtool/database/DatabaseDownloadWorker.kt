@@ -59,8 +59,6 @@ class DatabaseDownloadWorker(
         //显示加载进度
         MainScope().launch {
             MainActivity.layoutDownload.visibility = View.VISIBLE
-            MainActivity.progressDownloadHint.visibility = View.GONE
-            MainActivity.progressDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
             MainActivity.progressDownload.setProgress(1)
         }
