@@ -9,15 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -100,7 +96,7 @@ class EquipmentListFragment : Fragment() {
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
             viewModel.equipmentCounts.observe(viewLifecycleOwner, {
-                MainActivity.sp.edit {
+                SharedPreferenceUtil.getMain().edit {
                     putInt(Constants.SP_COUNT_EQUIP, it)
                 }
                 binding.equipCount.text = it.toString()

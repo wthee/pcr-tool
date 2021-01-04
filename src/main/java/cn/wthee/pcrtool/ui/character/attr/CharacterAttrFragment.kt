@@ -258,13 +258,13 @@ class CharacterAttrFragment : Fragment() {
 
     //设置星级
     private fun setRatity(num: Int) {
-        StarUtil.show(
+        StarViewUtil.show(
             binding.root.context,
             binding.starts,
             num,
             maxStar,
             50,
-            object : StarUtil.OnSelect {
+            object : StarViewUtil.OnSelect {
                 override fun select(index: Int) {
                     selRatity = index + 1
                     loadData()

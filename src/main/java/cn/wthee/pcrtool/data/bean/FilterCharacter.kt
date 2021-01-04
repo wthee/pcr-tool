@@ -1,8 +1,8 @@
 package cn.wthee.pcrtool.data.bean
 
 import androidx.core.content.edit
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.SharedPreferenceUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.Serializable
@@ -16,14 +16,14 @@ class FilterCharacter(
 ) : Serializable {
     var starIds = arrayListOf<Int>()
         get() {
-            val star = MainActivity.sp.getString(
+            val star = SharedPreferenceUtil.getMain().getString(
                 Constants.SP_STAR_CHARACTER,
                 Gson().toJson(arrayListOf<Int>())
             )
             return Gson().fromJson(star, object : TypeToken<List<Int>>() {}.type)
         }
         set(value) {
-            MainActivity.sp.edit {
+            SharedPreferenceUtil.getMain().edit {
                 putString(Constants.SP_STAR_CHARACTER, Gson().toJson(value))
             }
             field = value

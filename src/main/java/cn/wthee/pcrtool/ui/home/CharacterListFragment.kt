@@ -126,7 +126,7 @@ class CharacterListFragment : Fragment() {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
                 viewModel.characterCount.observe(viewLifecycleOwner, {
-                    MainActivity.sp.edit {
+                    SharedPreferenceUtil.getMain().edit {
                         putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
                     binding.characterCount.text = it.toString()

@@ -47,7 +47,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         switchPvpRegion?.isVisible = changeDbType?.value != "1"
         //数据版本
-        titleDatabase.title = getString(R.string.data) + MainActivity.sp.getString(
+        titleDatabase.title = getString(R.string.data) + SharedPreferenceUtil.getMain().getString(
             if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             "0"
         )
@@ -88,7 +88,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         eggs?.isVisible = CharacterListFragment.characterFilterParams.starIds.contains(106001)
                 || CharacterListFragment.characterFilterParams.starIds.contains(107801)
                 || CharacterListFragment.characterFilterParams.starIds.contains(112001)
-        var count = MainActivity.sp.getInt("click_kl", 0)
+        var count = SharedPreferenceUtil.getMain().getInt("click_kl", 0)
         eggKL?.setOnPreferenceClickListener {
             count++
             if (count > 3) {

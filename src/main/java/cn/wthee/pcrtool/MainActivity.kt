@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -41,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         @JvmField
         var currentCharaPosition: Int = 0
         var nowVersionName = "0.0.0"
-        lateinit var sp: SharedPreferences
 
         var pageLevel = 0
         var mFloatingWindowHeight = 0
@@ -211,8 +208,6 @@ class MainActivity : AppCompatActivity() {
             packageName,
             0
         ).versionName
-        //本地储存
-        sp = getSharedPreferences("main", Context.MODE_PRIVATE)
         //绑定活动
         ActivityUtil.instance.currentActivity = this
         //悬浮穿高度
