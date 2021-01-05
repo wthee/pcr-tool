@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
         NewsTable::class,
         RemoteKey::class,
     ],
-    version = 41,
+    version = 62,
     exportSchema = false
 )
 abstract class AppNewsDatabase : RoomDatabase() {
