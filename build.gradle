@@ -62,6 +62,9 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation "androidx.activity:activity-ktx:1.1.0"
 
+    //CircleProgressBar
+    implementation 'com.github.wthee:CircleProgressBar:1.0'
+
     //coil
     def coil_version = '1.1.0'
     implementation "io.coil-kt:coil:$coil_version"

@@ -8,13 +8,13 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
+import cn.wthee.circleprogressbar.CircleProgressView
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.home.*
@@ -55,9 +55,7 @@ class MainActivity : AppCompatActivity() {
     private var menuItemDrawable = arrayListOf<Int>()
     private var menuItemTitles = arrayListOf<Int>()
     private lateinit var binding: ActivityMainBinding
-    private val sharedCharacterViewModel by viewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

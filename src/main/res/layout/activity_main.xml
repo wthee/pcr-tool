@@ -32,7 +32,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <cn.wthee.pcrtool.utils.CircleProgressView
+        <cn.wthee.circleprogressbar.CircleProgressView
             android:id="@+id/progress"
             android:layout_width="@dimen/circle_progress_bar_size"
             android:layout_height="@dimen/circle_progress_bar_size"
@@ -41,10 +41,10 @@
             android:layout_marginEnd="@dimen/m_margin"
             app:circleColor="@color/colorGray"
             app:radius="11dp"
-            app:ringColor="@color/colorPrimary"
             app:ringBackgroundColor="@color/colorHalfAccent"
-            app:strokeWidth="3dp"
+            app:ringColor="@color/colorPrimary"
             app:ringType="flyme"
+            app:strokeWidth="3dp"
             app:textColor="@color/colorPrimary" />
 
         <com.google.android.material.textview.MaterialTextView
