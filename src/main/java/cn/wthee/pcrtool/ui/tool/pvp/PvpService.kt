@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.adapter.PvpLikedAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
+import cn.wthee.pcrtool.data.db.dao.PvpDao
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIds
@@ -175,53 +176,61 @@ class PvpService : Service() {
                     searchBg.visibility = View.INVISIBLE
                     likedBg.visibility = View.VISIBLE
                     MainScope().launch {
-                        val data = dao.getAll(region)
-                        likedAdapter.submitList(data) {
-                            updateTip(data)
-                        }
-
-                        //列表设置左右滑动
-                        ItemTouchHelper(object :
-                            ItemTouchHelper.SimpleCallback(
-                                0,
-                                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                            ) {
-                            override fun onMove(
-                                recyclerView: RecyclerView,
-                                viewHolder: RecyclerView.ViewHolder,
-                                target: RecyclerView.ViewHolder
-                            ): Boolean {
-                                return true
-                            }
-
-                            @SuppressLint("SimpleDateFormat")
-                            override fun onSwiped(
-                                viewHolder: RecyclerView.ViewHolder,
-                                direction: Int
-                            ) {
-                                MainScope().launch {
-                                    val atks =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
-                                    val defs =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
-                                    val type =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.type)
-                                    val atkIds = atks.text.toString()
-                                    val defIds = defs.text.toString()
-                                    val typeInt = type.text.toString().toInt()
-                                    //删除记录
-                                    dao.delete(dao.getLiked(atkIds, defIds, region, typeInt)!!)
-                                    val result = dao.getAll(region)
-                                    likedAdapter.submitList(result) {
-                                        updateTip(result)
-                                    }
-                                }
-                            }
-                        }).attachToRecyclerView(binding.listLiked)
+                        setSwipeDelete(dao, region, likedAdapter)
                     }
                 }
             }
         }
+    }
+
+    private suspend fun setSwipeDelete(
+        dao: PvpDao,
+        region: Int,
+        likedAdapter: PvpLikedAdapter
+    ) {
+        val data = dao.getAll(region)
+        likedAdapter.submitList(data) {
+            updateTip(data)
+        }
+
+        //列表设置左右滑动
+        ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return true
+            }
+
+            @SuppressLint("SimpleDateFormat")
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                direction: Int
+            ) {
+                MainScope().launch {
+                    val atks =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
+                    val defs =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
+                    val type =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.type)
+                    val atkIds = atks.text.toString()
+                    val defIds = defs.text.toString()
+                    val typeInt = type.text.toString().toInt()
+                    //删除记录
+                    dao.delete(dao.getLiked(atkIds, defIds, region, typeInt)!!)
+                    val result = dao.getAll(region)
+                    likedAdapter.submitList(result) {
+                        updateTip(result)
+                    }
+                }
+            }
+        }).attachToRecyclerView(binding.listLiked)
     }
 
     private fun updateTip(data: List<PvpLikedData>) {

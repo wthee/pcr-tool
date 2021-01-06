@@ -57,8 +57,7 @@ class PvpCharacterResultAdapter(
                     listParams.matchConstraintPercentWidth = 1f
                     listParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                     starParams.startToEnd = down.id
-                    starParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                    starParams.bottomToTop = atkCharacters.id
+                    starParams.topToBottom = atkCharacters.id
                     starParams.width = 18.dp
                 } else {
                     listParams.matchConstraintPercentWidth = 0.8f
@@ -67,8 +66,9 @@ class PvpCharacterResultAdapter(
                     starParams.bottomToBottom = atkCharacters.id
                     starParams.width = 28.dp
                 }
-                atkCharacters.layoutParams = listParams
                 star.layoutParams = starParams
+                atkCharacters.layoutParams = listParams
+
                 //初始化颜色
                 MainScope().launch {
                     if (dao.getLiked(data.atk, data.def, region, 0) != null) {

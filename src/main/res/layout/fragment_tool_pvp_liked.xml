@@ -13,31 +13,15 @@
         android:id="@+id/tool_pvp_like"
         layout="@layout/view_toolbar" />
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/pvp_like_chips"
-        android:layout_width="match_parent"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/like_tip"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/m_margin"
-        app:checkedChip="@id/pvp_all"
-        app:selectionRequired="true"
-        app:singleSelection="true">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/pvp_all"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab_all" />
-
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/pvp_cus"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/customize" />
-    </com.google.android.material.chip.ChipGroup>
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/m_margin"
+        android:text="@string/no_liked_data"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorWhite" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_liked"

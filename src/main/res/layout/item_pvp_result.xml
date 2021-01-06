@@ -4,57 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/m_margin">
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/rate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xs_margin"
-        android:ellipsize="end"
-        android:gravity="start"
-        android:maxLines="1"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/xs_padding"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.25"
-        tools:text="100%" />
-
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/up"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="start"
-        android:maxLines="1"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/xs_padding"
-        android:textColor="@color/cool_apk"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/rate"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.2"
-        tools:text="100" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/down"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="start"
-        android:maxLines="1"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/xs_padding"
-        android:textColor="@color/red"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@id/up"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.35"
-        tools:text="0" />
+    android:layout_marginTop="@dimen/s_margin">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/atk_characters"
@@ -66,7 +16,7 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/up"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.8"
         app:spanCount="5"
         tools:itemCount="5"
@@ -81,6 +31,60 @@
         android:tint="@color/textGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/atk_characters"
-        app:layout_constraintTop_toTopOf="@id/atk_characters" />
+        app:layout_constraintStart_toEndOf="@id/atk_characters"
+        app:layout_constraintTop_toBottomOf="@id/atk_characters" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/rate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xs_margin"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/xs_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/atk_characters"
+        app:layout_constraintWidth_percent="0.25"
+        tools:text="100%" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/up"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/xs_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/cool_apk"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/rate"
+        app:layout_constraintTop_toTopOf="@id/rate"
+        app:layout_constraintWidth_percent="0.25"
+        tools:text="100" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/down"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="1"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="@dimen/xs_padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/red"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toEndOf="@id/up"
+        app:layout_constraintTop_toTopOf="@id/rate"
+        app:layout_constraintWidth_percent="0.35"
+        tools:text="0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
