@@ -20,8 +20,7 @@
 
     <include
         android:id="@+id/pvp_result_toolbar"
-        layout="@layout/view_toolbar"
-        tools:visibility="gone" />
+        layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pvp_result_list"
@@ -30,8 +29,8 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pvp_result_toolbar"
+        app:layout_constrainedHeight="true"
         tools:context=".ui.tool.pvp.PvpResultDialogFragment"
         tools:itemCount="3"
         tools:listitem="@layout/item_pvp_result" />

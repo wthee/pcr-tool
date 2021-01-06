@@ -54,8 +54,8 @@ class PvpLikedAdapter(
                     params1.width = 24.dp
                     params1.height = 24.dp
                 }
-                atk.layoutParams = params0
-                def.layoutParams = params1
+//                atk.layoutParams = params0
+//                def.layoutParams = params1
             }
         }
     }

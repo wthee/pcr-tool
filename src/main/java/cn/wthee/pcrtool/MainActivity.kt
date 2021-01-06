@@ -114,14 +114,8 @@ class MainActivity : AppCompatActivity() {
                 //获取版本失败
                 0 -> {
                     MainScope().launch {
-                        layoutDownload.visibility = View.VISIBLE
-                        textDownload.text = "点击重试"
-                        layoutDownload.setOnClickListener {
-                            DatabaseUpdater.checkDBVersion()
-                            layoutDownload.visibility = View.GONE
-                        }
-                        delay(5000L)
                         layoutDownload.visibility = View.GONE
+                        ToastUtil.short("获取数据版本信息失败~")
                     }
                 }
                 //正常执行
