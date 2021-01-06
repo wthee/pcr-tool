@@ -48,7 +48,7 @@
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
-    <string name="data_from_hint">感谢大佬提供的数据接口</string>
+    <string name="data_from_hint">数据和图片来源</string>
     <string name="shizuru_note">静流笔记</string>
     <string name="dev_tip">感谢大佬的开源项目</string>
     <string name="check_app_update">应用版本</string>
@@ -166,5 +166,8 @@
     <string name="equip_name">装备名</string>
     <string name="reset">重置</string>
     <string name="ok">确认</string>
+    <string name="pcrdfans">公主连结Re: Dive Fan Club</string>
+    <string name="pvp_data">竞技场查询数据来源</string>
+    <string name="leader_data">角色排行数据来源</string>
 
 </resources>

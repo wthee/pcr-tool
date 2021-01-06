@@ -86,6 +86,25 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://github.com/MalitsPlus/ShizuruNotes" />
         </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/pvp_data"
+            app:title="@string/pcrdfans">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/url_pcrdfans_com" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/leader_data"
+            app:title="AppMedia">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/leader_source_url" />
+        </Preference>
+
     </PreferenceCategory>
 
     <PreferenceCategory
