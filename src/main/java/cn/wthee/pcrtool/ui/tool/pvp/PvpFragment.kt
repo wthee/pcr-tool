@@ -13,6 +13,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character1
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character2
@@ -58,7 +59,10 @@ class PvpFragment : Fragment() {
                     ToastUtil.short("请选择 5 名角色~")
                 } else {
                     //展示查询结果
-                    PvpResultDialogFragment().show(parentFragmentManager, "pvp")
+                    PvpResultDialogFragment.getInstance(selects.getIdStr()).show(
+                        parentFragmentManager,
+                        "pvp"
+                    )
                 }
             }
             //收藏页面
@@ -81,6 +85,7 @@ class PvpFragment : Fragment() {
                 } else {
                     val intent =
                         Intent(requireActivity().applicationContext, PvpService::class.java)
+
                     requireActivity().stopService(intent)
                     intent.putExtra("character1", character1 as Serializable)
                     intent.putExtra("character2", character2 as Serializable)
@@ -94,7 +99,6 @@ class PvpFragment : Fragment() {
             }
         }
     }
-
 
 
     //请求悬浮窗权限

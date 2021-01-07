@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
 import cn.wthee.pcrtool.utils.FileUtil
-import cn.wthee.pcrtool.utils.SharedPreferenceUtil
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -128,12 +127,12 @@ object DatabaseUpdater {
         }
     }
 
-    private fun getLocalDatabaseVersion() = SharedPreferenceUtil.getMain().getString(
+    private fun getLocalDatabaseVersion() = MainActivity.sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
         "0"
     ) ?: "0"
 
-    private fun getLocalDatabaseHash() = SharedPreferenceUtil.getMain().getString(
+    private fun getLocalDatabaseHash() = MainActivity.sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_HASH else Constants.SP_DATABASE_HASH_JP,
         "0"
     ) ?: "0"
@@ -142,7 +141,7 @@ object DatabaseUpdater {
         if (getDatabaseType() == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP
 
     fun updateLocalDataBaseVersion(ver: DatabaseVersion) {
-        SharedPreferenceUtil.getMain().edit {
+        MainActivity.sp.edit {
             val type = getDatabaseType()
             putString(
                 if (type == 1)

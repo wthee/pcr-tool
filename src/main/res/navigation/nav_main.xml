@@ -73,11 +73,7 @@
         tools:layout="@layout/fragment_tool_pvp_liked">
         <action
             android:id="@+id/action_pvpLikedFragment_to_pvpLikedCustomize"
-            app:destination="@id/pvpLikedCustomize"
-            app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit"
-            app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
+            app:destination="@id/pvpLikedCustomize" />
     </fragment>
     <fragment
         android:id="@+id/pvpLikedCustomize"

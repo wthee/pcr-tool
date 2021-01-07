@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
@@ -122,7 +123,7 @@ class CharacterListFragment : Fragment() {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
                 viewModel.characterCount.observe(viewLifecycleOwner, {
-                    SharedPreferenceUtil.getMain().edit {
+                    MainActivity.sp.edit {
                         putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
                     binding.characterCount.text = it.toString()

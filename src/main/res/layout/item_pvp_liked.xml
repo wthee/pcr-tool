@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_liked"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/s_margin"
@@ -9,6 +10,15 @@
     android:layout_marginBottom="@dimen/m_margin"
     android:background="@drawable/bg_card_press"
     android:orientation="vertical">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/type_img"
+        android:layout_width="@dimen/m_icon"
+        android:layout_height="@dimen/menu_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/angleStyle"
+        android:src="@color/red" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/atk_ids"
@@ -34,8 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
+    <cn.wthee.pcrtool.utils.NoTouchRecyclerView
         android:id="@+id/liked_characters"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -59,6 +68,7 @@
         android:src="@drawable/ic_pvp"
         android:tint="@color/colorPrimary"
         app:layout_constraintWidth_percent="0.075"
+        android:clickable="false"
         app:layout_constraintBottom_toBottomOf="@id/center_gl"
         app:layout_constraintEnd_toStartOf="@id/liked_characters"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +80,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_def"
         android:tint="@color/red"
+        android:clickable="false"
         app:layout_constraintWidth_percent="0.075"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/liked_characters"

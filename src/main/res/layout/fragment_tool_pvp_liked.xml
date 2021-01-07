@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/m_margin"
         android:text="@string/no_liked_data"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textColor="@color/colorWhite" />
 
     <androidx.recyclerview.widget.RecyclerView

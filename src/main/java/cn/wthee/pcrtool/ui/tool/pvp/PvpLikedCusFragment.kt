@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,8 +42,8 @@ class PvpLikedCusFragment : Fragment() {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             duration = 500L
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(Color.TRANSPARENT)
+//            scrimColor = Color.TRANSPARENT
+//            setAllContainerColors(Color.TRANSPARENT)
         }
     }
 

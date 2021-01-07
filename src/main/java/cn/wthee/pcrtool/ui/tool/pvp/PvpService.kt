@@ -159,6 +159,9 @@ class PvpService : Service() {
                 stopForeground(true)
                 NotificationUtil.notificationManager.cancelAll()
                 onDestroy()
+                val appFullName = "cn.wthee.pcrtool"
+                val launchIntent = packageManager.getLaunchIntentForPackage(appFullName)
+                launchIntent?.let { startActivity(it) }
             }
             //收藏
             val dao = AppPvpDatabase.getInstance().getPvpDao()

@@ -47,27 +47,24 @@ class PvpCharacterResultAdapter(
 
     inner class ViewHolder(private val binding: ItemPvpResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("SimpleDateFormat")
+        @SuppressLint("SimpleDateFormat", "SetTextI18n")
         fun bind(data: PvpData) {
             binding.apply {
                 //调整布局
-                val listParams = atkCharacters.layoutParams as ConstraintLayout.LayoutParams
-                val starParams = star.layoutParams as ConstraintLayout.LayoutParams
-                if (isFloat) {
-                    listParams.matchConstraintPercentWidth = 1f
-                    listParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                    starParams.startToEnd = down.id
-                    starParams.topToBottom = atkCharacters.id
-                    starParams.width = 18.dp
-                } else {
+                if (!isFloat) {
+                    val listParams = atkCharacters.layoutParams as ConstraintLayout.LayoutParams
+                    val starParams = star.layoutParams as ConstraintLayout.LayoutParams
                     listParams.matchConstraintPercentWidth = 0.8f
+                    starParams.startToEnd = atkCharacters.id
                     starParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                     starParams.topToTop = atkCharacters.id
                     starParams.bottomToBottom = atkCharacters.id
-                    starParams.width = 28.dp
+                    starParams.width = 24.dp
+                    starParams.height = 24.dp
+
+                    star.layoutParams = starParams
+                    atkCharacters.layoutParams = listParams
                 }
-                star.layoutParams = starParams
-                atkCharacters.layoutParams = listParams
 
                 //初始化颜色
                 MainScope().launch {
@@ -79,17 +76,18 @@ class PvpCharacterResultAdapter(
                             ColorStateList.valueOf(ResourcesUtil.getColor(R.color.textGray))
                     }
                 }
+                teamNum.text = "队伍 ${layoutPosition + 1}"
                 //进攻角色列表
                 val adapter = PvpCharacterResultItemAdapter()
                 atkCharacters.adapter = adapter
                 adapter.submitList(data.getAtkIdList())
                 //顶/踩信息
-                up.text = "${data.up}"
-                down.text = "${data.down}"
+                up.text = "✓${data.up}"
+                //赞同率
                 val rateNum = if (data.up == 0) 0 else {
                     round(data.up * 1.0 / (data.up + data.down) * 100).toInt()
                 }
-                rate.text = "$rateNum %"
+                rate.text = "$rateNum%"
                 //收藏监听
                 star.setOnClickListener {
                     MainScope().launch {

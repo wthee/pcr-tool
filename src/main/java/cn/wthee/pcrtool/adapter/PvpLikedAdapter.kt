@@ -1,12 +1,15 @@
 package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.databinding.ItemPvpLikedBinding
+import cn.wthee.pcrtool.ui.tool.pvp.PvpResultDialogFragment
+import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.dp
 
 
@@ -35,27 +38,35 @@ class PvpLikedAdapter(
         fun bind(data: PvpLikedData) {
             //设置数据
             binding.apply {
+                if (data.type == 1) {
+                    typeImg.visibility = View.VISIBLE
+                } else {
+                    typeImg.visibility = View.GONE
+                }
                 atkIds.text = data.atks
                 defIds.text = data.defs
                 type.text = data.type.toString()
                 val adapter = PvpCharacterResultItemAdapter()
                 likedCharacters.adapter = adapter
                 adapter.submitList(data.getIds())
-                val params0 = atk.layoutParams
-                val params1 = def.layoutParams
+                val params = root.layoutParams as RecyclerView.LayoutParams
                 if (isFloat) {
-                    params0.width = 14.dp
-                    params0.height = 14.dp
-                    params1.width = 14.dp
-                    params1.height = 14.dp
+                    params.marginStart = 1.dp
+                    params.marginEnd = 1.dp
                 } else {
-                    params0.width = 24.dp
-                    params0.height = 24.dp
-                    params1.width = 24.dp
-                    params1.height = 24.dp
+                    params.marginStart = 6.dp
+                    params.marginEnd = 6.dp
                 }
-//                atk.layoutParams = params0
-//                def.layoutParams = params1
+                root.layoutParams = params
+                //点击重新查询
+                layoutLiked.setOnClickListener {
+                    if (!isFloat) {
+                        PvpResultDialogFragment.getInstance(data.defs).show(
+                            ActivityUtil.instance.currentActivity!!.supportFragmentManager,
+                            "pvp_result"
+                        )
+                    }
+                }
             }
         }
     }
