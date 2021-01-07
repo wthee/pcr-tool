@@ -162,7 +162,7 @@
             android:id="@+id/liked_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_color"
+            android:background="@drawable/bg_gradient"
             android:orientation="vertical"
             android:visibility="invisible"
             tools:visibility="visible">

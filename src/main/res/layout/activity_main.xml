@@ -25,7 +25,7 @@
         android:layout_marginEnd="@dimen/efab_margin"
         android:layout_marginBottom="@dimen/xl_margin"
         android:animateLayoutChanges="true"
-        android:background="@drawable/efab_selected_background"
+        android:background="@drawable/bg_efab_press"
         android:clickable="true"
         android:elevation="@dimen/card_elevation"
         android:focusable="true"

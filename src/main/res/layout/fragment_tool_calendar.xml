@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_color"
+    android:background="@drawable/bg_gradient"
     android:orientation="vertical">
 
     <include
@@ -41,7 +41,7 @@
         android:layout_marginTop="@dimen/m_margin"
         android:layout_marginEnd="@dimen/m_margin"
         android:layout_weight="1"
-        android:background="@drawable/card_background"
+        android:background="@drawable/bg_card"
         android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView

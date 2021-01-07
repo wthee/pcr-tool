@@ -46,7 +46,7 @@ class NewsTagAdapter :
                 }
 
                 text1.text = fTag
-                val drawable = ResourcesUtil.getDrawable(R.drawable.title_background)
+                val drawable = ResourcesUtil.getDrawable(R.drawable.bg_text_view)
                 drawable?.setTint(ResourcesUtil.getColor(colorId))
                 text1.background = drawable
             }

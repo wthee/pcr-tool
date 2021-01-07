@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/background_color"
+    android:background="@drawable/bg_gradient"
     android:orientation="vertical">
 
     <include
@@ -18,7 +18,7 @@
         android:layout_marginStart="@dimen/m_margin"
         android:layout_marginEnd="@dimen/m_margin"
         android:layout_weight="1"
-        android:background="@drawable/card_background"
+        android:background="@drawable/bg_card"
         android:orientation="vertical"
         android:padding="@dimen/xs_padding">
 
@@ -26,7 +26,7 @@
             android:id="@+id/source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/title_background"
+            android:background="@drawable/bg_text_view"
             android:paddingStart="@dimen/xs_padding"
             android:paddingEnd="@dimen/xs_padding"
             android:text="@string/leader_source"

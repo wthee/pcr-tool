@@ -42,9 +42,9 @@ class NewsAdapter(
         item?.let { data ->
             val view = holder.itemView.findViewById<MaterialCardView>(R.id.news_item)
             if (selectItems.find { it.id == data.id } != null) {
-                view.background = ResourcesUtil.getDrawable(R.drawable.card_background_select)
+                view.background = ResourcesUtil.getDrawable(R.drawable.bg_card_dark)
             } else {
-                view.background = ResourcesUtil.getDrawable(R.drawable.card_background)
+                view.background = ResourcesUtil.getDrawable(R.drawable.bg_card)
             }
             holder.bind(data)
         }

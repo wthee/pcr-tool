@@ -7,14 +7,14 @@
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
     android:layout_marginBottom="@dimen/m_margin"
-    android:background="@drawable/card_background"
+    android:background="@drawable/bg_card"
     android:padding="@dimen/xs_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gacha_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/title_background"
+        android:background="@drawable/bg_text_view"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"

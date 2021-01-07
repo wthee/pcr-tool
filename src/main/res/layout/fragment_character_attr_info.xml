@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:background="@drawable/card_background"
+    android:background="@drawable/bg_card"
     android:padding="@dimen/xm_padding"
     app:layoutDescription="@xml/fragment_character_attr_info_scene">
 

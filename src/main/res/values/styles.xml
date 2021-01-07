@@ -33,7 +33,7 @@
 
     <!--  背景设置  -->
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/dialog_background</item>
+        <item name="android:background">@drawable/bg_bottom_dialog</item>
     </style>
 
     <!-- 圆角图片 -->

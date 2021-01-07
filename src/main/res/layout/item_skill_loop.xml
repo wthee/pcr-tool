@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/looping"
-        android:background="@drawable/title_background"
+        android:background="@drawable/bg_text_view"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"

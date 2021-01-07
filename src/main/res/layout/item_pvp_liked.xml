@@ -7,7 +7,7 @@
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
     android:layout_marginBottom="@dimen/m_margin"
-    android:background="@drawable/card_background"
+    android:background="@drawable/bg_card_press"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView

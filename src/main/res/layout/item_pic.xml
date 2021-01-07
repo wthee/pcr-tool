@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:background="@drawable/background_color"
+        tools:background="@drawable/bg_gradient"
         tools:foreground="@color/colorAlphaBlack"
         tools:layout_height="@dimen/card_height" />
 

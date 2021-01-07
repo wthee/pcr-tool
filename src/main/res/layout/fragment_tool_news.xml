@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/background_color"
+    android:background="@drawable/bg_gradient"
     android:orientation="vertical">
 
     <include
@@ -14,7 +14,7 @@
         android:id="@+id/tabs"
         android:layout_marginStart="@dimen/m_margin"
         android:layout_marginEnd="@dimen/m_margin"
-        android:background="@drawable/card_background"
+        android:background="@drawable/bg_card"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_height_1" />
 
