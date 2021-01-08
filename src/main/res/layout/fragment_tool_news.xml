@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_gradient"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <include
@@ -12,9 +12,7 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
-        android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/m_margin"
-        android:background="@drawable/bg_card"
+        android:background="@drawable/bg_back_drop"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_height_1" />
 
@@ -22,11 +20,7 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBg"
         tools:visibility="gone" />
-
-    <include
-        layout="@layout/fragment_tool_news_list"
-        android:visibility="gone"
-        tools:visibility="visible" />
 
 </LinearLayout>

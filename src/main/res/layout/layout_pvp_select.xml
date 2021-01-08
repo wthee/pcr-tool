@@ -1,99 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:background="@drawable/bg_gradient">
+    android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/pcrfan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_text_view"
+        android:layout_margin="@dimen/xs_margin"
+        android:paddingStart="@dimen/xs_padding"
+        android:paddingEnd="@dimen/xs_padding"
+        android:text="@string/pcrdfans_com"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/select_characters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/m_margin">
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/pcrfan"
+        app:spanCount="5"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_common" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite"
-            android:orientation="vertical">
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tablayout_position"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_height_1"
+        android:background="@color/colorAlpha"
+        app:layout_constraintTop_toBottomOf="@id/select_characters"
+        app:tabInlineLabel="true"
+        app:tabMode="fixed">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pcrfan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/xs_margin"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/xs_padding"
-                android:paddingEnd="@dimen/xs_padding"
-                android:text="@string/pcrdfans_com"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_1" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/select_characters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/pcrfan"
-                app:spanCount="5"
-                tools:itemCount="5"
-                tools:listitem="@layout/item_common" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_2" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_3" />
 
-    <LinearLayout
+    </com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/m_margin"
-        android:layout_marginTop="@dimen/m_margin"
-        android:layout_marginEnd="@dimen/m_margin"
         android:layout_weight="1"
-        android:background="@drawable/bg_pvp_card"
-        android:orientation="vertical"
-        android:padding="@dimen/xs_padding">
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tablayout_position">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tablayout_position"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pvp_pager"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height_1"
-            android:background="@color/colorAlpha"
-            app:tabInlineLabel="true"
-            app:tabMode="fixed">
+            android:layout_height="match_parent" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/position_1" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/position_2" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/position_3" />
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/pvp_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

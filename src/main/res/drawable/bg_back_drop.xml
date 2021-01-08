@@ -5,6 +5,6 @@
     <corners
         android:topLeftRadius="@dimen/back_drop_radius"
         android:topRightRadius="@dimen/back_drop_radius" />
-    <solid android:color="@color/colorWhite" />
+    <solid android:color="@color/colorBg" />
 
 </shape>

@@ -52,6 +52,9 @@ class PvpLikedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolPvpLikedBinding.inflate(inflater, container, false)
+        if (binding.root.currentState == R.id.liked_start) {
+            binding.root.transitionToEnd()
+        }
         init()
         setListener()
         lifecycleScope.launch {
