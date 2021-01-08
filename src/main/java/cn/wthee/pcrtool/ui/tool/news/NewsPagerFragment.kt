@@ -33,7 +33,7 @@ class NewsPagerFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolNewsBinding.inflate(inflater, container, false)
         //设置头部
-        ToolbarUtil(binding.toolNews).setToolHead(
+        ToolbarUtil(binding.toolNews).setMainToolbar(
             R.drawable.ic_news,
             getString(R.string.tool_news)
         )

@@ -24,15 +24,17 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     }
 
     //主页面toolbar
-    fun setMainToolbar(iconId: Int, titleText: String) {
+    fun setMainToolbar(iconId: Int, titleText: String): ToolbarUtil {
         setLeftIcon(iconId)
         title.text = titleText
         toolbar.root.setBackgroundColor(ResourcesUtil.getColor(R.color.colorPrimary))
+        return this
     }
 
-    fun setRightIcon(resId: Int): ToolbarUtil {
+    fun setRightIcon(resId: Int, colorId: Int): ToolbarUtil {
         rightIcon.visibility = View.VISIBLE
         rightIcon.setImageResource(resId)
+        rightIcon.imageTintList = ColorStateList.valueOf(ResourcesUtil.getColor(colorId))
         return this
     }
 
@@ -52,9 +54,4 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         return this
     }
 
-    fun setToolHead(iconId: Int, titleText: String) {
-        leftIcon.imageTintList = ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorWhite))
-        setLeftIcon(iconId)
-        title.text = titleText
-    }
 }

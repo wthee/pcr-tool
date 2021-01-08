@@ -39,7 +39,7 @@ class PvpFragment : Fragment() {
         binding = FragmentToolPvpBinding.inflate(inflater, container, false)
         binding.pvpLike.transitionName = "liked_add"
         //设置头部
-        ToolbarUtil(binding.toolPvp).setToolHead(
+        ToolbarUtil(binding.toolPvp).setMainToolbar(
             R.drawable.ic_pvp,
             getString(R.string.tool_pvp)
         )

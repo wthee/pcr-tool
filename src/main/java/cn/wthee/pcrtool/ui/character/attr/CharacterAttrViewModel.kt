@@ -7,7 +7,6 @@ import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
-import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.launch
 
 
@@ -66,7 +65,6 @@ class CharacterAttrViewModel(
             info.add(storyAttr)
             return info
         } catch (e: Exception) {
-            ToastUtil.short("角色详细信息暂无~")
         }
         return Attr()
     }

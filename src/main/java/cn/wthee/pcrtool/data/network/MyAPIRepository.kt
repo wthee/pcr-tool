@@ -69,11 +69,11 @@ object MyAPIRepository {
     }
 
     //排名信息
-    suspend fun getLeader(): ResponseData<List<LeaderboardData>> {
+    suspend fun getLeader(): ResponseData<LeaderData> {
         //请求
         try {
             val response = service.getLeader()
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+            if (response.message == "failure" || response.data == null) {
                 return error()
             }
             return response
@@ -84,7 +84,6 @@ object MyAPIRepository {
         }
         return error()
     }
-
 
     //日历信息
     suspend fun getCalendar(): ResponseData<CalendarData> {

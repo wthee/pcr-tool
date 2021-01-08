@@ -93,7 +93,7 @@ class CharacterSkillFragment : Fragment() {
             layoutLoopTitle.root.visibility = View.VISIBLE
             ToolbarUtil(layoutLoopTitle).apply {
                 setCenterTitle("")
-                setRightIcon(R.drawable.ic_loop)
+                setRightIcon(R.drawable.ic_loop, R.color.colorPrimary)
                 rightIcon.setOnClickListener {
                     CharacterSkillLoopDialogFragment.getInstance(uid)
                         .show(parentFragmentManager, "loop")

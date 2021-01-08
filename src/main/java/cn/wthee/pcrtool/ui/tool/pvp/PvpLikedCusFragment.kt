@@ -124,7 +124,7 @@ class PvpLikedCusFragment : Fragment() {
         binding.pvpNext.icon = ResourcesUtil.getDrawable(R.drawable.ic_loved)
         binding.pvpNext.text = "保存"
         binding.pvpPre.show()
-        ToolbarUtil(binding.toolPvp).setToolHead(
+        ToolbarUtil(binding.toolPvp).setMainToolbar(
             R.drawable.ic_def,
             "请添加防守方队伍信息"
         )
@@ -141,7 +141,7 @@ class PvpLikedCusFragment : Fragment() {
             .replace(R.id.layout_select, PvpSelectFragment(0))
             .commit()
         //设置头部
-        ToolbarUtil(binding.toolPvp).setToolHead(
+        ToolbarUtil(binding.toolPvp).setMainToolbar(
             R.drawable.ic_pvp,
             "请添加进攻方队伍信息"
         )

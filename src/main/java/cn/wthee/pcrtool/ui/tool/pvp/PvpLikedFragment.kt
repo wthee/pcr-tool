@@ -57,7 +57,7 @@ class PvpLikedFragment : Fragment() {
         lifecycleScope.launch {
             setSwipeDelete(AppPvpDatabase.getInstance().getPvpDao())
         }
-        ToolbarUtil(binding.toolPvpLike).setToolHead(
+        ToolbarUtil(binding.toolPvpLike).setMainToolbar(
             R.drawable.ic_loved,
             "收藏信息"
         )

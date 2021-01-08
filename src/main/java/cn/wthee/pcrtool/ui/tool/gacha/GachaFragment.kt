@@ -38,7 +38,7 @@ class GachaFragment : Fragment() {
         })
 
         //设置头部
-        ToolbarUtil(binding.toolGacha).setToolHead(
+        ToolbarUtil(binding.toolGacha).setMainToolbar(
             R.drawable.ic_gacha,
             getString(R.string.tool_gacha)
         )

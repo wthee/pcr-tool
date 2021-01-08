@@ -38,7 +38,7 @@ class EventFragment : Fragment() {
         })
 
         //设置头部
-        ToolbarUtil(binding.toolEvent).setToolHead(
+        ToolbarUtil(binding.toolEvent).setMainToolbar(
             R.drawable.ic_event,
             getString(R.string.tool_event)
         )

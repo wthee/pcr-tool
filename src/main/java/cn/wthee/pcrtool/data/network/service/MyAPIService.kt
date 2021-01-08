@@ -27,8 +27,8 @@ interface MyAPIService {
     suspend fun getNewsData(@Body body: RequestBody): ResponseData<List<NewsTable>>
 
     //排行信息
-    @POST("leader")
-    suspend fun getLeader(): ResponseData<List<LeaderboardData>>
+    @POST("leaders")
+    suspend fun getLeader(): ResponseData<LeaderData>
 
     //国服日历
     @POST("calendar")

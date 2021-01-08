@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_radius">4dp</dimen>
+    <dimen name="back_drop_radius">12dp</dimen>
     <dimen name="menu_item_card_radius">8dp</dimen>
     <dimen name="loading_dialog_height">80dp</dimen>
     <dimen name="desc_height">70dp</dimen>
