@@ -162,7 +162,7 @@
             android:id="@+id/liked_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorBg"
             android:orientation="vertical"
             android:visibility="invisible"
             tools:visibility="visible">
@@ -172,7 +172,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorPrimary"
                 android:layout_marginTop="@dimen/m_margin"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:text="@string/no_liked_data" />
@@ -183,8 +183,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:layout_marginTop="@dimen/m_margin"
-                android:layout_marginStart="@dimen/s_margin"
-                android:layout_marginEnd="@dimen/s_margin"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"

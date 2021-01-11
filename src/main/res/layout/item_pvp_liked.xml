@@ -5,8 +5,6 @@
     android:id="@+id/layout_liked"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/s_margin"
-    android:layout_marginEnd="@dimen/s_margin"
     android:background="@drawable/bg_card_press"
     android:clickable="true"
     android:focusable="true">

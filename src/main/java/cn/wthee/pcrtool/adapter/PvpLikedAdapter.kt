@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -50,14 +51,22 @@ class PvpLikedAdapter(
                 likedCharacters.adapter = adapter
                 adapter.submitList(data.getIds())
                 val params = root.layoutParams as RecyclerView.LayoutParams
+                val listParams = likedCharacters.layoutParams as ConstraintLayout.LayoutParams
                 if (isFloat) {
                     params.marginStart = 1.dp
                     params.marginEnd = 1.dp
+                    atk.visibility = View.GONE
+                    def.visibility = View.GONE
+                    listParams.matchConstraintPercentWidth = 1f
                 } else {
                     params.marginStart = 6.dp
                     params.marginEnd = 6.dp
+                    atk.visibility = View.VISIBLE
+                    def.visibility = View.VISIBLE
+                    listParams.matchConstraintPercentWidth = 0.85f
                 }
                 root.layoutParams = params
+                likedCharacters.layoutParams = listParams
                 //点击重新查询
                 layoutLiked.setOnClickListener {
                     if (!isFloat) {
