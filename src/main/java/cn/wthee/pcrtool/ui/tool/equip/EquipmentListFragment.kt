@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -26,6 +27,7 @@ class EquipmentListFragment : Fragment() {
 
     companion object {
         lateinit var list: RecyclerView
+        lateinit var motionLayout: MotionLayout
         var equipFilterParams = FilterEquipment(true, "全部")
         var asc = false
         lateinit var equipTypes: ArrayList<String>
@@ -64,15 +66,16 @@ class EquipmentListFragment : Fragment() {
     }
 
     private fun init() {
+        motionLayout = binding.root
+        list = binding.pagerList
         //设置头部
-        ToolbarUtil(binding.toolEquip).setMainToolbar(
+        ToolbarUtil(binding.toolBar).setMainToolbar(
             R.drawable.ic_equip,
             getString(R.string.tool_equip)
         )
         binding.apply {
-            list = binding.equipPage
             pageAdapter = EquipmentPageAdapter(parentFragmentManager)
-            binding.equipPage.adapter = pageAdapter
+            binding.pagerList.adapter = pageAdapter
         }
         //获取装备类型
         equipTypes = arrayListOf()

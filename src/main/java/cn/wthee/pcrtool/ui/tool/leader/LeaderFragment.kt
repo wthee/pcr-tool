@@ -11,7 +11,6 @@ import cn.wthee.pcrtool.adapter.CharacterLeaderAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 
@@ -29,17 +28,18 @@ class LeaderFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolLeaderBinding.inflate(inflater, container, false)
-        if (binding.root.currentState == R.id.leader_start) {
-            binding.root.transitionToEnd()
-        }
         leaderViewModel.getLeader()
         leaderViewModel.leaderData.observe(viewLifecycleOwner, {
             if (it.status == 0) {
-                binding.leaderDesc.apply {
-                    text = it.data?.desc
+                binding.tip.apply {
+                    text = it.data?.desc?.replace("\n", "，")
+                    isSelected = true
+                    setOnClickListener { _ ->
+                        ToastUtil.long(it.data?.desc)
+                    }
                 }
                 val adapter = CharacterLeaderAdapter(requireContext())
-                binding.leaderList.adapter = adapter
+                binding.toolList.adapter = adapter
                 adapter.submitList(it.data?.leader) {
                     binding.loading.text = ""
                 }
@@ -49,19 +49,19 @@ class LeaderFragment : Fragment() {
         })
 
         //设置头部
-        ToolbarUtil(binding.toolLeader).setMainToolbar(
+        ToolbarUtil(binding.toolHead).setMainToolbar(
             R.drawable.ic_leader,
             getString(R.string.tool_leader)
         )
-
-
         //来源
         binding.source.setOnClickListener {
             BrowserUtil.open(requireContext(), getString(R.string.leader_source_url))
         }
-        //滚动监听
-        binding.leaderList.setScrollToTopListener(binding.fabTop)
-
+        //回到顶部
+        binding.fabTop.setOnClickListener {
+            binding.root.transitionToStart()
+            binding.toolList.scrollToPosition(0)
+        }
         return binding.root
     }
 

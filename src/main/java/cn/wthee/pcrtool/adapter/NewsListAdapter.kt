@@ -44,7 +44,7 @@ class NewsAdapter(
             if (selectItems.find { it.id == data.id } != null) {
                 view.background = ResourcesUtil.getDrawable(R.drawable.bg_card_dark)
             } else {
-                view.background = ResourcesUtil.getDrawable(R.drawable.bg_card)
+                view.background = ResourcesUtil.getDrawable(R.drawable.bg_card_press)
             }
             holder.bind(data)
         }

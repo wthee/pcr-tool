@@ -133,7 +133,7 @@ class PvpService : Service() {
             //返回
             back.setOnClickListener {
                 if (this@PvpService::job.isLateinit) {
-                    if (!job.isCancelled) {
+                    if (!job.isCompleted) {
                         job.cancel()
                     }
                 }

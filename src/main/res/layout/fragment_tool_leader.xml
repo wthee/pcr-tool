@@ -5,36 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/bg_main"
     app:layoutDescription="@xml/fragment_tool_leader_scene">
 
     <include
-        android:id="@+id/tool_leader"
+        android:id="@+id/tool_head"
         layout="@layout/view_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/leader_desc"
+        android:layout_height="@dimen/toolbar_height"
+        app:layout_constraintBottom_toTopOf="@+id/tip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/leader_desc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:id="@+id/tip"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="start"
         android:paddingStart="@dimen/xm_padding"
-        android:paddingEnd="@dimen/xm_padding"
         android:paddingTop="@dimen/s_padding"
+        android:paddingEnd="@dimen/xm_padding"
         android:paddingBottom="@dimen/s_padding"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/no_liked_data"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tool_leader"
-        tools:text="@string/test"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@id/tool_head" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,7 +48,7 @@
         app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leader_desc">
+        app:layout_constraintTop_toBottomOf="@+id/tip">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/source"
@@ -124,7 +125,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/leader_list"
+        android:id="@+id/tool_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorBg"
@@ -140,18 +141,17 @@
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/loading_news"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/loading_news"
-        app:layout_constraintTop_toTopOf="@id/tool_leader" />
+        app:layout_constraintTop_toTopOf="@id/tool_list" />
+
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/xl_margin"
-        android:layout_marginBottom="@dimen/efab_margin"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/back_top"
         android:text="@string/back_top"
@@ -160,8 +160,6 @@
         app:borderWidth="0dp"
         app:icon="@drawable/ic_top"
         app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:iconTint="@color/colorPrimary" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

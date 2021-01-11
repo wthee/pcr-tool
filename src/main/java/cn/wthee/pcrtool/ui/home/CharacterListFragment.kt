@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -36,6 +37,7 @@ class CharacterListFragment : Fragment() {
         lateinit var guilds: ArrayList<String>
         var r6Ids = listOf<Int>()
         var isPostponeEnterTransition = false
+        lateinit var motionLayout: MotionLayout
         lateinit var characterList: RecyclerView
 
     }
@@ -80,8 +82,8 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
-        characterList = binding.characterList
-
+        motionLayout = binding.root
+        characterList = binding.pagerList
         //toolbar
         ToolbarUtil(binding.toolBar).setMainToolbar(
             R.mipmap.ic_logo,
@@ -102,7 +104,7 @@ class CharacterListFragment : Fragment() {
             }
             r6Ids = viewModel.getR6Ids()
         }
-        binding.characterList.adapter = listAdapter
+        binding.pagerList.adapter = listAdapter
     }
 
     private fun setListener() {

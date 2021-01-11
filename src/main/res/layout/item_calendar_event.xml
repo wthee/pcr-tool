@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/s_margin"
-    android:layout_marginEnd="@dimen/s_margin"
+    android:layout_marginStart="@dimen/m_margin"
+    android:layout_marginEnd="@dimen/m_margin"
     android:padding="@dimen/xs_padding">
 
     <com.google.android.material.textview.MaterialTextView

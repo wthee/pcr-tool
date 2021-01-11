@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
@@ -22,6 +23,9 @@ import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 /**
@@ -30,6 +34,7 @@ import java.io.Serializable
 class PvpFragment : Fragment() {
 
     private lateinit var binding: FragmentToolPvpBinding
+    private lateinit var job: Job
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +50,27 @@ class PvpFragment : Fragment() {
         )
         //监听
         setListener()
-        //显示选择角色布局
-        childFragmentManager.beginTransaction()
-            .replace(R.id.layout_select, PvpSelectFragment())
-            .commit()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //过渡动画结束后，显示选择角色布局
+        job = lifecycleScope.launch {
+            childFragmentManager.beginTransaction()
+                .replace(R.id.layout_select, PvpSelectFragment())
+                .commit()
+            delay(500L)
+            binding.layoutSelect.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //返回时，取消加载布局
+        if (!job.isCompleted) {
+            job.cancel()
+        }
     }
 
     private fun setListener() {

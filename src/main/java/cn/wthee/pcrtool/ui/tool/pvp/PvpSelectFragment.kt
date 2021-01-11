@@ -27,7 +27,6 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
         var character2 = listOf<PvpCharacterData>()
         var character3 = listOf<PvpCharacterData>()
         lateinit var selectedAdapter: PvpCharacterAdapter
-
     }
 
     private val viewModel by activityViewModels<CharacterViewModel> {

@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
@@ -52,17 +51,14 @@ class PvpLikedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolPvpLikedBinding.inflate(inflater, container, false)
-        if (binding.root.currentState == R.id.liked_start) {
-            binding.root.transitionToEnd()
-        }
         init()
         setListener()
         lifecycleScope.launch {
             setSwipeDelete(AppPvpDatabase.getInstance().getPvpDao())
         }
-        ToolbarUtil(binding.toolPvpLike).setMainToolbar(
+        ToolbarUtil(binding.toolHead).setMainToolbar(
             R.drawable.ic_loved,
-            "收藏信息"
+            getString(R.string.tool_pvp_liked)
         )
         return binding.root
     }
@@ -81,7 +77,7 @@ class PvpLikedFragment : Fragment() {
         FabHelper.addBackFab(2)
         //初始化适配器
         likedAdapter = PvpLikedAdapter(false)
-        binding.listLiked.adapter = likedAdapter
+        binding.toolList.adapter = likedAdapter
         lifecycleScope.launch {
             allData = dao.getAll(region)
             likedAdapter.submitList(allData) {
@@ -101,10 +97,11 @@ class PvpLikedFragment : Fragment() {
                 null, extras
             )
         }
-
-        //滚动监听
-        binding.listLiked.setScrollToTopListener(binding.fabTop)
-
+        //回到顶部
+        binding.fabTop.setOnClickListener {
+            binding.root.transitionToStart()
+            binding.toolList.scrollToPosition(0)
+        }
     }
 
     private suspend fun setSwipeDelete(dao: PvpDao) {
@@ -164,11 +161,11 @@ class PvpLikedFragment : Fragment() {
                         .show()
                 }
             }
-        }).attachToRecyclerView(binding.listLiked)
+        }).attachToRecyclerView(binding.toolList)
     }
 
     private fun updateTip() {
-        binding.likeTip.text =
+        binding.tip.text =
             if (allData.isNotEmpty())
                 getString(R.string.liked_count, allData.size)
             else

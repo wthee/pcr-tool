@@ -41,6 +41,7 @@
     <dimen name="page_padding">66dp</dimen>
 
     <dimen name="toolbar_height">38dp</dimen>
+    <dimen name="toolbar_height_1">47dp</dimen>
     <dimen name="tab_height_1">36dp</dimen>
     <dimen name="tab_height_2">22dp</dimen>
 

@@ -5,15 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorPrimary"
     app:layoutDescription="@xml/fragment_main_pager_scene">
+
+    <View
+        android:id="@+id/layout_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <include
         android:id="@+id/tool_bar"
         layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/character_list"
+        android:id="@+id/pager_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/bg_back_drop"

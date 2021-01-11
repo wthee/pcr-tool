@@ -7,17 +7,18 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
-    android:layout_marginBottom="@dimen/m_margin"
-    android:orientation="vertical">
+    android:background="@drawable/bg_card_press"
+    android:clickable="true"
+    android:focusable="true">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/type_img"
-        android:layout_width="@dimen/m_icon"
+        android:layout_width="@dimen/menu_icon"
         android:layout_height="@dimen/menu_icon"
+        android:src="@color/red"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/angleStyle"
-        android:src="@color/red" />
+        app:shapeAppearanceOverlay="@style/angleStyle" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/atk_ids"
@@ -64,27 +65,27 @@
         android:id="@+id/atk"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:clickable="false"
         android:src="@drawable/ic_pvp"
         android:tint="@color/colorPrimary"
-        app:layout_constraintWidth_percent="0.075"
-        android:clickable="false"
         app:layout_constraintBottom_toBottomOf="@id/center_gl"
         app:layout_constraintEnd_toStartOf="@id/liked_characters"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.075" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/def"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:clickable="false"
         android:src="@drawable/ic_def"
         android:tint="@color/red"
-        android:clickable="false"
-        app:layout_constraintWidth_percent="0.075"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/liked_characters"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/center_gl" />
+        app:layout_constraintTop_toTopOf="@id/center_gl"
+        app:layout_constraintWidth_percent="0.075" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/center_gl"

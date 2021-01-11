@@ -22,7 +22,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/error" />
+            tools:src="@drawable/unknown_gray" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/position_type"

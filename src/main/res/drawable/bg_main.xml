@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:bottom="@dimen/toolbar_height_1">
+        <shape android:shape="rectangle">
+            <size
+                android:height="@dimen/toolbar_height_1"
+                android:width="100dp" />
+            <solid android:color="@color/colorPrimary" />
+        </shape>
+    </item>
+    <item android:top="@dimen/toolbar_height_1">
+        <shape android:shape="rectangle">
+            <size
+                android:height="@dimen/toolbar_height_1"
+                android:width="100dp" />
+            <solid android:color="@color/colorBg" />
+        </shape>
+    </item>
+
+
+</layer-list>

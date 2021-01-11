@@ -14,7 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 object DialogUtil {
 
     //创建 dialog
-    fun create(context: Context, layout: View, gravity: Int): AlertDialog {
+    fun create(context: Context, layout: View, gravity: Int = Gravity.BOTTOM): AlertDialog {
         val dialog = MaterialAlertDialogBuilder(context)
             .setView(layout)
             .create()

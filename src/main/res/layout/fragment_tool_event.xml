@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorPrimary"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:layoutDescription="@xml/fragment_tool_common_scene">
+
+    <View
+        android:id="@+id/layout_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <include
-        android:id="@+id/tool_event"
+        android:id="@+id/tool_head"
         layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/event_list"
+        android:id="@+id/tool_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_back_drop"
         android:orientation="vertical"
         android:scrollbars="vertical"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toBottomOf="@id/tool_event"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:padding="@dimen/xs_padding"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_event_data" />
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_head"
+        tools:listitem="@layout/item_event" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_top"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
-        android:layout_gravity="end"
-        android:layout_marginTop="@dimen/efab_margin"
-        android:layout_marginEnd="@dimen/xl_margin"
-        android:layout_marginBottom="@dimen/efab_margin"
         android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/back_top"
         android:text="@string/back_top"
@@ -43,9 +42,9 @@
         android:textSize="@dimen/fab_text_size"
         app:borderWidth="0dp"
         app:icon="@drawable/ic_top"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
+        app:iconTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

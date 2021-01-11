@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
-    android:layout_marginBottom="@dimen/m_margin"
-    android:padding="@dimen/xs_padding">
+    android:background="@drawable/bg_card"
+    android:orientation="vertical"
+    android:padding="@dimen/s_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gacha_date"
@@ -18,18 +19,15 @@
         android:paddingEnd="@dimen/s_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/app_name" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/gacha_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/xs_margin"
+        android:padding="@dimen/m_padding"
+        android:textColor="@color/text"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        app:layout_constraintStart_toStartOf="@id/gacha_date"
-        app:layout_constraintTop_toBottomOf="@+id/gacha_date"
         tools:text="@string/app_name" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -39,9 +37,6 @@
         android:layout_marginTop="@dimen/xs_margin"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gacha_name"
         app:spanCount="2"
         tools:itemCount="5"
         tools:listitem="@layout/item_common" />
@@ -53,8 +48,7 @@
         android:layout_marginStart="@dimen/s_margin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/gacha_icons"
         tools:text="@string/app_name" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
 

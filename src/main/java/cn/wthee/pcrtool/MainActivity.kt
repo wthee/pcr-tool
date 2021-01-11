@@ -229,11 +229,17 @@ class MainActivity : AppCompatActivity() {
         }
         //长按回到顶部
         fabMain.setOnLongClickListener {
+            //角色页面-回到顶部
             try {
-                CharacterListFragment.characterList.smoothScrollToPosition(0)
-                EquipmentListFragment.list.smoothScrollToPosition(0)
+                CharacterListFragment.motionLayout.transitionToStart()
+                CharacterListFragment.characterList.scrollToPosition(0)
             } catch (e: Exception) {
-
+            }
+            //装备页面-回到顶部
+            try {
+                EquipmentListFragment.motionLayout.transitionToStart()
+                EquipmentListFragment.list.scrollToPosition(0)
+            } catch (e: Exception) {
             }
             return@setOnLongClickListener true
         }

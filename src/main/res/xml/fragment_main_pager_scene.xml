@@ -2,7 +2,15 @@
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ConstraintSet android:id="@+id/character_start">
+    <ConstraintSet android:id="@+id/pager_start">
+        <Constraint
+            android:id="@+id/layout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <CustomAttribute
+                app:attributeName="BackgroundColor"
+                app:customColorValue="@color/colorPrimary" />
+        </Constraint>
         <Constraint
             android:id="@+id/tool_bar"
             android:layout_width="match_parent"
@@ -12,7 +20,15 @@
             app:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/character_end">
+    <ConstraintSet android:id="@+id/pager_end">
+        <Constraint
+            android:id="@+id/layout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <CustomAttribute
+                app:attributeName="BackgroundColor"
+                app:customColorValue="@color/colorBg" />
+        </Constraint>
         <Constraint
             android:id="@id/tool_bar"
             android:layout_width="match_parent"
@@ -23,8 +39,8 @@
     </ConstraintSet>
 
     <Transition
-        app:constraintSetEnd="@id/character_end"
-        app:constraintSetStart="@+id/character_start">
+        app:constraintSetEnd="@id/pager_end"
+        app:constraintSetStart="@id/pager_start">
         <KeyFrameSet>
             <KeyAttribute
                 app:framePosition="0"
@@ -37,7 +53,7 @@
         </KeyFrameSet>
         <OnSwipe
             app:dragDirection="dragUp"
-            app:touchAnchorId="@id/character_list"
+            app:touchAnchorId="@id/pager_list"
             app:touchAnchorSide="top" />
     </Transition>
 </MotionScene>

@@ -82,7 +82,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (!job.isCancelled) {
+        if (!job.isCompleted) {
             job.cancel()
         }
     }

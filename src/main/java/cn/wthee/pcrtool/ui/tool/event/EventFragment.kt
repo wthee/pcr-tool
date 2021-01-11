@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.adapter.EventHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
 import cn.wthee.pcrtool.utils.ToolbarUtil
 
 /**
@@ -28,7 +27,7 @@ class EventFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolEventBinding.inflate(inflater, container, false)
         val adapter = EventHistoryAdapter()
-        binding.eventList.adapter = adapter
+        binding.toolList.adapter = adapter
 
         viewModel = InjectorUtil.provideEventViewModelFactory().create(EventViewModel::class.java)
 
@@ -38,13 +37,15 @@ class EventFragment : Fragment() {
         })
 
         //设置头部
-        ToolbarUtil(binding.toolEvent).setMainToolbar(
+        ToolbarUtil(binding.toolHead).setMainToolbar(
             R.drawable.ic_event,
             getString(R.string.tool_event)
         )
-
-        //滚动监听
-        binding.eventList.setScrollToTopListener(binding.fabTop)
+        //回到顶部
+        binding.fabTop.setOnClickListener {
+            binding.root.transitionToStart()
+            binding.toolList.scrollToPosition(0)
+        }
         return binding.root
     }
 

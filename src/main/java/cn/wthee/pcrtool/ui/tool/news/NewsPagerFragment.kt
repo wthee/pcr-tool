@@ -21,6 +21,7 @@ class NewsPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentToolNewsBinding
     private lateinit var adapter: NewsListPagerAdapter
+    private lateinit var viewPager: ViewPager2
 
     companion object {
         var currentPage = 0
@@ -33,25 +34,26 @@ class NewsPagerFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolNewsBinding.inflate(inflater, container, false)
         //设置头部
-        ToolbarUtil(binding.toolNews).setMainToolbar(
+        ToolbarUtil(binding.toolHead).setMainToolbar(
             R.drawable.ic_news,
             getString(R.string.tool_news)
         )
         //viewpager
-        if (binding.viewPager.adapter == null) {
+        viewPager = binding.toolList
+        if (viewPager.adapter == null) {
             adapter = NewsListPagerAdapter(requireActivity())
-            binding.viewPager.adapter = adapter
-            binding.viewPager.offscreenPageLimit = 3
+            viewPager.adapter = adapter
+            viewPager.offscreenPageLimit = 3
         }
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 currentPage = position
             }
         })
 
-        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+        TabLayoutMediator(binding.tabs, viewPager) { tab, position ->
             when (position) {
                 0 -> {
                     tab.text = getString(R.string.db_cn)
@@ -91,6 +93,6 @@ class NewsPagerFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.viewPager.adapter = null
+        viewPager.adapter = null
     }
 }

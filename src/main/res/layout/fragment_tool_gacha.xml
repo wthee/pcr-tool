@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_gradient"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:layoutDescription="@xml/fragment_tool_common_scene">
+
+    <View
+        android:id="@+id/layout_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <include
-        android:id="@+id/tool_gacha"
+        android:id="@+id/tool_head"
         layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/gacha_list"
+        android:id="@+id/tool_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_back_drop"
         android:orientation="vertical"
-        android:padding="@dimen/xs_padding"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/tool_gacha"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_head"
         tools:listitem="@layout/item_gacha" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -46,4 +51,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <include
         android:id="@+id/tool_calendar"
         layout="@layout/view_toolbar" />
-
 
     <FrameLayout
         android:id="@+id/layout_calendar"
@@ -45,6 +45,19 @@
         app:layout_constraintTop_toBottomOf="@id/layout_calendar"
         tools:text="@string/app_name" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/events"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="false"
+        android:background="@color/colorBg"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/current_date"
+        tools:listitem="@layout/item_calendar_event" />
+
     <include
         android:id="@+id/loading"
         layout="@layout/layout_loading"
@@ -54,24 +67,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/current_date" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/events"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBg"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/current_date"
-        tools:listitem="@layout/item_calendar_event" />
-
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_today"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="end"
-        android:layout_marginTop="@dimen/efab_margin"
+        android:layout_marginTop="@dimen/s_margin"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
         android:backgroundTint="@color/colorWhite"
