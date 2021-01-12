@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getDefault
 import cn.wthee.pcrtool.databinding.LayoutPvpSelectBinding
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
-import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
@@ -40,7 +39,6 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = LayoutPvpSelectBinding.inflate(layoutInflater, container, false)
-        if (customize != -1) binding.pcrfan.visibility = View.GONE
         if (customize == 0) {
             selects = PvpLikedCusFragment.atkSelected
         }
@@ -55,13 +53,6 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
             character2 = viewModel.getCharacterByPosition(2)
             character3 = viewModel.getCharacterByPosition(3)
             setPager()
-        }
-
-        binding.apply {
-            pcrfan.setOnClickListener {
-                //从其他浏览器打开
-                BrowserUtil.open(requireContext(), getString(R.string.url_pcrdfans_com))
-            }
         }
         return binding.root
     }

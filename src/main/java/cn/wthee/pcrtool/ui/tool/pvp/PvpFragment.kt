@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character1
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character2
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character3
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
@@ -75,6 +76,12 @@ class PvpFragment : Fragment() {
 
     private fun setListener() {
         binding.apply {
+            //来源
+            pcrfan.setOnClickListener {
+                //从其他浏览器打开
+                BrowserUtil.open(requireContext(), getString(R.string.url_pcrdfans_com))
+            }
+            //搜索
             pvpSearch.setOnClickListener {
                 if (selects.contains(PvpCharacterData(0, 999))) {
                     ToastUtil.short("请选择 5 名角色~")

@@ -10,13 +10,26 @@
         android:id="@+id/tool_pvp"
         layout="@layout/view_toolbar" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/pcrfan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/xs_padding"
+        android:paddingEnd="@dimen/xs_padding"
+        android:text="@string/pcrdfans_com"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@id/tool_pvp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tool_pvp" />
+
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/layout_select"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:visibility="gone"
-        android:background="@drawable/bg_back_drop"
         app:layout_constraintBottom_toTopOf="@id/layout_fab"
         app:layout_constraintTop_toBottomOf="@id/tool_pvp" />
 
@@ -24,7 +37,6 @@
         android:id="@+id/layout_fab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_toolbar_height"
-        android:background="@color/colorBg"
         android:gravity="end|center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"

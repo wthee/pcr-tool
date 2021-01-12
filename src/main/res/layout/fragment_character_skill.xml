@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_card"
+    android:background="@drawable/bg_card_no_shadow"
+    android:elevation="@dimen/card_elevation"
     android:minHeight="@dimen/card_height">
 
     <include
