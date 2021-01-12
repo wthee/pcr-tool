@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.equip
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.bean.FilterEquipment
@@ -100,7 +100,8 @@ class EquipmentListFragment : Fragment() {
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
             viewModel.equipmentCounts.observe(viewLifecycleOwner, {
-                MainActivity.sp.edit {
+                val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
+                sp.edit {
                     putInt(Constants.SP_COUNT_EQUIP, it)
                 }
                 binding.equipCount.text = it.toString()

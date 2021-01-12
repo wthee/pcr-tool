@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -44,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         var pageLevel = 0
         var mFloatingWindowHeight = 0
         lateinit var handler: Handler
-        lateinit var sp: SharedPreferences
 
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
@@ -77,13 +74,6 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //应用版本校验
         AppUpdateHelper.init(this, layoutInflater)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //绑定活动
-        ActivityUtil.instance.currentActivity = this
-        sp = getSharedPreferences("main", Context.MODE_PRIVATE)
     }
 
     // 全屏显示
@@ -153,8 +143,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         ActivityUtil.instance.currentActivity = this
-        sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText

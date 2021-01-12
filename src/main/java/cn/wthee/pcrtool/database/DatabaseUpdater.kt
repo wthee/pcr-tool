@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.content.Context
 import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
@@ -14,6 +15,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
+import cn.wthee.pcrtool.utils.ActivityUtil
 import cn.wthee.pcrtool.utils.ApiHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
@@ -26,6 +28,9 @@ import java.io.File
 
 
 object DatabaseUpdater {
+
+    val sp =
+        ActivityUtil.instance.currentActivity!!.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
@@ -127,12 +132,12 @@ object DatabaseUpdater {
         }
     }
 
-    private fun getLocalDatabaseVersion() = MainActivity.sp.getString(
+    private fun getLocalDatabaseVersion() = sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
         "0"
     ) ?: "0"
 
-    private fun getLocalDatabaseHash() = MainActivity.sp.getString(
+    private fun getLocalDatabaseHash() = sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_HASH else Constants.SP_DATABASE_HASH_JP,
         "0"
     ) ?: "0"
@@ -141,7 +146,11 @@ object DatabaseUpdater {
         if (getDatabaseType() == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP
 
     fun updateLocalDataBaseVersion(ver: DatabaseVersion) {
-        MainActivity.sp.edit {
+        val sp = ActivityUtil.instance.currentActivity!!.getSharedPreferences(
+            "main",
+            Context.MODE_PRIVATE
+        )
+        sp.edit {
             val type = getDatabaseType()
             putString(
                 if (type == 1)
