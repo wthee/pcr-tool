@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
@@ -16,7 +15,6 @@ import cn.wthee.pcrtool.databinding.LayoutPvpSelectBinding
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.launch
 
 class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
 
@@ -48,12 +46,19 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
         //已选择角色
         loadDefault()
         //角色页面 绑定tab viewpager
-        lifecycleScope.launch {
-            character1 = viewModel.getCharacterByPosition(1)
-            character2 = viewModel.getCharacterByPosition(2)
-            character3 = viewModel.getCharacterByPosition(3)
+        viewModel.getAllCharacter()
+        viewModel.allPvpCharacterData.observe(viewLifecycleOwner, { data ->
+            character1 = data.filter {
+                it.position in 0..299
+            }
+            character2 = data.filter {
+                it.position in 300..599
+            }
+            character3 = data.filter {
+                it.position in 600..9999
+            }
             setPager()
-        }
+        })
         return binding.root
     }
 

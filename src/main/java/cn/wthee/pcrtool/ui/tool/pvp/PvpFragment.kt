@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarUtil
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
@@ -61,8 +60,6 @@ class PvpFragment : Fragment() {
             childFragmentManager.beginTransaction()
                 .replace(R.id.layout_select, PvpSelectFragment())
                 .commit()
-            delay(500L)
-            binding.layoutSelect.visibility = View.VISIBLE
         }
     }
 

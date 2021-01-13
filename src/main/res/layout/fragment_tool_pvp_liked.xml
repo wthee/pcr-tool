@@ -25,6 +25,7 @@
         android:paddingTop="@dimen/s_padding"
         android:paddingEnd="@dimen/xm_padding"
         android:paddingBottom="@dimen/s_padding"
+        android:textStyle="bold"
         android:text="@string/no_liked_data"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"

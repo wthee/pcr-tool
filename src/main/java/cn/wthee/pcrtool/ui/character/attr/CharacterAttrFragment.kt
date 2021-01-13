@@ -76,6 +76,11 @@ class CharacterAttrFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterAttrInfoBinding.inflate(inflater, container, false)
+        //延迟绘制页面
+        binding.root.visibility = View.GONE
+        binding.root.postDelayed({
+            binding.root.visibility = View.VISIBLE
+        }, 500L)
         //点击事件
         setListener()
         //数据监听

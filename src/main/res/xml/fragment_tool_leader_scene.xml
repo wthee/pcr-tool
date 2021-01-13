@@ -11,6 +11,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <Constraint
+            android:id="@+id/source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/m_margin"
+            app:layout_constraintBottom_toBottomOf="@id/tool_head"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tool_head" />
+        <Constraint
             android:id="@id/tip"
             android:layout_width="match_parent"
             android:layout_height="0.01dp"
@@ -33,6 +41,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/source"
+            android:layout_width="wrap_content"
+            android:layout_height="0.01dp"
+            android:layout_marginEnd="@dimen/m_margin"
+            app:layout_constraintBottom_toBottomOf="@id/tool_head"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tool_head" />
         <Constraint
             android:id="@+id/tip"
             android:layout_width="match_parent"
@@ -60,6 +76,14 @@
                 android:alpha="0.0"
                 app:framePosition="100"
                 app:motionTarget="@id/tool_head" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="0"
+                app:motionTarget="@id/source" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="100"
+                app:motionTarget="@id/source" />
             <KeyAttribute
                 android:alpha="0.0"
                 app:framePosition="0"

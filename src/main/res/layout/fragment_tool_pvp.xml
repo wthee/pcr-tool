@@ -21,7 +21,7 @@
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@id/tool_pvp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="@dimen/m_margin"
         app:layout_constraintTop_toTopOf="@id/tool_pvp" />
 
 

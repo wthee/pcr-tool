@@ -19,6 +19,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/xs_padding"
+        android:paddingEnd="@dimen/xs_padding"
+        android:text="@string/leader_source"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@id/tool_head"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tool_head" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tip"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
@@ -32,7 +45,8 @@
         android:paddingBottom="@dimen/s_padding"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:text="@string/no_liked_data"
+        android:textStyle="bold"
+        android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"
         app:layout_constraintTop_toBottomOf="@id/tool_head" />
@@ -50,40 +64,27 @@
         app:layout_constraintTop_toBottomOf="@+id/tip">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/source"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_text_view"
-            android:paddingStart="@dimen/xs_padding"
-            android:paddingEnd="@dimen/xs_padding"
-            android:text="@string/leader_source"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:textColor="@color/colorWhite"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/character"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/xs_margin"
             android:gravity="center"
             android:text="@string/character"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constraintEnd_toStartOf="@id/all"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/all"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.2" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/all"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/xs_margin"
             android:gravity="center"
             android:text="@string/all"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             app:layout_constraintEnd_toStartOf="@id/pvp"
-            app:layout_constraintTop_toBottomOf="@id/source"
+            app:layout_constraintTop_toTopOf="@id/character"
             app:layout_constraintWidth_percent="0.2" />
 
         <com.google.android.material.textview.MaterialTextView
