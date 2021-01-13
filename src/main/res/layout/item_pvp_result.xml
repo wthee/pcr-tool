@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/team_atk" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <cn.wthee.pcrtool.utils.NoTouchRecyclerView
         android:id="@+id/atk_characters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

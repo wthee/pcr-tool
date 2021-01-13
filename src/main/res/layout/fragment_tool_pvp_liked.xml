@@ -16,32 +16,17 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tip"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:gravity="start"
-        android:paddingStart="@dimen/xm_padding"
-        android:paddingTop="@dimen/s_padding"
-        android:paddingEnd="@dimen/xm_padding"
-        android:paddingBottom="@dimen/s_padding"
-        android:textStyle="bold"
-        android:text="@string/no_liked_data"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@id/tool_head" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tool_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="@dimen/m_padding"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/fab_top"
-        app:layout_constraintTop_toBottomOf="@id/tip"
+        app:layout_constraintTop_toBottomOf="@id/tool_head"
         tools:itemCount="5"
         tools:listitem="@layout/item_pvp_liked" />
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -33,8 +34,8 @@ class PvpLikedFragment : Fragment() {
     private lateinit var binding: FragmentToolPvpLikedBinding
     private var region = DatabaseUpdater.getRegion()
     private lateinit var likedAdapter: PvpLikedAdapter
-    private var allData = listOf<PvpLikedData>()
     private lateinit var dao: PvpDao
+    private val viewModel by activityViewModels<PvpLikedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,9 +66,7 @@ class PvpLikedFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch {
-            allData = dao.getAll(region)
-        }
+        viewModel.getLiked(region)
     }
 
     private fun init() {
@@ -78,12 +77,12 @@ class PvpLikedFragment : Fragment() {
         //初始化适配器
         likedAdapter = PvpLikedAdapter(false)
         binding.toolList.adapter = likedAdapter
-        lifecycleScope.launch {
-            allData = dao.getAll(region)
-            likedAdapter.submitList(allData) {
-                updateTip()
+        viewModel.getLiked(region)
+        viewModel.allData.observe(viewLifecycleOwner, {
+            likedAdapter.submitList(it) {
+                updateTip(it)
             }
-        }
+        })
     }
 
     private fun setListener() {
@@ -105,11 +104,6 @@ class PvpLikedFragment : Fragment() {
     }
 
     private suspend fun setSwipeDelete(dao: PvpDao) {
-        val data = dao.getAll(region)
-        likedAdapter.submitList(data) {
-            updateTip()
-        }
-
         //列表设置左右滑动
         ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(
@@ -142,20 +136,14 @@ class PvpLikedFragment : Fragment() {
                     //删除记录
                     val deleteData = dao.getLiked(atkIds, defIds, region, typeInt)!!
                     dao.delete(deleteData)
-                    allData = dao.getAll(region)
-                    likedAdapter.submitList(allData) {
-                        updateTip()
-                    }
+                    viewModel.getLiked(region)
                     //显示撤回
                     Snackbar.make(binding.root, "已取消收藏~", Snackbar.LENGTH_LONG)
                         .setAction("撤回") {
                             //添加记录
                             lifecycleScope.launch {
                                 dao.insert(deleteData)
-                                allData = dao.getAll(region)
-                                likedAdapter.submitList(allData) {
-                                    updateTip()
-                                }
+                                viewModel.getLiked(region)
                             }
                         }
                         .show()
@@ -164,11 +152,11 @@ class PvpLikedFragment : Fragment() {
         }).attachToRecyclerView(binding.toolList)
     }
 
-    private fun updateTip() {
-        binding.tip.text =
-            if (allData.isNotEmpty())
-                getString(R.string.liked_count, allData.size)
+    private fun updateTip(list: List<PvpLikedData>) {
+        binding.toolHead.title.text =
+            if (list.isNotEmpty())
+                getString(R.string.liked_count, list.size)
             else
-                getString(R.string.no_liked_data)
+                getString(R.string.tool_pvp_liked)
     }
 }

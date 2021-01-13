@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.network.model.PvpData
 import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.ItemPvpResultBinding
+import cn.wthee.pcrtool.ui.tool.pvp.PvpLikedViewModel
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.dp
 import kotlinx.coroutines.MainScope
@@ -24,7 +25,8 @@ import kotlin.math.round
 
 
 class PvpCharacterResultAdapter(
-    private val isFloat: Boolean
+    private val isFloat: Boolean,
+    private val viewModel: PvpLikedViewModel? = null
 ) :
     ListAdapter<PvpData, PvpCharacterResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
 
@@ -76,7 +78,11 @@ class PvpCharacterResultAdapter(
                             ColorStateList.valueOf(ResourcesUtil.getColor(R.color.textGray))
                     }
                 }
-                teamNum.text = "队伍 ${layoutPosition + 1}"
+                teamNum.text = "队伍 " + if (layoutPosition + 1 < 10) {
+                    "0"
+                } else {
+                    ""
+                } + (layoutPosition + 1)
                 //进攻角色列表
                 val adapter = PvpCharacterResultItemAdapter()
                 atkCharacters.adapter = adapter
@@ -89,7 +95,7 @@ class PvpCharacterResultAdapter(
                 }
                 rate.text = "$rateNum%"
                 //收藏监听
-                star.setOnClickListener {
+                root.setOnClickListener {
                     MainScope().launch {
                         if (dao.getLiked(data.atk, data.def, region, 0) != null) {
                             //已收藏，取消收藏
@@ -112,6 +118,11 @@ class PvpCharacterResultAdapter(
                             )
                             star.imageTintList =
                                 ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorPrimary))
+                        }
+                        //收藏页面刷新
+                        try {
+                            viewModel?.getLiked(region)
+                        } catch (e: Exception) {
 
                         }
                     }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
@@ -25,6 +26,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var binding: FragmentToolPvpResultBinding
     private lateinit var job: Job
     private var idList = JsonArray()
+    private val viewModel by activityViewModels<PvpLikedViewModel>()
 
     companion object {
         fun getInstance(ids: String) =
@@ -61,7 +63,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
                     if (result.data!!.isEmpty()) {
                         binding.pvpNoData.visibility = View.VISIBLE
                     }
-                    val adapter = PvpCharacterResultAdapter(false)
+                    val adapter = PvpCharacterResultAdapter(false, viewModel)
                     binding.pvpResultList.adapter = adapter
                     //展示查询结果
                     adapter.submitList(result.data!!.sortedByDescending {
