@@ -2,7 +2,7 @@ package cn.wthee.pcrtool.data.bean
 
 import android.content.Context
 import androidx.core.content.edit
-import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -17,7 +17,7 @@ class FilterCharacter(
 ) : Serializable {
     var starIds = arrayListOf<Int>()
         get() {
-            val sp = ActivityUtil.instance.currentActivity!!.getSharedPreferences(
+            val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
                 "main",
                 Context.MODE_PRIVATE
             )
@@ -28,7 +28,7 @@ class FilterCharacter(
             return Gson().fromJson(star, object : TypeToken<List<Int>>() {}.type)
         }
         set(value) {
-            val sp = ActivityUtil.instance.currentActivity!!.getSharedPreferences(
+            val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
                 "main",
                 Context.MODE_PRIVATE
             )

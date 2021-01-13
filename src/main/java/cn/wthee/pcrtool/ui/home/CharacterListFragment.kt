@@ -85,7 +85,7 @@ class CharacterListFragment : Fragment() {
         motionLayout = binding.root
         characterList = binding.pagerList
         //toolbar
-        ToolbarUtil(binding.toolBar).setMainToolbar(
+        ToolbarHelper(binding.toolBar).setMainToolbar(
             R.mipmap.ic_logo,
             getString(R.string.app_name)
         )

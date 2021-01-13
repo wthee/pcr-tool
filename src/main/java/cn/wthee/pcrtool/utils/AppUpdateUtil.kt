@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 /**
  * 应用更新
  */
-object AppUpdateHelper {
+object AppUpdateUtil {
 
     fun init(context: Context, inflater: LayoutInflater, showToast: Boolean = false) {
         try {
@@ -25,7 +25,7 @@ object AppUpdateHelper {
                 info.versionCode.toLong()
             }
 
-            val service = ApiHelper.create(
+            val service = ApiUtil.create(
                 MyAPIService::class.java,
                 Constants.API_URL
             )

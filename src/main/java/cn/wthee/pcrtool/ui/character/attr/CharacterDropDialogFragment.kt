@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import coil.load
 import kotlinx.coroutines.launch
 
@@ -53,7 +53,7 @@ class CharacterDropDialogFragment : CommonBottomSheetDialogFragment() {
     ): View {
         binding = FragmentCharacterDropInfoBinding.inflate(inflater, container, false)
         //toolbar
-        ToolbarUtil(binding.toolbar).setCenterTitle("角色碎片掉落")
+        ToolbarHelper(binding.toolbar).setCenterTitle("角色碎片掉落")
         val picUrl = Constants.ITEM_URL + (uid / 100 + 30000) + Constants.WEBP
         binding.dropIcon.load(picUrl) {
             placeholder(R.drawable.unknown_gray)

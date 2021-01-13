@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.databinding.ItemPvpLikedBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpResultDialogFragment
-import cn.wthee.pcrtool.utils.ActivityUtil
+import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.dp
 
 
@@ -71,7 +71,7 @@ class PvpLikedAdapter(
                 layoutLiked.setOnClickListener {
                     if (!isFloat) {
                         PvpResultDialogFragment.getInstance(data.defs).show(
-                            ActivityUtil.instance.currentActivity!!.supportFragmentManager,
+                            ActivityHelper.instance.currentActivity!!.supportFragmentManager,
                             "pvp_result"
                         )
                     }

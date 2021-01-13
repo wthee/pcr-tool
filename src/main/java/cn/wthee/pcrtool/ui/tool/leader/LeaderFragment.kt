@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolLeaderBinding
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 角色排行
@@ -49,7 +49,7 @@ class LeaderFragment : Fragment() {
         })
 
         //设置头部
-        ToolbarUtil(binding.toolHead).setMainToolbar(
+        ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_leader,
             getString(R.string.tool_leader)
         )

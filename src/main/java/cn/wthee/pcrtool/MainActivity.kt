@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         //监听
         setListener()
         //应用版本校验
-        AppUpdateHelper.init(this, layoutInflater)
+        AppUpdateUtil.init(this, layoutInflater)
     }
 
     // 全屏显示
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        ActivityUtil.instance.currentActivity = this
+        ActivityHelper.instance.currentActivity = this
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText

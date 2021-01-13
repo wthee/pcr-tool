@@ -6,7 +6,7 @@ import androidx.palette.graphics.Palette
 /**
  * 取色器
  */
-object PaletteHelper {
+object PaletteUtil {
 
     fun createPaletteSync(bitmap: Bitmap): Palette = Palette.from(bitmap).generate()
 }

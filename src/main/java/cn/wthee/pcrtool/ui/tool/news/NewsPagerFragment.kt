@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolNewsBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**
@@ -34,7 +34,7 @@ class NewsPagerFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolNewsBinding.inflate(inflater, container, false)
         //设置头部
-        ToolbarUtil(binding.toolHead).setMainToolbar(
+        ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_news,
             getString(R.string.tool_news)
         )

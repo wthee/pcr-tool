@@ -15,8 +15,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
-import cn.wthee.pcrtool.utils.ActivityUtil
-import cn.wthee.pcrtool.utils.ApiHelper
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
@@ -30,7 +30,7 @@ import java.io.File
 object DatabaseUpdater {
 
     val sp =
-        ActivityUtil.instance.currentActivity!!.getSharedPreferences("main", Context.MODE_PRIVATE)
+        ActivityHelper.instance.currentActivity!!.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
@@ -46,7 +46,7 @@ object DatabaseUpdater {
         //获取数据库最新版本
         MainScope().launch {
             try {//创建服务
-                val service = ApiHelper.create(
+                val service = ApiUtil.create(
                     MyAPIService::class.java,
                     API_URL
                 )
@@ -146,7 +146,7 @@ object DatabaseUpdater {
         if (getDatabaseType() == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP
 
     fun updateLocalDataBaseVersion(ver: DatabaseVersion) {
-        val sp = ActivityUtil.instance.currentActivity!!.getSharedPreferences(
+        val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
             "main",
             Context.MODE_PRIVATE
         )

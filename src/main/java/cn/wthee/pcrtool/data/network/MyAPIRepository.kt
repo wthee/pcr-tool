@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.utils.ApiHelper
+import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -15,7 +15,7 @@ import okhttp3.RequestBody
 object MyAPIRepository {
 
     //创建服务
-    private val service = ApiHelper.create(MyAPIService::class.java, Constants.API_URL)
+    private val service = ApiUtil.create(MyAPIService::class.java, Constants.API_URL)
 
     suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpData>> {
         val region = DatabaseUpdater.getRegion()

@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.adapter.EventHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 活动
@@ -37,7 +37,7 @@ class EventFragment : Fragment() {
         })
 
         //设置头部
-        ToolbarUtil(binding.toolHead).setMainToolbar(
+        ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_event,
             getString(R.string.tool_event)
         )

@@ -57,7 +57,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         appUpdate?.setOnPreferenceClickListener {
             //应用版本校验
             ToastUtil.short("应用版本检测中...")
-            AppUpdateHelper.init(requireContext(), layoutInflater, true)
+            AppUpdateUtil.init(requireContext(), layoutInflater, true)
             return@setOnPreferenceClickListener true
         }
         //设置监听

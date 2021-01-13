@@ -69,7 +69,7 @@ class EquipmentListFragment : Fragment() {
         motionLayout = binding.root
         list = binding.pagerList
         //设置头部
-        ToolbarUtil(binding.toolBar).setMainToolbar(
+        ToolbarHelper(binding.toolBar).setMainToolbar(
             R.drawable.ic_equip,
             getString(R.string.tool_equip)
         )

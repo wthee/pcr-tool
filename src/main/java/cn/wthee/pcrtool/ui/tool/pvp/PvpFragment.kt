@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.Serializable
@@ -44,7 +44,7 @@ class PvpFragment : Fragment() {
         binding = FragmentToolPvpBinding.inflate(inflater, container, false)
         binding.pvpLike.transitionName = "liked_add"
         //设置头部
-        ToolbarUtil(binding.toolPvp).setMainToolbar(
+        ToolbarHelper(binding.toolPvp).setMainToolbar(
             R.drawable.ic_pvp,
             getString(R.string.tool_pvp)
         )

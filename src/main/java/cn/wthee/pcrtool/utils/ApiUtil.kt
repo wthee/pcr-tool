@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Retrofit2 创建服务
  */
-object ApiHelper {
+object ApiUtil {
 
     fun downloadClientBuild(listener: DownloadListener): OkHttpClient {
         return OkHttpClient.Builder()

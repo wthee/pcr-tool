@@ -9,6 +9,8 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -16,14 +18,14 @@ import java.io.OutputStream
 /**
  * 图片保存到本地
  */
-class ImageDownloadUtil(
+class ImageDownloadHelper(
     private val activity: FragmentActivity
 ) {
 
     val context: Context = activity.applicationContext
 
     fun save(bitmap: Bitmap, name: String) {
-        activity.runOnUiThread {
+        activity.lifecycleScope.launch {
             saveBitmap(bitmap, name)
         }
     }

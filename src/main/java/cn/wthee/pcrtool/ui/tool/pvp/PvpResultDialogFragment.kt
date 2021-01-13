@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.gson.JsonArray
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -76,7 +76,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
             }
         }
         //toolbar
-        ToolbarUtil(binding.pvpResultToolbar).setCenterTitle("进攻方信息")
+        ToolbarHelper(binding.pvpResultToolbar).setCenterTitle("进攻方信息")
         return binding.root
     }
 

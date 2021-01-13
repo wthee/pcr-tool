@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.MaterialContainerTransform
@@ -56,7 +56,7 @@ class PvpLikedFragment : Fragment() {
         lifecycleScope.launch {
             setSwipeDelete(AppPvpDatabase.getInstance().getPvpDao())
         }
-        ToolbarUtil(binding.toolHead).setMainToolbar(
+        ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_loved,
             getString(R.string.tool_pvp_liked)
         )

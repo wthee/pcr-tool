@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.data.network.model.CalendarDay
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
 import java.util.*
@@ -45,7 +45,7 @@ class CalendarFragment : Fragment() {
         //监听
         setListener()
         //设置头部
-        ToolbarUtil(binding.toolCalendar).setMainToolbar(
+        ToolbarHelper(binding.toolCalendar).setMainToolbar(
             R.drawable.ic_calendar,
             getString(R.string.tool_calendar)
         )

@@ -19,6 +19,6 @@ object ShareIntentUtil {
 //            shareIntent.putExtra(Intent.EXTRA_STREAM, imgUri)
 //            shareIntent.type = "image/*"
 //            shareIntent = Intent.createChooser(shareIntent, "分享下载二维码")
-        ActivityUtil.instance.currentActivity?.startActivity(shareIntent)
+        ActivityHelper.instance.currentActivity?.startActivity(shareIntent)
     }
 }
