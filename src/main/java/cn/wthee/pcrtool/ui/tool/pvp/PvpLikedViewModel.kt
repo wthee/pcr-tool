@@ -4,22 +4,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
-import cn.wthee.pcrtool.data.db.repository.PvpRepository
+import cn.wthee.pcrtool.database.AppPvpDatabase
 import kotlinx.coroutines.launch
 
 
-class PvpLikedViewModel(
-    private val repository: PvpRepository
-) : ViewModel() {
+class PvpLikedViewModel : ViewModel() {
 
-    var data = MutableLiveData<List<PvpLikedData>>()
+    private val pvpDao = AppPvpDatabase.getInstance().getPvpDao()
+    var allData = MutableLiveData<List<PvpLikedData>>()
 
-
-    //收藏队伍信息
     fun getLiked(region: Int) {
         viewModelScope.launch {
-            data.postValue(repository.getLiked(region))
+            val data = pvpDao.getAll(region)
+            allData.postValue(data)
         }
     }
+
 
 }

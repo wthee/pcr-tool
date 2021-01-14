@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.setting
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import androidx.preference.*
@@ -36,6 +37,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
         //获取控件
         titleDatabase = findPreference("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
@@ -47,7 +49,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         switchPvpRegion?.isVisible = changeDbType?.value != "1"
         //数据版本
-        titleDatabase.title = getString(R.string.data) + MainActivity.sp.getString(
+        titleDatabase.title = getString(R.string.data) + sp.getString(
             if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             "0"
         )
@@ -55,7 +57,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         appUpdate?.setOnPreferenceClickListener {
             //应用版本校验
             ToastUtil.short("应用版本检测中...")
-            AppUpdateHelper.init(requireContext(), layoutInflater, true)
+            AppUpdateUtil.init(requireContext(), layoutInflater, true)
             return@setOnPreferenceClickListener true
         }
         //设置监听
@@ -88,14 +90,14 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         eggs?.isVisible = CharacterListFragment.characterFilterParams.starIds.contains(106001)
                 || CharacterListFragment.characterFilterParams.starIds.contains(107801)
                 || CharacterListFragment.characterFilterParams.starIds.contains(112001)
-        var count = MainActivity.sp.getInt("click_kl", 0)
+        var count = sp.getInt("click_kl", 0)
         eggKL?.setOnPreferenceClickListener {
             count++
             if (count > 3) {
                 //隐藏
                 eggs?.isVisible = false
                 CharacterListFragment.characterFilterParams
-                    .remove(106001, 107801, 112001)
+                    .remove(107801)
                 CharacterListFragment.characterFilterParams.initData()
                 sharedCharacterViewModel.getCharacters(
                     sortType,

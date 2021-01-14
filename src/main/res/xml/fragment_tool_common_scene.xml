@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/tool_start">
+        <Constraint
+            android:id="@+id/layout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <CustomAttribute
+                app:attributeName="BackgroundColor"
+                app:customColorValue="@color/colorPrimary" />
+        </Constraint>
+        <Constraint
+            android:id="@+id/tool_head"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/fab_top"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginTop="@dimen/efab_margin"
+            android:layout_marginEnd="@dimen/xl_margin"
+            android:layout_marginBottom="@dimen/efab_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/tool_end">
+        <Constraint
+            android:id="@+id/layout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <CustomAttribute
+                app:attributeName="BackgroundColor"
+                app:customColorValue="@color/colorBg" />
+        </Constraint>
+        <Constraint
+            android:id="@id/tool_head"
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/fab_top"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginTop="@dimen/efab_margin"
+            android:layout_marginEnd="@dimen/xl_margin"
+            android:layout_marginBottom="@dimen/efab_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </ConstraintSet>
+
+    <Transition
+        app:constraintSetEnd="@id/tool_end"
+        app:constraintSetStart="@+id/tool_start">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="0"
+                app:motionTarget="@id/tool_head" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_head" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="0"
+                app:motionTarget="@id/fab_top" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/fab_top" />
+        </KeyFrameSet>
+        <OnSwipe
+            app:dragDirection="dragUp"
+            app:touchAnchorId="@id/tool_list"
+            app:touchAnchorSide="top" />
+    </Transition>
+</MotionScene>

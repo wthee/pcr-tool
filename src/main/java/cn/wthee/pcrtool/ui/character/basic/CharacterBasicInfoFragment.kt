@@ -90,7 +90,7 @@ class CharacterBasicInfoFragment : Fragment() {
             placeholder(R.drawable.load)
         }
         //开始动画
-        ObjectAnimatorHelper.enter(object : ObjectAnimatorHelper.OnAnimatorListener {
+        ObjectAnimatorUtil.enter(object : ObjectAnimatorUtil.OnAnimatorListener {
             override fun prev(view: View) {
                 view.visibility = View.GONE
             }
@@ -107,6 +107,7 @@ class CharacterBasicInfoFragment : Fragment() {
     //点击事件
     private fun setListener() {
         binding.apply {
+            //角色图片列表
             characterPic.setOnClickListener {
                 CharacterPicListFragment.getInstance(uid, r6Id)
                     .show(parentFragmentManager, "pic_list")

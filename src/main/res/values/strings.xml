@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">PCR Tool</string>
+
     <string name="date_m_d">%s 月 %s 日</string>
     <string name="character_detail">%s / %sCM / %sKG / %d</string>
     <string name="blood">%s 型</string>
@@ -9,9 +10,9 @@
     <string name="equip_count_dot">%s …x%d</string>
     <string name="equip_count">%s x%d</string>
     <string name="select_pic_count">已选择 %d</string>
-    <!-- 角色 & 装备  -->
+    <!-- 角色 -->
     <string name="rank">RANK</string>
-    <string name="title_quest">什么地方</string>
+    <string name="title_quest">？？？</string>
     <string name="age">年龄</string>
     <string name="title_height">身高</string>
     <string name="title_weight">体重</string>
@@ -23,15 +24,19 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-
-    <string name="equip_details">道具详情</string>
-    <string name="tab_all">全部</string>
-    <string name="tab_love">收藏</string>
-
     <string name="skill_action">技能效果</string>
     <string name="skill_loop">技能循环</string>
-
-
+    <string name="before_loop">入场动作</string>
+    <string name="looping">循环动作</string>
+    <string name="equip_details">道具详情</string>
+    <string name="title_comments">交流</string>
+    <string name="title_material">所需装备：%d</string>
+    <string name="title_looping_sp">特殊循环</string>
+    <string name="title_all_attr_sub">已计算角色剧情属性</string>
+    <string name="title_story_attr_sub">相同角色所有剧情属性</string>
+    <string name="title_all_attr">- 人物属性 -</string>
+    <string name="title_story_attr">- 剧情属性 -</string>
+    <!--    -->
     <string name="back">返回</string>
     <string name="other">其它</string>
     <string name="setting">设置</string>
@@ -41,6 +46,7 @@
     <string name="function">功能</string>
     <string name="data_null_character">未找到角色信息~</string>
     <string name="data_null_equip">未找到装备信息~</string>
+    <string name="sorry_ue">优衣，对不起~ </string>
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
@@ -48,7 +54,7 @@
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
-    <string name="data_from_hint">感谢大佬提供的数据接口</string>
+    <string name="data_from_hint">数据和图片来源</string>
     <string name="shizuru_note">静流笔记</string>
     <string name="dev_tip">感谢大佬的开源项目</string>
     <string name="check_app_update">应用版本</string>
@@ -60,7 +66,19 @@
     <string name="db_jp">日服</string>
     <string name="db_cn_value">1</string>
     <string name="db_jp_value">2</string>
-
+    <string name="egg_text">我啊，很幸福哦</string>
+    <string name="egg_summary">…还…还是被发现了</string>
+    <string name="game_version">切换数据</string>
+    <string name="game_version_summary">可选择国服或日服数据</string>
+    <string name="change_success">更新完成</string>
+    <string name="change_success_tip">数据已更新，请点击关闭应用</string>
+    <string name="close_app">关闭应用</string>
+    <string name="close_app_too">快点关闭</string>
+    <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
+    <string name="pcrdfans_com">来源 pcrdfans.com</string>
+    <string name="url_pcrdfans_com">https://pcrdfans.com</string>
+    <string name="share_app">分享应用</string>
+    <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
     <!--筛选  -->
     <string name="filter_sort">筛选排序</string>
     <string name="filter">筛选</string>
@@ -75,18 +93,16 @@
     <string name="atk_type">攻击类型</string>
     <string name="physical">物理攻击</string>
     <string name="magic">魔法攻击</string>
-
-
-    <string name="sorry_ue">优衣，对不起~ </string>
-    <string name="before_loop">入场动作</string>
-    <string name="looping">循环动作</string>
-    <string name="egg_text">我啊，很幸福哦</string>
-    <string name="egg_summary">…还…还是被发现了</string>
+    <string name="tab_all">全部</string>
+    <string name="tab_love">收藏</string>
     <string name="sort_date">登场日期</string>
     <string name="sort_type">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
     <string name="equip_type">装备类型</string>
+    <string name="title_rarity">角色星级</string>
+    <string name="six_unlock">六星</string>
+    <string name="name">名字</string>
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
@@ -98,30 +114,12 @@
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_float">悬浮窗</string>
-    <string name="game_version">切换数据</string>
-    <string name="game_version_summary">可选择国服或日服数据</string>
-    <string name="change_success">更新完成</string>
-    <string name="change_success_tip">数据已更新，请点击关闭应用</string>
-    <string name="close_app">关闭应用</string>
-    <string name="close_app_too">快点关闭</string>
-    <string name="title_comments">交流</string>
-    <string name="title_material">所需装备：%d</string>
-    <string name="title_looping_sp">特殊循环</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">活动</string>
     <string name="pre">✦ </string>
-    <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
-    <string name="pcrdfans_com">来源 pcrdfans.com</string>
-    <string name="url_pcrdfans_com">https://pcrdfans.com</string>
-    <string name="share_app">分享应用</string>
-    <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
     <string name="drop_info">- 掉落信息 -</string>
     <string name="test">testtesttes</string>
-    <string name="title_all_attr_sub">已计算角色剧情属性</string>
-    <string name="title_story_attr_sub">相同角色所有剧情属性</string>
-    <string name="title_all_attr">- 人物属性 -</string>
-    <string name="title_story_attr">- 剧情属性 -</string>
     <string name="download_pic">下载当前图片</string>
     <string name="tool_news">公告</string>
     <string name="loading">加载中…</string>
@@ -141,11 +139,6 @@
     <string name="rerduce_1">-</string>
     <string name="equal">=</string>
     <string name="rank_pre">R%d</string>
-
-    <string name="title_rarity">角色星级</string>
-    <string name="six_unlock">六星</string>
-    <string name="name">名字</string>
-
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
     <string name="unselect_pic">未选择图片</string>
@@ -159,12 +152,15 @@
     <string name="from">From %s</string>
     <string name="customize">自定义</string>
     <string name="add">添加</string>
-    <string name="pvp_search_jp">日版竞技场查询</string>
-    <string name="pvp_search_summary">查询台服信息</string>
+    <string name="pvp_search_jp">查询台服竞技场数据</string>
+    <string name="pvp_search_summary">竞技场查询返回台服竞技场信息</string>
     <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
     <string name="equip_name">装备名</string>
     <string name="reset">重置</string>
     <string name="ok">确认</string>
+    <string name="pcrdfans">公主连结Re: Dive Fan Club</string>
+    <string name="pvp_data">竞技场查询数据来源</string>
+    <string name="leader_data">角色排行数据来源</string>
 
 </resources>

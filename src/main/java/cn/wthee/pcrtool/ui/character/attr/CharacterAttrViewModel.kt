@@ -7,7 +7,6 @@ import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
-import cn.wthee.pcrtool.utils.ToastUtil
 import kotlinx.coroutines.launch
 
 
@@ -19,7 +18,7 @@ class CharacterAttrViewModel(
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
     var storyAttrs = MutableLiveData<Attr>()
     var sumInfo = MutableLiveData<Attr>()
-    var maxData = MutableLiveData<List<Int>>()
+    var maxData = MutableLiveData<Map<String, Int>>()
 
     //获取角色属性信息
     fun getCharacterInfo(unitId: Int, rank: Int, rarity: Int, lv: Int, ueLv: Int) {
@@ -66,7 +65,6 @@ class CharacterAttrViewModel(
             info.add(storyAttr)
             return info
         } catch (e: Exception) {
-            ToastUtil.short("角色详细信息暂无~")
         }
         return Attr()
     }
@@ -88,7 +86,12 @@ class CharacterAttrViewModel(
                 val rarity = characterRepository.getMaxRarity(id)
                 val level = characterRepository.getMaxLevel()
                 val ueLv = equipmentRepository.getUniqueEquipMaxLv()
-                maxData.postValue(listOf(rank, rarity, level, ueLv))
+                val map = HashMap<String, Int>()
+                map["rank"] = rank
+                map["rarity"] = rarity
+                map["level"] = level
+                map["ueLv"] = ueLv
+                maxData.postValue(map)
             } catch (e: Exception) {
 
             }

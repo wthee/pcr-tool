@@ -1,23 +1,21 @@
 package cn.wthee.pcrtool.ui.tool.equip
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentPageAdapter
 import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,6 +27,7 @@ class EquipmentListFragment : Fragment() {
 
     companion object {
         lateinit var list: RecyclerView
+        lateinit var motionLayout: MotionLayout
         var equipFilterParams = FilterEquipment(true, "全部")
         var asc = false
         lateinit var equipTypes: ArrayList<String>
@@ -67,15 +66,16 @@ class EquipmentListFragment : Fragment() {
     }
 
     private fun init() {
+        motionLayout = binding.root
+        list = binding.pagerList
         //设置头部
-        ToolbarUtil(binding.toolEquip).setMainToolbar(
+        ToolbarHelper(binding.toolBar).setMainToolbar(
             R.drawable.ic_equip,
             getString(R.string.tool_equip)
         )
         binding.apply {
-            list = binding.equipPage
             pageAdapter = EquipmentPageAdapter(parentFragmentManager)
-            binding.equipPage.adapter = pageAdapter
+            binding.pagerList.adapter = pageAdapter
         }
         //获取装备类型
         equipTypes = arrayListOf()
@@ -100,7 +100,8 @@ class EquipmentListFragment : Fragment() {
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
             viewModel.equipmentCounts.observe(viewLifecycleOwner, {
-                MainActivity.sp.edit {
+                val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
+                sp.edit {
                     putInt(Constants.SP_COUNT_EQUIP, it)
                 }
                 binding.equipCount.text = it.toString()

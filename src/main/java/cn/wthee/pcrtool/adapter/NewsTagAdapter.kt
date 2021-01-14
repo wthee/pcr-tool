@@ -34,7 +34,7 @@ class NewsTagAdapter :
                 val colorId = when (tag) {
                     "公告", "更新", "アップデート" -> R.color.news_update
                     "系統", "メンテナンス" -> R.color.news_system
-                    else -> R.color.news_event
+                    else -> R.color.colorPrimary
                 }
                 val fTag = when (tag) {
                     "アップデート" -> "更新"
@@ -46,7 +46,7 @@ class NewsTagAdapter :
                 }
 
                 text1.text = fTag
-                val drawable = ResourcesUtil.getDrawable(R.drawable.title_background)
+                val drawable = ResourcesUtil.getDrawable(R.drawable.bg_text_view)
                 drawable?.setTint(ResourcesUtil.getColor(colorId))
                 text1.background = drawable
             }

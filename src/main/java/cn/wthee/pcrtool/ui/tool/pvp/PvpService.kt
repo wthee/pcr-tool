@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.adapter.PvpLikedAdapter
 import cn.wthee.pcrtool.adapter.viewpager.PvpCharacterPagerAdapter
+import cn.wthee.pcrtool.data.db.dao.PvpDao
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIds
@@ -27,6 +28,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater.getRegion
 import cn.wthee.pcrtool.databinding.FragmentToolPvpFloatWindowBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.utils.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.Job
@@ -41,7 +43,7 @@ class PvpService : Service() {
     companion object {
         var isMin = false
         lateinit var selectedAdapter: PvpCharacterAdapter
-
+        lateinit var fabSearch: FloatingActionButton
     }
 
     private var windowManager: WindowManager? = null
@@ -61,7 +63,7 @@ class PvpService : Service() {
 
     @Suppress("UNCHECKED_CAST")
     override fun onStartCommand(intent: Intent?, flg: Int, startId: Int): Int {
-        activity = ActivityUtil.instance.currentActivity
+        activity = ActivityHelper.instance.currentActivity
         character1 = intent?.getSerializableExtra("character1") as List<PvpCharacterData>
         character2 = intent.getSerializableExtra("character2") as List<PvpCharacterData>
         character3 = intent.getSerializableExtra("character3") as List<PvpCharacterData>
@@ -108,19 +110,19 @@ class PvpService : Service() {
     //初始化布局
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() {
-
         //初始化
         loadDefault()
         activity?.let {
             setPager(it)
         }
+        fabSearch = binding.search
         setListener()
     }
 
     private fun setListener() {
         binding.apply {
             //搜索按钮
-            search.setOnClickListener {
+            fabSearch.setOnClickListener {
                 resultContent.progress.visibility = View.VISIBLE
                 if (selects.contains(PvpCharacterData(0, 999))) {
                     ToastUtil.short("请选择 5 名角色~")
@@ -132,7 +134,7 @@ class PvpService : Service() {
             //返回
             back.setOnClickListener {
                 if (this@PvpService::job.isLateinit) {
-                    if (!job.isCancelled) {
+                    if (!job.isCompleted) {
                         job.cancel()
                     }
                 }
@@ -153,11 +155,21 @@ class PvpService : Service() {
             move.setOnClickListener {
                 minWindow()
             }
-            //关闭
-            close.setOnClickListener {
+            //返回应用
+            max.setOnClickListener {
                 stopForeground(true)
                 NotificationUtil.notificationManager.cancelAll()
                 onDestroy()
+                val appFullName = "cn.wthee.pcrtool"
+                val launchIntent = packageManager.getLaunchIntentForPackage(appFullName)
+                launchIntent?.let { startActivity(it) }
+            }
+            //关闭
+            max.setOnLongClickListener {
+                stopForeground(true)
+                NotificationUtil.notificationManager.cancelAll()
+                onDestroy()
+                return@setOnLongClickListener true
             }
             //收藏
             val dao = AppPvpDatabase.getInstance().getPvpDao()
@@ -175,53 +187,61 @@ class PvpService : Service() {
                     searchBg.visibility = View.INVISIBLE
                     likedBg.visibility = View.VISIBLE
                     MainScope().launch {
-                        val data = dao.getAll(region)
-                        likedAdapter.submitList(data) {
-                            updateTip(data)
-                        }
-
-                        //列表设置左右滑动
-                        ItemTouchHelper(object :
-                            ItemTouchHelper.SimpleCallback(
-                                0,
-                                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                            ) {
-                            override fun onMove(
-                                recyclerView: RecyclerView,
-                                viewHolder: RecyclerView.ViewHolder,
-                                target: RecyclerView.ViewHolder
-                            ): Boolean {
-                                return true
-                            }
-
-                            @SuppressLint("SimpleDateFormat")
-                            override fun onSwiped(
-                                viewHolder: RecyclerView.ViewHolder,
-                                direction: Int
-                            ) {
-                                MainScope().launch {
-                                    val atks =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
-                                    val defs =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
-                                    val type =
-                                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.type)
-                                    val atkIds = atks.text.toString()
-                                    val defIds = defs.text.toString()
-                                    val typeInt = type.text.toString().toInt()
-                                    //删除记录
-                                    dao.delete(dao.getLiked(atkIds, defIds, region, typeInt)!!)
-                                    val result = dao.getAll(region)
-                                    likedAdapter.submitList(result) {
-                                        updateTip(result)
-                                    }
-                                }
-                            }
-                        }).attachToRecyclerView(binding.listLiked)
+                        setSwipeDelete(dao, region, likedAdapter)
                     }
                 }
             }
         }
+    }
+
+    private suspend fun setSwipeDelete(
+        dao: PvpDao,
+        region: Int,
+        likedAdapter: PvpLikedAdapter
+    ) {
+        val data = dao.getAll(region)
+        likedAdapter.submitList(data) {
+            updateTip(data)
+        }
+
+        //列表设置左右滑动
+        ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return true
+            }
+
+            @SuppressLint("SimpleDateFormat")
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                direction: Int
+            ) {
+                MainScope().launch {
+                    val atks =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
+                    val defs =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
+                    val type =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.type)
+                    val atkIds = atks.text.toString()
+                    val defIds = defs.text.toString()
+                    val typeInt = type.text.toString().toInt()
+                    //删除记录
+                    dao.delete(dao.getLiked(atkIds, defIds, region, typeInt)!!)
+                    val result = dao.getAll(region)
+                    likedAdapter.submitList(result) {
+                        updateTip(result)
+                    }
+                }
+            }
+        }).attachToRecyclerView(binding.listLiked)
     }
 
     private fun updateTip(data: List<PvpLikedData>) {
@@ -232,11 +252,23 @@ class PvpService : Service() {
                 getString(R.string.no_liked_data)
     }
 
+    //展示查询结果
     private fun showResult() {
         binding.apply {
+            //刷新已选择列表
+            selectedAdapter.apply {
+                submitList(selects) {
+                    notifyDataSetChanged()
+                }
+            }
+            //显示搜索结果布局
+            searchBg.visibility = View.VISIBLE
+            likedBg.visibility = View.INVISIBLE
+            liked.setImageResource(R.drawable.ic_loved_line)
             select.visibility = View.INVISIBLE
             back.visibility = View.VISIBLE
             resultContent.root.visibility = View.VISIBLE
+            //开始查询
             job = MainScope().launch {
                 resultContent.pvpNoData.visibility = View.GONE
                 val result = MyAPIRepository.getPVPData(selects.getIds())
@@ -244,6 +276,7 @@ class PvpService : Service() {
                     if (result.data!!.isEmpty()) {
                         resultContent.pvpNoData.visibility = View.VISIBLE
                     }
+                    //显示结果
                     adapter.submitList(result.data!!.sortedByDescending {
                         it.up
                     })
@@ -309,7 +342,8 @@ class PvpService : Service() {
             adapter = PvpCharacterResultAdapter(true)
             resultContent.pvpResultList.adapter = adapter
             resultContent.root.visibility = View.GONE
-            resultContent.pvpResultToolbar.root.visibility = View.GONE
+            resultContent.teamDef.visibility = View.GONE
+            resultContent.hr.visibility = View.GONE
         }
     }
 }

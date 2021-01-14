@@ -10,8 +10,8 @@ android {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 60
-        versionName "0.6.0"
+        versionCode 62
+        versionName "0.6.2"
 
     }
 
@@ -61,6 +61,9 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation "androidx.activity:activity-ktx:1.1.0"
+
+    //CircleProgressBar
+    implementation 'com.github.wthee:CircleProgressBar:1.0.2'
 
     //coil
     def coil_version = '1.1.0'

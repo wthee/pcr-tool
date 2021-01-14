@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/colorPrimary" />
+        </shape>
+    </item>
+
+    <item android:top="@dimen/toolbar_height">
+        <shape android:shape="rectangle">
+
+            <size
+                android:width="100dp"
+                android:height="@dimen/toolbar_height" />
+            <corners
+                android:topLeftRadius="@dimen/back_drop_radius"
+                android:topRightRadius="@dimen/back_drop_radius" />
+            <solid android:color="@color/colorBg" />
+        </shape>
+    </item>
+
+
+</layer-list>

@@ -14,8 +14,7 @@ class CharacterSkillViewModel(
 ) : ViewModel() {
 
     companion object {
-        var iconType1 = 1
-        var iconType2 = 1
+        var iconTypes = hashMapOf<Int, Int>()
     }
 
     var skills = MutableLiveData<List<CharacterSkillInfo>>()
@@ -26,16 +25,16 @@ class CharacterSkillViewModel(
     //角色技能信息
     fun getCharacterSkills(id: Int) {
         isLoading.postValue(true)
+        iconTypes.clear()
         viewModelScope.launch {
             try {
                 val infos = mutableListOf<CharacterSkillInfo>()
                 val data = repository.getCharacterSkill(id)
-
                 //技能信息
                 data.getAllSkillId().forEach { sid ->
                     val skill = repository.getSkillData(sid)
-                    if (skill.skill_id % 10 == 2) iconType1 = skill.icon_type
-                    if (skill.skill_id % 10 == 3) iconType2 = skill.icon_type
+                    val aid = skill.skill_id % 1000
+                    iconTypes[aid] = skill.icon_type
                     val info = CharacterSkillInfo(
                         skill.skill_id,
                         skill.name ?: "",
@@ -46,12 +45,9 @@ class CharacterSkillViewModel(
                         .filter { it.description.isNotEmpty() }
                     infos.add(info)
                 }
-                //技能循环
-                val pattern = repository.getAttackPattern(id)
                 isLoading.postValue(false)
                 refresh.postValue(false)
                 skills.postValue(infos)
-                atlPattern.postValue(pattern)
             } catch (e: Exception) {
 
             }

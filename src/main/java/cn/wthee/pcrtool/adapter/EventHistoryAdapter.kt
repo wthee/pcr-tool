@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
-import cn.wthee.pcrtool.databinding.ItemEventDataBinding
+import cn.wthee.pcrtool.databinding.ItemEventBinding
 
 
 class EventHistoryAdapter :
     ListAdapter<EventData, EventHistoryAdapter.ViewHolder>(EventDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemEventDataBinding.inflate(
+            ItemEventBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -29,7 +29,7 @@ class EventHistoryAdapter :
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val binding: ItemEventDataBinding) :
+    inner class ViewHolder(private val binding: ItemEventBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")

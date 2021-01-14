@@ -24,35 +24,28 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="@dimen/efab_margin"
         android:layout_marginBottom="@dimen/xl_margin"
-        android:background="@drawable/efab_selected_background"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/bg_efab_press"
         android:clickable="true"
         android:elevation="@dimen/card_elevation"
         android:focusable="true"
-        android:animateLayoutChanges="true"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <cn.wthee.pcrtool.utils.TasksCompletedView
+        <cn.wthee.circleprogressbar.CircleProgressView
             android:id="@+id/progress"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
+            android:layout_width="@dimen/circle_progress_bar_size"
+            android:layout_height="@dimen/circle_progress_bar_size"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
-            android:visibility="invisible"
             app:circleColor="@color/colorGray"
-            app:radius="9dp"
+            app:radius="11dp"
+            app:ringBackgroundColor="@color/colorHalfAccent"
             app:ringColor="@color/colorPrimary"
+            app:ringType="flyme"
             app:strokeWidth="3dp"
             app:textColor="@color/colorPrimary" />
-
-        <ProgressBar
-            android:id="@+id/progress_hint"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/download_text"

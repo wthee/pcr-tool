@@ -11,11 +11,11 @@ object ScreenUtil {
     private fun getDm(): DisplayMetrics {
         val outMetrics = DisplayMetrics()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            val display = ActivityUtil.instance.currentActivity?.display
+            val display = ActivityHelper.instance.currentActivity?.display
             display?.getRealMetrics(outMetrics)
         } else {
             @Suppress("DEPRECATION")
-            val display = ActivityUtil.instance.currentActivity?.windowManager?.defaultDisplay
+            val display = ActivityHelper.instance.currentActivity?.windowManager?.defaultDisplay
             @Suppress("DEPRECATION")
             display?.getMetrics(outMetrics)
         }

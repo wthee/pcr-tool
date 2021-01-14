@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.utils.Constants.REGION
 private const val NEWSID = "news_id"
 private const val URL = "url"
 
-class NewsDetailDialogFragment : CommonBottomSheetDialogFragment(true) {
+class NewsDetailDialogFragment : CommonBottomSheetDialogFragment() {
 
     private var region = 0
     private var newsId = 0
@@ -95,6 +95,7 @@ class NewsDetailDialogFragment : CommonBottomSheetDialogFragment(true) {
                                 $('.top').css('display','none');
                                 $('.title').css('font-size','16px');
                                 $('.title').css('color','#2c94e4');
+                                $('#news-content').css('margin-bottom','1rem');
                             """.trimIndent()
                         )
                     }
@@ -110,6 +111,7 @@ class NewsDetailDialogFragment : CommonBottomSheetDialogFragment(true) {
                                 $('aside').css('display','none');
                                 $('.paging').css('display','none');
                                 $('h3').css('font-size','16px');
+                                $('.news_con').css('margin','0px');
                             """.trimIndent()
                         )
                     }

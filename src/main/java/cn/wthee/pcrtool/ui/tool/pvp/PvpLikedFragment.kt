@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -14,29 +15,27 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.PvpLikedAdapter
+import cn.wthee.pcrtool.data.db.dao.PvpDao
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.RecyclerViewHelper.setScrollToTopListener
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.MaterialContainerTransform
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
 class PvpLikedFragment : Fragment() {
 
     private lateinit var binding: FragmentToolPvpLikedBinding
-
-    private val viewModel =
-        InjectorUtil.providePvpViewModelFactory().create(PvpLikedViewModel::class.java)
     private var region = DatabaseUpdater.getRegion()
-    private lateinit var adapter: PvpLikedAdapter
-    private var allData = arrayListOf<PvpLikedData>()
+    private lateinit var likedAdapter: PvpLikedAdapter
+    private lateinit var dao: PvpDao
+    private val viewModel by activityViewModels<PvpLikedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,23 +53,14 @@ class PvpLikedFragment : Fragment() {
     ): View {
         binding = FragmentToolPvpLikedBinding.inflate(inflater, container, false)
         init()
-        setListener(adapter)
-        viewModel.data.observe(viewLifecycleOwner, { it ->
-            allData.clear()
-            allData.addAll(it)
-            adapter.submitList(if (binding.pvpAll.isChecked) allData else allData.filter { it.type == 1 }) {
-                updateTip()
-                adapter.notifyDataSetChanged()
-                startPostponedEnterTransition()
-            }
-        })
-        ToolbarUtil(binding.toolPvpLike).setToolHead(
-            R.drawable.ic_loved,
-            "收藏信息"
-        )
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
+        setListener()
+        lifecycleScope.launch {
+            setSwipeDelete(AppPvpDatabase.getInstance().getPvpDao())
         }
+        ToolbarHelper(binding.toolHead).setMainToolbar(
+            R.drawable.ic_loved,
+            getString(R.string.tool_pvp_liked)
+        )
         return binding.root
     }
 
@@ -79,26 +69,23 @@ class PvpLikedFragment : Fragment() {
         viewModel.getLiked(region)
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun updateTip() {
-        binding.pvpAll.text = getString(R.string.tab_all) + " " + allData.size
-        binding.pvpCus.text = getString(R.string.customize) + " " + allData.filter {
-            it.type == 1
-        }.size
-    }
-
     private fun init() {
+        dao = AppPvpDatabase.getInstance().getPvpDao()
         binding.root.transitionName = "liked"
         binding.fabAdd.transitionName = "liked_add"
         FabHelper.addBackFab(2)
-        //获取数据版本
-        viewModel.getLiked(region)
         //初始化适配器
-        adapter = PvpLikedAdapter(false)
-        binding.listLiked.adapter = adapter
+        likedAdapter = PvpLikedAdapter(false)
+        binding.toolList.adapter = likedAdapter
+        viewModel.getLiked(region)
+        viewModel.allData.observe(viewLifecycleOwner, {
+            likedAdapter.submitList(it) {
+                updateTip(it)
+            }
+        })
     }
 
-    private fun setListener(adapter: PvpLikedAdapter) {
+    private fun setListener() {
         //自定义
         binding.fabAdd.setOnClickListener {
             val extras = FragmentNavigatorExtras(
@@ -109,25 +96,20 @@ class PvpLikedFragment : Fragment() {
                 null, extras
             )
         }
-        //切换
-        binding.pvpLikeChips.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.pvp_all -> {
-                    adapter.submitList(allData) {
-                        updateTip()
-                    }
-                }
-                R.id.pvp_cus -> {
-                    val cus = allData.filter { it.type == 1 }
-                    adapter.submitList(cus) {
-                        updateTip()
-                    }
-                }
-            }
+        //回到顶部
+        binding.fabTop.setOnClickListener {
+            binding.root.transitionToStart()
+            binding.toolList.scrollToPosition(0)
         }
+    }
+
+    private suspend fun setSwipeDelete(dao: PvpDao) {
         //列表设置左右滑动
         ItemTouchHelper(object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -137,36 +119,44 @@ class PvpLikedFragment : Fragment() {
             }
 
             @SuppressLint("SimpleDateFormat")
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                lifecycleScope.launch {
-                    val dao = AppPvpDatabase.getInstance().getPvpDao()
-                    val atks = viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
-                    val defs = viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
-                    val type = viewHolder.itemView.findViewById<MaterialTextView>(R.id.type)
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                direction: Int
+            ) {
+                MainScope().launch {
+                    val atks =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
+                    val defs =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.def_ids)
+                    val type =
+                        viewHolder.itemView.findViewById<MaterialTextView>(R.id.type)
                     val atkIds = atks.text.toString()
                     val defIds = defs.text.toString()
                     val typeInt = type.text.toString().toInt()
-                    val data = dao.getLiked(atkIds, defIds, region, typeInt)!!
                     //删除记录
-                    dao.delete(data)
+                    val deleteData = dao.getLiked(atkIds, defIds, region, typeInt)!!
+                    dao.delete(deleteData)
                     viewModel.getLiked(region)
                     //显示撤回
                     Snackbar.make(binding.root, "已取消收藏~", Snackbar.LENGTH_LONG)
                         .setAction("撤回") {
                             //添加记录
                             lifecycleScope.launch {
-                                dao.insert(data)
+                                dao.insert(deleteData)
                                 viewModel.getLiked(region)
                             }
                         }
                         .show()
                 }
             }
-        }).attachToRecyclerView(binding.listLiked)
-        //滚动监听
-        binding.listLiked.setScrollToTopListener(binding.fabTop)
-
+        }).attachToRecyclerView(binding.toolList)
     }
 
-
+    private fun updateTip(list: List<PvpLikedData>) {
+        binding.toolHead.title.text =
+            if (list.isNotEmpty())
+                getString(R.string.liked_count, list.size)
+            else
+                getString(R.string.tool_pvp_liked)
+    }
 }

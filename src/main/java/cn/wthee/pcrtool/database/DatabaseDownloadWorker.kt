@@ -59,8 +59,6 @@ class DatabaseDownloadWorker(
         //显示加载进度
         MainScope().launch {
             MainActivity.layoutDownload.visibility = View.VISIBLE
-            MainActivity.progressDownloadHint.visibility = View.GONE
-            MainActivity.progressDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
             MainActivity.progressDownload.setProgress(1)
         }
@@ -75,9 +73,9 @@ class DatabaseDownloadWorker(
     ): Result {
         try {
             //创建Retrofit服务
-            val service = ApiHelper.createWithClient(
+            val service = ApiUtil.createWithClient(
                 DatabaseService::class.java, Constants.DATABASE_URL,
-                ApiHelper.downloadClientBuild(object : DownloadListener {
+                ApiUtil.downloadClientBuild(object : DownloadListener {
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         //更新下载进度

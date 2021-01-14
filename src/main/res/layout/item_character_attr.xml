@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:background="@drawable/title_background"
+        android:background="@drawable/bg_text_view"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingStart="@dimen/s_padding"

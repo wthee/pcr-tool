@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.data.bean.CharacterSkillInfo
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.PaletteHelper
+import cn.wthee.pcrtool.utils.PaletteUtil
 import coil.load
 
 
@@ -68,7 +68,7 @@ class SkillAdapter :
                         val bitmap = (it as BitmapDrawable).bitmap
                         //字体颜色
                         name.setTextColor(
-                            PaletteHelper.createPaletteSync(bitmap)
+                            PaletteUtil.createPaletteSync(bitmap)
                                 .getDarkVibrantColor(Color.BLACK)
                         )
                         itemPic.background = it

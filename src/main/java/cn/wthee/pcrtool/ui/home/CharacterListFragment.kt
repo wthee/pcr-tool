@@ -1,25 +1,23 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
-import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,6 +37,7 @@ class CharacterListFragment : Fragment() {
         lateinit var guilds: ArrayList<String>
         var r6Ids = listOf<Int>()
         var isPostponeEnterTransition = false
+        lateinit var motionLayout: MotionLayout
         lateinit var characterList: RecyclerView
 
     }
@@ -83,10 +82,10 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
-        characterList = binding.characterList
-
+        motionLayout = binding.root
+        characterList = binding.pagerList
         //toolbar
-        ToolbarUtil(binding.toolBar).setMainToolbar(
+        ToolbarHelper(binding.toolBar).setMainToolbar(
             R.mipmap.ic_logo,
             getString(R.string.app_name)
         )
@@ -105,7 +104,7 @@ class CharacterListFragment : Fragment() {
             }
             r6Ids = viewModel.getR6Ids()
         }
-        binding.characterList.adapter = listAdapter
+        binding.pagerList.adapter = listAdapter
     }
 
     private fun setListener() {
@@ -126,7 +125,8 @@ class CharacterListFragment : Fragment() {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
                 viewModel.characterCount.observe(viewLifecycleOwner, {
-                    MainActivity.sp.edit {
+                    val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
+                    sp.edit {
                         putInt(Constants.SP_COUNT_CHARACTER, it)
                     }
                     binding.characterCount.text = it.toString()
@@ -147,21 +147,6 @@ class CharacterListFragment : Fragment() {
             if (!reset.hasObservers()) {
                 reset.observe(viewLifecycleOwner, {
                     reset()
-                })
-            }
-            //重新加载
-            if (!reload.hasObservers()) {
-                reload.observe(viewLifecycleOwner, {
-                    try {
-                        if (it) {
-                            requireActivity().recreate()
-                            pageLevel = 0
-                            MainActivity.fabMain.setImageResource(R.drawable.ic_function)
-                        }
-                        reload.postValue(false)
-                    } catch (e: Exception) {
-                        Log.e(LOG_TAG, e.message.toString())
-                    }
                 })
             }
         }

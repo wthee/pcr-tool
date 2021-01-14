@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.adapter
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModel.Companion.iconType1
-import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModel.Companion.iconType2
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModel.Companion.iconTypes
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.PaletteHelper
+import cn.wthee.pcrtool.utils.PaletteUtil
 import coil.load
 
 
@@ -49,21 +49,26 @@ class SkillLoopAdapter :
                     pic.load(EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP)
                 } else {
                     //技能图标
-                    val iconType = if (atkId == 1001 || atkId == 2001) {
-                        name.text = "技能1"
-                        iconType1
-                    } else {
-                        name.text = "技能2"
-                        iconType2
+                    name.text = if (atkId == 1001 || atkId == 2001)
+                        "技能2"
+                    else
+                        "技能1"
+
+                    val iconType = when (atkId) {
+                        2001 -> iconTypes[101]
+                        2002 -> iconTypes[102]
+                        else -> iconTypes[atkId % 10]
                     }
+                    Log.e("skill", "$iconType")
                     //图标地址
                     val picUrl = SKILL_ICON_URL + iconType + WEBP
+
                     pic.load(picUrl) {
                         target {
                             val bitmap = (it as BitmapDrawable).bitmap
                             //字体颜色
                             name.setTextColor(
-                                PaletteHelper.createPaletteSync(bitmap)
+                                PaletteUtil.createPaletteSync(bitmap)
                                     .getDarkVibrantColor(Color.BLACK)
                             )
                             pic.background = it

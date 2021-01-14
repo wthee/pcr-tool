@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.utils
 
 import android.content.Context
-import android.content.DialogInterface
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -15,43 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 object DialogUtil {
 
     //创建 dialog
-    fun create(context: Context, layout: View): AlertDialog {
-        val dialog = MaterialAlertDialogBuilder(context)
-            .setView(layout)
-            .create()
-        dialog.window?.setGravity(Gravity.BOTTOM)
-        return dialog
-    }
-
-    //创建 dialog
-    fun create(
-        context: Context,
-        layout: View,
-        btn1: String,
-        btn2: String,
-        listener: DialogListener
-    ): AlertDialog {
-        val dialog = MaterialAlertDialogBuilder(context)
-            .setView(layout)
-            .create()
-        dialog.apply {
-            //取消
-            setButton(DialogInterface.BUTTON_NEUTRAL, btn1) { dialog, _ ->
-                listener.onCancel(this)
-                dialog.dismiss()
-            }
-            //确认
-            setButton(DialogInterface.BUTTON_POSITIVE, btn2) { dialog, _ ->
-                listener.onConfirm(this)
-                dialog.dismiss()
-            }
-        }
-        dialog.window?.setGravity(Gravity.BOTTOM)
-        return dialog
-    }
-
-    //创建 dialog
-    fun create(context: Context, layout: View, gravity: Int): AlertDialog {
+    fun create(context: Context, layout: View, gravity: Int = Gravity.BOTTOM): AlertDialog {
         val dialog = MaterialAlertDialogBuilder(context)
             .setView(layout)
             .create()

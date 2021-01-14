@@ -5,19 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CalendarEventAdapter
-import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.network.model.CalendarDay
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -35,7 +32,7 @@ class CalendarFragment : Fragment() {
     private lateinit var minCal: Calendar
     private lateinit var maxCal: Calendar
     private lateinit var cal: Calendar
-    private lateinit var job: Job
+    private val calendarViewModel by activityViewModels<CalendarViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,26 +40,17 @@ class CalendarFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolCalendarBinding.inflate(inflater, container, false)
-
         //初始值
         init()
         //监听
         setListener()
         //设置头部
-        ToolbarUtil(binding.toolCalendar).setToolHead(
+        ToolbarHelper(binding.toolCalendar).setMainToolbar(
             R.drawable.ic_calendar,
             getString(R.string.tool_calendar)
         )
 
         return binding.root
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (!job.isCancelled) {
-            job.cancel()
-        }
     }
 
     private fun setListener() {
@@ -119,31 +107,22 @@ class CalendarFragment : Fragment() {
         adapter = CalendarEventAdapter()
         binding.events.adapter = adapter
         //初始加载
-        job = MainScope().launch {
-            getEvents(object : OnLoadFinish {
-                override fun finish(maxDate: String) {
-                    binding.calendarView.visibility = View.VISIBLE
-                    //设置最大值
-                    maxCal = Calendar.getInstance()
-                    val date = maxDate.split("/")
-                    maxCal.set(date[0].toInt(), date[1].toInt() - 1, date[2].toInt())
-                    binding.calendarView.setMaximumDate(maxCal)
-                    //显示事件列表
-                    showDayEvents(cal)
-                }
-            })
-        }
-    }
-
-    //一次获取全部
-    private suspend fun getEvents(onLoadFinish: OnLoadFinish) {
-        val list = MyAPIRepository.getCalendar()
-        if (list.status == 0) {
-            events = list.data!!.days
-            onLoadFinish.finish(list.data!!.maxDate)
-        } else if (list.status == -1) {
-            ToastUtil.short(list.message)
-        }
+        calendarViewModel.getCalendar()
+        calendarViewModel.calendar.observe(viewLifecycleOwner, { list ->
+            if (list.status == 0) {
+                events = list.data!!.days
+                binding.calendarView.visibility = View.VISIBLE
+                //设置最大值
+                maxCal = Calendar.getInstance()
+                val date = list.data!!.maxDate.split("/")
+                maxCal.set(date[0].toInt(), date[1].toInt() - 1, date[2].toInt())
+                binding.calendarView.setMaximumDate(maxCal)
+                //显示事件列表
+                showDayEvents(cal)
+            } else if (list.status == -1) {
+                ToastUtil.short(list.message)
+            }
+        })
     }
 
     //显示事件

@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.databinding.FragmentSkillLoopBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 角色技能循环页面
@@ -42,7 +42,7 @@ class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSkillLoopBinding.inflate(inflater, container, false)
-        ToolbarUtil(binding.titleSkillLoop).setCenterTitle(getString(R.string.skill_loop))
+        ToolbarHelper(binding.titleSkillLoop).setCenterTitle(getString(R.string.skill_loop))
         val adapter = SkillLoopAllAdapter()
         binding.skillLoopList.adapter = adapter
 

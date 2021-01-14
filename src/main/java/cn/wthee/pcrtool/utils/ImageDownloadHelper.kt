@@ -9,6 +9,8 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -16,39 +18,40 @@ import java.io.OutputStream
 /**
  * 图片保存到本地
  */
-class ImageDownloadUtil(
+class ImageDownloadHelper(
     private val activity: FragmentActivity
 ) {
 
     val context: Context = activity.applicationContext
 
     fun save(bitmap: Bitmap, name: String) {
-        activity.runOnUiThread {
-            saveBitmap(bitmap, name)
+        activity.lifecycleScope.launch {
+            saveBitmap(bitmap, name, true)
         }
     }
 
     //保存bitmap
-    private fun saveBitmap(
-        bitmap: Bitmap, displayName: String
-    ) {
+    fun saveBitmap(
+        bitmap: Bitmap, displayName: String, toast: Boolean
+    ): Boolean {
         var stream: OutputStream? = null
-        var path: String
+        val path = getImagePath()
         try {
             //保存属性
             val contentValues = ContentValues()
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/*")
-            path = Environment.DIRECTORY_PICTURES
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, path)
+                contentValues.put(
+                    MediaStore.MediaColumns.RELATIVE_PATH,
+                    Environment.DIRECTORY_PICTURES
+                )
             }
             // 判断是否已存在
-            path = "/storage/emulated/0" + File.separator + path
             val file = File("$path/$displayName")
-            if (file.exists()) {
+            if (file.exists() && toast) {
                 ToastUtil.short("图片已存在~")
-                return
+                return true
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 var uri: Uri? = null
@@ -74,12 +77,21 @@ class ImageDownloadUtil(
                     contentValues
                 )
             }
-            ToastUtil.short("图片保存成功~$displayName")
+            if (toast) ToastUtil.short("图片保存成功~$displayName")
+            return true
         } catch (e: Exception) {
             ToastUtil.short("图片保存失败")
+            return false
         } finally {
             stream?.close()
         }
     }
 
+    companion object {
+        fun getImagePath(): String {
+            var path: String = Environment.DIRECTORY_PICTURES
+            path = "/storage/emulated/0" + File.separator + path
+            return path
+        }
+    }
 }

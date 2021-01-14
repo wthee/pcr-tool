@@ -1,6 +1,11 @@
 package cn.wthee.pcrtool.data.network.model
 
 
+data class LeaderData(
+    val desc: String,
+    val leader: List<LeaderboardData>
+)
+
 data class LeaderboardData(
     val icon: String,
     val name: String,

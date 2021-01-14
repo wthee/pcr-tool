@@ -1,23 +1,17 @@
 package cn.wthee.pcrtool
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.ProgressBar
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
+import cn.wthee.circleprogressbar.CircleProgressView
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.home.*
@@ -41,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         @JvmField
         var currentCharaPosition: Int = 0
         var nowVersionName = "0.0.0"
-        lateinit var sp: SharedPreferences
 
         var pageLevel = 0
         var mFloatingWindowHeight = 0
@@ -50,8 +43,7 @@ class MainActivity : AppCompatActivity() {
         //fab 默认隐藏
         lateinit var fabMain: FloatingActionButton
         lateinit var layoutDownload: FrameLayout
-        lateinit var progressDownload: TasksCompletedView
-        lateinit var progressDownloadHint: ProgressBar
+        lateinit var progressDownload: CircleProgressView
         lateinit var textDownload: MaterialTextView
     }
 
@@ -60,15 +52,16 @@ class MainActivity : AppCompatActivity() {
     private var menuItemDrawable = arrayListOf<Int>()
     private var menuItemTitles = arrayListOf<Int>()
     private lateinit var binding: ActivityMainBinding
-    private val sharedCharacterViewModel by viewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        //获取 Uri
+        fixUriBug()
+        //初始化 handler
         setHandler()
-        // 全屏显示
+        //全屏显示
         setFullScreen()
         setContentView(binding.root)
         //取消其它任务
@@ -80,7 +73,13 @@ class MainActivity : AppCompatActivity() {
         //监听
         setListener()
         //应用版本校验
-        AppUpdateHelper.init(this, layoutInflater)
+        AppUpdateUtil.init(this, layoutInflater)
+    }
+
+    private fun fixUriBug() {
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        builder.detectFileUriExposure()
     }
 
     // 全屏显示
@@ -119,26 +118,18 @@ class MainActivity : AppCompatActivity() {
                 //获取版本失败
                 0 -> {
                     MainScope().launch {
-                        layoutDownload.visibility = View.VISIBLE
-                        textDownload.text = "点击重试"
-                        layoutDownload.setOnClickListener {
-                            DatabaseUpdater.checkDBVersion()
-                            layoutDownload.visibility = View.GONE
-                        }
-                        delay(5000L)
                         layoutDownload.visibility = View.GONE
+                        ToastUtil.short("获取数据版本信息失败~")
                     }
                 }
                 //正常执行
                 1 -> {
-                    sharedCharacterViewModel.reload.postValue(true)
+                    recreate()
                 }
                 //数据切换
                 2 -> {
                     MainScope().launch {
                         delay(500L)
-                        progressDownloadHint.visibility = View.GONE
-                        progressDownload.visibility = View.VISIBLE
                         progressDownload.setProgress(100)
                         layoutDownload.setOnClickListener {
                             exitProcess(0)
@@ -157,10 +148,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        ActivityHelper.instance.currentActivity = this
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
-        progressDownloadHint = binding.progressHint
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
@@ -211,10 +202,6 @@ class MainActivity : AppCompatActivity() {
             packageName,
             0
         ).versionName
-        //本地储存
-        sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-        //绑定活动
-        ActivityUtil.instance.currentActivity = this
         //悬浮穿高度
         mFloatingWindowHeight = ScreenUtil.getWidth() - 48.dp
     }
@@ -236,11 +223,17 @@ class MainActivity : AppCompatActivity() {
         }
         //长按回到顶部
         fabMain.setOnLongClickListener {
+            //角色页面-回到顶部
             try {
-                CharacterListFragment.characterList.smoothScrollToPosition(0)
-                EquipmentListFragment.list.smoothScrollToPosition(0)
+                CharacterListFragment.motionLayout.transitionToStart()
+                CharacterListFragment.characterList.scrollToPosition(0)
             } catch (e: Exception) {
-
+            }
+            //装备页面-回到顶部
+            try {
+                EquipmentListFragment.motionLayout.transitionToStart()
+                EquipmentListFragment.list.scrollToPosition(0)
+            } catch (e: Exception) {
             }
             return@setOnLongClickListener true
         }

@@ -153,7 +153,7 @@ fun Attr.allNotZero(): List<AttrValue> {
     return attrs
 }
 
-//非零属性
+//属性对比
 fun Attr.compare(attr1: Attr): List<AttrValue> {
     val attrs = all()
     val attrs1 = attr1.all()

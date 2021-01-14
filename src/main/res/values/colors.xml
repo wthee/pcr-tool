@@ -4,12 +4,13 @@
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="colorPrimaryDark">#165FDA</color>
     <color name="colorAccent">#8BBBF1</color>
+    <color name="colorHalfAccent">#808BBBF1</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorAlpha">#00FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="text">#454545</color>
     <color name="textGray">#848484</color>
-    <color name="colorGray">#86EEEEEE</color>
+    <color name="colorGray">#EEEEEE</color>
     <color name="colorFg">#15000000</color>
     <color name="colorBg">#F5F5F5</color>
     <color name="colorAlphaBlack">#75000000</color>
@@ -27,7 +28,6 @@
     <color name="red">#FF0000</color>
     <color name="news_update">#f55291</color>
     <color name="news_system">#a067c5</color>
-    <color name="news_event">#399be6</color>
     <color name="cool_apk">#4caf50</color>
     <color name="viewpager_bg">#323232</color>
 </resources>

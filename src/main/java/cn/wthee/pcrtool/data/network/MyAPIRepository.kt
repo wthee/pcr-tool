@@ -1,12 +1,10 @@
 package cn.wthee.pcrtool.data.network
 
-import androidx.preference.PreferenceManager
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.utils.ApiHelper
+import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -17,18 +15,10 @@ import okhttp3.RequestBody
 object MyAPIRepository {
 
     //创建服务
-    private val service = ApiHelper.create(MyAPIService::class.java, Constants.API_URL)
+    private val service = ApiUtil.create(MyAPIService::class.java, Constants.API_URL)
 
     suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpData>> {
-        var region = DatabaseUpdater.getRegion()
-        if (region == 4) {
-            //获取查询设置
-            val tw = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
-                .getBoolean("pvp_region", false)
-            if (tw) {
-                region = 3
-            }
-        }
+        val region = DatabaseUpdater.getRegion()
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)
@@ -79,11 +69,11 @@ object MyAPIRepository {
     }
 
     //排名信息
-    suspend fun getLeader(): ResponseData<List<LeaderboardData>> {
+    suspend fun getLeader(): ResponseData<LeaderData> {
         //请求
         try {
             val response = service.getLeader()
-            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+            if (response.message == "failure" || response.data == null) {
                 return error()
             }
             return response
@@ -94,7 +84,6 @@ object MyAPIRepository {
         }
         return error()
     }
-
 
     //日历信息
     suspend fun getCalendar(): ResponseData<CalendarData> {

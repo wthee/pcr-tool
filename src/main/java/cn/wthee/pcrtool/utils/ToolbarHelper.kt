@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.databinding.ViewToolbarBinding
 /**
  * toolbar 设置
  */
-class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
+class ToolbarHelper(private val toolbar: ViewToolbarBinding) {
 
     val leftIcon = toolbar.leftIcon
     val rightIcon = toolbar.rightIcon
@@ -24,15 +24,17 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
     }
 
     //主页面toolbar
-    fun setMainToolbar(iconId: Int, titleText: String) {
+    fun setMainToolbar(iconId: Int, titleText: String): ToolbarHelper {
         setLeftIcon(iconId)
         title.text = titleText
         toolbar.root.setBackgroundColor(ResourcesUtil.getColor(R.color.colorPrimary))
+        return this
     }
 
-    fun setRightIcon(resId: Int): ToolbarUtil {
+    fun setRightIcon(resId: Int, colorId: Int): ToolbarHelper {
         rightIcon.visibility = View.VISIBLE
         rightIcon.setImageResource(resId)
+        rightIcon.imageTintList = ColorStateList.valueOf(ResourcesUtil.getColor(colorId))
         return this
     }
 
@@ -46,15 +48,10 @@ class ToolbarUtil(private val toolbar: ViewToolbarBinding) {
         title.setTextColor(ResourcesUtil.getColor(R.color.colorPrimary))
     }
 
-    fun setCenterTitle(titleText: String): ToolbarUtil {
+    fun setCenterTitle(titleText: String): ToolbarHelper {
         setCenterStyle()
         title.text = titleText
         return this
     }
 
-    fun setToolHead(iconId: Int, titleText: String) {
-        leftIcon.imageTintList = ColorStateList.valueOf(ResourcesUtil.getColor(R.color.colorWhite))
-        setLeftIcon(iconId)
-        title.text = titleText
-    }
 }

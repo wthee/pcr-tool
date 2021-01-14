@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 /**
  * 动画
  */
-object ObjectAnimatorHelper {
+object ObjectAnimatorUtil {
 
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
         val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.95f, 1f)

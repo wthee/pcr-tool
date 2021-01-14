@@ -33,7 +33,7 @@
 
     <!--  背景设置  -->
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/dialog_background</item>
+        <item name="android:background">@drawable/bg_bottom_dialog</item>
     </style>
 
     <!-- 圆角图片 -->
@@ -48,5 +48,13 @@
     <style name="circleStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/card_radius</item>
+    </style>
+
+    <!--三角图片  -->
+    <style name="angleStyle">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/card_radius</item>
+        <item name="cornerFamilyBottomRight">cut</item>
+        <item name="cornerSizeBottomRight">100%</item>
     </style>
 </resources>

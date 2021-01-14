@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference
 /**
  * 全局获取 activity
  */
-class ActivityUtil private constructor() {
+class ActivityHelper private constructor() {
 
     private var sCurrentActivityWeakRef: WeakReference<AppCompatActivity>? = null
 
@@ -26,7 +26,7 @@ class ActivityUtil private constructor() {
 
     companion object {
 
-        val instance = ActivityUtil()
+        val instance = ActivityHelper()
     }
 
 

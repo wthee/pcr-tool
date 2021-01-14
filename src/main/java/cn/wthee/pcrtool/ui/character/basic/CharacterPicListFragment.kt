@@ -68,7 +68,7 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
         binding.apply {
             downLoadFab = fabDownload
-            ToolbarUtil(titleViewPic).setCenterTitle(getString(R.string.view_pic))
+            ToolbarHelper(titleViewPic).setCenterTitle(getString(R.string.view_pic))
             //初始化列表
             adapter = CharacterPicAdapter(this@CharacterPicListFragment)
             pics.adapter = adapter
@@ -116,12 +116,14 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
         //下载
         downLoadFab.setOnClickListener {
             if (hasSelected.contains(true)) {
+                //权限申请
                 PermissionX.init(activity).permissions(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 ).request { allGranted, _, _ ->
                     val selectedUrls = arrayListOf<String>()
                     if (allGranted) {
+                        //所选图片是否全部加载完成
                         var startDownload = true
                         hasSelected.forEachIndexed { index, b ->
                             if (b && !hasLoaded[index]) {
@@ -131,6 +133,7 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
                                 selectedUrls.add(urls[index])
                             }
                         }
+                        //开始下载
                         if (startDownload) {
                             ToastUtil.short("正在保存，请稍后~")
                             selectedUrls.forEachIndexed { index, url ->
@@ -153,7 +156,7 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
                                             .build()
                                         val bitmap =
                                             (requireContext().imageLoader.execute(request).drawable as BitmapDrawable).bitmap
-                                        ImageDownloadUtil(requireActivity()).save(bitmap, name)
+                                        ImageDownloadHelper(requireActivity()).save(bitmap, name)
                                     }
                                 } catch (e: Exception) {
                                     ToastUtil.short("第${index + 1}张图片未保存成功，请重试~")

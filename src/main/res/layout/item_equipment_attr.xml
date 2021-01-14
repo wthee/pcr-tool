@@ -16,7 +16,7 @@
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:background="@drawable/title_background"
+        android:background="@drawable/bg_text_view"
         tools:text="@string/physical"
         android:ellipsize="end"
         android:maxLines="1"

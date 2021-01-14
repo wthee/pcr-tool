@@ -7,14 +7,20 @@
     android:animateLayoutChanges="true"
     app:layoutDescription="@xml/fragment_main_pager_scene">
 
+    <View
+        android:id="@+id/layout_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <include
         android:id="@+id/tool_bar"
         layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/character_list"
+        android:id="@+id/pager_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/bg_back_drop"
         android:orientation="vertical"
         android:padding="@dimen/xs_padding"
         android:scrollbars="vertical"

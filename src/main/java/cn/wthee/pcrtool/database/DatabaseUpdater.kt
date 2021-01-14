@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.content.Context
 import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
@@ -14,7 +15,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
-import cn.wthee.pcrtool.utils.ApiHelper
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
@@ -26,6 +28,9 @@ import java.io.File
 
 
 object DatabaseUpdater {
+
+    val sp =
+        ActivityHelper.instance.currentActivity!!.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
@@ -41,7 +46,7 @@ object DatabaseUpdater {
         //获取数据库最新版本
         MainScope().launch {
             try {//创建服务
-                val service = ApiHelper.create(
+                val service = ApiUtil.create(
                     MyAPIService::class.java,
                     API_URL
                 )
@@ -116,14 +121,23 @@ object DatabaseUpdater {
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
-    fun getRegion() = if (getDatabaseType() == 1) 2 else 4
+    fun getRegion() = if (getDatabaseType() == 1) 2 else {
+        //获取查询设置
+        val tw = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
+            .getBoolean("pvp_region", false)
+        if (tw) {
+            3
+        } else {
+            4
+        }
+    }
 
-    private fun getLocalDatabaseVersion() = MainActivity.sp.getString(
+    private fun getLocalDatabaseVersion() = sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
         "0"
     ) ?: "0"
 
-    private fun getLocalDatabaseHash() = MainActivity.sp.getString(
+    private fun getLocalDatabaseHash() = sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_HASH else Constants.SP_DATABASE_HASH_JP,
         "0"
     ) ?: "0"
@@ -132,7 +146,11 @@ object DatabaseUpdater {
         if (getDatabaseType() == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP
 
     fun updateLocalDataBaseVersion(ver: DatabaseVersion) {
-        MainActivity.sp.edit {
+        val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
+            "main",
+            Context.MODE_PRIVATE
+        )
+        sp.edit {
             val type = getDatabaseType()
             putString(
                 if (type == 1)

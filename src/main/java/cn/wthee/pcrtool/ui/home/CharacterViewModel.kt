@@ -9,6 +9,7 @@ import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.enums.SortType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class CharacterViewModel(
     var character = MutableLiveData<CharacterInfoPro>()
     var reset = MutableLiveData<Boolean>()
     var updateCharacter = MutableLiveData<Boolean>()
-    var reload = MutableLiveData<Boolean>()
+    var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
 
     //角色基本资料
     fun getCharacters(sortType: SortType, asc: Boolean, name: String, reload: Boolean = true) {
@@ -68,6 +69,13 @@ class CharacterViewModel(
         2 -> repository.getCharacterByPosition(300, 599)
         3 -> repository.getCharacterByPosition(600, 999)
         else -> repository.getCharacterByPosition(0, 999)
+    }
+
+    fun getAllCharacter() {
+        viewModelScope.launch {
+            val data = repository.getCharacterByPosition(0, 999)
+            allPvpCharacterData.postValue(data)
+        }
     }
 
     //升级经验列表

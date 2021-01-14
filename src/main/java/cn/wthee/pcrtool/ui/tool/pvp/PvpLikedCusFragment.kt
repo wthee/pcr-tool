@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater.getRegion
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedCustomizeBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -43,8 +42,8 @@ class PvpLikedCusFragment : Fragment() {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             duration = 500L
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(Color.TRANSPARENT)
+//            scrimColor = Color.TRANSPARENT
+//            setAllContainerColors(Color.TRANSPARENT)
         }
     }
 
@@ -125,7 +124,7 @@ class PvpLikedCusFragment : Fragment() {
         binding.pvpNext.icon = ResourcesUtil.getDrawable(R.drawable.ic_loved)
         binding.pvpNext.text = "保存"
         binding.pvpPre.show()
-        ToolbarUtil(binding.toolPvp).setToolHead(
+        ToolbarHelper(binding.toolPvp).setMainToolbar(
             R.drawable.ic_def,
             "请添加防守方队伍信息"
         )
@@ -142,7 +141,7 @@ class PvpLikedCusFragment : Fragment() {
             .replace(R.id.layout_select, PvpSelectFragment(0))
             .commit()
         //设置头部
-        ToolbarUtil(binding.toolPvp).setToolHead(
+        ToolbarHelper(binding.toolPvp).setMainToolbar(
             R.drawable.ic_pvp,
             "请添加进攻方队伍信息"
         )

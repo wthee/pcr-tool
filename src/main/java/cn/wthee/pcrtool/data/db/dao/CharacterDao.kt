@@ -21,7 +21,7 @@ const val characterWhere =
             WHEN  0 = :r6  THEN 1
             WHEN  rarity_6_quest_id != 0 AND 1 = :r6  THEN 1 
         END
-        AND unit_profile.unit_id NOT IN (106701,110201,113801,900103,906601)
+        AND unit_profile.unit_id < 200000 
         AND 1 = CASE
             WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
         END

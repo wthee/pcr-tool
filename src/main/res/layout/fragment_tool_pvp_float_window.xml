@@ -25,12 +25,12 @@
             app:tint="@color/colorPrimary" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/close"
+            android:id="@+id/max"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorWhite"
-            android:contentDescription="@string/cancel"
-            android:src="@drawable/ic_cancel"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_float_close"
             app:borderWidth="0dp"
             app:fabSize="mini"
             app:tint="@color/colorPrimary" />
@@ -162,17 +162,16 @@
             android:id="@+id/liked_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_color"
+            android:background="@color/colorBg"
             android:orientation="vertical"
-            android:visibility="invisible"
-            tools:visibility="visible">
+            android:visibility="invisible">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/like_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorPrimary"
                 android:layout_marginTop="@dimen/m_margin"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:text="@string/no_liked_data" />
@@ -183,8 +182,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:layout_marginTop="@dimen/m_margin"
-                android:layout_marginStart="@dimen/s_margin"
-                android:layout_marginEnd="@dimen/s_margin"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"
