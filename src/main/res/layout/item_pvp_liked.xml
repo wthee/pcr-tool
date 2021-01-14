@@ -51,7 +51,7 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.85"
         app:spanCount="5"
@@ -67,8 +67,8 @@
         android:src="@drawable/ic_pvp"
         android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@id/center_gl"
-        app:layout_constraintEnd_toStartOf="@id/liked_characters"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/liked_characters"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.075" />
 
@@ -80,8 +80,8 @@
         android:src="@drawable/ic_def"
         android:tint="@color/red"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/liked_characters"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/liked_characters"
         app:layout_constraintTop_toTopOf="@id/center_gl"
         app:layout_constraintWidth_percent="0.075" />
 

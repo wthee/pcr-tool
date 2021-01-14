@@ -342,6 +342,8 @@ class PvpService : Service() {
             adapter = PvpCharacterResultAdapter(true)
             resultContent.pvpResultList.adapter = adapter
             resultContent.root.visibility = View.GONE
+            resultContent.teamDef.visibility = View.GONE
+            resultContent.hr.visibility = View.GONE
         }
     }
 }

@@ -152,8 +152,8 @@
     <string name="from">From %s</string>
     <string name="customize">自定义</string>
     <string name="add">添加</string>
-    <string name="pvp_search_jp">日版竞技场查询</string>
-    <string name="pvp_search_summary">查询台服信息</string>
+    <string name="pvp_search_jp">查询台服竞技场数据</string>
+    <string name="pvp_search_summary">竞技场查询返回台服竞技场信息</string>
     <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
     <string name="equip_name">装备名</string>

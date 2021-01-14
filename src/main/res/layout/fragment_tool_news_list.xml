@@ -18,8 +18,7 @@
         android:layout_weight="1"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:layout_marginTop="@dimen/m_margin"
-        android:padding="@dimen/xs_padding">
+        android:layout_marginTop="@dimen/m_margin">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/news_list"

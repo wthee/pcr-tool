@@ -89,7 +89,7 @@ class PvpCharacterResultAdapter(
                 atkCharacters.adapter = adapter
                 adapter.submitList(data.getAtkIdList())
                 //顶/踩信息
-                up.text = "✓${data.up}"
+                up.text = "${data.up}"
                 //赞同率
                 val rateNum = if (data.up == 0) 0 else {
                     round(data.up * 1.0 / (data.up + data.down) * 100).toInt()

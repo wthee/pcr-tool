@@ -88,6 +88,14 @@ class PvpLikedAdapter(
                             }
                         }
                         PvpSelectFragment.selects = idList
+                        try {
+                            //更新应用内已选择列表
+                            PvpSelectFragment.selectedAdapter.submitList(idList) {
+                                PvpSelectFragment.selectedAdapter.notifyDataSetChanged()
+                            }
+                        } catch (e: Exception) {
+
+                        }
                         //悬浮窗重新查询
                         PvpService.fabSearch.callOnClick()
                     }
