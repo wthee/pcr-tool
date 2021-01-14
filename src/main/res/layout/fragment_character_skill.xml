@@ -8,10 +8,6 @@
     android:elevation="@dimen/card_elevation"
     android:minHeight="@dimen/card_height">
 
-    <include
-        android:id="@+id/layout_loop_title"
-        layout="@layout/view_toolbar"
-        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/skill_list"
@@ -20,12 +16,21 @@
         android:layout_marginStart="@dimen/xm_margin"
         android:layout_marginTop="@dimen/m_margin"
         android:layout_marginEnd="@dimen/xm_margin"
+        android:background="@color/colorWhite"
         android:orientation="vertical"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintTop_toBottomOf="@id/layout_loop_title"
+        app:layout_constraintTop_toTopOf="parent"
         tools:itemCount="3"
         tools:listitem="@layout/item_skill" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/skill_share"
+        android:visibility="gone"
+        android:layout_width="@dimen/menu_icon"
+        android:layout_height="@dimen/menu_icon"
+        android:src="@drawable/ic_share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

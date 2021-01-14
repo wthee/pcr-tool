@@ -26,31 +26,32 @@ class ImageDownloadHelper(
 
     fun save(bitmap: Bitmap, name: String) {
         activity.lifecycleScope.launch {
-            saveBitmap(bitmap, name)
+            saveBitmap(bitmap, name, true)
         }
     }
 
     //保存bitmap
-    private fun saveBitmap(
-        bitmap: Bitmap, displayName: String
-    ) {
+    fun saveBitmap(
+        bitmap: Bitmap, displayName: String, toast: Boolean
+    ): Boolean {
         var stream: OutputStream? = null
-        var path: String
+        val path = getImagePath()
         try {
             //保存属性
             val contentValues = ContentValues()
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/*")
-            path = Environment.DIRECTORY_PICTURES
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, path)
+                contentValues.put(
+                    MediaStore.MediaColumns.RELATIVE_PATH,
+                    Environment.DIRECTORY_PICTURES
+                )
             }
             // 判断是否已存在
-            path = "/storage/emulated/0" + File.separator + path
             val file = File("$path/$displayName")
-            if (file.exists()) {
+            if (file.exists() && toast) {
                 ToastUtil.short("图片已存在~")
-                return
+                return true
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 var uri: Uri? = null
@@ -76,12 +77,21 @@ class ImageDownloadHelper(
                     contentValues
                 )
             }
-            ToastUtil.short("图片保存成功~$displayName")
+            if (toast) ToastUtil.short("图片保存成功~$displayName")
+            return true
         } catch (e: Exception) {
             ToastUtil.short("图片保存失败")
+            return false
         } finally {
             stream?.close()
         }
     }
 
+    companion object {
+        fun getImagePath(): String {
+            var path: String = Environment.DIRECTORY_PICTURES
+            path = "/storage/emulated/0" + File.separator + path
+            return path
+        }
+    }
 }

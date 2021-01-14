@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.adapter.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ShareIntentUtil
 
 /**
  * 角色技能页面
@@ -57,7 +58,10 @@ class CharacterSkillFragment : Fragment() {
         sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
             adapter.submitList(it)
         })
-
+        //分享长图
+        binding.skillShare.setOnClickListener {
+            ShareIntentUtil.imageLong(requireActivity(), binding.skillList, "skill_${uid}.png")
+        }
         return binding.root
     }
 

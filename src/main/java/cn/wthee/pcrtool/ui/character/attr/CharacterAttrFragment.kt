@@ -36,18 +36,18 @@ class CharacterAttrFragment : Fragment() {
             }
         }
 
-        var selRatity = 1
+        var selRarity = 5
         var maxRank = 1
         var maxStar = 5
-        var lv = 85
-        var ueLv = 1
+        var lv = 100
+        var ueLv = 100
         var uid = 0
     }
 
     private var r6Id = -1
     private lateinit var binding: FragmentCharacterAttrInfoBinding
     private lateinit var attrAdapter: CharacterAttrAdapter
-    private var selRank = 2
+    private var selRank = 10
     private var index = 0
     private var iconUrls = arrayListOf<String>()
 
@@ -81,17 +81,26 @@ class CharacterAttrFragment : Fragment() {
         binding.root.postDelayed({
             binding.root.visibility = View.VISIBLE
         }, 500L)
+        init()
         //点击事件
         setListener()
         //数据监听
         setObserve()
+
+        return binding.root
+    }
+
+    private fun init() {
         iconUrls = CharacterIdUtil.getAllIconUrl(uid, r6Id)
         //加载icon
         loadIcon(iconUrls[index])
         characterAttrViewModel.getMaxRankAndRarity(uid)
-        return binding.root
+        attrAdapter = CharacterAttrAdapter()
+        binding.charcterAttrs.adapter = attrAdapter
+
     }
 
+    //加载图标
     private fun loadIcon(url: String) {
         binding.icon.load(url) {
             error(R.drawable.unknown_gray)
@@ -150,18 +159,27 @@ class CharacterAttrFragment : Fragment() {
                 ueLv = slider.value.toInt()
                 uniqueEquip.ueLv.text = getString(R.string.unique_equip_lv, ueLv)
             }
+            //专武分享
+            uniqueShare.setOnClickListener {
+                //分享图片
+                ShareIntentUtil.image(
+                    requireActivity(),
+                    uniqueEquip.root,
+                    "ue_${uid}_lv_${uniqueEquip.ueLvSeekBar.value.toInt()}.png"
+                )
+            }
         }
     }
 
     private fun setObserve() {
         //获取角色最大Rank后，加载数据
         characterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
-            maxRank = r[0]
-            selRank = r[0]
-            selRatity = r[1]
-            maxStar = r[1]
-            lv = r[2]
-            ueLv = r[3]
+            maxRank = r["rank"] ?: 11
+            selRank = r["rank"] ?: 11
+            selRarity = r["rarity"] ?: 5
+            maxStar = r["rarity"] ?: 5
+            lv = r["level"] ?: 100
+            ueLv = r["ueLv"] ?: 100
             binding.apply {
                 level.text = lv.toString()
                 levelSeekBar.valueFrom = 1.0f
@@ -171,7 +189,7 @@ class CharacterAttrFragment : Fragment() {
                 uniqueEquip.ueLvSeekBar.valueTo = ueLv.toFloat()
                 uniqueEquip.ueLvSeekBar.value = ueLv.toFloat()
                 loadData(selRank)
-                setRatity(selRatity)
+                setRarity(selRarity)
                 //rank 选择
                 RankSelectBtnsHelper(binding.rankEquip.rankBtns).apply {
                     initRank(selRank)
@@ -239,8 +257,6 @@ class CharacterAttrFragment : Fragment() {
             }
         })
         //角色属性
-        attrAdapter = CharacterAttrAdapter()
-        binding.charcterAttrs.adapter = attrAdapter
         characterAttrViewModel.sumInfo.observe(viewLifecycleOwner, {
             attrAdapter.submitList(it.all()) {
                 attrAdapter.notifyDataSetChanged()
@@ -257,12 +273,12 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private fun loadData(rank: Int = selRank) {
-        characterAttrViewModel.getCharacterInfo(uid, rank, selRatity, lv, ueLv)
+        characterAttrViewModel.getCharacterInfo(uid, rank, selRarity, lv, ueLv)
     }
 
 
     //设置星级
-    private fun setRatity(num: Int) {
+    private fun setRarity(num: Int) {
         StarViewUtil.show(
             binding.root.context,
             binding.starts,
@@ -271,7 +287,7 @@ class CharacterAttrFragment : Fragment() {
             50,
             object : StarViewUtil.OnSelect {
                 override fun select(index: Int) {
-                    selRatity = index + 1
+                    selRarity = index + 1
                     loadData()
                 }
             })

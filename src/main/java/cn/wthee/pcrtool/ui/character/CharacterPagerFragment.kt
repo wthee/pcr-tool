@@ -21,7 +21,6 @@ import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -33,7 +32,6 @@ class CharacterPagerFragment : Fragment() {
 
     companion object {
         lateinit var viewPager: ViewPager2
-        lateinit var fab: ExtendedFloatingActionButton
         var uid = -1
         var r6Id = -1
     }
@@ -41,7 +39,6 @@ class CharacterPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPagerBinding
     private lateinit var adapter: CharacterPagerAdapter
-
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
     }
@@ -83,7 +80,6 @@ class CharacterPagerFragment : Fragment() {
         MainScope().launch {
             val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
-            fab = binding.characterFab
             if (viewPager.adapter == null) {
                 adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid, r6Id)
                 viewPager.adapter = adapter
@@ -104,7 +100,7 @@ class CharacterPagerFragment : Fragment() {
     fun fabChange(position: Int) {
         when (position) {
             0 -> {
-                fab.apply {
+                binding.fabCharacter.apply {
                     text = getString(R.string.view_pic)
                     icon = ResourcesUtil.getDrawable(R.drawable.ic_pic)
                     setOnClickListener {
@@ -113,7 +109,7 @@ class CharacterPagerFragment : Fragment() {
                 }
             }
             1 -> {
-                fab.apply {
+                binding.fabCharacter.apply {
                     text = getString(R.string.rank_compare)
                     icon = ResourcesUtil.getDrawable(R.drawable.ic_compare)
                     setOnClickListener {
@@ -122,7 +118,7 @@ class CharacterPagerFragment : Fragment() {
                 }
             }
             2 -> {
-                fab.apply {
+                binding.fabCharacter.apply {
                     text = getString(R.string.skill_loop)
                     icon = ResourcesUtil.getDrawable(R.drawable.ic_loop)
                     setOnClickListener {

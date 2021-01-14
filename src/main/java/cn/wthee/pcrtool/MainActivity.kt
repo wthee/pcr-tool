@@ -1,10 +1,7 @@
 package cn.wthee.pcrtool
 
 import android.content.res.Configuration
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
@@ -60,8 +57,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        //获取 Uri
+        fixUriBug()
+        //初始化 handler
         setHandler()
-        // 全屏显示
+        //全屏显示
         setFullScreen()
         setContentView(binding.root)
         //取消其它任务
@@ -74,6 +74,12 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //应用版本校验
         AppUpdateUtil.init(this, layoutInflater)
+    }
+
+    private fun fixUriBug() {
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        builder.detectFileUriExposure()
     }
 
     // 全屏显示

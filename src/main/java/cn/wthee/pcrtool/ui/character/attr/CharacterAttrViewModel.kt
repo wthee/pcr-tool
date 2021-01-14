@@ -18,7 +18,7 @@ class CharacterAttrViewModel(
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
     var storyAttrs = MutableLiveData<Attr>()
     var sumInfo = MutableLiveData<Attr>()
-    var maxData = MutableLiveData<List<Int>>()
+    var maxData = MutableLiveData<Map<String, Int>>()
 
     //获取角色属性信息
     fun getCharacterInfo(unitId: Int, rank: Int, rarity: Int, lv: Int, ueLv: Int) {
@@ -86,7 +86,12 @@ class CharacterAttrViewModel(
                 val rarity = characterRepository.getMaxRarity(id)
                 val level = characterRepository.getMaxLevel()
                 val ueLv = equipmentRepository.getUniqueEquipMaxLv()
-                maxData.postValue(listOf(rank, rarity, level, ueLv))
+                val map = HashMap<String, Int>()
+                map["rank"] = rank
+                map["rarity"] = rarity
+                map["level"] = level
+                map["ueLv"] = ueLv
+                maxData.postValue(map)
             } catch (e: Exception) {
 
             }

@@ -83,7 +83,7 @@ class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
                                 MainScope().launch {
                                     attr0 = sharedAttrViewModel.getAttrs(
                                         CharacterAttrFragment.uid, rank,
-                                        CharacterAttrFragment.selRatity,
+                                        CharacterAttrFragment.selRarity,
                                         CharacterAttrFragment.lv,
                                         CharacterAttrFragment.ueLv
                                     )
@@ -104,7 +104,7 @@ class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
                                 MainScope().launch {
                                     attr1 = sharedAttrViewModel.getAttrs(
                                         CharacterAttrFragment.uid, rank,
-                                        CharacterAttrFragment.selRatity,
+                                        CharacterAttrFragment.selRarity,
                                         CharacterAttrFragment.lv,
                                         CharacterAttrFragment.ueLv
                                     )
