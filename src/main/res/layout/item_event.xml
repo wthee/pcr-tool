@@ -18,6 +18,7 @@
         android:background="@drawable/bg_text_view"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
+        android:layout_margin="@dimen/xs_margin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorWhite"
         tools:text="@string/app_name" />
@@ -27,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/s_padding"
-        android:paddingTop="@dimen/xm_padding"
+        android:paddingTop="@dimen/m_padding"
         android:paddingEnd="@dimen/s_padding"
         android:paddingBottom="@dimen/xm_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"

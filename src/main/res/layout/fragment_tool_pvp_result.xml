@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pvp_result_toolbar"
         app:layout_constrainedHeight="true"
         tools:context=".ui.tool.pvp.PvpResultDialogFragment"

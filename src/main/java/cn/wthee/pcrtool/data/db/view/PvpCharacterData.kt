@@ -18,7 +18,6 @@ fun getDefault() = arrayListOf(
     PvpCharacterData(0, 999),
 )
 
-
 fun ArrayList<PvpCharacterData>.getIds(): JsonArray {
     val ids = JsonArray()
     for (character in this) {

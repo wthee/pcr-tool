@@ -20,6 +20,7 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
 
     companion object {
         var selects = getDefault()
+        var allCharecters = listOf<PvpCharacterData>()
         var character1 = listOf<PvpCharacterData>()
         var character2 = listOf<PvpCharacterData>()
         var character3 = listOf<PvpCharacterData>()
@@ -48,6 +49,7 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
         //角色页面 绑定tab viewpager
         viewModel.getAllCharacter()
         viewModel.allPvpCharacterData.observe(viewLifecycleOwner, { data ->
+            allCharecters = data
             character1 = data.filter {
                 it.position in 0..299
             }

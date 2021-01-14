@@ -44,7 +44,6 @@ class ToolNewsListFragment : Fragment() {
         adapter = NewsAdapter(parentFragmentManager, region, binding.fabCopy)
         val loaderStateAdapter = LoaderStateAdapter { adapter.retry() }
         binding.newsList.adapter = adapter.withLoadStateFooter(loaderStateAdapter)
-
         //下拉刷新
         binding.refresh.apply {
             setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
@@ -76,7 +75,6 @@ class ToolNewsListFragment : Fragment() {
 
     private fun loadNews() {
         binding.loading.loadingTip.text = getString(R.string.loading_news)
-        binding.loading.loadingTip.setTextColor(ResourcesUtil.getColor(R.color.colorWhite))
         lifecycleScope.launch {
             @OptIn(ExperimentalCoroutinesApi::class)
             when (region) {

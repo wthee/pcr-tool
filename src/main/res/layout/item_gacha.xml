@@ -17,6 +17,7 @@
         android:background="@drawable/bg_text_view"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/s_padding"
+        android:layout_margin="@dimen/xs_margin"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"
         tools:text="@string/app_name" />
@@ -25,16 +26,17 @@
         android:id="@+id/gacha_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/m_padding"
-        android:textColor="@color/text"
+        android:paddingStart="@dimen/m_padding"
+        android:paddingEnd="@dimen/m_padding"
+        android:paddingTop="@dimen/s_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/text"
         tools:text="@string/app_name" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gacha_icons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/xs_margin"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:spanCount="2"

@@ -8,8 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemPvpLikedBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpResultDialogFragment
+import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment
+import cn.wthee.pcrtool.ui.tool.pvp.PvpService
 import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.dp
 
@@ -74,6 +77,19 @@ class PvpLikedAdapter(
                             ActivityHelper.instance.currentActivity!!.supportFragmentManager,
                             "pvp_result"
                         )
+                    } else {
+                        val idList = arrayListOf<PvpCharacterData>()
+                        val ids = data.defs.split("-")
+                        ids.forEach {
+                            if (it != "") {
+                                idList.add(PvpSelectFragment.allCharecters.filter { p ->
+                                    p.unitId == it.toInt()
+                                }[0])
+                            }
+                        }
+                        PvpSelectFragment.selects = idList
+                        //悬浮窗重新查询
+                        PvpService.fabSearch.callOnClick()
                     }
                 }
             }
