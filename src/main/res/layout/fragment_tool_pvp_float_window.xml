@@ -164,8 +164,7 @@
             android:layout_height="match_parent"
             android:background="@color/colorBg"
             android:orientation="vertical"
-            android:visibility="invisible"
-            tools:visibility="visible">
+            android:visibility="invisible">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/like_tip"

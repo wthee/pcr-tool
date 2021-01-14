@@ -342,7 +342,6 @@ class PvpService : Service() {
             adapter = PvpCharacterResultAdapter(true)
             resultContent.pvpResultList.adapter = adapter
             resultContent.root.visibility = View.GONE
-            resultContent.pvpResultToolbar.root.visibility = View.GONE
         }
     }
 }

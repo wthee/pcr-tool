@@ -78,7 +78,8 @@ class PvpCharacterResultAdapter(
                             ColorStateList.valueOf(ResourcesUtil.getColor(R.color.textGray))
                     }
                 }
-                teamNum.text = "队伍 " + if (layoutPosition + 1 < 10) {
+                teamNum.text = "进攻方" +
+                        " " + if (layoutPosition + 1 < 10) {
                     "0"
                 } else {
                     ""

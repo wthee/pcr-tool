@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
+import cn.wthee.pcrtool.adapter.PvpCharacterResultItemAdapter
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
@@ -26,13 +27,14 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var binding: FragmentToolPvpResultBinding
     private lateinit var job: Job
     private var idList = JsonArray()
+    private var defIds = arrayListOf<Int>()
     private val viewModel by activityViewModels<PvpLikedViewModel>()
 
     companion object {
-        fun getInstance(ids: String) =
+        fun getInstance(defIds: String) =
             PvpResultDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString("ids", ids)
+                    putString("defIds", defIds)
                 }
             }
     }
@@ -40,10 +42,11 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
-            val ids = getString("ids")!!
+            val ids = getString("defIds")!!
             for (id in ids.split("-")) {
                 if (id != "") {
                     idList.add(id.toInt())
+                    defIds.add(id.toInt())
                 }
             }
         }
@@ -54,6 +57,10 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolPvpResultBinding.inflate(inflater, container, false)
+        //显示进攻队伍
+        val defAdapter = PvpCharacterResultItemAdapter()
+        binding.defCharacters.adapter = defAdapter
+        defAdapter.submitList(defIds)
         //创建服务
         job = MainScope().launch {
             try {
@@ -77,8 +84,6 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
             } catch (e: Exception) {
             }
         }
-        //toolbar
-        ToolbarHelper(binding.pvpResultToolbar).setCenterTitle("进攻方信息")
         return binding.root
     }
 
