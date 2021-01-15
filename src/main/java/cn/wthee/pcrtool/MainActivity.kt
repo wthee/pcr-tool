@@ -122,12 +122,8 @@ class MainActivity : AppCompatActivity() {
                         ToastUtil.short("获取数据版本信息失败~")
                     }
                 }
-                //正常执行
-                1 -> {
-                    recreate()
-                }
                 //数据切换
-                2 -> {
+                1, 2 -> {
                     MainScope().launch {
                         delay(500L)
                         progressDownload.setProgress(100)
