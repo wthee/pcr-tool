@@ -19,8 +19,7 @@ import cn.wthee.pcrtool.utils.dp
 
 class PvpLikedAdapter(
     private val isFloat: Boolean
-) :
-    ListAdapter<PvpLikedData, PvpLikedAdapter.ViewHolder>(PvpLikedDiffCallback()) {
+) : ListAdapter<PvpLikedData, PvpLikedAdapter.ViewHolder>(PvpLikedDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
