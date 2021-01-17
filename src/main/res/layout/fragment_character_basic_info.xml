@@ -122,15 +122,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_name"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/xm_margin"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
                 android:text="@string/name"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/intro"
                 app:layout_constraintWidth_percent="0.15" />
@@ -155,15 +151,12 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_birth"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+
                 android:layout_marginTop="@dimen/xm_margin"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
                 android:text="@string/title_birth"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_name"
                 app:layout_constraintWidth_percent="0.15" />
@@ -190,14 +183,10 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_blood"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
                 android:text="@string/title_blood"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toEndOf="@id/birth"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
                 app:layout_constraintWidth_percent="0.15" />
@@ -217,15 +206,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_race"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
+                android:layout_marginTop="@dimen/xm_margin"
                 android:text="@string/title_race"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_birth"
                 app:layout_constraintWidth_percent="0.15" />
@@ -248,14 +233,10 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_cv"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
                 android:text="@string/cv"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toEndOf="@id/race"
                 app:layout_constraintTop_toTopOf="@id/title_race"
                 app:layout_constraintWidth_percent="0.15" />
@@ -275,15 +256,11 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_guide"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
+                android:layout_marginTop="@dimen/xm_margin"
                 android:text="@string/title_guide"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_race"
                 app:layout_constraintWidth_percent="0.15" />
@@ -301,16 +278,10 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_favorite"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_text_view"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
                 android:text="@string/title_fav"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/guide"
                 app:layout_constraintWidth_percent="0.15" />
@@ -329,14 +300,10 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_self"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="0dp"
                 android:text="@string/title_self"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/favorite"
                 app:layout_constraintWidth_percent="0.15" />
@@ -356,14 +323,10 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_comments"
+                style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_text_view"
-                android:paddingStart="@dimen/s_padding"
-                android:paddingEnd="@dimen/s_padding"
                 android:text="@string/title_comments"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                android:textColor="@color/colorWhite"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/self"

@@ -12,11 +12,7 @@
         android:id="@+id/team_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xs_margin"
-        android:background="@drawable/bg_text_view"
-        android:paddingStart="@dimen/xs_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:textColor="@color/colorWhite"
+        style="@style/titleStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/team_atk" />

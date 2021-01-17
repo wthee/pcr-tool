@@ -25,15 +25,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/type"
+        style="@style/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginStart="@dimen/m_margin"
-        android:background="@drawable/bg_text_view"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/name"
@@ -67,15 +61,10 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/skill_des"
+        style="@style/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
-        android:background="@drawable/bg_text_view"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
         android:text="@string/skill_action"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/desc" />
 

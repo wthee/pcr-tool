@@ -41,7 +41,7 @@ class CharacterLeaderAdapter(private val context: Context) :
                     placeholder(R.drawable.unknown_gray)
                     error(R.drawable.unknown_gray)
                 }
-//                name.text = data.name
+                name.text = data.name
                 all.text = data.all
                 all.setTextColor(getColor(data.all))
                 pvp.text = data.pvp

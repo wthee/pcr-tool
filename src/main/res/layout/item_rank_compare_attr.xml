@@ -3,22 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/xs_margin"
-    android:paddingStart="@dimen/s_padding"
-    android:paddingEnd="@dimen/s_padding"
+    android:layout_marginTop="@dimen/m_margin"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_attr"
+        style="@style/titleStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         android:layout_weight="3"
-        android:background="@drawable/bg_text_view"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/colorWhite"
         tools:text="@string/physical" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -26,9 +21,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:maxLines="1"
         android:ellipsize="end"
         android:gravity="end"
+        android:maxLines="1"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="780" />
 
@@ -37,9 +32,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:maxLines="1"
         android:ellipsize="end"
         android:gravity="end"
+        android:maxLines="1"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         tools:text="780" />
 
@@ -48,10 +43,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:maxLines="1"
         android:ellipsize="end"
-        android:textStyle="bold"
         android:gravity="end"
+        android:maxLines="1"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textStyle="bold"
         tools:text="780" />
 </LinearLayout>

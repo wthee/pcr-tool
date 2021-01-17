@@ -9,15 +9,6 @@
     android:clickable="true"
     android:focusable="true">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/type_img"
-        android:layout_width="@dimen/menu_icon"
-        android:layout_height="@dimen/menu_icon"
-        android:src="@color/red"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/angleStyle" />
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/atk_ids"
         android:layout_width="0dp"
@@ -91,4 +82,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/type_img"
+        android:layout_width="@dimen/menu_icon"
+        android:layout_height="@dimen/menu_icon"
+        android:src="@color/red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/angleStyle" />
 </androidx.constraintlayout.widget.ConstraintLayout>
