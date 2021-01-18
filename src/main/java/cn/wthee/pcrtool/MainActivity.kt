@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.startup.AppInitializer
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
 import cn.wthee.circleprogressbar.CircleProgressView
@@ -57,6 +58,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        //友盟初始化
+        AppInitializer.getInstance(applicationContext)
+            .initializeComponent(UMengInitializer::class.java)
         //获取 Uri
         fixUriBug()
         //初始化 handler
@@ -131,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                             exitProcess(0)
                         }
                         for (i in 3 downTo 1) {
-                            textDownload.text = "应用将在 ${i} 秒后关闭!"
+                            textDownload.text = getString(R.string.close_app, i)
                             delay(1000L)
                         }
                         exitProcess(0)

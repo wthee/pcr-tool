@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.database
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
@@ -29,7 +30,7 @@ import java.io.File
 
 object DatabaseUpdater {
 
-    val sp =
+    private val sp: SharedPreferences =
         ActivityHelper.instance.currentActivity!!.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -15,6 +16,7 @@ class NoTouchRecyclerView : RecyclerView {
         defStyle
     )
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(e: MotionEvent?): Boolean {
         return false
     }

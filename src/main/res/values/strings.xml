@@ -10,6 +10,7 @@
     <string name="equip_count_dot">%s …x%d</string>
     <string name="equip_count">%s x%d</string>
     <string name="select_pic_count">已选择 %d</string>
+    <string name="close_app">应用将在 %d 秒后关闭!</string>
     <!-- 角色 -->
     <string name="rank">RANK</string>
     <string name="title_quest">？？？</string>
@@ -72,8 +73,6 @@
     <string name="game_version_summary">可选择国服或日服数据</string>
     <string name="change_success">更新完成</string>
     <string name="change_success_tip">数据已更新，请点击关闭应用</string>
-    <string name="close_app">关闭应用</string>
-    <string name="close_app_too">快点关闭</string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
     <string name="pcrdfans_com">来源 pcrdfans.com</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
@@ -162,5 +161,6 @@
     <string name="pcrdfans">公主连结Re: Dive Fan Club</string>
     <string name="pvp_data">竞技场查询数据来源</string>
     <string name="leader_data">角色排行数据来源</string>
+    <string name="zero">0</string>
 
 </resources>

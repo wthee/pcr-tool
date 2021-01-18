@@ -48,7 +48,7 @@
             android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/character"
             android:elevation="@dimen/home_fab_elevation"
-            android:text="0"
+            android:text="@string/zero"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/fab_text_size"
             app:borderWidth="0dp"

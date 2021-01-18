@@ -12,7 +12,6 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.gson.JsonArray
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope

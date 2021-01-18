@@ -58,7 +58,7 @@ object ScreenshotUtil {
             val bigCanvas = Canvas(bigBitmap)
             val lBackground: Drawable = view.background
             if (lBackground is ColorDrawable) {
-                val lColorDrawable: ColorDrawable = lBackground as ColorDrawable
+                val lColorDrawable: ColorDrawable = lBackground
                 val lColor: Int = lColorDrawable.color
                 bigCanvas.drawColor(lColor)
             }

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool.equip
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.forEachIndexed
@@ -56,6 +57,7 @@ class EquipmentFilterDialogFragment : CommonDialogFragment() {
         viewModel.getEquips(EquipmentListFragment.equipName)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initFilter(
         chips: ChipGroup,
         binding: FragmentFilterEquipmentBinding
@@ -85,7 +87,7 @@ class EquipmentFilterDialogFragment : CommonDialogFragment() {
             binding.searchInput.setText(EquipmentListFragment.equipName)
         }
         //取消焦点
-        binding.layoutFilter.setOnTouchListener { v, event ->
+        binding.layoutFilter.setOnTouchListener { _, _ ->
             binding.searchInput.clearFocus()
             return@setOnTouchListener false
         }

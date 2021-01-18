@@ -10,28 +10,15 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.CachePolicy
 import coil.util.CoilUtils
-import com.umeng.analytics.MobclickAgent
-import com.umeng.commonsdk.UMConfigure
-import com.umeng.umcrash.UMCrash
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 
 class MyApplication : Application(), ImageLoaderFactory {
 
-
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        UMConfigure.init(
-            this,
-            "5fe591d7adb42d58268e8603",
-            "Umeng",
-            UMConfigure.DEVICE_TYPE_PHONE,
-            ""
-        )
-        UMCrash.setDebug(false)
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
     }
 
     override fun newImageLoader(): ImageLoader {
