@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.databinding.ItemGachaBinding
+import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.intArrayList
 
 
@@ -40,19 +41,19 @@ class GachaHistoryAdapter :
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
+                //起止日期
+                val startDate = gacha.start_time.subSequence(0, 10).toString()
+                val endDate = gacha.end_time.subSequence(0, 10).toString()
+                title.text = "$startDate ~ $endDate"
+                //时间
+                days.text = "${endDate.days(startDate)} 天"
                 //卡池名
                 subTitle.text = gacha.gacha_name
                 //角色图片
                 val adapter = IconListAdapter()
                 icons.adapter = adapter
                 adapter.submitList(gacha.unitIds.intArrayList())
-                //起止日期
-                title.text = "${gacha.start_time.subSequence(0, 10)} ~ ${
-                    gacha.end_time.subSequence(
-                        0,
-                        10
-                    )
-                }"
+
                 //卡池描述
                 gachaDesc.text = gacha.getDesc()
                 if (gacha.unitIds.intArrayList().contains(0)) {
