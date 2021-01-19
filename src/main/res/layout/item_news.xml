@@ -12,24 +12,21 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/news_date"
+        style="@style/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/titleStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/app_name" />
 
-    <cn.wthee.pcrtool.utils.NoTouchRecyclerView
-        android:id="@+id/tags"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tag"
+        style="@style/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toEndOf="@id/news_date"
+        app:layout_constraintStart_toEndOf="@+id/news_date"
         app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="3"
-        tools:listitem="@layout/item_tag" />
+        tools:text="@string/app_name" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/news_title"
