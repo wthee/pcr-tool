@@ -60,16 +60,6 @@ object DatabaseUpdater {
         }
     }
 
-    //不校验版本，直接下载最新数据库
-    fun forceUpdate() {
-        try {
-            //更新判断
-            downloadDB(DatabaseVersion("0", "hash"), force = true)
-        } catch (e: Exception) {
-            handler.sendEmptyMessage(0)
-        }
-    }
-
     //获取数据库
     private fun downloadDB(
         ver: DatabaseVersion,
@@ -94,7 +84,6 @@ object DatabaseUpdater {
                         .putString(DatabaseDownloadWorker.KEY_VERSION, ver.TruthVersion)
                         .putString(DatabaseDownloadWorker.KEY_HASH, ver.hash)
                         .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
-                        .putInt(DatabaseDownloadWorker.KEY_FROM_SETTING, fromSetting)
                         .build()
                 )
                 .build()
@@ -104,7 +93,7 @@ object DatabaseUpdater {
                 uploadWorkRequest
             )
         } else {
-            //强制更新/切换成功
+            //强制更新/切换成功，引导关闭应用
             if (fromSetting != -1) {
                 handler.sendEmptyMessage(1)
             }
