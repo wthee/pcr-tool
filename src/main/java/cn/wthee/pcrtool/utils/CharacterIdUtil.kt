@@ -2,9 +2,9 @@ package cn.wthee.pcrtool.utils
 
 object CharacterIdUtil {
 
-    fun getAllPicUrl(id: Int, r6Id: Int): ArrayList<String> {
+    fun getAllPicUrl(id: Int, r6Id: Boolean): ArrayList<String> {
         val list = arrayListOf<String>()
-        if (r6Id != 0) {
+        if (r6Id) {
             list.add(Constants.CHARACTER_FULL_URL + getStarId(id, 6) + Constants.WEBP)
         }
         list.add(Constants.CHARACTER_FULL_URL + getStarId(id, 3) + Constants.WEBP)
@@ -15,10 +15,10 @@ object CharacterIdUtil {
         return list
     }
 
-    fun getAllIconUrl(uid: Int, r6Id: Int): ArrayList<String> {
+    fun getAllIconUrl(uid: Int, r6Id: Boolean): ArrayList<String> {
         val list = arrayListOf<String>()
 
-        if (r6Id != 0) {
+        if (r6Id) {
             list.add(Constants.UNIT_ICON_URL + getStarId(uid, 6) + Constants.WEBP)
         }
         list.add(Constants.UNIT_ICON_URL + getStarId(uid, 3) + Constants.WEBP)

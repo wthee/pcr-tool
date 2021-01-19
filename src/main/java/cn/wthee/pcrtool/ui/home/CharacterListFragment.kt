@@ -35,7 +35,6 @@ class CharacterListFragment : Fragment() {
         var sortAsc = Constants.SORT_ASC
         var characterName = ""
         lateinit var guilds: ArrayList<String>
-        var r6Ids = listOf<Int>()
         var isPostponeEnterTransition = false
         lateinit var motionLayout: MotionLayout
         lateinit var characterList: RecyclerView
@@ -102,7 +101,6 @@ class CharacterListFragment : Fragment() {
                 }
                 guilds.add("？？？")
             }
-            r6Ids = viewModel.getR6Ids()
         }
         binding.pagerList.adapter = listAdapter
     }

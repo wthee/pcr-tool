@@ -11,6 +11,9 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.databinding.ItemEventBinding
+import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
+import cn.wthee.pcrtool.utils.days
+import cn.wthee.pcrtool.utils.intArrayList
 
 
 class EventHistoryAdapter :
@@ -38,10 +41,35 @@ class EventHistoryAdapter :
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
-                //卡池名
-                eventName.text = event.title
-                //起止日期
-                eventDate.text = event.start_time.subSequence(0, 10)
+                //内容
+                subTitle.text = event.title
+                //角色碎片
+                val adapter = IconListAdapter()
+                icons.adapter = adapter
+                adapter.submitList(event.unitIds.intArrayList())
+                val startDate = event.startTime.subSequence(0, 10).toString()
+                val endDate = event.endTime.subSequence(0, 10).toString()
+                title.text = "$startDate ~ $endDate"
+                when {
+                    //支线
+                    event.eventId / 10000 == 2 -> {
+                        type.text = "支线"
+                        type.setTitleBackground(R.color.cool_apk)
+                        days.text = "无限制"
+                    }
+                    //复刻
+                    event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
+                        type.text = "复刻"
+                        type.setTitleBackground(R.color.news_system)
+                        days.text = "${endDate.days(startDate)} 天"
+                    }
+                    //正常
+                    else -> {
+                        type.text = "最新"
+                        type.setTitleBackground(R.color.news_update)
+                        days.text = "${endDate.days(startDate)} 天"
+                    }
+                }
             }
         }
     }
@@ -54,7 +82,7 @@ private class EventDiffCallback : DiffUtil.ItemCallback<EventData>() {
         oldItem: EventData,
         newItem: EventData
     ): Boolean {
-        return oldItem.start_time == newItem.start_time
+        return oldItem.eventId == newItem.eventId
     }
 
     override fun areContentsTheSame(

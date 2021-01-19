@@ -17,7 +17,6 @@ import cn.wthee.pcrtool.data.db.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
@@ -89,7 +88,6 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         val bundle = Bundle()
                         bundle.putInt(UID, character.id)
-                        bundle.putInt(R6ID, character.r6Id)
                         val extras =
                             FragmentNavigatorExtras(
                                 root to root.transitionName

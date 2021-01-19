@@ -120,7 +120,7 @@
                 app:layout_constraintTop_toBottomOf="@id/catah"
                 tools:text="@string/test" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_name"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
@@ -149,12 +149,11 @@
                 app:layout_constraintTop_toTopOf="@id/title_name"
                 tools:text="@string/test" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_birth"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="@dimen/xm_margin"
                 android:text="@string/title_birth"
                 app:layout_constraintStart_toStartOf="parent"
@@ -181,11 +180,12 @@
                 tools:text="@string/test" />
 
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_blood"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
                 android:text="@string/title_blood"
                 app:layout_constraintStart_toEndOf="@id/birth"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
@@ -193,18 +193,19 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/blood"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_blood"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
-                app:layout_constraintWidth_percent="0.35"
                 tools:text="@string/test" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_race"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
@@ -236,6 +237,7 @@
                 style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
                 android:text="@string/cv"
                 app:layout_constraintStart_toEndOf="@id/race"
                 app:layout_constraintTop_toTopOf="@id/title_race"
@@ -243,18 +245,19 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/cv"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_cv"
                 app:layout_constraintTop_toTopOf="@id/title_race"
-                app:layout_constraintWidth_percent="0.35"
                 tools:text="@string/test" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_guide"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
@@ -276,7 +279,7 @@
                 app:layout_constraintTop_toBottomOf="@id/title_guide"
                 tools:text="@string/test" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_favorite"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
@@ -298,7 +301,7 @@
                 app:layout_constraintTop_toBottomOf="@id/title_favorite"
                 tools:text="@string/test" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_self"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
@@ -317,11 +320,12 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textIsSelectable="true"
                 app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_self"
                 tools:text="@string/test" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_comments"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
@@ -340,6 +344,8 @@
                 android:padding="@dimen/s_padding"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textIsSelectable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_comments"
                 tools:text="@string/test" />
         </androidx.constraintlayout.widget.ConstraintLayout>

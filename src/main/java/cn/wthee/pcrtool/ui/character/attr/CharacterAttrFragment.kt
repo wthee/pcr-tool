@@ -29,10 +29,9 @@ class CharacterAttrFragment : Fragment() {
 
     companion object {
 
-        fun getInstance(uid: Int, r6Id: Int) = CharacterAttrFragment().apply {
+        fun getInstance(uid: Int) = CharacterAttrFragment().apply {
             arguments = Bundle().apply {
                 putInt(UID, uid)
-                putInt(Constants.R6ID, r6Id)
             }
         }
 
@@ -44,7 +43,6 @@ class CharacterAttrFragment : Fragment() {
         var uid = 0
     }
 
-    private var r6Id = -1
     private lateinit var binding: FragmentCharacterAttrInfoBinding
     private lateinit var attrAdapter: CharacterAttrAdapter
     private var selRank = 10
@@ -67,7 +65,6 @@ class CharacterAttrFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
             uid = getInt(UID)
-            r6Id = getInt(Constants.R6ID)
         }
     }
 
@@ -91,9 +88,15 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private fun init() {
-        iconUrls = CharacterIdUtil.getAllIconUrl(uid, r6Id)
-        //加载icon
-        loadIcon(iconUrls[index])
+        lifecycleScope.launch {
+            iconUrls = CharacterIdUtil.getAllIconUrl(
+                uid, sharedCharacterViewModel.getR6Ids().contains(
+                    uid
+                )
+            )
+            //加载icon
+            loadIcon(iconUrls[index])
+        }
         characterAttrViewModel.getMaxRankAndRarity(uid)
         attrAdapter = CharacterAttrAdapter()
         binding.charcterAttrs.adapter = attrAdapter

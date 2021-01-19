@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.databinding.ItemGachaBinding
+import cn.wthee.pcrtool.utils.intArrayList
 
 
 class GachaHistoryAdapter :
@@ -40,13 +41,13 @@ class GachaHistoryAdapter :
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
                 //卡池名
-                gachaName.text = gacha.gacha_name
+                subTitle.text = gacha.gacha_name
                 //角色图片
-                val adapter = GachaListAdapter()
-                gachaIcons.adapter = adapter
-                adapter.submitList(gacha.getUnits())
+                val adapter = IconListAdapter()
+                icons.adapter = adapter
+                adapter.submitList(gacha.unitIds.intArrayList())
                 //起止日期
-                gachaDate.text = "${gacha.start_time.subSequence(0, 10)} ~ ${
+                title.text = "${gacha.start_time.subSequence(0, 10)} ~ ${
                     gacha.end_time.subSequence(
                         0,
                         10
@@ -54,12 +55,12 @@ class GachaHistoryAdapter :
                 }"
                 //卡池描述
                 gachaDesc.text = gacha.getDesc()
-                if (gacha.getUnits().contains(0)) {
+                if (gacha.unitIds.intArrayList().contains(0)) {
                     gachaDesc.visibility = View.VISIBLE
-                    gachaIcons.visibility = View.GONE
+                    icons.visibility = View.GONE
                 } else {
                     gachaDesc.visibility = View.GONE
-                    gachaIcons.visibility = View.VISIBLE
+                    icons.visibility = View.VISIBLE
                 }
             }
         }

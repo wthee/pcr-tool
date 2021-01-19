@@ -1,26 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
-    android:background="@drawable/bg_card_press"
-    android:clickable="true"
-    android:focusable="true"
+    android:background="@drawable/bg_card"
     android:orientation="vertical"
     android:padding="@dimen/s_padding">
 
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/xs_margin"
+        app:constraint_referenced_ids="title,days,type"
+        app:flow_horizontalBias="0"
+        app:flow_horizontalGap="@dimen/xs_margin"
+        app:flow_horizontalStyle="packed"
+        app:flow_verticalGap="@dimen/xs_margin"
+        app:flow_wrapMode="chain"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/event_date"
+        android:id="@+id/title"
+        style="@style/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/titleStyle"
+        android:textIsSelectable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/app_name" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/event_name"
+        android:id="@+id/days"
+        style="@style/titleStyle"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/app_name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/type"
+        style="@style/titleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        app:layout_constraintStart_toEndOf="@+id/days"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/app_name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/sub_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/s_padding"
         android:paddingTop="@dimen/m_padding"
@@ -28,6 +64,21 @@
         android:paddingBottom="@dimen/xm_padding"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/text"
+        android:textIsSelectable="true"
+        app:layout_constraintTop_toBottomOf="@id/flow"
         tools:text="@string/app_name" />
 
-</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sub_title"
+        app:spanCount="2"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_common" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

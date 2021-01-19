@@ -40,10 +40,11 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:layout_marginTop">@dimen/xs_margin</item>
         <item name="android:layout_marginStart">@dimen/xs_margin</item>
-        <item name="android:ellipsize">end</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle2
         </item>
-        <item name="maxLines">1</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <!--  背景设置  -->

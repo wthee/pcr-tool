@@ -12,14 +12,5 @@ data class GachaInfo(
     @ColumnInfo(name = "unit_ids") val unitIds: String
 ) {
 
-    fun getUnits(): ArrayList<Int> {
-        val units = arrayListOf<Int>()
-        val ids = unitIds.split("-")
-        ids.forEachIndexed { _, id ->
-            units.add(id.toInt())
-        }
-        return units
-    }
-
     fun getDesc() = description.replace("\\n", "\n")
 }

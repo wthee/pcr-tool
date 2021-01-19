@@ -7,7 +7,7 @@
     android:layout_marginTop="@dimen/m_margin"
     android:orientation="horizontal">
 
-    <com.google.android.material.textview.MaterialTextView
+    <cn.wthee.pcrtool.utils.AutoScrollTextView
         android:id="@+id/title_attr"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

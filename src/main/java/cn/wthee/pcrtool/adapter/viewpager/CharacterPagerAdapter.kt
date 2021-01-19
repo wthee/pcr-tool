@@ -18,15 +18,15 @@ class CharacterPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
     noData: Boolean,
-    uid: Int, r6Id: Int
+    uid: Int
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     private val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
-        mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid, r6Id))
+        mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid))
         if (!noData) {
-            mFragments.put(1, CharacterAttrFragment.getInstance(uid, r6Id))
+            mFragments.put(1, CharacterAttrFragment.getInstance(uid))
             mFragments.put(2, CharacterSkillFragment.getInstance(uid))
         }
     }

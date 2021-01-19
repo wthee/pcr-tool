@@ -106,15 +106,12 @@ class DatabaseDownloadWorker(
             if (!file.exists()) {
                 file.mkdir()
             }
-            //删除已有数据库文件
             //br压缩包路径
             val dbZipPath = FileUtil.getDatabaseZipPath(type)
             val db = File(dbZipPath)
             if (db.exists()) {
-                FileUtil.deleteDir(
-                    folderPath,
-                    arrayListOf(dbZipPath, FileUtil.getNewsDatabasePath())
-                )
+                //删除已有数据库文件
+                FileUtil.deleteMainDatabase(type)
             }
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)

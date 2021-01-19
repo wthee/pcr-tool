@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import android.os.Build
-import android.util.Log
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.utils.Constants.LOG_TAG
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -28,10 +26,11 @@ object FileUtil {
     private fun getDatabaseWalPath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_WAL else Constants.DATABASE_WAL_JP
 
+    private fun getDatabaseShmPath(type: Int) =
+        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_SHM else Constants.DATABASE_SHM_JP
+
     fun getDatabaseZipPath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP
-
-    fun getNewsDatabasePath() = getDatabaseDir() + Constants.DATABASE_NEWS
 
     //数据库判断
     fun needUpdate(type: Int) =
@@ -39,19 +38,19 @@ object FileUtil {
                 || File(getDatabasePath(type)).length() < 1 * 1024 * 1024
                 || File(getDatabaseWalPath(type)).length() < 1 * 1024
 
-    //迭代删除文件夹里的内容
-    fun deleteDir(dirPath: String, notDel: List<String>) {
-        val file = File(dirPath)
-        if (file.isFile && !notDel.contains(file.path)) {
-            Log.e(LOG_TAG, file.path)
-            file.delete()
-        } else {
-            val files = file.listFiles()
-            if (files != null) {
-                for (i in files.indices) {
-                    deleteDir(files[i].absolutePath, notDel)
-                }
-            }
+    //删除数据库文件
+    fun deleteMainDatabase(type: Int) {
+        val db = File(getDatabasePath(type))
+        if (db.exists()) {
+            db.delete()
+        }
+        val wal = File(getDatabaseWalPath(type))
+        if (wal.exists()) {
+            wal.delete()
+        }
+        val shm = File(getDatabaseShmPath(type))
+        if (shm.exists()) {
+            shm.delete()
         }
     }
 

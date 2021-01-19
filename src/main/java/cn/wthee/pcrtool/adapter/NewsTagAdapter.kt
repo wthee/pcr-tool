@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemTagBinding
-import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
 
 
 class NewsTagAdapter :
@@ -44,11 +44,8 @@ class NewsTagAdapter :
                     "グッズ" -> "周边"
                     else -> tag
                 }
-
                 text1.text = fTag
-                val drawable = ResourcesUtil.getDrawable(R.drawable.bg_text_view)
-                drawable?.setTint(ResourcesUtil.getColor(colorId))
-                text1.background = drawable
+                text1.setTitleBackground(colorId)
             }
         }
     }

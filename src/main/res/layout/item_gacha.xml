@@ -11,24 +11,26 @@
     android:padding="@dimen/s_padding">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/gacha_date"
+        android:id="@+id/title"
+        style="@style/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/titleStyle"
+        android:textIsSelectable="true"
         tools:text="@string/app_name" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/gacha_name"
+        android:id="@+id/sub_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/s_padding"
         android:paddingEnd="@dimen/m_padding"
+        android:textIsSelectable="true"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/text"
         tools:text="@string/app_name" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/gacha_icons"
+        android:id="@+id/icons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

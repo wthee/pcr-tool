@@ -21,11 +21,13 @@ object Constants {
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
     const val DATABASE_Name_JP = "redive_jp.db"
     const val DATABASE_WAL_JP = "redive_jp.db-wal"
+    const val DATABASE_SHM_JP = "redive_jp.db-shm"
     const val DATABASE_VERSION_URL_JP = "last_version_jp.json"
 
     const val DATABASE_DOWNLOAD_File_Name = "redive_cn.db.br"
     const val DATABASE_Name = "redive_cn.db"
     const val DATABASE_WAL = "redive_cn.db-wal"
+    const val DATABASE_SHM = "redive_cn.db-shm"
     const val DATABASE_VERSION_URL = "last_version_cn.json"
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_PVP = "pvp.db"
@@ -82,7 +84,7 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
-    const val R6ID = "r6id"
+    const val SIXSTAR = "six_star"
     const val REGION = "region"
 
     val ATTR = arrayListOf(

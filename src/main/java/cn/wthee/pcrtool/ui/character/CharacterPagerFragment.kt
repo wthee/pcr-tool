@@ -8,19 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.HorizontalMarginItemDecoration
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
+import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrViewModel
+import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.character.skill.CharacterSkillLoopDialogFragment
-import cn.wthee.pcrtool.utils.Constants.R6ID
+import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -33,22 +37,23 @@ class CharacterPagerFragment : Fragment() {
     companion object {
         lateinit var viewPager: ViewPager2
         var uid = -1
-        var r6Id = -1
     }
 
 
     private lateinit var binding: FragmentCharacterPagerBinding
     private lateinit var adapter: CharacterPagerAdapter
+
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
     }
-
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
             uid = it.getInt(UID)
-            r6Id = it.getInt(R6ID)
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = resources.getColor(R.color.viewpager_bg, null)
@@ -81,7 +86,7 @@ class CharacterPagerFragment : Fragment() {
             val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
             if (viewPager.adapter == null) {
-                adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid, r6Id)
+                adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid)
                 viewPager.adapter = adapter
                 viewPager.adjustViewPager(requireContext())
             }
@@ -107,6 +112,7 @@ class CharacterPagerFragment : Fragment() {
                         CharacterBasicInfoFragment.characterPic.callOnClick()
                     }
                 }
+                binding.fabShare.hide()
             }
             1 -> {
                 binding.fabCharacter.apply {
@@ -114,6 +120,23 @@ class CharacterPagerFragment : Fragment() {
                     icon = ResourcesUtil.getDrawable(R.drawable.ic_compare)
                     setOnClickListener {
                         CharacterRankCompareFragment().show(parentFragmentManager, "rank_compare")
+                    }
+                }
+                binding.fabShare.apply {
+                    show()
+                    setImageResource(R.mipmap.ic_logo)
+                    setOnClickListener {
+                        lifecycleScope.launch {
+                            val hasDrop =
+                                sharedCharacterViewModel.getDrops(CharacterAttrFragment.uid)
+                                    .isNotEmpty()
+                            if (hasDrop) {
+                                CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
+                                    .show(parentFragmentManager, "character_drop")
+                            } else {
+                                ToastUtil.short("无掉落信息~")
+                            }
+                        }
                     }
                 }
             }
@@ -126,6 +149,7 @@ class CharacterPagerFragment : Fragment() {
                             .show(parentFragmentManager, "loop")
                     }
                 }
+                binding.fabShare.hide()
             }
         }
     }

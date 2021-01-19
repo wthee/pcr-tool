@@ -7,7 +7,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <com.google.android.material.textview.MaterialTextView
+    <cn.wthee.pcrtool.utils.AutoScrollTextView
         android:id="@+id/title_attr"
         style="@style/titleStyle"
         android:layout_width="0dp"

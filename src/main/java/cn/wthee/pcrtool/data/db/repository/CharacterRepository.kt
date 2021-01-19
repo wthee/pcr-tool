@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.db.repository
 import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.data.db.dao.CharacterDao
 import cn.wthee.pcrtool.enums.SortType
-import cn.wthee.pcrtool.enums.value
 
 
 //角色数据Repository
@@ -16,7 +15,7 @@ class CharacterRepository(private val characterDao: CharacterDao) {
         name: String,
         filter: FilterCharacter
     ) = characterDao.getInfoAndData(
-        sortType.value,
+        sortType.type,
         if (asc) "asc" else "desc",
         name,
         filter.position()[0],

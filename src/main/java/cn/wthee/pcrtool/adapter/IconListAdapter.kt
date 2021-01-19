@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.utils.Constants
 import coil.load
 
 
-class GachaListAdapter : ListAdapter<Int, GachaListAdapter.ViewHolder>(GachaListDiffCallback()) {
+class IconListAdapter() : ListAdapter<Int, IconListAdapter.ViewHolder>(GachaListDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -38,20 +38,29 @@ class GachaListAdapter : ListAdapter<Int, GachaListAdapter.ViewHolder>(GachaList
                 itemParams.width = RecyclerView.LayoutParams.WRAP_CONTENT
                 root.layoutParams = itemParams
                 //角色图片
-                val picUrl = Constants.UNIT_ICON_URL + (uid + 30) + Constants.WEBP
+                var picId = 0
+                var pagerId = 0
+                if (uid / 10000 == 3) {
+                    //item 转 unit
+                    picId = uid % 10000 * 100 + 11
+                    pagerId = uid % 10000 * 100 + 1
+                } else {
+                    picId = uid + 30
+                    pagerId = uid
+                }
+
+                val picUrl = Constants.UNIT_ICON_URL + picId + Constants.WEBP
                 pic.load(picUrl) {
                     placeholder(R.drawable.unknown_gray)
-                    error(R.drawable.error)
+                    error(R.drawable.unknown_gray)
                 }
                 //角色名
                 name.visibility = View.GONE
                 pic.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putInt(Constants.UID, uid)
-                    bundle.putInt(Constants.R6ID, 0)
-
+                    bundle.putInt(Constants.UID, pagerId)
                     root.findNavController().navigate(
-                        R.id.action_toolGachaFragment_to_characterPagerFragment,
+                        R.id.action_global_characterPagerFragment,
                         bundle,
                         null,
                         null

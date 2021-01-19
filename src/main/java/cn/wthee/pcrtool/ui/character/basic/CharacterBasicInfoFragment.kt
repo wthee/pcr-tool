@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
@@ -15,9 +16,9 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import coil.load
+import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息页面
@@ -28,16 +29,14 @@ class CharacterBasicInfoFragment : Fragment() {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
         lateinit var characterPic: AppCompatImageView
-        fun getInstance(uid: Int, r6Id: Int) = CharacterBasicInfoFragment().apply {
+        fun getInstance(uid: Int) = CharacterBasicInfoFragment().apply {
             arguments = Bundle().apply {
                 putInt(UID, uid)
-                putInt(R6ID, r6Id)
             }
         }
     }
 
     private var uid = -1
-    private var r6Id = -1
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -46,7 +45,6 @@ class CharacterBasicInfoFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
             uid = getInt(UID)
-            r6Id = getInt(R6ID)
         }
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
     }
@@ -80,14 +78,18 @@ class CharacterBasicInfoFragment : Fragment() {
         //打开页面共享元素
         binding.root.transitionName = "item_${uid}"
         //toolbar 背景
-        val picUrl =
-            Constants.CHARACTER_FULL_URL + (uid + if (r6Id != 0) 60 else 30) + Constants.WEBP
-        //角色图片共享元素
-        binding.characterPic.transitionName = picUrl
-        //加载图片
-        binding.characterPic.load(picUrl) {
-            error(R.drawable.error)
-            placeholder(R.drawable.load)
+        lifecycleScope.launch {
+            val picUrl =
+                Constants.CHARACTER_FULL_URL + (uid + if (sharedCharacterViewModel.getR6Ids()
+                        .contains(uid)
+                ) 60 else 30) + Constants.WEBP
+            //角色图片共享元素
+            binding.characterPic.transitionName = picUrl
+            //加载图片
+            binding.characterPic.load(picUrl) {
+                error(R.drawable.error)
+                placeholder(R.drawable.load)
+            }
         }
         //开始动画
         ObjectAnimatorUtil.enter(object : ObjectAnimatorUtil.OnAnimatorListener {
@@ -109,7 +111,7 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.apply {
             //角色图片列表
             characterPic.setOnClickListener {
-                CharacterPicListFragment.getInstance(uid, r6Id)
+                CharacterPicListFragment.getInstance(uid)
                     .show(parentFragmentManager, "pic_list")
             }
             //fab点击监听
