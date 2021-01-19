@@ -60,7 +60,6 @@ class DatabaseDownloadWorker(
         MainScope().launch {
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
-            MainActivity.progressDownload.setProgress(1)
         }
         return@coroutineScope download(DatabaseVersion(version, hash), type, fromSetting)
     }
@@ -127,19 +126,10 @@ class DatabaseDownloadWorker(
             //更新数据库版本号
             DatabaseUpdater.updateLocalDataBaseVersion(version)
             //通知更新数据
-            if (fromSetting == 0 || fromSetting == 1) {
-                //自动关闭应用
-                handler.sendEmptyMessage(2)
-            }
-            if (fromSetting == -1) {
-                //跳转
-                MainScope().launch {
-                    delay(1000L)
-                    handler.sendEmptyMessage(1)
-                }
-            }
             MainScope().launch {
                 MainActivity.textDownload.text = Constants.NOTICE_TOAST_SUCCESS
+                delay(500L)
+                handler.sendEmptyMessage(1)
             }
             return Result.success()
         } catch (e: Exception) {

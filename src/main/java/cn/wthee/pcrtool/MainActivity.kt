@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 //数据切换
-                1, 2 -> {
+                1 -> {
                     MainScope().launch {
                         delay(500L)
                         progressDownload.setProgress(100)
