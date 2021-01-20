@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.adapter.PvpCharacterResultItemAdapter
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.gson.JsonArray
 import kotlinx.coroutines.Job
@@ -32,7 +33,9 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var job: Job
     private var idList = JsonArray()
     private var defIds = arrayListOf<Int>()
-    private val viewModel by activityViewModels<PvpLikedViewModel>()
+    private val viewModel by activityViewModels<PvpLikedViewModel>() {
+        InjectorUtil.providePvpViewModelFactory()
+    }
 
     companion object {
         fun getInstance(defIds: String) =
