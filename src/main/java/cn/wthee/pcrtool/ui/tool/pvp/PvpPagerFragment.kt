@@ -14,7 +14,13 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
- * 竞技场角色ViewPager
+ * 竞技场角色 ViewPager
+ *
+ * 根据位置 [position] 悬浮[isFloatWindow] ，加载数据
+ *
+ * 页面布局 [FragmentToolPvpCharacterBinding]
+ *
+ * ViewModels []
  */
 private const val POSITION = "positon"
 private const val FLOAT = "float"

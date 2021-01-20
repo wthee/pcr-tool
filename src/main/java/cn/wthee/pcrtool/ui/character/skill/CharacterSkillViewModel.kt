@@ -8,7 +8,11 @@ import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import kotlinx.coroutines.launch
 
-
+/**
+ * 角色技能 ViewModel
+ *
+ * 数据来源 [CharacterRepository]
+ */
 class CharacterSkillViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
@@ -22,14 +26,16 @@ class CharacterSkillViewModel(
     private var refresh = MutableLiveData<Boolean>()
     private var isLoading = MutableLiveData<Boolean>()
 
-    //角色技能信息
-    fun getCharacterSkills(id: Int) {
+    /**
+     * 根据 [unitId]， 获取角色技能信息
+     */
+    fun getCharacterSkills(unitId: Int) {
         isLoading.postValue(true)
         iconTypes.clear()
         viewModelScope.launch {
             try {
                 val infos = mutableListOf<CharacterSkillInfo>()
-                val data = repository.getCharacterSkill(id)
+                val data = repository.getCharacterSkill(unitId)
                 //技能信息
                 data.getAllSkillId().forEach { sid ->
                     val skill = repository.getSkillData(sid)
@@ -55,12 +61,14 @@ class CharacterSkillViewModel(
         }
     }
 
-    //角色技能循环
-    fun getCharacterSkillLoops(id: Int) {
+    /**
+     * 根据 [unitId]，角色技能循环
+     */
+    fun getCharacterSkillLoops(unitId: Int) {
         isLoading.postValue(true)
         viewModelScope.launch {
             //技能循环
-            val pattern = repository.getAttackPattern(id)
+            val pattern = repository.getAttackPattern(unitId)
             atlPattern.postValue(pattern)
         }
     }

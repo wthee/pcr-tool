@@ -16,6 +16,10 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 角色排行
+ *
+ * 页面布局 [FragmentToolLeaderBinding]
+ *
+ * ViewModels [LeaderViewModel]
  */
 class LeaderFragment : Fragment() {
 

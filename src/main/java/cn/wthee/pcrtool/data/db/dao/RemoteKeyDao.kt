@@ -6,6 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import cn.wthee.pcrtool.data.db.entity.RemoteKey
 
+/**
+ * 公告分页 DAO
+ */
 @Dao
 interface RemoteKeyDao {
 

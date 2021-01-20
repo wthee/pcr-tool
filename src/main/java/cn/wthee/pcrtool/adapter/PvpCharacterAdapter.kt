@@ -1,4 +1,4 @@
- package cn.wthee.pcrtool.adapter
+package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -24,20 +24,25 @@ import coil.request.ImageRequest
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * 竞技场角色列表适配器，[isFloatWindow] 判断是否为悬浮窗
+ *
+ * 列表项布局 [ItemCommonBinding]
+ *
+ * 列表项数据 [PvpCharacterData]
+ */
+class PvpCharacterAdapter(
+    private val isFloatWindow: Boolean
+) : ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
 
- class PvpCharacterAdapter(
-     private val isFloatWindow: Boolean
- ) :
-     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
-
-     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-         return ViewHolder(
-             ItemCommonBinding.inflate(
-                 LayoutInflater.from(parent.context),
-                 parent,
-                 false
-             )
-         )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            ItemCommonBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -129,6 +134,7 @@ import kotlinx.coroutines.launch
                         } catch (e: Exception) {
 
                         }
+                        //更新悬浮窗列表
                         try {
                             PvpService.selectedAdapter.apply {
                                 submitList(selects) {

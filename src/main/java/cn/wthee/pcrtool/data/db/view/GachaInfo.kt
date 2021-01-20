@@ -2,7 +2,9 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 
-//卡池记录
+/**
+ * 卡池记录
+ */
 data class GachaInfo(
     @ColumnInfo(name = "gacha_id") val gacha_id: Int,
     @ColumnInfo(name = "gacha_name") val gacha_name: String,
@@ -12,5 +14,8 @@ data class GachaInfo(
     @ColumnInfo(name = "unit_ids") val unitIds: String
 ) {
 
+    /**
+     * 获取卡池描述
+     */
     fun getDesc() = description.replace("\\n", "\n")
 }

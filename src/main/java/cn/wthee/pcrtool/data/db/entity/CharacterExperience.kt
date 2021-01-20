@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-//角色等级信息
+/**
+ * 角色等级信息
+ */
 @Entity(tableName = "experience_unit")
 data class CharacterExperience(
     @PrimaryKey

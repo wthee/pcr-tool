@@ -9,6 +9,9 @@ import cn.wthee.pcrtool.databinding.ViewMenuItemBinding
  */
 class MenuItemViewHelper(private val binding: ViewMenuItemBinding) {
 
+    /**
+     * 设置菜单项标题 [title]，图标 [iconId]
+     */
     fun setItem(title: String, iconId: Int): MenuItemViewHelper {
         if (iconId == R.drawable.ic_calendar) {
             setCenterIcon()
@@ -24,6 +27,9 @@ class MenuItemViewHelper(private val binding: ViewMenuItemBinding) {
         return this
     }
 
+    /**
+     * 设置居中样式
+     */
     private fun setCenterIcon() {
         binding.itemIcon.apply {
             val params = layoutParams as ConstraintLayout.LayoutParams

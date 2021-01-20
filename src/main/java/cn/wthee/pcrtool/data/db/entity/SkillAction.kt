@@ -9,7 +9,9 @@ import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 
-//技能效果
+/**
+ * 技能效果
+ */
 @Entity(tableName = "skill_action")
 data class SkillAction(
     @PrimaryKey

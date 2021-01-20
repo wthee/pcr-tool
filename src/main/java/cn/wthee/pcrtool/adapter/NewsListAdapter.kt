@@ -17,7 +17,13 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
-
+/**
+ * 公告列表列表适配器，[region] 区分游戏服务器版本
+ *
+ * 列表项布局 [ItemNewsBinding]
+ *
+ * 列表项数据 [NewsTable]
+ */
 class NewsAdapter(
     private val fragmentManager: FragmentManager,
     private val region: Int,

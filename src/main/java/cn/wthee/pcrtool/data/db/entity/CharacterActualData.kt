@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 
-//角色真实资料
+/**
+ * 角色现实资料
+ */
 @Entity(tableName = "actual_unit_background")
 data class CharacterActualData(
     @PrimaryKey

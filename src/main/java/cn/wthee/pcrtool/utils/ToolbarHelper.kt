@@ -18,12 +18,17 @@ class ToolbarHelper(private val toolbar: ViewToolbarBinding) {
     val title = toolbar.title
     val resources: Resources = MyApplication.context.resources
 
+    /**
+     * 设置左侧图标
+     */
     fun setLeftIcon(resId: Int) {
         leftIcon.visibility = View.VISIBLE
         leftIcon.setImageResource(resId)
     }
 
-    //主页面toolbar
+    /**
+     * 设置主页面样式 Toolbar
+     */
     fun setMainToolbar(iconId: Int, titleText: String): ToolbarHelper {
         setLeftIcon(iconId)
         title.text = titleText
@@ -31,6 +36,9 @@ class ToolbarHelper(private val toolbar: ViewToolbarBinding) {
         return this
     }
 
+    /**
+     * 设置右侧图标
+     */
     fun setRightIcon(resId: Int, colorId: Int): ToolbarHelper {
         rightIcon.visibility = View.VISIBLE
         rightIcon.setImageResource(resId)
@@ -38,6 +46,9 @@ class ToolbarHelper(private val toolbar: ViewToolbarBinding) {
         return this
     }
 
+    /**
+     * 设置标题居中样式
+     */
     private fun setCenterStyle() {
         val params = title.layoutParams as ConstraintLayout.LayoutParams
         params.startToStart = 0
@@ -48,6 +59,9 @@ class ToolbarHelper(private val toolbar: ViewToolbarBinding) {
         title.setTextColor(ResourcesUtil.getColor(R.color.colorPrimary))
     }
 
+    /**
+     * 设置居中标题
+     */
     fun setCenterTitle(titleText: String): ToolbarHelper {
         setCenterStyle()
         title.text = titleText

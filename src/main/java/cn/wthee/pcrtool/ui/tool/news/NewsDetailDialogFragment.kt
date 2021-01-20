@@ -15,12 +15,17 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants.REGION
 
 
-/**
- * 公告详情
- */
 private const val NEWSID = "news_id"
 private const val URL = "url"
-
+/**
+ * 公告详情
+ *
+ * 根据 [url] 加载公告
+ *
+ * 页面布局 [FragmentToolNewsDetailBinding]
+ *
+ * ViewModels []
+ */
 class NewsDetailDialogFragment : CommonBottomSheetDialogFragment() {
 
     private var region = 0

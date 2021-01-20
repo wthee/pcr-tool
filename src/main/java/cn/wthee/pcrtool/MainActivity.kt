@@ -26,7 +26,11 @@ import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 /**
- * 主活动
+ * 主页
+ *
+ * 页面布局 [ActivityMainBinding]
+ *
+ * ViewModels []
  */
 class MainActivity : AppCompatActivity() {
 

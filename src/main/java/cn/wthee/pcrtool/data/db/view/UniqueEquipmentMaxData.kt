@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import java.io.Serializable
 
-//专武最大强化
+/**
+ * 专武最大强化
+ */
 data class UniqueEquipmentMaxData(
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
@@ -13,6 +15,9 @@ data class UniqueEquipmentMaxData(
     @Embedded val attr: Attr,
 ) : Serializable {
 
+    /**
+     * 获取装备描述
+     */
     fun getDesc() = description.replace("\\n", "")
 
 }

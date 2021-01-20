@@ -5,9 +5,15 @@ import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.EventData
 
+/**
+ * 活动记录 DAO
+ */
 @Dao
 interface EventDao {
 
+    /**
+     * 获取所有活动记录 [EventData]
+     */
     @Transaction
     @Query(
         """

@@ -10,6 +10,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.LayoutLoadingDialogBinding
 import com.google.android.material.card.MaterialCardView
 
+/**
+ * 列表加载状态适配器
+ */
 class LoaderStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<LoaderStateAdapter.LoaderViewHolder>() {
 

@@ -11,7 +11,13 @@ import cn.wthee.pcrtool.data.db.view.ItemDropInfo
 import cn.wthee.pcrtool.databinding.ItemCharacterDropBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
-
+/**
+ * 角色碎片掉落列表适配器
+ *
+ * 列表项布局 [ItemCharacterDropBinding]
+ *
+ * 列表项数据 [ItemDropInfo]
+ */
 class CharacterDropAdapter :
     ListAdapter<ItemDropInfo, CharacterDropAdapter.ViewHolder>(CharacterDropDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

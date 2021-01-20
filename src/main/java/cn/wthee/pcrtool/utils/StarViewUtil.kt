@@ -8,11 +8,13 @@ import androidx.core.view.get
 import cn.wthee.pcrtool.R
 
 /**
- * 星级选择
+ * 星级选择视图
  */
 object StarViewUtil {
 
-    //显示星数
+    /**
+     * 显示星数
+     */
     fun show(context: Context, parent: ViewGroup, num: Int, size: Int) {
         for (i in 0 until num) {
             val starView = AppCompatImageView(context)
@@ -23,7 +25,9 @@ object StarViewUtil {
         }
     }
 
-    //显示可点击星数
+    /**
+     * 显示可点击星数
+     */
     fun show(
         context: Context,
         partent: ViewGroup,
@@ -62,6 +66,9 @@ object StarViewUtil {
         }
     }
 
+    /**
+     * 选择回调
+     */
     interface OnSelect {
         fun select(index: Int)
     }

@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 
-// 角色rank信息
+/**
+ * 角色 Rank 装备信息
+ */
 @Entity(
     tableName = "unit_promotion",
     indices = [Index(

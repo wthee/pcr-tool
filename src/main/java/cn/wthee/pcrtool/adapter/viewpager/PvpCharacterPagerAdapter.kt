@@ -6,6 +6,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.wthee.pcrtool.ui.tool.pvp.PvpPagerFragment
 
+/**
+ * 角色图标适配器，按前、中、后卫分类显示
+ */
 class PvpCharacterPagerAdapter(
     activity: FragmentActivity,
     isFloatWindow: Boolean

@@ -74,6 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
         android:nestedScrollingEnabled="false"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/skill_des"
         tools:itemCount="5"

@@ -11,7 +11,13 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.SkillAction
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
 
-
+/**
+ * 角色技能效果列表适配器
+ *
+ * 列表项布局 [ItemSkillActionBinding]
+ *
+ * 列表项数据 [SkillAction]
+ */
 class SkillActionAdapter :
     ListAdapter<SkillAction, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

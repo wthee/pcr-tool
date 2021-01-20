@@ -2,11 +2,13 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.PvpDao
 
-
-//卡池数据Repository
+/**
+ * 竞技场收藏 Repository
+ *
+ * 数据来源 [PvpDao]
+ */
 class PvpRepository(private val pvpDao: PvpDao) {
 
-    //获取卡池信息
     suspend fun getLiked(region: Int) = pvpDao.getAll(region)
 
     companion object {

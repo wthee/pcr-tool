@@ -21,7 +21,9 @@ import javax.net.ssl.X509TrustManager
  */
 object ApiUtil {
 
-    //SSL 证书
+    /**
+     * 获取SSL 证书
+     */
     private fun initSSL(): List<Any> {
         val cf = CertificateFactory.getInstance("X.509")
         val inputStream = context.resources.openRawResource(R.raw.certificate)
@@ -36,6 +38,9 @@ object ApiUtil {
         return listOf(sslContext, tmf.trustManagers[0])
     }
 
+    /**
+     * 下载进度
+     */
     fun downloadClientBuild(listener: DownloadListener): OkHttpClient {
         val params = initSSL()
         return OkHttpClient.Builder()
@@ -56,7 +61,9 @@ object ApiUtil {
             .build()
     }
 
-    //client
+    /**
+     * 创建 [OkHttpClient]
+     */
     fun getClient(): OkHttpClient {
         val params = initSSL()
         return OkHttpClient.Builder()
@@ -71,7 +78,9 @@ object ApiUtil {
             .build()
     }
 
-    //创建服务
+    /**
+     * 创建服务
+     */
     fun <T> create(serviceClass: Class<T>, url: String): T {
 
         val builder = Retrofit.Builder()
@@ -82,6 +91,9 @@ object ApiUtil {
         return builder.build().create(serviceClass)
     }
 
+    /**
+     * 创建自定义 [client] 服务
+     */
     fun <T> createWithClient(serviceClass: Class<T>, url: String, client: OkHttpClient): T {
         val builder = Retrofit.Builder()
             .baseUrl(url)

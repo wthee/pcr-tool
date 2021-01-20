@@ -6,6 +6,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import cn.wthee.pcrtool.ui.tool.news.ToolNewsListFragment
 
+/**
+ * 公告页面适配器，根据 region 显示对应优先版本的公告
+ *
+ * 2：国服，3：台服，4：日服
+ */
 class NewsListPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
     val mFragments: SparseArray<Fragment> = SparseArray()

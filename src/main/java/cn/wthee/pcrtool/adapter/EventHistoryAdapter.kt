@@ -15,7 +15,13 @@ import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.intArrayList
 
-
+/**
+ * 活动记录列表适配器
+ *
+ * 列表项布局 [ItemEventBinding]
+ *
+ * 列表项数据 [EventData]
+ */
 class EventHistoryAdapter :
     ListAdapter<EventData, EventHistoryAdapter.ViewHolder>(EventDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

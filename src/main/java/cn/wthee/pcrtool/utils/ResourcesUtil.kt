@@ -13,10 +13,19 @@ object ResourcesUtil {
 
     private val resource: Resources = MyApplication.context.resources
 
+    /**
+     * 获取颜色
+     */
     fun getColor(resId: Int) = ResourcesCompat.getColor(resource, resId, null)
 
+    /**
+     * 获取图片
+     */
     fun getDrawable(resId: Int) = ResourcesCompat.getDrawable(resource, resId, null)
 
+    /**
+     * 设置标题风格
+     */
     fun MaterialTextView.setTitleBackground(resId: Int) {
         val drawable = getDrawable(R.drawable.bg_text_view)
         drawable?.setTint(getColor(resId))

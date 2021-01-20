@@ -24,6 +24,10 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色列表
+ *
+ * 页面布局 [FragmentCharacterListBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class CharacterListFragment : Fragment() {
 

@@ -13,7 +13,13 @@ import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
-
+/**
+ * 装备筛选弹窗
+ *
+ * 页面布局 [FragmentFilterEquipmentBinding]
+ *
+ * ViewModels [EquipmentViewModel]
+ */
 class EquipmentFilterDialogFragment : CommonDialogFragment() {
 
     private lateinit var binding: FragmentFilterEquipmentBinding
@@ -41,6 +47,9 @@ class EquipmentFilterDialogFragment : CommonDialogFragment() {
         return binding.root
     }
 
+    /**
+     * 装备筛选
+     */
     private fun filterData(binding: FragmentFilterEquipmentBinding) {
         //筛选选项
         val chip =
@@ -57,6 +66,9 @@ class EquipmentFilterDialogFragment : CommonDialogFragment() {
         viewModel.getEquips(EquipmentListFragment.equipName)
     }
 
+    /**
+     * 初始化筛选
+     */
     @SuppressLint("ClickableViewAccessibility")
     private fun initFilter(
         chips: ChipGroup,

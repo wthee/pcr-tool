@@ -8,6 +8,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.Serializable
 
+/**
+ * 角色信息筛选
+ */
 class FilterCharacter(
     var all: Boolean,
     var positon: Int,
@@ -38,21 +41,13 @@ class FilterCharacter(
             field = value
         }
 
-    fun add(vararg id: Int) {
-        val list = starIds
-        id.forEach {
-            if (!list.contains(it)) {
-                list.add(it)
-            }
-        }
-        starIds = list
-    }
-
-    fun remove(vararg id: Int) {
+    fun addOrRemove(vararg id: Int) {
         val list = starIds
         id.forEach {
             if (list.contains(it)) {
                 list.remove(it)
+            } else {
+                list.add(it)
             }
         }
         starIds = list

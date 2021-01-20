@@ -6,7 +6,9 @@ import cn.wthee.pcrtool.data.db.entity.CharacterRarity
 import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
 
-//角色属性
+/**
+ * 面板属性
+ */
 data class Attr(
     @ColumnInfo(name = "hp") var hp: Double,
     @ColumnInfo(name = "atk") var atk: Double,
@@ -28,6 +30,9 @@ data class Attr(
 ) : Serializable {
     companion object {
 
+        /**
+         * 属性成长
+         */
         fun setGrowthValue(rarityGrowth: CharacterRarity): Attr {
             return Attr(
                 rarityGrowth.hpGrowth,
@@ -73,7 +78,9 @@ data class Attr(
     )
 }
 
-
+/**
+ * 属性相加
+ */
 fun Attr.add(other: Attr): Attr {
     this.hp += other.hp
     this.atk += other.atk
@@ -95,6 +102,9 @@ fun Attr.add(other: Attr): Attr {
     return this
 }
 
+/**
+ * 属性乘积
+ */
 fun Attr.multiply(mult: Int): Attr {
     this.hp *= mult
     this.atk *= mult
@@ -116,7 +126,9 @@ fun Attr.multiply(mult: Int): Attr {
     return this
 }
 
-//全部属性
+/**
+ * 全部属性
+ */
 fun Attr.all(): ArrayList
 <AttrValue> {
     val attrs = arrayListOf<AttrValue>()
@@ -146,14 +158,18 @@ fun Attr.all(): ArrayList
     return attrs
 }
 
-//非零属性
+/**
+ * 非零属性
+ */
 fun Attr.allNotZero(): List<AttrValue> {
     val attrs = all()
     attrs.removeAll { it.value == 0.0 }
     return attrs
 }
 
-//属性对比
+/**
+ * 属性对比差值
+ */
 fun Attr.compare(attr1: Attr): List<AttrValue> {
     val attrs = all()
     val attrs1 = attr1.all()

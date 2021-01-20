@@ -52,6 +52,9 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
     version = 63,
     exportSchema = false
 )
+/**
+ * 日服版本数据库
+ */
 abstract class AppDatabaseJP : RoomDatabase() {
 
     abstract fun getCharacterDao(): CharacterDao

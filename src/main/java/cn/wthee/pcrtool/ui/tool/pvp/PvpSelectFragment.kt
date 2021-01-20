@@ -16,6 +16,15 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil
 import com.google.android.material.tabs.TabLayoutMediator
 
+/**
+ * 竞技场角色选择
+ *
+ * [customize] -1：页面查询 0：自定义进攻方选择 1：自定义防守方选择
+ *
+ * 页面布局 [LayoutPvpSelectBinding]
+ *
+ * ViewModels [CharacterViewModel]
+ */
 class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
 
     companion object {

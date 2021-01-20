@@ -13,7 +13,11 @@ import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-
+/**
+ * 装备 ViewModel
+ *
+ * 数据来源 [EquipmentRepository]
+ */
 class EquipmentViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
@@ -24,7 +28,9 @@ class EquipmentViewModel(
     var equipmentCounts = MutableLiveData<Int>()
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
 
-    //获取装备列表
+    /**
+     * 获取装备列表
+     */
     fun getEquips(name: String) {
         viewModelScope.launch {
             equipments = Pager(
@@ -49,7 +55,9 @@ class EquipmentViewModel(
     }
 
 
-    //专武信息
+    /**
+     * 根据 [uid] 专武等级 [lv]，获取专武信息
+     */
     fun getUniqueEquipInfos(uid: Int, lv: Int) {
         viewModelScope.launch {
             val data = equipmentRepository.getUniqueEquipInfos(uid, lv)
@@ -57,9 +65,9 @@ class EquipmentViewModel(
         }
     }
 
-    suspend fun getUEMaxLv() = equipmentRepository.getUniqueEquipMaxLv()
-
-    //获取装备类型
+    /**
+     * 获取装备类型
+     */
     suspend fun getTypes() = equipmentRepository.getEquipTypes()
 
 }

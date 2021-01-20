@@ -14,7 +14,11 @@ import cn.wthee.pcrtool.enums.SortType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-
+/**
+ * 角色 ViewModel
+ *
+ * 数据来源 [CharacterRepository]
+ */
 class CharacterViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
@@ -26,7 +30,9 @@ class CharacterViewModel(
     var updateCharacter = MutableLiveData<Boolean>()
     var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
 
-    //角色基本资料
+    /**
+     * 角色基本资料 [CharacterInfo]
+     */
     fun getCharacters(sortType: SortType, asc: Boolean, name: String, reload: Boolean = true) {
         viewModelScope.launch {
             if (!this@CharacterViewModel::characters.isInitialized || reload) {
@@ -53,7 +59,9 @@ class CharacterViewModel(
         }
     }
 
-    //角色基本资料
+    /**
+     * 角色基本资料 [CharacterInfoPro]
+     */
     fun getCharacter(uid: Int) {
         viewModelScope.launch {
             val data = repository.getInfoPro(uid)
@@ -61,16 +69,9 @@ class CharacterViewModel(
         }
     }
 
-    suspend fun getCharacterData(uid: Int) = repository.getInfoPro(uid)
-
-    //角色基本资料
-    suspend fun getCharacterByPosition(positionType: Int) = when (positionType) {
-        1 -> repository.getCharacterByPosition(0, 299)
-        2 -> repository.getCharacterByPosition(300, 599)
-        3 -> repository.getCharacterByPosition(600, 999)
-        else -> repository.getCharacterByPosition(0, 999)
-    }
-
+    /**
+     * 竞技场角色信息
+     */
     fun getAllCharacter() {
         viewModelScope.launch {
             val data = repository.getCharacterByPosition(0, 999)
@@ -78,12 +79,18 @@ class CharacterViewModel(
         }
     }
 
-    //升级经验列表
+    /**
+     * 六星 id 列表
+     */
     suspend fun getR6Ids() = repository.getR6Ids()
 
-    //公会信息
+    /**
+     * 公会信息
+     */
     suspend fun getGuilds() = repository.getGuilds()
 
-    //掉落信息
+    /**
+     * 角色碎片掉落信息
+     */
     suspend fun getDrops(uid: Int) = repository.getItemDropInfos(uid)
 }

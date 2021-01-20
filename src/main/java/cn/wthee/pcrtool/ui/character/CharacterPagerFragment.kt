@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.HorizontalMarginItemDecoration
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrViewModel
 import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
@@ -30,7 +31,13 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
- * 角色信息 ViewPager
+ * 角色详情 ViewPager
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentCharacterPagerBinding]
+ *
+ * ViewModels [CharacterViewModel] [CharacterAttrViewModel]
  */
 class CharacterPagerFragment : Fragment() {
 

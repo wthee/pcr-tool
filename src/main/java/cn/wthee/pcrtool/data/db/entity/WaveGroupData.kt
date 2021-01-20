@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-//关卡波次掉落信息
+/**
+ * 关卡波次掉落信息
+ */
 @Entity(tableName = "wave_group_data")
 class WaveGroupData(
     @PrimaryKey

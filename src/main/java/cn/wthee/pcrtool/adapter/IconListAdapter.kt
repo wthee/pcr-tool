@@ -13,7 +13,13 @@ import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.utils.Constants
 import coil.load
 
-
+/**
+ * 角色图标列表适配器
+ *
+ * 列表项布局 [ItemCommonBinding]
+ *
+ * 列表项数据 [Int] unit_id
+ */
 class IconListAdapter() : ListAdapter<Int, IconListAdapter.ViewHolder>(GachaListDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

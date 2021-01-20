@@ -7,7 +7,9 @@ import com.umeng.commonsdk.UMConfigure
 import com.umeng.umcrash.UMCrash
 import java.util.*
 
-//友盟 SDK 初始化
+/**
+ * 友盟 SDK 初始化
+ */
 class UMengInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         UMConfigure.init(

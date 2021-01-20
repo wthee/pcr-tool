@@ -14,6 +14,10 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 卡池
+ *
+ * 页面布局 [FragmentToolGachaBinding]
+ *
+ * ViewModels [GachaViewModel]
  */
 class GachaFragment : Fragment() {
 

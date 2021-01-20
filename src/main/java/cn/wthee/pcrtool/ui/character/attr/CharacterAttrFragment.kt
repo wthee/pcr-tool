@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
 import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
+import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment.Companion.uid
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
@@ -23,7 +24,13 @@ import com.google.android.material.slider.Slider
 import kotlinx.coroutines.launch
 
 /**
- * 角色属性页面
+ * 角色面板属性页面
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 []
+ *
+ * ViewModels [CharacterViewModel] [EquipmentViewModel] [CharacterAttrViewModel]
  */
 class CharacterAttrFragment : Fragment() {
 

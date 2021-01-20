@@ -15,6 +15,9 @@ import kotlinx.coroutines.launch
  */
 object ObjectAnimatorUtil {
 
+    /**
+     * 进入动画
+     */
     fun enter(onAnimatorListener: OnAnimatorListener, vararg view: View) {
         val holder1 = PropertyValuesHolder.ofFloat("scaleX", 0.95f, 1f)
         val holder2 = PropertyValuesHolder.ofFloat("scaleY", 0.95f, 1f)
@@ -26,6 +29,9 @@ object ObjectAnimatorUtil {
         }
     }
 
+    /**
+     * 开始动画
+     */
     private fun start(
         view: View,
         onAnimatorListener: OnAnimatorListener?,
@@ -59,6 +65,9 @@ object ObjectAnimatorUtil {
         }
     }
 
+    /**
+     * 动画执行回调
+     */
     interface OnAnimatorListener {
         fun prev(view: View)
         fun start(view: View)

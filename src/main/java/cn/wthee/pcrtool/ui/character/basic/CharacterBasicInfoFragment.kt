@@ -22,6 +22,12 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息页面
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentCharacterBasicInfoBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class CharacterBasicInfoFragment : Fragment() {
 
@@ -117,6 +123,7 @@ class CharacterBasicInfoFragment : Fragment() {
             //fab点击监听
             fabLoveCbi.setOnClickListener {
                 isLoved = !isLoved
+                CharacterListFragment.characterFilterParams.addOrRemove(uid)
                 setLove(isLoved)
             }
             //角色编号
@@ -129,11 +136,6 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //设置收藏
     private fun setLove(isLoved: Boolean) {
-        if (isLoved)
-            CharacterListFragment.characterFilterParams.add(uid)
-        else
-            CharacterListFragment.characterFilterParams.remove(uid)
-
         val icFabColor =
             ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)
 

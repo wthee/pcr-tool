@@ -9,7 +9,12 @@ import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import kotlinx.coroutines.launch
 
-
+/**
+ * 角色面板属性 ViewModel
+ *
+ * 数据来源 [CharacterRepository] [EquipmentRepository]
+ *
+ */
 class CharacterAttrViewModel(
     private val characterRepository: CharacterRepository,
     private val equipmentRepository: EquipmentRepository
@@ -20,7 +25,10 @@ class CharacterAttrViewModel(
     var sumInfo = MutableLiveData<Attr>()
     var maxData = MutableLiveData<Map<String, Int>>()
 
-    //获取角色属性信息
+    /**
+     * 根据角色 id [unitId] [rank] 星级 [rarity] 等级 [lv] 专武等级 [ueLv]
+     * 获取角色属性信息 [Attr]
+     */
     fun getCharacterInfo(unitId: Int, rank: Int, rarity: Int, lv: Int, ueLv: Int) {
         //计算属性
         viewModelScope.launch {
@@ -30,7 +38,10 @@ class CharacterAttrViewModel(
 
     }
 
-    //获取角色属性信息
+    /**
+     * 根据角色 id [unitId] [rank] 星级 [rarity] 等级 [lv] 专武等级 [ueLv]
+     * 获取角色属性信息 [Attr]
+     */
     suspend fun getAttrs(unitId: Int, rank: Int, rarity: Int, lv: Int, ueLv: Int): Attr {
         try {
             val rankData = characterRepository.getRankStatus(unitId, rank)
@@ -69,21 +80,26 @@ class CharacterAttrViewModel(
         return Attr()
     }
 
-    private suspend fun getStoryAttrs(id: Int): Attr {
+    /**
+     *根据 [unitId]，获取角色剧情属性 [Attr]
+     */
+    private suspend fun getStoryAttrs(unitId: Int): Attr {
         val storyAttr = Attr()
-        val storyInfo = characterRepository.getCharacterStoryStatus(id)
+        val storyInfo = characterRepository.getCharacterStoryStatus(unitId)
         storyInfo.forEach {
             storyAttr.add(it.getAttr())
         }
         return storyAttr
     }
 
-    //获取最大Rank和星级
-    fun getMaxRankAndRarity(id: Int) {
+    /**
+     * 根据 [unitId]，获取最大Rank和星级
+     */
+    fun getMaxRankAndRarity(unitId: Int) {
         viewModelScope.launch {
             try {
-                val rank = characterRepository.getMaxRank(id)
-                val rarity = characterRepository.getMaxRarity(id)
+                val rank = characterRepository.getMaxRank(unitId)
+                val rarity = characterRepository.getMaxRarity(unitId)
                 val level = characterRepository.getMaxLevel()
                 val ueLv = equipmentRepository.getUniqueEquipMaxLv()
                 val map = HashMap<String, Int>()
@@ -98,11 +114,14 @@ class CharacterAttrViewModel(
         }
     }
 
-    suspend fun isUnknown(id: Int): Boolean {
+    /**
+     * 根据 [unitId]，判断角色是否有技能等信息
+     */
+    suspend fun isUnknown(unitId: Int): Boolean {
         try {
-            characterRepository.getMaxRank(id)
-            characterRepository.getMaxRarity(id)
-            if (characterRepository.getEquipmentIds(id, 2).getAllIds().isEmpty()) {
+            characterRepository.getMaxRank(unitId)
+            characterRepository.getMaxRarity(unitId)
+            if (characterRepository.getEquipmentIds(unitId, 2).getAllIds().isEmpty()) {
                 return true
             }
         } catch (e: Exception) {

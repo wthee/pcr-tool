@@ -8,6 +8,9 @@ import cn.wthee.pcrtool.MyApplication
  */
 object ScreenUtil {
 
+    /**
+     * 获取 DisplayMetrics
+     */
     private fun getDm(): DisplayMetrics {
         val outMetrics = DisplayMetrics()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
@@ -22,13 +25,21 @@ object ScreenUtil {
         return outMetrics
     }
 
+    /**
+     * 宽度
+     */
     fun getWidth() = getDm().widthPixels
 
+    /**
+     * 高度
+     */
     fun getHeight() = getDm().heightPixels
 
 }
 
-// 获取 dp 的像素值
+/**
+ *  获取 dp 的像素值
+ */
 val Int.dp: Int
     get() {
         val scale: Float = MyApplication.context.resources.displayMetrics.density

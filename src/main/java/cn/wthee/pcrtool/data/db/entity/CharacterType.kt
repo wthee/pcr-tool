@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-//角色类型
+/**
+ * 角色类型
+ */
 @Entity(tableName = "chara_identity")
 data class CharacterType(
     @PrimaryKey

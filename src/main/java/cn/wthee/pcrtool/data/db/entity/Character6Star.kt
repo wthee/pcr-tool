@@ -6,7 +6,9 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//六星角色信息
+/**
+ * 六星角色信息
+ */
 @Entity(
     tableName = "rarity_6_quest_data",
     indices = [Index(

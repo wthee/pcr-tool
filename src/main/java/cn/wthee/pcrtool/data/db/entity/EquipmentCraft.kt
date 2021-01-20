@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 
-//装备合成信息
+/**
+ * 装备合成信息
+ */
 @Entity(tableName = "equipment_craft")
 data class EquipmentCraft(
     @PrimaryKey

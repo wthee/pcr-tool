@@ -9,8 +9,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.RankCompareAdapter
 import cn.wthee.pcrtool.data.bean.getRankCompareList
 import cn.wthee.pcrtool.data.db.view.Attr
-import cn.wthee.pcrtool.data.db.view.all
-import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.InjectorUtil
@@ -20,7 +18,13 @@ import cn.wthee.pcrtool.utils.getRankColor
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 角色 Rank 对比弹窗
+ *
+ * 页面布局 [FragmentCharacterRankCompareBinding]
+ *
+ * ViewModels [CharacterAttrViewModel]
+ */
 class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
 
     private lateinit var binding: FragmentCharacterRankCompareBinding
@@ -61,11 +65,7 @@ class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
                 //初始化数据
                 rankCompare.adapter = adapter
                 adapter.submitList(
-                    getRankCompareList(
-                        attr0.all(),
-                        attr1.all(),
-                        attr1.compare(attr0)
-                    )
+                    getRankCompareList(attr0, attr1)
                 )
                 //列表头
                 value0.text = getString(R.string.rank_pre, CharacterAttrFragment.maxRank)
@@ -123,6 +123,6 @@ class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
     }
 
     private fun reload() {
-        adapter.submitList(getRankCompareList(attr0.all(), attr1.all(), attr0.compare(attr1)))
+        adapter.submitList(getRankCompareList(attr0, attr1))
     }
 }

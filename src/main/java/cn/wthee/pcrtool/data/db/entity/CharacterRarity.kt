@@ -6,7 +6,9 @@ import androidx.room.Entity
 import androidx.room.Index
 import cn.wthee.pcrtool.data.db.view.Attr
 
-//角色星级属性
+/**
+ * 角色星级属性
+ */
 @Entity(
     tableName = "unit_rarity",
     indices = [Index(

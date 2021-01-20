@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//道具信息
+/**
+ * 道具掉落信息
+ */
 @Entity(tableName = "odds_name_data")
 data class OddsNameData(
     @PrimaryKey

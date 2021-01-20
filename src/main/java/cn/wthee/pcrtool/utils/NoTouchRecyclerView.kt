@@ -6,7 +6,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
 
-
+/**
+ * 不拦截点击事件的 RecyclerView
+ */
 class NoTouchRecyclerView : RecyclerView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)

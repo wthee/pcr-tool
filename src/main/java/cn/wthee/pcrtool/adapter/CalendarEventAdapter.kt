@@ -19,11 +19,19 @@ import cn.wthee.pcrtool.databinding.ItemCalendarEventHeaderBinding
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_ITEM = 1
 
-
+/**
+ * 日历事项列表适配器
+ *
+ * 列表项布局：分组名 [ItemCalendarEventHeaderBinding]，分组内容 [ItemCalendarEventBinding]
+ *
+ * 列表项数据：分组名 [CalendarDataItem.Header]，分组内容 [CalendarDataItem.Item]
+ */
 class CalendarEventAdapter :
     ListAdapter<CalendarDataItem, CalendarEventAdapter.ViewHolder>(CalendarDiffCallback()) {
 
-
+    /**
+     * 处理事项 [list] 为 [CalendarDataItem] 数组，并更新列表
+     */
     fun addHeaderAndSubmitList(list: List<CalendarContent>?) {
         val items = when {
             list == null || list.isEmpty() -> listOf(CalendarDataItem.Header("无活动")) + listOf(

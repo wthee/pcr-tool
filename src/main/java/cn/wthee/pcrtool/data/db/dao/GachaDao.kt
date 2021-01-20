@@ -6,10 +6,15 @@ import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 
+/**
+ * 卡池记录 DAO
+ */
 @Dao
 interface GachaDao {
 
-    //获取卡池记录
+    /**
+     * 获取所有卡池记录 [GachaInfo]
+     */
     @Transaction
     @Query(
         """

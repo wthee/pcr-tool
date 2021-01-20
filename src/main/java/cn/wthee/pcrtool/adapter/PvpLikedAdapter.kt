@@ -16,7 +16,13 @@ import cn.wthee.pcrtool.ui.tool.pvp.PvpService
 import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.dp
 
-
+/**
+ * 竞技场收藏列表适配器，[isFloat] 判断是否为悬浮窗
+ *
+ * 列表项布局 [ItemPvpLikedBinding]
+ *
+ * 列表项数据 [PvpLikedData]
+ */
 class PvpLikedAdapter(
     private val isFloat: Boolean
 ) : ListAdapter<PvpLikedData, PvpLikedAdapter.ViewHolder>(PvpLikedDiffCallback()) {
@@ -41,6 +47,7 @@ class PvpLikedAdapter(
         fun bind(data: PvpLikedData) {
             //设置数据
             binding.apply {
+                //自定义
                 if (data.type == 1) {
                     typeImg.visibility = View.VISIBLE
                 } else {
@@ -49,9 +56,11 @@ class PvpLikedAdapter(
                 atkIds.text = data.atks
                 defIds.text = data.defs
                 type.text = data.type.toString()
+                //角色图标
                 val adapter = PvpCharacterResultItemAdapter()
                 likedCharacters.adapter = adapter
                 adapter.submitList(data.getIds())
+                //适配悬浮窗/正常页面
                 val params = root.layoutParams as RecyclerView.LayoutParams
                 val listParams = likedCharacters.layoutParams as ConstraintLayout.LayoutParams
                 if (isFloat) {

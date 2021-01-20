@@ -8,6 +8,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
  * 底部弹窗基类
+ *
+ * 默认是否展开 [expend]
  */
 open class CommonBottomSheetDialogFragment(private val expend: Boolean = false) :
     BottomSheetDialogFragment() {

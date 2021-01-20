@@ -3,7 +3,9 @@ package cn.wthee.pcrtool.utils
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
-// 把 - 拼接的字符串，转化为数组
+/**
+ *  把 - 拼接的字符串，转化为数组
+ */
 fun String.intArrayList(): ArrayList<Int> {
     val list = arrayListOf<Int>()
     val ids = this.split("-")
@@ -15,8 +17,11 @@ fun String.intArrayList(): ArrayList<Int> {
     return list
 }
 
-// 计算日期字符串间隔天数 yyyy-MM-dd  this - str2 相差天数
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd")
+
+/**
+ *  计算日期字符串间隔天数 yyyy-MM-dd  this - str2 相差天数
+ */
 fun String.days(str2: String): String {
     return try {
         val d1 = df.parse(this)!!

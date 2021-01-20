@@ -21,6 +21,10 @@ import kotlinx.coroutines.launch
 
 /**
  * 公告列表
+ *
+ * 页面布局 [FragmentToolNewsListBinding]
+ *
+ * ViewModels [NewsViewModel]
  */
 class ToolNewsListFragment : Fragment() {
 

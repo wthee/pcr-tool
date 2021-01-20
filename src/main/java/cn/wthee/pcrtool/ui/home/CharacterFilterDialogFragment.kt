@@ -14,7 +14,13 @@ import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
-
+/**
+ * 角色筛选弹窗
+ *
+ * 页面布局 [FragmentFilterCharacterBinding]
+ *
+ * ViewModels [CharacterViewModel]
+ */
 class CharacterFilterDialogFragment : CommonDialogFragment() {
 
     private lateinit var binding: FragmentFilterCharacterBinding

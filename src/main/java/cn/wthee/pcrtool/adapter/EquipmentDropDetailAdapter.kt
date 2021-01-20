@@ -15,7 +15,13 @@ import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import coil.load
 
-
+/**
+ * 副本掉落装备列表适配器
+ *
+ * 列表项布局 [ItemEquipmentDropDetailBinding]
+ *
+ * 列表项数据 [EquipmentIdWithOdd]
+ */
 class EquipmentDropDetailAdapter(private val eid: Int) :
     ListAdapter<EquipmentIdWithOdd, EquipmentDropDetailAdapter.ViewHolder>(OddDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

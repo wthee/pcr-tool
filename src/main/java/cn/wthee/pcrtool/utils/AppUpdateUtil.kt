@@ -14,6 +14,9 @@ import kotlinx.coroutines.launch
  */
 object AppUpdateUtil {
 
+    /**
+     * 校验版本
+     */
     fun init(context: Context, inflater: LayoutInflater, showToast: Boolean = false) {
         try {
             //本地版本

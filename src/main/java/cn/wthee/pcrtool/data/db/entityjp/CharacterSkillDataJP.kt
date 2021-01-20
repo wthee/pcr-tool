@@ -4,6 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * 技能信息
+ */
 @Entity(tableName = "unit_skill_data")
 data class CharacterSkillDataJP(
     @PrimaryKey

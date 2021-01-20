@@ -2,11 +2,13 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EventDao
 
-
-//剧情活动数据Repository
+/**
+ * 剧情活动 Repository
+ *
+ * 数据来源 [EventDao]
+ */
 class EventRepository(private val eventDao: EventDao) {
 
-    //获取活动事件信息
     suspend fun getAllEvents() = eventDao.getAllEvents()
 
     companion object {

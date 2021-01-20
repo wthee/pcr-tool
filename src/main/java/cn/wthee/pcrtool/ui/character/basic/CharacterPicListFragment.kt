@@ -24,7 +24,13 @@ import com.permissionx.guolindev.PermissionX
 import kotlinx.coroutines.launch
 
 /**
- * 角色图片展示页面
+ * 角色图片展示页面弹窗
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentCharacterPicListBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
 

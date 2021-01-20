@@ -36,7 +36,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
- * 悬浮窗
+ * 悬浮窗服务
  */
 class PvpService : Service() {
 
@@ -119,6 +119,9 @@ class PvpService : Service() {
         setListener()
     }
 
+    /**
+     * 设置点击
+     */
     private fun setListener() {
         binding.apply {
             //搜索按钮
@@ -194,6 +197,9 @@ class PvpService : Service() {
         }
     }
 
+    /**
+     * 滑动删除
+     */
     private suspend fun setSwipeDelete(
         dao: PvpDao,
         region: Int,
@@ -244,6 +250,9 @@ class PvpService : Service() {
         }).attachToRecyclerView(binding.listLiked)
     }
 
+    /**
+     * 更新收藏数
+     */
     private fun updateTip(data: List<PvpLikedData>) {
         binding.likeTip.text =
             if (data.isNotEmpty())
@@ -252,7 +261,9 @@ class PvpService : Service() {
                 getString(R.string.no_liked_data)
     }
 
-    //展示查询结果
+    /**
+     * 展示查询结果
+     */
     private fun showResult() {
         binding.apply {
             //刷新已选择列表
@@ -289,7 +300,9 @@ class PvpService : Service() {
         }
     }
 
-    //page 初始化
+    /**
+     * page 初始化
+     */
     private fun setPager(activity: AppCompatActivity) {
         binding.pvpPager.offscreenPageLimit = 3
         binding.pvpPager.adapter = PvpCharacterPagerAdapter(activity, true)
@@ -311,7 +324,9 @@ class PvpService : Service() {
         }.attach()
     }
 
-    //最大/小化
+    /**
+     * 最大/小化
+     */
     private fun minWindow() {
         binding.apply {
             if (isMin) {
@@ -330,7 +345,9 @@ class PvpService : Service() {
         }
     }
 
-    //初始化
+    /**
+     * 初始化页面
+     */
     private fun loadDefault() {
         selectedAdapter = PvpCharacterAdapter(true)
         binding.selectCharacters.adapter = selectedAdapter

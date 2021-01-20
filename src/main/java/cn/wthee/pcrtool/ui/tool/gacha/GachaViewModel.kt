@@ -7,7 +7,11 @@ import cn.wthee.pcrtool.data.db.repository.GachaRepository
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import kotlinx.coroutines.launch
 
-
+/**
+ * 卡池 ViewModel
+ *
+ * 数据来源 [GachaRepository]
+ */
 class GachaViewModel(
     private val repository: GachaRepository
 ) : ViewModel() {
@@ -15,7 +19,9 @@ class GachaViewModel(
     var gachas = MutableLiveData<List<GachaInfo>>()
 
 
-    //卡池信息
+    /**
+     * 获取卡池记录
+     */
     fun getGachaHistory() {
         viewModelScope.launch {
             val data = repository.getGachaHistory()

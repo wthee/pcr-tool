@@ -1,7 +1,13 @@
 package cn.wthee.pcrtool.utils
 
+/**
+ * 角色 id 工具
+ */
 object CharacterIdUtil {
 
+    /**
+     * 获取角色卡面 urls
+     */
     fun getAllPicUrl(id: Int, r6Id: Boolean): ArrayList<String> {
         val list = arrayListOf<String>()
         if (r6Id) {
@@ -15,6 +21,9 @@ object CharacterIdUtil {
         return list
     }
 
+    /**
+     * 获取角色图片 urls
+     */
     fun getAllIconUrl(uid: Int, r6Id: Boolean): ArrayList<String> {
         val list = arrayListOf<String>()
 
@@ -26,12 +35,17 @@ object CharacterIdUtil {
         return list
     }
 
+    /**
+     * 获取星级 [star] id
+     */
     private fun getStarId(uid: Int, star: Int): String {
         val idStr = uid.toString()
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
     }
 
-    //去除无效id
+    /**
+     * 去除无效id
+     */
     private fun getFixedId(id: Int) = id + if (Constants.errorIDs.contains(id)) 31 else 30
 
 

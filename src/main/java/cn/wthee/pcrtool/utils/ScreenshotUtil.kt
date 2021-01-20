@@ -9,9 +9,14 @@ import android.view.View
 import androidx.collection.LruCache
 import androidx.recyclerview.widget.RecyclerView
 
-
+/**
+ * 截图保存
+ */
 object ScreenshotUtil {
 
+    /**
+     * [view] 转 [Bitmap]
+     */
     fun getBitmap(view: View): Bitmap? {
         val bitmap = Bitmap.createBitmap(
             view.width,
@@ -22,6 +27,9 @@ object ScreenshotUtil {
         return bitmap
     }
 
+    /**
+     * 保存 RecyclerView
+     */
     fun shotRecyclerView(view: RecyclerView): Bitmap? {
         val adapter = view.adapter
         var bigBitmap: Bitmap? = null

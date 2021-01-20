@@ -20,6 +20,12 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色碎片掉落页面
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentCharacterDropInfoBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class CharacterDropDialogFragment : CommonBottomSheetDialogFragment() {
 

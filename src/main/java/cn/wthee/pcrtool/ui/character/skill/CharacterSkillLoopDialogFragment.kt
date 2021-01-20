@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.SkillLoopAllAdapter
 import cn.wthee.pcrtool.data.bean.SkillLoop
@@ -15,6 +16,12 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 角色技能循环页面
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentSkillLoopBinding]
+ *
+ * ViewModels [CharacterSkillViewModel]
  */
 class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
@@ -29,6 +36,9 @@ class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
     private lateinit var binding: FragmentSkillLoopBinding
     private var uid = 0
+    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
+        InjectorUtil.provideCharacterSkillViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +56,9 @@ class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
         val adapter = SkillLoopAllAdapter()
         binding.skillLoopList.adapter = adapter
 
-        val viewModel = InjectorUtil.provideCharacterSkillViewModelFactory()
-            .create(CharacterSkillViewModel::class.java)
-
-        viewModel.getCharacterSkillLoops(uid)
+        sharedSkillViewModel.getCharacterSkillLoops(uid)
         //技能动作循环
-        viewModel.atlPattern.observe(viewLifecycleOwner, {
+        sharedSkillViewModel.atlPattern.observe(viewLifecycleOwner, {
             val loops = arrayListOf<SkillLoop>()
             if (it.size > 1) {
                 loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))

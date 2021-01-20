@@ -12,11 +12,19 @@ import kotlinx.coroutines.CancellationException
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
+/**
+ * 接口 Repository
+ *
+ * 数据来源 [MyAPIService]
+ */
 object MyAPIRepository {
 
     //创建服务
     private val service = ApiUtil.create(MyAPIService::class.java, Constants.API_URL)
 
+    /**
+     * 根据防守方 id [ids] 查询竞技场对战信息
+     */
     suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpData>> {
         val region = DatabaseUpdater.getRegion()
         //接口参数
@@ -43,7 +51,9 @@ object MyAPIRepository {
 
     }
 
-    //官网信息
+    /**
+     * 根据游戏版本 [region] 页数 [page]，查询公告信息
+     */
     suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsTable>> {
         //接口参数
         val json = JsonObject()
@@ -68,7 +78,9 @@ object MyAPIRepository {
         return error()
     }
 
-    //排名信息
+    /**
+     * 获取排名信息
+     */
     suspend fun getLeader(): ResponseData<LeaderData> {
         //请求
         try {
@@ -85,7 +97,9 @@ object MyAPIRepository {
         return error()
     }
 
-    //日历信息
+    /**
+     * 获取日历信息
+     */
     suspend fun getCalendar(): ResponseData<CalendarData> {
         //请求
         try {

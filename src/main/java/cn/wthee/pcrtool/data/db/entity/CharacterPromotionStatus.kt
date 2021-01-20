@@ -5,7 +5,9 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import cn.wthee.pcrtool.data.db.view.Attr
 
-//角色rank属性状态
+/**
+ * 角色 Rank 属性状态
+ */
 @Entity(
     tableName = "unit_promotion_status",
     primaryKeys = ["unit_id", "promotion_level"]

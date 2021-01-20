@@ -4,7 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//官网公告
+/**
+ * 官网公告
+ */
 @Entity(tableName = "news")
 data class NewsTable(
     @PrimaryKey

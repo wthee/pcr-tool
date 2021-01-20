@@ -10,6 +10,9 @@ import android.net.Uri
  */
 object BrowserUtil {
 
+    /**
+     * 在浏览器中打开 [url]
+     */
     fun open(context: Context, url: String) {
         val intent = Intent()
         intent.action = Intent.ACTION_VIEW

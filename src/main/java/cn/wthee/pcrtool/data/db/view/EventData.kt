@@ -3,7 +3,9 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import java.io.Serializable
 
-// 剧情活动
+/**
+ *  剧情活动视图
+ */
 data class EventData(
     @ColumnInfo(name = "event_id") val eventId: Int,
     @ColumnInfo(name = "story_id") val storyId: Int,

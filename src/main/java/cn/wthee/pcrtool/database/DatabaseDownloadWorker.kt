@@ -25,7 +25,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
-
+/**
+ * 数据库下载
+ */
 class DatabaseDownloadWorker(
     @NonNull context: Context,
     @NonNull parameters: WorkerParameters?

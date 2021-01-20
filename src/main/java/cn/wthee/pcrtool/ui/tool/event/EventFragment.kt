@@ -14,6 +14,10 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 活动
+ *
+ * 页面布局 [FragmentToolEventBinding]
+ *
+ * ViewModels [EventViewModel]
  */
 class EventFragment : Fragment() {
 

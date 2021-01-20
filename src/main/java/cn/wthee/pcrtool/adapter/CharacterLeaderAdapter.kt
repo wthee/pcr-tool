@@ -14,7 +14,13 @@ import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
-
+/**
+ * 角色排行列表适配器
+ *
+ * 列表项布局 [ItemLeaderBinding]
+ *
+ * 列表项数据 [LeaderboardData]
+ */
 class CharacterLeaderAdapter(private val context: Context) :
     ListAdapter<LeaderboardData, CharacterLeaderAdapter.ViewHolder>(LeaderDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

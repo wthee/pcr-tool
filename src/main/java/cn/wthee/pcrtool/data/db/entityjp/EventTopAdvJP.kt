@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+/**
+ * 活动信息
+ */
 @Entity(
     tableName = "event_top_adv",
     indices = [Index(

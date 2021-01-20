@@ -43,6 +43,7 @@ FROM
 	LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON b.promotion_level = d.promotion_level
  """
 
+//装备筛选
 const val equipWhere = """
     WHERE a.craft_flg = 1 
         AND a.equipment_name like '%' || :name || '%' 
@@ -59,15 +60,21 @@ const val equipWhere = """
         ORDER BY  a.require_level DESC
     """
 
-//角色数据DAO
+/**
+ * 装备数据DAO
+ */
 @Dao
 interface EquipmentDao {
 
-    //装备类型
+    /**
+     * 获取装备所有类型列表 [String]
+     */
     @Query("""SELECT description as type FROM equipment_enhance_rate GROUP BY description""")
     suspend fun getEquipTypes(): List<String>
 
-    //所有装备信息
+    /**
+     * 根据筛选条件获取所有装备分页信息 [EquipmentMaxData]
+     */
     @Transaction
     @Query("""$viewEquipmentMaxData  $equipWhere""")
     fun getPagingEquipments(
@@ -77,6 +84,9 @@ interface EquipmentDao {
         starIds: List<Int>
     ): PagingSource<Int, EquipmentMaxData>
 
+    /**
+     * 根据筛选条件获取所有装备数量
+     */
     @Transaction
     @Query(
         """
@@ -90,15 +100,21 @@ interface EquipmentDao {
     )
     suspend fun getEquipmentCount(type: String, name: String, showAll: Int, starIds: List<Int>): Int
 
-    //装备提升属性
+    /**
+     * 根据 [eid]，获取装备提升属性 [EquipmentEnhanceRate]
+     */
     @Query("SELECT * FROM equipment_enhance_rate WHERE equipment_enhance_rate.equipment_id = :eid ")
     suspend fun getEquipmentEnhanceData(eid: Int): EquipmentEnhanceRate
 
-    //装备碎片信息
+    /**
+     * 根据 [eid]，获取装备合成信息 [EquipmentCraft]
+     */
     @Query("SELECT * FROM equipment_craft WHERE equipment_craft.equipment_id = :eid ")
     suspend fun getEquipmentCraft(eid: Int): EquipmentCraft
 
-    //掉落区域
+    /**
+     * 根据 [eid]，获取装备掉落区域信息 [EquipmentDropInfo]
+     */
     @Transaction
     @Query(
         """
@@ -139,11 +155,16 @@ interface EquipmentDao {
     )
     suspend fun getEquipDropAreas(eid: Int): List<EquipmentDropInfo>
 
-    //装备信息
+    /**
+     * 根据 [eid]，获取装备数值信息 [EquipmentMaxData]
+     */
     @Transaction
     @Query("$viewEquipmentMaxData WHERE a.equipment_id =:eid")
     suspend fun getEquipInfos(eid: Int): EquipmentMaxData
 
+    /**
+     * 根据 专武角色[uid] 装备等级[lv]，获取专武信息 [UniqueEquipmentMaxData]
+     */
     @Transaction
     @Query(
         """
@@ -181,6 +202,9 @@ interface EquipmentDao {
     )
     suspend fun getUniqueEquipInfos(uid: Int, lv: Int): UniqueEquipmentMaxData?
 
+    /**
+     * 根获取专武最大强化等级 [Int]
+     */
     @Transaction
     @Query(" SELECT MAX( unique_equipment_enhance_data.enhance_level ) FROM unique_equipment_enhance_data")
     suspend fun getUniqueEquipMaxLv(): Int

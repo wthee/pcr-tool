@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.utils.intArrayList
 
+/**
+ * 竞技场收藏
+ */
 @Entity(tableName = "pvp_like")
 data class PvpLikedData(
     @PrimaryKey

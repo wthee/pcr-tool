@@ -20,6 +20,10 @@ import java.util.*
 
 /**
  * 日历
+ *
+ * 页面布局 [FragmentToolCalendarBinding]
+ *
+ * ViewModels [CalendarViewModel]
  */
 class CalendarFragment : Fragment() {
 

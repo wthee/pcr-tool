@@ -11,7 +11,9 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.CachePolicy
 
-
+/**
+ * 应用初始
+ */
 class MyApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {

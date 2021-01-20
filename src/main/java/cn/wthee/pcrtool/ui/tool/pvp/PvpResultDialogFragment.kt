@@ -17,9 +17,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
 /**
- * 查询结果
+ * 竞技场查询结果弹窗
+ *
+ * 根据防守方id [defIds]，查询信息
+ *
+ * 页面布局 [FragmentToolPvpResultBinding]
+ *
+ * ViewModels [PvpLikedViewModel]
  */
 class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
 

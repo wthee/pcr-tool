@@ -15,7 +15,11 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**
- * 官网公告ViewPager
+ * 官网公告 ViewPager
+ *
+ * 页面布局 [FragmentToolNewsBinding]
+ *
+ * ViewModels []
  */
 class NewsPagerFragment : Fragment() {
 

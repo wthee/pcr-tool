@@ -15,6 +15,9 @@ import cn.wthee.pcrtool.utils.Constants
     version = 51,
     exportSchema = false
 )
+/**
+ * 竞技场收藏信息数据库
+ */
 abstract class AppPvpDatabase : RoomDatabase() {
 
     abstract fun getPvpDao(): PvpDao

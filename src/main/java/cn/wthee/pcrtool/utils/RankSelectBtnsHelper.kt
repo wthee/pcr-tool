@@ -10,10 +10,16 @@ class RankSelectBtnsHelper(
     private val binding: LayoutRankSelectBinding
 ) {
 
+    /**
+     * 初始化选择
+     */
     fun initRank(selRank: Int) {
         setRank(selRank)
     }
 
+    /**
+     * 点击监听
+     */
     fun setOnClickListener(maxRank: Int, onClickListener: OnClickListener) {
         var selRank = maxRank
         binding.rankAdd.setOnClickListener {
@@ -42,7 +48,9 @@ class RankSelectBtnsHelper(
         }
     }
 
-    //设置rank
+    /**
+     * 设置 rank
+     */
     private fun setRank(num: Int) {
         binding.apply {
             rank.text = num.toString()

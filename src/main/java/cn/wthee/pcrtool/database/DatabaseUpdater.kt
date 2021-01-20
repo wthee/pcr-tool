@@ -27,13 +27,21 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
 
-
+/**
+ * 数据库更新
+ */
 object DatabaseUpdater {
 
     private val sp: SharedPreferences =
         ActivityHelper.instance.currentActivity!!.getSharedPreferences("main", Context.MODE_PRIVATE)
 
-    //检查是否需要更新 -1:正常调用  0：点击版本号  1：切换版本调用
+    /**
+     * 检查是否需要更新
+     *
+     * [fromSetting] -1:正常调用  0：点击版本号  1：切换版本调用
+     *
+     * [force] 是否强制更新
+     */
     fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
         //提示开始
         if (fromSetting == 1) {
@@ -60,7 +68,9 @@ object DatabaseUpdater {
         }
     }
 
-    //获取数据库
+    /**
+     * 下载数据库文件
+     */
     private fun downloadDB(
         ver: DatabaseVersion,
         fromSetting: Int = -1,
@@ -108,11 +118,16 @@ object DatabaseUpdater {
         }
     }
 
-
+    /**
+     * 获取数据库版本
+     */
     private fun getDatabaseType() =
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
+    /**
+     * 获取已选择的游戏版本
+     */
     fun getRegion() = if (getDatabaseType() == 1) 2 else {
         //获取查询设置
         val tw = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
@@ -124,19 +139,31 @@ object DatabaseUpdater {
         }
     }
 
+    /**
+     * 获取本地数据库版本号
+     */
     private fun getLocalDatabaseVersion() = sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
         "0"
     ) ?: "0"
 
+    /**
+     * 获取本地数据库哈希值
+     */
     private fun getLocalDatabaseHash() = sp.getString(
         if (getDatabaseType() == 1) Constants.SP_DATABASE_HASH else Constants.SP_DATABASE_HASH_JP,
         "0"
     ) ?: "0"
 
+    /**
+     * 获取数据库文件名
+     */
     private fun getVersionFileName() =
         if (getDatabaseType() == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP
 
+    /**
+     * 更新本地数据库版本、哈希值
+     */
     fun updateLocalDataBaseVersion(ver: DatabaseVersion) {
         val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
             "main",

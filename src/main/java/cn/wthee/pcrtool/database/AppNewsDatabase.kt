@@ -19,6 +19,9 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
     version = 62,
     exportSchema = false
 )
+/**
+ * 公告信息数据库
+ */
 abstract class AppNewsDatabase : RoomDatabase() {
 
     abstract fun getNewsDao(): NewsDao

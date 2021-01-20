@@ -19,9 +19,14 @@ import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteUtil
 import coil.load
 
-
-class SkillLoopAdapter :
-    ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoopDiffCallback()) {
+/**
+ * 技能循环图标列表适配器
+ *
+ * 列表项布局 [ItemCommonBinding]
+ *
+ * 列表项数据 [Int] atk_id
+ */
+class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoopDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(

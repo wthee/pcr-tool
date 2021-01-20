@@ -27,8 +27,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
+
 /**
  * 竞技场查询
+ *
+ * 页面布局 [FragmentToolPvpBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class PvpFragment : Fragment() {
 

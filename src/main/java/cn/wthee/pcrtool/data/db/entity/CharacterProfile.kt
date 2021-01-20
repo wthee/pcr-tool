@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//角色基本资料
+/**
+ * 角色资料
+ */
 @Entity(tableName = "unit_profile")
 data class CharacterProfile(
     @PrimaryKey

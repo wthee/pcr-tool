@@ -18,10 +18,16 @@ import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
-
-class EquipmentPageAdapter(
+/**
+ * 装备列表适配器
+ *
+ * 列表项布局 [ItemCommonBinding]
+ *
+ * 列表项数据 [EquipmentMaxData]
+ */
+class EquipmentListAdapter(
     private val fragmentManager: FragmentManager
-) : PagingDataAdapter<EquipmentMaxData, EquipmentPageAdapter.ViewHolder>(EquipDiffCallback()) {
+) : PagingDataAdapter<EquipmentMaxData, EquipmentListAdapter.ViewHolder>(EquipDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -63,7 +69,7 @@ class EquipmentPageAdapter(
                     }
                     //长按事件
                     binding.root.setOnLongClickListener {
-                        EquipmentListFragment.equipFilterParams.add(equip.equipmentId)
+                        EquipmentListFragment.equipFilterParams.addOrRemove(equip.equipmentId)
                         EquipmentListFragment.list.adapter?.notifyItemChanged(
                             absoluteAdapterPosition
                         )

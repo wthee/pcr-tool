@@ -15,7 +15,13 @@ import cn.wthee.pcrtool.databinding.ItemGachaBinding
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.intArrayList
 
-
+/**
+ * 卡池记录列表适配器
+ *
+ * 列表项布局 [ItemGachaBinding]
+ *
+ * 列表项数据 [GachaInfo]
+ */
 class GachaHistoryAdapter :
     ListAdapter<GachaInfo, GachaHistoryAdapter.ViewHolder>(GachaDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

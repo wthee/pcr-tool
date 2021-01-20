@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,8 +11,14 @@ import cn.wthee.pcrtool.data.bean.int
 import cn.wthee.pcrtool.databinding.ItemRankCompareAttrBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
-
-class RankCompareAdapter(private val hideTitle: Boolean = false) :
+/**
+ * 角色 Rank 属性对比列表适配器
+ *
+ * 列表项布局 [ItemRankCompareAttrBinding]
+ *
+ * 列表项数据 [RankCompareData]
+ */
+class RankCompareAdapter() :
     ListAdapter<RankCompareData, RankCompareAdapter.ViewHolder>(RankCompareDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -33,9 +38,6 @@ class RankCompareAdapter(private val hideTitle: Boolean = false) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: RankCompareData) {
             binding.apply {
-                if (hideTitle) {
-                    titleAttr.visibility = View.GONE
-                }
                 titleAttr.text = data.title
                 value0.text = data.attr0.int.toString()
                 value1.text = data.attr1.int.toString()

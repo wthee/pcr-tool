@@ -8,7 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.data.bean.SkillLoop
 import cn.wthee.pcrtool.databinding.ItemSkillLoopBinding
 
-
+/**
+ * 技能循环列表适配器
+ *
+ * 列表项布局 [ItemSkillLoopBinding]
+ *
+ * 列表项数据 [SkillLoop]
+ */
 class SkillLoopAllAdapter :
     ListAdapter<SkillLoop, SkillLoopAllAdapter.ViewHolder>(SkillLoopAllDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

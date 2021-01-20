@@ -21,7 +21,13 @@ import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
-
+/**
+ * 角色列表适配器
+ *
+ * 列表项布局 [ItemCharacterBinding]
+ *
+ * 列表项数据 [CharacterInfo]
+ */
 class CharacterListAdapter(private val fragment: CharacterListFragment) :
     PagingDataAdapter<CharacterInfo, CharacterListAdapter.ViewHolder>(CharacterDiffCallback()) {
 
@@ -104,10 +110,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 binding.root.setOnLongClickListener {
                     //收藏或取消
                     CharacterListFragment.characterFilterParams.apply {
-                        if (starIds.contains(character.id))
-                            remove(character.id)
-                        else
-                            add(character.id)
+                        addOrRemove(character.id)
                     }
                     notifyItemChanged(
                         absoluteAdapterPosition
