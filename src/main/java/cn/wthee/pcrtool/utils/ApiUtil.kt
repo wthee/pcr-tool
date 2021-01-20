@@ -1,18 +1,43 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.MyApplication.Companion.context
+import cn.wthee.pcrtool.R
+import coil.util.CoilUtils
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.KeyStore
+import java.security.cert.CertificateFactory
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
+
 
 /**
  * Retrofit2 创建服务
  */
 object ApiUtil {
 
+    //SSL 证书
+    private fun initSSL(): List<Any> {
+        val cf = CertificateFactory.getInstance("X.509")
+        val inputStream = context.resources.openRawResource(R.raw.certificate)
+        val ca = cf.generateCertificate(inputStream)
+        val kStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        kStore.load(null, null)
+        kStore.setCertificateEntry("ca", ca)
+        val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        tmf.init(kStore)
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, tmf.trustManagers, null)
+        return listOf(sslContext, tmf.trustManagers[0])
+    }
+
     fun downloadClientBuild(listener: DownloadListener): OkHttpClient {
+        val params = initSSL()
         return OkHttpClient.Builder()
             .addInterceptor(Interceptor {
                 val originalResponse: Response = it.proceed(it.request())
@@ -24,21 +49,35 @@ object ApiUtil {
             .connectTimeout(360, TimeUnit.SECONDS)
             .writeTimeout(360, TimeUnit.SECONDS)
             .readTimeout(360, TimeUnit.SECONDS)
+            .sslSocketFactory(
+                (params[0] as SSLContext).socketFactory,
+                params[1] as X509TrustManager
+            )
+            .build()
+    }
+
+    //client
+    fun getClient(): OkHttpClient {
+        val params = initSSL()
+        return OkHttpClient.Builder()
+            .cache(CoilUtils.createDefaultCache(context))
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .sslSocketFactory(
+                (params[0] as SSLContext).socketFactory,
+                params[1] as X509TrustManager
+            )
             .build()
     }
 
     //创建服务
     fun <T> create(serviceClass: Class<T>, url: String): T {
-        val client = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build()
 
         val builder = Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            .client(getClient())
 
         return builder.build().create(serviceClass)
     }
@@ -51,4 +90,5 @@ object ApiUtil {
 
         return builder.build().create(serviceClass)
     }
+
 }
