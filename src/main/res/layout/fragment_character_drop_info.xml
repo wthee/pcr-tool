@@ -14,8 +14,8 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/drop_icon"
         android:layout_gravity="center"
-        android:layout_width="@dimen/character_icon_size"
-        android:layout_height="@dimen/character_icon_size"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:adjustViewBounds="true" />
 
     <androidx.recyclerview.widget.RecyclerView

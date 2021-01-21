@@ -48,7 +48,7 @@
     </style>
 
     <!--  悬浮按钮样式-->
-    <style name="fabStyle" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+    <style name="fabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:backgroundTint">@color/colorWhite</item>
         <item name="borderWidth">0dp</item>
         <item name="fabSize">mini</item>
@@ -65,6 +65,7 @@
         <item name="iconSize">@dimen/menu_icon</item>
         <item name="iconTint">@color/colorPrimary</item>
         <item name="elevation">@dimen/home_fab_elevation</item>
+        <item name="iconPadding">@dimen/xs_padding</item>
     </style>
 
     <!-- 背景设置  -->

@@ -14,8 +14,10 @@
         style="@style/titleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/s_margin"
+        android:textIsSelectable="true"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon"
         tools:text="@string/app_name" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -25,19 +27,20 @@
         android:layout_margin="@dimen/xs_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/unknown_gray" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/all"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_marginStart="@dimen/s_margin"
+        android:paddingStart="@dimen/s_padding"
+        android:paddingEnd="0dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constraintBottom_toBottomOf="@id/icon"
-        app:layout_constraintEnd_toStartOf="@id/pvp"
-        app:layout_constraintTop_toTopOf="@id/icon"
-        app:layout_constraintWidth_percent="0.2"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toBottomOf="@id/name"
         tools:text="780" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -45,7 +48,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constraintBottom_toBottomOf="@id/all"
         app:layout_constraintEnd_toStartOf="@id/clan"
         app:layout_constraintTop_toTopOf="@id/all"
@@ -57,7 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constraintBottom_toBottomOf="@id/all"
         app:layout_constraintEnd_toStartOf="@id/tower"
         app:layout_constraintTop_toTopOf="@id/all"
@@ -69,7 +72,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constraintBottom_toBottomOf="@id/all"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/all"

@@ -46,6 +46,9 @@ class LeaderFragment : Fragment() {
                 binding.toolList.adapter = adapter
                 adapter.submitList(it.data?.leader) {
                     binding.loading.text = ""
+                    binding.pvp.visibility = View.VISIBLE
+                    binding.clan.visibility = View.VISIBLE
+                    binding.tower.visibility = View.VISIBLE
                 }
             } else if (it.status == -1) {
                 ToastUtil.short(it.message)
