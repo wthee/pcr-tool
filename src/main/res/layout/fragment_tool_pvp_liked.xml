@@ -2,12 +2,12 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_main"
     android:orientation="vertical"
-    app:layoutDescription="@xml/fragment_tool_pvp_like_scene"
+    app:layoutDescription="@xml/fragment_tool_common_scene"
     tools:context=".ui.tool.pvp.PvpLikedFragment">
 
     <include
@@ -20,24 +20,16 @@
         android:id="@+id/tool_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_back_drop"
         android:orientation="vertical"
         android:paddingTop="@dimen/m_padding"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/fab_top"
+        app:layout_constraintBottom_toTopOf="@id/fab_add"
         app:layout_constraintTop_toBottomOf="@id/tool_head"
         tools:itemCount="5"
         tools:listitem="@layout/item_pvp_liked" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_top"
-        style="@style/efabStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/fab_size"
-        android:contentDescription="@string/back_top"
-        android:text="@string/back_top"
-        app:icon="@drawable/ic_top" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add"

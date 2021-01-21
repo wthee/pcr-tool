@@ -105,11 +105,6 @@ class PvpLikedFragment : Fragment() {
                 null, extras
             )
         }
-        //回到顶部
-        binding.fabTop.setOnClickListener {
-            binding.root.transitionToStart()
-            binding.toolList.scrollToPosition(0)
-        }
     }
 
     private suspend fun setSwipeDelete(dao: PvpDao) {

@@ -2,17 +2,13 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:gravity="center"
     android:orientation="vertical"
     app:layoutDescription="@xml/fragment_tool_common_scene">
-
-    <View
-        android:id="@+id/layout_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <include
         android:id="@+id/tool_head"
@@ -31,20 +27,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tool_head"
         tools:listitem="@layout/item_gacha" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_top"
-        style="@style/efabStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/fab_size"
-        android:layout_gravity="end"
-        android:layout_marginTop="@dimen/efab_margin"
-        android:layout_marginEnd="@dimen/xl_margin"
-        android:layout_marginBottom="@dimen/efab_margin"
-        android:contentDescription="@string/back_top"
-        android:text="@string/back_top"
-        app:icon="@drawable/ic_top"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
  *
  * 根据 [uid] 显示角色数据
  *
- * 页面布局 []
+ * 页面布局 [FragmentCharacterAttrInfoBinding]
  *
  * ViewModels [CharacterViewModel] [EquipmentViewModel] [CharacterAttrViewModel]
  */

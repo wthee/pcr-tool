@@ -4,19 +4,28 @@ import android.content.res.Configuration
 import android.os.*
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.recyclerview.widget.RecyclerView
 import androidx.startup.AppInitializer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
 import cn.wthee.circleprogressbar.CircleProgressView
+import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
+import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.home.*
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment
+import cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
@@ -217,12 +226,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setListener() {
         //点击展开
-        val motion = binding.motionLayout
         fabMain.setOnClickListener {
             if (pageLevel > 0) {
                 goBack(this)
             } else {
-                if (motion.currentState == R.id.start) {
+                if (binding.layoutMotion.currentState == R.id.start) {
                     openFab()
                 } else {
                     closeFab()
@@ -231,16 +239,49 @@ class MainActivity : AppCompatActivity() {
         }
         //长按回到顶部
         fabMain.setOnLongClickListener {
-            //角色页面-回到顶部
             try {
-                CharacterListFragment.motionLayout.transitionToStart()
-                CharacterListFragment.characterList.scrollToPosition(0)
-            } catch (e: Exception) {
-            }
-            //装备页面-回到顶部
-            try {
-                EquipmentListFragment.motionLayout.transitionToStart()
-                EquipmentListFragment.list.scrollToPosition(0)
+                when {
+                    pageLevel == 0 -> {
+                        CharacterListFragment.motionLayout.transitionToStart()
+                        CharacterListFragment.characterList.scrollToPosition(0)
+                    }
+                    else -> {
+                        val fragment =
+                            supportFragmentManager.fragments[0].childFragmentManager.fragments[0]
+                        val view = fragment.view
+                        view?.findViewById<MotionLayout>(R.id.layout_motion)?.transitionToStart()
+                        when (fragment) {
+                            is NewsPagerFragment -> {
+                                view?.findViewById<MotionLayout>(R.id.layout_motion)
+                                    ?.transitionToStart()
+                                //viewpager 特殊处理
+                                val itemView =
+                                    (NewsPagerFragment.viewPager.adapter as NewsListPagerAdapter)
+                                        .mFragments[NewsPagerFragment.currentPage]
+                                        .view as LinearLayout
+                                itemView.children.iterator().forEach {
+                                    if (it is SwipeRefreshLayout) {
+                                        (it.getChildAt(0) as RecyclerView).scrollToPosition(0)
+                                    }
+                                }
+                            }
+                            is CharacterPagerFragment -> {
+                                val itemView =
+                                    (CharacterPagerFragment.viewPager.adapter as CharacterPagerAdapter)
+                                        .mFragments[CharacterPagerFragment.currentPage]
+                                        .view as ViewGroup
+                                itemView.children.iterator().forEach {
+                                    if (it is RecyclerView) {
+                                        it.scrollToPosition(0)
+                                    }
+                                }
+                                itemView.findViewById<MotionLayout>(R.id.layout_motion)
+                                    ?.transitionToStart()
+                            }
+                        }
+                    }
+                }
+
             } catch (e: Exception) {
             }
             return@setOnLongClickListener true
@@ -273,7 +314,7 @@ class MainActivity : AppCompatActivity() {
     // 关闭菜单
     private fun closeFab() {
         fabMain.setImageResource(R.drawable.ic_function)
-        binding.motionLayout.apply {
+        binding.layoutMotion.apply {
             transitionToStart()
             isClickable = false
             isFocusable = false
@@ -290,7 +331,7 @@ class MainActivity : AppCompatActivity() {
             isClickable = false
             isFocusable = false
         }
-        binding.motionLayout.apply {
+        binding.layoutMotion.apply {
             transitionToStart()
             isClickable = false
             isFocusable = false
@@ -308,7 +349,7 @@ class MainActivity : AppCompatActivity() {
             isClickable = true
             isFocusable = true
         }
-        binding.motionLayout.apply {
+        binding.layoutMotion.apply {
             transitionToEnd()
             isClickable = true
             isFocusable = true

@@ -64,11 +64,6 @@ class LeaderFragment : Fragment() {
         binding.source.setOnClickListener {
             BrowserUtil.open(requireContext(), getString(R.string.leader_source_url))
         }
-        //回到顶部
-        binding.fabTop.setOnClickListener {
-            binding.root.transitionToStart()
-            binding.toolList.scrollToPosition(0)
-        }
         return binding.root
     }
 

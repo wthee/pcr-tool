@@ -48,11 +48,6 @@ class GuildFragment : Fragment() {
             R.drawable.ic_gacha,
             getString(R.string.title_guild)
         )
-        //回到顶部
-        binding.fabTop.setOnClickListener {
-            binding.root.transitionToStart()
-            binding.toolList.scrollToPosition(0)
-        }
         return binding.root
     }
 

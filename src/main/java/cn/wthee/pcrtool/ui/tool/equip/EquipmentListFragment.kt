@@ -71,15 +71,15 @@ class EquipmentListFragment : Fragment() {
 
     private fun init() {
         motionLayout = binding.root
-        list = binding.pagerList
+        list = binding.toolList
         //设置头部
-        ToolbarHelper(binding.toolBar).setMainToolbar(
+        ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_equip,
             getString(R.string.tool_equip)
         )
         binding.apply {
             pageAdapter = EquipmentListAdapter(parentFragmentManager)
-            binding.pagerList.adapter = pageAdapter
+            binding.toolList.adapter = pageAdapter
         }
         //获取装备类型
         equipTypes = arrayListOf()

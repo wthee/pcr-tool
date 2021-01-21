@@ -26,7 +26,7 @@
         app:constraintSetEnd="@id/tool_end"
         app:constraintSetStart="@+id/tool_start">
         <OnSwipe
-            app:dragDirection="dragUp"
+            app:dragDirection="dragDown"
             app:touchAnchorId="@id/tool_list"
             app:touchAnchorSide="top" />
     </Transition>

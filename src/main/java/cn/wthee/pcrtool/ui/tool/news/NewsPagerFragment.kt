@@ -25,9 +25,9 @@ class NewsPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentToolNewsBinding
     private lateinit var adapter: NewsListPagerAdapter
-    private lateinit var viewPager: ViewPager2
 
     companion object {
+        lateinit var viewPager: ViewPager2
         var currentPage = 0
     }
 

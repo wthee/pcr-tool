@@ -45,11 +45,6 @@ class EventFragment : Fragment() {
             R.drawable.ic_event,
             getString(R.string.tool_event)
         )
-        //回到顶部
-        binding.fabTop.setOnClickListener {
-            binding.root.transitionToStart()
-            binding.toolList.scrollToPosition(0)
-        }
         return binding.root
     }
 

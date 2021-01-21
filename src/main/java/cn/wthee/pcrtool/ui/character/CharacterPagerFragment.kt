@@ -43,6 +43,7 @@ class CharacterPagerFragment : Fragment() {
     companion object {
         lateinit var viewPager: ViewPager2
         var uid = -1
+        var currentPage = 0
     }
 
 
@@ -101,6 +102,7 @@ class CharacterPagerFragment : Fragment() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     fabChange(position)
+                    currentPage = position
                 }
             })
         }
