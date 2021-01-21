@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_card_no_shadow"
     android:padding="@dimen/xm_padding"
     app:layoutDescription="@xml/fragment_character_attr_info_scene">
 
@@ -36,8 +35,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="@dimen/l_icon"
             android:layout_height="@dimen/l_icon"
-            android:visibility="gone"
             android:src="@drawable/ic_star"
+            android:visibility="gone"
             tools:visibility="visible" />
     </LinearLayout>
 
