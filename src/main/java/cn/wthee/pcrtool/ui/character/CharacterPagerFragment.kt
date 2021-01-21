@@ -65,7 +65,7 @@ class CharacterPagerFragment : Fragment() {
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
-            setAllContainerColors(resources.getColor(R.color.viewpager_bg, null))
+            setAllContainerColors(resources.getColor(R.color.colorWhite, null))
         }
     }
 

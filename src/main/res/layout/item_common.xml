@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="@dimen/s_padding"
+    android:layout_margin="@dimen/xs_margin"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_card_no_shadow"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
