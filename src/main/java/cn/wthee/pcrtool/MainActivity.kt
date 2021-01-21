@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.home.*
+import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -248,13 +249,10 @@ class MainActivity : AppCompatActivity() {
                     else -> {
                         val fragment =
                             supportFragmentManager.fragments[0].childFragmentManager.fragments[0]
-                        val view = fragment.view
-                        view?.findViewById<MotionLayout>(R.id.layout_motion)?.transitionToStart()
+                        var view = fragment.view
                         when (fragment) {
+                            // 公告页面
                             is NewsPagerFragment -> {
-                                view?.findViewById<MotionLayout>(R.id.layout_motion)
-                                    ?.transitionToStart()
-                                //viewpager 特殊处理
                                 val itemView =
                                     (NewsPagerFragment.viewPager.adapter as NewsListPagerAdapter)
                                         .mFragments[NewsPagerFragment.currentPage]
@@ -265,6 +263,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                             }
+                            //角色详情页面
                             is CharacterPagerFragment -> {
                                 val itemView =
                                     (CharacterPagerFragment.viewPager.adapter as CharacterPagerAdapter)
@@ -275,10 +274,19 @@ class MainActivity : AppCompatActivity() {
                                         it.scrollToPosition(0)
                                     }
                                 }
-                                itemView.findViewById<MotionLayout>(R.id.layout_motion)
-                                    ?.transitionToStart()
+                                view = itemView
+                            }
+                            //设置页面
+                            is MainSettingsFragment -> {
+                                fragment.scrollToPreference(fragment.findPreference("title_database")!!)
+                            }
+                            else -> {
+                                view?.findViewById<RecyclerView>(R.id.tool_list)
+                                    ?.scrollToPosition(0)
                             }
                         }
+                        //布局复位
+                        view?.findViewById<MotionLayout>(R.id.layout_motion)?.transitionToStart()
                     }
                 }
 
