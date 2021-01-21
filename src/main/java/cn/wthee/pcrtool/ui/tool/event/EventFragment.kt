@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EventHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
@@ -21,7 +22,9 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
  */
 class EventFragment : Fragment() {
 
-    private lateinit var viewModel: EventViewModel
+    private val viewModel: EventViewModel by activityViewModels {
+        InjectorUtil.provideEventViewModelFactory()
+    }
     private lateinit var binding: FragmentToolEventBinding
 
     override fun onCreateView(
@@ -32,9 +35,6 @@ class EventFragment : Fragment() {
         binding = FragmentToolEventBinding.inflate(inflater, container, false)
         val adapter = EventHistoryAdapter()
         binding.toolList.adapter = adapter
-
-        viewModel = InjectorUtil.provideEventViewModelFactory().create(EventViewModel::class.java)
-
         viewModel.getEventHistory()
         viewModel.events.observe(viewLifecycleOwner, {
             adapter.submitList(it)

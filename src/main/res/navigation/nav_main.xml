@@ -36,11 +36,11 @@
     <fragment
         android:id="@+id/toolGachaFragment"
         android:name="cn.wthee.pcrtool.ui.tool.gacha.GachaFragment"
-        android:label="ToolGachaFragment" />
-    <fragment
-        android:id="@+id/characterPicListFragment"
-        android:name="cn.wthee.pcrtool.ui.character.basic.CharacterPicListFragment"
-        android:label="CharacterPicListFragment" />
+        android:label="ToolGachaFragment">
+        <action
+            android:id="@+id/action_toolGachaFragment_to_characterPagerFragment"
+            app:destination="@id/characterPagerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/toolNewsFragment"
         android:name="cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment"
@@ -51,7 +51,11 @@
     <fragment
         android:id="@+id/eventFragment"
         android:name="cn.wthee.pcrtool.ui.tool.event.EventFragment"
-        android:label="EventFragment" />
+        android:label="EventFragment">
+        <action
+            android:id="@+id/action_eventFragment_to_characterPagerFragment"
+            app:destination="@id/characterPagerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/calendarFragment"
         android:name="cn.wthee.pcrtool.ui.tool.calendar.CalendarFragment"
@@ -165,6 +169,10 @@
     <fragment
         android:id="@+id/guildFragment"
         android:name="cn.wthee.pcrtool.ui.tool.guild.GuildFragment"
-        android:label="GuildFragment" />
+        android:label="GuildFragment">
+        <action
+            android:id="@+id/action_guildFragment_to_characterPagerFragment"
+            app:destination="@id/characterPagerFragment" />
+    </fragment>
 
 </navigation>

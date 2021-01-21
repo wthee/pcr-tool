@@ -6,29 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.GuildAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.databinding.FragmentToolGuildBinding
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
-import kotlinx.coroutines.launch
 
 /**
  * 公会
  *
  * 页面布局 [FragmentToolGachaBinding]
  *
- * ViewModels [CharacterViewModel]
+ * ViewModels [GuildViewModel]
  */
 class GuildFragment : Fragment() {
 
     private lateinit var binding: FragmentToolGuildBinding
-    private val viewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
+    private val viewModel by activityViewModels<GuildViewModel> {
+        InjectorUtil.provideGuildViewModelFactory()
     }
 
     override fun onCreateView(
@@ -39,13 +36,14 @@ class GuildFragment : Fragment() {
         binding = FragmentToolGuildBinding.inflate(inflater, container, false)
         val adapter = GuildAdapter()
         binding.toolList.adapter = adapter
-        lifecycleScope.launch {
-            val guilds = viewModel.getGuilds()
-            adapter.submitList(guilds)
-        }
+        viewModel.getGuilds()
+        viewModel.guilds.observe(viewLifecycleOwner, {
+            adapter.submitList(it)
+
+        })
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(
-            R.drawable.ic_gacha,
+            R.drawable.ic_guild,
             getString(R.string.title_guild)
         )
         return binding.root

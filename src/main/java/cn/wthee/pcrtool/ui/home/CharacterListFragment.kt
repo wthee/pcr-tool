@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -40,7 +39,6 @@ class CharacterListFragment : Fragment() {
         var characterName = ""
         lateinit var guilds: ArrayList<String>
         var isPostponeEnterTransition = false
-        lateinit var motionLayout: MotionLayout
         lateinit var characterList: RecyclerView
 
     }
@@ -85,7 +83,6 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
-        motionLayout = binding.root
         characterList = binding.pagerList
         //toolbar
         ToolbarHelper(binding.toolHead).setMainToolbar(

@@ -6,7 +6,6 @@
     android:gravity="center"
     android:layout_margin="@dimen/xs_margin"
     android:layout_gravity="center"
-    android:background="@drawable/bg_card_no_shadow"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView

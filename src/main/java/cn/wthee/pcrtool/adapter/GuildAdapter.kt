@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
@@ -47,7 +48,12 @@ class GuildAdapter :
                 //公会名
                 title.text = guild.guildName
                 //介绍
-                subTitle.text = guild.description
+                guild.description.let {
+                    if (it.isEmpty()) {
+                        subTitle.visibility = View.GONE
+                    }
+                    subTitle.text = guild.description
+                }
                 //角色图片
                 val adapter = IconListAdapter()
                 icons.adapter = adapter

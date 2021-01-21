@@ -241,54 +241,47 @@ class MainActivity : AppCompatActivity() {
         //长按回到顶部
         fabMain.setOnLongClickListener {
             try {
-                when {
-                    pageLevel == 0 -> {
-                        CharacterListFragment.motionLayout.transitionToStart()
-                        CharacterListFragment.characterList.scrollToPosition(0)
-                    }
-                    else -> {
-                        val fragment =
-                            supportFragmentManager.fragments[0].childFragmentManager.fragments[0]
-                        var view = fragment.view
-                        when (fragment) {
-                            // 公告页面
-                            is NewsPagerFragment -> {
-                                val itemView =
-                                    (NewsPagerFragment.viewPager.adapter as NewsListPagerAdapter)
-                                        .mFragments[NewsPagerFragment.currentPage]
-                                        .view as LinearLayout
-                                itemView.children.iterator().forEach {
-                                    if (it is SwipeRefreshLayout) {
-                                        (it.getChildAt(0) as RecyclerView).scrollToPosition(0)
-                                    }
-                                }
-                            }
-                            //角色详情页面
-                            is CharacterPagerFragment -> {
-                                val itemView =
-                                    (CharacterPagerFragment.viewPager.adapter as CharacterPagerAdapter)
-                                        .mFragments[CharacterPagerFragment.currentPage]
-                                        .view as ViewGroup
-                                itemView.children.iterator().forEach {
-                                    if (it is RecyclerView) {
-                                        it.scrollToPosition(0)
-                                    }
-                                }
-                                view = itemView
-                            }
-                            //设置页面
-                            is MainSettingsFragment -> {
-                                fragment.scrollToPreference(fragment.findPreference("title_database")!!)
-                            }
-                            else -> {
-                                view?.findViewById<RecyclerView>(R.id.tool_list)
-                                    ?.scrollToPosition(0)
+
+                val fragment =
+                    supportFragmentManager.fragments[0].childFragmentManager.fragments[0]
+                var view = fragment.view
+                when (fragment) {
+                    // 公告页面
+                    is NewsPagerFragment -> {
+                        val itemView =
+                            (NewsPagerFragment.viewPager.adapter as NewsListPagerAdapter)
+                                .mFragments[NewsPagerFragment.currentPage]
+                                .view as LinearLayout
+                        itemView.children.iterator().forEach {
+                            if (it is SwipeRefreshLayout) {
+                                (it.getChildAt(0) as RecyclerView).scrollToPosition(0)
                             }
                         }
-                        //布局复位
-                        view?.findViewById<MotionLayout>(R.id.layout_motion)?.transitionToStart()
+                    }
+                    //角色详情页面
+                    is CharacterPagerFragment -> {
+                        val itemView =
+                            (CharacterPagerFragment.viewPager.adapter as CharacterPagerAdapter)
+                                .mFragments[CharacterPagerFragment.currentPage]
+                                .view as ViewGroup
+                        itemView.children.iterator().forEach {
+                            if (it is RecyclerView) {
+                                it.scrollToPosition(0)
+                            }
+                        }
+                        view = itemView
+                    }
+                    //设置页面
+                    is MainSettingsFragment -> {
+                        fragment.scrollToPreference(fragment.findPreference("title_database")!!)
+                    }
+                    else -> {
+                        view?.findViewById<RecyclerView>(R.id.tool_list)
+                            ?.scrollToPosition(0)
                     }
                 }
+                //布局复位
+                view?.findViewById<MotionLayout>(R.id.layout_motion)?.transitionToStart()
 
             } catch (e: Exception) {
             }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
@@ -21,7 +22,9 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
  */
 class GachaFragment : Fragment() {
 
-    private lateinit var viewModel: GachaViewModel
+    private val viewModel by activityViewModels<GachaViewModel>() {
+        InjectorUtil.provideGachaViewModelFactory()
+    }
     private lateinit var binding: FragmentToolGachaBinding
 
     override fun onCreateView(
@@ -32,9 +35,6 @@ class GachaFragment : Fragment() {
         binding = FragmentToolGachaBinding.inflate(inflater, container, false)
         val adapter = GachaHistoryAdapter()
         binding.toolList.adapter = adapter
-
-        viewModel = InjectorUtil.provideGachaViewModelFactory().create(GachaViewModel::class.java)
-
         viewModel.getGachaHistory()
         viewModel.gachas.observe(viewLifecycleOwner, {
             adapter.submitList(it)

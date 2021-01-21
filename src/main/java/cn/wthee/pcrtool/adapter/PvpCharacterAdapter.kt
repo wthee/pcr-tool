@@ -55,12 +55,13 @@ class PvpCharacterAdapter(
         fun bind(data: PvpCharacterData) {
             //设置数据
             binding.apply {
-                val params = pic.layoutParams as LinearLayout.LayoutParams
-                params.width = RecyclerView.LayoutParams.WRAP_CONTENT
-                params.height = RecyclerView.LayoutParams.WRAP_CONTENT
-                pic.layoutParams = params
+
                 if (isFloatWindow) {
                     name.visibility = View.GONE
+                    val params = pic.layoutParams as LinearLayout.LayoutParams
+                    params.width = RecyclerView.LayoutParams.WRAP_CONTENT
+                    params.height = RecyclerView.LayoutParams.WRAP_CONTENT
+                    pic.layoutParams = params
                 }
                 //名称
                 name.text = if (data.position == 999) "未选择" else data.position.toString()
