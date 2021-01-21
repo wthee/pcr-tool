@@ -27,7 +27,7 @@
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
     <string name="skill_action">技能效果</string>
-    <string name="skill_loop">循环</string>
+    <string name="skill_loop">技能循环</string>
     <string name="before_loop">入场动作</string>
     <string name="looping">循环动作</string>
     <string name="equip_details">道具详情</string>
@@ -124,7 +124,7 @@
     <string name="loading_news">正在获取最新数据…</string>
     <string name="stared">已收藏</string>
     <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
-    <string name="rank_compare">对比</string>
+    <string name="rank_compare">Rank对比</string>
     <string name="current">当前</string>
     <string name="compare">对比</string>
     <string name="all">综合</string>
@@ -137,7 +137,7 @@
     <string name="rerduce_1">-</string>
     <string name="equal">=</string>
     <string name="rank_pre">R%d</string>
-    <string name="view_pic">图片</string>
+    <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
     <string name="unselect_pic">未选择图片</string>
     <string name="back_top">回到顶部</string>

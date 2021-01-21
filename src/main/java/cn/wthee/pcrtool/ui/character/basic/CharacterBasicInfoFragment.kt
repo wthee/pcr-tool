@@ -97,19 +97,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 placeholder(R.drawable.load)
             }
         }
-        //开始动画
-        ObjectAnimatorUtil.enter(object : ObjectAnimatorUtil.OnAnimatorListener {
-            override fun prev(view: View) {
-                view.visibility = View.GONE
-            }
-
-            override fun start(view: View) {
-                view.visibility = View.VISIBLE
-            }
-
-            override fun end(view: View) {
-            }
-        }, binding.fabLoveCbi, binding.basicInfo)
     }
 
     //点击事件

@@ -10,9 +10,6 @@
         android:id="@+id/character_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/viewpager_bg"
-        android:paddingTop="@dimen/xm_padding"
-        android:paddingBottom="@dimen/page_padding"
         tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -30,7 +27,8 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_character"
-        android:layout_width="@dimen/fab_text_2"
+        style="@style/efabStyle"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
@@ -38,7 +36,6 @@
         android:text="@string/app_name"
         android:textAllCaps="false"
         app:icon="@drawable/ic_function"
-        style="@style/efabStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

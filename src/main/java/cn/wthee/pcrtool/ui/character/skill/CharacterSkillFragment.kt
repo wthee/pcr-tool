@@ -56,7 +56,7 @@ class CharacterSkillFragment : Fragment() {
         binding.root.visibility = View.GONE
         binding.root.postDelayed({
             binding.root.visibility = View.VISIBLE
-        }, 500L)
+        }, 700L)
         init()
         sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
             adapter.submitList(it)
