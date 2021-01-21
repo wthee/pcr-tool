@@ -44,8 +44,8 @@ class IconListAdapter() : ListAdapter<Int, IconListAdapter.ViewHolder>(GachaList
                 itemParams.width = RecyclerView.LayoutParams.WRAP_CONTENT
                 root.layoutParams = itemParams
                 //角色图片
-                var picId = 0
-                var pagerId = 0
+                val picId: Int
+                val pagerId: Int
                 if (uid / 10000 == 3) {
                     //item 转 unit
                     picId = uid % 10000 * 100 + 11

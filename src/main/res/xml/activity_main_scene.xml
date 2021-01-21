@@ -45,8 +45,8 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/setting"
-            app:layout_constraintEnd_toStartOf="@id/tool_news" />
+            app:layout_constraintBottom_toTopOf="@id/tool_news"
+            app:layout_constraintEnd_toStartOf="@id/tool_calendar" />
 
         <Constraint
             android:id="@+id/tool_news"
@@ -78,8 +78,8 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/tool_news"
-            app:layout_constraintEnd_toStartOf="@id/tool_calendar" />
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
 
         <Constraint
             android:id="@+id/tool_gacha"
@@ -89,8 +89,19 @@
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/tool_news"
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_guild"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginEnd="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/xl_margin"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tool_equip" />
 
         <Constraint
             android:id="@+id/tool_calendar"
@@ -101,7 +112,7 @@
             android:layout_marginBottom="@dimen/m_margin"
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/tool_news"
-            app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
+            app:layout_constraintEnd_toStartOf="@id/tool_pvp" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -121,41 +132,34 @@
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/xl_margin"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.45" />
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@id/tool_guild" />
+
+        <Constraint
+            android:id="@+id/tool_guild"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/xl_margin"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/setting"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@id/tool_equip" />
 
         <Constraint
             android:id="@+id/tool_equip"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/xl_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.45" />
-
-        <Constraint
-            android:id="@+id/tool_leader"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/menu_item_card_height"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_equip"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.3" />
-
-        <Constraint
-            android:id="@+id/tool_news"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/menu_item_card_height"
-            android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_equip"
-            app:layout_constraintStart_toEndOf="@id/tool_leader"
-            app:layout_constraintWidth_percent="0.3" />
+            app:layout_constraintEnd_toStartOf="@id/tool_guild"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Constraint
             android:id="@+id/tool_pvp"
@@ -164,20 +168,46 @@
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_equip"
+            app:layout_constraintBottom_toTopOf="@id/setting"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.3" />
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@id/tool_news" />
 
         <Constraint
-            android:id="@+id/tool_event"
+            android:id="@+id/tool_news"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/menu_item_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/m_margin"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/setting"
+            app:layout_constraintEnd_toStartOf="@id/tool_pvp"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@id/tool_calendar" />
+
+        <Constraint
+            android:id="@+id/tool_calendar"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_news"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.35" />
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_guild"
+            app:layout_constraintEnd_toStartOf="@id/tool_news"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_leader"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_margin"
+            android:layout_marginBottom="@dimen/m_margin"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_calendar"
+            app:layout_constraintEnd_toEndOf="@id/tool_calendar"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Constraint
             android:id="@+id/tool_gacha"
@@ -186,20 +216,23 @@
             android:layout_marginStart="@dimen/m_margin"
             android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_news"
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.35" />
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/tool_event" />
 
         <Constraint
-            android:id="@+id/tool_calendar"
+            android:id="@+id/tool_event"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_margin"
-            android:layout_marginEnd="@dimen/m_margin"
             android:layout_marginBottom="@dimen/m_margin"
-            app:layout_constraintBottom_toTopOf="@id/tool_news"
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
             app:layout_constraintEnd_toStartOf="@id/tool_gacha"
-            app:layout_constraintStart_toEndOf="@id/tool_event" />
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
     </ConstraintSet>
 
     <Transition

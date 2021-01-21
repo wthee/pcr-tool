@@ -142,6 +142,13 @@
             app:exitAnim="@anim/fragment_exit"
             app:popEnterAnim="@anim/fragment_popenter"
             app:popExitAnim="@anim/fragment_popexit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_guildFragment"
+            app:destination="@id/guildFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit_no_scale"
+            app:popEnterAnim="@anim/fragment_popenter_no_scale"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/equipmentListFragment"
@@ -155,5 +162,9 @@
         app:exitAnim="@anim/fragment_exit_no_scale"
         app:popEnterAnim="@anim/fragment_popenter_no_scale"
         app:popExitAnim="@anim/fragment_popexit" />
+    <fragment
+        android:id="@+id/guildFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.guild.GuildFragment"
+        android:label="GuildFragment" />
 
 </navigation>

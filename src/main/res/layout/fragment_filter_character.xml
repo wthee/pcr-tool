@@ -297,11 +297,11 @@
             </com.google.android.material.chip.ChipGroup>
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title_guide"
+                android:id="@+id/title_guild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/s_margin"
-                android:text="@string/title_guide"
+                android:text="@string/title_guild"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textColor="@color/colorPrimary" />
 

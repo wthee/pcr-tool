@@ -258,25 +258,25 @@
                 tools:text="@string/test" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
-                android:id="@+id/title_guide"
+                android:id="@+id/title_guild"
                 style="@style/titleStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/xm_margin"
-                android:text="@string/title_guide"
+                android:text="@string/title_guild"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_race"
                 app:layout_constraintWidth_percent="0.15" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/guide"
+                android:id="@+id/guild"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/s_padding"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textIsSelectable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title_guide"
+                app:layout_constraintTop_toBottomOf="@id/title_guild"
                 tools:text="@string/test" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
@@ -286,7 +286,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title_fav"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/guide"
+                app:layout_constraintTop_toBottomOf="@id/guild"
                 app:layout_constraintWidth_percent="0.15" />
 
             <com.google.android.material.textview.MaterialTextView

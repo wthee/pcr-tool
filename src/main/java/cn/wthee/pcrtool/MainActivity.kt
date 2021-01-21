@@ -166,6 +166,7 @@ class MainActivity : AppCompatActivity() {
             binding.toolEvent,
             binding.toolCalendar,
             binding.toolGacha,
+            binding.toolGuild,
         )
         //菜单跳转
         menuItemIds = arrayListOf(
@@ -177,6 +178,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_characterListFragment_to_eventFragment,
             R.id.action_characterListFragment_to_calendarFragment,
             R.id.action_characterListFragment_to_toolGachaFragment,
+            R.id.action_characterListFragment_to_guildFragment,
         )
         //菜单标题
         menuItemTitles = arrayListOf(
@@ -186,8 +188,9 @@ class MainActivity : AppCompatActivity() {
             R.string.tool_news,
             R.string.tool_pvp,
             R.string.tool_event,
-            R.string.tool_calendar_hide,
+            R.string.tool_calendar_title,
             R.string.tool_gacha,
+            R.string.title_guild,
         )
         //菜单图标
         menuItemDrawable = arrayListOf(
@@ -199,6 +202,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_event,
             R.drawable.ic_calendar,
             R.drawable.ic_gacha,
+            R.drawable.ic_guild,
         )
         fabMain = binding.fab
         //获取版本名

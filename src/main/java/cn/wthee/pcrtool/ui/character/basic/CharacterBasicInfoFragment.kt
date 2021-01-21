@@ -174,7 +174,7 @@ class CharacterBasicInfoFragment : Fragment() {
             blood.text =
                 requireActivity().resources.getString(R.string.blood, characterPro.bloodType)
             race.text = characterPro.race
-            guide.text = characterPro.guild
+            guild.text = characterPro.guild
             favorite.text = characterPro.favorite
             cv.text = characterPro.voice
             self.text = characterPro.getSelf()

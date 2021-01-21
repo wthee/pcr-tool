@@ -11,6 +11,7 @@
     <string name="equip_count">%s x%d</string>
     <string name="select_pic_count">已选择 %d</string>
     <string name="close_app">应用将在 %d 秒后关闭!</string>
+    <string name="empty"> </string>
     <!-- 角色 -->
     <string name="rank">RANK</string>
     <string name="title_quest">？？？</string>
@@ -20,7 +21,7 @@
     <string name="title_birth">生日</string>
     <string name="title_blood">血型</string>
     <string name="title_race">种族</string>
-    <string name="title_guide">公会</string>
+    <string name="title_guild">公会</string>
     <string name="title_fav">兴趣</string>
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
@@ -104,7 +105,7 @@
     <!--  工具  -->
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历-国服</string>
-    <string name="tool_calendar_hide"> </string>
+    <string name="tool_calendar_title">日历</string>
     <string name="tool_pvp">竞技场</string>
     <string name="tool_pvp_liked">收藏</string>
     <string name="liked_count">已收藏： %d </string>

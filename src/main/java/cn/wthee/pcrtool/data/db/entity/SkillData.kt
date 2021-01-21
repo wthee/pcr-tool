@@ -32,50 +32,22 @@ data class SkillData(
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "icon_type") val icon_type: Int
 ) {
-    fun getAllActionId(): ArrayList<Int> {
-        val list = arrayListOf<Int>()
-        action_1.also {
-            if (it != 0) list.add(it)
-        }
-        action_2.also {
-            if (it != 0) list.add(it)
-        }
-        action_3.also {
-            if (it != 0) list.add(it)
-        }
-        action_4.also {
-            if (it != 0) list.add(it)
-        }
-        action_5.also {
-            if (it != 0) list.add(it)
-        }
-        action_6.also {
-            if (it != 0) list.add(it)
-        }
-        action_7.also {
-            if (it != 0) list.add(it)
-        }
-        depend_action_1.also {
-            if (it != 0) list.add(it)
-        }
-        depend_action_2.also {
-            if (it != 0) list.add(it)
-        }
-        depend_action_3.also {
-            if (it != 0) list.add(it)
-        }
-        depend_action_4.also {
-            if (it != 0) list.add(it)
-        }
-        depend_action_5.also {
-            if (it != 0) list.add(it)
-        }
-        depend_action_6.also {
-            if (it != 0) list.add(it)
-        }
-        depend_action_7.also {
-            if (it != 0) list.add(it)
-        }
-        return list
+    fun getAllActionId() = arrayListOf<Int>(
+        action_1,
+        action_2,
+        action_3,
+        action_4,
+        action_5,
+        action_6,
+        action_7,
+        depend_action_1,
+        depend_action_2,
+        depend_action_3,
+        depend_action_4,
+        depend_action_5,
+        depend_action_6,
+        depend_action_7,
+    ).filter {
+        it != 0
     }
 }

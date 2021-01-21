@@ -101,7 +101,7 @@ class CharacterListFragment : Fragment() {
                 guilds.add("全部")
                 val list = viewModel.getGuilds()
                 list.forEach {
-                    guilds.add(it.guild_name)
+                    guilds.add(it.guildName)
                 }
                 guilds.add("？？？")
             }
