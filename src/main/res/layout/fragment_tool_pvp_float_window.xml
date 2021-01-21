@@ -15,60 +15,45 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/move"
+            style="@style/fabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/min"
-            android:src="@mipmap/ic_logo"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
+            android:src="@mipmap/ic_logo" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/max"
+            style="@style/fabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_float_close"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
+            android:src="@drawable/ic_float_close" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/liked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/tool_pvp_liked"
             android:src="@drawable/ic_loved_line"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
+            style="@style/fabStyle" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/search"
             android:src="@drawable/ic_search"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary" />
+            style="@style/fabStyle" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_left"
             android:visibility="gone"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:tint="@color/colorPrimary"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            style="@style/fabStyle" />
 
     </LinearLayout>
 
@@ -171,17 +156,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/colorPrimary"
                 android:layout_marginTop="@dimen/m_margin"
+                android:text="@string/no_liked_data"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:text="@string/no_liked_data" />
+                android:textColor="@color/colorPrimary" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list_liked"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_marginTop="@dimen/m_margin"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"

@@ -14,6 +14,7 @@
         android:id="@+id/pcrfan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/m_margin"
         android:paddingStart="@dimen/xs_padding"
         android:paddingEnd="@dimen/xs_padding"
         android:text="@string/pcrdfans_com"
@@ -21,7 +22,6 @@
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@id/tool_pvp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/m_margin"
         app:layout_constraintTop_toTopOf="@id/tool_pvp" />
 
 
@@ -44,48 +44,34 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/pvp_like"
+            style="@style/fabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/tool_pvp_liked"
             android:src="@drawable/ic_loved_line"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/colorPrimary" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_float"
+            style="@style/efabStyle"
             android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/m_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/pvp_float"
             android:text="@string/pvp_float"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
-            app:borderWidth="0dp"
-            app:icon="@drawable/ic_float"
-            app:iconSize="@dimen/menu_icon"
-            app:iconTint="@color/colorPrimary" />
+            app:icon="@drawable/ic_float" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_search"
+            style="@style/efabStyle"
             android:layout_width="@dimen/fab_text_2"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/pvp_search"
             android:text="@string/pvp_search"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
-            app:borderWidth="0dp"
-            app:icon="@drawable/ic_search"
-            app:iconSize="@dimen/menu_icon"
-            app:iconTint="@color/colorPrimary" />
-
+            app:icon="@drawable/ic_search" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

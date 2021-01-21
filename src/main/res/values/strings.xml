@@ -163,5 +163,6 @@
     <string name="leader_data">角色排行数据来源</string>
     <string name="zero">0</string>
     <string name="event_character">活动角色：</string>
+    <string name="fragment">碎片</string>
 
 </resources>

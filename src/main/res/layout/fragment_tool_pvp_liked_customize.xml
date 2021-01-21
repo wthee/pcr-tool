@@ -27,36 +27,25 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_pre"
+            style="@style/efabStyle"
             android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/m_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/team_atk"
             android:text="@string/team_atk"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
             android:visibility="invisible"
-            app:borderWidth="0dp"
-            app:icon="@drawable/ic_pvp"
-            app:iconSize="@dimen/menu_icon"
-            app:iconTint="@color/colorPrimary" />
-
+            app:icon="@drawable/ic_pvp" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_next"
+            style="@style/efabStyle"
             android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/team_def"
             android:text="@string/team_def"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
-            app:borderWidth="0dp"
-            app:icon="@drawable/ic_def"
-            app:iconSize="@dimen/menu_icon"
-            app:iconTint="@color/colorPrimary" />
-
+            app:icon="@drawable/ic_def" />
     </LinearLayout>
 
 </LinearLayout>

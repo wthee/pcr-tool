@@ -15,10 +15,10 @@
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/m_margin"
         android:layout_weight="1"
         android:clipChildren="false"
-        android:clipToPadding="false"
-        android:layout_marginTop="@dimen/m_margin">
+        android:clipToPadding="false">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/news_list"
@@ -33,21 +33,15 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_copy"
+        style="@style/efabStyle"
         android:layout_width="@dimen/fab_text_2"
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/efab_margin"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/share"
         android:text="@string/share"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
-        app:icon="@drawable/ic_share"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
-
+        app:icon="@drawable/ic_share" />
 </LinearLayout>
 

@@ -32,34 +32,24 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_top"
+        style="@style/efabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/back_top"
         android:text="@string/back_top"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
-        app:icon="@drawable/ic_top"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
+        app:icon="@drawable/ic_top" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add"
+        style="@style/efabStyle"
         android:layout_width="@dimen/fab_text_2"
         android:layout_height="@dimen/fab_size"
         android:layout_marginTop="@dimen/efab_margin"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/add"
         android:text="@string/add"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
         app:icon="@drawable/ic_add"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tool_list" />

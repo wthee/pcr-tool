@@ -354,13 +354,10 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_love_cbi"
+        style="@style/fabStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/tab_love"
         android:src="@drawable/ic_loved"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
-        app:layout_anchor="@id/character_pic"
-        app:tint="@color/alphaPrimary" />
+        app:layout_anchor="@id/character_pic" />
 </androidx.constraintlayout.motion.widget.MotionLayout>

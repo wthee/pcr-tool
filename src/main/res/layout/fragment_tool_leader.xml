@@ -45,10 +45,10 @@
         android:paddingBottom="@dimen/s_padding"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:textStyle="bold"
         android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/tool_head" />
 
 
@@ -141,8 +141,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/loading_news"
-        android:textColor="@color/colorPrimary"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,16 +151,11 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_top"
+        style="@style/efabStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/back_top"
         android:text="@string/back_top"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
-        app:icon="@drawable/ic_top"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
+        app:icon="@drawable/ic_top" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -42,19 +42,13 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/equip_count"
+            style="@style/efabStyle"
             android:layout_width="@dimen/fab_text_2"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/tool_equip"
             android:elevation="@dimen/home_fab_elevation"
             android:text="@string/zero"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
-            app:borderWidth="0dp"
-            app:elevation="@dimen/home_fab_elevation"
-            app:icon="@drawable/ic_equip"
-            app:iconSize="@dimen/menu_icon"
-            app:iconTint="@color/colorPrimary" />
+            app:icon="@drawable/ic_equip" />
     </LinearLayout>
 </androidx.constraintlayout.motion.widget.MotionLayout>

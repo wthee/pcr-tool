@@ -47,7 +47,27 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <!--  背景设置  -->
+    <!--  悬浮按钮样式-->
+    <style name="fabStyle" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:backgroundTint">@color/colorWhite</item>
+        <item name="borderWidth">0dp</item>
+        <item name="fabSize">mini</item>
+        <item name="tint">@color/colorPrimary</item>
+        <item name="elevation">@dimen/home_fab_elevation</item>
+    </style>
+
+    <!--  扩展悬浮按钮样式-->
+    <style name="efabStyle" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:backgroundTint">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/fab_text_size</item>
+        <item name="borderWidth">0dp</item>
+        <item name="iconSize">@dimen/menu_icon</item>
+        <item name="iconTint">@color/colorPrimary</item>
+        <item name="elevation">@dimen/home_fab_elevation</item>
+    </style>
+
+    <!-- 背景设置  -->
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_dialog</item>
     </style>

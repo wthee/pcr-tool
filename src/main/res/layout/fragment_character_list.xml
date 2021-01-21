@@ -45,17 +45,12 @@
             android:layout_width="@dimen/fab_text_2"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/character"
             android:elevation="@dimen/home_fab_elevation"
             android:text="@string/zero"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
-            app:borderWidth="0dp"
             app:elevation="@dimen/home_fab_elevation"
             app:icon="@drawable/ic_character"
-            app:iconSize="@dimen/menu_icon"
-            app:iconTint="@color/colorPrimary" />
+            style="@style/efabStyle" />
 
     </LinearLayout>
 

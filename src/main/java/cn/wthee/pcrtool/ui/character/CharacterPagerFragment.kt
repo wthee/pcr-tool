@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -130,21 +129,18 @@ class CharacterPagerFragment : Fragment() {
                     }
                 }
                 binding.fabShare.apply {
-                    show()
-                    setImageResource(R.mipmap.ic_logo)
-                    setOnClickListener {
-                        lifecycleScope.launch {
-                            val hasDrop =
-                                sharedCharacterViewModel.getDrops(CharacterAttrFragment.uid)
-                                    .isNotEmpty()
-                            if (hasDrop) {
+                    //有掉落信息时，显示
+                    lifecycleScope.launch {
+                        if (sharedCharacterViewModel.getDrops(uid).isNotEmpty()) {
+                            show()
+                            icon = ResourcesUtil.getDrawable(R.drawable.ic_drop)
+                            setOnClickListener {
                                 CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
                                     .show(parentFragmentManager, "character_drop")
-                            } else {
-                                ToastUtil.short("无掉落信息~")
                             }
                         }
                     }
+
                 }
             }
             2 -> {
