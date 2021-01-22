@@ -6,16 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.edit
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
+import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel]
  */
-class CharacterListFragment : Fragment() {
+class CharacterListFragment : CommonListFragment() {
 
     companion object {
         var characterFilterParams = FilterCharacter(
@@ -39,8 +38,6 @@ class CharacterListFragment : Fragment() {
         var characterName = ""
         lateinit var guilds: ArrayList<String>
         var isPostponeEnterTransition = false
-        lateinit var characterList: RecyclerView
-
     }
 
     private var listAdapter = CharacterListAdapter(this)
@@ -83,7 +80,6 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
-        characterList = binding.pagerList
         //toolbar
         ToolbarHelper(binding.toolHead).setMainToolbar(
             R.mipmap.ic_logo,
@@ -103,7 +99,7 @@ class CharacterListFragment : Fragment() {
                 guilds.add("？？？")
             }
         }
-        binding.pagerList.adapter = listAdapter
+        binding.toolList.adapter = listAdapter
     }
 
     private fun setListener() {

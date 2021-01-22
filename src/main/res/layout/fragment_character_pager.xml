@@ -21,6 +21,7 @@
         android:layout_marginBottom="@dimen/efab_margin"
         android:contentDescription="@string/function"
         android:text="@string/fragment"
+        android:visibility="invisible"
         app:icon="@drawable/ic_drop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/fab_character" />

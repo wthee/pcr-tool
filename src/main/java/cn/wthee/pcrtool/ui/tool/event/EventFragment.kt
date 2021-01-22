@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EventHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
+import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
  *
  * ViewModels [EventViewModel]
  */
-class EventFragment : Fragment() {
+class EventFragment : CommonListFragment() {
 
     private val viewModel: EventViewModel by activityViewModels {
         InjectorUtil.provideEventViewModelFactory()

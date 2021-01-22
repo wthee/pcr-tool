@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.GuildAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.databinding.FragmentToolGuildBinding
+import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
  *
  * ViewModels [GuildViewModel]
  */
-class GuildFragment : Fragment() {
+class GuildFragment : CommonListFragment() {
 
     private lateinit var binding: FragmentToolGuildBinding
     private val viewModel by activityViewModels<GuildViewModel> {

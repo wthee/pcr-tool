@@ -241,7 +241,6 @@ class MainActivity : AppCompatActivity() {
         //长按回到顶部
         fabMain.setOnLongClickListener {
             try {
-
                 val fragment =
                     supportFragmentManager.fragments[0].childFragmentManager.fragments[0]
                 var view = fragment.view
