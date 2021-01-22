@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.adapter
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -55,16 +54,15 @@ class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoop
                 } else {
                     //技能图标
                     name.text = if (atkId == 1001 || atkId == 2001)
-                        "技能2"
-                    else
                         "技能1"
-
+                    else
+                        "技能2"
                     val iconType = when (atkId) {
                         2001 -> iconTypes[101]
                         2002 -> iconTypes[102]
-                        else -> iconTypes[atkId % 10]
+                        1001 -> iconTypes[2]
+                        else -> iconTypes[3]
                     }
-                    Log.e("skill", "$iconType")
                     //图标地址
                     val picUrl = SKILL_ICON_URL + iconType + WEBP
 

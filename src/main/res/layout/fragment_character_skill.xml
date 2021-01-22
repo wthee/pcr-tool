@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="@dimen/card_height"
+    android:paddingTop="@dimen/m_margin"
     android:paddingStart="@dimen/xm_padding"
-    android:paddingTop="@dimen/xm_padding"
     android:paddingEnd="@dimen/xm_padding">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/skill_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
         android:orientation="vertical"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
