@@ -79,8 +79,12 @@ class PvpFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         //返回时，取消加载布局
-        if (!job.isCompleted) {
-            job.cancel()
+        try {
+            if (!job.isCompleted) {
+                job.cancel()
+            }
+        } catch (e: Exception) {
+
         }
     }
 

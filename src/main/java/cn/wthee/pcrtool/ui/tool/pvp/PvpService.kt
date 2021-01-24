@@ -136,10 +136,12 @@ class PvpService : Service() {
             }
             //返回
             back.setOnClickListener {
-                if (this@PvpService::job.isLateinit) {
+                try {
                     if (!job.isCompleted) {
                         job.cancel()
                     }
+                } catch (e: Exception) {
+
                 }
                 //隐藏查询结果页面
                 resultContent.root.visibility = View.GONE

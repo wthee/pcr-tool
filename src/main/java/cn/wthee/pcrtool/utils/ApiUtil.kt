@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.util.concurrent.TimeUnit
@@ -71,6 +72,7 @@ object ApiUtil {
             .connectTimeout(300, TimeUnit.SECONDS)
             .writeTimeout(300, TimeUnit.SECONDS)
             .readTimeout(300, TimeUnit.SECONDS)
+            .addInterceptor(RetryIntercepter(3))
             .sslSocketFactory(
                 (params[0] as SSLContext).socketFactory,
                 params[1] as X509TrustManager
@@ -103,4 +105,25 @@ object ApiUtil {
         return builder.build().create(serviceClass)
     }
 
+}
+
+/**
+ * 重试拦截器
+ */
+class RetryIntercepter(  //最大重试次数
+    var maxRetry: Int
+) : Interceptor {
+    private var retryNum = 0 //假如设置为3次重试的话，则最大可能请求4次（默认1次+3次重试）
+
+    @Throws(IOException::class)
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        var response = chain.proceed(request)
+        while (!response.isSuccessful && retryNum < maxRetry) {
+            response.close()
+            retryNum++
+            response = chain.proceed(request)
+        }
+        return response
+    }
 }

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import android.annotation.SuppressLint
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -17,6 +18,7 @@ fun String.intArrayList(): ArrayList<Int> {
     return list
 }
 
+@SuppressLint("SimpleDateFormat")
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd")
 
 /**
