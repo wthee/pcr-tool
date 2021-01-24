@@ -27,7 +27,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_pre"
-            style="@style/efabStyle"
+            style="@style/EfabStyle"
             android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/m_margin"
@@ -38,7 +38,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_next"
-            style="@style/efabStyle"
+            style="@style/EfabStyle"
             android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"

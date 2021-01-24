@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/card_height"
     android:orientation="vertical"
     tools:context=".ui.character.attr.CharacterRankCompareFragment">
-
-    <include
-        android:id="@+id/title_rank_compare"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/view_toolbar" />
 
     <LinearLayout
         android:id="@+id/rank_compare_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/value_0"
@@ -63,20 +61,31 @@
         android:id="@+id/rank_compare"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
         android:nestedScrollingEnabled="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/rank_compare_title"
         tools:itemCount="5"
         tools:listitem="@layout/item_rank_compare_attr" />
 
+    <ProgressBar
+        android:id="@+id/loading"
+        style="@style/ProgressBarStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
+        android:id="@+id/layout_rank_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/m_margin"
         android:layout_marginBottom="@dimen/m_margin"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/rank_compare"
+        tools:visibility="visible">
 
         <include
             android:id="@+id/rank_btns_0"
@@ -93,8 +102,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/xs_margin"
-            android:gravity="center"
             android:layout_marginEnd="@dimen/xs_margin"
+            android:gravity="center"
             android:maxLines="1"
             android:text="@string/rerduce_1"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
@@ -115,4 +124,4 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

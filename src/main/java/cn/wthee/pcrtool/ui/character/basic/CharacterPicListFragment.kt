@@ -76,7 +76,6 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
         binding.apply {
             downLoadFab = fabDownload
-            ToolbarHelper(titleViewPic).setCenterTitle(getString(R.string.view_pic))
             //初始化列表
             lifecycleScope.launch {
                 adapter = CharacterPicAdapter(this@CharacterPicListFragment)

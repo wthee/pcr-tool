@@ -18,16 +18,15 @@ class EquipmentDetailsViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    private var materials = arrayListOf<EquipmentMaterial>()
+    private lateinit var materials: ArrayList<EquipmentMaterial>
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    private var isLoading = MutableLiveData<Boolean>()
 
     /**
      * 获取装备制作材料信息
      */
     fun getEquipInfos(equip: EquipmentMaxData) {
-        isLoading.postValue(true)
         viewModelScope.launch {
+            materials = arrayListOf()
             if (equip.craftFlg == 0) {
                 materials.add(
                     EquipmentMaterial(
@@ -40,7 +39,6 @@ class EquipmentDetailsViewModel(
                 getAllMaterial(equip.equipmentId, equip.equipmentName, 1, 1)
             }
             equipMaterialInfos.postValue(materials)
-            isLoading.postValue(false)
         }
     }
 

@@ -36,11 +36,8 @@ class LeaderFragment : Fragment() {
         leaderViewModel.leaderData.observe(viewLifecycleOwner, {
             if (it.status == 0) {
                 binding.tip.apply {
-                    text = it.data?.desc?.replace("\n", "，")
+                    text = it.data?.desc
                     isSelected = true
-                    setOnClickListener { _ ->
-                        ToastUtil.long(it.data?.desc)
-                    }
                 }
                 val adapter = CharacterLeaderAdapter(requireContext())
                 binding.toolList.adapter = adapter

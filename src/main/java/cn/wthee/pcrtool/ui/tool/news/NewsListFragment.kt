@@ -80,25 +80,24 @@ class ToolNewsListFragment : Fragment() {
 
     @ExperimentalPagingApi
     private fun loadNews() {
-        binding.loading.loadingTip.text = getString(R.string.loading_news)
         lifecycleScope.launch {
             when (region) {
                 2 -> {
                     newsViewModel.getNewsCN().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.root.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                     }
                 }
                 3 -> {
                     newsViewModel.getNewsTW().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.root.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                     }
                 }
                 4 -> {
                     newsViewModel.getNewsJP().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.root.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                     }
                 }
             }

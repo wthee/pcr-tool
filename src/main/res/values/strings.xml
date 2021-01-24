@@ -2,7 +2,9 @@
     <string name="app_name">PCR Tool</string>
 
     <string name="date_m_d">%s 月 %s 日</string>
-    <string name="character_detail">%s / %sCM / %sKG / %d</string>
+    <string name="character_detail">%s   %sCM   %sKG   %d</string>
+    <string name="character_heigth">%sCM</string>
+    <string name="character_weigth">%sKG</string>
     <string name="blood">%s 型</string>
     <string name="unique_equip_lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
@@ -101,6 +103,7 @@
     <string name="title_rarity">角色星级</string>
     <string name="six_unlock">六星</string>
     <string name="name">名字</string>
+    <string name="game_name">角色</string>
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>

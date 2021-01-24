@@ -59,8 +59,6 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
-                //设置共享元素名称
-                root.transitionName = "item_${character.id}"
                 //加载网络图片
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
@@ -87,7 +85,9 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                     character.getFixedWeight(),
                     character.position
                 )
-
+                //设置共享元素名称
+                root.transitionName = "item_${character.id}"
+                //点击跳转
                 root.setOnClickListener {
                     if (MainActivity.canClick) {
                         MainActivity.canClick = false

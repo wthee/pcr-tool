@@ -14,7 +14,7 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_share"
-        style="@style/efabStyle"
+        style="@style/EfabStyle"
         android:layout_width="@dimen/fab_text_3"
         android:layout_height="@dimen/fab_size"
         android:layout_marginEnd="@dimen/m_margin"
@@ -28,7 +28,7 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_character"
-        style="@style/efabStyle"
+        style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
         android:layout_marginEnd="@dimen/xl_margin"

@@ -89,8 +89,6 @@ class CharacterBasicInfoFragment : Fragment() {
                 Constants.CHARACTER_FULL_URL + (uid + if (sharedCharacterViewModel.getR6Ids()
                         .contains(uid)
                 ) 60 else 30) + Constants.WEBP
-            //角色图片共享元素
-            binding.characterPic.transitionName = picUrl
             //加载图片
             binding.characterPic.load(picUrl) {
                 error(R.drawable.error)
@@ -128,7 +126,6 @@ class CharacterBasicInfoFragment : Fragment() {
 
         val color = ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text)
         binding.name.setTextColor(color)
-        binding.nameExtra.setTextColor(color)
         binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
     }
 
@@ -138,28 +135,26 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.apply {
             unitId.text = uid.toString()
             catah.text = characterPro.catchCopy
-            name.text = characterPro.getNameF()
-            nameExtra.text = characterPro.getNameL()
-            three.text = requireActivity().resources.getString(
-                R.string.character_detail,
-                characterPro.getFixedAge(),
-                characterPro.getFixedHeight(),
-                characterPro.getFixedWeight(),
-                characterPro.position
-            )
             intro.text = characterPro.getIntroText()
             if (intro.text.isEmpty()) intro.visibility = View.GONE
             trueName.text = if (characterPro.actualName.isEmpty())
                 characterPro.name
             else
                 characterPro.actualName
-            birth.text = requireActivity().resources.getString(
+            name.text = characterPro.name
+            height.text =
+                resources.getString(R.string.character_heigth, characterPro.getFixedHeight())
+            weight.text =
+                resources.getString(R.string.character_weigth, characterPro.getFixedWeight())
+
+            birth.text = resources.getString(
                 R.string.date_m_d,
                 characterPro.birthMonth,
                 characterPro.birthDay
             )
-            blood.text =
-                requireActivity().resources.getString(R.string.blood, characterPro.bloodType)
+            age.text = characterPro.getFixedAge()
+            blood.text = resources.getString(R.string.blood, characterPro.bloodType)
+            position.text = characterPro.position.toString()
             race.text = characterPro.race
             guild.text = characterPro.guild
             favorite.text = characterPro.favorite

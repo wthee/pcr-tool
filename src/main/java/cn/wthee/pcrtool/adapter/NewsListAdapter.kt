@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -16,6 +15,7 @@ import cn.wthee.pcrtool.ui.tool.news.NewsDetailDialogFragment
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.textview.MaterialTextView
 
 /**
  * 公告列表列表适配器，[region] 区分游戏服务器版本
@@ -47,11 +47,11 @@ class NewsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         item?.let { data ->
-            val view = holder.itemView.findViewById<ConstraintLayout>(R.id.news_item)
+            val view = holder.itemView.findViewById<MaterialTextView>(R.id.news_title)
             if (selectItems.find { it.id == data.id } != null) {
-                view.background = ResourcesUtil.getDrawable(R.drawable.bg_card_dark)
+                view.setTextColor(ResourcesUtil.getColor(R.color.red))
             } else {
-                view.background = ResourcesUtil.getDrawable(R.drawable.bg_card_press)
+                view.setTextColor(ResourcesUtil.getColor(R.color.text))
             }
             holder.bind(data)
         }

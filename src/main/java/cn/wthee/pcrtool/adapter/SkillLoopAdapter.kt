@@ -49,7 +49,7 @@ class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoop
                 //加载图片
                 if (atkId == 1) {
                     name.text = "普攻"
-                    name.setTextColor(ctx.getColor(R.color.colorAccent))
+                    name.setTextColor(ctx.getColor(R.color.colorPrimary))
                     pic.load(EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP)
                 } else {
                     //技能图标

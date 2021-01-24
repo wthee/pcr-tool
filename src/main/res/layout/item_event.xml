@@ -4,11 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/s_margin"
-    android:layout_marginEnd="@dimen/s_margin"
-    android:background="@drawable/bg_card"
-    android:orientation="vertical"
-    android:padding="@dimen/s_padding">
+    style="@style/CardStyle"
+    android:orientation="vertical">
 
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flow"
@@ -27,7 +24,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
-        style="@style/titleStyle"
+        style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +33,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/days"
-        style="@style/titleStyle"
+        style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/title"
@@ -45,7 +42,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/type"
-        style="@style/titleStyle"
+        style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/days"

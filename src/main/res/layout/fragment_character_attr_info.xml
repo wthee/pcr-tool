@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:padding="@dimen/xm_padding"
+    android:padding="@dimen/xs_padding"
     app:layoutDescription="@xml/fragment_character_attr_info_scene">
 
     <com.google.android.material.textview.MaterialTextView
@@ -52,7 +52,6 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/xs_padding"
         android:scrollbars="none">
 
         <LinearLayout
@@ -119,6 +118,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/xs_margin"
                 android:layout_marginTop="@dimen/l_margin">
 
                 <include

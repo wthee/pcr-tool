@@ -24,7 +24,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/type"
-        style="@style/titleStyle"
+        style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/name"
@@ -60,7 +60,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/skill_des"
-        style="@style/titleStyle"
+        style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/skill_action"

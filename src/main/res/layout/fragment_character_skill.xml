@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/m_margin"
-    android:paddingStart="@dimen/xm_padding"
-    android:paddingEnd="@dimen/xm_padding">
+    android:paddingStart="@dimen/s_padding"
+    android:paddingEnd="@dimen/s_padding">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/skill_list"

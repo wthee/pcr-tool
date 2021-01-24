@@ -58,18 +58,17 @@
         app:layout_constraintTop_toBottomOf="@id/current_date"
         tools:listitem="@layout/item_calendar_event" />
 
-    <include
+    <ProgressBar
         android:id="@+id/loading"
-        layout="@layout/layout_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ProgressBarStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/current_date" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_today"
-        style="@style/efabStyle"
+        style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
         android:layout_marginTop="@dimen/s_margin"

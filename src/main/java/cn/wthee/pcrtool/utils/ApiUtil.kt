@@ -68,9 +68,9 @@ object ApiUtil {
         val params = initSSL()
         return OkHttpClient.Builder()
             .cache(CoilUtils.createDefaultCache(context))
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(300, TimeUnit.SECONDS)
+            .writeTimeout(300, TimeUnit.SECONDS)
+            .readTimeout(300, TimeUnit.SECONDS)
             .sslSocketFactory(
                 (params[0] as SSLContext).socketFactory,
                 params[1] as X509TrustManager

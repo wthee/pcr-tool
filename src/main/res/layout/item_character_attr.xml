@@ -9,7 +9,7 @@
 
     <cn.wthee.pcrtool.utils.AutoScrollTextView
         android:id="@+id/title_attr"
-        style="@style/titleStyle"
+        style="@style/TitleStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"

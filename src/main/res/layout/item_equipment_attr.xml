@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        style="@style/titleStyle"
+        style="@style/TitleStyle"
         android:layout_marginTop="0dp"
         tools:text="@string/physical" />
 

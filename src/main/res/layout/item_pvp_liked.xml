@@ -5,8 +5,10 @@
     android:id="@+id/layout_liked"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_card_press"
+    android:layout_margin="@dimen/s_margin"
     android:clickable="true"
+    android:background="@drawable/bg_card_no_shadow"
+    android:elevation="@dimen/card_elevation"
     android:focusable="true">
 
     <com.google.android.material.textview.MaterialTextView
@@ -87,8 +89,8 @@
         android:id="@+id/type_img"
         android:layout_width="@dimen/menu_icon"
         android:layout_height="@dimen/menu_icon"
-        android:src="@color/red"
+        android:src="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/angleStyle" />
+        app:shapeAppearanceOverlay="@style/AngleStyle" />
 </androidx.constraintlayout.widget.ConstraintLayout>

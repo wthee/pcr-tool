@@ -100,7 +100,7 @@ class EquipmentMaterialAdapter(
                         parentBinding.equipDrops.isNestedScrollingEnabled = true
                         parentBinding.material.isNestedScrollingEnabled = false
                         adapter.submitList(data) {
-                            parentBinding.progressBar.visibility = View.INVISIBLE
+                            parentBinding.progressBar.visibility = View.GONE
                         }
                         parentBinding.equipDrops.setItemViewCacheSize(50)
                     }

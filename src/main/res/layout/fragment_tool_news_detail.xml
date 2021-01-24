@@ -9,8 +9,7 @@
 
     <ProgressBar
         android:id="@+id/loading"
-        android:layout_width="@dimen/progress_bar_size"
-        android:layout_height="@dimen/progress_bar_size"
+        style="@style/ProgressBarStyle"
         android:layout_gravity="center"
         android:layout_margin="@dimen/xl_margin" />
 
@@ -29,7 +28,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_top"
-        style="@style/fabStyle"
+        style="@style/FabStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
@@ -42,7 +41,7 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_browser"
-        style="@style/efabStyle"
+        style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="end|bottom"

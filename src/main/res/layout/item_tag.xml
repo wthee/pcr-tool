@@ -4,5 +4,5 @@
     android:id="@+id/text1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    style="@style/titleStyle"
+    style="@style/TitleStyle"
     tools:text="@string/app_name" />

@@ -44,7 +44,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/pvp_like"
-            style="@style/fabStyle"
+            style="@style/FabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/m_margin"
@@ -55,7 +55,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_float"
-            style="@style/efabStyle"
+            style="@style/EfabStyle"
             android:layout_width="@dimen/fab_text_3"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/m_margin"
@@ -65,7 +65,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/pvp_search"
-            style="@style/efabStyle"
+            style="@style/EfabStyle"
             android:layout_width="@dimen/fab_text_2"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"

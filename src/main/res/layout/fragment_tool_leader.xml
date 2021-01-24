@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_main"
     app:layoutDescription="@xml/fragment_tool_leader_scene">
 
     <include
@@ -36,22 +35,13 @@
         android:id="@+id/tip"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:ellipsize="marquee"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="start"
-        android:paddingStart="@dimen/xm_padding"
-        android:paddingTop="@dimen/s_padding"
-        android:paddingEnd="@dimen/xm_padding"
-        android:paddingBottom="@dimen/s_padding"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
+        android:background="@color/colorPrimary"
         android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
+        android:gravity="start|center_vertical"
         app:layout_constraintTop_toBottomOf="@id/tool_head" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title_head"
@@ -59,7 +49,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/bg_back_drop"
-        android:padding="@dimen/s_padding"
+        android:paddingTop="@dimen/xs_padding"
         app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,6 +106,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:scrollbars="vertical"
+        android:background="@color/colorBg"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"

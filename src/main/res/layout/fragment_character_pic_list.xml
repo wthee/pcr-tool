@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <include
-        android:id="@+id/title_view_pic"
-        layout="@layout/view_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pics"
         android:layout_width="match_parent"
@@ -19,7 +13,7 @@
         android:layout_margin="@dimen/m_margin"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/title_view_pic"
+        app:layout_constraintTop_toTopOf="parent"
         app:spanCount="1"
         tools:itemCount="3"
         tools:listitem="@layout/item_pic" />
@@ -27,7 +21,7 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_download"
-        style="@style/efabStyle"
+        style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
         android:layout_marginEnd="@dimen/xl_margin"
@@ -40,7 +34,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_top"
-        style="@style/fabStyle"
+        style="@style/FabStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
