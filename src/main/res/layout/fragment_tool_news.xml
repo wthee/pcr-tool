@@ -7,11 +7,6 @@
     android:orientation="vertical"
     app:layoutDescription="@xml/fragment_tool_common_scene">
 
-    <View
-        android:id="@+id/layout_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <include
         android:id="@+id/tool_head"
         layout="@layout/view_toolbar" />

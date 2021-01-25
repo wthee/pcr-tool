@@ -54,7 +54,9 @@ class DownloadResponseBody(
 
 }
 
-
+/**
+ * 下载回调
+ */
 interface DownloadListener{
     fun onProgress(progress: Int, currSize: Long, totalSize: Long)
     fun onFinish()

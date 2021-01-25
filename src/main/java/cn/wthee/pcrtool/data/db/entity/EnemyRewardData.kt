@@ -4,8 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
-//掉落信息
+/**
+ * 掉落信息
+ */
 @Entity(tableName = "enemy_reward_data")
 class EnemyRewardData(
     @PrimaryKey

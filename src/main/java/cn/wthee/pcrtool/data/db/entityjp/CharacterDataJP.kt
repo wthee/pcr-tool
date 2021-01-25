@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//角色属性
+/**
+ * 角色属性
+ */
 @Entity(tableName = "unit_data")
 data class CharacterDataJP(
     @PrimaryKey

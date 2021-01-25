@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="@dimen/s_padding"
+    android:layout_margin="@dimen/xs_margin"
+    android:layout_gravity="center"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -25,6 +26,7 @@
         android:layout_gravity="center"
         android:textColor="@color/text"
         android:gravity="center"
+        android:textStyle="bold"
         android:layout_marginTop="@dimen/xs_margin"
         android:ellipsize="end"
         android:maxLines="1"

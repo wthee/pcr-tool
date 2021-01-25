@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
+import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -22,7 +24,13 @@ import com.permissionx.guolindev.PermissionX
 import kotlinx.coroutines.launch
 
 /**
- * 角色图片展示页面
+ * 角色图片展示页面弹窗
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentCharacterPicListBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
 
@@ -31,10 +39,9 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
         var hasSelected = arrayListOf(false, false, false, false)
         lateinit var downLoadFab: ExtendedFloatingActionButton
 
-        fun getInstance(uid: Int, r6Id: Int) = CharacterPicListFragment().apply {
+        fun getInstance(uid: Int) = CharacterPicListFragment().apply {
             arguments = Bundle().apply {
                 putInt(Constants.UID, uid)
-                putInt(Constants.R6ID, r6Id)
             }
         }
     }
@@ -43,7 +50,9 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
     private lateinit var urls: ArrayList<String>
     private lateinit var adapter: CharacterPicAdapter
     private var uid = -1
-    private var r6Id = -1
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +64,6 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
         }
         requireArguments().apply {
             uid = getInt(Constants.UID)
-            r6Id = getInt(Constants.R6ID)
         }
     }
 
@@ -68,12 +76,17 @@ class CharacterPicListFragment : CommonBottomSheetDialogFragment(true) {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
         binding.apply {
             downLoadFab = fabDownload
-            ToolbarHelper(titleViewPic).setCenterTitle(getString(R.string.view_pic))
             //初始化列表
-            adapter = CharacterPicAdapter(this@CharacterPicListFragment)
-            pics.adapter = adapter
-            urls = CharacterIdUtil.getAllPicUrl(uid, r6Id)
-            adapter.submitList(urls)
+            lifecycleScope.launch {
+                adapter = CharacterPicAdapter(this@CharacterPicListFragment)
+                pics.adapter = adapter
+                urls = CharacterIdUtil.getAllPicUrl(
+                    uid,
+                    sharedCharacterViewModel.getR6Ids().contains(uid)
+                )
+                adapter.submitList(urls)
+            }
+
             setListener()
         }
 

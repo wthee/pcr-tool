@@ -34,7 +34,7 @@ class FilterEquipment(
             field = value
         }
 
-    fun add(vararg id: Int) {
+    fun addOrRemove(vararg id: Int) {
         val list = starIds
         id.forEach {
             if (list.contains(it)) {
@@ -46,15 +46,6 @@ class FilterEquipment(
         starIds = list
     }
 
-    fun remove(vararg id: Int) {
-        val list = starIds
-        id.forEach {
-            if (list.contains(it)) {
-                list.remove(it)
-            }
-        }
-        starIds = list
-    }
 
     fun initData() {
         this.type = "全部"

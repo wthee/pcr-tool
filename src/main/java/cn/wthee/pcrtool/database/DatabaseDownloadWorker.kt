@@ -25,7 +25,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
-
+/**
+ * 数据库下载
+ */
 class DatabaseDownloadWorker(
     @NonNull context: Context,
     @NonNull parameters: WorkerParameters?
@@ -45,7 +47,6 @@ class DatabaseDownloadWorker(
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_HASH = "KEY_HASH"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
-        const val KEY_FROM_SETTING = "KEY_FROM_SETTING"
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -54,22 +55,19 @@ class DatabaseDownloadWorker(
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val hash = inputData.getString(KEY_HASH) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
-        val fromSetting = inputData.getInt(KEY_FROM_SETTING, -1)
         setForegroundAsync(createForegroundInfo())
         //显示加载进度
         MainScope().launch {
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
-            MainActivity.progressDownload.setProgress(1)
         }
-        return@coroutineScope download(DatabaseVersion(version, hash), type, fromSetting)
+        return@coroutineScope download(DatabaseVersion(version, hash), type)
     }
 
 
     private fun download(
         version: DatabaseVersion,
-        type: Int,
-        fromSetting: Int = -1
+        type: Int
     ): Result {
         try {
             //创建Retrofit服务
@@ -107,15 +105,12 @@ class DatabaseDownloadWorker(
             if (!file.exists()) {
                 file.mkdir()
             }
-            //删除已有数据库文件
             //br压缩包路径
             val dbZipPath = FileUtil.getDatabaseZipPath(type)
             val db = File(dbZipPath)
             if (db.exists()) {
-                FileUtil.deleteDir(
-                    folderPath,
-                    arrayListOf(dbZipPath, FileUtil.getNewsDatabasePath())
-                )
+                //删除已有数据库文件
+                FileUtil.deleteMainDatabase(type)
             }
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
@@ -127,19 +122,10 @@ class DatabaseDownloadWorker(
             //更新数据库版本号
             DatabaseUpdater.updateLocalDataBaseVersion(version)
             //通知更新数据
-            if (fromSetting == 0 || fromSetting == 1) {
-                //自动关闭应用
-                handler.sendEmptyMessage(2)
-            }
-            if (fromSetting == -1) {
-                //跳转
-                MainScope().launch {
-                    delay(1000L)
-                    handler.sendEmptyMessage(1)
-                }
-            }
             MainScope().launch {
                 MainActivity.textDownload.text = Constants.NOTICE_TOAST_SUCCESS
+                delay(500L)
+                handler.sendEmptyMessage(1)
             }
             return Result.success()
         } catch (e: Exception) {

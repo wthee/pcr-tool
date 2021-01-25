@@ -5,14 +5,16 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//公会信息
+/**
+ * 公会信息
+ */
 @Entity(tableName = "guild")
 data class GuildData(
     @PrimaryKey
-    @ColumnInfo(name = "guild_id") val guild_id: Int,
-    @ColumnInfo(name = "guild_name") val guild_name: String,
+    @ColumnInfo(name = "guild_id") val guildId: Int,
+    @ColumnInfo(name = "guild_name") val guildName: String,
     @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "guild_master") val guild_master: Int,
+    @ColumnInfo(name = "guild_master") val guildMaster: Int,
     @ColumnInfo(name = "member1") val member1: Int,
     @ColumnInfo(name = "member2") val member2: Int,
     @ColumnInfo(name = "member3") val member3: Int,
@@ -43,4 +45,42 @@ data class GuildData(
     @ColumnInfo(name = "member28") val member28: Int,
     @ColumnInfo(name = "member29") val member29: Int,
     @ColumnInfo(name = "member30") val member30: Int
-) : Serializable
+) : Serializable {
+
+    fun getMemberIds() = arrayListOf(
+        member1,
+        member2,
+        member3,
+        member4,
+        member5,
+        member6,
+        member7,
+        member8,
+        member9,
+        member10,
+        member11,
+        member12,
+        member13,
+        member14,
+        member15,
+        member16,
+        member17,
+        member18,
+        member19,
+        member20,
+        member21,
+        member22,
+        member23,
+        member24,
+        member25,
+        member26,
+        member27,
+        member28,
+        member29,
+        member30,
+    ).filter {
+        it != 0
+    }.map {
+        it * 100 + 1
+    }
+}

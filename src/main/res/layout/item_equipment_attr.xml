@@ -3,24 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/xs_margin"
-    android:layout_marginEnd="@dimen/xs_margin"
+    android:gravity="center_vertical"
     android:layout_marginTop="@dimen/m_margin"
     android:orientation="horizontal">
 
-    <com.google.android.material.textview.MaterialTextView
+    <cn.wthee.pcrtool.utils.AutoScrollTextView
         android:id="@+id/title_attr"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:background="@drawable/bg_text_view"
-        tools:text="@string/physical"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/colorWhite" />
+        style="@style/TitleStyle"
+        android:layout_marginTop="0dp"
+        tools:text="@string/physical" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"

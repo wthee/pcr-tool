@@ -45,7 +45,7 @@
         <Constraint
             android:id="@+id/starts"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/toolbar_height"
+            android:layout_height="@dimen/tab_height_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toBottomOf="@+id/icon" />
@@ -55,8 +55,8 @@
 
         <Constraint
             android:id="@+id/icon"
-            android:layout_width="@dimen/character_icon_size"
-            android:layout_height="@dimen/character_icon_size"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/normal_icon"
             app:layout_constraintBottom_toBottomOf="@id/starts"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -73,7 +73,7 @@
         <Constraint
             android:id="@+id/starts"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/toolbar_height"
+            android:layout_height="@dimen/tab_height_2"
             android:layout_marginStart="@dimen/s_margin"
             app:layout_constraintBottom_toTopOf="@id/nestedScrollView"
             app:layout_constraintStart_toEndOf="@id/icon"

@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/card_height"
-    app:cardCornerRadius="@dimen/card_radius"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/card_radius">
 
     <ProgressBar
         android:id="@+id/loading"
-        android:layout_width="@dimen/progress_bar_size"
-        android:layout_height="@dimen/progress_bar_size"
+        style="@style/ProgressBarStyle"
         android:layout_gravity="center"
         android:layout_margin="@dimen/xl_margin" />
 
@@ -29,36 +28,27 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_top"
+        style="@style/FabStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="@dimen/m_margin"
         android:layout_marginBottom="@dimen/m_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/function"
         android:src="@drawable/ic_top"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/colorPrimary" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_browser"
+        style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="end|bottom"
         android:layout_marginTop="@dimen/efab_margin"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/open_browser"
         android:text="@string/open_browser"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
-        app:icon="@drawable/ic_browser"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
-
+        app:icon="@drawable/ic_browser" />
 </com.google.android.material.card.MaterialCardView>

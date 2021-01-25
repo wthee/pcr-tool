@@ -20,7 +20,13 @@ import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 装备合成材料列表适配器
+ *
+ * 列表项布局 [ItemCommonBinding]
+ *
+ * 列表项数据 [EquipmentMaterial]
+ */
 class EquipmentMaterialAdapter(
     private val parentBinding: FragmentEquipmentDetailsBinding,
     private val viewModel: EquipmentDetailsViewModel
@@ -94,7 +100,7 @@ class EquipmentMaterialAdapter(
                         parentBinding.equipDrops.isNestedScrollingEnabled = true
                         parentBinding.material.isNestedScrollingEnabled = false
                         adapter.submitList(data) {
-                            parentBinding.progressBar.visibility = View.INVISIBLE
+                            parentBinding.progressBar.visibility = View.GONE
                         }
                         parentBinding.equipDrops.setItemViewCacheSize(50)
                     }

@@ -21,23 +21,15 @@
         <Constraint
             android:id="@id/tip"
             android:layout_width="match_parent"
-            android:layout_height="0.01dp"
+            android:layout_height="-2dp"
             app:layout_constraintTop_toBottomOf="@id/tool_head" />
-        <Constraint
-            android:id="@+id/fab_top"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/fab_size"
-            android:layout_marginEnd="@dimen/xl_margin"
-            android:layout_marginBottom="@dimen/efab_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/tool_end">
         <Constraint
             android:id="@id/tool_head"
             android:layout_width="match_parent"
-            android:layout_height="0.01dp"
+            android:layout_height="-2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,53 +46,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tool_head" />
-        <Constraint
-            android:id="@+id/fab_top"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/fab_size"
-            android:layout_marginEnd="@dimen/xl_margin"
-            android:layout_marginBottom="@dimen/efab_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
     <Transition
         app:constraintSetEnd="@id/tool_end"
         app:constraintSetStart="@+id/tool_start">
-        <KeyFrameSet>
-            <KeyAttribute
-                android:alpha="1.0"
-                app:framePosition="0"
-                app:motionTarget="@id/tool_head" />
-            <KeyAttribute
-                android:alpha="0.0"
-                app:framePosition="100"
-                app:motionTarget="@id/tool_head" />
-            <KeyAttribute
-                android:alpha="1.0"
-                app:framePosition="0"
-                app:motionTarget="@id/source" />
-            <KeyAttribute
-                android:alpha="0.0"
-                app:framePosition="100"
-                app:motionTarget="@id/source" />
-            <KeyAttribute
-                android:alpha="0.0"
-                app:framePosition="0"
-                app:motionTarget="@id/fab_top" />
-            <KeyAttribute
-                android:alpha="1.0"
-                app:framePosition="100"
-                app:motionTarget="@id/fab_top" />
-            <KeyAttribute
-                android:alpha="0.0"
-                app:framePosition="0"
-                app:motionTarget="@id/tip" />
-            <KeyAttribute
-                android:alpha="1.0"
-                app:framePosition="100"
-                app:motionTarget="@id/tip" />
-        </KeyFrameSet>
         <OnSwipe
             app:dragDirection="dragUp"
             app:touchAnchorId="@id/tool_list"

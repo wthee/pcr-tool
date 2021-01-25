@@ -13,9 +13,11 @@ import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsViewModelFactory
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModelFactory
 import cn.wthee.pcrtool.ui.tool.event.EventViewModelFactory
 import cn.wthee.pcrtool.ui.tool.gacha.GachaViewModelFactory
+import cn.wthee.pcrtool.ui.tool.guild.GuildViewModelFactory
+import cn.wthee.pcrtool.ui.tool.pvp.PvpLikedViewModelFactory
 
 /**
- * viewModel
+ * ViewModel 注射工具
  */
 object InjectorUtil {
     private fun getType() =
@@ -75,6 +77,13 @@ object InjectorUtil {
         )
     }
 
+    fun provideGuildViewModelFactory(): GuildViewModelFactory {
+        val repository = getCharacterRepository()
+        return GuildViewModelFactory(
+            repository
+        )
+    }
+
     fun provideCharacterAttrViewModelFactory(): CharacterAttrViewModelFactory {
         val repository1 = getCharacterRepository()
         val repository2 = getEquipmentRepository()
@@ -107,6 +116,11 @@ object InjectorUtil {
     fun provideGachaViewModelFactory(): GachaViewModelFactory {
         val repository = getGachaRepository()
         return GachaViewModelFactory(repository)
+    }
+
+    fun providePvpViewModelFactory(): PvpLikedViewModelFactory {
+        val repository = getPvpRepository()
+        return PvpLikedViewModelFactory(repository)
     }
 
     fun provideEventViewModelFactory(): EventViewModelFactory {

@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//关卡信息
+/**
+ * 关卡信息
+ */
 @Entity(tableName = "quest_data")
 class QuestData(
     @PrimaryKey

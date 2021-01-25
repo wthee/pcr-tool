@@ -15,7 +15,6 @@
     <color name="colorBg">#F5F5F5</color>
     <color name="colorAlphaBlack">#75000000</color>
     <color name="colorSelected">#C2C2C2</color>
-    <color name="colorHalfAlpha">#50ffffff</color>
     <color name="alphaPrimary">#8E9CB1</color>
     <color name="color_map_n">@color/colorPrimary</color>
     <color name="color_map_h">#C94C5D</color>
@@ -24,10 +23,11 @@
     <color name="color_rank_4_6">#989898</color>
     <color name="color_rank_7_10">#EFC005</color>
     <color name="color_rank_11_17">#B55CCF</color>
-    <color name="color_rank_18">#FF0000</color>
+    <color name="color_rank_18">#DE0703</color>
     <color name="red">#FF0000</color>
     <color name="news_update">#f55291</color>
     <color name="news_system">#a067c5</color>
+    <color name="news_main">#399be6</color>
     <color name="cool_apk">#4caf50</color>
     <color name="viewpager_bg">#323232</color>
 </resources>

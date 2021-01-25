@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import java.io.Serializable
 
-//装备强化信息
+/**
+ * 装备强化信息
+ */
 @Entity(tableName = "equipment_enhance_data",
     primaryKeys = ["promotion_level", "equipment_enhance_level"])
 class EquipmentEnhanceData(

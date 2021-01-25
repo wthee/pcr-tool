@@ -9,9 +9,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.permissionx.guolindev.PermissionX
 
-
+/**
+ * 分享
+ */
 object ShareIntentUtil {
 
+    /**
+     * 分享文本
+     */
     fun text(str: String) {
         var shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
@@ -24,19 +29,27 @@ object ShareIntentUtil {
         ActivityHelper.instance.currentActivity?.startActivity(shareIntent)
     }
 
-    //分享图片
+    /**
+     * 分享图片
+     */
     fun image(activity: FragmentActivity, view: View, fileName: String) {
         //获取要分享的视图 bitmap
         val bitmap = ScreenshotUtil.getBitmap(view)
         shareImage(activity, bitmap, fileName)
     }
 
+    /**
+     * 分享 RecyclerView
+     */
     fun imageLong(activity: FragmentActivity, view: RecyclerView, fileName: String) {
         //获取要分享的视图 bitmap
         val bitmap = ScreenshotUtil.shotRecyclerView(view)
         shareImage(activity, bitmap, fileName)
     }
 
+    /**
+     * 分享图片
+     */
     private fun shareImage(activity: FragmentActivity, bitmap: Bitmap?, fileName: String) {
         if (bitmap == null) {
             ToastUtil.short("分享出错，请重试~")

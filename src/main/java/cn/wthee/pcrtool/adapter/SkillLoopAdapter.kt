@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.adapter
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -19,9 +18,14 @@ import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteUtil
 import coil.load
 
-
-class SkillLoopAdapter :
-    ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoopDiffCallback()) {
+/**
+ * 技能循环图标列表适配器
+ *
+ * 列表项布局 [ItemCommonBinding]
+ *
+ * 列表项数据 [Int] atk_id
+ */
+class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoopDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -45,21 +49,20 @@ class SkillLoopAdapter :
                 //加载图片
                 if (atkId == 1) {
                     name.text = "普攻"
-                    name.setTextColor(ctx.getColor(R.color.colorAccent))
+                    name.setTextColor(ctx.getColor(R.color.colorPrimary))
                     pic.load(EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP)
                 } else {
                     //技能图标
                     name.text = if (atkId == 1001 || atkId == 2001)
-                        "技能2"
-                    else
                         "技能1"
-
+                    else
+                        "技能2"
                     val iconType = when (atkId) {
                         2001 -> iconTypes[101]
                         2002 -> iconTypes[102]
-                        else -> iconTypes[atkId % 10]
+                        1001 -> iconTypes[2]
+                        else -> iconTypes[3]
                     }
-                    Log.e("skill", "$iconType")
                     //图标地址
                     val picUrl = SKILL_ICON_URL + iconType + WEBP
 

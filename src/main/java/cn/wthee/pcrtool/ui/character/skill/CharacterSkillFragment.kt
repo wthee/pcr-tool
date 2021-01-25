@@ -14,10 +14,13 @@ import cn.wthee.pcrtool.utils.ShareIntentUtil
 
 /**
  * 角色技能页面
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentCharacterSkillBinding]
+ *
+ * ViewModels [CharacterSkillViewModel]
  */
-
-private const val DIALOG = "isDialog"
-
 class CharacterSkillFragment : Fragment() {
 
 
@@ -53,7 +56,7 @@ class CharacterSkillFragment : Fragment() {
         binding.root.visibility = View.GONE
         binding.root.postDelayed({
             binding.root.visibility = View.VISIBLE
-        }, 500L)
+        }, 700L)
         init()
         sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
             adapter.submitList(it)

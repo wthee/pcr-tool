@@ -2,19 +2,18 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_card_no_shadow"
-    android:elevation="@dimen/card_elevation"
-    android:padding="@dimen/xm_padding"
+    android:padding="@dimen/xs_padding"
     app:layoutDescription="@xml/fragment_character_attr_info_scene">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textColor="@color/colorPrimary"
         tools:text="999" />
 
@@ -31,9 +30,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal"
-        tools:layout_height="@dimen/toolbar_height">
+        android:orientation="horizontal">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/l_icon"
+            android:layout_height="@dimen/l_icon"
+            android:src="@drawable/ic_star"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <com.google.android.material.slider.Slider
@@ -48,7 +52,6 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/xs_padding"
         android:scrollbars="none">
 
         <LinearLayout
@@ -68,16 +71,6 @@
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintTop_toBottomOf="@id/level_seek_bar" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title_all_attr_sub"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/xs_margin"
-                android:gravity="center"
-                android:text="@string/title_all_attr_sub"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-                app:layout_constraintTop_toBottomOf="@id/title_all_attr" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/charcter_attrs"
                 android:layout_width="match_parent"
@@ -85,7 +78,7 @@
                 android:layout_marginTop="@dimen/m_margin"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/title_all_attr_sub"
+                app:layout_constraintTop_toBottomOf="@id/title_all_attr"
                 app:spanCount="2"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_character_attr" />
@@ -101,17 +94,6 @@
                 android:textColor="@color/colorPrimary"
                 app:layout_constraintTop_toBottomOf="@id/charcter_attrs" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title_story_attr_sub"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/xs_margin"
-                android:gravity="center"
-                android:text="@string/title_story_attr_sub"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-                app:layout_constraintTop_toBottomOf="@id/title_story_attr" />
-
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/charcter_story_attrs"
                 android:layout_width="match_parent"
@@ -119,7 +101,7 @@
                 android:layout_marginTop="@dimen/m_margin"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/title_story_attr_sub"
+                app:layout_constraintTop_toBottomOf="@id/title_story_attr"
                 app:spanCount="2"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_character_attr" />
@@ -136,6 +118,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/xs_margin"
                 android:layout_marginTop="@dimen/l_margin">
 
                 <include

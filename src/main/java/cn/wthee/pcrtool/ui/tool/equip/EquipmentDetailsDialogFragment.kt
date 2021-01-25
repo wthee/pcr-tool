@@ -18,13 +18,19 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import coil.load
 
-/**
- * 装备详情页面
- */
+
 private const val EQUIP = "equip"
 
+/**
+ * 装备详情页面
+ *
+ * 根据 [equip] 显示装备信息
+ *
+ * 页面布局 [FragmentEquipmentDetailsBinding]
+ *
+ * ViewModels [EquipmentDetailsViewModel]
+ */
 class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
-
 
     companion object {
         fun getInstance(equip: EquipmentMaxData) =

@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-//动作循环
+/**
+ * 动作循环
+ */
 @Entity(tableName = "unit_attack_pattern")
 data class AttackPattern(
     @PrimaryKey

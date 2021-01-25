@@ -9,19 +9,24 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import kotlinx.coroutines.launch
 
-
+/**
+ * 装备详情 ViewModel
+ *
+ * 数据来源 [EquipmentRepository]
+ */
 class EquipmentDetailsViewModel(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    private var materials = arrayListOf<EquipmentMaterial>()
+    private lateinit var materials: ArrayList<EquipmentMaterial>
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    private var isLoading = MutableLiveData<Boolean>()
 
-    //获取装备制作材料信息
+    /**
+     * 获取装备制作材料信息
+     */
     fun getEquipInfos(equip: EquipmentMaxData) {
-        isLoading.postValue(true)
         viewModelScope.launch {
+            materials = arrayListOf()
             if (equip.craftFlg == 0) {
                 materials.add(
                     EquipmentMaterial(
@@ -34,10 +39,13 @@ class EquipmentDetailsViewModel(
                 getAllMaterial(equip.equipmentId, equip.equipmentName, 1, 1)
             }
             equipMaterialInfos.postValue(materials)
-            isLoading.postValue(false)
         }
     }
 
+    /**
+     * TODO 优化
+     * 获取合成材料
+     */
     private suspend fun getAllMaterial(equipmentId: Int, name: String, count: Int, craftFlg: Int) {
         if (craftFlg == 1) {
             val material = equipmentRepository.getEquipmentCraft(equipmentId).getAllMaterialId()
@@ -66,7 +74,9 @@ class EquipmentDetailsViewModel(
         }
     }
 
-    //获取装备掉落关卡信息
+    /**
+     * 根据 [equipmentId]，获取装备掉落关卡信息
+     */
     suspend fun getDropInfos(equipmentId: Int): List<EquipmentDropInfo> {
         val equip = equipmentRepository.getEquipmentData(equipmentId)
         val fixedId = if (equip.craftFlg == 1) {
@@ -78,6 +88,9 @@ class EquipmentDetailsViewModel(
         return infos.sortedWith(getSort(equipmentId))
     }
 
+    /**
+     * 根据掉率排序
+     */
     private fun getSort(eid: Int): java.util.Comparator<EquipmentDropInfo> {
         val str = eid.toString()
         return Comparator { o1: EquipmentDropInfo, o2: EquipmentDropInfo ->

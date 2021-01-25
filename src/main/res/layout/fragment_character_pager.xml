@@ -4,49 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/viewpager_bg">
+    android:animateLayoutChanges="true">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/character_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/xm_padding"
-        android:paddingBottom="@dimen/page_padding"
         tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        style="@style/EfabStyle"
+        android:layout_width="@dimen/fab_text_3"
+        android:layout_height="@dimen/fab_size"
         android:layout_marginEnd="@dimen/m_margin"
-        android:layout_marginBottom="@dimen/m_margin"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/share"
-        android:src="@drawable/ic_share"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
-        android:visibility="gone"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:contentDescription="@string/function"
+        android:text="@string/fragment"
+        android:visibility="invisible"
+        app:icon="@drawable/ic_drop"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_character"
-        app:tint="@color/colorPrimary" />
+        app:layout_constraintEnd_toStartOf="@id/fab_character" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_character"
+        style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
-        android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/function"
         android:text="@string/app_name"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
+        android:textAllCaps="false"
         app:icon="@drawable/ic_function"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -9,11 +9,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 /**
- * 弹窗
+ * 弹窗工具
  */
 object DialogUtil {
 
-    //创建 dialog
+    /**
+     *  创建自定义 [layout] 弹窗
+     */
     fun create(context: Context, layout: View, gravity: Int = Gravity.BOTTOM): AlertDialog {
         val dialog = MaterialAlertDialogBuilder(context)
             .setView(layout)
@@ -22,6 +24,10 @@ object DialogUtil {
         return dialog
     }
 
+    /**
+     * 创建 [layout] 弹窗，并设置
+     * 点击回调 [listener]
+     */
     fun create(
         context: Context,
         layout: LayoutWarnDialogBinding,
@@ -53,6 +59,9 @@ object DialogUtil {
     }
 }
 
+/**
+ * 点击回调
+ */
 interface DialogListener {
 
     fun onCancel(dialog: AlertDialog)

@@ -24,6 +24,13 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * 竞技场信息自定义
+ *
+ * 页面布局 [FragmentToolPvpLikedCustomizeBinding]
+ *
+ * ViewModels []
+ */
 class PvpLikedCusFragment : Fragment() {
 
     companion object {

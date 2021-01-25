@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_main"
     android:orientation="vertical"
-    app:layoutDescription="@xml/fragment_tool_pvp_like_scene"
+    android:background="@color/colorBg"
     tools:context=".ui.tool.pvp.PvpLikedFragment">
 
     <include
@@ -20,48 +20,30 @@
         android:id="@+id/tool_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_back_drop"
         android:orientation="vertical"
         android:paddingTop="@dimen/m_padding"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/fab_top"
+        app:layout_constraintBottom_toTopOf="@id/fab_add"
         app:layout_constraintTop_toBottomOf="@id/tool_head"
         tools:itemCount="5"
         tools:listitem="@layout/item_pvp_liked" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_top"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/fab_size"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/back_top"
-        android:text="@string/back_top"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
-        app:icon="@drawable/ic_top"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add"
+        style="@style/EfabStyle"
         android:layout_width="@dimen/fab_text_2"
         android:layout_height="@dimen/fab_size"
         android:layout_marginTop="@dimen/efab_margin"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/add"
         android:text="@string/add"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
         app:icon="@drawable/ic_add"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tool_list" />
 
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

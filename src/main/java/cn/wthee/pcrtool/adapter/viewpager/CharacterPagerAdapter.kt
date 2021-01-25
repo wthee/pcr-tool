@@ -14,19 +14,25 @@ import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.character.skill.CharacterSkillFragment
 
+/**
+ * 角色详情页面适配器
+ * 角色基本信息 [CharacterBasicInfoFragment]
+ * 角色属性信息 [CharacterAttrFragment]
+ * 角色技能信息 [CharacterSkillFragment]
+ */
 class CharacterPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
     noData: Boolean,
-    uid: Int, r6Id: Int
+    uid: Int
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    private val mFragments: SparseArray<Fragment> = SparseArray()
+    val mFragments: SparseArray<Fragment> = SparseArray()
 
     init {
-        mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid, r6Id))
+        mFragments.put(0, CharacterBasicInfoFragment.getInstance(uid))
         if (!noData) {
-            mFragments.put(1, CharacterAttrFragment.getInstance(uid, r6Id))
+            mFragments.put(1, CharacterAttrFragment.getInstance(uid))
             mFragments.put(2, CharacterSkillFragment.getInstance(uid))
         }
     }

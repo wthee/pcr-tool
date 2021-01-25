@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.databinding.ItemPvpResultIconBinding
-import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.r6Ids
+import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.r6Ids
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import coil.Coil
@@ -15,7 +15,13 @@ import coil.request.ImageRequest
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
+/**
+ * 竞技场查询结果角色图标列表适配器
+ *
+ * 列表项布局 [ItemPvpResultIconBinding]
+ *
+ * 列表项数据 [Int] unit_id
+ */
 class PvpCharacterResultItemAdapter :
     ListAdapter<Int, PvpCharacterResultItemAdapter.ViewHolder>(PvpResultItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -10,39 +10,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Constraint
-            android:id="@id/position_type"
-            android:layout_width="@dimen/menu_icon"
-            android:layout_height="@dimen/menu_icon"
-            android:layout_marginStart="@dimen/xm_margin"
-            app:layout_constraintBottom_toBottomOf="@id/name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/name" />
-
-        <Constraint
-            android:id="@id/name"
-            android:layout_width="wrap_content"
+            android:id="@id/catah"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
             android:layout_marginTop="@dimen/s_margin"
-            app:layout_constraintStart_toEndOf="@id/position_type"
+            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginEnd="@dimen/s_margin"
             app:layout_constraintTop_toBottomOf="@id/character_pic" />
-
-        <Constraint
-            android:id="@id/name_extra"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/xs_margin"
-            app:layout_constraintBottom_toBottomOf="@id/name"
-            app:layout_constraintStart_toEndOf="@id/name"
-            app:layout_constraintTop_toTopOf="@id/name" />
-
-        <Constraint
-            android:id="@id/three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/xm_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
 
         <Constraint
             android:id="@id/fab_love_cbi"
@@ -62,38 +36,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Constraint
-            android:id="@id/position_type"
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
-            app:layout_constraintBottom_toBottomOf="@id/name"
-            app:layout_constraintEnd_toStartOf="@id/name"
-            app:layout_constraintTop_toTopOf="@id/name" />
-
-        <Constraint
-            android:id="@id/name"
-            android:layout_width="wrap_content"
+            android:id="@id/catah"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/s_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Constraint
-            android:id="@id/name_extra"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/xs_margin"
-            app:layout_constraintBottom_toBottomOf="@id/name"
-            app:layout_constraintStart_toEndOf="@id/name"
-            app:layout_constraintTop_toTopOf="@id/name" />
-
-        <Constraint
-            android:id="@id/three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name" />
+            android:layout_marginStart="@dimen/s_margin"
+            android:layout_marginEnd="@dimen/s_margin"
+            app:layout_constraintBottom_toBottomOf="@id/character_pic"
+            app:layout_constraintTop_toTopOf="@id/character_pic" />
 
         <Constraint
             android:id="@id/fab_love_cbi"
@@ -132,18 +81,6 @@
                 android:alpha="0.0"
                 app:framePosition="100"
                 app:motionTarget="@id/fab_love_cbi" />
-            <KeyAttribute
-                android:alpha="1.0"
-                app:framePosition="0"
-                app:motionTarget="@id/position_type" />
-            <KeyAttribute
-                android:alpha="0.0"
-                app:framePosition="50"
-                app:motionTarget="@id/position_type" />
-            <KeyAttribute
-                android:alpha="0.0"
-                app:framePosition="100"
-                app:motionTarget="@id/position_type" />
             <KeyAttribute
                 android:alpha="1.0"
                 app:framePosition="30"

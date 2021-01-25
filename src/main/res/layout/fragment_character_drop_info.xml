@@ -7,15 +7,11 @@
     android:minHeight="@dimen/card_height"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/view_toolbar" />
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/drop_icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
         android:layout_gravity="center"
-        android:layout_width="@dimen/character_icon_size"
-        android:layout_height="@dimen/character_icon_size"
         android:adjustViewBounds="true" />
 
     <androidx.recyclerview.widget.RecyclerView

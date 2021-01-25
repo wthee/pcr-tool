@@ -48,6 +48,16 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
+        <provider
+            android:authorities="${applicationId}.androidx-startup"
+            android:name="androidx.startup.InitializationProvider"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="cn.wthee.pcrtool.utils.UMengInitializer"
+                android:value="@string/androidx_startup" />
+        </provider>
     </application>
 
 </manifest>

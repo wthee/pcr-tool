@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -16,25 +17,35 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
+import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character1
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character2
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character3
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
-import cn.wthee.pcrtool.utils.BrowserUtil
-import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.ToolbarHelper
+import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
+
 /**
  * 竞技场查询
+ *
+ * 页面布局 [FragmentToolPvpBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class PvpFragment : Fragment() {
 
+    companion object {
+        var r6Ids = listOf<Int>()
+    }
+
     private lateinit var binding: FragmentToolPvpBinding
     private lateinit var job: Job
+    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+        InjectorUtil.provideCharacterViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +68,8 @@ class PvpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //过渡动画结束后，显示选择角色布局
         job = lifecycleScope.launch {
+            //获取六星id
+            r6Ids = sharedCharacterViewModel.getR6Ids()
             childFragmentManager.beginTransaction()
                 .replace(R.id.layout_select, PvpSelectFragment())
                 .commit()
@@ -66,8 +79,12 @@ class PvpFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         //返回时，取消加载布局
-        if (!job.isCompleted) {
-            job.cancel()
+        try {
+            if (!job.isCompleted) {
+                job.cancel()
+            }
+        } catch (e: Exception) {
+
         }
     }
 

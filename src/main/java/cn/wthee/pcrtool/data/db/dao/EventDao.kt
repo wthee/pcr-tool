@@ -5,40 +5,49 @@ import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.view.EventData
 
+/**
+ * 活动记录 DAO
+ */
 @Dao
 interface EventDao {
 
+    /**
+     * 获取所有活动记录 [EventData]
+     */
     @Transaction
     @Query(
         """
             SELECT
-                c.*,
-                d.title 
+                event.*,
+                c.title,
+                COALESCE( GROUP_CONCAT( f.value, '-' ), "-" ) AS unit_ids,
+                COALESCE( GROUP_CONCAT( f.item_name, '-' ), "-" ) AS unit_names 
             FROM
                 (
                 SELECT
-                    * 
-                FROM
-                    (
-                    SELECT
-                        a.story_id / 1000 AS story_id,
-                        substr( a.start_time, 0, 11 ) AS start_time,
-                        substr( a.end_time, 0, 11 ) AS end_time 
-                    FROM
-                        ( SELECT * FROM event_top_adv GROUP BY event_id ) AS a UNION
-                    SELECT
-                        b.story_group_id AS story_id,
-                        substr( b.start_time, 0, 11 ) AS start_time,
-                        substr( b.end_time, 0, 11 ) AS end_time 
-                    FROM
-                        event_story_data AS b 
-                        WHERE b.story_group_id not in (SELECT story_id/1000 FROM event_top_adv)
-                    ) 
-                ORDER BY
-                    start_time 
-                ) AS c
-                LEFT JOIN event_story_data AS d ON c.story_id = d.story_group_id
-                ORDER BY start_time desc
+                    a.event_id,
+                (( CASE WHEN a.original_event_id = 0 THEN a.event_id ELSE a.original_event_id END ) % 10000 + 5000 ) AS story_id,
+                substr( a.start_time, 0, 11 ) AS start_time,
+                substr( a.end_time, 0, 11 ) AS end_time 
+            FROM
+                hatsune_schedule AS a UNION
+            SELECT
+                b.event_id,
+                b.story_id / 1000 AS story_id,
+                substr( b.start_time, 0, 11 ) AS start_time,
+                substr( b.end_time, 0, 11 ) AS end_time 
+            FROM
+                event_top_adv AS b 
+            WHERE
+                b.event_id > 20000 
+            GROUP BY
+                b.event_id 
+                ) AS event
+                LEFT JOIN event_story_data AS c ON c.story_group_id = event.story_id
+                LEFT JOIN odds_name_data AS e ON event.event_id % 10000 = e.odds_file / 100000 % 10000
+                LEFT JOIN item_data AS f ON e.name = f.item_name 
+            GROUP BY event.start_time
+            ORDER BY event.start_time DESC     
         """
     )
     suspend fun getAllEvents(): List<EventData>

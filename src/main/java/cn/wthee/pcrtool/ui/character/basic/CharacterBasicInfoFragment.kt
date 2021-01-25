@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
@@ -15,12 +16,18 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.Constants.R6ID
 import cn.wthee.pcrtool.utils.Constants.UID
 import coil.load
+import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息页面
+ *
+ * 根据 [uid] 显示角色数据
+ *
+ * 页面布局 [FragmentCharacterBasicInfoBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class CharacterBasicInfoFragment : Fragment() {
 
@@ -28,16 +35,14 @@ class CharacterBasicInfoFragment : Fragment() {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
         lateinit var characterPic: AppCompatImageView
-        fun getInstance(uid: Int, r6Id: Int) = CharacterBasicInfoFragment().apply {
+        fun getInstance(uid: Int) = CharacterBasicInfoFragment().apply {
             arguments = Bundle().apply {
                 putInt(UID, uid)
-                putInt(R6ID, r6Id)
             }
         }
     }
 
     private var uid = -1
-    private var r6Id = -1
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -46,7 +51,6 @@ class CharacterBasicInfoFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
             uid = getInt(UID)
-            r6Id = getInt(R6ID)
         }
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
     }
@@ -80,28 +84,17 @@ class CharacterBasicInfoFragment : Fragment() {
         //打开页面共享元素
         binding.root.transitionName = "item_${uid}"
         //toolbar 背景
-        val picUrl =
-            Constants.CHARACTER_FULL_URL + (uid + if (r6Id != 0) 60 else 30) + Constants.WEBP
-        //角色图片共享元素
-        binding.characterPic.transitionName = picUrl
-        //加载图片
-        binding.characterPic.load(picUrl) {
-            error(R.drawable.error)
-            placeholder(R.drawable.load)
+        lifecycleScope.launch {
+            val picUrl =
+                Constants.CHARACTER_FULL_URL + (uid + if (sharedCharacterViewModel.getR6Ids()
+                        .contains(uid)
+                ) 60 else 30) + Constants.WEBP
+            //加载图片
+            binding.characterPic.load(picUrl) {
+                error(R.drawable.error)
+                placeholder(R.drawable.load)
+            }
         }
-        //开始动画
-        ObjectAnimatorUtil.enter(object : ObjectAnimatorUtil.OnAnimatorListener {
-            override fun prev(view: View) {
-                view.visibility = View.GONE
-            }
-
-            override fun start(view: View) {
-                view.visibility = View.VISIBLE
-            }
-
-            override fun end(view: View) {
-            }
-        }, binding.fabLoveCbi, binding.basicInfo)
     }
 
     //点击事件
@@ -109,12 +102,13 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.apply {
             //角色图片列表
             characterPic.setOnClickListener {
-                CharacterPicListFragment.getInstance(uid, r6Id)
+                CharacterPicListFragment.getInstance(uid)
                     .show(parentFragmentManager, "pic_list")
             }
             //fab点击监听
             fabLoveCbi.setOnClickListener {
                 isLoved = !isLoved
+                CharacterListFragment.characterFilterParams.addOrRemove(uid)
                 setLove(isLoved)
             }
             //角色编号
@@ -127,17 +121,11 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //设置收藏
     private fun setLove(isLoved: Boolean) {
-        if (isLoved)
-            CharacterListFragment.characterFilterParams.add(uid)
-        else
-            CharacterListFragment.characterFilterParams.remove(uid)
-
         val icFabColor =
             ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)
 
         val color = ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text)
         binding.name.setTextColor(color)
-        binding.nameExtra.setTextColor(color)
         binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
     }
 
@@ -147,30 +135,28 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.apply {
             unitId.text = uid.toString()
             catah.text = characterPro.catchCopy
-            name.text = characterPro.getNameF()
-            nameExtra.text = characterPro.getNameL()
-            three.text = requireActivity().resources.getString(
-                R.string.character_detail,
-                characterPro.getFixedAge(),
-                characterPro.getFixedHeight(),
-                characterPro.getFixedWeight(),
-                characterPro.position
-            )
             intro.text = characterPro.getIntroText()
             if (intro.text.isEmpty()) intro.visibility = View.GONE
             trueName.text = if (characterPro.actualName.isEmpty())
                 characterPro.name
             else
                 characterPro.actualName
-            birth.text = requireActivity().resources.getString(
+            name.text = characterPro.name
+            height.text =
+                resources.getString(R.string.character_heigth, characterPro.getFixedHeight())
+            weight.text =
+                resources.getString(R.string.character_weigth, characterPro.getFixedWeight())
+
+            birth.text = resources.getString(
                 R.string.date_m_d,
                 characterPro.birthMonth,
                 characterPro.birthDay
             )
-            blood.text =
-                requireActivity().resources.getString(R.string.blood, characterPro.bloodType)
+            age.text = characterPro.getFixedAge()
+            blood.text = resources.getString(R.string.blood, characterPro.bloodType)
+            position.text = characterPro.position.toString()
             race.text = characterPro.race
-            guide.text = characterPro.guild
+            guild.text = characterPro.guild
             favorite.text = characterPro.favorite
             cv.text = characterPro.voice
             self.text = characterPro.getSelf()

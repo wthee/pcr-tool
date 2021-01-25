@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import java.io.Serializable
 
 
-//角色详情信息
+/**
+ * 角色详情信息视图
+ */
 data class CharacterInfoPro(
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,
@@ -30,11 +32,24 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "comments") val comments: String,
 ) : Serializable {
 
+    /**
+     * 格式化年龄
+     */
     fun getFixedAge() = if (age == "999") "?" else age
+
+    /**
+     * 格式化身高
+     */
     fun getFixedHeight() = if (height == "999") "?" else height
+
+    /**
+     * 格式划体重
+     */
     fun getFixedWeight() = if (weight == "999") "?" else weight
 
-    //获取名字，去除限定类型
+    /**
+     * 获取名字，去除限定类型
+     */
     fun getNameF(): String {
         val index = this.name.indexOf("（")
         return if (index == -1) {
@@ -45,7 +60,9 @@ data class CharacterInfoPro(
         }
     }
 
-    //获取限定类型
+    /**
+     * 获取限定类型
+     */
     fun getNameL(): String {
         val index = this.name.indexOf("（")
         return if (index == -1) {

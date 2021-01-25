@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <include
@@ -58,32 +57,25 @@
         app:layout_constraintTop_toBottomOf="@id/current_date"
         tools:listitem="@layout/item_calendar_event" />
 
-    <include
+    <ProgressBar
         android:id="@+id/loading"
-        layout="@layout/layout_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ProgressBarStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/current_date" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_today"
+        style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
-        android:layout_gravity="end"
         android:layout_marginTop="@dimen/s_margin"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/back_today"
         android:text="@string/back_today"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
         app:icon="@drawable/ic_calendar"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

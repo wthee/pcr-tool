@@ -76,9 +76,7 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="@dimen/progress_bar_size"
-        android:layout_height="@dimen/progress_bar_size"
+        style="@style/ProgressBarStyle"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/m_margin"
         app:layout_constraintBottom_toBottomOf="parent"

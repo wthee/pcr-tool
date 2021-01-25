@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.data.network.model
 
-
+/**
+ * 竞技场查询结果
+ */
 data class PvpData(
     val atk: String,
     val def: String,
@@ -9,6 +11,10 @@ data class PvpData(
     val region: Int,
     val up: Int
 ) {
+
+    /**
+     * 获取进攻方角色 id 列表
+     */
     fun getAtkIdList(): List<Int> {
         val ids = arrayListOf<Int>()
         val atks = atk.split('-').filter {

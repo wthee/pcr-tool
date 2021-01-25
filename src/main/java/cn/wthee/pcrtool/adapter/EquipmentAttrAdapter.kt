@@ -12,7 +12,13 @@ import cn.wthee.pcrtool.data.bean.AttrValue
 import cn.wthee.pcrtool.data.bean.int
 import cn.wthee.pcrtool.databinding.ItemEquipmentAttrBinding
 
-
+/**
+ * 装备面板属性列表适配器
+ *
+ * 列表项布局 [ItemEquipmentAttrBinding]
+ *
+ * 列表项数据 [AttrValue]
+ */
 class EquipmentAttrAdapter :
     ListAdapter<AttrValue, EquipmentAttrAdapter.ViewHolder>(AttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

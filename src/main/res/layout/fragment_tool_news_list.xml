@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,9 +7,12 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <include
+    <ProgressBar
         android:id="@+id/loading"
-        layout="@layout/layout_loading" />
+        style="@style/ProgressBarStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
@@ -18,7 +21,7 @@
         android:layout_weight="1"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:layout_marginTop="@dimen/m_margin">
+        app:layout_constraintTop_toBottomOf="@id/loading">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/news_list"
@@ -33,21 +36,17 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_copy"
+        style="@style/EfabStyle"
         android:layout_width="@dimen/fab_text_2"
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/efab_margin"
         android:layout_marginEnd="@dimen/xl_margin"
         android:layout_marginBottom="@dimen/efab_margin"
-        android:backgroundTint="@color/colorWhite"
         android:contentDescription="@string/share"
         android:text="@string/share"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
         app:icon="@drawable/ic_share"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
-
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 

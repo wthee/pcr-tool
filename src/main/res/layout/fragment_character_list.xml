@@ -2,33 +2,32 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    app:layoutDescription="@xml/fragment_main_pager_scene">
-
-    <View
-        android:id="@+id/layout_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    app:layoutDescription="@xml/fragment_home_scene">
 
     <include
-        android:id="@+id/tool_bar"
-        layout="@layout/view_toolbar" />
+        android:id="@+id/tool_head"
+        layout="@layout/view_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/pager_list"
+        android:id="@+id/tool_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_back_drop"
         android:orientation="vertical"
-        android:padding="@dimen/xs_padding"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar"
-        app:layout_constraintVertical_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/tool_head"
         app:spanCount="2"
         tools:listitem="@layout/item_character" />
 
@@ -42,20 +41,15 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/character_count"
+            style="@style/EfabStyle"
             android:layout_width="@dimen/fab_text_2"
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_margin"
-            android:backgroundTint="@color/colorWhite"
             android:contentDescription="@string/character"
             android:elevation="@dimen/home_fab_elevation"
-            android:text="0"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
-            app:borderWidth="0dp"
+            android:text="@string/zero"
             app:elevation="@dimen/home_fab_elevation"
-            app:icon="@drawable/ic_character"
-            app:iconSize="@dimen/menu_icon"
-            app:iconTint="@color/colorPrimary" />
+            app:icon="@drawable/ic_character" />
 
     </LinearLayout>
 

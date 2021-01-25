@@ -5,18 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.content.edit
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.enums.SortType
+import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -24,8 +22,12 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色列表
+ *
+ * 页面布局 [FragmentCharacterListBinding]
+ *
+ * ViewModels [CharacterViewModel]
  */
-class CharacterListFragment : Fragment() {
+class CharacterListFragment : CommonListFragment() {
 
     companion object {
         var characterFilterParams = FilterCharacter(
@@ -35,11 +37,7 @@ class CharacterListFragment : Fragment() {
         var sortAsc = Constants.SORT_ASC
         var characterName = ""
         lateinit var guilds: ArrayList<String>
-        var r6Ids = listOf<Int>()
         var isPostponeEnterTransition = false
-        lateinit var motionLayout: MotionLayout
-        lateinit var characterList: RecyclerView
-
     }
 
     private var listAdapter = CharacterListAdapter(this)
@@ -82,10 +80,8 @@ class CharacterListFragment : Fragment() {
 
     //加载数据
     private fun init() {
-        motionLayout = binding.root
-        characterList = binding.pagerList
         //toolbar
-        ToolbarHelper(binding.toolBar).setMainToolbar(
+        ToolbarHelper(binding.toolHead).setMainToolbar(
             R.mipmap.ic_logo,
             getString(R.string.app_name)
         )
@@ -98,13 +94,12 @@ class CharacterListFragment : Fragment() {
                 guilds.add("全部")
                 val list = viewModel.getGuilds()
                 list.forEach {
-                    guilds.add(it.guild_name)
+                    guilds.add(it.guildName)
                 }
                 guilds.add("？？？")
             }
-            r6Ids = viewModel.getR6Ids()
         }
-        binding.pagerList.adapter = listAdapter
+        binding.toolList.adapter = listAdapter
     }
 
     private fun setListener() {

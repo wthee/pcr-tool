@@ -12,7 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapter.EquipmentPageAdapter
+import cn.wthee.pcrtool.adapter.EquipmentListAdapter
 import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.*
@@ -22,6 +22,10 @@ import kotlinx.coroutines.launch
 
 /**
  * 装备列表
+ *
+ * 页面布局 [FragmentEquipmentListBinding]
+ *
+ * ViewModels [EquipmentViewModel]
  */
 class EquipmentListFragment : Fragment() {
 
@@ -31,7 +35,7 @@ class EquipmentListFragment : Fragment() {
         var equipFilterParams = FilterEquipment(true, "全部")
         var asc = false
         lateinit var equipTypes: ArrayList<String>
-        lateinit var pageAdapter: EquipmentPageAdapter
+        lateinit var pageAdapter: EquipmentListAdapter
         var equipName = ""
     }
 
@@ -67,15 +71,15 @@ class EquipmentListFragment : Fragment() {
 
     private fun init() {
         motionLayout = binding.root
-        list = binding.pagerList
+        list = binding.toolList
         //设置头部
-        ToolbarHelper(binding.toolBar).setMainToolbar(
+        ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_equip,
             getString(R.string.tool_equip)
         )
         binding.apply {
-            pageAdapter = EquipmentPageAdapter(parentFragmentManager)
-            binding.pagerList.adapter = pageAdapter
+            pageAdapter = EquipmentListAdapter(parentFragmentManager)
+            binding.toolList.adapter = pageAdapter
         }
         //获取装备类型
         equipTypes = arrayListOf()

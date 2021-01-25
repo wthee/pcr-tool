@@ -7,7 +7,11 @@ import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.view.EventData
 import kotlinx.coroutines.launch
 
-
+/**
+ * 活动 ViewModel
+ *
+ * 数据来源 [EventRepository]
+ */
 class EventViewModel(
     private val repository: EventRepository
 ) : ViewModel() {
@@ -15,7 +19,9 @@ class EventViewModel(
     var events = MutableLiveData<List<EventData>>()
 
 
-    //活动
+    /**
+     * 获取活动记录
+     */
     fun getEventHistory() {
         viewModelScope.launch {
             val data = repository.getAllEvents()

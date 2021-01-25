@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/xm_margin"
-    android:elevation="@dimen/card_elevation">
+    android:layout_marginBottom="@dimen/l_margin">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
@@ -25,15 +24,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/type"
+        style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginStart="@dimen/m_margin"
-        android:background="@drawable/bg_text_view"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="@id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/name"
@@ -67,15 +60,10 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/skill_des"
+        style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
-        android:background="@drawable/bg_text_view"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
         android:text="@string/skill_action"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/desc" />
 
@@ -84,7 +72,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginBottom="@dimen/m_margin"
         android:nestedScrollingEnabled="false"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/skill_des"
         tools:itemCount="5"

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.NewsAdapter
 import cn.wthee.pcrtool.adapter.load.LoaderStateAdapter
@@ -15,12 +16,15 @@ import cn.wthee.pcrtool.utils.Constants.REGION
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.ToastUtil
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
  * 公告列表
+ *
+ * 页面布局 [FragmentToolNewsListBinding]
+ *
+ * ViewModels [NewsViewModel]
  */
 class ToolNewsListFragment : Fragment() {
 
@@ -36,6 +40,7 @@ class ToolNewsListFragment : Fragment() {
         }
     }
 
+    @ExperimentalPagingApi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,27 +78,26 @@ class ToolNewsListFragment : Fragment() {
         return binding.root
     }
 
+    @ExperimentalPagingApi
     private fun loadNews() {
-        binding.loading.loadingTip.text = getString(R.string.loading_news)
         lifecycleScope.launch {
-            @OptIn(ExperimentalCoroutinesApi::class)
             when (region) {
                 2 -> {
                     newsViewModel.getNewsCN().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.root.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                     }
                 }
                 3 -> {
                     newsViewModel.getNewsTW().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.root.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                     }
                 }
                 4 -> {
                     newsViewModel.getNewsJP().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.root.visibility = View.GONE
+                        binding.loading.visibility = View.GONE
                     }
                 }
             }

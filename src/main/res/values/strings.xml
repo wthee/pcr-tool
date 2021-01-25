@@ -2,7 +2,9 @@
     <string name="app_name">PCR Tool</string>
 
     <string name="date_m_d">%s 月 %s 日</string>
-    <string name="character_detail">%s / %sCM / %sKG / %d</string>
+    <string name="character_detail">%s   %sCM   %sKG   %d</string>
+    <string name="character_heigth">%sCM</string>
+    <string name="character_weigth">%sKG</string>
     <string name="blood">%s 型</string>
     <string name="unique_equip_lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
@@ -10,6 +12,8 @@
     <string name="equip_count_dot">%s …x%d</string>
     <string name="equip_count">%s x%d</string>
     <string name="select_pic_count">已选择 %d</string>
+    <string name="close_app">应用将在 %d 秒后关闭!</string>
+    <string name="empty"> </string>
     <!-- 角色 -->
     <string name="rank">RANK</string>
     <string name="title_quest">？？？</string>
@@ -19,7 +23,7 @@
     <string name="title_birth">生日</string>
     <string name="title_blood">血型</string>
     <string name="title_race">种族</string>
-    <string name="title_guide">公会</string>
+    <string name="title_guild">公会</string>
     <string name="title_fav">兴趣</string>
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
@@ -32,8 +36,6 @@
     <string name="title_comments">交流</string>
     <string name="title_material">所需装备：%d</string>
     <string name="title_looping_sp">特殊循环</string>
-    <string name="title_all_attr_sub">已计算角色剧情属性</string>
-    <string name="title_story_attr_sub">相同角色所有剧情属性</string>
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">- 剧情属性 -</string>
     <!--    -->
@@ -72,8 +74,6 @@
     <string name="game_version_summary">可选择国服或日服数据</string>
     <string name="change_success">更新完成</string>
     <string name="change_success_tip">数据已更新，请点击关闭应用</string>
-    <string name="close_app">关闭应用</string>
-    <string name="close_app_too">快点关闭</string>
     <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
     <string name="pcrdfans_com">来源 pcrdfans.com</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
@@ -103,11 +103,12 @@
     <string name="title_rarity">角色星级</string>
     <string name="six_unlock">六星</string>
     <string name="name">名字</string>
+    <string name="game_name">角色</string>
 
     <!--  工具  -->
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历-国服</string>
-    <string name="tool_calendar_hide"> </string>
+    <string name="tool_calendar_title">日历</string>
     <string name="tool_pvp">竞技场</string>
     <string name="tool_pvp_liked">收藏</string>
     <string name="liked_count">已收藏： %d </string>
@@ -162,5 +163,15 @@
     <string name="pcrdfans">公主连结Re: Dive Fan Club</string>
     <string name="pvp_data">竞技场查询数据来源</string>
     <string name="leader_data">角色排行数据来源</string>
+    <string name="zero">0</string>
+    <string name="event_character">活动角色：</string>
+    <string name="fragment">碎片</string>
 
+    <!--  技能效果-->
+    <string name="physical_damage">物理</string>
+    <string name="magic_damage">魔法</string>
+    <string name="inevitable_physical">必中的物理</string>
+    <string name="skill_action_damage_1">对敌方单体造成#%d + %d * 技能等级 + %d * 攻击力#的%s伤害</string>
+    <string name="skill_action_damage_2">对敌方单体造成#%d + %d * 技能等级 + %d * 攻击力#的%s伤害</string>
+    <string name="skill_action_damage_3">对敌方单体造成#%d + %d * 技能等级 + %d * 攻击力#的%s伤害</string>
 </resources>

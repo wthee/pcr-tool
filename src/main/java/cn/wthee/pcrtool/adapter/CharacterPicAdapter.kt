@@ -12,7 +12,13 @@ import cn.wthee.pcrtool.ui.character.basic.CharacterPicListFragment
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
-
+/**
+ * 角色详情图片列表适配器
+ *
+ * 列表项布局 [ItemPicBinding]
+ *
+ * 列表项数据 [String] 图片链接
+ */
 class CharacterPicAdapter(private val parentFragment: Fragment) :
     ListAdapter<String, CharacterPicAdapter.ViewHolder>(CharacterImageDiffCallback()) {
 

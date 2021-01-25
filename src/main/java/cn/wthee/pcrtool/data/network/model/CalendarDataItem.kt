@@ -1,5 +1,10 @@
 package cn.wthee.pcrtool.data.network.model
 
+/**
+ * 日历事项分组类
+ *
+ * 分组名[Header] 分组内容[Item]
+ */
 sealed class CalendarDataItem {
     abstract val id: String
 

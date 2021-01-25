@@ -5,7 +5,9 @@ import androidx.room.Embedded
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import java.io.Serializable
 
-//装备最大强化后属性
+/**
+ * 装备最大强化后属性视图
+ */
 data class EquipmentMaxData(
     @ColumnInfo(name = "equipment_id") val equipmentId: Int,
     @ColumnInfo(name = "equipment_name") val equipmentName: String,
@@ -17,6 +19,9 @@ data class EquipmentMaxData(
     @Embedded val attr: Attr,
 ) : Serializable {
 
+    /**
+     * 装备描述
+     */
     fun getDesc() = description.replace("\\n", "")
 
     companion object {

@@ -13,6 +13,9 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.io.InvalidObjectException
 
+/**
+ * 公告加载
+ */
 @OptIn(ExperimentalPagingApi::class)
 class NewsRemoteMediator(
     private val region: Int,

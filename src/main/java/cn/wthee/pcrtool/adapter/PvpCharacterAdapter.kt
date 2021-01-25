@@ -1,4 +1,4 @@
- package cn.wthee.pcrtool.adapter
+package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.r6Ids
+import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.r6Ids
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selectedAdapter
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.selects
 import cn.wthee.pcrtool.ui.tool.pvp.PvpService
@@ -24,37 +24,30 @@ import coil.request.ImageRequest
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * 竞技场角色列表适配器，[isFloatWindow] 判断是否为悬浮窗
+ *
+ * 列表项布局 [ItemCommonBinding]
+ *
+ * 列表项数据 [PvpCharacterData]
+ */
+class PvpCharacterAdapter(
+    private val isFloatWindow: Boolean
+) : ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
 
- class PvpCharacterAdapter(
-     private val isFloatWindow: Boolean
- ) :
-     ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
-
-     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-         return ViewHolder(
-             ItemCommonBinding.inflate(
-                 LayoutInflater.from(parent.context),
-                 parent,
-                 false
-             )
-         )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            ItemCommonBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-//        val itemView = holder.itemView.findViewById<MaterialTextView>(R.id.name)
-//        val isSelected =
-//            ToolPvpFragment.selects.contains(PvpCharacterData(item.unitId, item.position))
-//                    && item.unitId != 0
-//        //选中变更
-//        if (isSelected) {
-////            itemView.background = ResourcesUtil.getDrawable(R.drawable.title_background)
-//            itemView.setTextColor(ResourcesUtil.getColor(R.color.red))
-//        } else {
-////            itemView.background = null
-//            itemView.setTextColor(ResourcesUtil.getColor(R.color.text))
-//        }
     }
 
     inner class ViewHolder(private val binding: ItemCommonBinding) :
@@ -62,6 +55,7 @@ import kotlinx.coroutines.launch
         fun bind(data: PvpCharacterData) {
             //设置数据
             binding.apply {
+
                 if (isFloatWindow) {
                     name.visibility = View.GONE
                     val params = pic.layoutParams as LinearLayout.LayoutParams
@@ -129,6 +123,7 @@ import kotlinx.coroutines.launch
                         } catch (e: Exception) {
 
                         }
+                        //更新悬浮窗列表
                         try {
                             PvpService.selectedAdapter.apply {
                                 submitList(selects) {

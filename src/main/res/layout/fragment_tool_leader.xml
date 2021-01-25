@@ -2,10 +2,10 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_main"
     app:layoutDescription="@xml/fragment_tool_leader_scene">
 
     <include
@@ -35,57 +35,25 @@
         android:id="@+id/tip"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:ellipsize="marquee"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="start"
-        android:paddingStart="@dimen/xm_padding"
-        android:paddingTop="@dimen/s_padding"
-        android:paddingEnd="@dimen/xm_padding"
-        android:paddingBottom="@dimen/s_padding"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:textStyle="bold"
+        android:background="@color/colorPrimary"
         android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:gravity="start|center_vertical"
         app:layout_constraintTop_toBottomOf="@id/tool_head" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/title_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/s_padding"
+        android:background="@drawable/bg_back_drop"
+        android:paddingTop="@dimen/xs_padding"
         app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tip">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/character"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/xs_margin"
-            android:gravity="center"
-            android:text="@string/character"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            app:layout_constraintEnd_toStartOf="@id/all"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.2" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/all"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/all"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            app:layout_constraintEnd_toStartOf="@id/pvp"
-            app:layout_constraintTop_toTopOf="@id/character"
-            app:layout_constraintWidth_percent="0.2" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/pvp"
@@ -94,9 +62,12 @@
             android:gravity="center"
             android:text="@string/jjc"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            app:layout_constraintStart_toEndOf="@id/all"
-            app:layout_constraintTop_toTopOf="@id/all"
-            app:layout_constraintWidth_percent="0.2" />
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/clan"
+            app:layout_constraintTop_toTopOf="@id/tower"
+            app:layout_constraintWidth_percent="0.2"
+            tools:visibility="visible" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/clan"
@@ -105,9 +76,12 @@
             android:gravity="center"
             android:text="@string/clan"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            app:layout_constraintStart_toEndOf="@id/pvp"
-            app:layout_constraintTop_toTopOf="@id/all"
-            app:layout_constraintWidth_percent="0.2" />
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/tower"
+            app:layout_constraintTop_toTopOf="@id/tower"
+            app:layout_constraintWidth_percent="0.2"
+            tools:visibility="visible" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tower"
@@ -116,10 +90,12 @@
             android:gravity="center"
             android:text="@string/tower"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/clan"
-            app:layout_constraintTop_toTopOf="@id/all"
-            app:layout_constraintWidth_percent="0.2" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.2"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -130,10 +106,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:scrollbars="vertical"
+        android:background="@color/colorBg"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayout"
+        app:layout_constraintTop_toBottomOf="@id/title_head"
         tools:listitem="@layout/item_leader" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -141,26 +118,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/loading_news"
-        android:textColor="@color/colorPrimary"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tool_list" />
-
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorWhite"
-        android:contentDescription="@string/back_top"
-        android:text="@string/back_top"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/fab_text_size"
-        app:borderWidth="0dp"
-        app:icon="@drawable/ic_top"
-        app:iconSize="@dimen/menu_icon"
-        app:iconTint="@color/colorPrimary" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

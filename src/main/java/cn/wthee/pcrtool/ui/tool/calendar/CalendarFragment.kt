@@ -20,6 +20,10 @@ import java.util.*
 
 /**
  * 日历
+ *
+ * 页面布局 [FragmentToolCalendarBinding]
+ *
+ * ViewModels [CalendarViewModel]
  */
 class CalendarFragment : Fragment() {
 
@@ -151,7 +155,7 @@ class CalendarFragment : Fragment() {
             }?.content
             //显示数据
             adapter.addHeaderAndSubmitList(eventData)
-            binding.loading.root.visibility = View.GONE
+            binding.loading.visibility = View.GONE
             //设置标题
             binding.currentDate.text =
                 resources.getString(R.string.date_m_d, month.toString(), dayOfMonth.toString())

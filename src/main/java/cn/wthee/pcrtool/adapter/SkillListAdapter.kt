@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
@@ -18,9 +17,14 @@ import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteUtil
 import coil.load
 
-
-class SkillAdapter :
-    ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
+/**
+ * 角色技能列表适配器
+ *
+ * 列表项布局 [ItemSkillBinding]
+ *
+ * 列表项数据 [CharacterSkillInfo]
+ */
+class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSkillBinding.inflate(
@@ -77,9 +81,6 @@ class SkillAdapter :
                 //技能属性
                 val adapter = SkillActionAdapter()
                 actions.adapter = adapter
-                val lm = LinearLayoutManager(MyApplication.context)
-                lm.orientation = LinearLayoutManager.VERTICAL
-                actions.layoutManager = lm
                 adapter.submitList(skill.actions)
             }
         }

@@ -24,13 +24,18 @@ class ImageDownloadHelper(
 
     val context: Context = activity.applicationContext
 
+    /**
+     * 保存文件，文件名 [name]
+     */
     fun save(bitmap: Bitmap, name: String) {
         activity.lifecycleScope.launch {
             saveBitmap(bitmap, name, true)
         }
     }
 
-    //保存bitmap
+    /**
+     * 保存bitmap
+     */
     fun saveBitmap(
         bitmap: Bitmap, displayName: String, toast: Boolean
     ): Boolean {
@@ -88,6 +93,9 @@ class ImageDownloadHelper(
     }
 
     companion object {
+        /**
+         * 获取图片保存路径
+         */
         fun getImagePath(): String {
             var path: String = Environment.DIRECTORY_PICTURES
             path = "/storage/emulated/0" + File.separator + path

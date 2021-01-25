@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.forEachIndexed
@@ -13,7 +14,13 @@ import cn.wthee.pcrtool.utils.*
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
-
+/**
+ * 角色筛选弹窗
+ *
+ * 页面布局 [FragmentFilterCharacterBinding]
+ *
+ * ViewModels [CharacterViewModel]
+ */
 class CharacterFilterDialogFragment : CommonDialogFragment() {
 
     private lateinit var binding: FragmentFilterCharacterBinding
@@ -94,6 +101,7 @@ class CharacterFilterDialogFragment : CommonDialogFragment() {
         )
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initFilter(
         chips: ChipGroup,
         binding: FragmentFilterCharacterBinding
@@ -154,7 +162,7 @@ class CharacterFilterDialogFragment : CommonDialogFragment() {
             binding.searchInput.setText(CharacterListFragment.characterName)
         }
         //取消焦点
-        binding.layoutFilter.setOnTouchListener { v, event ->
+        binding.layoutFilter.setOnTouchListener { _, _ ->
             binding.searchInput.clearFocus()
             return@setOnTouchListener false
         }

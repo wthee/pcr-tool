@@ -23,12 +23,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
-
+/**
+ * 竞技场查询结果列表适配器，[isFloat] 判断是否为悬浮窗
+ *
+ * 列表项布局 [ItemPvpResultBinding]
+ *
+ * 列表项数据 [PvpData]
+ */
 class PvpCharacterResultAdapter(
     private val isFloat: Boolean,
     private val viewModel: PvpLikedViewModel? = null
-) :
-    ListAdapter<PvpData, PvpCharacterResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
+) : ListAdapter<PvpData, PvpCharacterResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
 
     val dao = AppPvpDatabase.getInstance().getPvpDao()
     val region = DatabaseUpdater.getRegion()

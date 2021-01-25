@@ -4,15 +4,13 @@
     android:id="@+id/loading_dialog"
     android:layout_width="match_parent"
     android:layout_height="@dimen/loading_dialog_height"
-    android:elevation="@dimen/card_elevation"
     android:layout_marginStart="@dimen/s_margin"
     android:layout_marginEnd="@dimen/s_margin"
+    android:elevation="@dimen/card_elevation"
     app:cardCornerRadius="@dimen/card_radius">
 
     <ProgressBar
-        style="?android:attr/progressBarStyle"
-        android:layout_width="@dimen/progress_bar_size"
-        android:layout_height="@dimen/progress_bar_size"
+        style="@style/ProgressBarStyle"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/m_margin" />
 
@@ -24,6 +22,6 @@
         android:layout_margin="@dimen/s_margin"
         android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/colorPrimary" />
 
 </com.google.android.material.card.MaterialCardView>

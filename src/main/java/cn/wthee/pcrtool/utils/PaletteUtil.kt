@@ -8,5 +8,8 @@ import androidx.palette.graphics.Palette
  */
 object PaletteUtil {
 
+    /**
+     * 创建取色器
+     */
     fun createPaletteSync(bitmap: Bitmap): Palette = Palette.from(bitmap).generate()
 }

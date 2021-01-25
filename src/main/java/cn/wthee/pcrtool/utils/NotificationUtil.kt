@@ -18,7 +18,9 @@ object NotificationUtil {
     val notificationManager: NotificationManager =
         MyApplication.context.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
 
-    //前台通知
+    /**
+     * 创建前台通知
+     */
     fun createForeground(service: Service, content: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel()

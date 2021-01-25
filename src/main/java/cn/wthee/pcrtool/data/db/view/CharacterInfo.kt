@@ -5,7 +5,9 @@ import cn.wthee.pcrtool.R
 import java.io.Serializable
 
 
-//多表查询结果保存
+/**
+ * 角色信息视图
+ */
 data class CharacterInfo(
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,
@@ -21,11 +23,24 @@ data class CharacterInfo(
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
 ) : Serializable {
 
+    /**
+     * 格式化年龄
+     */
     fun getFixedAge() = if (age == "999") "?" else age
+
+    /**
+     * 格式化身高
+     */
     fun getFixedHeight() = if (height == "999") "?" else height
+
+    /**
+     * 格式划体重
+     */
     fun getFixedWeight() = if (weight == "999") "?" else weight
 
-    //获取名字，去除限定类型
+    /**
+     * 获取名字，去除限定类型
+     */
     fun getNameF(): String {
         val index = this.name.indexOf("（")
         return if (index == -1) {
@@ -36,7 +51,9 @@ data class CharacterInfo(
         }
     }
 
-    //获取限定类型
+    /**
+     * 获取限定类型
+     */
     fun getNameL(): String {
         val index = this.name.indexOf("（")
         return if (index == -1) {
@@ -49,7 +66,9 @@ data class CharacterInfo(
 
 }
 
-//位置
+/**
+ * 根据位置 [position]
+ */
 fun getPositionIcon(position: Int) = when (position) {
     in 0..299 -> R.drawable.ic_position_front
     in 300..599 -> R.drawable.ic_position_middle

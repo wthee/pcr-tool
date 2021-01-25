@@ -16,6 +16,10 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
 
 /**
  * 角色排行
+ *
+ * 页面布局 [FragmentToolLeaderBinding]
+ *
+ * ViewModels [LeaderViewModel]
  */
 class LeaderFragment : Fragment() {
 
@@ -32,16 +36,16 @@ class LeaderFragment : Fragment() {
         leaderViewModel.leaderData.observe(viewLifecycleOwner, {
             if (it.status == 0) {
                 binding.tip.apply {
-                    text = it.data?.desc?.replace("\n", "，")
+                    text = it.data?.desc
                     isSelected = true
-                    setOnClickListener { _ ->
-                        ToastUtil.long(it.data?.desc)
-                    }
                 }
                 val adapter = CharacterLeaderAdapter(requireContext())
                 binding.toolList.adapter = adapter
                 adapter.submitList(it.data?.leader) {
                     binding.loading.text = ""
+                    binding.pvp.visibility = View.VISIBLE
+                    binding.clan.visibility = View.VISIBLE
+                    binding.tower.visibility = View.VISIBLE
                 }
             } else if (it.status == -1) {
                 ToastUtil.short(it.message)
@@ -56,11 +60,6 @@ class LeaderFragment : Fragment() {
         //来源
         binding.source.setOnClickListener {
             BrowserUtil.open(requireContext(), getString(R.string.leader_source_url))
-        }
-        //回到顶部
-        binding.fabTop.setOnClickListener {
-            binding.root.transitionToStart()
-            binding.toolList.scrollToPosition(0)
         }
         return binding.root
     }

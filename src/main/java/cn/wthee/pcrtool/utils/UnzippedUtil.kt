@@ -15,10 +15,7 @@ object UnzippedUtil {
     private const val EXT = ".br"
 
     /**
-     * 文件解压缩
-     * @param file 压缩文件
-     * @param delete 是否删除源文件
-     * @throws IOException
+     * 文件解压
      */
     @Throws(IOException::class)
     fun deCompress(file: File, delete: Boolean) {

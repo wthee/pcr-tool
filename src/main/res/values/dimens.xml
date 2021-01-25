@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_radius">4dp</dimen>
-    <dimen name="back_drop_radius">12dp</dimen>
+    <dimen name="back_drop_radius">10dp</dimen>
     <dimen name="menu_item_card_radius">8dp</dimen>
     <dimen name="loading_dialog_height">80dp</dimen>
     <dimen name="desc_height">70dp</dimen>
@@ -49,8 +49,8 @@
     <dimen name="home_fab_elevation">16dp</dimen>
     <dimen name="menu_item_elevation_card">8dp</dimen>
 
-    <dimen name="viewpager_next_item_visible">8dp</dimen>
-    <dimen name="viewpager_current_item_horizontal_margin">14dp</dimen>
+    <dimen name="viewpager_next_item_visible">0dp</dimen>
+    <dimen name="viewpager_current_item_horizontal_margin">0dp</dimen>
     <dimen name="fab_text_size">10sp</dimen>
     <dimen name="fab_text_2">90dp</dimen>
     <dimen name="fab_text_3">100dp</dimen>
@@ -59,4 +59,5 @@
     <dimen name="bottom_toolbar_height">64dp</dimen>
     <dimen name="dialog_button_height">42dp</dimen>
     <dimen name="button_layout_height">48dp</dimen>
+    <dimen name="bg_card_dp">1dp</dimen>
 </resources>

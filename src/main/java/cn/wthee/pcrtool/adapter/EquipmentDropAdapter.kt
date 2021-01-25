@@ -11,7 +11,13 @@ import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
-
+/**
+ * 装备掉落副本列表适配器
+ *
+ * 列表项布局 [ItemEquipmentDropBinding]
+ *
+ * 列表项数据 [EquipmentDropInfo]
+ */
 class EquipmentDropAdapter :
     ListAdapter<EquipmentDropInfo, EquipmentDropAdapter.ViewHolder>(DropDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

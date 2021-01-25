@@ -10,6 +10,9 @@ import cn.wthee.pcrtool.MyApplication
  */
 object ClipboardUtil {
 
+    /**
+     * 添加 [str] 到系统剪切板
+     */
     fun add(str: String, tipText: String = "内容已复制~") {
         val clipboardManager =
             MyApplication.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

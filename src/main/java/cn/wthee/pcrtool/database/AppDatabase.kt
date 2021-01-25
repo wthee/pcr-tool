@@ -46,10 +46,15 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         EventStoryData::class,
         EventStoryDetail::class,
         EventTopAdv::class,
+        OddsNameData::class,
+        HatsuneSchedule::class,
     ],
-    version = 50,
+    version = 63,
     exportSchema = false
 )
+/**
+ * 国服版本数据库
+ */
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCharacterDao(): CharacterDao

@@ -18,6 +18,10 @@ import kotlinx.coroutines.launch
 
 /**
  * 设置
+ *
+ * 页面布局 [R.xml.root_preferences]
+ *
+ * ViewModels [CharacterViewModel]
  */
 class MainSettingsFragment : PreferenceFragmentCompat() {
 
@@ -33,6 +37,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         super.onResume()
         //添加返回fab
         FabHelper.addBackFab()
+
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -97,7 +102,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                 //隐藏
                 eggs?.isVisible = false
                 CharacterListFragment.characterFilterParams
-                    .remove(107801)
+                    .addOrRemove(107801)
                 CharacterListFragment.characterFilterParams.initData()
                 sharedCharacterViewModel.getCharacters(
                     sortType,
