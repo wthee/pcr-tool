@@ -27,6 +27,7 @@
     <color name="red">#FF0000</color>
     <color name="news_update">#f55291</color>
     <color name="news_system">#a067c5</color>
+    <color name="news_main">#399be6</color>
     <color name="cool_apk">#4caf50</color>
     <color name="viewpager_bg">#323232</color>
 </resources>

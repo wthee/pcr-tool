@@ -72,7 +72,7 @@ class NewsAdapter(
                 val colorId = when (tags[0]) {
                     "公告", "更新", "アップデート" -> R.color.news_update
                     "系統", "メンテナンス" -> R.color.news_system
-                    else -> R.color.colorPrimary
+                    else -> R.color.news_main
                 }
                 val fTag = when (tags[0]) {
                     "アップデート" -> "更新"

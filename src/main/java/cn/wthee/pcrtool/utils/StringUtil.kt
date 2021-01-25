@@ -30,6 +30,6 @@ fun String.days(str2: String): String {
         val d2 = df.parse(str2)!!
         String.format("%02d", (d1.time - d2.time) / (60 * 60 * 1000 * 24))
     } catch (e: Exception) {
-        "0"
+        "00"
     }
 }

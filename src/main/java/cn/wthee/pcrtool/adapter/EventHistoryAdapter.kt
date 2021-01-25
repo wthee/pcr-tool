@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
@@ -55,24 +56,28 @@ class EventHistoryAdapter :
                 adapter.submitList(event.unitIds.intArrayList())
                 val startDate = event.startTime.subSequence(0, 10).toString()
                 val endDate = event.endTime.subSequence(0, 10).toString()
-                title.text = "$startDate ~ $endDate"
                 when {
                     //支线
                     event.eventId / 10000 == 2 -> {
                         type.text = "支线"
                         type.setTitleBackground(R.color.cool_apk)
-                        days.text = "无限制"
+                        title.text = startDate
+                        days.visibility = View.GONE
                     }
                     //复刻
                     event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
                         type.text = "复刻"
                         type.setTitleBackground(R.color.news_system)
+                        title.text = "$startDate ~ $endDate"
                         days.text = "${endDate.days(startDate)} 天"
                     }
                     //正常
                     else -> {
-                        type.text = "最新"
+                        type.text = "活动"
                         type.setTitleBackground(R.color.news_update)
+                        val day = endDate.days(startDate)
+                        if (day == "00") days.visibility = View.GONE
+                        title.text = "$startDate ~ $endDate"
                         days.text = "${endDate.days(startDate)} 天"
                     }
                 }

@@ -47,6 +47,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         EventStoryDetail::class,
         EventTopAdv::class,
         OddsNameData::class,
+        HatsuneSchedule::class,
     ],
     version = 63,
     exportSchema = false
