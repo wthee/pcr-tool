@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.data.network
 
+import cn.wthee.pcrtool.data.db.dao.CharacterDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -17,10 +19,24 @@ import okhttp3.RequestBody
  *
  * 数据来源 [MyAPIService]
  */
-object MyAPIRepository {
+class MyAPIRepository(private val service: MyAPIService) {
 
-    //创建服务
-    private val service = ApiUtil.create(MyAPIService::class.java, Constants.API_URL)
+    companion object {
+
+        @Volatile
+        private var instance: MyAPIRepository? = null
+
+        fun getInstance() =
+            instance ?: synchronized(this) {
+                instance ?: MyAPIRepository(
+                    ApiUtil.create(
+                        MyAPIService::class.java,
+                        Constants.API_URL
+                    )
+                ).also { instance = it }
+            }
+    }
+
 
     /**
      * 根据防守方 id [ids] 查询竞技场对战信息

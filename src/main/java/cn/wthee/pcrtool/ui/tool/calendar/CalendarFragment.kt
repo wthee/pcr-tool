@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.adapter.CalendarEventAdapter
 import cn.wthee.pcrtool.data.network.model.CalendarDay
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
@@ -36,7 +37,9 @@ class CalendarFragment : Fragment() {
     private lateinit var minCal: Calendar
     private lateinit var maxCal: Calendar
     private lateinit var cal: Calendar
-    private val calendarViewModel by activityViewModels<CalendarViewModel>()
+    private val calendarViewModel by activityViewModels<CalendarViewModel> {
+        InjectorUtil.provideCalendarViewModelFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -112,6 +115,7 @@ class CalendarFragment : Fragment() {
         binding.events.adapter = adapter
         //初始加载
         calendarViewModel.getCalendar()
+        //TODO 优化按月份加载
         calendarViewModel.calendar.observe(viewLifecycleOwner, { list ->
             if (list.status == 0) {
                 events = list.data!!.days
@@ -196,10 +200,5 @@ class CalendarFragment : Fragment() {
         binding.calendarView.setEvents(events)
 
     }
-
-    interface OnLoadFinish {
-        fun finish(maxDate: String)
-    }
-
 
 }

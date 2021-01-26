@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EventDao
+import cn.wthee.pcrtool.data.db.view.DropEvent
 
 /**
  * 剧情活动 Repository
@@ -10,6 +11,8 @@ import cn.wthee.pcrtool.data.db.dao.EventDao
 class EventRepository(private val eventDao: EventDao) {
 
     suspend fun getAllEvents() = eventDao.getAllEvents()
+
+    suspend fun getDropEvent() = eventDao.getDropEvent()
 
     companion object {
 

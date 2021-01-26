@@ -37,7 +37,7 @@ class NewsRemoteMediator(
         }
 
         try {
-            val response = MyAPIRepository.getNews(region, page).data
+            val response = MyAPIRepository.getInstance().getNews(region, page).data
             val list = arrayListOf<NewsTable>()
             response?.forEach {
                 list.add(

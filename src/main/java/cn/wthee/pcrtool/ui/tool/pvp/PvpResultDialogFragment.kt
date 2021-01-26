@@ -72,7 +72,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
         job = MainScope().launch {
             try {
                 binding.pvpNoData.visibility = View.GONE
-                val result = MyAPIRepository.getPVPData(idList)
+                val result = MyAPIRepository.getInstance().getPVPData(idList)
                 if (result.status == 0) {
                     if (result.data!!.isEmpty()) {
                         binding.pvpNoData.visibility = View.VISIBLE
