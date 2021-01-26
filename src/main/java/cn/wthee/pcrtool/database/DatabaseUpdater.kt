@@ -121,7 +121,7 @@ object DatabaseUpdater {
     /**
      * 获取数据库版本
      */
-    private fun getDatabaseType() =
+    fun getDatabaseType() =
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 

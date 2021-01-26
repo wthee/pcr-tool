@@ -62,16 +62,16 @@ interface EventDao {
         """
         SELECT
             COALESCE( GROUP_CONCAT( campaign_category, '-' ), "0" ) AS type,
-            ( value / 1000 ) AS multiple,
+            value,
             start_time,
             end_time 
         FROM
             campaign_schedule 
+        WHERE campaign_category IN (31,32,34,37,38,39,45) OR (campaign_category > 90  AND campaign_category < 101)
         GROUP BY
             start_time,
-            end_time 
-        ORDER BY
-            start_time
+            end_time ,
+            value
     """
     )
     suspend fun getDropEvent(): List<DropEvent>

@@ -191,7 +191,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_characterListFragment_to_toolNewsFragment,
             R.id.action_characterListFragment_to_toolPvpFragment,
             R.id.action_characterListFragment_to_eventFragment,
-            R.id.action_characterListFragment_to_calendarFragment,
+            if (DatabaseUpdater.getDatabaseType() == 1)
+                R.id.action_characterListFragment_to_calendarFragment
+            else
+                R.id.action_characterListFragment_to_calendarJPFragment,
             R.id.action_characterListFragment_to_toolGachaFragment,
             R.id.action_characterListFragment_to_guildFragment,
         )

@@ -22,7 +22,7 @@ fun String.intArrayList(): ArrayList<Int> {
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd")
 
 /**
- *  计算日期字符串间隔天数 yyyy-MM-dd  this - str2 相差天数
+ *  计算日期字符串间隔天数 yyyy/MM/dd  this - str2 相差天数
  */
 fun String.days(str2: String): String {
     return try {
@@ -33,3 +33,18 @@ fun String.days(str2: String): String {
         "00"
     }
 }
+
+fun String.daysInt(str2: String): Int {
+    return try {
+        val d1 = df.parse(this)!!
+        val d2 = df.parse(str2)!!
+        ((d1.time - d2.time) / (60 * 60 * 1000 * 24)).toInt()
+    } catch (e: Exception) {
+        0
+    }
+}
+
+/**
+ * 月份、天份补零
+ */
+fun String.fillZero() = if (this.length == 1) "0$this" else this
