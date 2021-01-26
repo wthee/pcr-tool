@@ -63,7 +63,6 @@ class CalendarDropEventAdapter :
         private fun getType(type: String, value: String): String {
             var str = ""
             val list = type.split("-")
-            var masterIcon = 0
             list.forEachIndexed { index, s ->
                 val title = when (s.toInt()) {
                     31 -> ResourcesUtil.getString(R.string.normal)
@@ -73,14 +72,6 @@ class CalendarDropEventAdapter :
                     37 -> ResourcesUtil.getString(R.string.shrine)
                     38 -> ResourcesUtil.getString(R.string.temple)
                     45 -> ResourcesUtil.getString(R.string.dungeon)
-                    in 90..101 -> {
-                        if (masterIcon == 0) {
-                            masterIcon++
-                            ResourcesUtil.getString(R.string.master_icon)
-                        } else {
-                            ""
-                        }
-                    }
                     else -> ""
                 }
                 if (index < list.size - 1 && title != "") {

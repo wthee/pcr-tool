@@ -67,7 +67,7 @@ interface EventDao {
             end_time 
         FROM
             campaign_schedule 
-        WHERE campaign_category IN (31,32,34,37,38,39,45) OR (campaign_category > 90  AND campaign_category < 101)
+        WHERE campaign_category IN (31,32,34,37,38,39,45)
         GROUP BY
             start_time,
             end_time ,

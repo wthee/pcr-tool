@@ -186,19 +186,8 @@ class CalendarJPFragment : Fragment() {
                 selectDay.daysInt(sd) >= 0 && ed.daysInt(selectDay) >= 0
             }
             var eventCount = 0
-            var masterIcon = 0
             eventData.forEach {
-                it.type.split("-").forEach { c ->
-                    when (c.toInt()) {
-                        31, 32, 39, 34, 37, 38, 45 -> eventCount++
-                        in 90..101 -> {
-                            if (masterIcon == 0) {
-                                masterIcon++
-                                eventCount++
-                            }
-                        }
-                    }
-                }
+                eventCount += it.type.split("-").size
             }
             eventDays.add(
                 EventDay(
