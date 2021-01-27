@@ -196,10 +196,20 @@ interface CharacterDao {
     suspend fun getSkillData(sid: Int): SkillData
 
     /**
-     * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillAction]
+     * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillActionPro]
      */
-    @Query("SELECT * FROM skill_action  WHERE action_id IN (:aid)")
-    suspend fun getSkillActions(aid: List<Int>): List<SkillAction>
+    @Query(
+        """
+        SELECT
+            a.*,
+           COALESCE( b.ailment_name,"") as ailment_name
+        FROM
+            skill_action AS a
+            LEFT JOIN ailment_data as b ON a.action_type = b.ailment_action AND (a.action_detail_1 = b.ailment_detail_1 OR b.ailment_detail_1 = -1)
+         WHERE action_id IN (:aid)
+    """
+    )
+    suspend fun getSkillActions(aid: List<Int>): List<SkillActionPro>
 
     /**
      * 获取角色最大等级
@@ -286,4 +296,5 @@ interface CharacterDao {
     """
     )
     suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>
+
 }

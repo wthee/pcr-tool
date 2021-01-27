@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.bean.CharacterSkillInfo
+import cn.wthee.pcrtool.data.db.view.SkillActionLite
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -78,11 +79,43 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
                         itemPic.background = it
                     }
                 }
+                val actionData = skill.getActionInfo()
                 //技能属性
                 val adapter = SkillActionAdapter()
                 actions.adapter = adapter
-                adapter.submitList(skill.actions)
+                adapter.submitList(getActions(actionData))
+                //异常状态属性
+                val ailmentAdapter = TagAdapter()
+                ailments.adapter = ailmentAdapter
+                ailmentAdapter.submitList(getAilments(actionData))
             }
+
+        }
+
+        /**
+         * 获取动作
+         */
+        private fun getActions(data: ArrayList<SkillActionLite>): ArrayList<String> {
+            val list = arrayListOf<String>()
+            data.forEach {
+                if (it.action.isNotEmpty()) {
+                    list.add(it.action)
+                }
+            }
+            return list
+        }
+
+        /**
+         * 获取异常状态
+         */
+        private fun getAilments(data: ArrayList<SkillActionLite>): ArrayList<String> {
+            val list = arrayListOf<String>()
+            data.forEach {
+                if (it.ailmentName.isNotEmpty() && !list.contains(it.ailmentName)) {
+                    list.add(it.ailmentName)
+                }
+            }
+            return list
         }
     }
 

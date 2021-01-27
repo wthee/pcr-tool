@@ -48,7 +48,6 @@ class CharacterSkillViewModel(
                         skill.icon_type
                     )
                     info.actions = repository.getSkillActions(skill.getAllActionId())
-                        .filter { it.description.isNotEmpty() }
                     infos.add(info)
                 }
                 isLoading.postValue(false)

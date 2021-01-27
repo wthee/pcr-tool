@@ -51,6 +51,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         HatsuneScheduleJP::class,
         CampaignScheduleJP::class,
         CharacterRoomComments::class,
+        AilmentData::class,
     ],
     version = 65,
     exportSchema = false
