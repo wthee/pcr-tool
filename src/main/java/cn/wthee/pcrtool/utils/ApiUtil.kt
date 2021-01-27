@@ -23,6 +23,25 @@ import javax.net.ssl.X509TrustManager
 object ApiUtil {
 
     /**
+     * 创建 [OkHttpClient]
+     */
+    val params = initSSL()
+
+    val client = OkHttpClient.Builder()
+        .cache(CoilUtils.createDefaultCache(context))
+        .retryOnConnectionFailure(true)
+        .connectTimeout(300, TimeUnit.SECONDS)
+        .writeTimeout(300, TimeUnit.SECONDS)
+        .readTimeout(300, TimeUnit.SECONDS)
+        .addInterceptor(RetryInterceptor(3))
+        .sslSocketFactory(
+            (params[0] as SSLContext).socketFactory,
+            params[1] as X509TrustManager
+        )
+        .build()
+
+
+    /**
      * 获取SSL 证书
      */
     private fun initSSL(): List<Any> {
@@ -62,23 +81,6 @@ object ApiUtil {
             .build()
     }
 
-    /**
-     * 创建 [OkHttpClient]
-     */
-    fun getClient(): OkHttpClient {
-        val params = initSSL()
-        return OkHttpClient.Builder()
-            .cache(CoilUtils.createDefaultCache(context))
-            .connectTimeout(300, TimeUnit.SECONDS)
-            .writeTimeout(300, TimeUnit.SECONDS)
-            .readTimeout(300, TimeUnit.SECONDS)
-            .addInterceptor(RetryIntercepter(3))
-            .sslSocketFactory(
-                (params[0] as SSLContext).socketFactory,
-                params[1] as X509TrustManager
-            )
-            .build()
-    }
 
     /**
      * 创建服务
@@ -87,7 +89,7 @@ object ApiUtil {
         val builder = Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(getClient())
+            .client(client)
 
         return builder.build().create(serviceClass)
     }
@@ -109,7 +111,7 @@ object ApiUtil {
 /**
  * 重试拦截器
  */
-class RetryIntercepter(  //最大重试次数
+class RetryInterceptor(
     var maxRetry: Int
 ) : Interceptor {
     private var retryNum = 0 //假如设置为3次重试的话，则最大可能请求4次（默认1次+3次重试）
@@ -125,4 +127,5 @@ class RetryIntercepter(  //最大重试次数
         }
         return response
     }
+
 }
