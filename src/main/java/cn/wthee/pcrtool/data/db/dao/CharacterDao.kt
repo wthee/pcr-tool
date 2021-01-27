@@ -282,7 +282,7 @@ interface CharacterDao {
                 LEFT JOIN chara_identity AS b ON a.chara_id_1 = b.unit_id / 100 
             ) AS c 
         WHERE
-            c.chara_type IN ( SELECT chara_type FROM chara_identity WHERE unit_id =:unitId)
+            c.chara_type = ( SELECT chara_type FROM chara_identity WHERE unit_id =:unitId)
     """
     )
     suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>
