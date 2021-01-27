@@ -63,7 +63,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
                 val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
-                characterPic.load(picUrl) {
+                characterPic.load(R.drawable.unknown_gray) {
                     error(R.drawable.error)
                     placeholder(R.drawable.load)
                     listener(

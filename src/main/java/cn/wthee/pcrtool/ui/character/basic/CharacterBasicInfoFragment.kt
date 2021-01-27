@@ -163,6 +163,7 @@ class CharacterBasicInfoFragment : Fragment() {
             positionType.background =
                 ResourcesUtil.getDrawable(getPositionIcon(characterPro.position))
             comments.text = characterPro.getCommentsText()
+            roomComments.text = characterPro.getRoomCommentsText()
         }
     }
 }

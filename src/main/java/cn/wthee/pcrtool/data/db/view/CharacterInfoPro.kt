@@ -30,6 +30,7 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
     @ColumnInfo(name = "comments") val comments: String,
+    @ColumnInfo(name = "room_comments") val roomComments: String,
 ) : Serializable {
 
     /**
@@ -47,33 +48,10 @@ data class CharacterInfoPro(
      */
     fun getFixedWeight() = if (weight == "999") "?" else weight
 
-    /**
-     * 获取名字，去除限定类型
-     */
-    fun getNameF(): String {
-        val index = this.name.indexOf("（")
-        return if (index == -1) {
-            this.name
-        } else {
-            val sp = this.name.split("（")
-            sp[0]
-        }
-    }
 
     /**
-     * 获取限定类型
+     * 角色自我介绍
      */
-    fun getNameL(): String {
-        val index = this.name.indexOf("（")
-        return if (index == -1) {
-            ""
-        } else {
-            val sp = this.name.split("（")
-            sp[1].substring(0, sp[1].lastIndex)
-        }
-    }
-
-    //角色自我介绍
     fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {
         "......"
     } else {
@@ -81,11 +59,22 @@ data class CharacterInfoPro(
     }
 
 
-    //角色介绍
+    /**
+     * 角色介绍
+     */
     fun getIntroText() = intro.replace("\\n", "")
 
-    //交流
+    /**
+     * 交流
+     */
     fun getCommentsText() =
         comments.replace("\\n", "").replace("-", "\n\n")
+
+
+    /**
+     * 小屋交流
+     */
+    fun getRoomCommentsText() =
+        roomComments.replace("\\n", "").replace("-", "\n\n")
 
 }

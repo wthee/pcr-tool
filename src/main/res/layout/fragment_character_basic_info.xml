@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/CardImageStyle"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/unknown_gray" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/catah"
@@ -442,6 +442,29 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_comments"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_room_comments"
+                style="@style/TitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_room_comments"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/comments" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/room_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_padding"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_room_comments"
                 tools:text="@string/test" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
