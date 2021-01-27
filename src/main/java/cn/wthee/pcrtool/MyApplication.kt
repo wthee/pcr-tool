@@ -37,7 +37,7 @@ class MyApplication : Application(), ImageLoaderFactory {
             .networkCachePolicy(CachePolicy.ENABLED)
             .availableMemoryPercentage(0.75)
             .okHttpClient {
-                ApiUtil.client
+                ApiUtil.getClient()
             }
             .build()
     }
