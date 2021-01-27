@@ -184,4 +184,7 @@
     <string name="temple">神殿调查掉落量 x 倍</string>
     <string name="dungeon">地下城玛那掉落量 x 倍</string>
     <string name="master_icon">大师币掉落量 x 倍</string>
+
+    <!--  异常提示-->
+    <string name="network_error">网络异常~</string>
 </resources>

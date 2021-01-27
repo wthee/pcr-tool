@@ -16,13 +16,11 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.ApiUtil
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
-import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_NETWORK_ERROR
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -54,7 +52,8 @@ object DatabaseUpdater {
         }
         //获取数据库最新版本
         MainScope().launch {
-            try {//创建服务
+            try {
+                //创建服务
                 val service = ApiUtil.create(
                     MyAPIService::class.java,
                     API_URL
@@ -63,7 +62,7 @@ object DatabaseUpdater {
                 //更新判断
                 downloadDB(version.data!!, fromSetting, force)
             } catch (e: Exception) {
-                handler.sendEmptyMessage(0)
+                MainActivity.textDownload.text = NOTICE_TOAST_NETWORK_ERROR
             }
         }
     }
@@ -88,20 +87,22 @@ object DatabaseUpdater {
                 || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
         if (toDownload) {
             //开始下载
-            val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
-                .setInputData(
-                    Data.Builder()
-                        .putString(DatabaseDownloadWorker.KEY_VERSION, ver.TruthVersion)
-                        .putString(DatabaseDownloadWorker.KEY_HASH, ver.hash)
-                        .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
-                        .build()
+            if (NetworkUtil.isEnable()) {
+                val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
+                    .setInputData(
+                        Data.Builder()
+                            .putString(DatabaseDownloadWorker.KEY_VERSION, ver.TruthVersion)
+                            .putString(DatabaseDownloadWorker.KEY_HASH, ver.hash)
+                            .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
+                            .build()
+                    )
+                    .build()
+                WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
+                    "updateDatabase",
+                    ExistingWorkPolicy.KEEP,
+                    uploadWorkRequest
                 )
-                .build()
-            WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
-                "updateDatabase",
-                ExistingWorkPolicy.KEEP,
-                uploadWorkRequest
-            )
+            }
         } else {
             //强制更新/切换成功，引导关闭应用
             if (fromSetting != -1) {
