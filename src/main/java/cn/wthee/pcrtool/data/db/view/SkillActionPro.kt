@@ -3,7 +3,9 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.enums.parse
+import cn.wthee.pcrtool.enums.SkillActionType
+import cn.wthee.pcrtool.enums.getAilment
+import cn.wthee.pcrtool.enums.toSkillActionType
 import kotlin.math.abs
 
 /**
@@ -63,17 +65,18 @@ data class SkillActionPro(
          * <2160 ：范围
          */
         //设置异常状态
-        val p = parse(action_type)
+        val p = getAilment(action_type)
         if (p.isNotEmpty()) {
             ailmentName = p
         }
-        val desc = when (action_type) {
-            //伤害, 每秒恢复
-            1, 37, 48 -> "<$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力>"
-            //位置变动
-            2 -> "移动至最近敌人前$action_value_1，移动速度$action_value_2"
-            //击退/击飞/拉近
-            3 -> {
+        val desc = when (toSkillActionType(action_type)) {
+            SkillActionType.DAMAGE, SkillActionType.HOT -> {
+                "<$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力>"
+            }
+            SkillActionType.MOVE -> {
+                "移动至最近敌人前<$action_value_1>" + if (action_value_2 > 0) "，移动速度<${action_value_2}>" else ""
+            }
+            SkillActionType.CHANGE_ENEMY_POSITION -> {
                 ailmentName = if (action_value_4 != 0.toDouble()) {
                     "击飞"
                 } else {
@@ -81,20 +84,26 @@ data class SkillActionPro(
                 }
                 "${ailmentName}距离<${abs(action_value_1)}>"
             }
-            //恢复
-            4 -> "<$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力>"
-            //护盾，持续伤害
-            6, 9 -> "<$action_value_1 + $action_value_2 * 技能等级>，持续<$action_value_3>秒"
-            //视点切换
-//            7 -> "自身攻击目标切换"
-            //速度变化/限制行动
-            8 -> {
-                //fixme 判断异常状态
+            SkillActionType.HEAL -> {
+                "<$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力>"
+            }
+            SkillActionType.SHIELD -> {
+                "<$action_value_1 + $action_value_2 * 技能等级>，持续<$action_value_3>秒"
+            }
+            SkillActionType.CHANGE_ACTION_SPEED -> {
+                //判断异常状态
                 ailmentName = when (action_detail_1) {
-                    1 -> "眩晕"
+                    1 -> "减速"
                     2 -> "加速"
                     3 -> "麻痹"
                     4 -> "冰冻"
+                    5 -> "束缚"
+                    6 -> "睡眠"
+                    7 -> "眩晕"
+                    8 -> "石化"
+                    9 -> "拘留"
+                    10 -> "晕倒"
+                    11 -> "时停"
                     else -> ""
                 }
                 if (action_value_1 != 0.toDouble()) {
@@ -103,51 +112,73 @@ data class SkillActionPro(
                     "，持续<$action_value_3>秒"
                 }
             }
-            //buff/debuff
-            10 -> {
-                if (action_value_3 != 0.toDouble()) {
+            SkillActionType.DOT -> {
+                ailmentName = when (action_detail_1) {
+                    0 -> "拘留（造成伤害）"
+                    1 -> "中毒"
+                    2 -> "灼烧"
+                    3, 5 -> "诅咒"
+                    4 -> "剧毒"
+                    else -> ""
+                }
+                "<$action_value_1 + $action_value_2 * 技能等级>，持续<$action_value_3>秒"
+            }
+            SkillActionType.AURA -> {
+                ailmentName = if (target_assignment == 1) "DEBUFF" else "BUFF"
+                if (action_value_3 > 0) {
                     "<$action_value_2 + $action_value_3 * 技能等级>，持续<$action_value_4>秒"
                 } else {
                     "<$action_value_2>，持续<$action_value_4>秒"
                 }
 
             }
-            //持续伤害
-            11, 12 -> "，持续<$action_value_1>秒，" + if (action_value_3 == 100.toDouble()) "成功率100%" else "成功率<1 + $action_value_3 * 技能等级 %>"
-            //TP变化
-            14 -> {
-                if (action_value_1 != 0.toDouble()) {
-                    "每秒降低TP <$action_value_1>"
-                } else {
-                    ""
+            SkillActionType.CHARM -> {
+                ailmentName = when (action_detail_1) {
+                    0 -> "魅惑"
+                    1 -> "混乱"
+                    else -> ""
                 }
+                "，持续<$action_value_1>秒"
             }
-            16 -> {
-                if (action_value_2 == 0.toDouble()) {
-                    "<$action_value_1>"
-                } else {
+            SkillActionType.BLIND -> {
+                "，持续<$action_value_1>秒"
+            }
+            SkillActionType.CHANGE_MODE -> {
+                if (action_value_1 > 0) "每秒降低TP <$action_value_1>" else ""
+            }
+            SkillActionType.CHANGE_TP -> {
+                if (action_value_2 > 0)
                     "<$action_value_1 + $action_value_2 * 技能等级>"
-                }
+                else
+                    "<$action_value_1>"
             }
-            //挑衅 , 无敌
-            20, 21 -> {
+            SkillActionType.TAUNT, SkillActionType.INVINCIBLE -> {
+                if (action_value_2 > 0) ", 持续<$action_value_1 + $action_value_2 * 技能等级>秒" else ", 持续<$action_value_1>秒"
+            }
+            //反伤
+            SkillActionType.STRIKE_BACK -> {
+                "<$action_value_1 + $action_value_2 * 技能等级>"
+            }
+            //伤害叠加
+            SkillActionType.INCREASED_DAMAGE -> {
+                "<$action_value_2 + $action_value_3 * 技能等级>, 叠加上限<$action_value_4>"
+            }
+            SkillActionType.ATTACK_FIELD -> {
+                "<$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力>，持续<$action_value_5>秒，范围<$action_value_7>"
+            }
+            SkillActionType.HEAL_FIELD,
+            SkillActionType.DEBUFF_FIELD,
+            SkillActionType.DOT_FIELD -> {
                 if (action_value_2 == 0.toDouble()) {
-                    ", 持续<$action_value_1>秒"
+                    "$action_value_1 ，持续<$action_value_3>秒"
                 } else {
-                    ", 持续<$action_value_1 + $action_value_2 * 技能等级>秒"
-                }
+                    "<$action_value_1 + $action_value_2 * 技能等级>，持续<$action_value_3>秒"
+                } + "，范围<$action_value_7>"
             }
-            33 -> "<$action_value_1 + $action_value_2 * 技能等级>"
-            34 -> "<$action_value_2 + $action_value_3 * 技能等级>, 叠加上限<$action_value_4>"
-            //领域
-            38 -> if (action_value_2 == 0.toDouble()) {
-                "$action_value_1 ，持续<$action_value_3>秒"
-            } else {
-                "<$action_value_1 + $action_value_2 * 技能等级>，持续<$action_value_3>秒"
+            SkillActionType.CHANNEL -> {
+                "<$action_value_2 + $action_value_3 * 技能等级>，持续<$action_value_4>秒"
             }
-            50 -> "<$action_value_2 + $action_value_3 * 技能等级>，持续<$action_value_4>秒"
-            //提升攻击力等
-            90 -> if (action_value_3 == 0.toDouble()) {
+            SkillActionType.EX -> if (action_value_3 == 0.toDouble()) {
                 "<$action_value_2>"
             } else {
                 "<$action_value_2 + $action_value_3 * 技能等级>"

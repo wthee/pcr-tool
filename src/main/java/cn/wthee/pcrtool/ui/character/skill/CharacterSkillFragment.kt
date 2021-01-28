@@ -58,9 +58,6 @@ class CharacterSkillFragment : Fragment() {
             binding.root.visibility = View.VISIBLE
         }, 700L)
         init()
-        sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
-            adapter.submitList(it)
-        })
         //分享长图
         binding.skillShare.setOnClickListener {
             ShareIntentUtil.imageLong(requireActivity(), binding.skillList, "skill_${uid}.png")
@@ -75,6 +72,9 @@ class CharacterSkillFragment : Fragment() {
             skillList.adapter = adapter
         }
         sharedSkillViewModel.getCharacterSkills(uid)
+        sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
+            adapter.submitList(it)
+        })
     }
 
 }

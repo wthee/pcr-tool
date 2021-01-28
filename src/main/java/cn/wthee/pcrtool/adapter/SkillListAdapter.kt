@@ -49,8 +49,9 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
-                //装备名称
+                //技能名称
                 name.text = skill.name
+                //技能描述
                 desc.text = skill.desc
                 type.text = when (skill.skillId % 1000) {
                     1 -> "连结爆发"

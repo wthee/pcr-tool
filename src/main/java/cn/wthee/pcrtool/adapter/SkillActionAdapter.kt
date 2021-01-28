@@ -1,8 +1,11 @@
 package cn.wthee.pcrtool.adapter
 
+import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -38,28 +41,37 @@ class SkillActionAdapter :
 
     class ViewHolder(private val binding: ItemSkillActionBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(fixed: String) {
             binding.apply {
                 action.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
                 //改变颜色
                 val spannable = SpannableStringBuilder(fixed)
-                val start0 = fixed.indexOfFirst { it == '<' }
-                val start1 = fixed.indexOfLast { it == '<' }
-                val end0 = fixed.indexOfFirst { it == '>' }
-                val end1 = fixed.indexOfLast { it == '>' }
-                if (start0 != -1 && end0 != -1) {
-                    spannable.setSpan(
-                        ForegroundColorSpan(
-                            MyApplication.context.getColor(R.color.colorPrimary)
-                        ), start0, end0 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
+                val starts = arrayListOf<Int>()
+                val ends = arrayListOf<Int>()
+                fixed.filterIndexed { index, c ->
+                    if (c == '<') {
+                        starts.add(index)
+                    }
+                    if (c == '>') {
+                        ends.add(index)
+                    }
+                    c == '<' || c == '>'
                 }
-                if (start1 != -1 && end1 != -1) {
+                starts.forEachIndexed { index, _ ->
+                    //变色
                     spannable.setSpan(
                         ForegroundColorSpan(
                             MyApplication.context.getColor(R.color.colorPrimary)
-                        ), start1, end1 + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        ), starts[index], ends[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    //加粗
+                    spannable.setSpan(
+                        StyleSpan(Typeface.BOLD),
+                        starts[index],
+                        ends[index] + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                 }
                 action.text = spannable

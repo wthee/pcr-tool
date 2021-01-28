@@ -7,6 +7,8 @@ package cn.wthee.pcrtool.enums
  */
 enum class SkillActionType(val type: Int, val desc: String) {
 
+    UNKNOWN(0, ""),
+
     /**
      * 1：造成伤害
      */
@@ -40,7 +42,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 7：指定攻击对象
      */
-    CHOOSE_ENEMY(7, ""),
+    CHOOSE_ENEMY(7, "指定"),
 
     /**
      * 8：行动速度变更：行动速度提升/降低；无法行动
@@ -55,27 +57,27 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 10：buff/debuff
      */
-    AURA(10, "BUFF/DEBUFF"),
+    AURA(10, ""),
 
     /**
-     * 11：魅惑
+     * 11：魅惑/混乱
      */
-    CHARM(11, "魅惑"),
+    CHARM(11, ""),
 
     /**
      * 12：黑暗，失明
      */
-    BLIND(12, ""),
+    BLIND(12, "黑暗"),
 
     /**
      * 13：沉默
      */
-    SILENCE(13, ""),
+    SILENCE(13, "沉默"),
 
     /**
      * 14：改变模式
      */
-    CHANGE_MODE(14, ""),
+    CHANGE_MODE(14, "行动改变"),
 
     /**
      * 15：召唤
@@ -90,17 +92,17 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 17：触发条件
      */
-    TRIGGER(17, ""),
+    TRIGGER(17, "条件触发"),
 
     /**
      * 18：充能
      */
-    CHARGE(18, ""),
+    CHARGE(18, "充能"),
 
     /**
      * 19：伤害充能
      */
-    DAMAGE_CHARGE(19, ""),
+    DAMAGE_CHARGE(19, "充能"),
 
     /**
      * 20：挑衅
@@ -115,17 +117,17 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 22：行动模式变更
      */
-    CHANGE_PATTERN(22, ""),
+    CHANGE_PATTERN(22, "行动改变"),
 
     /**
      * 23：判定对象状态
      */
-    ACCORD_STATUS(23, ""),
+    ACCORD_STATUS(23, "状态增伤"),
 
     /**
      * 24：复活
      */
-    REVIVAL(24, ""),
+    REVIVAL(24, "复活"),
 
     /**
      * 25：连续攻击
@@ -133,19 +135,21 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CONTINUOUS_ATTACK(25, ""),
 
     /**
-     * 26：叠加
+     * 26：增伤
      */
-    ADDITIVE(26, "叠加"),
+    ADDITIVE(26, "条件"),
 
     /**
-     * 27：提升倍率
+     * 27：击杀敌人
      */
-    MULTIPLE(27, ""),
+    MULTIPLE(27, "击杀"),
 
     /**
-     * 28：满足特殊条件：击杀敌人、使用技能后、女仆成功失败等
+     * 28：特殊条件
+     *
+     * fixme 优化判断
      */
-    IF_TRUE(28, ""),
+    IF_FOR_ALL(28, ""),
 
     /**
      * 29：变更攻击区域？
@@ -153,9 +157,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANGE_SEARCH_AREA(29, ""),
 
     /**
-     * 30：死亡触发
+     * 30：立即死亡
      */
-    IF_DIE(30, ""),
+    KILL_ME(30, "自爆"),
 
     /**
      * 31：连续攻击附近
@@ -168,9 +172,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     LIFE_STEAL(32, "吸血"),
 
     /**
-     * 33：自动反击
+     * 33：消失时造成伤害
      */
-    STRIKE_BACK(33, "格挡"),
+    STRIKE_BACK(33, "反伤"),
 
     /**
      * 34：伤害递增
@@ -185,27 +189,27 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 36：范围攻击
      */
-    ATTACK_FIELD(36, "范围"),
+    ATTACK_FIELD(36, "领域"),
 
     /**
      * 37：范围治疗
      */
-    HEAL_FIELD(37, "范围"),
+    HEAL_FIELD(37, "领域"),
 
     /**
      * 38：范围减益
      */
-    DEBUFF_FIELD(38, "范围"),
+    DEBUFF_FIELD(38, "领域"),
 
     /**
      * 39：范围持续伤害
      */
-    DOT_FIELD(39, "范围"),
+    DOT_FIELD(39, "领域"),
 
     /**
      * 40：范围行动速度变更
      */
-    CHANGE_ACTION_SPEED_FIELD(40, ""),
+    CHANGE_ACTION_SPEED_FIELD(40, "领域"),
 
     /**
      * 41：改变 UB 时间
@@ -215,7 +219,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 42：循环触发：哈哈剑大笑时...等状态触发
      */
-    LOOP_TRIGGER(42, ""),
+    LOOP_TRIGGER(42, "反击"),
 
     /**
      * 43：拥有标记时触发
@@ -228,7 +232,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     WAVE_START(44, "进场"),
 
     /**
-     * 45：已使用技能数
+     * fixme 45：已使用技能数相关
      */
     SKILL_COUNT(45, ""),
 
@@ -245,7 +249,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 48：持续治疗
      */
-    HOT(48, ""),
+    HOT(48, "持续治疗"),
 
     /**
      * 49：移除增益
@@ -255,7 +259,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 50：特殊状态：铃声响起时
      */
-    CHANNEL(50, "摇铃"),
+    CHANNEL(50, "铃铛"),
+
+    /**
+     * 51：分裂？
+     */
+    DIVISION(51, ""),
 
     /**
      * 52：改变单位距离
@@ -270,7 +279,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 54：隐身
      */
-    STEALTH(54, ""),
+    STEALTH(54, "隐身"),
 
     /**
      * 55：部位移动
@@ -278,9 +287,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     MOVE_PART(55, ""),
 
     /**
-     * 56：次数失明 如：拉姆千里眼，攻击一次失效
+     * 56：千里眼
      */
-    COUNT_BLIND(56, ""),
+    COUNT_BLIND(56, "千里眼"),
 
     /**
      * 57：延迟攻击 如：万圣炸弹人的 UB
@@ -290,7 +299,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 58：解除领域 如：晶姐 UB
      */
-    STOP_FIELD(58, ""),
+    STOP_FIELD(58, "解除领域"),
 
     /**
      * 59：降低治疗效果
@@ -305,40 +314,59 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 61：恐惧
      */
-    FEAR(61, ""),
+    FEAR(61, "恐惧"),
+
+    /**
+     * 62：敬畏
+     */
+    AWE(61, "敬畏"),
 
     /**
      * 71：特殊状态：公主佩可 UB 后不死BUFF
      */
-    PR_PEKO_UB(71, ""),
+    PR_PEKO_UB(71, "骑士"),
 
     /**
      * 75：依据攻击次数增伤：水流夏
      */
-    HIT_COUNT(75, ""),
+    HIT_COUNT(75, "次数增伤"),
+
+
+    /**
+     * 76：依据攻击次数增伤：水流夏
+     */
+    HEAL_DOWN(76, "减疗"),
+
 
     /**
      * 77：特殊刻印：增益时叠加 圣诞哈哈剑
      */
-    IF_BUFF_SEAL(77, ""),
+    IF_BUFF_SEAL(77, "刻印"),
 
     /**
      * 90：EX被动
      */
     EX(90, "被动"),
-
-    /**
-     * 91：EX被动+
-     */
-    EX_PLUS(91, "被动");
-
 }
 
-fun parse(value: Int): String {
+/**
+ * 获取描述
+ */
+fun getAilment(value: Int): String {
     for (item in SkillActionType.values()) {
         if (item.type == value) return item.desc
     }
     return ""
+}
+
+/**
+ * 获取技能类型枚举对象
+ */
+fun toSkillActionType(value: Int): SkillActionType {
+    for (item in SkillActionType.values()) {
+        if (item.type == value) return item
+    }
+    return SkillActionType.UNKNOWN
 }
 
 

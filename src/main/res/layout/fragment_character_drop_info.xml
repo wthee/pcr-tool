@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/card_height"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -12,7 +11,9 @@
         android:layout_width="@dimen/normal_icon"
         android:layout_height="@dimen/normal_icon"
         android:layout_gravity="center"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:layout_margin="@dimen/s_margin"
+        tools:src="@drawable/unknown_gray" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/character_drops"
