@@ -64,7 +64,7 @@ data class SkillActionPro(
          * > 2160: 全体
          * <2160 ：范围
          */
-        //设置异常状态
+        //设置状态标签
         val p = getAilment(action_type)
         if (p.isNotEmpty()) {
             ailmentName = p
@@ -115,10 +115,10 @@ data class SkillActionPro(
             SkillActionType.DOT -> {
                 ailmentName = when (action_detail_1) {
                     0 -> "拘留（造成伤害）"
-                    1 -> "中毒"
-                    2 -> "灼烧"
+                    1 -> "毒"
+                    2 -> "烧伤"
                     3, 5 -> "诅咒"
-                    4 -> "剧毒"
+                    4 -> "猛毒"
                     else -> ""
                 }
                 "<$action_value_1 + $action_value_2 * 技能等级>，持续<$action_value_3>秒"
@@ -138,10 +138,10 @@ data class SkillActionPro(
                     1 -> "混乱"
                     else -> ""
                 }
-                "，持续<$action_value_1>秒"
+                "，持续<$action_value_1>秒，" + if (action_value_3 == 100.toDouble()) "成功率100%" else "成功率<1 + $action_value_3 * 技能等级 %>"
             }
             SkillActionType.BLIND -> {
-                "，持续<$action_value_1>秒"
+                "，持续<$action_value_1>秒，" + if (action_value_3 == 100.toDouble()) "成功率100%" else "成功率<1 + $action_value_3 * 技能等级 %>"
             }
             SkillActionType.CHANGE_MODE -> {
                 if (action_value_1 > 0) "每秒降低TP <$action_value_1>" else ""

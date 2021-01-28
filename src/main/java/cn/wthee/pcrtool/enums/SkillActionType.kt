@@ -95,9 +95,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     TRIGGER(17, "条件触发"),
 
     /**
-     * 18：充能
+     * fixme 18：充能
      */
-    CHARGE(18, "充能"),
+    CHARGE(18, ""),
 
     /**
      * 19：伤害充能
@@ -159,7 +159,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 30：立即死亡
      */
-    KILL_ME(30, "自爆"),
+    KILL_ME(30, "即死"),
 
     /**
      * 31：连续攻击附近

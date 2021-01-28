@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.adapter.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ShareIntentUtil
 
 /**
  * 角色技能页面
@@ -31,6 +31,8 @@ class CharacterSkillFragment : Fragment() {
                     putInt(UID, uid)
                 }
             }
+
+        lateinit var shareSkillList: RecyclerView
     }
 
     private lateinit var binding: FragmentCharacterSkillBinding
@@ -53,20 +55,17 @@ class CharacterSkillFragment : Fragment() {
     ): View {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
         //延迟绘制页面
-        binding.root.visibility = View.GONE
-        binding.root.postDelayed({
-            binding.root.visibility = View.VISIBLE
-        }, 700L)
+        binding.skillList.visibility = View.GONE
+        binding.skillList.postDelayed({
+            binding.skillList.visibility = View.VISIBLE
+        }, 600L)
         init()
-        //分享长图
-        binding.skillShare.setOnClickListener {
-            ShareIntentUtil.imageLong(requireActivity(), binding.skillList, "skill_${uid}.png")
-        }
         return binding.root
     }
 
     private fun init() {
         binding.apply {
+            shareSkillList = skillList
             //技能信息
             adapter = SkillAdapter()
             skillList.adapter = adapter

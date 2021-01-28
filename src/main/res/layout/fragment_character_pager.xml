@@ -12,19 +12,19 @@
         android:layout_height="match_parent"
         tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_share"
-        style="@style/EfabStyle"
-        android:layout_width="@dimen/fab_text_3"
-        android:layout_height="@dimen/fab_size"
+        style="@style/FabStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/m_margin"
-        android:layout_marginBottom="@dimen/efab_margin"
+        android:layout_marginBottom="@dimen/m_margin"
         android:contentDescription="@string/function"
-        android:text="@string/fragment"
+        android:src="@drawable/ic_function"
         android:visibility="invisible"
-        app:icon="@drawable/ic_drop"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_character" />
+        app:layout_constraintEnd_toStartOf="@id/fab_character"
+        tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_character"

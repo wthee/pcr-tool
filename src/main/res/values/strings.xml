@@ -168,14 +168,6 @@
     <string name="event_character">活动角色：</string>
     <string name="fragment">碎片</string>
 
-    <!--  技能效果-->
-    <string name="physical_damage">物理</string>
-    <string name="magic_damage">魔法</string>
-    <string name="inevitable_physical">必中的物理</string>
-    <string name="skill_action_damage_1">对敌方单体造成#%d + %d * 技能等级 + %d * 攻击力#的%s伤害</string>
-    <string name="skill_action_damage_2">对敌方单体造成#%d + %d * 技能等级 + %d * 攻击力#的%s伤害</string>
-    <string name="skill_action_damage_3">对敌方单体造成#%d + %d * 技能等级 + %d * 攻击力#的%s伤害</string>
-
     <!--  活动相关-->
     <string name="normal">普通关卡掉落量 x 倍</string>
     <string name="hard">困难关卡掉落量 x 倍</string>
