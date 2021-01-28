@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.setting
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
@@ -92,9 +93,16 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val eggs = findPreference<PreferenceCategory>("egg")
         val eggKL = findPreference<Preference>("kl")
         //是否显示
-        eggs?.isVisible = CharacterListFragment.characterFilterParams.starIds.contains(106001)
-                || CharacterListFragment.characterFilterParams.starIds.contains(107801)
-                || CharacterListFragment.characterFilterParams.starIds.contains(112001)
+        lifecycleScope.launch {
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
+                override fun read(s: String?) {
+                    val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
+                    CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
+                    eggs?.isVisible = starIds?.contains(107801) ?: false
+                }
+            })
+        }
+
         var count = sp.getInt("click_kl", 0)
         eggKL?.setOnPreferenceClickListener {
             count++
@@ -105,6 +113,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                     .addOrRemove(107801)
                 CharacterListFragment.characterFilterParams.initData()
                 sharedCharacterViewModel.getCharacters(
+                    CharacterListFragment.characterFilterParams,
                     sortType,
                     sortAsc,
                     ""

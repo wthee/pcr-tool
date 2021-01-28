@@ -72,10 +72,7 @@ class CharacterListFragment : CommonListFragment() {
         sortType = SortType.SORT_DATE
         sortAsc = false
         characterName = ""
-        viewModel.getCharacters(
-            sortType,
-            sortAsc, characterName
-        )
+        load()
     }
 
     //加载数据
@@ -85,8 +82,6 @@ class CharacterListFragment : CommonListFragment() {
             R.mipmap.ic_logo,
             getString(R.string.app_name)
         )
-        //获取角色
-        viewModel.getCharacters(sortType, sortAsc, characterName, false)
         lifecycleScope.launch {
             //公会列表
             guilds = arrayListOf()
@@ -99,7 +94,28 @@ class CharacterListFragment : CommonListFragment() {
                 guilds.add("？？？")
             }
         }
+        //获取角色
+        load()
         binding.toolList.adapter = listAdapter
+    }
+
+    private fun load() {
+        lifecycleScope.launch {
+            //获取角色
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
+                override fun read(s: String?) {
+                    val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
+                    characterFilterParams.starIds = newStarIds ?: arrayListOf()
+                    viewModel.getCharacters(
+                        characterFilterParams,
+                        sortType,
+                        sortAsc,
+                        characterName,
+                        false
+                    )
+                }
+            })
+        }
     }
 
     private fun setListener() {

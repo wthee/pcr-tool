@@ -52,7 +52,16 @@ class CharacterBasicInfoFragment : Fragment() {
         requireArguments().apply {
             uid = getInt(UID)
         }
-        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
+        lifecycleScope.launch {
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
+                override fun read(s: String?) {
+                    val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
+                    CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
+                    //是否收藏
+                    isLoved = starIds?.contains(uid) ?: false
+                }
+            })
+        }
     }
 
     override fun onCreateView(

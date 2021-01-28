@@ -4,6 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.createDataStore
 import cn.wthee.pcrtool.utils.ApiUtil
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -19,6 +22,7 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        dataStore = context.createDataStore(name = "main")
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -44,6 +48,7 @@ class MyApplication : Application(), ImageLoaderFactory {
 
     companion object {
         lateinit var context: Context
+        lateinit var dataStore: DataStore<Preferences>
     }
 
 
