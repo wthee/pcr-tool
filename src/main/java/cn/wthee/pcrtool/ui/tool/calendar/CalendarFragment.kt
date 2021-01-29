@@ -30,7 +30,6 @@ class CalendarFragment : Fragment() {
 
 
     private lateinit var binding: FragmentToolCalendarBinding
-    private lateinit var adapter: CalendarEventAdapter
     private var events = listOf<CalendarDay>()
     private var mYear = 0
     private var mMonth = 0
@@ -40,6 +39,7 @@ class CalendarFragment : Fragment() {
     private val calendarViewModel by activityViewModels<CalendarViewModel> {
         InjectorUtil.provideCalendarViewModelFactory()
     }
+    private var adapter = CalendarEventAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +70,8 @@ class CalendarFragment : Fragment() {
             minCal.set(2020, 6 - 1, 6)
             setMinimumDate(minCal)
             setOnDayClickListener { eventDay ->
-                showDayEvents(eventDay.calendar)
+                cal = eventDay.calendar
+                showDayEvents(cal)
             }
             //月份切换监听
             setOnForwardPageChangeListener {
@@ -111,7 +112,6 @@ class CalendarFragment : Fragment() {
         binding.currentDate.text =
             resources.getString(R.string.date_m_d, month.toString(), day.toString())
         //列表
-        adapter = CalendarEventAdapter()
         binding.events.adapter = adapter
         //初始加载
         calendarViewModel.getCalendar()
