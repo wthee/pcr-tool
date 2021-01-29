@@ -15,7 +15,7 @@ object Constants {
     const val DATABASE_URL = "https://wthee.xyz/db/"
 
     //接口正式地址
-    const val API_URL = "https://wthee.xyz:8848/api/"
+    const val API_URL = "https://wthee.xyz:1211/api/"
 
     //数据库
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
@@ -57,9 +57,6 @@ object Constants {
 
     //角色Rank
     const val CHARACTER_MIN_RANK = 2
-
-    //Log输出
-    const val LOG_TAG = "pcrtool_log_info"
 
     //本地储存
     const val SP_DATABASE_VERSION = "database_version"

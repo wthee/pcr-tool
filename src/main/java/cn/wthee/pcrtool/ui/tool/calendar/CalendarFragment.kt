@@ -115,16 +115,24 @@ class CalendarFragment : Fragment() {
         binding.events.adapter = adapter
         //初始加载
         calendarViewModel.getCalendar()
-        //TODO 优化按月份加载
         calendarViewModel.calendar.observe(viewLifecycleOwner, { list ->
             if (list.status == 0) {
                 events = list.data!!.days
                 binding.calendarView.visibility = View.VISIBLE
                 //设置最大值
                 maxCal = Calendar.getInstance()
-                val date = list.data!!.maxDate.split("/")
-                maxCal.set(date[0].toInt(), date[1].toInt() - 1, date[2].toInt())
+                val max = events.maxByOrNull {
+                    it.date
+                }!!.date.split("/")
+                maxCal.set(max[0].toInt(), max[1].toInt() - 1, max[2].toInt(), 0, 0, 0)
                 binding.calendarView.setMaximumDate(maxCal)
+                //设置最小值
+                minCal = Calendar.getInstance()
+                val min = events.minByOrNull {
+                    it.date
+                }!!.date.split("/")
+                minCal.set(min[0].toInt(), min[1].toInt() - 1, min[2].toInt(), 0, 0, 0)
+                binding.calendarView.setMinimumDate(minCal)
                 //显示事件列表
                 showDayEvents(cal)
             } else if (list.status == -1) {

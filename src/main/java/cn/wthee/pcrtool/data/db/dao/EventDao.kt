@@ -67,11 +67,15 @@ interface EventDao {
             end_time 
         FROM
             campaign_schedule 
-        WHERE campaign_category IN (31,32,34,37,38,39,45)
+        WHERE
+            campaign_category IN ( 31, 32, 34, 37, 38, 39, 45 ) 
         GROUP BY
             start_time,
-            end_time ,
-            value
+            end_time,
+            value 
+        ORDER BY
+            start_time DESC 
+            LIMIT 100 OFFSET 0
     """
     )
     suspend fun getDropEvent(): List<DropEvent>
