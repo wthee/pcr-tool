@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
@@ -136,9 +134,8 @@ class CharacterListFragment : CommonListFragment() {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
                 viewModel.characterCount.observe(viewLifecycleOwner, {
-                    val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
-                    sp.edit {
-                        putInt(Constants.SP_COUNT_CHARACTER, it)
+                    lifecycleScope.launch {
+                        DataStoreUtil.save<Int>(Constants.SP_COUNT_CHARACTER, it)
                     }
                     binding.characterCount.text = it.toString()
                 })

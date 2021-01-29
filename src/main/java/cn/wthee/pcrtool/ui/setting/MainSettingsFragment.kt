@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.setting
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -9,8 +8,6 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
-import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortAsc
-import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortType
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
@@ -43,7 +40,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
         //获取控件
         titleDatabase = findPreference("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
@@ -55,10 +51,19 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         switchPvpRegion?.isVisible = changeDbType?.value != "1"
         //数据版本
-        titleDatabase.title = getString(R.string.data) + sp.getString(
-            if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-            "0"
-        )
+        MainScope().launch {
+            DataStoreUtil.get(
+                if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+                object : DataStoreRead<String> {
+                    override fun read(str: String?) {
+                        titleDatabase.title = getString(R.string.data) + if (str != null) {
+                            str.split("/")[0]
+                        } else {
+                            ""
+                        }
+                    }
+                })
+        }
         appUpdate?.summary = MainActivity.nowVersionName
         appUpdate?.setOnPreferenceClickListener {
             //应用版本校验
@@ -95,39 +100,17 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //是否显示
         lifecycleScope.launch {
             DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
-                override fun read(s: String?) {
-                    val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
+                override fun read(str: String?) {
+                    val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
                     CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
-                    eggs?.isVisible = starIds?.contains(107801) ?: false
+                    eggs?.isVisible =
+                        CharacterListFragment.characterFilterParams.starIds.contains(107801)
                 }
             })
         }
 
-        var count = sp.getInt("click_kl", 0)
         eggKL?.setOnPreferenceClickListener {
-            count++
-            if (count > 3) {
-                //隐藏
-                eggs?.isVisible = false
-                CharacterListFragment.characterFilterParams
-                    .addOrRemove(107801)
-                CharacterListFragment.characterFilterParams.initData()
-                sharedCharacterViewModel.getCharacters(
-                    CharacterListFragment.characterFilterParams,
-                    sortType,
-                    sortAsc,
-                    ""
-                )
-            } else {
-                val text = when (count) {
-                    1 -> "不要碰我了~烦死啦"
-                    2 -> "我都说过了！烦死啦~烦死啦~"
-                    3 -> "凯露我啊~真的生气了！！！"
-                    else -> ""
-                }
-                ToastUtil.short(text)
-            }
-
+            ToastUtil.short("不要碰我了~烦死啦")
             return@setOnPreferenceClickListener true
         }
 

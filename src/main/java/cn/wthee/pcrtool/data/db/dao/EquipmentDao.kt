@@ -47,11 +47,6 @@ FROM
 const val equipWhere = """
     WHERE a.craft_flg = 1 
         AND a.equipment_name like '%' || :name || '%' 
-        AND (
-            (a.equipment_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-            OR 
-            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-        )
         AND a.equipment_id < 140000 
         AND 1 = CASE
             WHEN  '全部' = :type  THEN 1 
@@ -79,9 +74,7 @@ interface EquipmentDao {
     @Query("""$viewEquipmentMaxData  $equipWhere""")
     fun getPagingEquipments(
         type: String,
-        name: String,
-        showAll: Int,
-        starIds: List<Int>
+        name: String
     ): PagingSource<Int, EquipmentMaxData>
 
     /**
@@ -98,7 +91,7 @@ interface EquipmentDao {
     $equipWhere
     """
     )
-    suspend fun getEquipmentCount(type: String, name: String, showAll: Int, starIds: List<Int>): Int
+    suspend fun getEquipmentCount(type: String, name: String): Int
 
     /**
      * 根据 [eid]，获取装备提升属性 [EquipmentEnhanceRate]

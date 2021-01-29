@@ -42,5 +42,6 @@ object DataStoreUtil {
 }
 
 interface DataStoreRead<T> {
-    fun read(s: T?)
+    fun read(str: T?)
 }
+

@@ -12,10 +12,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 /**
@@ -48,11 +46,6 @@ class EquipmentListAdapter(
             if (equip != null) {
                 //设置数据
                 binding.apply {
-                    //是否收藏
-                    val isLoved =
-                        EquipmentListFragment.equipFilterParams.starIds.contains(equip.equipmentId)
-                    name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
-
                     val ctx = MyApplication.context
                     pic.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                     //装备名称
@@ -66,14 +59,6 @@ class EquipmentListAdapter(
                     //设置点击跳转
                     root.setOnClickListener {
                         click(equip)
-                    }
-                    //长按事件
-                    binding.root.setOnLongClickListener {
-                        EquipmentListFragment.equipFilterParams.addOrRemove(equip.equipmentId)
-                        EquipmentListFragment.list.adapter?.notifyItemChanged(
-                            absoluteAdapterPosition
-                        )
-                        return@setOnLongClickListener true
                     }
                 }
             }

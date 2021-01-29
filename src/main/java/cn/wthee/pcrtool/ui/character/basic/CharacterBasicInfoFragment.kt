@@ -58,7 +58,8 @@ class CharacterBasicInfoFragment : Fragment() {
                     val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
                     CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
                     //是否收藏
-                    isLoved = starIds?.contains(uid) ?: false
+                    isLoved =
+                        CharacterListFragment.characterFilterParams.starIds.contains(uid) ?: false
                 }
             })
         }

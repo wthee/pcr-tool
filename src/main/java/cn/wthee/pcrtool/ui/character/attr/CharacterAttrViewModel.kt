@@ -66,7 +66,7 @@ class CharacterAttrViewModel(
                 info.add(eq.attr)
             }
             //专武
-            val uniqueEquip = equipmentRepository.getUniqueEquipInfos(unitId, ueLv)
+            val uniqueEquip = equipmentRepository.getUniqueEquipInfo(unitId, ueLv)
             if (uniqueEquip != null) {
                 info.add(uniqueEquip.attr)
             }

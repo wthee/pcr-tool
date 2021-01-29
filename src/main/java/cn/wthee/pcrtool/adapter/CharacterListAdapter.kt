@@ -63,7 +63,9 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                         CharacterListFragment.characterFilterParams.starIds =
                             starIds ?: arrayListOf()
                         //是否收藏
-                        val isLoved = starIds?.contains(character.id) ?: false
+                        val isLoved =
+                            CharacterListFragment.characterFilterParams.starIds.contains(character.id)
+                                ?: false
                         binding.apply {
                             name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                             //加载动画
