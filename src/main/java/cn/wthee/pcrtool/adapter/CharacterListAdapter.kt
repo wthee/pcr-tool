@@ -57,15 +57,14 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
         ) {
 
             MainScope().launch {
-                DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
-                    override fun read(s: String?) {
-                        val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
+                DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
+                    override fun read(str: String?) {
+                        val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
                         CharacterListFragment.characterFilterParams.starIds =
                             starIds ?: arrayListOf()
                         //是否收藏
                         val isLoved =
                             CharacterListFragment.characterFilterParams.starIds.contains(character.id)
-                                ?: false
                         binding.apply {
                             name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                             //加载动画

@@ -74,7 +74,7 @@ object DatabaseUpdater {
             val type = getDatabaseType()
             DataStoreUtil.get(
                 if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-                object : DataStoreRead<String> {
+                object : DataStoreRead {
                     override fun read(str: String?) {
                         val databaseType = getDatabaseType()
                         //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新

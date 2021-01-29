@@ -101,9 +101,6 @@ class EquipmentListFragment : Fragment() {
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
             viewModel.equipmentCounts.observe(viewLifecycleOwner, {
-                lifecycleScope.launch {
-                    DataStoreUtil.save(Constants.SP_COUNT_EQUIP, it)
-                }
                 binding.equipCount.text = it.toString()
             })
         }

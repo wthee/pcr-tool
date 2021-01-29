@@ -100,9 +100,9 @@ class CharacterListFragment : CommonListFragment() {
     private fun load() {
         lifecycleScope.launch {
             //获取角色
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
-                override fun read(s: String?) {
-                    val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
+                override fun read(str: String?) {
+                    val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
                     characterFilterParams.starIds = newStarIds ?: arrayListOf()
                     viewModel.getCharacters(
                         characterFilterParams,
@@ -134,9 +134,6 @@ class CharacterListFragment : CommonListFragment() {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
                 viewModel.characterCount.observe(viewLifecycleOwner, {
-                    lifecycleScope.launch {
-                        DataStoreUtil.save<Int>(Constants.SP_COUNT_CHARACTER, it)
-                    }
                     binding.characterCount.text = it.toString()
                 })
             }

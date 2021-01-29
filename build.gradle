@@ -71,7 +71,7 @@ dependencies {
     implementation "io.coil-kt:coil-gif:$coil_version"
 
     //DataStore
-    def data_store_version = '1.0.0-alpha05'
+    def data_store_version = '1.0.0-alpha06'
     implementation "androidx.datastore:datastore-preferences:$data_store_version"
 
     //Lifecycle
@@ -107,7 +107,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
     //Room
-    def room_version = "2.3.0-alpha04"
+    def room_version = "2.3.0-beta01"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -116,7 +116,7 @@ dependencies {
     implementation "androidx.startup:startup-runtime:1.0.0"
 
     //Paging3
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha11"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha13"
 
     //umeng
     implementation "com.umeng.umsdk:common:9.3.3"

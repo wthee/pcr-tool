@@ -41,9 +41,9 @@ class FilterCharacter(
         //保存
         MainScope().launch {
             DataStoreUtil.save(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
-                override fun read(s: String?) {
-                    val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(s)
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
+                override fun read(str: String?) {
+                    val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
                     starIds = newStarIds ?: arrayListOf()
                 }
             })

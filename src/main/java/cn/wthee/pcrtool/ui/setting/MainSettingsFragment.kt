@@ -56,7 +56,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         MainScope().launch {
             DataStoreUtil.get(
                 if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-                object : DataStoreRead<String> {
+                object : DataStoreRead {
                     override fun read(str: String?) {
                         titleDatabase.title = getString(R.string.data) + if (str != null) {
                             str.split("/")[0]
@@ -117,7 +117,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val eggKL = findPreference<Preference>("kl")
         //是否显示
         lifecycleScope.launch {
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead<String> {
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
                 override fun read(str: String?) {
                     val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
                     CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
