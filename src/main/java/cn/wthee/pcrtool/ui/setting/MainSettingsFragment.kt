@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
@@ -29,9 +28,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         lateinit var titleDatabase: Preference
     }
 
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -50,7 +46,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val changeDbType = findPreference<ListPreference>("change_database")
         val switchPvpRegion = findPreference<SwitchPreference>("pvp_region")
         changeDbType?.title =
-            "数据版本： " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
+            "版本：" + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         switchPvpRegion?.isVisible = changeDbType?.value != "1"
         //数据版本
         MainScope().launch {
@@ -99,10 +95,10 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         changeDbType?.setOnPreferenceChangeListener { _, newValue ->
             if (changeDbType.value != newValue as String) {
                 if (newValue == "1") {
-                    changeDbType.title = "游戏版本 - " + getString(R.string.db_cn)
+                    changeDbType.title = "版本：" + getString(R.string.db_cn)
                     switchPvpRegion?.isVisible = false
                 } else {
-                    changeDbType.title = "游戏版本 - " + getString(R.string.db_jp)
+                    changeDbType.title = "版本：" + getString(R.string.db_jp)
                     switchPvpRegion?.isVisible = true
                 }
                 MainScope().launch {
