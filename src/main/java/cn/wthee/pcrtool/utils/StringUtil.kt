@@ -18,6 +18,12 @@ fun String.intArrayList(): ArrayList<Int> {
     return list
 }
 
+
+/**
+ * 去除空格等无用字符
+ */
+fun String.deleteSpace() = this.replace("\\s".toRegex(), "")
+
 @SuppressLint("SimpleDateFormat")
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd")
 
