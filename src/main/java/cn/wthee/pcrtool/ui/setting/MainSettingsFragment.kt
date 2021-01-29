@@ -1,12 +1,14 @@
 package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
@@ -48,7 +50,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val changeDbType = findPreference<ListPreference>("change_database")
         val switchPvpRegion = findPreference<SwitchPreference>("pvp_region")
         changeDbType?.title =
-            "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
+            "数据版本： " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         switchPvpRegion?.isVisible = changeDbType?.value != "1"
         //数据版本
         MainScope().launch {
@@ -64,17 +66,33 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                     }
                 })
         }
+        //强制更新数据库
+        forceUpdateDb?.setOnPreferenceClickListener {
+            DialogUtil.create(
+                requireContext(),
+                LayoutWarnDialogBinding.inflate(layoutInflater),
+                getString(R.string.redownload_db),
+                getString(R.string.to_download),
+                "取消",
+                "下载数据",
+                object : DialogListener {
+                    override fun onCancel(dialog: AlertDialog) {
+                        dialog.dismiss()
+                    }
+
+                    override fun onConfirm(dialog: AlertDialog) {
+                        DatabaseUpdater.checkDBVersion(0, force = true)
+                        dialog.dismiss()
+                    }
+                }).show()
+            return@setOnPreferenceClickListener true
+        }
+        //应用更新
         appUpdate?.summary = MainActivity.nowVersionName
         appUpdate?.setOnPreferenceClickListener {
             //应用版本校验
             ToastUtil.short("应用版本检测中...")
             AppUpdateUtil.init(requireContext(), layoutInflater, true)
-            return@setOnPreferenceClickListener true
-        }
-        //设置监听
-        //强制更新数据库
-        forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdater.checkDBVersion(0, force = true)
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本

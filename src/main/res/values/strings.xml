@@ -53,6 +53,7 @@
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
+    <string name="redownload_db_summary">重新下载最新数据</string>
     <string name="data">数据版本：</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
@@ -71,11 +72,11 @@
     <string name="db_jp_value">2</string>
     <string name="egg_text">我啊，很幸福哦</string>
     <string name="egg_summary">…还…还是被发现了</string>
-    <string name="game_version">切换数据</string>
-    <string name="game_version_summary">可选择国服或日服数据</string>
+    <string name="game_version">切换版本</string>
+    <string name="game_version_summary">点击切换数据版本</string>
     <string name="change_success">更新完成</string>
     <string name="change_success_tip">数据已更新，请点击关闭应用</string>
-    <string name="to_download">若应用内容与游戏内容不同步，请点击</string>
+    <string name="to_download">是否重新下载最新数据？</string>
     <string name="pcrdfans_com">来源 pcrdfans.com</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
     <string name="share_app">分享应用</string>
