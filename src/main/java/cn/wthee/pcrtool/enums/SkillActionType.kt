@@ -112,7 +112,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 21：无敌
      */
-    INVINCIBLE(21, "无敌"),
+    INVINCIBLE(21, "回避"),
 
     /**
      * 22：行动模式变更

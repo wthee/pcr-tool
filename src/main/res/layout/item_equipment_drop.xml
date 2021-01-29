@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/s_padding"
+    android:padding="@dimen/s_dp"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
@@ -34,7 +34,7 @@
         android:id="@+id/quest_equip_drops"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginTop="@dimen/m_dp"
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

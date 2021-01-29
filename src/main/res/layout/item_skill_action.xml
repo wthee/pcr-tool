@@ -3,9 +3,9 @@
     android:id="@+id/action"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/s_padding"
-    android:paddingEnd="@dimen/s_padding"
-    android:paddingBottom="@dimen/s_padding"
+    android:paddingStart="@dimen/s_dp"
+    android:paddingEnd="@dimen/s_dp"
+    android:paddingBottom="@dimen/s_dp"
     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
     android:textIsSelectable="true"
     tools:text="@string/test" />

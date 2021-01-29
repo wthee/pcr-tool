@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.enums.SkillActionType
 import cn.wthee.pcrtool.enums.getAilment
 import cn.wthee.pcrtool.enums.toSkillActionType
@@ -44,7 +43,6 @@ data class SkillActionPro(
      */
     fun getFixedDesc(): SkillActionLite {
         val fixed: String
-        val c = MyApplication.context
 
         /**
          * 技能施放对象
@@ -126,11 +124,10 @@ data class SkillActionPro(
             SkillActionType.AURA -> {
                 ailmentName = if (target_assignment == 1) "DEBUFF" else "BUFF"
                 if (action_value_3 > 0) {
-                    "<$action_value_2 + $action_value_3 * 技能等级>，持续<$action_value_4>秒"
+                    "<$action_value_2 + $action_value_3 * 技能等级>"
                 } else {
-                    "<$action_value_2>，持续<$action_value_4>秒"
-                }
-
+                    "<$action_value_2>"
+                } + "，持续<$action_value_4>秒"
             }
             SkillActionType.CHARM -> {
                 ailmentName = when (action_detail_1) {

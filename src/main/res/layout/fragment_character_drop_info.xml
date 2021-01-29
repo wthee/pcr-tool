@@ -13,7 +13,7 @@
         android:layout_height="@dimen/normal_icon"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:layout_margin="@dimen/s_margin"
+        android:layout_margin="@dimen/s_dp"
         tools:src="@drawable/unknown_gray" />
 
     <androidx.recyclerview.widget.RecyclerView

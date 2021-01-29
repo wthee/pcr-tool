@@ -11,7 +11,7 @@
         android:id="@+id/loading"
         style="@style/ProgressBarStyle"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/xl_margin" />
+        android:layout_margin="@dimen/xl_dp" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
@@ -32,8 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@dimen/m_margin"
-        android:layout_marginBottom="@dimen/m_margin"
+        android:layout_marginEnd="@dimen/m_dp"
+        android:layout_marginBottom="@dimen/m_dp"
         android:contentDescription="@string/function"
         android:src="@drawable/ic_top"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,7 +46,7 @@
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="end|bottom"
         android:layout_marginTop="@dimen/efab_margin"
-        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginEnd="@dimen/xl_dp"
         android:layout_marginBottom="@dimen/efab_margin"
         android:contentDescription="@string/open_browser"
         android:text="@string/open_browser"

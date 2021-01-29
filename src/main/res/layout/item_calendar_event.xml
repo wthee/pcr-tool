@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/m_margin"
-    android:layout_marginEnd="@dimen/m_margin"
-    android:padding="@dimen/xs_padding">
+    android:layout_marginStart="@dimen/m_dp"
+    android:layout_marginEnd="@dimen/m_dp"
+    android:padding="@dimen/xs_dp">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/calendar_event_title"
@@ -24,8 +24,8 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/s_padding"
-        android:paddingEnd="@dimen/s_padding"
+        android:paddingStart="@dimen/s_dp"
+        android:paddingEnd="@dimen/s_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         app:layout_constraintTop_toBottomOf="@id/calendar_event_title"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin">
+    android:layout_margin="@dimen/s_dp">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/loop_title"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginTop="@dimen/s_dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/loop_title"
         app:spanCount="5"

@@ -7,15 +7,15 @@
     android:background="@drawable/bg_card_no_shadow"
     android:elevation="@dimen/home_fab_elevation"
     android:orientation="vertical"
-    android:paddingStart="@dimen/xm_padding"
-    android:paddingTop="@dimen/s_padding"
-    android:paddingEnd="@dimen/xm_padding">
+    android:paddingStart="@dimen/xm_dp"
+    android:paddingTop="@dimen/s_dp"
+    android:paddingEnd="@dimen/xm_dp">
 
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginTop="@dimen/m_dp"
         android:text="@string/search"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
@@ -34,7 +34,7 @@
         android:id="@+id/layout_filter"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/xs_margin"
+        android:layout_marginTop="@dimen/xs_dp"
         android:layout_weight="1"
         android:fadeScrollbars="false"
         android:scrollbars="vertical">
@@ -48,7 +48,7 @@
                 android:id="@+id/sort_character"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 android:text="@string/title_sort"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/colorPrimary"
@@ -58,7 +58,7 @@
                 android:id="@+id/sort_type_chips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 app:checkedChip="@id/sort_chip_0"
                 app:selectionRequired="true"
                 app:singleSelection="true">
@@ -103,7 +103,7 @@
                 android:id="@+id/title_sort_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 android:text="@string/sort_type"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/colorPrimary"
@@ -113,7 +113,7 @@
                 android:id="@+id/asc_chips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 app:checkedChip="@id/asc"
                 app:selectionRequired="true"
                 app:singleSelection="true">
@@ -154,7 +154,7 @@
                 android:id="@+id/chips_stars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 app:checkedChip="@id/position_chip_1"
                 app:selectionRequired="true"
                 app:singleSelection="true">
@@ -188,7 +188,7 @@
                 android:id="@+id/chips_raritys"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 app:checkedChip="@id/position_chip_1"
                 app:selectionRequired="true"
                 app:singleSelection="true">
@@ -222,7 +222,7 @@
                 android:id="@+id/chips_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 app:checkedChip="@id/position_chip_1"
                 app:selectionRequired="true"
                 app:singleSelection="true">
@@ -261,7 +261,7 @@
                 android:id="@+id/atk_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s_margin"
+                android:layout_marginTop="@dimen/s_dp"
                 android:text="@string/atk_type"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textColor="@color/colorPrimary" />
@@ -270,7 +270,7 @@
                 android:id="@+id/chips_atk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 app:checkedChip="@id/atk_chip_1"
                 app:selectionRequired="true"
                 app:singleSelection="true">
@@ -301,7 +301,7 @@
                 android:id="@+id/title_guild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/s_margin"
+                android:layout_marginTop="@dimen/s_dp"
                 android:text="@string/title_guild"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textColor="@color/colorPrimary" />
@@ -310,7 +310,7 @@
                 android:id="@+id/chips_guild"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 app:selectionRequired="true"
                 app:singleSelection="true" />
 

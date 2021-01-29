@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin"
+    android:padding="@dimen/s_dp"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
@@ -17,7 +17,7 @@
         android:id="@+id/calendar_event_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
+        android:layout_margin="@dimen/s_dp"
         android:gravity="start"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         tools:text="@string/app_name" />
