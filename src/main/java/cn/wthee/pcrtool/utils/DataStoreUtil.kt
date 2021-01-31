@@ -1,10 +1,11 @@
 package cn.wthee.pcrtool.utils
 
+
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import cn.wthee.pcrtool.MyApplication
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 /**
@@ -25,11 +26,9 @@ object DataStoreUtil {
     /**
      * 读取
      */
-    suspend inline fun get(key: String, listener: DataStoreRead) {
-        MyApplication.dataStore.data.map {
+    fun get(key: String): Flow<String?> {
+        return MyApplication.dataStore.data.map {
             it[stringPreferencesKey(key)]
-        }.collect {
-            listener.read(it)
         }
     }
 

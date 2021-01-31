@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import coil.load
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -53,15 +54,13 @@ class CharacterBasicInfoFragment : Fragment() {
             uid = getInt(UID)
         }
         lifecycleScope.launch {
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
-                override fun read(str: String?) {
-                    val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-                    CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
-                    //是否收藏
-                    isLoved =
-                        CharacterListFragment.characterFilterParams.starIds.contains(uid) ?: false
-                }
-            })
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+                val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
+                //是否收藏
+                isLoved =
+                    CharacterListFragment.characterFilterParams.starIds.contains(uid) ?: false
+            }
         }
     }
 

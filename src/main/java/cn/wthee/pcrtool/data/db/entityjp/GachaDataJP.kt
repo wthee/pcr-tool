@@ -35,6 +35,7 @@ data class GachaDataJP(
     @ColumnInfo(name = "chara_odds_star2") var chara_odds_star2: String = "",
     @ColumnInfo(name = "chara_odds_star3") var chara_odds_star3: String = "",
     //jp
+    @ColumnInfo(name = "pick_up_chara_text") var pick_up_chara_text: String = "",
     @ColumnInfo(name = "description_2") var description_2: String = "",
     @ColumnInfo(name = "description_sp") var description_sp: String = "",
     @ColumnInfo(name = "parallel_id") var parallel_id: Int = 0,

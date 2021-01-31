@@ -38,4 +38,5 @@ data class HatsuneScheduleJP(
     @ColumnInfo(name = "backgroud_pos_y") val backgroud_pos_y: Int,
     @ColumnInfo(name = "original_event_id") val original_event_id: Int,
     @ColumnInfo(name = "series_event_id") val series_event_id: Int,
+    @ColumnInfo(name = "teaser_dialog_type") val teaser_dialog_type: Int,
 )

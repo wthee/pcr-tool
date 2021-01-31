@@ -36,16 +36,13 @@ class LeaderFragment : Fragment() {
         leaderViewModel.leaderData.observe(viewLifecycleOwner, {
             if (it.status == 0) {
                 binding.tip.apply {
-                    text = it.data?.desc
+                    text = it.data?.desc?.replace("\n", " ")
                     isSelected = true
                 }
                 val adapter = CharacterLeaderAdapter(requireContext())
                 binding.toolList.adapter = adapter
                 adapter.submitList(it.data?.leader) {
                     binding.loading.text = ""
-                    binding.pvp.visibility = View.VISIBLE
-                    binding.clan.visibility = View.VISIBLE
-                    binding.tower.visibility = View.VISIBLE
                 }
             } else if (it.status == -1) {
                 ToastUtil.short(it.message)

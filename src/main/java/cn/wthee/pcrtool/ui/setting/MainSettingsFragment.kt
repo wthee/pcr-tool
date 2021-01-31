@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -51,16 +52,15 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //数据版本
         MainScope().launch {
             DataStoreUtil.get(
-                if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-                object : DataStoreRead {
-                    override fun read(str: String?) {
-                        titleDatabase.title = getString(R.string.data) + if (str != null) {
-                            str.split("/")[0]
-                        } else {
-                            ""
-                        }
-                    }
-                })
+                if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP
+            ).collect { str ->
+                titleDatabase.title = getString(R.string.data) + if (str != null) {
+                    str.split("/")[0]
+                } else {
+                    ""
+                }
+
+            }
         }
         //强制更新数据库
         forceUpdateDb?.setOnPreferenceClickListener {
@@ -113,14 +113,12 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val eggKL = findPreference<Preference>("kl")
         //是否显示
         lifecycleScope.launch {
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
-                override fun read(str: String?) {
-                    val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-                    CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
-                    eggs?.isVisible =
-                        CharacterListFragment.characterFilterParams.starIds.contains(107801)
-                }
-            })
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+                val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
+                eggs?.isVisible =
+                    CharacterListFragment.characterFilterParams.starIds.contains(107801)
+            }
         }
 
         eggKL?.setOnPreferenceClickListener {

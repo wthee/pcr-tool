@@ -18,11 +18,11 @@ import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.DataStoreRead
 import cn.wthee.pcrtool.utils.DataStoreUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -57,85 +57,82 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
         ) {
 
             MainScope().launch {
-                DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
-                    override fun read(str: String?) {
-                        val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-                        CharacterListFragment.characterFilterParams.starIds =
-                            starIds ?: arrayListOf()
-                        //是否收藏
-                        val isLoved =
-                            CharacterListFragment.characterFilterParams.starIds.contains(character.id)
-                        binding.apply {
-                            name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
-                            //加载动画
-                            root.animation =
-                                AnimationUtils.loadAnimation(
-                                    MyApplication.context,
-                                    R.anim.anim_list_item
-                                )
-                            //加载网络图片
-                            var id = character.id
-                            id += if (character.r6Id != 0) 60 else 30
-                            val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
-                            characterPic.load(picUrl) {
-                                error(R.drawable.error)
-                                placeholder(R.drawable.load)
-                                listener(
-                                    onStart = {
-                                        startEnter()
-                                    }
-                                )
-                            }
-                            //角色位置
-                            positionType.background =
-                                ResourcesUtil.getDrawable(getPositionIcon(character.position))
-                            //基本信息
-                            name.text = character.getNameF()
-                            nameExtra.text = character.getNameL()
-                            three.text = MyApplication.context.resources.getString(
-                                R.string.character_detail,
-                                character.getFixedAge(),
-                                character.getFixedHeight(),
-                                character.getFixedWeight(),
-                                character.position
+                DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+                    val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                    CharacterListFragment.characterFilterParams.starIds =
+                        starIds ?: arrayListOf()
+                    //是否收藏
+                    val isLoved =
+                        CharacterListFragment.characterFilterParams.starIds.contains(character.id)
+                    binding.apply {
+                        name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
+                        //加载动画
+                        root.animation =
+                            AnimationUtils.loadAnimation(
+                                MyApplication.context,
+                                R.anim.anim_list_item
                             )
-                            //设置共享元素名称
-                            root.transitionName = "item_${character.id}"
-                            //点击跳转
-                            root.setOnClickListener {
-                                if (MainActivity.canClick) {
-                                    MainActivity.canClick = false
-                                    MainActivity.currentCharaPosition = absoluteAdapterPosition
-                                    val bundle = Bundle()
-                                    bundle.putInt(UID, character.id)
-                                    val extras =
-                                        FragmentNavigatorExtras(
-                                            root to root.transitionName
-                                        )
-                                    root.findNavController().navigate(
-                                        R.id.action_characterListFragment_to_characterPagerFragment,
-                                        bundle,
-                                        null,
-                                        extras
+                        //加载网络图片
+                        var id = character.id
+                        id += if (character.r6Id != 0) 60 else 30
+                        val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
+                        characterPic.load(picUrl) {
+                            error(R.drawable.error)
+                            placeholder(R.drawable.load)
+                            listener(
+                                onStart = {
+                                    startEnter()
+                                }
+                            )
+                        }
+                        //角色位置
+                        positionType.background =
+                            ResourcesUtil.getDrawable(getPositionIcon(character.position))
+                        //基本信息
+                        name.text = character.getNameF()
+                        nameExtra.text = character.getNameL()
+                        three.text = MyApplication.context.resources.getString(
+                            R.string.character_detail,
+                            character.getFixedAge(),
+                            character.getFixedHeight(),
+                            character.getFixedWeight(),
+                            character.position
+                        )
+                        //设置共享元素名称
+                        root.transitionName = "item_${character.id}"
+                        //点击跳转
+                        root.setOnClickListener {
+                            if (MainActivity.canClick) {
+                                MainActivity.canClick = false
+                                MainActivity.currentCharaPosition = absoluteAdapterPosition
+                                val bundle = Bundle()
+                                bundle.putInt(UID, character.id)
+                                val extras =
+                                    FragmentNavigatorExtras(
+                                        root to root.transitionName
                                     )
-                                }
-                            }
-                            //长按事件
-                            binding.root.setOnLongClickListener {
-                                //收藏或取消
-                                CharacterListFragment.characterFilterParams.apply {
-                                    addOrRemove(character.id)
-                                }
-                                notifyItemChanged(
-                                    absoluteAdapterPosition
+                                root.findNavController().navigate(
+                                    R.id.action_characterListFragment_to_characterPagerFragment,
+                                    bundle,
+                                    null,
+                                    extras
                                 )
-                                return@setOnLongClickListener true
                             }
                         }
+                        //长按事件
+                        binding.root.setOnLongClickListener {
+                            //收藏或取消
+                            CharacterListFragment.characterFilterParams.apply {
+                                addOrRemove(character.id)
+                            }
+                            notifyItemChanged(
+                                absoluteAdapterPosition
+                            )
+                            return@setOnLongClickListener true
+                        }
                     }
-                })
+                }
             }
-
         }
 
         private fun startEnter() {

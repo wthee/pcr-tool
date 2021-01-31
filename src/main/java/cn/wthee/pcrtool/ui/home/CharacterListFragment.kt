@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -100,19 +101,18 @@ class CharacterListFragment : CommonListFragment() {
     private fun load() {
         lifecycleScope.launch {
             //获取角色
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER, object : DataStoreRead {
-                override fun read(str: String?) {
-                    val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-                    characterFilterParams.starIds = newStarIds ?: arrayListOf()
-                    viewModel.getCharacters(
-                        characterFilterParams,
-                        sortType,
-                        sortAsc,
-                        characterName,
-                        false
-                    )
-                }
-            })
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+                val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                characterFilterParams.starIds = newStarIds ?: arrayListOf()
+                viewModel.getCharacters(
+                    characterFilterParams,
+                    sortType,
+                    sortAsc,
+                    characterName,
+                    false
+                )
+
+            }
         }
     }
 
