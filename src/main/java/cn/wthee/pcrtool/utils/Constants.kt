@@ -18,16 +18,24 @@ object Constants {
     const val API_URL = "https://wthee.xyz:1211/api/"
 
     //数据库
-    const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
-    const val DATABASE_Name_JP = "redive_jp.db"
+    const val DATABASE_DOWNLOAD_FILE_NAME_JP = "redive_jp.db.br"
+    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP = "redive_jp_backup.db.br"
+    const val DATABASE_NAME_JP = "redive_jp.db"
+    const val DATABASE_BACKUP_NAME_JP = "redive_jp_backup.db"
     const val DATABASE_WAL_JP = "redive_jp.db-wal"
+    const val DATABASE_WAL_JP_BACKUP = "redive_jp_backup.db-wal"
     const val DATABASE_SHM_JP = "redive_jp.db-shm"
+    const val DATABASE_SHM_JP_BACKUP = "redive_jp_backup.db-shm"
     const val DATABASE_VERSION_URL_JP = "last_version_jp.json"
 
-    const val DATABASE_DOWNLOAD_File_Name = "redive_cn.db.br"
-    const val DATABASE_Name = "redive_cn.db"
+    const val DATABASE_DOWNLOAD_FILE_NAME = "redive_cn.db.br"
+    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP = "redive_cn_backup.db.br"
+    const val DATABASE_NAME = "redive_cn.db"
+    const val DATABASE_BACKUP_NAME = "redive_cn_backup.db"
     const val DATABASE_WAL = "redive_cn.db-wal"
+    const val DATABASE_WAL_BACKUP = "redive_cn_backup.db-wal"
     const val DATABASE_SHM = "redive_cn.db-shm"
+    const val DATABASE_SHM_BACKUP = "redive_cn_backup.db-shm"
     const val DATABASE_VERSION_URL = "last_version_cn.json"
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_PVP = "pvp.db"
@@ -63,10 +71,8 @@ object Constants {
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
     const val SP_STAR_EQUIP = "star_equip"
-
-    //数量
-    const val SP_COUNT_CHARACTER = "count_character"
-    const val SP_COUNT_EQUIP = "count_equip"
+    const val SP_BACKUP_CN = "backup_cn"
+    const val SP_BACKUP_JP = "backup_jp"
 
     //默认值
     const val SORT_ASC = false

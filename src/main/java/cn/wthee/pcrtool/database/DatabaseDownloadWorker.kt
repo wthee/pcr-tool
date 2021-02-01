@@ -43,8 +43,10 @@ class DatabaseDownloadWorker(
     private val folderPath = FileUtil.getDatabaseDir()
 
     companion object {
+        const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
+        const val KEY_FORCE = "KEY_FORCE"
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -52,19 +54,28 @@ class DatabaseDownloadWorker(
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
+        val fileName = inputData.getString(KEY_FILE)
+        val force = inputData.getBoolean(KEY_FORCE, false)
         setForegroundAsync(createForegroundInfo())
         //显示加载进度
         MainScope().launch {
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
         }
-        return@coroutineScope download(version, type)
+        return@coroutineScope download(
+            version,
+            type,
+            fileName ?: Constants.DATABASE_DOWNLOAD_FILE_NAME,
+            force
+        )
     }
 
 
     private fun download(
         version: String,
-        type: Int
+        type: Int,
+        fileName: String,
+        force: Boolean,
     ): Result {
         try {
             //创建Retrofit服务
@@ -90,12 +101,8 @@ class DatabaseDownloadWorker(
                     }
                 })
             )
-
             //下载文件
-            val response =
-                service.getDb(if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP)
-                    .execute()
-
+            val response = service.getDb(fileName).execute()
             //保存
             //创建数据库文件夹
             val file = File(folderPath)
@@ -103,18 +110,50 @@ class DatabaseDownloadWorker(
                 file.mkdir()
             }
             //br压缩包路径
-            val dbZipPath = FileUtil.getDatabaseZipPath(type)
+            val dbZipPath = FileUtil.getDatabaseDir() + File.separator + fileName
             val db = File(dbZipPath)
             if (db.exists()) {
                 //删除已有数据库文件
                 FileUtil.deleteMainDatabase(type)
             }
+            //自动备份
+            var firstDownload = false
+            val dbFile = File(FileUtil.getDatabasePath(type))
+            if (dbFile.exists() && dbFile.length() > 1024 * 1024) {
+                //已下载过，并且非强制更新。在此处备份
+                if (!force) {
+                    FileUtil.copy(
+                        FileUtil.getDatabasePath(type),
+                        FileUtil.getDatabaseBackupPath(type)
+                    )
+                }
+            } else {
+                //首次下载，等待解压结束后备份
+                firstDownload = true
+            }
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
             //更新数据库
-            AppDatabase.getInstance().close()
-            AppDatabaseJP.getInstance().close()
+            if (!firstDownload) {
+                if (type == 1) {
+                    AppDatabase.getInstance().close()
+                } else {
+                    AppDatabaseJP.getInstance().close()
+                }
+            }
+            //删除旧的wal
+            FileUtil.apply {
+                delete(getDatabaseBackupWalPath(1))
+                delete(getDatabaseBackupWalPath(2))
+                delete(getDatabaseWalPath(1))
+                delete(getDatabaseWalPath(2))
+            }
+            //加压缩
             UnzippedUtil.deCompress(db, true)
+            //首次下载备份，并且非强制更新。不备份远程备份文件
+            if (firstDownload && !fileName.contains("backup") && !force) {
+                FileUtil.copy(FileUtil.getDatabasePath(type), FileUtil.getDatabaseBackupPath(type))
+            }
             notificationManager.cancelAll()
             //更新数据库版本号
             DatabaseUpdater.updateLocalDataBaseVersion(version)

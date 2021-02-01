@@ -2,9 +2,10 @@ package cn.wthee.pcrtool.utils
 
 import android.os.Build
 import cn.wthee.pcrtool.MyApplication
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
+import cn.wthee.pcrtool.R
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import java.io.*
 
 /**
  * 文件路径获取
@@ -25,13 +26,25 @@ object FileUtil {
      * 数据库路径
      */
     fun getDatabasePath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_Name else Constants.DATABASE_Name_JP
+        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_NAME else Constants.DATABASE_NAME_JP
+
+    /**
+     * 数据库备份路径
+     */
+    fun getDatabaseBackupPath(type: Int) =
+        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_BACKUP_NAME else Constants.DATABASE_BACKUP_NAME_JP
 
     /**
      * wal 文件路径
      */
-    private fun getDatabaseWalPath(type: Int) =
+    fun getDatabaseWalPath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_WAL else Constants.DATABASE_WAL_JP
+
+    /**
+     * 备份 wal 文件路径
+     */
+    fun getDatabaseBackupWalPath(type: Int) =
+        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_WAL_BACKUP else Constants.DATABASE_WAL_JP_BACKUP
 
     /**
      * shm 文件路径
@@ -40,10 +53,11 @@ object FileUtil {
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_SHM else Constants.DATABASE_SHM_JP
 
     /**
-     * 数据库压缩文件路径
+     * shm 文件路径
      */
-    fun getDatabaseZipPath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP
+    private fun getDatabaseBackupShmPath(type: Int) =
+        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_SHM_BACKUP else Constants.DATABASE_SHM_JP_BACKUP
+
 
     /**
      * 数据库是否需要判断
@@ -72,6 +86,24 @@ object FileUtil {
     }
 
     /**
+     * 删除备份数据库文件
+     */
+    fun deleteBackupDatabase(type: Int) {
+        val db = File(getDatabaseBackupPath(type))
+        if (db.exists()) {
+            db.delete()
+        }
+        val wal = File(getDatabaseBackupWalPath(type))
+        if (wal.exists()) {
+            wal.delete()
+        }
+        val shm = File(getDatabaseBackupShmPath(type))
+        if (shm.exists()) {
+            shm.delete()
+        }
+    }
+
+    /**
      * 保存文件
      */
     fun save(input: InputStream, output: File) {
@@ -86,4 +118,37 @@ object FileUtil {
         input.close()
     }
 
+    /**
+     * 删除文件
+     */
+    fun delete(path: String) {
+        val file = File(path)
+        if (file.exists()) {
+            file.delete()
+        }
+    }
+
+    /**
+     * 备份文件
+     */
+    fun copy(source: String, dest: String) {
+        var `in`: InputStream? = null
+        var out: OutputStream? = null
+        try {
+            `in` = FileInputStream(File(source))
+            out = FileOutputStream(File(dest))
+            val buffer = ByteArray(1024 * 4)
+            var len: Int
+            while (`in`.read(buffer).also { len = it } > 0) {
+                out.write(buffer, 0, len)
+            }
+        } catch (e: Exception) {
+            MainScope().launch {
+                ToastUtil.short(ResourcesUtil.getString(R.string.backup_error))
+            }
+        } finally {
+            `in`?.close()
+            out?.close()
+        }
+    }
 }

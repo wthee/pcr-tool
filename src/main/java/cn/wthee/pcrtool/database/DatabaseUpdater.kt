@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.content.Context
 import android.view.View
 import androidx.preference.PreferenceManager
 import androidx.work.Data
@@ -72,59 +73,102 @@ object DatabaseUpdater {
         force: Boolean = false
     ) {
         //更新判断
-        val downloadJob =
-            MainScope().launch {
-                val type = getDatabaseType()
-                val downloadFlow =
-                    DataStoreUtil.get(if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP)
-                downloadFlow.collect { str ->
-                    val databaseType = getDatabaseType()
-                    //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
-                    val toDownload = str != ver.toString()  //版本号hash远程不一致
-                            || force  //强制更新
-                            || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || str == "0"))  //打开应用，数据库wal被清空
-                            || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
-                    if (toDownload) {
-                        //开始下载
-                        if (NetworkUtil.isEnable()) {
-                            val uploadWorkRequest =
-                                OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
-                                    .setInputData(
-                                        Data.Builder()
-                                            .putString(
-                                                DatabaseDownloadWorker.KEY_VERSION,
-                                                ver.toString()
-                                            )
-                                            .putInt(
-                                                DatabaseDownloadWorker.KEY_VERSION_TYPE,
-                                                databaseType
-                                            )
-                                            .build()
-                                    )
-                                    .build()
-                            WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
-                                "updateDatabase",
-                                ExistingWorkPolicy.KEEP,
-                                uploadWorkRequest
-                            )
+        MainScope().launch {
+            val type = getDatabaseType()
+            val downloadFlow =
+                DataStoreUtil.get(if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP)
+            downloadFlow.collect { str ->
+                val databaseType = getDatabaseType()
+                //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
+                val backupMode = if (type == 1) MainActivity.backupCN else MainActivity.backupJP
+                val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
+                    "main",
+                    Context.MODE_PRIVATE
+                )
+                val remoteBackupMode = sp.getBoolean(
+                    if (type == 1) Constants.SP_BACKUP_CN else Constants.SP_BACKUP_JP,
+                    false
+                )
+                //正常下载
+                var toDownload = str != ver.toString()  //版本号hash远程不一致
+                        || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || str == "0"))  //打开应用，数据库wal被清空
+                        || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
+                toDownload = toDownload && !remoteBackupMode && !backupMode
+                //下载远程备份
+                val toDownloadRemoteBackup =
+                    remoteBackupMode && File(FileUtil.getDatabaseBackupPath(databaseType)).length() < 1024 * 1024
+                if (toDownload || toDownloadRemoteBackup || force) {
+                    //远程备份时
+                    var fileName =
+                        if (type == 1) {
+                            if (remoteBackupMode) {
+                                Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP
+                            } else {
+                                Constants.DATABASE_DOWNLOAD_FILE_NAME
+                            }
+                        } else {
+                            if (remoteBackupMode) {
+                                Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP
+                            } else {
+                                Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
+                            }
                         }
-                    } else {
-                        //强制更新/切换成功，引导关闭应用
-                        if (fromSetting != -1) {
-                            handler.sendEmptyMessage(1)
-                        }
-                        //更新数据库版本号
-                        try {
-                            MainSettingsFragment.titleDatabase.title =
-                                MyApplication.context.getString(R.string.data) + ver.TruthVersion
-                        } catch (e: Exception) {
-                        } finally {
-                            updateLocalDataBaseVersion(ver.toString())
+                    //强制更新时
+                    if (force) {
+                        fileName = if (type == 1) {
+                            Constants.DATABASE_DOWNLOAD_FILE_NAME
+                        } else {
+                            Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
                         }
                     }
-                    this.cancel()
+                    //开始下载
+                    if (NetworkUtil.isEnable()) {
+                        val uploadWorkRequest =
+                            OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
+                                .setInputData(
+                                    Data.Builder()
+                                        .putString(
+                                            DatabaseDownloadWorker.KEY_VERSION,
+                                            ver.toString()
+                                        )
+                                        .putString(
+                                            DatabaseDownloadWorker.KEY_FILE,
+                                            fileName
+                                        )
+                                        .putInt(
+                                            DatabaseDownloadWorker.KEY_VERSION_TYPE,
+                                            databaseType
+                                        )
+                                        .putBoolean(
+                                            DatabaseDownloadWorker.KEY_FORCE,
+                                            force
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
+                            "updateDatabase",
+                            ExistingWorkPolicy.KEEP,
+                            uploadWorkRequest
+                        )
+                    }
+                } else {
+                    //强制更新/切换成功，引导关闭应用
+                    if (fromSetting != -1) {
+                        handler.sendEmptyMessage(1)
+                    }
+                    //更新数据库版本号
+                    try {
+                        MainSettingsFragment.titleDatabase.title =
+                            MyApplication.context.getString(R.string.data) + ver.TruthVersion
+                    } catch (e: Exception) {
+                    } finally {
+                        updateLocalDataBaseVersion(ver.toString())
+                    }
                 }
+                this.cancel()
             }
+        }
     }
 
     /**
