@@ -189,17 +189,19 @@ class CalendarJPFragment : Fragment() {
             eventData.forEach {
                 eventCount += it.type.split("-").size
             }
-            eventDays.add(
-                EventDay(
-                    sc,
-                    getDrawableText(
-                        requireContext(),
-                        eventCount.toString(),
-                        R.color.colorPrimaryDark,
-                        10
+            if (eventCount > 0) {
+                eventDays.add(
+                    EventDay(
+                        sc,
+                        getDrawableText(
+                            requireContext(),
+                            eventCount.toString(),
+                            R.color.colorPrimaryDark,
+                            10
+                        )
                     )
                 )
-            )
+            }
         }
 
         binding.calendarView.setEvents(eventDays)

@@ -190,20 +190,22 @@ class CalendarFragment : Fragment() {
             it.content.forEach { c ->
                 eventCount += c.events.size
             }
-            val calendar = Calendar.getInstance()
-            val date = it.date.split("/")
-            calendar.set(date[0].toInt(), date[1].toInt() - 1, date[2].toInt())
-            events.add(
-                EventDay(
-                    calendar,
-                    getDrawableText(
-                        requireContext(),
-                        eventCount.toString(),
-                        R.color.colorPrimaryDark,
-                        10
+            if (eventCount > 0) {
+                val calendar = Calendar.getInstance()
+                val date = it.date.split("/")
+                calendar.set(date[0].toInt(), date[1].toInt() - 1, date[2].toInt())
+                events.add(
+                    EventDay(
+                        calendar,
+                        getDrawableText(
+                            requireContext(),
+                            eventCount.toString(),
+                            R.color.colorPrimaryDark,
+                            10
+                        )
                     )
                 )
-            )
+            }
         }
         binding.calendarView.setEvents(events)
 
