@@ -132,15 +132,18 @@ interface CharacterDao {
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
             unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
-            COALESCE(cts.comments, "") AS comments
+            COALESCE(cts.comments, "") AS comments,
+            GROUP_CONCAT(r.description, "-") AS room_comments
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN actual_unit_background ON ( unit_data.unit_id = actual_unit_background.unit_id - 30 OR unit_data.unit_id = actual_unit_background.unit_id - 31 )
             LEFT JOIN (SELECT unit_id, GROUP_CONCAT( description, '-' ) AS comments FROM unit_comments GROUP BY unit_id) AS cts ON cts.unit_id = unit_profile.unit_id
+            LEFT JOIN room_unit_comments AS r ON unit_profile.unit_id = r.unit_id
         WHERE 
-            unit_profile.unit_id = :unitId """
+            unit_profile.unit_id = :unitId 
+        GROUP BY unit_profile.unit_id """
     )
     suspend fun getInfoPro(unitId: Int): CharacterInfoPro
 
@@ -193,10 +196,20 @@ interface CharacterDao {
     suspend fun getSkillData(sid: Int): SkillData
 
     /**
-     * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillAction]
+     * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillActionPro]
      */
-    @Query("SELECT * FROM skill_action  WHERE action_id IN (:aid)")
-    suspend fun getSkillActions(aid: List<Int>): List<SkillAction>
+    @Query(
+        """
+        SELECT
+            a.*,
+           COALESCE( b.ailment_name,"") as ailment_name
+        FROM
+            skill_action AS a
+            LEFT JOIN ailment_data as b ON a.action_type = b.ailment_action AND (a.action_detail_1 = b.ailment_detail_1 OR b.ailment_detail_1 = -1)
+         WHERE action_id IN (:aid)
+    """
+    )
+    suspend fun getSkillActions(aid: List<Int>): List<SkillActionPro>
 
     /**
      * 获取角色最大等级
@@ -279,8 +292,9 @@ interface CharacterDao {
                 LEFT JOIN chara_identity AS b ON a.chara_id_1 = b.unit_id / 100 
             ) AS c 
         WHERE
-            c.chara_type IN ( SELECT chara_type FROM chara_identity WHERE unit_id =:unitId)
+            c.chara_type = ( SELECT chara_type FROM chara_identity WHERE unit_id =:unitId)
     """
     )
     suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>
+
 }

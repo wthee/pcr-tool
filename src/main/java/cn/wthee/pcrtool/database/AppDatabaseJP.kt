@@ -50,8 +50,11 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         EventTopAdvJP::class,
         OddsNameData::class,
         HatsuneScheduleJP::class,
+        CampaignScheduleJP::class,
+        CharacterRoomComments::class,
+        AilmentData::class,
     ],
-    version = 63,
+    version = 64,
     exportSchema = false
 )
 /**

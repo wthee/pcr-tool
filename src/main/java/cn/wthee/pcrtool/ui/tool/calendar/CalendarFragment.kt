@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.adapter.CalendarEventAdapter
 import cn.wthee.pcrtool.data.network.model.CalendarDay
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
@@ -19,7 +20,7 @@ import java.util.*
 
 
 /**
- * 日历
+ * 日历国服
  *
  * 页面布局 [FragmentToolCalendarBinding]
  *
@@ -29,14 +30,16 @@ class CalendarFragment : Fragment() {
 
 
     private lateinit var binding: FragmentToolCalendarBinding
-    private lateinit var adapter: CalendarEventAdapter
     private var events = listOf<CalendarDay>()
     private var mYear = 0
     private var mMonth = 0
     private lateinit var minCal: Calendar
     private lateinit var maxCal: Calendar
     private lateinit var cal: Calendar
-    private val calendarViewModel by activityViewModels<CalendarViewModel>()
+    private val calendarViewModel by activityViewModels<CalendarViewModel> {
+        InjectorUtil.provideCalendarViewModelFactory()
+    }
+    private var adapter = CalendarEventAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +70,8 @@ class CalendarFragment : Fragment() {
             minCal.set(2020, 6 - 1, 6)
             setMinimumDate(minCal)
             setOnDayClickListener { eventDay ->
-                showDayEvents(eventDay.calendar)
+                cal = eventDay.calendar
+                showDayEvents(cal)
             }
             //月份切换监听
             setOnForwardPageChangeListener {
@@ -108,7 +112,6 @@ class CalendarFragment : Fragment() {
         binding.currentDate.text =
             resources.getString(R.string.date_m_d, month.toString(), day.toString())
         //列表
-        adapter = CalendarEventAdapter()
         binding.events.adapter = adapter
         //初始加载
         calendarViewModel.getCalendar()
@@ -118,9 +121,18 @@ class CalendarFragment : Fragment() {
                 binding.calendarView.visibility = View.VISIBLE
                 //设置最大值
                 maxCal = Calendar.getInstance()
-                val date = list.data!!.maxDate.split("/")
-                maxCal.set(date[0].toInt(), date[1].toInt() - 1, date[2].toInt())
+                val max = events.maxByOrNull {
+                    it.date
+                }!!.date.split("/")
+                maxCal.set(max[0].toInt(), max[1].toInt() - 1, max[2].toInt(), 0, 0, 0)
                 binding.calendarView.setMaximumDate(maxCal)
+                //设置最小值
+                minCal = Calendar.getInstance()
+                val min = events.minByOrNull {
+                    it.date
+                }!!.date.split("/")
+                minCal.set(min[0].toInt(), min[1].toInt() - 1, min[2].toInt(), 0, 0, 0)
+                binding.calendarView.setMinimumDate(minCal)
                 //显示事件列表
                 showDayEvents(cal)
             } else if (list.status == -1) {
@@ -196,10 +208,5 @@ class CalendarFragment : Fragment() {
         binding.calendarView.setEvents(events)
 
     }
-
-    interface OnLoadFinish {
-        fun finish(maxDate: String)
-    }
-
 
 }

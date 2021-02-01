@@ -79,7 +79,7 @@
                 android:id="@+id/select_characters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/xs_margin"
+                android:layout_margin="@dimen/xs_dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="5"
                 tools:itemCount="5"
@@ -94,7 +94,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/s_margin">
+                android:layout_marginTop="@dimen/s_dp">
 
                 <LinearLayout
                     android:id="@+id/select"
@@ -156,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 android:text="@string/no_liked_data"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textColor="@color/colorPrimary" />
@@ -165,7 +165,7 @@
                 android:id="@+id/list_liked"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

@@ -1,12 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.equip
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -32,7 +30,7 @@ class EquipmentListFragment : Fragment() {
     companion object {
         lateinit var list: RecyclerView
         lateinit var motionLayout: MotionLayout
-        var equipFilterParams = FilterEquipment(true, "全部")
+        var equipFilterParams = FilterEquipment("全部")
         var asc = false
         lateinit var equipTypes: ArrayList<String>
         lateinit var pageAdapter: EquipmentListAdapter
@@ -94,7 +92,6 @@ class EquipmentListFragment : Fragment() {
 
     private fun reset() {
         equipFilterParams.initData()
-        equipFilterParams.all = true
         equipName = ""
         viewModel.getEquips(equipName)
     }
@@ -104,10 +101,6 @@ class EquipmentListFragment : Fragment() {
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
             viewModel.equipmentCounts.observe(viewLifecycleOwner, {
-                val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
-                sp.edit {
-                    putInt(Constants.SP_COUNT_EQUIP, it)
-                }
                 binding.equipCount.text = it.toString()
             })
         }

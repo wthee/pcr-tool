@@ -15,24 +15,16 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
     fun getPagingEquipments(name: String, filter: FilterEquipment) =
-        equipmentDao.getPagingEquipments(
-            filter.type, name,
-            if (filter.all) 1 else 0,
-            filter.starIds
-        )
+        equipmentDao.getPagingEquipments(filter.type, name)
 
     suspend fun getEquipmentCount(name: String, filter: FilterEquipment) =
-        equipmentDao.getEquipmentCount(
-            filter.type, name,
-            if (filter.all) 1 else 0,
-            filter.starIds
-        )
+        equipmentDao.getEquipmentCount(filter.type, name)
 
     suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)
 
     suspend fun getEquipmentCraft(eid: Int) = equipmentDao.getEquipmentCraft(eid)
 
-    suspend fun getUniqueEquipInfos(uid: Int, lv: Int) = equipmentDao.getUniqueEquipInfos(uid, lv)
+    suspend fun getUniqueEquipInfo(uid: Int, lv: Int) = equipmentDao.getUniqueEquipInfos(uid, lv)
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
 

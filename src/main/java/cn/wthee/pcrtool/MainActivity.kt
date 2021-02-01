@@ -86,10 +86,10 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).cancelAllWork()
         //初始化
         init()
-        //数据库版本检查
-        DatabaseUpdater.checkDBVersion()
         //监听
         setListener()
+        //数据库版本检查
+        DatabaseUpdater.checkDBVersion()
         //应用版本校验
         AppUpdateUtil.init(this, layoutInflater)
     }
@@ -186,7 +186,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_characterListFragment_to_toolNewsFragment,
             R.id.action_characterListFragment_to_toolPvpFragment,
             R.id.action_characterListFragment_to_eventFragment,
-            R.id.action_characterListFragment_to_calendarFragment,
+            if (DatabaseUpdater.getDatabaseType() == 1)
+                R.id.action_characterListFragment_to_calendarFragment
+            else
+                R.id.action_characterListFragment_to_calendarJPFragment,
             R.id.action_characterListFragment_to_toolGachaFragment,
             R.id.action_characterListFragment_to_guildFragment,
         )

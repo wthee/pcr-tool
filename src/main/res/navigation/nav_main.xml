@@ -153,6 +153,13 @@
             app:exitAnim="@anim/fragment_exit_no_scale"
             app:popEnterAnim="@anim/fragment_popenter_no_scale"
             app:popExitAnim="@anim/fragment_popexit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_calendarJPFragment"
+            app:destination="@id/calendarJPFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit_no_scale"
+            app:popEnterAnim="@anim/fragment_popenter_no_scale"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/equipmentListFragment"
@@ -174,5 +181,9 @@
             android:id="@+id/action_guildFragment_to_characterPagerFragment"
             app:destination="@id/characterPagerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/calendarJPFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.calendar.CalendarJPFragment"
+        android:label="CalendarJPFragment" />
 
 </navigation>

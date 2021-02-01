@@ -1,15 +1,17 @@
 package cn.wthee.pcrtool.data.bean
 
-import android.content.Context
-import androidx.core.content.edit
-import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.DataStoreUtil
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 /**
  * 角色信息筛选
+ *
+ * fixme starIds获取问题
  */
 class FilterCharacter(
     var all: Boolean,
@@ -19,26 +21,12 @@ class FilterCharacter(
     var guild: String
 ) : Serializable {
     var starIds = arrayListOf<Int>()
-        get() {
-            val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
-                "main",
-                Context.MODE_PRIVATE
-            )
-            val star = sp.getString(
-                Constants.SP_STAR_CHARACTER,
-                Gson().toJson(arrayListOf<Int>())
-            )
-            return Gson().fromJson(star, object : TypeToken<List<Int>>() {}.type)
-        }
         set(value) {
-            val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
-                "main",
-                Context.MODE_PRIVATE
-            )
-            sp.edit {
-                putString(Constants.SP_STAR_CHARACTER, Gson().toJson(value))
+            val list = arrayListOf<Int>()
+            value.forEach {
+                list.add(it.toInt())
             }
-            field = value
+            field = list
         }
 
     fun addOrRemove(vararg id: Int) {
@@ -50,7 +38,14 @@ class FilterCharacter(
                 list.add(it)
             }
         }
-        starIds = list
+        //保存
+        MainScope().launch {
+            DataStoreUtil.save(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+                val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                starIds = newStarIds ?: arrayListOf()
+            }
+        }
     }
 
 

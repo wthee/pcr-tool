@@ -96,6 +96,7 @@ class CharacterFilterDialogFragment : CommonDialogFragment() {
         //筛选
         CharacterListFragment.characterName = binding.searchInput.text.toString()
         viewModel.getCharacters(
+            CharacterListFragment.characterFilterParams,
             CharacterListFragment.sortType,
             CharacterListFragment.sortAsc, CharacterListFragment.characterName
         )

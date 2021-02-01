@@ -7,14 +7,14 @@
     android:background="@drawable/bg_card_no_shadow"
     android:elevation="@dimen/home_fab_elevation"
     android:orientation="vertical"
-    android:paddingStart="@dimen/xm_padding"
-    android:paddingTop="@dimen/s_padding"
-    android:paddingEnd="@dimen/xm_padding">
+    android:paddingStart="@dimen/xm_dp"
+    android:paddingTop="@dimen/s_dp"
+    android:paddingEnd="@dimen/xm_dp">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/m_margin"
+        android:layout_marginTop="@dimen/m_dp"
         android:text="@string/search"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
@@ -32,7 +32,7 @@
         android:id="@+id/layout_filter"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/xs_margin"
+        android:layout_marginTop="@dimen/xs_dp"
         android:layout_weight="1"
         android:fadeScrollbars="false"
         android:scrollbars="vertical">
@@ -43,47 +43,11 @@
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title_star"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_love"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chips_stars"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
-                app:checkedChip="@id/position_chip_1"
-                app:selectionRequired="true"
-                app:singleSelection="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/star_0"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_all" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/star_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stared" />
-
-
-            </com.google.android.material.chip.ChipGroup>
-
-
-            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/filter_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_margin"
-                android:layout_marginBottom="@dimen/m_margin"
+                android:layout_marginTop="@dimen/m_dp"
+                android:layout_marginBottom="@dimen/m_dp"
                 android:text="@string/equip_type"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/colorPrimary"

@@ -37,7 +37,6 @@ object StarViewUtil {
         onSelect: OnSelect
     ) {
         partent.removeAllViews()
-        //TODO 替换成粉星
         for (i in 0 until num) {
             val starView = AppCompatImageView(context)
             starView.setBackgroundResource(if (i < 5) R.drawable.ic_star else R.drawable.ic_star_pink)

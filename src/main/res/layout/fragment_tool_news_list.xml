@@ -7,12 +7,6 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/loading"
-        style="@style/ProgressBarStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
@@ -21,7 +15,7 @@
         android:layout_weight="1"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/loading">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/news_list"
@@ -41,7 +35,7 @@
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/efab_margin"
-        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginEnd="@dimen/xl_dp"
         android:layout_marginBottom="@dimen/efab_margin"
         android:contentDescription="@string/share"
         android:text="@string/share"

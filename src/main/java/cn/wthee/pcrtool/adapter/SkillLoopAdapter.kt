@@ -61,7 +61,8 @@ class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoop
                         2001 -> iconTypes[101]
                         2002 -> iconTypes[102]
                         1001 -> iconTypes[2]
-                        else -> iconTypes[3]
+                        1002 -> iconTypes[3]
+                        else -> ""
                     }
                     //图标地址
                     val picUrl = SKILL_ICON_URL + iconType + WEBP

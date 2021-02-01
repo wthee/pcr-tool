@@ -60,7 +60,7 @@ class EquipmentViewModel(
      */
     fun getUniqueEquipInfos(uid: Int, lv: Int) {
         viewModelScope.launch {
-            val data = equipmentRepository.getUniqueEquipInfos(uid, lv)
+            val data = equipmentRepository.getUniqueEquipInfo(uid, lv)
             uniqueEquip.postValue(data)
         }
     }

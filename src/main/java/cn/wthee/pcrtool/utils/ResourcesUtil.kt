@@ -24,6 +24,11 @@ object ResourcesUtil {
     fun getDrawable(resId: Int) = ResourcesCompat.getDrawable(resource, resId, null)
 
     /**
+     * 获取文本
+     */
+    fun getString(resId: Int) = MyApplication.context.getString(resId)
+
+    /**
      * 设置标题风格
      */
     fun MaterialTextView.setTitleBackground(resId: Int) {

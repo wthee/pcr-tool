@@ -31,6 +31,7 @@ data class CharacterDataJP(
     @ColumnInfo(name = "start_time") var startTime: String = "",
     @ColumnInfo(name = "end_time") var endTime: String = "",
     //jp
+    @ColumnInfo(name = "prefab_id_battle") var prefabIdBattle: Int = 0,
     @ColumnInfo(name = "is_limited") var isLimited: Int = 0,
     @ColumnInfo(name = "cutin1_star6") var cutin1Star6: Int = 0,
     @ColumnInfo(name = "cutin2_star6") var cutin2Star6: Int = 0

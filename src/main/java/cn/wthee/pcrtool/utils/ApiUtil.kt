@@ -80,11 +80,11 @@ object ApiUtil {
             .build()
     }
 
+
     /**
      * 创建服务
      */
     fun <T> create(serviceClass: Class<T>, url: String): T {
-
         val builder = Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())

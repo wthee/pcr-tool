@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin"
+    android:padding="@dimen/s_dp"
     android:layout_gravity="center">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_pic"
         android:layout_width="@dimen/xl_icon"
         android:layout_height="@dimen/xl_icon"
-        android:layout_margin="@dimen/s_margin"
+        android:layout_margin="@dimen/s_dp"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

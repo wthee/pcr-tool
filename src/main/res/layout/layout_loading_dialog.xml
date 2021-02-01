@@ -4,22 +4,22 @@
     android:id="@+id/loading_dialog"
     android:layout_width="match_parent"
     android:layout_height="@dimen/loading_dialog_height"
-    android:layout_marginStart="@dimen/s_margin"
-    android:layout_marginEnd="@dimen/s_margin"
+    android:layout_marginStart="@dimen/s_dp"
+    android:layout_marginEnd="@dimen/s_dp"
     android:elevation="@dimen/card_elevation"
     app:cardCornerRadius="@dimen/card_radius">
 
     <ProgressBar
         style="@style/ProgressBarStyle"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/m_margin" />
+        android:layout_marginBottom="@dimen/m_dp" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/loading_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="@dimen/s_margin"
+        android:layout_margin="@dimen/s_dp"
         android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:textColor="@color/colorPrimary" />

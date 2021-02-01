@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
@@ -17,6 +15,7 @@ import cn.wthee.pcrtool.enums.SortType
 import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -72,10 +71,7 @@ class CharacterListFragment : CommonListFragment() {
         sortType = SortType.SORT_DATE
         sortAsc = false
         characterName = ""
-        viewModel.getCharacters(
-            sortType,
-            sortAsc, characterName
-        )
+        load()
     }
 
     //加载数据
@@ -85,8 +81,6 @@ class CharacterListFragment : CommonListFragment() {
             R.mipmap.ic_logo,
             getString(R.string.app_name)
         )
-        //获取角色
-        viewModel.getCharacters(sortType, sortAsc, characterName, false)
         lifecycleScope.launch {
             //公会列表
             guilds = arrayListOf()
@@ -99,7 +93,27 @@ class CharacterListFragment : CommonListFragment() {
                 guilds.add("？？？")
             }
         }
+        //获取角色
+        load()
         binding.toolList.adapter = listAdapter
+    }
+
+    private fun load() {
+        lifecycleScope.launch {
+            //获取角色
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+                val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                characterFilterParams.starIds = newStarIds ?: arrayListOf()
+                viewModel.getCharacters(
+                    characterFilterParams,
+                    sortType,
+                    sortAsc,
+                    characterName,
+                    false
+                )
+
+            }
+        }
     }
 
     private fun setListener() {
@@ -120,10 +134,6 @@ class CharacterListFragment : CommonListFragment() {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
                 viewModel.characterCount.observe(viewLifecycleOwner, {
-                    val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
-                    sp.edit {
-                        putInt(Constants.SP_COUNT_CHARACTER, it)
-                    }
                     binding.characterCount.text = it.toString()
                 })
             }

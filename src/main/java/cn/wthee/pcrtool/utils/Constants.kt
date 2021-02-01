@@ -15,7 +15,7 @@ object Constants {
     const val DATABASE_URL = "https://wthee.xyz/db/"
 
     //接口正式地址
-    const val API_URL = "https://wthee.xyz:8848/api/"
+    const val API_URL = "https://wthee.xyz:1211/api/"
 
     //数据库
     const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
@@ -58,16 +58,10 @@ object Constants {
     //角色Rank
     const val CHARACTER_MIN_RANK = 2
 
-    //Log输出
-    const val LOG_TAG = "pcrtool_log_info"
-
     //本地储存
     const val SP_DATABASE_VERSION = "database_version"
-    const val SP_DATABASE_HASH = "database_hash"
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
-    const val SP_DATABASE_HASH_JP = "database_hash_jp"
     const val SP_STAR_CHARACTER = "star_character"
-    const val SP_STAR_EQUIP = "star_equip"
 
     //数量
     const val SP_COUNT_CHARACTER = "count_character"
@@ -81,6 +75,7 @@ object Constants {
     const val NOTICE_TOAST_NO_FILE = "数据文件下载失败，请稍后重试~"
     const val NOTICE_TOAST_CHANGE = "数据切换中..."
     const val NOTICE_TOAST_CHECKING = "正在获取信息"
+    const val NOTICE_TOAST_NETWORK_ERROR = "网络异常..."
 
     //常量值
     const val UID = "unit_id"

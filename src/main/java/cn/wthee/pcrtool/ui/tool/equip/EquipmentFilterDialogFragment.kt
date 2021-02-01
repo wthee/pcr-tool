@@ -3,9 +3,7 @@ package cn.wthee.pcrtool.ui.tool.equip
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import androidx.core.view.forEachIndexed
 import androidx.fragment.app.activityViewModels
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentFilterEquipmentBinding
 import cn.wthee.pcrtool.databinding.LayoutChipBinding
 import cn.wthee.pcrtool.ui.common.CommonDialogFragment
@@ -55,13 +53,6 @@ class EquipmentFilterDialogFragment : CommonDialogFragment() {
         val chip =
             binding.root.findViewById<Chip>(binding.chipsType.checkedChipId)
         EquipmentListFragment.equipFilterParams.type = chip.text.toString()
-        //收藏
-        EquipmentListFragment.equipFilterParams.all =
-            when (binding.chipsStars.checkedChipId) {
-                R.id.star_0 -> true
-                R.id.star_1 -> false
-                else -> true
-            }
         EquipmentListFragment.equipName = binding.searchInput.text.toString()
         viewModel.getEquips(EquipmentListFragment.equipName)
     }
@@ -74,15 +65,6 @@ class EquipmentFilterDialogFragment : CommonDialogFragment() {
         chips: ChipGroup,
         binding: FragmentFilterEquipmentBinding
     ) {
-        //收藏初始
-        binding.chipsStars.forEachIndexed { index, view ->
-            val chip = view as Chip
-            chip.isChecked =
-                (EquipmentListFragment.equipFilterParams.all
-                        && index == 0)
-                        || (!EquipmentListFragment.equipFilterParams.all
-                        && index == 1)
-        }
         //类型
         EquipmentListFragment.equipTypes.forEachIndexed { _, type ->
             val chip = LayoutChipBinding.inflate(layoutInflater).root

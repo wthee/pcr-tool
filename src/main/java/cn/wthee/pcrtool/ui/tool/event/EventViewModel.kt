@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.tool.event
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.data.db.entity.EventStoryDetail
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.view.EventData
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ class EventViewModel(
 ) : ViewModel() {
 
     var events = MutableLiveData<List<EventData>>()
+    var storys = MutableLiveData<List<EventStoryDetail>>()
 
 
     /**
@@ -29,4 +31,13 @@ class EventViewModel(
         }
     }
 
+    /**
+     * 获取活动剧情记录
+     */
+    fun getStoryDetails(storyId: Int) {
+        viewModelScope.launch {
+            val data = repository.getStoryDetails(storyId)
+            storys.postValue(data)
+        }
+    }
 }

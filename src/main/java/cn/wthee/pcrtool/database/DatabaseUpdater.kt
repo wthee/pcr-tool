@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.database
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.view.View
-import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -16,14 +13,14 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.ApiUtil
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
-import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_NETWORK_ERROR
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -31,9 +28,6 @@ import java.io.File
  * 数据库更新
  */
 object DatabaseUpdater {
-
-    private val sp: SharedPreferences =
-        ActivityHelper.instance.currentActivity!!.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     /**
      * 检查是否需要更新
@@ -54,7 +48,8 @@ object DatabaseUpdater {
         }
         //获取数据库最新版本
         MainScope().launch {
-            try {//创建服务
+            try {
+                //创建服务
                 val service = ApiUtil.create(
                     MyAPIService::class.java,
                     API_URL
@@ -63,7 +58,7 @@ object DatabaseUpdater {
                 //更新判断
                 downloadDB(version.data!!, fromSetting, force)
             } catch (e: Exception) {
-                handler.sendEmptyMessage(0)
+                MainActivity.textDownload.text = NOTICE_TOAST_NETWORK_ERROR
             }
         }
     }
@@ -77,51 +72,65 @@ object DatabaseUpdater {
         force: Boolean = false
     ) {
         //更新判断
-        val databaseVersion = getLocalDatabaseVersion()
-        val databaseHash = getLocalDatabaseHash()
-        val databaseType = getDatabaseType()
-        //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
-        val toDownload = databaseHash != ver.hash  //hash 与远程不一致
-                || getLocalDatabaseVersion() != ver.TruthVersion  //版本号与远程不一致
-                || force  //强制更新
-                || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || databaseVersion == "0"))  //打开应用，数据库wal被清空
-                || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
-        if (toDownload) {
-            //开始下载
-            val uploadWorkRequest = OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
-                .setInputData(
-                    Data.Builder()
-                        .putString(DatabaseDownloadWorker.KEY_VERSION, ver.TruthVersion)
-                        .putString(DatabaseDownloadWorker.KEY_HASH, ver.hash)
-                        .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
-                        .build()
-                )
-                .build()
-            WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
-                "updateDatabase",
-                ExistingWorkPolicy.KEEP,
-                uploadWorkRequest
-            )
-        } else {
-            //强制更新/切换成功，引导关闭应用
-            if (fromSetting != -1) {
-                handler.sendEmptyMessage(1)
+        val downloadJob =
+            MainScope().launch {
+                val type = getDatabaseType()
+                val downloadFlow =
+                    DataStoreUtil.get(if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP)
+                downloadFlow.collect { str ->
+                    val databaseType = getDatabaseType()
+                    //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
+                    val toDownload = str != ver.toString()  //版本号hash远程不一致
+                            || force  //强制更新
+                            || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || str == "0"))  //打开应用，数据库wal被清空
+                            || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
+                    if (toDownload) {
+                        //开始下载
+                        if (NetworkUtil.isEnable()) {
+                            val uploadWorkRequest =
+                                OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
+                                    .setInputData(
+                                        Data.Builder()
+                                            .putString(
+                                                DatabaseDownloadWorker.KEY_VERSION,
+                                                ver.toString()
+                                            )
+                                            .putInt(
+                                                DatabaseDownloadWorker.KEY_VERSION_TYPE,
+                                                databaseType
+                                            )
+                                            .build()
+                                    )
+                                    .build()
+                            WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
+                                "updateDatabase",
+                                ExistingWorkPolicy.KEEP,
+                                uploadWorkRequest
+                            )
+                        }
+                    } else {
+                        //强制更新/切换成功，引导关闭应用
+                        if (fromSetting != -1) {
+                            handler.sendEmptyMessage(1)
+                        }
+                        //更新数据库版本号
+                        try {
+                            MainSettingsFragment.titleDatabase.title =
+                                MyApplication.context.getString(R.string.data) + ver.TruthVersion
+                        } catch (e: Exception) {
+                        } finally {
+                            updateLocalDataBaseVersion(ver.toString())
+                        }
+                    }
+                    this.cancel()
+                }
             }
-            //更新数据库版本号
-            try {
-                MainSettingsFragment.titleDatabase.title =
-                    MyApplication.context.getString(R.string.data) + ver.TruthVersion
-            } catch (e: Exception) {
-            } finally {
-                updateLocalDataBaseVersion(ver)
-            }
-        }
     }
 
     /**
      * 获取数据库版本
      */
-    private fun getDatabaseType() =
+    fun getDatabaseType() =
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
@@ -139,21 +148,6 @@ object DatabaseUpdater {
         }
     }
 
-    /**
-     * 获取本地数据库版本号
-     */
-    private fun getLocalDatabaseVersion() = sp.getString(
-        if (getDatabaseType() == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-        "0"
-    ) ?: "0"
-
-    /**
-     * 获取本地数据库哈希值
-     */
-    private fun getLocalDatabaseHash() = sp.getString(
-        if (getDatabaseType() == 1) Constants.SP_DATABASE_HASH else Constants.SP_DATABASE_HASH_JP,
-        "0"
-    ) ?: "0"
 
     /**
      * 获取数据库文件名
@@ -164,26 +158,12 @@ object DatabaseUpdater {
     /**
      * 更新本地数据库版本、哈希值
      */
-    fun updateLocalDataBaseVersion(ver: DatabaseVersion) {
-        val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
-            "main",
-            Context.MODE_PRIVATE
-        )
-        sp.edit {
-            val type = getDatabaseType()
-            putString(
-                if (type == 1)
-                    Constants.SP_DATABASE_VERSION
-                else
-                    Constants.SP_DATABASE_VERSION_JP,
-                ver.TruthVersion
-            )
-            putString(
-                if (type == 1)
-                    Constants.SP_DATABASE_HASH
-                else
-                    Constants.SP_DATABASE_HASH_JP,
-                ver.hash
+    fun updateLocalDataBaseVersion(ver: String) {
+        val type = getDatabaseType()
+        MainScope().launch {
+            DataStoreUtil.save(
+                if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+                ver
             )
         }
     }

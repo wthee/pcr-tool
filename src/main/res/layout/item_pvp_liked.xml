@@ -5,7 +5,7 @@
     android:id="@+id/layout_liked"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/s_margin"
+    android:layout_margin="@dimen/s_dp"
     android:clickable="true"
     android:background="@drawable/bg_card_no_shadow"
     android:elevation="@dimen/card_elevation"

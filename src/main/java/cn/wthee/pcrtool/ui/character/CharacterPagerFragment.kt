@@ -20,11 +20,13 @@ import cn.wthee.pcrtool.ui.character.attr.CharacterAttrViewModel
 import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterRankCompareFragment
 import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
+import cn.wthee.pcrtool.ui.character.skill.CharacterSkillFragment
 import cn.wthee.pcrtool.ui.character.skill.CharacterSkillLoopDialogFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.ShareIntentUtil
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -135,14 +137,15 @@ class CharacterPagerFragment : Fragment() {
                     lifecycleScope.launch {
                         if (sharedCharacterViewModel.getDrops(uid).isNotEmpty()) {
                             show()
-                            icon = ResourcesUtil.getDrawable(R.drawable.ic_drop)
+                            setImageResource(R.drawable.ic_drop)
                             setOnClickListener {
                                 CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
                                     .show(parentFragmentManager, "character_drop")
                             }
+                        } else {
+                            hide()
                         }
                     }
-
                 }
             }
             2 -> {
@@ -154,7 +157,17 @@ class CharacterPagerFragment : Fragment() {
                             .show(parentFragmentManager, "loop")
                     }
                 }
-                binding.fabShare.hide()
+                binding.fabShare.apply {
+                    show()
+                    setImageResource(R.drawable.ic_share)
+                    setOnClickListener {
+                        ShareIntentUtil.imageLong(
+                            requireActivity(),
+                            CharacterSkillFragment.shareSkillList,
+                            "skill_${uid}.png"
+                        )
+                    }
+                }
             }
         }
     }

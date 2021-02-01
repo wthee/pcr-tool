@@ -11,18 +11,18 @@
         layout="@layout/layout_equip_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginTop="@dimen/s_margin"
-        android:layout_marginEnd="@dimen/xm_margin" />
+        android:layout_marginStart="@dimen/xm_dp"
+        android:layout_marginTop="@dimen/s_dp"
+        android:layout_marginEnd="@dimen/xm_dp" />
 
     <TextView
         android:id="@+id/material_count"
         style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginTop="@dimen/s_margin"
-        android:padding="@dimen/s_padding"
+        android:layout_marginStart="@dimen/xm_dp"
+        android:layout_marginTop="@dimen/s_dp"
+        android:padding="@dimen/s_dp"
         android:textColor="@color/colorPrimary"
         tools:text="@string/title_material" />
 
@@ -30,8 +30,8 @@
         android:id="@+id/material"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xm_margin"
-        android:layout_marginEnd="@dimen/xm_margin"
+        android:layout_marginStart="@dimen/xm_dp"
+        android:layout_marginEnd="@dimen/xm_dp"
         android:fadeScrollbars="false"
         android:nestedScrollingEnabled="true"
         android:orientation="horizontal"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginTop="@dimen/s_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/red"
         android:visibility="gone"
@@ -67,7 +67,7 @@
         android:id="@+id/progressBar"
         style="@style/ProgressBarStyle"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/xs_margin"
+        android:layout_marginTop="@dimen/xs_dp"
         android:visibility="gone"
         tools:visibility="visible" />
 

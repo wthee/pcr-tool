@@ -9,8 +9,8 @@
         <Preference
             app:iconSpaceReserved="false"
             app:key="force_update_db"
-            app:summary="@string/to_download"
-            app:title="@string/redownload_db" />
+            app:title="@string/redownload_db"
+            app:summary="@string/redownload_db_summary" />
 
         <ListPreference
             app:defaultValue="@string/db_cn_value"

@@ -85,19 +85,16 @@ class ToolNewsListFragment : Fragment() {
                 2 -> {
                     newsViewModel.getNewsCN().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.visibility = View.GONE
                     }
                 }
                 3 -> {
                     newsViewModel.getNewsTW().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.visibility = View.GONE
                     }
                 }
                 4 -> {
                     newsViewModel.getNewsJP().collectLatest {
                         adapter.submitData(it)
-                        binding.loading.visibility = View.GONE
                     }
                 }
             }

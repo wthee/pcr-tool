@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/xm_padding"
-    android:paddingTop="@dimen/s_padding"
-    android:paddingEnd="@dimen/xm_padding">
+    android:paddingStart="@dimen/xm_dp"
+    android:paddingTop="@dimen/s_dp"
+    android:paddingEnd="@dimen/xm_dp">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/quest_num"

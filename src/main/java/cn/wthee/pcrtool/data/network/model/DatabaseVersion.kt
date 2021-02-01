@@ -6,4 +6,8 @@ package cn.wthee.pcrtool.data.network.model
 data class DatabaseVersion(
     val TruthVersion: String,
     val hash: String
-)
+) {
+    override fun toString(): String {
+        return "$TruthVersion/$hash"
+    }
+}

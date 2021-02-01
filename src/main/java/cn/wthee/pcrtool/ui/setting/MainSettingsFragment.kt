@@ -1,19 +1,19 @@
 package cn.wthee.pcrtool.ui.setting
 
-import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.activityViewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
-import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortAsc
-import cn.wthee.pcrtool.ui.home.CharacterListFragment.Companion.sortType
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -29,9 +29,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         lateinit var titleDatabase: Preference
     }
 
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -42,7 +39,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
-        val sp = requireActivity().getSharedPreferences("main", Context.MODE_PRIVATE)
         //获取控件
         titleDatabase = findPreference("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
@@ -51,13 +47,43 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val changeDbType = findPreference<ListPreference>("change_database")
         val switchPvpRegion = findPreference<SwitchPreference>("pvp_region")
         changeDbType?.title =
-            "游戏版本 - " + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
+            "版本：" + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         switchPvpRegion?.isVisible = changeDbType?.value != "1"
         //数据版本
-        titleDatabase.title = getString(R.string.data) + sp.getString(
-            if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-            "0"
-        )
+        MainScope().launch {
+            DataStoreUtil.get(
+                if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP
+            ).collect { str ->
+                titleDatabase.title = getString(R.string.data) + if (str != null) {
+                    str.split("/")[0]
+                } else {
+                    ""
+                }
+
+            }
+        }
+        //强制更新数据库
+        forceUpdateDb?.setOnPreferenceClickListener {
+            DialogUtil.create(
+                requireContext(),
+                LayoutWarnDialogBinding.inflate(layoutInflater),
+                getString(R.string.redownload_db),
+                getString(R.string.to_download),
+                "取消",
+                "下载数据",
+                object : DialogListener {
+                    override fun onCancel(dialog: AlertDialog) {
+                        dialog.dismiss()
+                    }
+
+                    override fun onConfirm(dialog: AlertDialog) {
+                        DatabaseUpdater.checkDBVersion(0, force = true)
+                        dialog.dismiss()
+                    }
+                }).show()
+            return@setOnPreferenceClickListener true
+        }
+        //应用更新
         appUpdate?.summary = MainActivity.nowVersionName
         appUpdate?.setOnPreferenceClickListener {
             //应用版本校验
@@ -65,20 +91,14 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             AppUpdateUtil.init(requireContext(), layoutInflater, true)
             return@setOnPreferenceClickListener true
         }
-        //设置监听
-        //强制更新数据库
-        forceUpdateDb?.setOnPreferenceClickListener {
-            DatabaseUpdater.checkDBVersion(0, force = true)
-            return@setOnPreferenceClickListener true
-        }
         //切换数据库版本
         changeDbType?.setOnPreferenceChangeListener { _, newValue ->
             if (changeDbType.value != newValue as String) {
                 if (newValue == "1") {
-                    changeDbType.title = "游戏版本 - " + getString(R.string.db_cn)
+                    changeDbType.title = "版本：" + getString(R.string.db_cn)
                     switchPvpRegion?.isVisible = false
                 } else {
-                    changeDbType.title = "游戏版本 - " + getString(R.string.db_jp)
+                    changeDbType.title = "版本：" + getString(R.string.db_jp)
                     switchPvpRegion?.isVisible = true
                 }
                 MainScope().launch {
@@ -92,33 +112,17 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val eggs = findPreference<PreferenceCategory>("egg")
         val eggKL = findPreference<Preference>("kl")
         //是否显示
-        eggs?.isVisible = CharacterListFragment.characterFilterParams.starIds.contains(106001)
-                || CharacterListFragment.characterFilterParams.starIds.contains(107801)
-                || CharacterListFragment.characterFilterParams.starIds.contains(112001)
-        var count = sp.getInt("click_kl", 0)
-        eggKL?.setOnPreferenceClickListener {
-            count++
-            if (count > 3) {
-                //隐藏
-                eggs?.isVisible = false
-                CharacterListFragment.characterFilterParams
-                    .addOrRemove(107801)
-                CharacterListFragment.characterFilterParams.initData()
-                sharedCharacterViewModel.getCharacters(
-                    sortType,
-                    sortAsc,
-                    ""
-                )
-            } else {
-                val text = when (count) {
-                    1 -> "不要碰我了~烦死啦"
-                    2 -> "我都说过了！烦死啦~烦死啦~"
-                    3 -> "凯露我啊~真的生气了！！！"
-                    else -> ""
-                }
-                ToastUtil.short(text)
+        lifecycleScope.launch {
+            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+                val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
+                eggs?.isVisible =
+                    CharacterListFragment.characterFilterParams.starIds.contains(107801)
             }
+        }
 
+        eggKL?.setOnPreferenceClickListener {
+            ToastUtil.short("不要碰我了~烦死啦")
             return@setOnPreferenceClickListener true
         }
 

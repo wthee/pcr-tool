@@ -14,7 +14,7 @@ class ResponseData<T>(
 /**
  * 错误
  */
-fun <T> error(): ResponseData<T> = ResponseData(-1, null, "未正常获取数据，请重新查询~")
+fun <T> error(): ResponseData<T> = ResponseData(-1, null, "未正常获取数据，请重试~")
 
 /**
  * 中断

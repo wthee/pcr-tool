@@ -19,7 +19,7 @@ class LeaderViewModel : ViewModel() {
 
     fun getLeader() {
         viewModelScope.launch {
-            val data = MyAPIRepository.getLeader()
+            val data = MyAPIRepository.getInstance().getLeader()
             leaderData.postValue(data)
         }
     }

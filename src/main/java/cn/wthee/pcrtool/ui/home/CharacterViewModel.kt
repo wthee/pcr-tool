@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import cn.wthee.pcrtool.data.bean.FilterCharacter
 import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
@@ -33,7 +34,13 @@ class CharacterViewModel(
     /**
      * 角色基本资料 [CharacterInfo]
      */
-    fun getCharacters(sortType: SortType, asc: Boolean, name: String, reload: Boolean = true) {
+    fun getCharacters(
+        params: FilterCharacter,
+        sortType: SortType,
+        asc: Boolean,
+        name: String,
+        reload: Boolean = true
+    ) {
         viewModelScope.launch {
             if (!this@CharacterViewModel::characters.isInitialized || reload) {
                 characters = Pager(
@@ -47,7 +54,7 @@ class CharacterViewModel(
                         sortType,
                         asc,
                         name,
-                        CharacterListFragment.characterFilterParams
+                        params
                     )
                 }.flow
             }

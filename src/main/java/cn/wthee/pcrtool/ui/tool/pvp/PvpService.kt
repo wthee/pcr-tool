@@ -284,7 +284,7 @@ class PvpService : Service() {
             //开始查询
             job = MainScope().launch {
                 resultContent.pvpNoData.visibility = View.GONE
-                val result = MyAPIRepository.getPVPData(selects.getIds())
+                val result = MyAPIRepository.getInstance().getPVPData(selects.getIds())
                 if (result.status == 0) {
                     if (result.data!!.isEmpty()) {
                         resultContent.pvpNoData.visibility = View.VISIBLE

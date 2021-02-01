@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <include
@@ -16,8 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_back_drop"
-        android:paddingStart="@dimen/m_padding"
-        android:paddingEnd="@dimen/m_padding"
+        android:paddingStart="@dimen/m_dp"
+        android:paddingEnd="@dimen/m_dp"
         app:layout_constraintTop_toBottomOf="@id/tool_calendar">
 
         <com.applandeo.materialcalendarview.CalendarView
@@ -70,8 +69,8 @@
         style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
-        android:layout_marginTop="@dimen/s_margin"
-        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginTop="@dimen/s_dp"
+        android:layout_marginEnd="@dimen/xl_dp"
         android:layout_marginBottom="@dimen/efab_margin"
         android:contentDescription="@string/back_today"
         android:text="@string/back_today"

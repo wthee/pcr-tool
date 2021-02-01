@@ -20,7 +20,7 @@ data class EventStoryDetail(
     @PrimaryKey
     @ColumnInfo(name = "story_id") val story_id: Int,
     @ColumnInfo(name = "story_group_id") val story_group_id: Int,
-    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "sub_title") val sub_title: String,
     @ColumnInfo(name = "visible_type") val visible_type: Int,
     @ColumnInfo(name = "story_end") val story_end: Int,

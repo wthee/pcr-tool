@@ -3,6 +3,8 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import cn.wthee.pcrtool.data.db.entity.EventStoryDetail
+import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.db.view.EventData
 
 /**
@@ -51,4 +53,39 @@ interface EventDao {
         """
     )
     suspend fun getAllEvents(): List<EventData>
+
+
+    /**
+     * 根据 [storyId] 获取活动剧情列表
+     */
+    @Query("SELECT * FROM event_story_detail WHERE story_group_id = :storyId")
+    suspend fun getStoryDetails(storyId: Int): List<EventStoryDetail>
+
+
+    /**
+     * 获取加倍活动信息
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT
+            COALESCE( GROUP_CONCAT( campaign_category, '-' ), "0" ) AS type,
+            value,
+            start_time,
+            end_time 
+        FROM
+            campaign_schedule 
+        WHERE
+            campaign_category IN ( 31, 32, 34, 37, 38, 39, 45 ) 
+        GROUP BY
+            start_time,
+            end_time,
+            value 
+        ORDER BY
+            start_time DESC 
+            LIMIT 100 OFFSET 0
+    """
+    )
+    suspend fun getDropEvent(): List<DropEvent>
+
 }

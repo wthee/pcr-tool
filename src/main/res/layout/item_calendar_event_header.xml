@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/xs_padding"
-    android:paddingTop="@dimen/m_padding"
-    android:paddingEnd="@dimen/xs_padding"
-    android:paddingBottom="@dimen/xs_padding">
+    android:paddingStart="@dimen/xs_dp"
+    android:paddingTop="@dimen/m_dp"
+    android:paddingEnd="@dimen/xs_dp"
+    android:paddingBottom="@dimen/xs_dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/calendar_event_icon"

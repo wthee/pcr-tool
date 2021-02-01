@@ -16,7 +16,6 @@ import androidx.work.WorkerParameters
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.handler
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.network.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.DatabaseService
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.MainScope
@@ -45,7 +44,6 @@ class DatabaseDownloadWorker(
 
     companion object {
         const val KEY_VERSION = "KEY_VERSION"
-        const val KEY_HASH = "KEY_HASH"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
     }
 
@@ -53,7 +51,6 @@ class DatabaseDownloadWorker(
         val inputData: Data = inputData
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
-        val hash = inputData.getString(KEY_HASH) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         setForegroundAsync(createForegroundInfo())
         //显示加载进度
@@ -61,12 +58,12 @@ class DatabaseDownloadWorker(
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
         }
-        return@coroutineScope download(DatabaseVersion(version, hash), type)
+        return@coroutineScope download(version, type)
     }
 
 
     private fun download(
-        version: DatabaseVersion,
+        version: String,
         type: Int
     ): Result {
         try {

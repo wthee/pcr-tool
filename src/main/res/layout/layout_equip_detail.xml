@@ -9,7 +9,7 @@
         android:id="@+id/equip_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/s_margin"
+        android:layout_margin="@dimen/s_dp"
         android:text="@string/equip_details"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimary"
@@ -21,40 +21,41 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/item_pic"
-        android:layout_width="@dimen/normal_icon"
-        android:layout_height="@dimen/normal_icon"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/m_margin"
-        android:scaleType="fitCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/equip_name"
-        tools:src="@drawable/unknown_gray" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/desc"
+    <LinearLayout
+        android:id="@+id/layout_equil_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/m_margin"
-        android:minHeight="@dimen/desc_height"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:textIsSelectable="true"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/item_pic"
-        app:layout_constraintTop_toTopOf="@id/item_pic"
-        tools:text="@string/test" />
+        android:layout_marginTop="@dimen/s_dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/equip_name">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/item_pic"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/normal_icon"
+            android:scaleType="fitCenter"
+            tools:src="@drawable/unknown_gray" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/m_dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textIsSelectable="true"
+            tools:text="@string/test" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/equip_attrs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_margin"
+        android:layout_marginTop="@dimen/s_dp"
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/desc"
+        app:layout_constraintTop_toBottomOf="@id/layout_equil_desc"
         tools:itemCount="2"
         tools:listitem="@layout/item_equipment_attr" />
 
@@ -62,8 +63,8 @@
         android:id="@+id/ue_lv_seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_margin"
-        android:layout_marginEnd="@dimen/xl_margin"
+        android:layout_marginStart="@dimen/s_dp"
+        android:layout_marginEnd="@dimen/xl_dp"
         android:scrollbarSize="10dp"
         android:stepSize="1"
         android:visibility="gone"
@@ -80,8 +81,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingStart="@dimen/xs_padding"
-        android:paddingEnd="@dimen/xs_padding"
+        android:paddingStart="@dimen/xs_dp"
+        android:paddingEnd="@dimen/xs_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"

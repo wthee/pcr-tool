@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrViewModelFactory
 import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModelFactory
 import cn.wthee.pcrtool.ui.home.CharacterViewModelFactory
+import cn.wthee.pcrtool.ui.tool.calendar.CalendarViewModelFactory
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsViewModelFactory
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModelFactory
 import cn.wthee.pcrtool.ui.tool.event.EventViewModelFactory
@@ -128,4 +129,8 @@ object InjectorUtil {
         return EventViewModelFactory(repository)
     }
 
+    fun provideCalendarViewModelFactory(): CalendarViewModelFactory {
+        val repository = getEventRepository()
+        return CalendarViewModelFactory(repository)
+    }
 }

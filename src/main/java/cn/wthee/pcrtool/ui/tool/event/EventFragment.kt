@@ -33,7 +33,7 @@ class EventFragment : CommonListFragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolEventBinding.inflate(inflater, container, false)
-        val adapter = EventHistoryAdapter()
+        val adapter = EventHistoryAdapter(parentFragmentManager)
         binding.toolList.adapter = adapter
         viewModel.getEventHistory()
         viewModel.events.observe(viewLifecycleOwner, {

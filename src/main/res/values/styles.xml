@@ -35,11 +35,11 @@
     <style name="TitleStyle">
         <item name="android:background">@drawable/bg_text_view</item>
         <item name="android:gravity">start</item>
-        <item name="android:paddingStart">@dimen/s_padding</item>
-        <item name="android:paddingEnd">@dimen/s_padding</item>
+        <item name="android:paddingStart">@dimen/s_dp</item>
+        <item name="android:paddingEnd">@dimen/s_dp</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:layout_marginTop">@dimen/xs_margin</item>
-        <item name="android:layout_marginStart">@dimen/xs_margin</item>
+        <item name="android:layout_marginTop">@dimen/xs_dp</item>
+        <item name="android:layout_marginStart">@dimen/xs_dp</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle2
@@ -65,7 +65,7 @@
         <item name="iconSize">@dimen/menu_icon</item>
         <item name="iconTint">@color/colorPrimary</item>
         <item name="elevation">@dimen/home_fab_elevation</item>
-        <item name="iconPadding">@dimen/xs_padding</item>
+        <item name="iconPadding">@dimen/xs_dp</item>
     </style>
 
     <!--  进度条-->
@@ -78,7 +78,7 @@
     <style name="CardStyle">
         <item name="android:background">@drawable/bg_card_no_shadow</item>
         <item name="android:elevation">@dimen/card_elevation</item>
-        <item name="android:layout_margin">@dimen/s_margin</item>
+        <item name="android:layout_margin">@dimen/s_dp</item>
         <item name="android:foreground">?selectableItemBackgroundBorderless</item>
     </style>
 

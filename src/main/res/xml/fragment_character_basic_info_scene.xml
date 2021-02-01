@@ -13,9 +13,9 @@
             android:id="@id/catah"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/s_margin"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_marginEnd="@dimen/s_margin"
+            android:layout_marginTop="@dimen/s_dp"
+            android:layout_marginStart="@dimen/s_dp"
+            android:layout_marginEnd="@dimen/s_dp"
             app:layout_constraintTop_toBottomOf="@id/character_pic" />
 
         <Constraint
@@ -39,8 +39,8 @@
             android:id="@id/catah"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_margin"
-            android:layout_marginEnd="@dimen/s_margin"
+            android:layout_marginStart="@dimen/s_dp"
+            android:layout_marginEnd="@dimen/s_dp"
             app:layout_constraintBottom_toBottomOf="@id/character_pic"
             app:layout_constraintTop_toTopOf="@id/character_pic" />
 

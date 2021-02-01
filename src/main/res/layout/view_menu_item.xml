@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/m_margin"
+    android:layout_margin="@dimen/m_dp"
     android:elevation="@dimen/menu_item_elevation_card"
     app:cardCornerRadius="@dimen/menu_item_card_radius">
 
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:background="@color/colorPrimary"
-        android:padding="@dimen/m_padding"
+        android:padding="@dimen/m_dp"
         tools:layout_height="@dimen/card_height">
 
         <com.google.android.material.textview.MaterialTextView
