@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/xs_dp"
+        android:nestedScrollingEnabled="false"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/name">
 
@@ -52,10 +53,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/m_dp"
+            android:nestedScrollingEnabled="false"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
             android:textIsSelectable="true"
             tools:text="@string/test" />
-
 
     </LinearLayout>
 
