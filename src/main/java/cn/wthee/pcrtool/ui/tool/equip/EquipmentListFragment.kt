@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -30,8 +31,7 @@ class EquipmentListFragment : Fragment() {
     companion object {
         lateinit var list: RecyclerView
         lateinit var motionLayout: MotionLayout
-        var equipFilterParams = FilterEquipment("全部")
-        var asc = false
+        var equipFilterParams = FilterEquipment(true, "全部")
         lateinit var equipTypes: ArrayList<String>
         lateinit var pageAdapter: EquipmentListAdapter
         var equipName = ""
@@ -87,17 +87,28 @@ class EquipmentListFragment : Fragment() {
                 equipTypes.add(it)
             }
         }
-        viewModel.getEquips("")
+        load(false)
     }
 
     private fun reset() {
         equipFilterParams.initData()
         equipName = ""
-        viewModel.getEquips(equipName)
+        load(true)
+    }
+
+
+    private fun load(reload: Boolean) {
+        lifecycleScope.launch {
+            //获取角色
+            DataStoreUtil.get(Constants.SP_STAR_EQUIP).collect { str ->
+                val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+                equipFilterParams.starIds = newStarIds ?: arrayListOf()
+                viewModel.getEquips(equipFilterParams, "", reload)
+            }
+        }
     }
 
     private fun setObserve() {
-
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
             viewModel.equipmentCounts.observe(viewLifecycleOwner, {
@@ -112,7 +123,6 @@ class EquipmentListFragment : Fragment() {
                     @OptIn(ExperimentalCoroutinesApi::class)
                     viewModel.equipments.collectLatest { data ->
                         pageAdapter.submitData(data)
-                        pageAdapter.notifyDataSetChanged()
                     }
                 }
             })

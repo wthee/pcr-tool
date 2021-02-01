@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
@@ -112,15 +111,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val eggs = findPreference<PreferenceCategory>("egg")
         val eggKL = findPreference<Preference>("kl")
         //是否显示
-        lifecycleScope.launch {
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
-                val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-                CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
-                eggs?.isVisible =
-                    CharacterListFragment.characterFilterParams.starIds.contains(107801)
-            }
-        }
-
+        eggs?.isVisible =
+            CharacterListFragment.characterFilterParams.starIds.contains(107801)
         eggKL?.setOnPreferenceClickListener {
             ToastUtil.short("不要碰我了~烦死啦")
             return@setOnPreferenceClickListener true

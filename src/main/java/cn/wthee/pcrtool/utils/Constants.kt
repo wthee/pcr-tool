@@ -62,6 +62,7 @@ object Constants {
     const val SP_DATABASE_VERSION = "database_version"
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
+    const val SP_STAR_EQUIP = "star_equip"
 
     //数量
     const val SP_COUNT_CHARACTER = "count_character"

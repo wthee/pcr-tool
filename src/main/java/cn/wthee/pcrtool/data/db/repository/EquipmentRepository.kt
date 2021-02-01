@@ -15,10 +15,15 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
     fun getPagingEquipments(name: String, filter: FilterEquipment) =
-        equipmentDao.getPagingEquipments(filter.type, name)
+        equipmentDao.getPagingEquipments(
+            filter.type,
+            name,
+            if (filter.all) 1 else 0,
+            filter.starIds
+        )
 
     suspend fun getEquipmentCount(name: String, filter: FilterEquipment) =
-        equipmentDao.getEquipmentCount(filter.type, name)
+        equipmentDao.getEquipmentCount(filter.type, name, if (filter.all) 1 else 0, filter.starIds)
 
     suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)
 

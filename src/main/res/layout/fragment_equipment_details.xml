@@ -6,14 +6,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/detail"
-        layout="@layout/layout_equip_detail"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/xm_dp"
-        android:layout_marginTop="@dimen/s_dp"
-        android:layout_marginEnd="@dimen/xm_dp" />
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/detail"
+            layout="@layout/layout_equip_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/xm_dp"
+            android:layout_marginEnd="@dimen/xm_dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/stared"
+            android:layout_width="@dimen/menu_icon"
+            android:layout_height="@dimen/menu_icon"
+            android:layout_margin="@dimen/s_dp"
+            android:src="@drawable/ic_loved"
+            android:layout_gravity="end" />
+
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/material_count"

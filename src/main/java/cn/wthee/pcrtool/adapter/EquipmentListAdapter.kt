@@ -12,8 +12,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
+import cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 /**
@@ -47,8 +49,12 @@ class EquipmentListAdapter(
                 //设置数据
                 binding.apply {
                     val ctx = MyApplication.context
-                    pic.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
+                    root.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_list_item)
+                    //是否收藏
+                    val isLoved =
+                        EquipmentListFragment.equipFilterParams.starIds.contains(equip.equipmentId)
                     //装备名称
+                    name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                     name.text = equip.equipmentName
                     //加载装备图片
                     val picUrl = EQUIPMENT_URL + equip.equipmentId + WEBP
@@ -58,14 +64,19 @@ class EquipmentListAdapter(
                     }
                     //设置点击跳转
                     root.setOnClickListener {
-                        click(equip)
+                        EquipmentDetailsDialogFragment.getInstance(equip)
+                            .show(fragmentManager, "equip_details")
+                    }
+                    //长按事件
+                    binding.root.setOnLongClickListener {
+                        EquipmentListFragment.equipFilterParams.addOrRemove(equip.equipmentId)
+                        EquipmentListFragment.list.adapter?.notifyItemChanged(
+                            absoluteAdapterPosition
+                        )
+                        return@setOnLongClickListener true
                     }
                 }
             }
-        }
-
-        private fun click(equip: EquipmentMaxData) {
-            EquipmentDetailsDialogFragment.getInstance(equip).show(fragmentManager, "details")
         }
     }
 }

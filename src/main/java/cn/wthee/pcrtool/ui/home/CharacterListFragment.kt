@@ -111,7 +111,6 @@ class CharacterListFragment : CommonListFragment() {
                     characterName,
                     false
                 )
-
             }
         }
     }
