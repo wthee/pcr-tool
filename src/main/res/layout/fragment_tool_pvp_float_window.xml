@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/min"
-            android:src="@mipmap/ic_logo" />
+            android:src="@mipmap/ic_logo"
+            app:elevation="@dimen/card_elevation" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/max"
@@ -27,33 +28,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_float_close" />
+            android:src="@drawable/ic_float_close"
+            app:elevation="@dimen/card_elevation" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/liked"
+            style="@style/FabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/tool_pvp_liked"
             android:src="@drawable/ic_loved_line"
-            style="@style/FabStyle" />
+            app:elevation="@dimen/card_elevation" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/search"
+            style="@style/FabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/search"
             android:src="@drawable/ic_search"
-            style="@style/FabStyle" />
+            app:elevation="@dimen/card_elevation" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/back"
+            style="@style/FabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_left"
             android:visibility="gone"
-            tools:visibility="visible"
-            style="@style/FabStyle" />
+            app:elevation="@dimen/card_elevation"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
@@ -61,6 +66,7 @@
         android:id="@+id/float_right"
         android:layout_width="@dimen/float_window_width"
         android:layout_height="wrap_content"
+        android:elevation="@dimen/card_elevation"
         app:cardCornerRadius="@dimen/card_radius"
         tools:layout_width="@dimen/float_window_width">
 
