@@ -37,7 +37,7 @@ object DatabaseUpdater {
      *
      * [force] 是否强制更新
      */
-    fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
+    suspend fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
         //提示开始
         if (fromSetting == 1) {
             MainActivity.layoutDownload.visibility = View.VISIBLE
@@ -48,19 +48,17 @@ object DatabaseUpdater {
             MainActivity.textDownload.text = NOTICE_TOAST_CHECKING
         }
         //获取数据库最新版本
-        MainScope().launch {
-            try {
-                //创建服务
-                val service = ApiUtil.create(
-                    MyAPIService::class.java,
-                    API_URL
-                )
-                val version = service.getDbVersion(getVersionFileName())
-                //更新判断
-                downloadDB(version.data!!, fromSetting, force)
-            } catch (e: Exception) {
-                MainActivity.textDownload.text = NOTICE_TOAST_NETWORK_ERROR
-            }
+        try {
+            //创建服务
+            val service = ApiUtil.create(
+                MyAPIService::class.java,
+                API_URL
+            )
+            val version = service.getDbVersion(getVersionFileName())
+            //更新判断
+            downloadDB(version.data!!, fromSetting, force)
+        } catch (e: Exception) {
+            MainActivity.textDownload.text = NOTICE_TOAST_NETWORK_ERROR
         }
     }
 

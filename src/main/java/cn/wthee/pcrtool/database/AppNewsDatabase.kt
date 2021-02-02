@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.annotation.SuppressLint
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,6 +10,7 @@ import cn.wthee.pcrtool.data.db.dao.RemoteKeyDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
+import java.util.concurrent.TimeUnit
 
 
 @Database(
@@ -40,13 +42,15 @@ abstract class AppNewsDatabase : RoomDatabase() {
             }
         }
 
-
+        @SuppressLint("UnsafeOptInUsageError")
         private fun buildDatabase(): AppNewsDatabase {
             return Room.databaseBuilder(
                 MyApplication.context,
                 AppNewsDatabase::class.java,
                 DATABASE_NEWS
-            ).fallbackToDestructiveMigration().build()
+            ).fallbackToDestructiveMigration()
+                .setAutoCloseTimeout(1, TimeUnit.MINUTES)
+                .build()
         }
     }
 

@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.setting
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
@@ -76,8 +77,10 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                     }
 
                     override fun onConfirm(dialog: AlertDialog) {
-                        DatabaseUpdater.checkDBVersion(0, force = true)
-                        dialog.dismiss()
+                        lifecycleScope.launch {
+                            DatabaseUpdater.checkDBVersion(0, force = true)
+                            dialog.dismiss()
+                        }
                     }
                 }).show()
             return@setOnPreferenceClickListener true
@@ -86,8 +89,10 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         appUpdate?.summary = MainActivity.nowVersionName
         appUpdate?.setOnPreferenceClickListener {
             //应用版本校验
-            ToastUtil.short("应用版本检测中...")
-            AppUpdateUtil.init(requireContext(), layoutInflater, true)
+            lifecycleScope.launch {
+                ToastUtil.short("应用版本检测中...")
+                AppUpdateUtil.init(requireContext(), layoutInflater, true)
+            }
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.core.content.edit
 import androidx.room.Database
@@ -20,6 +21,7 @@ import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 
 @Database(
@@ -95,7 +97,8 @@ abstract class AppDatabase : RoomDatabase() {
                     buildDatabase(DATABASE_NAME).openHelper.readableDatabase
                 }
             } catch (e: Exception) {
-                UMCrash.generateCustomLog(e, "更新国服数据结构！！！");
+                //上传日志
+                UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
                 //启用备份数据库
                 val remoteBackupMode = sp.getBoolean(Constants.SP_BACKUP_CN, false)
                 if (remoteBackupMode) {
@@ -150,12 +153,15 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
 
+        @SuppressLint("UnsafeOptInUsageError")
         private fun buildDatabase(name: String): AppDatabase {
             return Room.databaseBuilder(
                 MyApplication.context,
                 AppDatabase::class.java,
                 name
-            ).fallbackToDestructiveMigration().build()
+            ).fallbackToDestructiveMigration()
+                .setAutoCloseTimeout(2, TimeUnit.MINUTES)
+                .build()
         }
     }
 

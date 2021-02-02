@@ -66,7 +66,7 @@ dependencies {
     implementation 'com.github.wthee:CircleProgressBar:1.0.2'
 
     //coil
-    def coil_version = '1.1.0'
+    def coil_version = '1.1.1'
     implementation "io.coil-kt:coil:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"
 
@@ -81,14 +81,14 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     //Material
-    def material_version = '1.3.0-alpha04'
+    def material_version = '1.3.0-rc01'
     implementation "com.google.android.material:material:$material_version"
 
     //Material CalendarView
     implementation project(':Material-Calendar-View')
 
     //Navigation
-    def nav_version = "2.3.2"
+    def nav_version = "2.3.3"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
@@ -99,6 +99,9 @@ dependencies {
     //PermissionX
     def permissionx_version = '1.4.0'
     implementation "com.permissionx.guolindev:permissionx:$permissionx_version"
+
+    //Paging3
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha13"
 
     //Retrofit
     def retrofit_version = '2.9.0'
@@ -115,20 +118,17 @@ dependencies {
     //startup
     implementation "androidx.startup:startup-runtime:1.0.0"
 
-    //Paging3
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha13"
-
     //umeng
     implementation "com.umeng.umsdk:common:9.3.3"
-    implementation "com.umeng.umsdk:asms:1.1.4" // asms包依赖(必选)
-    implementation 'com.umeng.umsdk:apm:1.1.0' // U-APM产品包依赖(必选)
+    implementation "com.umeng.umsdk:asms:1.1.4"
+    implementation "com.umeng.umsdk:apm:1.1.0"
 
     //Viewpager2
     def viewpager2_version = '1.0.0'
     implementation "androidx.viewpager2:viewpager2:$viewpager2_version"
 
     //Work
-    def work_version = "2.4.0"
+    def work_version = "2.5.0"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     //from libs

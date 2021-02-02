@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
+import com.umeng.commonsdk.UMConfigure
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         //友盟初始化
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(UMengInitializer::class.java)
+        UMConfigure.setProcessEvent(true)
         //获取 Uri
         fixUriBug()
         //初始化 handler
@@ -90,10 +92,12 @@ class MainActivity : AppCompatActivity() {
         init()
         //监听
         setListener()
-        //数据库版本检查
-        DatabaseUpdater.checkDBVersion()
-        //应用版本校验
-        AppUpdateUtil.init(this, layoutInflater)
+        MainScope().launch {
+            //数据库版本检查
+            DatabaseUpdater.checkDBVersion()
+            //应用版本校验
+            AppUpdateUtil.init(this@MainActivity, layoutInflater)
+        }
     }
 
     private fun fixUriBug() {
