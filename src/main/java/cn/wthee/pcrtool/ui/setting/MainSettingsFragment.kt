@@ -34,7 +34,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         super.onResume()
         //添加返回fab
         FabHelper.addBackFab()
-
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -42,6 +41,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //获取控件
         titleDatabase = findPreference("title_database")!!
         val forceUpdateDb = findPreference<Preference>("force_update_db")
+        val cleanDatabase = findPreference<Preference>("clean_database")
         val appUpdate = findPreference<Preference>("force_update_app")
         val shareApp = findPreference<Preference>("share_app")
         val changeDbType = findPreference<ListPreference>("change_database")
@@ -49,6 +49,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         changeDbType?.title =
             "版本：" + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
         switchPvpRegion?.isVisible = changeDbType?.value != "1"
+        cleanDatabase?.summary = FileUtil.getOldDatabaseSize()
         //数据版本
         MainScope().launch {
             DataStoreUtil.get(
@@ -85,16 +86,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                 }).show()
             return@setOnPreferenceClickListener true
         }
-        //应用更新
-        appUpdate?.summary = MainActivity.nowVersionName
-        appUpdate?.setOnPreferenceClickListener {
-            //应用版本校验
-            lifecycleScope.launch {
-                ToastUtil.short("应用版本检测中...")
-                AppUpdateUtil.init(requireContext(), layoutInflater, true)
-            }
-            return@setOnPreferenceClickListener true
-        }
         //切换数据库版本
         changeDbType?.setOnPreferenceChangeListener { _, newValue ->
             if (changeDbType.value != newValue as String) {
@@ -112,6 +103,25 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             }
             return@setOnPreferenceChangeListener true
         }
+        //历史数据库文件
+        cleanDatabase?.setOnPreferenceClickListener {
+            FileUtil.deleteOldDatabase()
+            it.summary = FileUtil.getOldDatabaseSize()
+            return@setOnPreferenceClickListener true
+        }
+
+        //应用更新
+        appUpdate?.summary = MainActivity.nowVersionName
+        appUpdate?.setOnPreferenceClickListener {
+            //应用版本校验
+            lifecycleScope.launch {
+                ToastUtil.short("应用版本检测中...")
+                AppUpdateUtil.init(requireContext(), layoutInflater, true)
+            }
+            return@setOnPreferenceClickListener true
+        }
+
+
         //egg
         val eggs = findPreference<PreferenceCategory>("egg")
         val eggKL = findPreference<Preference>("kl")

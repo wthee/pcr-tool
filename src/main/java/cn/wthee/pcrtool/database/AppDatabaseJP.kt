@@ -20,7 +20,6 @@ import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 
 @Database(
@@ -96,7 +95,7 @@ abstract class AppDatabaseJP : RoomDatabase() {
                     buildDatabase(DATABASE_NAME_JP).openHelper.readableDatabase
                 }
             } catch (e: Exception) {
-                //上传日志
+                //fixme 上传日志
                 UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
                 //启用远程备份数据库
                 sp.edit {
@@ -131,7 +130,6 @@ abstract class AppDatabaseJP : RoomDatabase() {
                 AppDatabaseJP::class.java,
                 name
             ).fallbackToDestructiveMigration()
-                .setAutoCloseTimeout(2, TimeUnit.MINUTES)
                 .build()
         }
     }

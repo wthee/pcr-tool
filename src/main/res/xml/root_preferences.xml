@@ -26,6 +26,12 @@
             app:iconSpaceReserved="false"
             app:title="@string/pvp_search_jp"
             app:summary="@string/pvp_search_summary" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="clean_database"
+            app:summary="@string/zero"
+            app:title="@string/clean_database" />
     </PreferenceCategory>
 
 
@@ -36,7 +42,7 @@
         <Preference
             app:iconSpaceReserved="false"
             app:key="force_update_app"
-            app:summary="0.0.3-beta"
+            app:summary="@string/zero"
             app:title="@string/check_app_update" />
 
         <SwitchPreferenceCompat

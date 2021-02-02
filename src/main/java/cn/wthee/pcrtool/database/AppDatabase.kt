@@ -20,7 +20,6 @@ import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 
 @Database(
@@ -63,7 +62,7 @@ import java.util.concurrent.TimeUnit
         CharacterRoomComments::class,
         AilmentData::class,
     ],
-    version = 65,
+    version = 66,
     exportSchema = false
 )
 /**
@@ -87,7 +86,7 @@ abstract class AppDatabase : RoomDatabase() {
         )
 
         /**
-         * 自动获取数据库、本地备份数据、远程备份数据
+         * 自动获取数据库、远程备份数据
          */
         fun getInstance(): AppDatabase {
             try {
@@ -96,7 +95,7 @@ abstract class AppDatabase : RoomDatabase() {
                     buildDatabase(DATABASE_NAME).openHelper.readableDatabase
                 }
             } catch (e: Exception) {
-                //上传日志
+                //fixme 上传日志
                 UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
                 //启用远程备份数据库
                 sp.edit {
@@ -131,7 +130,6 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 name
             ).fallbackToDestructiveMigration()
-                .setAutoCloseTimeout(2, TimeUnit.MINUTES)
                 .build()
         }
     }

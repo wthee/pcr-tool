@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import android.os.Build
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import kotlinx.coroutines.MainScope
@@ -149,6 +150,43 @@ object FileUtil {
         } finally {
             `in`?.close()
             out?.close()
+        }
+    }
+
+
+    /**
+     * 获取历史数据库文件列表
+     */
+    private fun getOldList(): List<File>? {
+        val file = File(getDatabaseDir())
+        return file.listFiles()?.filter {
+            try {
+                val code = it.name.split("r")[0].toInt()
+                code != BuildConfig.VERSION_CODE
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    /**
+     * 获取历史数据库文件大小
+     */
+    fun getOldDatabaseSize(): String {
+        var size = 0f
+        getOldList()?.forEach {
+            size += it.length()
+        }
+        return "${(size / 1024).toLong()} KB"
+    }
+
+
+    /**
+     * 删除历史数据库文件
+     */
+    fun deleteOldDatabase() {
+        getOldList()?.forEach {
+            it.delete()
         }
     }
 }

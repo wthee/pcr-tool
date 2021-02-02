@@ -81,6 +81,8 @@
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
     <string name="share_app">分享应用</string>
     <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
+    <string name="clean_database">删除历史数据文件</string>
+
     <!--筛选  -->
     <string name="filter_sort">筛选排序</string>
     <string name="filter">筛选</string>
