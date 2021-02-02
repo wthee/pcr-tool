@@ -182,6 +182,5 @@
     <!--  异常提示-->
     <string name="network_error">网络异常~</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
-    <string name="database_local_backup">已启用本地备用数据~</string>
     <string name="backup_error">数据备份异常~</string>
 </resources>

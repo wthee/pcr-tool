@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.BuildConfig
+
 /**
  * 常量
  */
@@ -17,26 +19,37 @@ object Constants {
     //接口正式地址
     const val API_URL = "https://wthee.xyz:1211/api/"
 
-    //数据库
+    //日服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_JP = "redive_jp.db.br"
-    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP = "redive_jp_backup.db.br"
-    const val DATABASE_NAME_JP = "redive_jp.db"
-    const val DATABASE_BACKUP_NAME_JP = "redive_jp_backup.db"
-    const val DATABASE_WAL_JP = "redive_jp.db-wal"
-    const val DATABASE_WAL_JP_BACKUP = "redive_jp_backup.db-wal"
-    const val DATABASE_SHM_JP = "redive_jp.db-shm"
-    const val DATABASE_SHM_JP_BACKUP = "redive_jp_backup.db-shm"
     const val DATABASE_VERSION_URL_JP = "last_version_jp.json"
+    const val DATABASE_NAME_JP = "redive_jp.db"
+    const val DATABASE_WAL_JP = "redive_jp.db-wal"
+    const val DATABASE_SHM_JP = "redive_jp.db-shm"
 
-    const val DATABASE_DOWNLOAD_FILE_NAME = "redive_cn.db.br"
-    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP = "redive_cn_backup.db.br"
-    const val DATABASE_NAME = "redive_cn.db"
-    const val DATABASE_BACKUP_NAME = "redive_cn_backup.db"
-    const val DATABASE_WAL = "redive_cn.db-wal"
-    const val DATABASE_WAL_BACKUP = "redive_cn_backup.db-wal"
-    const val DATABASE_SHM = "redive_cn.db-shm"
-    const val DATABASE_SHM_BACKUP = "redive_cn_backup.db-shm"
+    //日服备份数据库
+    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP =
+        BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME_JP
+    const val DATABASE_BACKUP_NAME_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_JP
+    const val DATABASE_WAL_JP_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_JP
+    const val DATABASE_SHM_JP_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_SHM_JP
+
+
+    //国服数据库
     const val DATABASE_VERSION_URL = "last_version_cn.json"
+    const val DATABASE_DOWNLOAD_FILE_NAME = "redive_cn.db.br"
+    const val DATABASE_NAME = "redive_cn.db"
+    const val DATABASE_WAL = "redive_cn.db-wal"
+    const val DATABASE_SHM = "redive_cn.db-shm"
+
+    //国服备份数据库
+    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP =
+        BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME
+    const val DATABASE_BACKUP_NAME = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME
+    const val DATABASE_WAL_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL
+    const val DATABASE_SHM_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_SHM
+
+
+    //其它数据库
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_PVP = "pvp.db"
 
@@ -86,7 +99,6 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
-    const val SIXSTAR = "six_star"
     const val REGION = "region"
 
     val ATTR = arrayListOf(

@@ -116,31 +116,9 @@ class DatabaseDownloadWorker(
                 //删除已有数据库文件
                 FileUtil.deleteMainDatabase(type)
             }
-            //自动备份
-            var firstDownload = false
-            val dbFile = File(FileUtil.getDatabasePath(type))
-            if (dbFile.exists() && dbFile.length() > 1024 * 1024) {
-                //已下载过，并且非强制更新。在此处备份
-                if (!force) {
-                    FileUtil.copy(
-                        FileUtil.getDatabasePath(type),
-                        FileUtil.getDatabaseBackupPath(type)
-                    )
-                }
-            } else {
-                //首次下载，等待解压结束后备份
-                firstDownload = true
-            }
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
-            //更新数据库
-            if (!firstDownload) {
-                if (type == 1) {
-                    AppDatabase.getInstance().close()
-                } else {
-                    AppDatabaseJP.getInstance().close()
-                }
-            }
+
             //删除旧的wal
             FileUtil.apply {
                 delete(getDatabaseBackupWalPath(1))
@@ -150,10 +128,6 @@ class DatabaseDownloadWorker(
             }
             //加压缩
             UnzippedUtil.deCompress(db, true)
-            //首次下载备份，并且非强制更新。不备份远程备份文件
-            if (firstDownload && !fileName.contains("backup") && !force) {
-                FileUtil.copy(FileUtil.getDatabasePath(type), FileUtil.getDatabaseBackupPath(type))
-            }
             notificationManager.cancelAll()
             //更新数据库版本号
             DatabaseUpdater.updateLocalDataBaseVersion(version)

@@ -47,8 +47,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         var canClick = true
-        var backupCN = false
-        var backupJP = false
 
         @JvmField
         var currentCharaPosition: Int = 0

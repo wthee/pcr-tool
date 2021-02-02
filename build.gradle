@@ -6,13 +6,15 @@ android {
 
     compileSdkVersion 30
 
+    def VERSION_NAME = "0.6.5"
+    def VERSION_CODE = 65
+
     defaultConfig {
         applicationId "cn.wthee.pcrtool"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 65
-        versionName "0.6.5"
-
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
     }
 
     kotlinOptions {

@@ -78,7 +78,6 @@ object DatabaseUpdater {
             downloadFlow.collect { str ->
                 val databaseType = getDatabaseType()
                 //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
-                val backupMode = if (type == 1) MainActivity.backupCN else MainActivity.backupJP
                 val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
                     "main",
                     Context.MODE_PRIVATE
@@ -91,7 +90,7 @@ object DatabaseUpdater {
                 var toDownload = str != ver.toString()  //版本号hash远程不一致
                         || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || str == "0"))  //打开应用，数据库wal被清空
                         || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
-                toDownload = toDownload && !remoteBackupMode && !backupMode
+                toDownload = toDownload && !remoteBackupMode
                 //下载远程备份
                 val toDownloadRemoteBackup =
                     remoteBackupMode && File(FileUtil.getDatabaseBackupPath(databaseType)).length() < 1024 * 1024
