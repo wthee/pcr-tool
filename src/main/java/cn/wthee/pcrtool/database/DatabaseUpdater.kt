@@ -136,10 +136,6 @@ object DatabaseUpdater {
                                             DatabaseDownloadWorker.KEY_VERSION_TYPE,
                                             databaseType
                                         )
-                                        .putBoolean(
-                                            DatabaseDownloadWorker.KEY_FORCE,
-                                            force
-                                        )
                                         .build()
                                 )
                                 .build()

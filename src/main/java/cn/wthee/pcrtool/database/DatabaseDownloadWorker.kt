@@ -46,7 +46,6 @@ class DatabaseDownloadWorker(
         const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
-        const val KEY_FORCE = "KEY_FORCE"
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -55,7 +54,6 @@ class DatabaseDownloadWorker(
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         val fileName = inputData.getString(KEY_FILE)
-        val force = inputData.getBoolean(KEY_FORCE, false)
         setForegroundAsync(createForegroundInfo())
         //显示加载进度
         MainScope().launch {
@@ -65,8 +63,7 @@ class DatabaseDownloadWorker(
         return@coroutineScope download(
             version,
             type,
-            fileName ?: Constants.DATABASE_DOWNLOAD_FILE_NAME,
-            force
+            fileName ?: Constants.DATABASE_DOWNLOAD_FILE_NAME
         )
     }
 
@@ -75,7 +72,6 @@ class DatabaseDownloadWorker(
         version: String,
         type: Int,
         fileName: String,
-        force: Boolean,
     ): Result {
         try {
             //创建Retrofit服务
