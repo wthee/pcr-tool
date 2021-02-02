@@ -87,14 +87,14 @@ object DatabaseUpdater {
                     false
                 )
                 //正常下载
-                var toDownload = str != ver.toString()  //版本号hash远程不一致
+                val toDownload = str != ver.toString()  //版本号hash远程不一致
+                        || force
                         || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || str == "0"))  //打开应用，数据库wal被清空
                         || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
-                toDownload = toDownload && !remoteBackupMode
                 //下载远程备份
                 val toDownloadRemoteBackup =
                     remoteBackupMode && File(FileUtil.getDatabaseBackupPath(databaseType)).length() < 1024 * 1024
-                if (toDownload || toDownloadRemoteBackup || force) {
+                if (toDownload || toDownloadRemoteBackup) {
                     //远程备份时
                     var fileName =
                         if (type == 1) {
