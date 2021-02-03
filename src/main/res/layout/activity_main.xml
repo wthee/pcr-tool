@@ -57,6 +57,20 @@
             android:textStyle="bold" />
     </FrameLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_notice"
+        style="@style/FabStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="@dimen/m_dp"
+        android:layout_marginBottom="@dimen/m_dp"
+        android:contentDescription="@string/notice"
+        android:src="@drawable/ic_notice"
+        android:visibility="invisible"
+        app:tint="@color/red"
+        tools:visibility="visible" />
+
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/layout_motion"
         android:layout_width="match_parent"

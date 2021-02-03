@@ -86,7 +86,7 @@ class NewsAdapter(
                 tag.setTitleBackground(colorId)
                 //点击查看
                 root.setOnClickListener {
-                    NewsDetailDialogFragment.newInstance(
+                    NewsDetailDialogFragment.getInstance(
                         region, data.getTrueId(), data.url
                     ).show(fragmentManager, "detail$data.id")
                 }

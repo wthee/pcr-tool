@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.data.network
 
-import cn.wthee.pcrtool.data.db.dao.CharacterDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -132,5 +130,22 @@ class MyAPIRepository(private val service: MyAPIService) {
         return error()
     }
 
-
+    /**
+     * 获取通知信息
+     */
+    suspend fun getNotice(): ResponseData<List<AppNotice>> {
+        //请求
+        try {
+            val response = service.getAppNotice()
+            if (response.message == "failure" || response.data == null) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            }
+        }
+        return error()
+    }
 }

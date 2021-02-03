@@ -61,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         lateinit var layoutDownload: FrameLayout
         lateinit var progressDownload: CircleProgressView
         lateinit var textDownload: MaterialTextView
+
+        //消息通知
+        lateinit var fabNotice: FloatingActionButton
+
     }
 
     private var menuItems = arrayListOf<ViewBinding>()
@@ -92,8 +96,13 @@ class MainActivity : AppCompatActivity() {
         setListener()
         MainScope().launch {
             //应用版本校验
-            AppUpdateUtil.init(this@MainActivity, layoutInflater)
+            AppUpdateUtil.init()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fabNotice.show()
     }
 
     private fun fixUriBug() {
@@ -168,6 +177,8 @@ class MainActivity : AppCompatActivity() {
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
+        fabNotice = binding.fabNotice
+        fabNotice.hide()
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
@@ -312,6 +323,14 @@ class MainActivity : AppCompatActivity() {
                     null,
                     extras
                 )
+            }
+        }
+        //打开通知
+        binding.fabNotice.apply {
+            show()
+            setOnClickListener {
+                this@MainActivity.findNavController(R.id.nav_host_fragment)
+                    .navigate(R.id.action_global_noticeListFragment)
             }
         }
     }

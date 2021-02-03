@@ -86,8 +86,6 @@ object Constants {
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
     const val SP_STAR_EQUIP = "star_equip"
-    const val SP_BACKUP_CN = "backup_cn"
-    const val SP_BACKUP_JP = "backup_jp"
 
     //默认值
     const val SORT_ASC = false

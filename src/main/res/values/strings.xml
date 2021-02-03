@@ -187,4 +187,6 @@
     <string name="network_error">网络异常~</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="backup_error">数据备份异常~</string>
+    <string name="notice">通知</string>
+    <string name="to_update"><![CDATA[去更新 >]]></string>
 </resources>

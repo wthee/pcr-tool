@@ -50,6 +50,7 @@ class CharacterListFragment : CommonListFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterListBinding.inflate(inflater, container, false)
+
         //加载数据
         init()
         setListener()
@@ -125,6 +126,7 @@ class CharacterListFragment : CommonListFragment() {
         binding.characterCount.setOnClickListener {
             CharacterFilterDialogFragment().show(parentFragmentManager, "filter_character")
         }
+
     }
 
     //绑定observe

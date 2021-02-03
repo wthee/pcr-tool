@@ -185,5 +185,16 @@
         android:id="@+id/calendarJPFragment"
         android:name="cn.wthee.pcrtool.ui.tool.calendar.CalendarJPFragment"
         android:label="CalendarJPFragment" />
+    <fragment
+        android:id="@+id/noticeListFragment"
+        android:name="cn.wthee.pcrtool.ui.notice.NoticeListFragment"
+        android:label="NoticeListFragment" />
+    <action
+        android:id="@+id/action_global_noticeListFragment"
+        app:destination="@id/noticeListFragment"
+        app:enterAnim="@anim/fragment_enter"
+        app:exitAnim="@anim/fragment_exit_no_scale"
+        app:popEnterAnim="@anim/fragment_popenter_no_scale"
+        app:popExitAnim="@anim/fragment_popexit" />
 
 </navigation>
