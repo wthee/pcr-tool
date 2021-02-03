@@ -63,10 +63,15 @@ object FileUtil {
     /**
      * 数据库是否需要判断
      */
-    fun needUpdate(type: Int) =
-        !File(getDatabasePath(type)).exists()
-                || File(getDatabasePath(type)).length() < 1 * 1024 * 1024
-                || File(getDatabaseWalPath(type)).length() < 1 * 1024
+    fun needUpdate(type: Int): Boolean {
+        val dbFile = File(getDatabasePath(type))
+        val walFile = File(getDatabaseWalPath(type))
+        val dbNotExists = !dbFile.exists()
+        val dbSizeError = dbFile.length() < 1 * 1024 * 1024
+        val walSizeError = walFile.exists() && walFile.length() < 1 * 1024
+        return dbNotExists || dbSizeError || walSizeError
+    }
+
 
     /**
      * 删除数据库文件
@@ -172,12 +177,12 @@ object FileUtil {
     /**
      * 获取历史数据库文件大小
      */
-    fun getOldDatabaseSize(): String {
+    fun getOldDatabaseSize(): Long {
         var size = 0f
         getOldList()?.forEach {
             size += it.length()
         }
-        return "${(size / 1024).toLong()} KB"
+        return size.toLong()
     }
 
 
@@ -188,5 +193,24 @@ object FileUtil {
         getOldList()?.forEach {
             it.delete()
         }
+    }
+
+
+    /**
+     * 格式化文件大小格式
+     */
+    fun Long.convertFileSize(): String {
+        val kb: Long = 1024
+        val mb = kb * 1024
+        val gb = mb * 1024
+        return if (this >= gb) {
+            String.format("%.1f GB", this.toFloat() / gb)
+        } else if (this >= mb) {
+            val f = this.toFloat() / mb
+            String.format(if (f > 100) "%.0f MB" else "%.1f MB", f)
+        } else if (this >= kb) {
+            val f = this.toFloat() / kb
+            String.format(if (f > 100) "%.0f KB" else "%.1f KB", f)
+        } else String.format("%d B", this)
     }
 }

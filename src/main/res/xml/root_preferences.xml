@@ -18,7 +18,7 @@
             app:entryValues="@array/database_type_value"
             app:iconSpaceReserved="false"
             app:key="change_database"
-            app:summary="@string/game_version_summary"
+            app:summary="@string/empty"
             app:title="@string/game_version" />
 
         <SwitchPreference
@@ -31,6 +31,7 @@
             app:iconSpaceReserved="false"
             app:key="clean_database"
             app:summary="@string/zero"
+            app:isPreferenceVisible="false"
             app:title="@string/clean_database" />
     </PreferenceCategory>
 

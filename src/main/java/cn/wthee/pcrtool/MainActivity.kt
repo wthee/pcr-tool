@@ -91,8 +91,6 @@ class MainActivity : AppCompatActivity() {
         //监听
         setListener()
         MainScope().launch {
-            //数据库版本检查
-            DatabaseUpdater.checkDBVersion()
             //应用版本校验
             AppUpdateUtil.init(this@MainActivity, layoutInflater)
         }

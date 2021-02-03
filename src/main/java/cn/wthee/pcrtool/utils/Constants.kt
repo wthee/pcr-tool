@@ -25,6 +25,7 @@ object Constants {
     const val DATABASE_NAME_JP = "redive_jp.db"
     const val DATABASE_WAL_JP = "redive_jp.db-wal"
     const val DATABASE_SHM_JP = "redive_jp.db-shm"
+    const val DATABASE_REMOTE_JP = "database_jp_remote_mode"
 
     //日服备份数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP =
@@ -40,6 +41,7 @@ object Constants {
     const val DATABASE_NAME = "redive_cn.db"
     const val DATABASE_WAL = "redive_cn.db-wal"
     const val DATABASE_SHM = "redive_cn.db-shm"
+    const val DATABASE_REMOTE = "database_remote_mode"
 
     //国服备份数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP =

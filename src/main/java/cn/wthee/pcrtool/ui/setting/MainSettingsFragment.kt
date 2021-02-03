@@ -5,12 +5,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.*
 import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -29,6 +31,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         lateinit var titleDatabase: Preference
     }
 
+    private lateinit var switchPvpRegion: SwitchPreference
+    private lateinit var changeDbType: ListPreference
 
     override fun onResume() {
         super.onResume()
@@ -44,16 +48,22 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val cleanDatabase = findPreference<Preference>("clean_database")
         val appUpdate = findPreference<Preference>("force_update_app")
         val shareApp = findPreference<Preference>("share_app")
-        val changeDbType = findPreference<ListPreference>("change_database")
-        val switchPvpRegion = findPreference<SwitchPreference>("pvp_region")
-        changeDbType?.title =
-            "版本：" + if (changeDbType?.value == "1") getString(R.string.db_cn) else getString(R.string.db_jp)
-        switchPvpRegion?.isVisible = changeDbType?.value != "1"
-        cleanDatabase?.summary = FileUtil.getOldDatabaseSize()
+        changeDbType = findPreference("change_database")!!
+        switchPvpRegion = findPreference("pvp_region")!!
+        setDbSummary(changeDbType.value)
+        //切换竞技场查询
+        switchPvpRegion.isVisible = changeDbType.value != "1"
+        //历史数据大小
+        FileUtil.getOldDatabaseSize().let {
+            if (it > 0) {
+                cleanDatabase?.isVisible = true
+                cleanDatabase?.summary = FileUtil.getOldDatabaseSize().convertFileSize()
+            }
+        }
         //数据版本
         MainScope().launch {
             DataStoreUtil.get(
-                if (changeDbType?.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP
+                if (changeDbType.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP
             ).collect { str ->
                 titleDatabase.title = getString(R.string.data) + if (str != null) {
                     str.split("/")[0]
@@ -79,23 +89,17 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
                     override fun onConfirm(dialog: AlertDialog) {
                         lifecycleScope.launch {
-                            DatabaseUpdater.checkDBVersion(0, force = true)
                             dialog.dismiss()
+                            DatabaseUpdater.checkDBVersion(0, force = true)
                         }
                     }
                 }).show()
             return@setOnPreferenceClickListener true
         }
         //切换数据库版本
-        changeDbType?.setOnPreferenceChangeListener { _, newValue ->
+        changeDbType.setOnPreferenceChangeListener { _, newValue ->
             if (changeDbType.value != newValue as String) {
-                if (newValue == "1") {
-                    changeDbType.title = "版本：" + getString(R.string.db_cn)
-                    switchPvpRegion?.isVisible = false
-                } else {
-                    changeDbType.title = "版本：" + getString(R.string.db_jp)
-                    switchPvpRegion?.isVisible = true
-                }
+                setDbSummary(newValue)
                 MainScope().launch {
                     delay(800L)
                     DatabaseUpdater.checkDBVersion(1)
@@ -106,7 +110,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         //历史数据库文件
         cleanDatabase?.setOnPreferenceClickListener {
             FileUtil.deleteOldDatabase()
-            it.summary = FileUtil.getOldDatabaseSize()
+            it.summary = FileUtil.getOldDatabaseSize().convertFileSize()
+            it.isVisible = false
             return@setOnPreferenceClickListener true
         }
 
@@ -140,5 +145,20 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-
+    /**
+     * 设置切换版本摘要
+     */
+    private fun setDbSummary(newValue: String) {
+        changeDbType.summary = getString(R.string.now_db_type) + if (newValue == "1") {
+            switchPvpRegion.isVisible = false
+            getString(R.string.db_cn)
+        } else {
+            switchPvpRegion.isVisible = true
+            getString(R.string.db_jp)
+        } + if (MyApplication.backupMode) {
+            getString(R.string.backup_mode)
+        } else {
+            ""
+        }
+    }
 }

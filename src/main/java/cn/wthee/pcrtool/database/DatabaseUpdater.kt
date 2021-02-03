@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.database
 
-import android.content.Context
 import android.view.View
 import androidx.preference.PreferenceManager
 import androidx.work.Data
@@ -19,6 +18,7 @@ import cn.wthee.pcrtool.utils.Constants.API_URL
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHANGE
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_CHECKING
 import cn.wthee.pcrtool.utils.Constants.NOTICE_TOAST_NETWORK_ERROR
+import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
@@ -63,6 +63,46 @@ object DatabaseUpdater {
     }
 
     /**
+     * 尝试打开本地数据库
+     *
+     * 1：正常打开  0：启用备用数据库
+     */
+    fun tryOpenDatabase(): Int {
+        if (getDatabaseType() == 1) {
+            try {
+                //尝试打开数据库
+                if (File(FileUtil.getDatabasePath(1)).exists()) {
+                    AppDatabase.buildDatabase(Constants.DATABASE_NAME).openHelper.readableDatabase
+                }
+            } catch (e: Exception) {
+                UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
+                //启用远程备份数据库
+                MainScope().launch {
+                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                }
+                return 0
+            }
+            //正常打开
+            return 1
+        } else {
+            try {
+                //尝试打开数据库
+                if (File(FileUtil.getDatabasePath(2)).exists()) {
+                    AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper.readableDatabase
+                }
+            } catch (e: Exception) {
+                UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
+                //启用远程备份数据库
+                MainScope().launch {
+                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                }
+                return 0
+            }
+            return 1
+        }
+    }
+
+    /**
      * 下载数据库文件
      */
     private fun downloadDB(
@@ -77,15 +117,9 @@ object DatabaseUpdater {
                 DataStoreUtil.get(if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP)
             downloadFlow.collect { str ->
                 val databaseType = getDatabaseType()
+
                 //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
-                val sp = ActivityHelper.instance.currentActivity!!.getSharedPreferences(
-                    "main",
-                    Context.MODE_PRIVATE
-                )
-                val remoteBackupMode = sp.getBoolean(
-                    if (type == 1) Constants.SP_BACKUP_CN else Constants.SP_BACKUP_JP,
-                    false
-                )
+                val remoteBackupMode = MyApplication.backupMode
                 //正常下载
                 val toDownload = str != ver.toString()  //版本号hash远程不一致
                         || force
