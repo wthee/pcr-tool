@@ -100,6 +100,7 @@ object Constants {
     //常量值
     const val UID = "unit_id"
     const val REGION = "region"
+    const val LOG_TAG = "log_tag"
 
     val ATTR = arrayListOf(
         "HP",

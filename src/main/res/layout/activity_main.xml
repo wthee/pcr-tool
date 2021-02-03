@@ -15,61 +15,68 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_main" />
 
-    <FrameLayout
-        android:id="@+id/layout_download"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@dimen/efab_margin"
-        android:layout_marginBottom="@dimen/xl_dp"
-        android:animateLayoutChanges="true"
-        android:background="@drawable/bg_efab_press"
-        android:clickable="true"
-        android:elevation="@dimen/card_elevation"
-        android:focusable="true"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:paddingBottom="@dimen/xl_dp"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
 
-        <cn.wthee.circleprogressbar.CircleProgressView
-            android:id="@+id/progress"
-            android:layout_width="@dimen/circle_progress_bar_size"
-            android:layout_height="@dimen/circle_progress_bar_size"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/m_dp"
-            android:layout_marginEnd="@dimen/m_dp"
-            app:circleColor="@color/colorGray"
-            app:radius="11dp"
-            app:ringBackgroundColor="@color/colorHalfAccent"
-            app:ringColor="@color/colorPrimary"
-            app:ringType="flyme"
-            app:strokeWidth="3dp"
-            app:textColor="@color/colorPrimary" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/download_text"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_notice"
+            style="@style/FabStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginStart="@dimen/fab_size"
+            android:layout_gravity="end"
             android:layout_marginEnd="@dimen/m_dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/fab_text_size"
-            android:textStyle="bold" />
-    </FrameLayout>
+            android:layout_marginTop="@dimen/m_dp"
+            android:contentDescription="@string/notice"
+            android:src="@drawable/ic_notice"
+            app:tint="@color/cool_apk"
+            android:elevation="@dimen/card_elevation" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_notice"
-        style="@style/FabStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|bottom"
-        android:layout_marginStart="@dimen/m_dp"
-        android:layout_marginBottom="@dimen/m_dp"
-        android:contentDescription="@string/notice"
-        android:src="@drawable/ic_notice"
-        android:visibility="invisible"
-        app:tint="@color/red"
-        tools:visibility="visible" />
+        <FrameLayout
+            android:id="@+id/layout_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_efab_press"
+            android:layout_margin="@dimen/m_dp"
+            android:clickable="true"
+            android:elevation="@dimen/card_elevation"
+            android:focusable="true"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <cn.wthee.circleprogressbar.CircleProgressView
+                android:id="@+id/progress"
+                android:layout_width="@dimen/circle_progress_bar_size"
+                android:layout_height="@dimen/circle_progress_bar_size"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/m_dp"
+                android:layout_marginEnd="@dimen/m_dp"
+                app:circleColor="@color/colorGray"
+                app:radius="11dp"
+                app:ringBackgroundColor="@color/colorHalfAccent"
+                app:ringColor="@color/colorPrimary"
+                app:ringType="flyme"
+                app:strokeWidth="3dp"
+                app:textColor="@color/colorPrimary" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/download_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginStart="@dimen/fab_size"
+                android:layout_marginEnd="@dimen/m_dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/fab_text_size"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+    </LinearLayout>
+
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/layout_motion"

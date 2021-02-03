@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.network
 
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.network.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
@@ -137,6 +138,32 @@ class MyAPIRepository(private val service: MyAPIService) {
         //请求
         try {
             val response = service.getAppNotice()
+            if (response.message == "failure" || response.data == null) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 获取应用更新通知信息
+     */
+    suspend fun getAppUpdateNotice(): ResponseData<Boolean> {
+        //请求
+        try {
+            //接口参数
+            val json = JsonObject()
+            json.addProperty("version", BuildConfig.VERSION_NAME)
+            val body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                json.toString()
+            )
+            val response = service.toUpdate(body)
             if (response.message == "failure" || response.data == null) {
                 return error()
             }

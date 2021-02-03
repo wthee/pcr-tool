@@ -46,9 +46,7 @@
             android:layout_height="@dimen/fab_size"
             android:layout_marginEnd="@dimen/xl_dp"
             android:contentDescription="@string/character"
-            android:elevation="@dimen/home_fab_elevation"
             android:text="@string/zero"
-            app:elevation="@dimen/home_fab_elevation"
             app:icon="@drawable/ic_character" />
 
     </LinearLayout>

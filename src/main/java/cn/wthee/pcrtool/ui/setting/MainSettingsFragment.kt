@@ -121,7 +121,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             //应用版本校验
             lifecycleScope.launch {
                 ToastUtil.short("应用版本检测中...")
-                AppUpdateUtil.init(true)
+                AppUpdateUtil.init(requireActivity(), true)
             }
             return@setOnPreferenceClickListener true
         }

@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         setListener()
         MainScope().launch {
             //应用版本校验
-            AppUpdateUtil.init()
+            AppUpdateUtil.init(this@MainActivity)
         }
     }
 
@@ -327,7 +327,6 @@ class MainActivity : AppCompatActivity() {
         }
         //打开通知
         binding.fabNotice.apply {
-            show()
             setOnClickListener {
                 this@MainActivity.findNavController(R.id.nav_host_fragment)
                     .navigate(R.id.action_global_noticeListFragment)

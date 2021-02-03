@@ -35,7 +35,7 @@ interface MyAPIService {
      * 版本更新校验
      */
     @POST("toupdate")
-    suspend fun toUpdate(): ResponseData<Boolean>
+    suspend fun toUpdate(@Body body: RequestBody): ResponseData<Boolean>
 
     /**
      * 获取公告
