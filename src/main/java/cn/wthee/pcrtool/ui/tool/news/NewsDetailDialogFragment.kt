@@ -169,7 +169,7 @@ class NewsDetailDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(region: Int, newsId: Int, url: String) =
+        fun getInstance(region: Int, newsId: Int, url: String) =
             NewsDetailDialogFragment().apply {
                 arguments = Bundle().apply {
                     putInt(REGION, region)

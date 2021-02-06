@@ -43,6 +43,7 @@ class DatabaseDownloadWorker(
     private val folderPath = FileUtil.getDatabaseDir()
 
     companion object {
+        const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
     }
@@ -52,19 +53,25 @@ class DatabaseDownloadWorker(
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
+        val fileName = inputData.getString(KEY_FILE)
         setForegroundAsync(createForegroundInfo())
         //显示加载进度
         MainScope().launch {
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
         }
-        return@coroutineScope download(version, type)
+        return@coroutineScope download(
+            version,
+            type,
+            fileName ?: Constants.DATABASE_DOWNLOAD_FILE_NAME
+        )
     }
 
 
     private fun download(
         version: String,
-        type: Int
+        type: Int,
+        fileName: String,
     ): Result {
         try {
             //创建Retrofit服务
@@ -90,12 +97,8 @@ class DatabaseDownloadWorker(
                     }
                 })
             )
-
             //下载文件
-            val response =
-                service.getDb(if (type == 1) Constants.DATABASE_DOWNLOAD_File_Name else Constants.DATABASE_DOWNLOAD_File_Name_JP)
-                    .execute()
-
+            val response = service.getDb(fileName).execute()
             //保存
             //创建数据库文件夹
             val file = File(folderPath)
@@ -103,7 +106,7 @@ class DatabaseDownloadWorker(
                 file.mkdir()
             }
             //br压缩包路径
-            val dbZipPath = FileUtil.getDatabaseZipPath(type)
+            val dbZipPath = FileUtil.getDatabaseDir() + File.separator + fileName
             val db = File(dbZipPath)
             if (db.exists()) {
                 //删除已有数据库文件
@@ -111,9 +114,15 @@ class DatabaseDownloadWorker(
             }
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
-            //更新数据库
-            AppDatabase.getInstance().close()
-            AppDatabaseJP.getInstance().close()
+
+            //删除旧的wal
+            FileUtil.apply {
+                delete(getDatabaseBackupWalPath(1))
+                delete(getDatabaseBackupWalPath(2))
+                delete(getDatabaseWalPath(1))
+                delete(getDatabaseWalPath(2))
+            }
+            //加压缩
             UnzippedUtil.deCompress(db, true)
             notificationManager.cancelAll()
             //更新数据库版本号

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.annotation.SuppressLint
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -7,6 +8,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.PvpDao
 import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.utils.Constants
+import java.util.concurrent.TimeUnit
 
 @Database(
     entities = [
@@ -36,12 +38,15 @@ abstract class AppPvpDatabase : RoomDatabase() {
         }
 
 
+        @SuppressLint("UnsafeOptInUsageError")
         private fun buildDatabase(): AppPvpDatabase {
             return Room.databaseBuilder(
                 MyApplication.context,
                 AppPvpDatabase::class.java,
                 Constants.DATABASE_PVP
-            ).fallbackToDestructiveMigration().build()
+            ).fallbackToDestructiveMigration()
+                .setAutoCloseTimeout(1, TimeUnit.MINUTES)
+                .build()
         }
     }
 }

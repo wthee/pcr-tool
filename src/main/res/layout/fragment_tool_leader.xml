@@ -109,9 +109,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/loading_news"
+        android:layout_marginTop="@dimen/m_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tool_list" />

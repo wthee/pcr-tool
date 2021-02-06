@@ -18,7 +18,7 @@
             app:entryValues="@array/database_type_value"
             app:iconSpaceReserved="false"
             app:key="change_database"
-            app:summary="@string/game_version_summary"
+            app:summary="@string/empty"
             app:title="@string/game_version" />
 
         <SwitchPreference
@@ -26,18 +26,26 @@
             app:iconSpaceReserved="false"
             app:title="@string/pvp_search_jp"
             app:summary="@string/pvp_search_summary" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="clean_database"
+            app:summary="@string/zero"
+            app:isPreferenceVisible="false"
+            app:title="@string/clean_database" />
     </PreferenceCategory>
 
 
     <PreferenceCategory
+        app:key="title_app"
         app:iconSpaceReserved="false"
-        app:title="应用信息">
+        app:title="@string/app_version">
 
         <Preference
             app:iconSpaceReserved="false"
             app:key="force_update_app"
-            app:summary="0.0.3-beta"
-            app:title="@string/check_app_update" />
+            app:summary="@string/app_version_summary"
+            app:title="@string/notice" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"

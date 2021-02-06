@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
  *
  * 列表项数据 [RankCompareData]
  */
-class RankCompareAdapter() :
+class RankCompareAdapter :
     ListAdapter<RankCompareData, RankCompareAdapter.ViewHolder>(RankCompareDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

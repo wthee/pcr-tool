@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.annotation.SuppressLint
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -10,7 +11,7 @@ import cn.wthee.pcrtool.data.db.dao.EventDao
 import cn.wthee.pcrtool.data.db.dao.GachaDao
 import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.data.db.entityjp.*
-import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
+import cn.wthee.pcrtool.utils.Constants
 
 
 @Database(
@@ -54,7 +55,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name_JP
         CharacterRoomComments::class,
         AilmentData::class,
     ],
-    version = 64,
+    version = 65,
     exportSchema = false
 )
 /**
@@ -71,22 +72,31 @@ abstract class AppDatabaseJP : RoomDatabase() {
     
         @Volatile
         private var instance: AppDatabaseJP? = null
-    
+
+        /**
+         * 自动获取数据库、远程备份数据
+         */
         fun getInstance(): AppDatabaseJP {
             return instance ?: synchronized(this) {
-                instance
-                    ?: buildDatabase()
-                        .also { instance = it }
+                instance ?: buildDatabase(
+                    if (MyApplication.backupMode) {
+                        Constants.DATABASE_BACKUP_NAME_JP
+                    } else {
+                        Constants.DATABASE_NAME_JP
+                    }
+                ).also { instance = it }
             }
         }
 
 
-        private fun buildDatabase(): AppDatabaseJP {
+        @SuppressLint("UnsafeOptInUsageError")
+        fun buildDatabase(name: String): AppDatabaseJP {
             return Room.databaseBuilder(
                 MyApplication.context,
                 AppDatabaseJP::class.java,
-                DATABASE_Name_JP
-            ).fallbackToDestructiveMigration().build()
+                name
+            ).fallbackToDestructiveMigration()
+                .build()
         }
     }
 

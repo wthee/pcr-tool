@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import cn.wthee.pcrtool.data.bean.FilterEquipment
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
@@ -31,23 +32,25 @@ class EquipmentViewModel(
     /**
      * 获取装备列表
      */
-    fun getEquips(name: String) {
+    fun getEquips(params: FilterEquipment, name: String, reload: Boolean = true) {
         viewModelScope.launch {
-            equipments = Pager(
-                PagingConfig(
-                    pageSize = 10,
-                    enablePlaceholders = false
-                )
-            ) {
-                equipmentRepository.getPagingEquipments(
-                    name,
-                    EquipmentListFragment.equipFilterParams
-                )
-            }.flow.cachedIn(viewModelScope)
+            if (!this@EquipmentViewModel::equipments.isInitialized || reload) {
+                equipments = Pager(
+                    PagingConfig(
+                        pageSize = 10,
+                        enablePlaceholders = false
+                    )
+                ) {
+                    equipmentRepository.getPagingEquipments(
+                        name,
+                        params
+                    )
+                }.flow.cachedIn(viewModelScope)
+            }
             equipmentCounts.postValue(
                 equipmentRepository.getEquipmentCount(
                     name,
-                    EquipmentListFragment.equipFilterParams
+                    params
                 )
             )
             updateEquip.postValue(true)

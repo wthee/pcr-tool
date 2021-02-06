@@ -26,10 +26,16 @@ interface MyAPIService {
     suspend fun getDbVersion(@Url url: String): ResponseData<DatabaseVersion>
 
     /**
-     * 获取应用版本
+     * 获取消息通知
      */
-    @GET("app.json")
-    suspend fun getAppVersion(): ResponseData<AppRemoteVersion>
+    @POST("notice")
+    suspend fun getAppNotice(): ResponseData<List<AppNotice>>
+
+    /**
+     * 版本更新校验
+     */
+    @POST("toupdate")
+    suspend fun toUpdate(@Body body: RequestBody): ResponseData<Boolean>
 
     /**
      * 获取公告

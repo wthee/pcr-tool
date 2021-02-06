@@ -43,7 +43,6 @@ class EquipmentDetailsViewModel(
     }
 
     /**
-     * TODO 优化
      * 获取合成材料
      */
     private suspend fun getAllMaterial(equipmentId: Int, name: String, count: Int, craftFlg: Int) {

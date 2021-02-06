@@ -18,7 +18,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/CardImageStyle"
-        tools:src="@drawable/load" />
+        tools:src="@drawable/error" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/s_dp"
+        android:layout_marginTop="@dimen/xs_dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@id/three"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/character_pic"
+        app:layout_constraintEnd_toStartOf="@id/position_type"
+        tools:text="@string/test" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/position_type"
@@ -29,21 +43,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/name"
         tools:background="@drawable/ic_position_front" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_dp"
-        android:layout_marginTop="@dimen/xs_dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toTopOf="@id/three"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/character_pic"
-        tools:text="@string/test" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name_extra"

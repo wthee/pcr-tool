@@ -55,16 +55,3 @@ fun String.daysInt(str2: String): Int {
  */
 fun String.fillZero() = if (this.length == 1) "0$this" else this
 
-/**
- * 罗马字符
- */
-fun Int.toRome() = when (this) {
-    1 -> "Ⅰ"
-    2 -> "Ⅱ"
-    3 -> "Ⅲ"
-    4 -> "Ⅳ"
-    5 -> "Ⅴ"
-    6 -> "Ⅵ"
-    7 -> "Ⅶ"
-    else -> ""
-}

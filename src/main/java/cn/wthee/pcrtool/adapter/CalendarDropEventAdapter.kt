@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.DropEvent
-import cn.wthee.pcrtool.databinding.ItemCalendarEventBinding
 import cn.wthee.pcrtool.databinding.ItemCalendarEventJpBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
@@ -74,10 +73,10 @@ class CalendarDropEventAdapter :
                     45 -> ResourcesUtil.getString(R.string.dungeon)
                     else -> ""
                 }
-                if (index < list.size - 1 && title != "") {
-                    str += (title + "\n")
+                str += if (index < list.size - 1 && title != "") {
+                    (title + "\n")
                 } else {
-                    str += title
+                    title
                 }
             }
             return str.replace("x", value)

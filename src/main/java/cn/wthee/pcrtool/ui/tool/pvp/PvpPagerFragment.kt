@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapter.PvpCharacterAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolPvpCharacterBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character1
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character2
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSelectFragment.Companion.character3
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
  * 竞技场角色 ViewPager
- *
- * 根据位置 [position] 悬浮[isFloatWindow] ，加载数据
  *
  * 页面布局 [FragmentToolPvpCharacterBinding]
  *
@@ -54,10 +52,9 @@ class PvpPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
-        MainScope().launch {
+        lifecycleScope.launch {
 
-            val adapter = PvpCharacterAdapter(isFloatWindow)
-//            adapter.setHasStableIds(!isFloatWindow)
+            val adapter = PvpCharacterAdapter(isFloatWindow, !isFloatWindow)
             binding.icons.adapter = adapter
 
             adapter.submitList(

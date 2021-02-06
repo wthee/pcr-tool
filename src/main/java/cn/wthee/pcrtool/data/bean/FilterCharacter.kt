@@ -4,15 +4,14 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.DataStoreUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
 /**
  * 角色信息筛选
  *
- * fixme starIds获取问题
  */
+@Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterCharacter(
     var all: Boolean,
     var positon: Int,
@@ -41,10 +40,10 @@ class FilterCharacter(
         //保存
         MainScope().launch {
             DataStoreUtil.save(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
-                val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-                starIds = newStarIds ?: arrayListOf()
-            }
+//            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
+//                val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
+//                starIds = newStarIds ?: arrayListOf()
+//            }
         }
     }
 

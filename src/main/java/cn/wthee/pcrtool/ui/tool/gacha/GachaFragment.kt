@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
  */
 class GachaFragment : CommonListFragment() {
 
-    private val viewModel by activityViewModels<GachaViewModel>() {
+    private val viewModel by activityViewModels<GachaViewModel> {
         InjectorUtil.provideGachaViewModelFactory()
     }
     private lateinit var binding: FragmentToolGachaBinding

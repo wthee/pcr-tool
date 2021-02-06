@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.utils
 
+import cn.wthee.pcrtool.BuildConfig
+
 /**
  * 常量
  */
@@ -17,18 +19,37 @@ object Constants {
     //接口正式地址
     const val API_URL = "https://wthee.xyz:1211/api/"
 
-    //数据库
-    const val DATABASE_DOWNLOAD_File_Name_JP = "redive_jp.db.br"
-    const val DATABASE_Name_JP = "redive_jp.db"
+    //日服数据库
+    const val DATABASE_DOWNLOAD_FILE_NAME_JP = "redive_jp.db.br"
+    const val DATABASE_VERSION_URL_JP = "last_version_jp.json"
+    const val DATABASE_NAME_JP = "redive_jp.db"
     const val DATABASE_WAL_JP = "redive_jp.db-wal"
     const val DATABASE_SHM_JP = "redive_jp.db-shm"
-    const val DATABASE_VERSION_URL_JP = "last_version_jp.json"
 
-    const val DATABASE_DOWNLOAD_File_Name = "redive_cn.db.br"
-    const val DATABASE_Name = "redive_cn.db"
+    //日服备份数据库
+    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP =
+        BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME_JP
+    const val DATABASE_BACKUP_NAME_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_JP
+    const val DATABASE_WAL_JP_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_JP
+    const val DATABASE_SHM_JP_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_SHM_JP
+
+
+    //国服数据库
+    const val DATABASE_VERSION_URL = "last_version_cn.json"
+    const val DATABASE_DOWNLOAD_FILE_NAME = "redive_cn.db.br"
+    const val DATABASE_NAME = "redive_cn.db"
     const val DATABASE_WAL = "redive_cn.db-wal"
     const val DATABASE_SHM = "redive_cn.db-shm"
-    const val DATABASE_VERSION_URL = "last_version_cn.json"
+
+    //国服备份数据库
+    const val DATABASE_DOWNLOAD_FILE_NAME_BACKUP =
+        BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME
+    const val DATABASE_BACKUP_NAME = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME
+    const val DATABASE_WAL_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL
+    const val DATABASE_SHM_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_SHM
+
+
+    //其它数据库
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_PVP = "pvp.db"
 
@@ -47,10 +68,6 @@ object Constants {
 
     //图标接口
     const val UNIT_ICON_URL = RESOURCE_URL + "icon/unit/"
-    const val UNIT_ICON_SHADOW_URL = RESOURCE_URL + "icon/unit_shadow/"
-
-    //角色界面接口
-    const val CHARACTER_PLATE_URL = RESOURCE_URL + "icon/plate/"
 
     //技能图标接口
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
@@ -62,10 +79,7 @@ object Constants {
     const val SP_DATABASE_VERSION = "database_version"
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
-
-    //数量
-    const val SP_COUNT_CHARACTER = "count_character"
-    const val SP_COUNT_EQUIP = "count_equip"
+    const val SP_STAR_EQUIP = "star_equip"
 
     //默认值
     const val SORT_ASC = false
@@ -79,8 +93,8 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
-    const val SIXSTAR = "six_star"
     const val REGION = "region"
+    const val LOG_TAG = "log_tag"
 
     val ATTR = arrayListOf(
         "HP",

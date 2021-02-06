@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.annotation.SuppressLint
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,7 +10,8 @@ import cn.wthee.pcrtool.data.db.dao.EquipmentDao
 import cn.wthee.pcrtool.data.db.dao.EventDao
 import cn.wthee.pcrtool.data.db.dao.GachaDao
 import cn.wthee.pcrtool.data.db.entity.*
-import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
+import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME
+import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
 
 
 @Database(
@@ -52,7 +54,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_Name
         CharacterRoomComments::class,
         AilmentData::class,
     ],
-    version = 64,
+    version = 66,
     exportSchema = false
 )
 /**
@@ -64,27 +66,36 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
-    
+
     companion object {
     
         @Volatile
         private var instance: AppDatabase? = null
-    
+
+        /**
+         * 自动获取数据库、远程备份数据
+         */
         fun getInstance(): AppDatabase {
             return instance ?: synchronized(this) {
-                instance
-                    ?: buildDatabase()
-                        .also { instance = it }
+                instance ?: buildDatabase(
+                    if (MyApplication.backupMode) {
+                        DATABASE_BACKUP_NAME
+                    } else {
+                        DATABASE_NAME
+                    }
+                ).also { instance = it }
             }
         }
 
 
-        private fun buildDatabase(): AppDatabase {
+        @SuppressLint("UnsafeOptInUsageError")
+        fun buildDatabase(name: String): AppDatabase {
             return Room.databaseBuilder(
                 MyApplication.context,
                 AppDatabase::class.java,
-                DATABASE_Name
-            ).fallbackToDestructiveMigration().build()
+                name
+            ).fallbackToDestructiveMigration()
+                .build()
         }
     }
 

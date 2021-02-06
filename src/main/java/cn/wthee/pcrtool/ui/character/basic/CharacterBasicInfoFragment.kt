@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.getPositionIcon
@@ -18,7 +19,6 @@ import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import coil.load
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -53,15 +53,7 @@ class CharacterBasicInfoFragment : Fragment() {
         requireArguments().apply {
             uid = getInt(UID)
         }
-        lifecycleScope.launch {
-            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
-                val starIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-                CharacterListFragment.characterFilterParams.starIds = starIds ?: arrayListOf()
-                //是否收藏
-                isLoved =
-                    CharacterListFragment.characterFilterParams.starIds.contains(uid) ?: false
-            }
-        }
+        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
     }
 
     override fun onCreateView(
@@ -86,7 +78,7 @@ class CharacterBasicInfoFragment : Fragment() {
     //初始化
     private fun init() {
         //添加返回fab
-        FabHelper.addBackFab(1, true)
+        FabHelper.addBackFab(MainActivity.pageLevel, true)
         characterPic = binding.characterPic
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
@@ -143,7 +135,7 @@ class CharacterBasicInfoFragment : Fragment() {
         //文本数据
         binding.apply {
             unitId.text = uid.toString()
-            catah.text = characterPro.catchCopy
+            catah.text = characterPro.catchCopy.deleteSpace()
             intro.text = characterPro.getIntroText()
             if (intro.text.isEmpty()) intro.visibility = View.GONE
             trueName.text = if (characterPro.actualName.isEmpty())

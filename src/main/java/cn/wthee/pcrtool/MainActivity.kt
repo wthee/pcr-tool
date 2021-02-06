@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
@@ -28,9 +29,10 @@ import cn.wthee.pcrtool.ui.home.*
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment
 import cn.wthee.pcrtool.utils.*
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
-import kotlinx.coroutines.MainScope
+import com.umeng.commonsdk.UMConfigure
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -60,6 +62,10 @@ class MainActivity : AppCompatActivity() {
         lateinit var layoutDownload: FrameLayout
         lateinit var progressDownload: CircleProgressView
         lateinit var textDownload: MaterialTextView
+
+        //消息通知
+        lateinit var fabNotice: ExtendedFloatingActionButton
+
     }
 
     private var menuItems = arrayListOf<ViewBinding>()
@@ -75,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         //友盟初始化
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(UMengInitializer::class.java)
+        UMConfigure.setProcessEvent(true)
         //获取 Uri
         fixUriBug()
         //初始化 handler
@@ -88,10 +95,10 @@ class MainActivity : AppCompatActivity() {
         init()
         //监听
         setListener()
-        //数据库版本检查
-        DatabaseUpdater.checkDBVersion()
-        //应用版本校验
-        AppUpdateUtil.init(this, layoutInflater)
+        lifecycleScope.launch {
+            //应用版本校验
+            AppUpdateUtil.init()
+        }
     }
 
     private fun fixUriBug() {
@@ -135,14 +142,14 @@ class MainActivity : AppCompatActivity() {
             when (it.what) {
                 //获取版本失败
                 0 -> {
-                    MainScope().launch {
+                    lifecycleScope.launch {
                         layoutDownload.visibility = View.GONE
                         ToastUtil.short("获取数据版本信息失败~")
                     }
                 }
                 //数据切换
                 1 -> {
-                    MainScope().launch {
+                    lifecycleScope.launch {
                         delay(500L)
                         progressDownload.setProgress(100)
                         layoutDownload.setOnClickListener {
@@ -166,6 +173,8 @@ class MainActivity : AppCompatActivity() {
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
+        fabNotice = binding.fabNotice
+        fabNotice.hide()
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
@@ -310,6 +319,13 @@ class MainActivity : AppCompatActivity() {
                     null,
                     extras
                 )
+            }
+        }
+        //打开通知
+        binding.fabNotice.apply {
+            setOnClickListener {
+                this@MainActivity.findNavController(R.id.nav_host_fragment)
+                    .navigate(R.id.action_global_noticeListFragment)
             }
         }
     }

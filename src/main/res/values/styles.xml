@@ -31,7 +31,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
-    <!-- 标题 -->
+    <!-- 带背景标题 -->
     <style name="TitleStyle">
         <item name="android:background">@drawable/bg_text_view</item>
         <item name="android:gravity">start</item>
@@ -47,13 +47,23 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <!--  正常标题-->
+    <style name="NormalTitleStyle">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle2
+        </item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <!--  悬浮按钮样式-->
     <style name="FabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:backgroundTint">@color/colorWhite</item>
         <item name="borderWidth">0dp</item>
         <item name="fabSize">mini</item>
         <item name="tint">@color/colorPrimary</item>
-        <item name="elevation">@dimen/home_fab_elevation</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
     </style>
 
     <!--  扩展悬浮按钮样式-->
@@ -64,7 +74,7 @@
         <item name="borderWidth">0dp</item>
         <item name="iconSize">@dimen/menu_icon</item>
         <item name="iconTint">@color/colorPrimary</item>
-        <item name="elevation">@dimen/home_fab_elevation</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
         <item name="iconPadding">@dimen/xs_dp</item>
     </style>
 

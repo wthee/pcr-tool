@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapter.PvpCharacterResultAdapter
 import cn.wthee.pcrtool.adapter.PvpCharacterResultItemAdapter
 import cn.wthee.pcrtool.data.network.MyAPIRepository
@@ -15,7 +16,6 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.gson.JsonArray
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
@@ -33,7 +33,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var job: Job
     private var idList = JsonArray()
     private var defIds = arrayListOf<Int>()
-    private val viewModel by activityViewModels<PvpLikedViewModel>() {
+    private val viewModel by activityViewModels<PvpLikedViewModel> {
         InjectorUtil.providePvpViewModelFactory()
     }
 
@@ -69,7 +69,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
         binding.defCharacters.adapter = defAdapter
         defAdapter.submitList(defIds)
         //创建服务
-        job = MainScope().launch {
+        job = lifecycleScope.launch {
             try {
                 binding.pvpNoData.visibility = View.GONE
                 val result = MyAPIRepository.getInstance().getPVPData(idList)

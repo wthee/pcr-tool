@@ -32,7 +32,7 @@ data class SkillData(
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "icon_type") val icon_type: Int
 ) {
-    fun getAllActionId() = arrayListOf<Int>(
+    fun getAllActionId() = arrayListOf(
         action_1,
         action_2,
         action_3,

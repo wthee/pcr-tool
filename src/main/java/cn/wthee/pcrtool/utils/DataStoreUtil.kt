@@ -17,9 +17,9 @@ object DataStoreUtil {
      * 保存
      */
     suspend inline fun save(key: String, obj: String) {
-        val NAME = stringPreferencesKey(key)
+        val name = stringPreferencesKey(key)
         MyApplication.dataStore.edit { main ->
-            main[NAME] = obj
+            main[name] = obj
         }
     }
 
@@ -38,9 +38,5 @@ object DataStoreUtil {
     inline fun <reified T : Any> fromJson(json: String?): T? {
         return Gson().fromJson(json, T::class.java)
     }
-}
-
-interface DataStoreRead {
-    fun read(str: String?)
 }
 

@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.tool.equip
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 
@@ -33,6 +35,7 @@ private const val EQUIP = "equip"
 class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
+        var isLoved = false
         fun getInstance(equip: EquipmentMaxData) =
             EquipmentDetailsDialogFragment().apply {
                 arguments = Bundle().apply {
@@ -56,6 +59,8 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
         requireArguments().let {
             equip = it.getSerializable(EQUIP) as EquipmentMaxData
         }
+        isLoved = EquipmentListFragment.equipFilterParams.starIds.contains(equip.equipmentId)
+
     }
 
     override fun onCreateView(
@@ -65,6 +70,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
         binding = FragmentEquipmentDetailsBinding.inflate(inflater, container, false)
         init()
         setObserve()
+        setLove(isLoved)
         viewModel.getEquipInfos(equip)
         return binding.root
     }
@@ -98,6 +104,12 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
                 if (equipDrops.isNestedScrollingEnabled) equipDrops.isNestedScrollingEnabled = false
                 return@setOnTouchListener false
             }
+            //点击收藏
+            stared.setOnClickListener {
+                isLoved = !isLoved
+                EquipmentListFragment.equipFilterParams.addOrRemove(equip.equipmentId)
+                setLove(isLoved)
+            }
         }
     }
 
@@ -113,5 +125,13 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
                 binding.material.visibility = View.GONE
             }
         })
+    }
+
+    //设置收藏
+    private fun setLove(isLoved: Boolean) {
+        binding.detail.equipName.setTextColor(ResourcesUtil.getColor(if (Companion.isLoved) R.color.colorPrimary else R.color.text))
+        binding.stared.imageTintList =
+            ColorStateList.valueOf(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary))
+        EquipmentListFragment.pageAdapter.notifyDataSetChanged()
     }
 }

@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.databinding.ItemCharacterAttrBinding
  *
  * 列表项数据 [AttrValue]
  */
-class CharacterAttrAdapter() :
+class CharacterAttrAdapter :
     ListAdapter<AttrValue, CharacterAttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
