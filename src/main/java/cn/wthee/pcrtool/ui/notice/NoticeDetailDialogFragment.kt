@@ -40,9 +40,10 @@ class NoticeDetailDialogFragment : CommonBottomSheetDialogFragment() {
         binding = FragmentNoticeDetailBinding.inflate(inflater, container, false)
         binding.apply {
             title.text = if (notice.type == 1)
-                "更新日志 " + notice.title
+                notice.title + " 更新日志"
             else
                 notice.title
+            date.text = notice.date
             content.text = notice.message
         }
         return binding.root

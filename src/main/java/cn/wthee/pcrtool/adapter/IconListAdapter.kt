@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.utils.Constants
@@ -65,6 +66,8 @@ class IconListAdapter() : ListAdapter<Int, IconListAdapter.ViewHolder>(GachaList
                 pic.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putInt(Constants.UID, pagerId)
+                    //二级页面
+                    MainActivity.pageLevel = 2
                     root.findNavController().navigate(
                         R.id.action_global_characterPagerFragment,
                         bundle,

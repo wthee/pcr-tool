@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import coil.Coil
+import coil.load
 import coil.request.ImageRequest
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -32,7 +33,8 @@ import kotlinx.coroutines.launch
  * 列表项数据 [PvpCharacterData]
  */
 class PvpCharacterAdapter(
-    private val isFloatWindow: Boolean
+    private val isFloatWindow: Boolean,
+    private val isPager: Boolean
 ) : ListAdapter<PvpCharacterData, PvpCharacterAdapter.ViewHolder>(PvpDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -55,7 +57,6 @@ class PvpCharacterAdapter(
         fun bind(data: PvpCharacterData) {
             //设置数据
             binding.apply {
-
                 if (isFloatWindow) {
                     name.visibility = View.GONE
                     val params = pic.layoutParams as LinearLayout.LayoutParams
@@ -65,26 +66,34 @@ class PvpCharacterAdapter(
                 }
                 //名称
                 name.text = if (data.position == 999) "未选择" else data.position.toString()
+
                 //加载图片
+                var id = data.unitId
+                id += if (r6Ids.contains(id)) 60 else 30
+                val picUrl = UNIT_ICON_URL + id + WEBP
                 if (data.unitId == 0) {
                     //默认
                     val drawable = ResourcesUtil.getDrawable(R.drawable.unknown_gray)
                     pic.setImageDrawable(drawable)
                 } else {
-                    //角色
-                    var id = data.unitId
-                    id += if (r6Ids.contains(id)) 60 else 30
-                    val picUrl = UNIT_ICON_URL + id + WEBP
-                    val coil = Coil.imageLoader(MyApplication.context)
-                    val request = ImageRequest.Builder(MyApplication.context)
-                        .data(picUrl)
-                        .placeholder(R.drawable.unknown_gray)
-                        .error(R.drawable.unknown_gray)
-                        .build()
-                    MainScope().launch {
-                        pic.setImageDrawable(coil.execute(request).drawable)
+                    if (isPager) {
+                        pic.load(picUrl) {
+                            error(R.drawable.unknown_gray)
+                            placeholder(R.drawable.unknown_gray)
+                        }
+                    } else {
+                        val coil = Coil.imageLoader(MyApplication.context)
+                        val request = ImageRequest.Builder(MyApplication.context)
+                            .data(picUrl)
+                            .placeholder(R.drawable.unknown_gray)
+                            .error(R.drawable.unknown_gray)
+                            .build()
+                        MainScope().launch {
+                            pic.setImageDrawable(coil.execute(request).drawable)
+                        }
                     }
                 }
+
                 //设置点击事件
                 root.setOnClickListener {
                     selects.apply {

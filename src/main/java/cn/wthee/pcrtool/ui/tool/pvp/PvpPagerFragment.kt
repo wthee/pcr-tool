@@ -56,8 +56,7 @@ class PvpPagerFragment : Fragment() {
         binding = FragmentToolPvpCharacterBinding.inflate(inflater, container, false)
         lifecycleScope.launch {
 
-            val adapter = PvpCharacterAdapter(isFloatWindow)
-//            adapter.setHasStableIds(!isFloatWindow)
+            val adapter = PvpCharacterAdapter(isFloatWindow, !isFloatWindow)
             binding.icons.adapter = adapter
 
             adapter.submitList(

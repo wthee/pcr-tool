@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/m_dp"
     android:minHeight="@dimen/card_height">
 
     <com.google.android.material.textview.MaterialTextView
@@ -12,6 +11,7 @@
         style="@style/NormalTitleStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m_dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +31,7 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/s_dp"
+        android:padding="@dimen/m_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         app:layout_constraintTop_toBottomOf="@id/date"
         tools:text="@string/test" />

@@ -237,6 +237,90 @@
     <Transition
         app:constraintSetEnd="@id/end"
         app:constraintSetStart="@+id/start"
-        app:duration="@integer/menu_item" />
+        app:duration="@integer/menu_item">
+
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="70"
+                app:motionTarget="@id/tool_event" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_event" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="70"
+                app:motionTarget="@id/tool_gacha" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_gacha" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="60"
+                app:motionTarget="@id/tool_leader" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_leader" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="60"
+                app:motionTarget="@id/tool_calendar" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_calendar" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/tool_news" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_news" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/tool_pvp" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_pvp" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="60"
+                app:motionTarget="@id/tool_equip" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_equip" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/tool_guild" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_guild" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/setting" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/setting" />
+        </KeyFrameSet>
+    </Transition>
 
 </MotionScene>

@@ -95,6 +95,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                     if (MainActivity.canClick) {
                         MainActivity.canClick = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
+                        MainActivity.pageLevel = 1
                         val bundle = Bundle()
                         bundle.putInt(UID, character.id)
                         val extras =
