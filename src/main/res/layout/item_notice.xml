@@ -30,11 +30,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/xs_dp"
+        android:paddingStart="@dimen/s_dp"
+        android:paddingEnd="@dimen/s_dp"
+        android:text="@string/to_update"
         android:textColor="@color/cool_apk"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/to_update"
         tools:visibility="visible" />
 
     <com.google.android.material.textview.MaterialTextView

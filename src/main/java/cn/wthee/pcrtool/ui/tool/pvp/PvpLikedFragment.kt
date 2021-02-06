@@ -26,7 +26,6 @@ import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.MaterialContainerTransform
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
@@ -127,7 +126,7 @@ class PvpLikedFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 direction: Int
             ) {
-                MainScope().launch {
+                lifecycleScope.launch {
                     val atks =
                         viewHolder.itemView.findViewById<MaterialTextView>(R.id.atk_ids)
                     val defs =

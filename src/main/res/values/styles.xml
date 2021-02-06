@@ -63,7 +63,7 @@
         <item name="borderWidth">0dp</item>
         <item name="fabSize">mini</item>
         <item name="tint">@color/colorPrimary</item>
-        <item name="elevation">@dimen/card_elevation</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
     </style>
 
     <!--  扩展悬浮按钮样式-->
@@ -74,7 +74,7 @@
         <item name="borderWidth">0dp</item>
         <item name="iconSize">@dimen/menu_icon</item>
         <item name="iconTint">@color/colorPrimary</item>
-        <item name="elevation">@dimen/card_elevation</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
         <item name="iconPadding">@dimen/xs_dp</item>
     </style>
 

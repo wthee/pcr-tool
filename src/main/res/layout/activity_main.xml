@@ -18,30 +18,37 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:layout_gravity="end|bottom"
-        android:paddingBottom="@dimen/xl_dp"
+        android:minWidth="@dimen/card_height"
         android:orientation="vertical"
-        android:animateLayoutChanges="true">
+        android:paddingBottom="@dimen/xl_dp">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/fab_notice"
-            style="@style/FabStyle"
+            style="@style/EfabStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/fab_size"
             android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/m_dp"
-            android:layout_marginTop="@dimen/m_dp"
+            android:layout_marginTop="@dimen/xs_dp"
+            android:layout_marginEnd="@dimen/xm_dp"
+            android:layout_marginBottom="@dimen/xm_dp"
             android:contentDescription="@string/notice"
-            android:src="@drawable/ic_notice"
-            app:tint="@color/cool_apk"
-            android:elevation="@dimen/card_elevation" />
+            android:elevation="@dimen/card_elevation"
+            android:text="@string/notice"
+            android:textColor="@color/cool_apk"
+            app:icon="@drawable/ic_notice"
+            app:iconTint="@color/cool_apk" />
 
         <FrameLayout
             android:id="@+id/layout_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/xs_dp"
+            android:layout_marginEnd="@dimen/xm_dp"
+            android:layout_marginBottom="@dimen/xm_dp"
             android:background="@drawable/bg_efab_press"
-            android:layout_margin="@dimen/m_dp"
             android:clickable="true"
             android:elevation="@dimen/card_elevation"
             android:focusable="true"

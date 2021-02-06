@@ -28,7 +28,6 @@ import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import com.google.android.material.transition.MaterialContainerTransform
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
@@ -91,7 +90,7 @@ class CharacterPagerFragment : Fragment() {
 
     private fun init() {
         //加载列表
-        MainScope().launch {
+        lifecycleScope.launch {
             val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
             if (viewPager.adapter == null) {

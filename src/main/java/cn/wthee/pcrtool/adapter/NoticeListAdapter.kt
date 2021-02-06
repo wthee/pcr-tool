@@ -61,7 +61,7 @@ class NoticeListAdapter(
                         title.text = data.message
                         tag.text = if (data.title != BuildConfig.VERSION_NAME) {
                             tip.visibility = View.VISIBLE
-                            "最新版本 "
+                            "新版本："
                         } else {
                             tip.visibility = View.GONE
                             "当前版本 "

@@ -3,8 +3,9 @@ package cn.wthee.pcrtool.ui.setting
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.preference.*
-import cn.wthee.pcrtool.MainActivity
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -13,7 +14,6 @@ import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -44,6 +44,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         //获取控件
         titleDatabase = findPreference("title_database")!!
+        val titleApp = findPreference<Preference>("title_app")
         val forceUpdateDb = findPreference<Preference>("force_update_db")
         val cleanDatabase = findPreference<Preference>("clean_database")
         val appUpdate = findPreference<Preference>("force_update_app")
@@ -61,7 +62,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
             }
         }
         //数据版本
-        MainScope().launch {
+        lifecycleScope.launch {
             DataStoreUtil.get(
                 if (changeDbType.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP
             ).collect { str ->
@@ -100,7 +101,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         changeDbType.setOnPreferenceChangeListener { _, newValue ->
             if (changeDbType.value != newValue as String) {
                 setDbSummary(newValue)
-                MainScope().launch {
+                lifecycleScope.launch {
                     delay(800L)
                     DatabaseUpdater.checkDBVersion(1)
                 }
@@ -116,12 +117,12 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
 
         //应用更新
-        appUpdate?.summary = MainActivity.nowVersionName
+        titleApp?.title = getString(R.string.app_version) + BuildConfig.VERSION_NAME
         appUpdate?.setOnPreferenceClickListener {
             //应用版本校验
             lifecycleScope.launch {
-                ToastUtil.short("应用版本检测中...")
-                AppUpdateUtil.init(requireActivity(), true)
+                requireActivity().findNavController(R.id.nav_host_fragment)
+                    .navigate(R.id.action_global_noticeListFragment)
             }
             return@setOnPreferenceClickListener true
         }

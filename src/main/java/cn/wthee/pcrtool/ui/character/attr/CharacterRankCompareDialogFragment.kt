@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.RankCompareAdapter
 import cn.wthee.pcrtool.data.bean.getRankCompareList
@@ -14,7 +15,6 @@ import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.RankSelectBtnsHelper
 import cn.wthee.pcrtool.utils.getRankColor
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
@@ -41,7 +41,7 @@ class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterRankCompareBinding.inflate(inflater, container, false)
-        MainScope().launch {
+        lifecycleScope.launch {
             attr0 = sharedAttrViewModel.getAttrs(
                 CharacterAttrFragment.uid,
                 CharacterAttrFragment.maxRank,
@@ -82,7 +82,7 @@ class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
                         CharacterAttrFragment.maxRank,
                         object : RankSelectBtnsHelper.OnClickListener {
                             override fun onChange(rank: Int) {
-                                MainScope().launch {
+                                lifecycleScope.launch {
                                     attr0 = sharedAttrViewModel.getAttrs(
                                         CharacterAttrFragment.uid, rank,
                                         CharacterAttrFragment.selRarity,
@@ -103,7 +103,7 @@ class CharacterRankCompareFragment : CommonBottomSheetDialogFragment(true) {
                         CharacterAttrFragment.maxRank,
                         object : RankSelectBtnsHelper.OnClickListener {
                             override fun onChange(rank: Int) {
-                                MainScope().launch {
+                                lifecycleScope.launch {
                                     attr1 = sharedAttrViewModel.getAttrs(
                                         CharacterAttrFragment.uid, rank,
                                         CharacterAttrFragment.selRarity,

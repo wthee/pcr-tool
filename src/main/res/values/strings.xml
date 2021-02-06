@@ -61,7 +61,6 @@
     <string name="data_from_hint">数据和图片来源</string>
     <string name="shizuru_note">静流笔记</string>
     <string name="dev_tip">感谢大佬的开源项目</string>
-    <string name="check_app_update">应用版本</string>
     <string name="auto_update_app">自动更新应用</string>
     <string name="off_auto_app">已取消自动更新</string>
     <string name="on_auto_app">打开应用时，自动检查更新应用</string>
@@ -84,6 +83,11 @@
     <string name="clean_database">删除历史数据文件</string>
     <string name="now_db_type">当前版本：</string>
     <string name="backup_mode">（备份数据）</string>
+    <string name="notice">更新通知</string>
+    <string name="app_version">应用版本：</string>
+    <string name="app_version_summary">查看全部更新通知</string>
+    <string name="need_update">发现新版本，点击查看</string>
+    <string name="not_update">已是最新版本</string>
 
     <!--筛选  -->
     <string name="filter_sort">筛选排序</string>
@@ -187,6 +191,5 @@
     <string name="network_error">网络异常~</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="backup_error">数据备份异常~</string>
-    <string name="notice">通知</string>
-    <string name="to_update"><![CDATA[去更新 >]]></string>
+    <string name="to_update"><![CDATA[去更新 > ]]></string>
 </resources>

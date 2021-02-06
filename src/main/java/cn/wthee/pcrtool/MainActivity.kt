@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
@@ -28,10 +29,10 @@ import cn.wthee.pcrtool.ui.home.*
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment
 import cn.wthee.pcrtool.utils.*
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import com.umeng.commonsdk.UMConfigure
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var textDownload: MaterialTextView
 
         //消息通知
-        lateinit var fabNotice: FloatingActionButton
+        lateinit var fabNotice: ExtendedFloatingActionButton
 
     }
 
@@ -94,15 +95,10 @@ class MainActivity : AppCompatActivity() {
         init()
         //监听
         setListener()
-        MainScope().launch {
+        lifecycleScope.launch {
             //应用版本校验
-            AppUpdateUtil.init(this@MainActivity)
+            AppUpdateUtil.init()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        fabNotice.show()
     }
 
     private fun fixUriBug() {
@@ -146,14 +142,14 @@ class MainActivity : AppCompatActivity() {
             when (it.what) {
                 //获取版本失败
                 0 -> {
-                    MainScope().launch {
+                    lifecycleScope.launch {
                         layoutDownload.visibility = View.GONE
                         ToastUtil.short("获取数据版本信息失败~")
                     }
                 }
                 //数据切换
                 1 -> {
-                    MainScope().launch {
+                    lifecycleScope.launch {
                         delay(500L)
                         progressDownload.setProgress(100)
                         layoutDownload.setOnClickListener {

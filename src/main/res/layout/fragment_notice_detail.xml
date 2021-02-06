@@ -9,20 +9,31 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
+        style="@style/NormalTitleStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/NormalTitleStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/app_name" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="@string/app_name" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/s_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/date"
         tools:text="@string/test" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

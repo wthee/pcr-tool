@@ -37,14 +37,15 @@
 
 
     <PreferenceCategory
+        app:key="title_app"
         app:iconSpaceReserved="false"
-        app:title="应用信息">
+        app:title="@string/app_version">
 
         <Preference
             app:iconSpaceReserved="false"
             app:key="force_update_app"
-            app:summary="@string/zero"
-            app:title="@string/check_app_update" />
+            app:summary="@string/app_version_summary"
+            app:title="@string/notice" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
