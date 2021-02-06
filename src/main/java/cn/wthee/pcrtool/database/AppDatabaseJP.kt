@@ -37,6 +37,7 @@ import cn.wthee.pcrtool.utils.Constants
         SkillAction::class,
         SkillData::class,
         WaveGroupDataJP::class,
+        CharacterExperience::class,
         AttackPattern::class,
         GuildData::class,
         CharacterComments::class,
@@ -66,9 +67,9 @@ abstract class AppDatabaseJP : RoomDatabase() {
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
-
+    
     companion object {
-
+    
         @Volatile
         private var instance: AppDatabaseJP? = null
 
