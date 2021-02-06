@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
 import cn.wthee.pcrtool.data.network.model.AppNotice
 import cn.wthee.pcrtool.databinding.FragmentNoticeDetailBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
@@ -14,9 +13,7 @@ import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 private const val NOTICE = "notice"
 
 /**
- * 公告详情
- *
- * 根据 [url] 加载公告
+ * 通知详情
  *
  * 页面布局 [FragmentNoticeDetailBinding]
  *

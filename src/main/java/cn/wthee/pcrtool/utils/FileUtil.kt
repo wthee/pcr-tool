@@ -3,10 +3,9 @@ package cn.wthee.pcrtool.utils
 import android.os.Build
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 /**
  * 文件路径获取
@@ -92,24 +91,6 @@ object FileUtil {
     }
 
     /**
-     * 删除备份数据库文件
-     */
-    fun deleteBackupDatabase(type: Int) {
-        val db = File(getDatabaseBackupPath(type))
-        if (db.exists()) {
-            db.delete()
-        }
-        val wal = File(getDatabaseBackupWalPath(type))
-        if (wal.exists()) {
-            wal.delete()
-        }
-        val shm = File(getDatabaseBackupShmPath(type))
-        if (shm.exists()) {
-            shm.delete()
-        }
-    }
-
-    /**
      * 保存文件
      */
     fun save(input: InputStream, output: File) {
@@ -133,31 +114,6 @@ object FileUtil {
             file.delete()
         }
     }
-
-    /**
-     * 备份文件
-     */
-    fun copy(source: String, dest: String) {
-        var `in`: InputStream? = null
-        var out: OutputStream? = null
-        try {
-            `in` = FileInputStream(File(source))
-            out = FileOutputStream(File(dest))
-            val buffer = ByteArray(1024 * 4)
-            var len: Int
-            while (`in`.read(buffer).also { len = it } > 0) {
-                out.write(buffer, 0, len)
-            }
-        } catch (e: Exception) {
-            MainScope().launch {
-                ToastUtil.short(ResourcesUtil.getString(R.string.backup_error))
-            }
-        } finally {
-            `in`?.close()
-            out?.close()
-        }
-    }
-
 
     /**
      * 获取历史数据库文件列表
@@ -203,14 +159,19 @@ object FileUtil {
         val kb: Long = 1024
         val mb = kb * 1024
         val gb = mb * 1024
-        return if (this >= gb) {
-            String.format("%.1f GB", this.toFloat() / gb)
-        } else if (this >= mb) {
-            val f = this.toFloat() / mb
-            String.format(if (f > 100) "%.0f MB" else "%.1f MB", f)
-        } else if (this >= kb) {
-            val f = this.toFloat() / kb
-            String.format(if (f > 100) "%.0f KB" else "%.1f KB", f)
-        } else String.format("%d B", this)
+        return when {
+            this >= gb -> {
+                String.format("%.1f GB", this.toFloat() / gb)
+            }
+            this >= mb -> {
+                val f = this.toFloat() / mb
+                String.format(if (f > 100) "%.0f MB" else "%.1f MB", f)
+            }
+            this >= kb -> {
+                val f = this.toFloat() / kb
+                String.format(if (f > 100) "%.0f KB" else "%.1f KB", f)
+            }
+            else -> String.format("%d B", this)
+        }
     }
 }

@@ -29,11 +29,10 @@ data class DropEvent(
     /**
      * 去零
      */
-    fun getFixedValue(): String {
-        if (value % 1000 != 0) {
-            return (value / 1000f).toString()
-        } else {
-            return (value / 1000).toString()
-        }
+    fun getFixedValue() = if (value % 1000 != 0) {
+        (value / 1000f).toString()
+    } else {
+        (value / 1000).toString()
     }
+
 }

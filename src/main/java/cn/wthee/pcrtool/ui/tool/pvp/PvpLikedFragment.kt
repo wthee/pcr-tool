@@ -41,7 +41,7 @@ class PvpLikedFragment : Fragment() {
     private var region = DatabaseUpdater.getRegion()
     private lateinit var likedAdapter: PvpLikedAdapter
     private lateinit var dao: PvpDao
-    private val viewModel by activityViewModels<PvpLikedViewModel>() {
+    private val viewModel by activityViewModels<PvpLikedViewModel> {
         InjectorUtil.providePvpViewModelFactory()
     }
 

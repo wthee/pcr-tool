@@ -11,6 +11,7 @@ import java.io.Serializable
  * 角色信息筛选
  *
  */
+@Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterCharacter(
     var all: Boolean,
     var positon: Int,

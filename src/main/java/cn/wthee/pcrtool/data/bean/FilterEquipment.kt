@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+@Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterEquipment(
     var all: Boolean,
     var type: String

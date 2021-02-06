@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.tool.calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cn.wthee.pcrtool.data.db.repository.EventRepository
-import cn.wthee.pcrtool.data.db.repository.PvpRepository
 
 class CalendarViewModelFactory(
     private val repository: EventRepository

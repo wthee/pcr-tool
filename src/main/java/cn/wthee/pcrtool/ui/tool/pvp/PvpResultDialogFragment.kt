@@ -33,7 +33,7 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var job: Job
     private var idList = JsonArray()
     private var defIds = arrayListOf<Int>()
-    private val viewModel by activityViewModels<PvpLikedViewModel>() {
+    private val viewModel by activityViewModels<PvpLikedViewModel> {
         InjectorUtil.providePvpViewModelFactory()
     }
 

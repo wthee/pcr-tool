@@ -28,7 +28,6 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-    <string name="skill_action">技能效果</string>
     <string name="skill_loop">技能循环</string>
     <string name="before_loop">入场动作</string>
     <string name="looping">循环动作</string>
@@ -47,8 +46,6 @@
     <string name="move">移动</string>
     <string name="cancel">取消</string>
     <string name="function">功能</string>
-    <string name="data_null_character">未找到角色信息~</string>
-    <string name="data_null_equip">未找到装备信息~</string>
     <string name="sorry_ue">优衣，对不起~ </string>
 
     <!-- 设置页面   -->
@@ -72,9 +69,6 @@
     <string name="egg_text">我啊，很幸福哦</string>
     <string name="egg_summary">…还…还是被发现了</string>
     <string name="game_version">切换版本</string>
-    <string name="game_version_summary">点击切换数据版本</string>
-    <string name="change_success">更新完成</string>
-    <string name="change_success_tip">数据已更新，请点击关闭应用</string>
     <string name="to_download">是否重新下载最新数据？</string>
     <string name="pcrdfans_com">来源 pcrdfans.com</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
@@ -86,11 +80,8 @@
     <string name="notice">更新通知</string>
     <string name="app_version">应用版本：</string>
     <string name="app_version_summary">查看全部更新通知</string>
-    <string name="need_update">发现新版本，点击查看</string>
-    <string name="not_update">已是最新版本</string>
 
     <!--筛选  -->
-    <string name="filter_sort">筛选排序</string>
     <string name="filter">筛选</string>
     <string name="title_sort">排序类型</string>
     <string name="title_tip">信息提示</string>
@@ -128,7 +119,6 @@
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">活动</string>
-    <string name="pre">✦ </string>
     <string name="drop_info">- 掉落信息 -</string>
     <string name="test">testtesttestesttesttestesttesttestesttesttestesttesttestesttesttes</string>
     <string name="download_pic">下载当前图片</string>
@@ -140,7 +130,6 @@
     <string name="rank_compare">Rank对比</string>
     <string name="current">当前</string>
     <string name="compare">对比</string>
-    <string name="all">综合</string>
     <string name="jjc">竞技场</string>
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
@@ -148,12 +137,10 @@
     <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
     <string name="result">差值</string>
     <string name="rerduce_1">-</string>
-    <string name="equal">=</string>
     <string name="rank_pre">R%d</string>
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
     <string name="unselect_pic">未选择图片</string>
-    <string name="back_top">回到顶部</string>
     <string name="team_atk">进攻方</string>
     <string name="team_def">防守方</string>
     <string name="no_liked_data">无收藏信息~</string>
@@ -161,7 +148,6 @@
     <string name="open_browser">浏览器中打开</string>
     <string name="min">最小化</string>
     <string name="from">From %s</string>
-    <string name="customize">自定义</string>
     <string name="add">添加</string>
     <string name="pvp_search_jp">查询台服竞技场数据</string>
     <string name="pvp_search_summary">竞技场查询返回台服竞技场信息</string>
@@ -174,8 +160,6 @@
     <string name="pvp_data">竞技场查询数据来源</string>
     <string name="leader_data">角色排行数据来源</string>
     <string name="zero">0</string>
-    <string name="event_character">活动角色：</string>
-    <string name="fragment">碎片</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡掉落量 x 倍</string>
@@ -185,7 +169,6 @@
     <string name="shrine">圣迹调查掉落量 x 倍</string>
     <string name="temple">神殿调查掉落量 x 倍</string>
     <string name="dungeon">地下城玛那掉落量 x 倍</string>
-    <string name="master_icon">大师币掉落量 x 倍</string>
 
     <!--  异常提示-->
     <string name="network_error">网络异常~</string>

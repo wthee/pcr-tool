@@ -76,7 +76,7 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
 
     //已选择角色
     private fun loadDefault() {
-        selectedAdapter = PvpCharacterAdapter(false, false)
+        selectedAdapter = PvpCharacterAdapter(isFloatWindow = false, isPager = false)
         binding.selectCharacters.adapter = selectedAdapter
         selectedAdapter.submitList(selects)
         selectedAdapter.notifyDataSetChanged()

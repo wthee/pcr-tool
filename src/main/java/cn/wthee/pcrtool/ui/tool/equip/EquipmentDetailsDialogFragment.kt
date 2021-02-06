@@ -132,5 +132,6 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
         binding.detail.equipName.setTextColor(ResourcesUtil.getColor(if (Companion.isLoved) R.color.colorPrimary else R.color.text))
         binding.stared.imageTintList =
             ColorStateList.valueOf(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary))
+        EquipmentListFragment.pageAdapter.notifyDataSetChanged()
     }
 }
