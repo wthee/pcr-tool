@@ -59,7 +59,8 @@ class NoticeListAdapter(
                 val colorId = when (data.type) {
                     0 -> {
                         title.text = data.message
-                        tag.text = if (data.title != BuildConfig.VERSION_NAME) {
+                        val remoteVersion = data.title.replace(".", "").toInt()
+                        tag.text = if (remoteVersion > BuildConfig.VERSION_CODE) {
                             tip.visibility = View.VISIBLE
                             "新版本："
                         } else {

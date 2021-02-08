@@ -61,6 +61,17 @@ class EventHistoryAdapter(
                 adapter.submitList(event.unitIds.intArrayList())
                 val startDate = event.startTime.subSequence(0, 10).toString()
                 val endDate = event.endTime.subSequence(0, 10).toString()
+                if (startDate == "2030/12/30") {
+                    title.text = "活动预告"
+                } else {
+                    title.text = "$startDate ~ $endDate"
+                }
+                val day = endDate.days(startDate)
+                if (day == "00") {
+                    days.visibility = View.GONE
+                } else {
+                    days.text = "$day 天"
+                }
                 when {
                     //支线
                     event.eventId / 10000 == 2 -> {
@@ -73,17 +84,11 @@ class EventHistoryAdapter(
                     event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
                         type.text = "复刻"
                         type.setTitleBackground(R.color.news_system)
-                        title.text = "$startDate ~ $endDate"
-                        days.text = "${endDate.days(startDate)} 天"
                     }
                     //正常
                     else -> {
                         type.text = "活动"
                         type.setTitleBackground(R.color.news_update)
-                        val day = endDate.days(startDate)
-                        if (day == "00") days.visibility = View.GONE
-                        title.text = "$startDate ~ $endDate"
-                        days.text = "${endDate.days(startDate)} 天"
                     }
                 }
                 //点击查看剧情列表
