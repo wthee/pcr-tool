@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.utils
 
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.createDataStore
 import cn.wthee.pcrtool.MyApplication
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
@@ -13,12 +14,14 @@ import kotlinx.coroutines.flow.map
  */
 object DataStoreUtil {
 
+    val dataStore = MyApplication.context.createDataStore(name = "main")
+
     /**
      * 保存
      */
     suspend inline fun save(key: String, obj: String) {
         val name = stringPreferencesKey(key)
-        MyApplication.dataStore.edit { main ->
+        dataStore.edit { main ->
             main[name] = obj
         }
     }
@@ -27,7 +30,7 @@ object DataStoreUtil {
      * 读取
      */
     fun get(key: String): Flow<String?> {
-        return MyApplication.dataStore.data.map {
+        return dataStore.data.map {
             it[stringPreferencesKey(key)]
         }
     }

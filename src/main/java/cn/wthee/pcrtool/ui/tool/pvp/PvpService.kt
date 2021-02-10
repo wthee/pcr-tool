@@ -162,12 +162,12 @@ class PvpService : Service() {
             }
             //返回应用
             max.setOnClickListener {
-                stopForeground(true)
-                NotificationUtil.notificationManager.cancelAll()
-                onDestroy()
                 val appFullName = "cn.wthee.pcrtool"
                 val launchIntent = packageManager.getLaunchIntentForPackage(appFullName)
                 launchIntent?.let { startActivity(it) }
+                stopForeground(true)
+                NotificationUtil.notificationManager.cancelAll()
+                onDestroy()
             }
             //关闭
             max.setOnLongClickListener {

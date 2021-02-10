@@ -65,13 +65,13 @@ object ApiUtil {
     /**
      * 创建 [OkHttpClient]
      */
-    fun getClient(): OkHttpClient {
+    fun getClient(second: Long): OkHttpClient {
         val params = initSSL()
         return OkHttpClient.Builder()
             .cache(CoilUtils.createDefaultCache(context))
-            .connectTimeout(300, TimeUnit.SECONDS)
-            .writeTimeout(300, TimeUnit.SECONDS)
-            .readTimeout(300, TimeUnit.SECONDS)
+            .connectTimeout(second, TimeUnit.SECONDS)
+            .writeTimeout(second, TimeUnit.SECONDS)
+            .readTimeout(second, TimeUnit.SECONDS)
             .addInterceptor(RetryInterceptor(3))
             .sslSocketFactory(
                 (params[0] as SSLContext).socketFactory,
@@ -84,11 +84,11 @@ object ApiUtil {
     /**
      * 创建服务
      */
-    fun <T> create(serviceClass: Class<T>, url: String): T {
+    fun <T> create(serviceClass: Class<T>, url: String, second: Long): T {
         val builder = Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(getClient())
+            .client(getClient(second))
 
         return builder.build().create(serviceClass)
     }
