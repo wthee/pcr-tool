@@ -30,7 +30,8 @@ class MyAPIRepository(private val service: MyAPIService) {
                 instance ?: MyAPIRepository(
                     ApiUtil.create(
                         MyAPIService::class.java,
-                        Constants.API_URL
+                        Constants.API_URL,
+                        20
                     )
                 ).also { instance = it }
             }

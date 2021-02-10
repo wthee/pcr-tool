@@ -23,11 +23,11 @@ import kotlinx.coroutines.launch
 private const val POSITION = "positon"
 private const val FLOAT = "float"
 
-class PvpPagerFragment : Fragment() {
+class PvpListFragment : Fragment() {
 
     companion object {
         fun getInstance(position: Int, isFloatWindow: Boolean) =
-            PvpPagerFragment().apply {
+            PvpListFragment().apply {
                 arguments = Bundle().apply {
                     putInt(POSITION, position)
                     putSerializable(FLOAT, isFloatWindow)

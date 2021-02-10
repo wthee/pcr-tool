@@ -26,7 +26,16 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [NewsViewModel]
  */
-class ToolNewsListFragment : Fragment() {
+class NewsListFragment : Fragment() {
+
+    companion object {
+        fun newInstance(region: Int) =
+            NewsListFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(REGION, region)
+                }
+            }
+    }
 
     private var region = 0
     private lateinit var binding: FragmentToolNewsListBinding
@@ -49,6 +58,14 @@ class ToolNewsListFragment : Fragment() {
         adapter = NewsAdapter(parentFragmentManager, region, binding.fabCopy)
         val loaderStateAdapter = LoaderStateAdapter { adapter.retry() }
         binding.newsList.adapter = adapter.withLoadStateFooter(loaderStateAdapter)
+        setListener()
+        //新闻数据
+        loadNews()
+        return binding.root
+    }
+
+    @ExperimentalPagingApi
+    private fun setListener() {
         //下拉刷新
         binding.refresh.apply {
             setProgressBackgroundColorSchemeColor(ResourcesUtil.getColor(R.color.colorWhite))
@@ -73,9 +90,6 @@ class ToolNewsListFragment : Fragment() {
                 ToastUtil.short("未选择公告~")
             }
         }
-        //新闻数据
-        loadNews()
-        return binding.root
     }
 
     @ExperimentalPagingApi
@@ -101,12 +115,4 @@ class ToolNewsListFragment : Fragment() {
         }
     }
 
-    companion object {
-        fun newInstance(region: Int) =
-            ToolNewsListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(REGION, region)
-                }
-            }
-    }
 }

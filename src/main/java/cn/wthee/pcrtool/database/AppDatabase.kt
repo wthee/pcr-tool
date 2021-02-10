@@ -67,8 +67,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
 
+
     companion object {
-    
+
         @Volatile
         private var instance: AppDatabase? = null
 

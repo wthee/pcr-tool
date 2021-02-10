@@ -6,8 +6,8 @@ android {
 
     compileSdkVersion 30
 
-    def VERSION_NAME = "0.6.5"
-    def VERSION_CODE = 65
+    def VERSION_NAME = "0.6.6"
+    def VERSION_CODE = 66
 
     defaultConfig {
         applicationId "cn.wthee.pcrtool"

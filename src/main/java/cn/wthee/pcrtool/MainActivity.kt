@@ -33,6 +33,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import com.umeng.commonsdk.UMConfigure
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -78,6 +79,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        //初始化
+        init()
         //友盟初始化
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(UMengInitializer::class.java)
@@ -91,13 +94,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         //取消其它任务
         WorkManager.getInstance(this).cancelAllWork()
-        //初始化
-        init()
         //监听
         setListener()
-        lifecycleScope.launch {
+        GlobalScope.launch {
             //应用版本校验
             AppUpdateUtil.init()
+        }
+        GlobalScope.launch {
+            //数据库版本检查
+            DatabaseUpdater.checkDBVersion()
         }
     }
 

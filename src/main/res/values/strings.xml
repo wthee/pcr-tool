@@ -172,6 +172,7 @@
 
     <!--  异常提示-->
     <string name="network_error">网络异常~</string>
+    <string name="check_db_error">数据版本校验失败~</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="backup_error">数据备份异常~</string>
     <string name="to_update"><![CDATA[去更新 > ]]></string>

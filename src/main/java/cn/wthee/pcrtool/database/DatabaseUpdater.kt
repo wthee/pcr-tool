@@ -52,13 +52,17 @@ object DatabaseUpdater {
             //创建服务
             val service = ApiUtil.create(
                 MyAPIService::class.java,
-                API_URL
+                API_URL,
+                5
             )
             val version = service.getDbVersion(getVersionFileName())
             //更新判断
             downloadDB(version.data!!, fromSetting, force)
         } catch (e: Exception) {
             MainActivity.textDownload.text = NOTICE_TOAST_NETWORK_ERROR
+            MainScope().launch {
+                ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
+            }
         }
     }
 
@@ -75,10 +79,10 @@ object DatabaseUpdater {
                     AppDatabase.buildDatabase(Constants.DATABASE_NAME).openHelper.readableDatabase
                 }
             } catch (e: Exception) {
-                UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
                 //启用远程备份数据库
                 MainScope().launch {
                     ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                    UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
                 }
                 return 0
             }
@@ -91,10 +95,10 @@ object DatabaseUpdater {
                     AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper.readableDatabase
                 }
             } catch (e: Exception) {
-                UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
                 //启用远程备份数据库
                 MainScope().launch {
                     ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                    UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
                 }
                 return 0
             }
