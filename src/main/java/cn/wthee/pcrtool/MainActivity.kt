@@ -22,6 +22,7 @@ import androidx.work.WorkManager
 import cn.wthee.circleprogressbar.CircleProgressView
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
+import cn.wthee.pcrtool.database.DatabaseDownloadWorker
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
@@ -157,6 +158,11 @@ class MainActivity : AppCompatActivity() {
                     lifecycleScope.launch {
                         delay(500L)
                         progressDownload.setProgress(100)
+                        //关闭通知
+                        try {
+                            DatabaseDownloadWorker.service.cancel()
+                        } catch (e: Exception) {
+                        }
                         layoutDownload.setOnClickListener {
                             exitProcess(0)
                         }
