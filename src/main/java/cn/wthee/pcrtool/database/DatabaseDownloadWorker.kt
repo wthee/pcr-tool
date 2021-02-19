@@ -9,19 +9,15 @@ import android.view.View
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.work.CoroutineWorker
-import androidx.work.Data
-import androidx.work.ForegroundInfo
-import androidx.work.WorkerParameters
+import androidx.work.*
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MainActivity.Companion.handler
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.service.DatabaseService
 import cn.wthee.pcrtool.utils.*
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import okhttp3.ResponseBody
+import retrofit2.Call
 import java.io.File
 
 /**
@@ -46,6 +42,8 @@ class DatabaseDownloadWorker(
         const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
+
+        lateinit var service: Call<ResponseBody>
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -75,7 +73,7 @@ class DatabaseDownloadWorker(
     ): Result {
         try {
             //创建Retrofit服务
-            val service = ApiUtil.createWithClient(
+            service = ApiUtil.createWithClient(
                 DatabaseService::class.java, Constants.DATABASE_URL,
                 ApiUtil.downloadClientBuild(object : DownloadListener {
                     //下载进度
@@ -93,12 +91,12 @@ class DatabaseDownloadWorker(
                         //下载完成
                         notification.setProgress(100, 100, false)
                             .setContentTitle("${Constants.NOTICE_TOAST_SUCCESS} ")
-                        notificationManager.notify(noticeId, notification.build())
+                        notificationManager.cancelAll()
                     }
                 })
-            )
+            ).getDb(fileName)
             //下载文件
-            val response = service.getDb(fileName).execute()
+            val response = service.execute()
             //保存
             //创建数据库文件夹
             val file = File(folderPath)
@@ -114,7 +112,6 @@ class DatabaseDownloadWorker(
             }
             //写入文件
             FileUtil.save(response.body()!!.byteStream(), db)
-
             //删除旧的wal
             FileUtil.apply {
                 delete(getDatabaseBackupWalPath(1))
@@ -124,7 +121,6 @@ class DatabaseDownloadWorker(
             }
             //加压缩
             UnzippedUtil.deCompress(db, true)
-            notificationManager.cancelAll()
             //更新数据库版本号
             DatabaseUpdater.updateLocalDataBaseVersion(version)
             //通知更新数据
@@ -135,10 +131,6 @@ class DatabaseDownloadWorker(
             }
             return Result.success()
         } catch (e: Exception) {
-            MainScope().launch {
-                ToastUtil.short(Constants.NOTICE_TOAST_NO_FILE)
-            }
-            notificationManager.cancelAll()
             return Result.failure()
         }
     }
