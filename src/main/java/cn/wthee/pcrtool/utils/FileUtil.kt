@@ -67,8 +67,8 @@ object FileUtil {
         val walFile = File(getDatabaseWalPath(type))
         val dbNotExists = !dbFile.exists()
         val dbSizeError = dbFile.length() < 1 * 1024 * 1024
-        val walSizeError = walFile.exists() && walFile.length() < 1 * 1024
-        return dbNotExists || dbSizeError || walSizeError
+//        val walSizeError = walFile.exists() && walFile.length() < 1 * 1024
+        return dbNotExists || dbSizeError
     }
 
 
