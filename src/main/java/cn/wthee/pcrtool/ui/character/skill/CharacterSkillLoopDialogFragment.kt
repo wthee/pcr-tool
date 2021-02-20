@@ -56,7 +56,7 @@ class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
         sharedSkillViewModel.getCharacterSkillLoops(uid)
         //技能动作循环
-        sharedSkillViewModel.atlPattern.observe(viewLifecycleOwner, {
+        sharedSkillViewModel.atlPattern.observe(viewLifecycleOwner) {
             val loops = arrayListOf<SkillLoop>()
             if (it.size > 1) {
                 loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))
@@ -70,7 +70,7 @@ class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
             adapter.submitList(loops) {
                 adapter.notifyDataSetChanged()
             }
-        })
+        }
         return binding.root
     }
 

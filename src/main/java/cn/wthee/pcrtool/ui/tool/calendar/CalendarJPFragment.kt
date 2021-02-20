@@ -109,7 +109,7 @@ class CalendarJPFragment : Fragment() {
         //初始加载
         calendarViewModel.getDropEvent()
         //优化按月份加载
-        calendarViewModel.dropEvents.observe(viewLifecycleOwner, { list ->
+        calendarViewModel.dropEvents.observe(viewLifecycleOwner) { list ->
             if (list.isNotEmpty()) {
                 events = list.sortedBy {
                     it.getFixedStartTime()
@@ -132,7 +132,7 @@ class CalendarJPFragment : Fragment() {
                 //显示事件列表
                 showDayEvents(cal)
             }
-        })
+        }
     }
 
     //显示事件

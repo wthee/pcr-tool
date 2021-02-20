@@ -57,7 +57,7 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
         loadDefault()
         //角色页面 绑定tab viewpager
         viewModel.getAllCharacter()
-        viewModel.allPvpCharacterData.observe(viewLifecycleOwner, { data ->
+        viewModel.allPvpCharacterData.observe(viewLifecycleOwner) { data ->
             allCharecters = data
             character1 = data.filter {
                 it.position in 0..299
@@ -69,7 +69,7 @@ class PvpSelectFragment(private val customize: Int = -1) : Fragment() {
                 it.position in 600..9999
             }
             setPager()
-        })
+        }
         return binding.root
     }
 

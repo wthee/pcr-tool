@@ -13,7 +13,6 @@ import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import androidx.startup.AppInitializer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -318,18 +317,22 @@ class MainActivity : AppCompatActivity() {
             )
             //点击事件
             viewBinding.root.setOnClickListener {
-                closeMenus()
-                it.transitionName = getString(menuItemTitles[index])
-                val extras = FragmentNavigatorExtras(
-                    it to it.transitionName
-                )
-                //页面跳转
-                findNavController(R.id.nav_host_fragment).navigate(
-                    menuItemIds[index],
-                    null,
-                    null,
-                    extras
-                )
+                try {
+                    closeMenus()
+//                it.transitionName = getString(menuItemTitles[index])
+//                val extras = FragmentNavigatorExtras(
+//                    it to it.transitionName
+//                )
+                    //页面跳转
+                    findNavController(R.id.nav_host_fragment).navigate(
+                        menuItemIds[index],
+                        null,
+                        null,
+                        null
+                    )
+                } catch (e: Exception) {
+
+                }
             }
         }
         //打开通知

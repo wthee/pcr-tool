@@ -134,26 +134,26 @@ class CharacterListFragment : CommonListFragment() {
         viewModel.apply {
             //角色数量
             if (!viewModel.characterCount.hasObservers()) {
-                viewModel.characterCount.observe(viewLifecycleOwner, {
+                viewModel.characterCount.observe(viewLifecycleOwner) {
                     binding.characterCount.text = it.toString()
-                })
+                }
             }
             //角色信息
             if (!updateCharacter.hasObservers()) {
-                updateCharacter.observe(viewLifecycleOwner, {
+                updateCharacter.observe(viewLifecycleOwner) {
                     lifecycleScope.launch {
                         @OptIn(ExperimentalCoroutinesApi::class)
                         viewModel.characters.collectLatest { data ->
                             listAdapter.submitData(data)
                         }
                     }
-                })
+                }
             }
             //重置
             if (!reset.hasObservers()) {
-                reset.observe(viewLifecycleOwner, {
+                reset.observe(viewLifecycleOwner) {
                     reset()
-                })
+                }
             }
         }
     }

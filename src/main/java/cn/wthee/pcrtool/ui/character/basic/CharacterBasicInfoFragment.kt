@@ -65,9 +65,9 @@ class CharacterBasicInfoFragment : Fragment() {
         init()
         //点击事件
         setListener()
-        sharedCharacterViewModel.character.observe(viewLifecycleOwner, {
+        sharedCharacterViewModel.character.observe(viewLifecycleOwner) {
             setData(it)
-        })
+        }
         //初始收藏
         setLove(isLoved)
         //开始过渡动画
