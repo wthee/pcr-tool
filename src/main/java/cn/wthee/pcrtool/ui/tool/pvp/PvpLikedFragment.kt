@@ -86,11 +86,11 @@ class PvpLikedFragment : Fragment() {
         likedAdapter = PvpLikedAdapter(false)
         binding.toolList.adapter = likedAdapter
         viewModel.getLiked(region)
-        viewModel.allData.observe(viewLifecycleOwner, {
+        viewModel.allData.observe(viewLifecycleOwner) {
             likedAdapter.submitList(it) {
                 updateTip(it)
             }
-        })
+        }
     }
 
     private fun setListener() {

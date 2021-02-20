@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteUtil
+import cn.wthee.pcrtool.utils.dp
 import coil.load
 
 /**
@@ -26,6 +27,13 @@ import coil.load
  * 列表项数据 [CharacterSkillInfo]
  */
 class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
+
+    private var mSize = 0
+
+    fun setSize(num: Int) {
+        mSize = num
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSkillBinding.inflate(
@@ -40,7 +48,7 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemSkillBinding) :
+    inner class ViewHolder(private val binding: ItemSkillBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(skill: CharacterSkillInfo) {
             //设置数据
@@ -90,7 +98,12 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
                 ailments.adapter = ailmentAdapter
                 ailmentAdapter.submitList(getAilments(actionData))
             }
-
+            //修改底部边距
+            if (layoutPosition == mSize - 1) {
+                val params = binding.root.layoutParams as RecyclerView.LayoutParams
+                params.bottomMargin = 42.dp
+                binding.root.layoutParams = params
+            }
         }
 
         /**

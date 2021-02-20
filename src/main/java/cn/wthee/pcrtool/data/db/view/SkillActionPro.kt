@@ -170,7 +170,7 @@ data class SkillActionPro(
                     "$action_value_1 ，持续<$action_value_3>秒"
                 } else {
                     "<$action_value_1 + $action_value_2 * 技能等级>，持续<$action_value_3>秒"
-                } + "，范围<$action_value_7>"
+                } + "，范围<$action_value_7>；"
             }
             SkillActionType.CHANNEL -> {
                 "<$action_value_2 + $action_value_3 * 技能等级>，持续<$action_value_4>秒"

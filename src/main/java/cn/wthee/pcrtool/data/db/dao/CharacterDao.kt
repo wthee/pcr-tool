@@ -127,13 +127,13 @@ interface CharacterDao {
             unit_profile.catch_copy,
             unit_profile.self_text,
             unit_data.search_area_width,
-            COALESCE( unit_data.comment, "" ) AS intro,
+            COALESCE( unit_data.comment, "......" ) AS intro,
             unit_data.atk_type,
             COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
             unit_data.rarity,
             COALESCE( actual_unit_background.unit_name, "" ) AS actual_name,
-            COALESCE(cts.comments, "") AS comments,
-            GROUP_CONCAT(r.description, "-") AS room_comments
+            COALESCE(cts.comments, "......") AS comments,
+            COALESCE(GROUP_CONCAT(r.description, "-"), "......") AS room_comments
         FROM
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id

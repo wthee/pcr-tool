@@ -99,11 +99,11 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
                 adapter.submitList(equip.attr.allNotZero())
             }
             //动态限制只有一个列表可滚动
-            material.setOnTouchListener { _, _ ->
-                if (!material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = true
-                if (equipDrops.isNestedScrollingEnabled) equipDrops.isNestedScrollingEnabled = false
-                return@setOnTouchListener false
-            }
+//            material.setOnTouchListener { _, _ ->
+//                if (!material.isNestedScrollingEnabled) material.isNestedScrollingEnabled = true
+//                if (equipDrops.isNestedScrollingEnabled) equipDrops.isNestedScrollingEnabled = false
+//                return@setOnTouchListener false
+//            }
             //点击收藏
             stared.setOnClickListener {
                 isLoved = !isLoved
@@ -114,7 +114,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
     }
 
     private fun setObserve() {
-        viewModel.equipMaterialInfos.observe(viewLifecycleOwner, {
+        viewModel.equipMaterialInfos.observe(viewLifecycleOwner) {
             //合成素材
             if (it.isNotEmpty()) {
                 binding.materialCount.text = getString(R.string.title_material, it.size)
@@ -124,7 +124,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
             } else {
                 binding.material.visibility = View.GONE
             }
-        })
+        }
     }
 
     //设置收藏

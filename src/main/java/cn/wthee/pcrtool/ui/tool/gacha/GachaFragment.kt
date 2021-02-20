@@ -36,9 +36,9 @@ class GachaFragment : CommonListFragment() {
         val adapter = GachaHistoryAdapter()
         binding.toolList.adapter = adapter
         viewModel.getGachaHistory()
-        viewModel.gachas.observe(viewLifecycleOwner, {
+        viewModel.gachas.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        })
+        }
 
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(

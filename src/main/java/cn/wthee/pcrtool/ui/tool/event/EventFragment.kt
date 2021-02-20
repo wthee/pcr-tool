@@ -36,9 +36,9 @@ class EventFragment : CommonListFragment() {
         val adapter = EventHistoryAdapter(parentFragmentManager)
         binding.toolList.adapter = adapter
         viewModel.getEventHistory()
-        viewModel.events.observe(viewLifecycleOwner, {
+        viewModel.events.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        })
+        }
 
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(

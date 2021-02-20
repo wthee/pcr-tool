@@ -183,7 +183,7 @@ class CharacterAttrFragment : Fragment() {
 
     private fun setObserve() {
         //获取角色最大Rank后，加载数据
-        characterAttrViewModel.maxData.observe(viewLifecycleOwner, { r ->
+        characterAttrViewModel.maxData.observe(viewLifecycleOwner) { r ->
             maxRank = r["rank"] ?: 11
             selRank = r["rank"] ?: 11
             selRarity = r["rarity"] ?: 5
@@ -212,9 +212,9 @@ class CharacterAttrFragment : Fragment() {
             }
             //获取专武
             sharedEquipViewModel.getUniqueEquipInfos(uid, ueLv)
-        })
+        }
         //专武
-        sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner, {
+        sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner) {
             binding.uniqueEquip.apply {
                 if (it != null) {
                     binding.uniqueEquip.ueLv.visibility = View.VISIBLE
@@ -237,7 +237,7 @@ class CharacterAttrFragment : Fragment() {
                 }
 
             }
-        })
+        }
         //角色装备
         val equipPics = arrayListOf(
             binding.rankEquip.pic6,
@@ -247,7 +247,7 @@ class CharacterAttrFragment : Fragment() {
             binding.rankEquip.pic2,
             binding.rankEquip.pic1
         )
-        characterAttrViewModel.equipments.observe(viewLifecycleOwner, {
+        characterAttrViewModel.equipments.observe(viewLifecycleOwner) {
             it.forEachIndexed { index, equip ->
                 equipPics[index].apply {
                     //加载装备图片
@@ -265,21 +265,21 @@ class CharacterAttrFragment : Fragment() {
                     }
                 }
             }
-        })
+        }
         //角色属性
-        characterAttrViewModel.sumInfo.observe(viewLifecycleOwner, {
+        characterAttrViewModel.sumInfo.observe(viewLifecycleOwner) {
             attrAdapter.submitList(it.all()) {
                 attrAdapter.notifyDataSetChanged()
             }
-        })
+        }
         //角色剧情属性
         val storyAttrAdapter = CharacterAttrAdapter()
         binding.charcterStoryAttrs.adapter = storyAttrAdapter
-        characterAttrViewModel.storyAttrs.observe(viewLifecycleOwner, {
+        characterAttrViewModel.storyAttrs.observe(viewLifecycleOwner) {
             storyAttrAdapter.submitList(it.allNotZero()) {
                 attrAdapter.notifyDataSetChanged()
             }
-        })
+        }
     }
 
     private fun loadData(rank: Int = selRank) {

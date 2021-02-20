@@ -13,7 +13,6 @@ import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import androidx.startup.AppInitializer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,6 +21,7 @@ import androidx.work.WorkManager
 import cn.wthee.circleprogressbar.CircleProgressView
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
+import cn.wthee.pcrtool.database.DatabaseDownloadWorker
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
@@ -157,6 +157,11 @@ class MainActivity : AppCompatActivity() {
                     lifecycleScope.launch {
                         delay(500L)
                         progressDownload.setProgress(100)
+                        //关闭通知
+                        try {
+                            DatabaseDownloadWorker.service.cancel()
+                        } catch (e: Exception) {
+                        }
                         layoutDownload.setOnClickListener {
                             exitProcess(0)
                         }
@@ -312,18 +317,22 @@ class MainActivity : AppCompatActivity() {
             )
             //点击事件
             viewBinding.root.setOnClickListener {
-                closeMenus()
-                it.transitionName = getString(menuItemTitles[index])
-                val extras = FragmentNavigatorExtras(
-                    it to it.transitionName
-                )
-                //页面跳转
-                findNavController(R.id.nav_host_fragment).navigate(
-                    menuItemIds[index],
-                    null,
-                    null,
-                    extras
-                )
+                try {
+                    closeMenus()
+//                it.transitionName = getString(menuItemTitles[index])
+//                val extras = FragmentNavigatorExtras(
+//                    it to it.transitionName
+//                )
+                    //页面跳转
+                    findNavController(R.id.nav_host_fragment).navigate(
+                        menuItemIds[index],
+                        null,
+                        null,
+                        null
+                    )
+                } catch (e: Exception) {
+
+                }
             }
         }
         //打开通知

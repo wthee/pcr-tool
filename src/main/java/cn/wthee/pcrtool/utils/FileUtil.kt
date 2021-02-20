@@ -95,7 +95,7 @@ object FileUtil {
      */
     fun save(input: InputStream, output: File) {
         val out = FileOutputStream(output)
-        val byte = ByteArray(1024 * 4)
+        val byte = ByteArray(256)
         var line: Int
         while (input.read(byte).also { line = it } > 0) {
             out.write(byte, 0, line)
