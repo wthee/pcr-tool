@@ -54,7 +54,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
         CharacterRoomComments::class,
         AilmentData::class,
     ],
-    version = 66,
+    version = 67,
     exportSchema = false
 )
 /**
