@@ -73,11 +73,11 @@ class EventStoryDetailsDialogFragment : CommonBottomSheetDialogFragment() {
     }
 
     private fun setObserve() {
-        viewModel.storys.observe(viewLifecycleOwner, {
+        viewModel.storys.observe(viewLifecycleOwner) {
             adapter.submitList(it.map { d ->
                 d.title = d.title.deleteSpace().replace(storyName, "")
                 d
             })
-        })
+        }
     }
 }

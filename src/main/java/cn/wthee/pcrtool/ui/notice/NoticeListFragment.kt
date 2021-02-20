@@ -47,14 +47,14 @@ class NoticeListFragment : Fragment() {
         )
         //新闻数据
         noticeViewModel.getNotice()
-        noticeViewModel.notice.observe(viewLifecycleOwner, {
+        noticeViewModel.notice.observe(viewLifecycleOwner) {
             if (it.status == 0) {
                 adapter.submitList(it.data)
                 binding.loading.text = ""
             } else if (it.status == -1) {
                 ToastUtil.short(it.message)
             }
-        })
+        }
         return binding.root
     }
 }

@@ -33,7 +33,7 @@ class LeaderFragment : Fragment() {
         FabHelper.addBackFab()
         binding = FragmentToolLeaderBinding.inflate(inflater, container, false)
         leaderViewModel.getLeader()
-        leaderViewModel.leaderData.observe(viewLifecycleOwner, {
+        leaderViewModel.leaderData.observe(viewLifecycleOwner) {
             if (it.status == 0) {
                 binding.tip.apply {
                     text = it.data?.desc?.replace("\n", " ")
@@ -47,7 +47,7 @@ class LeaderFragment : Fragment() {
             } else if (it.status == -1) {
                 ToastUtil.short(it.message)
             }
-        })
+        }
 
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(

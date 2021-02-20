@@ -115,7 +115,7 @@ class CalendarFragment : Fragment() {
         binding.events.adapter = adapter
         //初始加载
         calendarViewModel.getCalendar()
-        calendarViewModel.calendar.observe(viewLifecycleOwner, { list ->
+        calendarViewModel.calendar.observe(viewLifecycleOwner) { list ->
             if (list.status == 0) {
                 events = list.data!!.days
                 binding.calendarView.visibility = View.VISIBLE
@@ -138,7 +138,7 @@ class CalendarFragment : Fragment() {
             } else if (list.status == -1) {
                 ToastUtil.short(list.message)
             }
-        })
+        }
     }
 
     //显示事件

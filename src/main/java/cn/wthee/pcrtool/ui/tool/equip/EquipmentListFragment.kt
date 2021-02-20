@@ -111,13 +111,13 @@ class EquipmentListFragment : Fragment() {
     private fun setObserve() {
         //装备数量
         if (!viewModel.equipmentCounts.hasObservers()) {
-            viewModel.equipmentCounts.observe(viewLifecycleOwner, {
+            viewModel.equipmentCounts.observe(viewLifecycleOwner) {
                 binding.equipCount.text = it.toString()
-            })
+            }
         }
         //装备信息
         if (!viewModel.updateEquip.hasActiveObservers()) {
-            viewModel.updateEquip.observe(viewLifecycleOwner, {
+            viewModel.updateEquip.observe(viewLifecycleOwner) {
                 //装备信息
                 lifecycleScope.launch {
                     @OptIn(ExperimentalCoroutinesApi::class)
@@ -125,13 +125,13 @@ class EquipmentListFragment : Fragment() {
                         pageAdapter.submitData(data)
                     }
                 }
-            })
+            }
         }
         //重置
         if (!viewModel.reset.hasActiveObservers()) {
-            viewModel.reset.observe(viewLifecycleOwner, {
+            viewModel.reset.observe(viewLifecycleOwner) {
                 reset()
-            })
+            }
         }
     }
 }

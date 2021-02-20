@@ -37,10 +37,9 @@ class GuildFragment : CommonListFragment() {
         val adapter = GuildAdapter()
         binding.toolList.adapter = adapter
         viewModel.getGuilds()
-        viewModel.guilds.observe(viewLifecycleOwner, {
+        viewModel.guilds.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-
-        })
+        }
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_guild,

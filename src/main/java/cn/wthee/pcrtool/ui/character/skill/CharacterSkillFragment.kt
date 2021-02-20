@@ -71,9 +71,9 @@ class CharacterSkillFragment : Fragment() {
             skillList.adapter = adapter
         }
         sharedSkillViewModel.getCharacterSkills(uid)
-        sharedSkillViewModel.skills.observe(viewLifecycleOwner, {
+        sharedSkillViewModel.skills.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        })
+        }
     }
 
 }
