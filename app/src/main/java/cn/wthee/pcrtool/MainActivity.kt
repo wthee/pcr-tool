@@ -149,6 +149,10 @@ class MainActivity : AppCompatActivity() {
             for (i in 0..fm.backStackEntryCount) {
                 fm.popBackStack()
             }
+            val navHostController = findNavController(R.id.nav_host_fragment)
+            for (i in 0..navHostController.backStack.size) {
+                navHostController.popBackStack()
+            }
             recreate()
             when (it.what) {
                 //正常更新
