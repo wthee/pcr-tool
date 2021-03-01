@@ -38,12 +38,6 @@ class EquipmentRepository(private val equipmentDao: EquipmentDao) {
 
     companion object {
 
-        @Volatile
-        private var instance: EquipmentRepository? = null
-
-        fun getInstance(equipmentDao: EquipmentDao) =
-            instance ?: synchronized(this) {
-                instance ?: EquipmentRepository(equipmentDao).also { instance = it }
-            }
+        fun getInstance(equipmentDao: EquipmentDao) = EquipmentRepository(equipmentDao)
     }
 }

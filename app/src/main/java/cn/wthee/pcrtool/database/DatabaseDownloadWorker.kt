@@ -44,6 +44,7 @@ class DatabaseDownloadWorker(
         const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
+        const val KEY_FROM = "KEY_FROM"
 
         lateinit var service: Call<ResponseBody>
     }
@@ -54,6 +55,7 @@ class DatabaseDownloadWorker(
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         val fileName = inputData.getString(KEY_FILE)
+        val from = inputData.getInt(KEY_FROM, -1)
         setForegroundAsync(createForegroundInfo())
         //显示加载进度
         MainScope().launch {
@@ -61,18 +63,13 @@ class DatabaseDownloadWorker(
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
         }
         return@coroutineScope download(
-            version,
-            type,
-            fileName ?: Constants.DATABASE_DOWNLOAD_FILE_NAME
+            version, type, fileName
+                ?: Constants.DATABASE_DOWNLOAD_FILE_NAME, from
         )
     }
 
 
-    private fun download(
-        version: String,
-        type: Int,
-        fileName: String,
-    ): Result {
+    private fun download(version: String, type: Int, fileName: String, from: Int): Result {
         var response: Response<ResponseBody>? = null
         try {
             //创建Retrofit服务
@@ -105,21 +102,19 @@ class DatabaseDownloadWorker(
                 UMCrash.generateCustomLog(e, Constants.EXCEPTION_DOWNLOAD_DB)
             }
         }
-
-        //创建数据库文件夹
-        val file = File(folderPath)
-        if (!file.exists()) {
-            file.mkdir()
-        }
-        //br压缩包路径
-        val dbZipPath = FileUtil.getDatabaseDir() + File.separator + fileName
-        val db = File(dbZipPath)
-        if (db.exists()) {
-            //删除已有数据库文件
-            FileUtil.deleteMainDatabase(type)
-        }
-
         try {
+            //创建数据库文件夹
+            val file = File(folderPath)
+            if (!file.exists()) {
+                file.mkdir()
+            }
+            //br压缩包路径
+            val dbZipPath = FileUtil.getDatabaseDir() + File.separator + fileName
+            val db = File(dbZipPath)
+            if (db.exists()) {
+                //删除已有数据库文件
+                FileUtil.deleteMainDatabase(type)
+            }
             //保存
             FileUtil.save(response!!.body()!!.byteStream(), db)
             //删除旧的wal
@@ -129,10 +124,17 @@ class DatabaseDownloadWorker(
                 delete(getDatabaseWalPath(1))
                 delete(getDatabaseWalPath(2))
             }
+            //关闭数据库
+            AppDatabase.close()
+            AppDatabaseJP.close()
             //加压缩
             UnzippedUtil.deCompress(db, true)
             //更新数据库版本号
             DatabaseUpdater.updateLocalDataBaseVersion(version)
+            /**
+             * fixme 首次安装切换数据时，闪退，
+             * Failed to open database '/data/user/0/cn.wthee.pcrtoolbeta/databases/redive_cn.db'.
+             */
             //通知更新数据
             MainScope().launch {
                 MainActivity.textDownload.text = Constants.NOTICE_TOAST_SUCCESS

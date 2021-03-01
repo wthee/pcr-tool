@@ -97,6 +97,7 @@ abstract class AppDatabase : RoomDatabase() {
                 if (it.isOpen) {
                     it.close()
                 }
+                instance = null
             }
         }
 

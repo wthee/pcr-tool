@@ -13,12 +13,6 @@ class PvpRepository(private val pvpDao: PvpDao) {
 
     companion object {
 
-        @Volatile
-        private var instance: PvpRepository? = null
-
-        fun getInstance(pvpDao: PvpDao) =
-            instance ?: synchronized(this) {
-                instance ?: PvpRepository(pvpDao).also { instance = it }
-            }
+        fun getInstance(pvpDao: PvpDao) = PvpRepository(pvpDao)
     }
 }

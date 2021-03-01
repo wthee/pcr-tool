@@ -32,17 +32,17 @@ object DatabaseUpdater {
     /**
      * 检查是否需要更新
      *
-     * [fromSetting] -1:正常调用  0：点击版本号  1：切换版本调用
+     * [from] -1:正常调用  0：点击版本号  1：切换版本调用
      *
      * [force] 是否强制更新
      */
-    suspend fun checkDBVersion(fromSetting: Int = -1, force: Boolean = false) {
+    suspend fun checkDBVersion(from: Int = -1, force: Boolean = false) {
         //提示开始
-        if (fromSetting == 1) {
+        if (from == 1) {
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = NOTICE_TOAST_CHANGE
         }
-        if (fromSetting == 0) {
+        if (from == 0) {
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = NOTICE_TOAST_CHECKING
         }
@@ -56,7 +56,7 @@ object DatabaseUpdater {
             )
             val version = service.getDbVersion(getVersionFileName())
             //更新判断
-            downloadDB(version.data!!, fromSetting, force)
+            downloadDB(version.data!!, from, force)
         } catch (e: Exception) {
             MainActivity.textDownload.text = Constants.NOTICE_TOAST_NETWORK_ERROR
             MainScope().launch {
@@ -111,7 +111,7 @@ object DatabaseUpdater {
      */
     private fun downloadDB(
         ver: DatabaseVersion,
-        fromSetting: Int = -1,
+        from: Int = -1,
         force: Boolean = false
     ) {
         //更新判断
@@ -127,8 +127,8 @@ object DatabaseUpdater {
                 //正常下载
                 val toDownload = str != ver.toString()  //版本号hash远程不一致
                         || force
-                        || (fromSetting == -1 && (FileUtil.needUpdate(databaseType) || str == "0"))  //打开应用，数据库wal被清空
-                        || (fromSetting == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
+                        || (from == -1 && (FileUtil.needUpdate(databaseType) || str == "0"))  //打开应用，数据库wal被清空
+                        || (from == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
                 //下载远程备份
                 val toDownloadRemoteBackup =
                     remoteBackupMode && File(FileUtil.getDatabaseBackupPath(databaseType)).length() < 1024 * 1024
@@ -158,24 +158,15 @@ object DatabaseUpdater {
                     }
                     //开始下载
                     try {
+                        val data = Data.Builder()
+                            .putString(DatabaseDownloadWorker.KEY_VERSION, ver.toString())
+                            .putString(DatabaseDownloadWorker.KEY_FILE, fileName)
+                            .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
+                            .putInt(DatabaseDownloadWorker.KEY_FROM, from)
+                            .build()
                         val uploadWorkRequest =
                             OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
-                                .setInputData(
-                                    Data.Builder()
-                                        .putString(
-                                            DatabaseDownloadWorker.KEY_VERSION,
-                                            ver.toString()
-                                        )
-                                        .putString(
-                                            DatabaseDownloadWorker.KEY_FILE,
-                                            fileName
-                                        )
-                                        .putInt(
-                                            DatabaseDownloadWorker.KEY_VERSION_TYPE,
-                                            databaseType
-                                        )
-                                        .build()
-                                )
+                                .setInputData(data)
                                 .build()
                         WorkManager.getInstance(MyApplication.context).enqueueUniqueWork(
                             "updateDatabase",
@@ -190,7 +181,7 @@ object DatabaseUpdater {
 
                 } else {
                     //强制更新/切换成功，引导关闭应用
-                    if (fromSetting != -1) {
+                    if (from != -1) {
                         handler.sendEmptyMessage(1)
                     }
                     //更新数据库版本号
@@ -209,6 +200,7 @@ object DatabaseUpdater {
 
     /**
      * 获取数据库版本
+     * 1: 国服 2：日服
      */
     fun getDatabaseType() =
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)

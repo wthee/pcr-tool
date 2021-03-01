@@ -86,7 +86,6 @@ object Constants {
     const val UNKNOWN_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在下载数据"
     const val NOTICE_TOAST_SUCCESS = "数据更新完成！"
-    const val NOTICE_TOAST_NO_FILE = "数据文件下载失败~"
     const val NOTICE_TOAST_CHANGE = "数据切换中..."
     const val NOTICE_TOAST_CHECKING = "正在获取信息"
     const val NOTICE_TOAST_NETWORK_ERROR = "网络异常..."

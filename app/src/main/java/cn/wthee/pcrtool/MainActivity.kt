@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.*
 import android.view.KeyEvent
@@ -21,7 +22,8 @@ import androidx.work.WorkManager
 import cn.wthee.circleprogressbar.CircleProgressView
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
-import cn.wthee.pcrtool.database.DatabaseDownloadWorker
+import cn.wthee.pcrtool.database.AppDatabase
+import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
@@ -36,9 +38,7 @@ import com.umeng.commonsdk.UMConfigure
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.system.exitProcess
 
 /**
  * 主页
@@ -143,6 +143,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
@@ -156,26 +157,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 //数据切换
                 1 -> {
-                    lifecycleScope.launch {
-                        delay(500L)
-                        progressDownload.setProgress(100)
-                        //关闭通知
-                        try {
-                            DatabaseDownloadWorker.service.cancel()
-                        } catch (e: Exception) {
-                            MainScope().launch {
-                                UMCrash.generateCustomLog(e, Constants.EXCEPTION_CANCEL_DOWNLOAD)
-                            }
-                        }
-                        layoutDownload.setOnClickListener {
-                            exitProcess(0)
-                        }
-                        for (i in 3 downTo 1) {
-                            textDownload.text = getString(R.string.close_app, i)
-                            delay(1000L)
-                        }
-                        exitProcess(0)
-                    }
+                    AppDatabase.close()
+                    AppDatabaseJP.close()
+                    viewModelStore.clear()
+                    recreate()
+                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
+                    //fixme 添加过渡，避免闪屏
                 }
             }
 

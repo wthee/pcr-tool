@@ -13,12 +13,6 @@ class GachaRepository(private val gachaDao: GachaDao) {
 
     companion object {
 
-        @Volatile
-        private var instance: GachaRepository? = null
-
-        fun getInstance(gachaDao: GachaDao) =
-            instance ?: synchronized(this) {
-                instance ?: GachaRepository(gachaDao).also { instance = it }
-            }
+        fun getInstance(gachaDao: GachaDao) = GachaRepository(gachaDao)
     }
 }

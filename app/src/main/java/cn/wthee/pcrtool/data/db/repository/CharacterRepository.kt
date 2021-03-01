@@ -77,12 +77,6 @@ class CharacterRepository(private val characterDao: CharacterDao) {
 
     companion object {
 
-        @Volatile
-        private var instance: CharacterRepository? = null
-
-        fun getInstance(characterDao: CharacterDao) =
-            instance ?: synchronized(this) {
-                instance ?: CharacterRepository(characterDao).also { instance = it }
-            }
+        fun getInstance(characterDao: CharacterDao) = CharacterRepository(characterDao)
     }
 }

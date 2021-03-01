@@ -17,12 +17,6 @@ class EventRepository(private val eventDao: EventDao) {
 
     companion object {
 
-        @Volatile
-        private var instance: EventRepository? = null
-
-        fun getInstance(eventDao: EventDao) =
-            instance ?: synchronized(this) {
-                instance ?: EventRepository(eventDao).also { instance = it }
-            }
+        fun getInstance(eventDao: EventDao) = EventRepository(eventDao)
     }
 }

@@ -91,8 +91,7 @@ class NewsRemoteMediator(
                 remoteKeys.nextKey
             }
             LoadType.PREPEND -> {
-                val remoteKeys = getFirstRemoteKey(state)
-                    ?: throw InvalidObjectException("Invalid state, key should not be null")
+                val remoteKeys = getFirstRemoteKey(state) ?: return 0
                 //end of list condition reached
                 remoteKeys.prevKey ?: return MediatorResult.Success(endOfPaginationReached = true)
                 remoteKeys.prevKey
