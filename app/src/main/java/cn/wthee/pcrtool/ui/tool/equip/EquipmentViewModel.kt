@@ -10,9 +10,6 @@ import androidx.paging.cachedIn
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.view.*
-import cn.wthee.pcrtool.utils.Constants
-import com.umeng.umcrash.UMCrash
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -29,7 +26,7 @@ class EquipmentViewModel(
     var updateEquip = MutableLiveData<Boolean>()
     var reset = MutableLiveData<Boolean>()
     var equipmentCounts = MutableLiveData<Int>()
-    var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData>()
+    var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData?>()
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
     var rankEquipMaterials = MutableLiveData<List<EquipmentMaterial>>()
 
@@ -67,17 +64,7 @@ class EquipmentViewModel(
      */
     fun getUniqueEquipInfos(uid: Int, lv: Int) {
         viewModelScope.launch {
-            val data = equipmentRepository.getUniqueEquipInfo(uid, lv)
-            if (data == null) {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(
-                        NullPointerException(),
-                        Constants.EXCEPTION_UNIT_NULL + "unit_id:$uid"
-                    )
-                }
-            } else {
-                uniqueEquip.postValue(data!!)
-            }
+            uniqueEquip.postValue(equipmentRepository.getUniqueEquipInfo(uid, lv))
         }
     }
 
