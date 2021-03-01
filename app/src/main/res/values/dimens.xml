@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_radius">4dp</dimen>
+    <dimen name="back_drop_radius">10dp</dimen>
+    <dimen name="menu_item_card_radius">8dp</dimen>
+    <dimen name="loading_dialog_height">80dp</dimen>
+    <dimen name="desc_height">70dp</dimen>
+    <dimen name="card_height">150dp</dimen>
+    <dimen name="menu_item_card_height">130dp</dimen>
+    <dimen name="small_card_height">60dp</dimen>
+    <dimen name="news_card_height">100dp</dimen>
+    <dimen name="filter_scroller_height">250dp</dimen>
+    <dimen name="float_window_width">233dp</dimen>
+    <!-- icon-->
+    <dimen name="m_icon">16dp</dimen>
+    <dimen name="progress_bar_size">24dp</dimen>
+    <dimen name="circle_progress_bar_size">28dp</dimen>
+    <dimen name="l_icon">24dp</dimen>
+    <dimen name="xl_icon">36dp</dimen>
+    <dimen name="menu_icon">20dp</dimen>
+    <dimen name="fab_size">40dp</dimen>
+    <dimen name="normal_icon">48dp</dimen>
+    <dimen name="big_icon">64dp</dimen>
+    <dimen name="indicator_border">2dp</dimen>
+
+    <!-- margin & padding-->
+    <dimen name="xxs_dp">1dp</dimen>
+    <dimen name="xs_dp">3dp</dimen>
+    <dimen name="s_dp">6dp</dimen>
+    <dimen name="m_dp">9dp</dimen>
+    <dimen name="xm_dp">12dp</dimen>
+    <dimen name="l_dp">25dp</dimen>
+    <dimen name="xl_dp">65dp</dimen>
+    <dimen name="efab_margin">13dp</dimen>
+
+    <dimen name="toolbar_height">38dp</dimen>
+    <dimen name="tab_height_1">36dp</dimen>
+    <dimen name="tab_height_2">22dp</dimen>
+
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="menu_item_elevation_card">8dp</dimen>
+
+    <dimen name="viewpager_next_item_visible">0dp</dimen>
+    <dimen name="viewpager_current_item_horizontal_margin">0dp</dimen>
+    <dimen name="fab_text_size">10sp</dimen>
+    <dimen name="fab_text_2">90dp</dimen>
+    <dimen name="fab_text_3">100dp</dimen>
+    <dimen name="icon_size">48dp</dimen>
+    <dimen name="bottom_toolbar_height">64dp</dimen>
+    <dimen name="dialog_button_height">42dp</dimen>
+    <dimen name="button_layout_height">48dp</dimen>
+    <dimen name="table_title_text_size">14sp</dimen>
+</resources>

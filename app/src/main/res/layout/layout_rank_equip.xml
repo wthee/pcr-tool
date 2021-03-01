@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic6"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/gl_1"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/unknown_gray" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic3"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="@id/gl_2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/unknown_gray" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic5"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_marginTop="@dimen/l_dp"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/gl_1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pic6"
+        tools:src="@drawable/unknown_gray" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic2"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_marginTop="@dimen/l_dp"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/gl_2"
+        app:layout_constraintTop_toBottomOf="@+id/pic3"
+        tools:src="@drawable/unknown_gray" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic4"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_marginTop="@dimen/l_dp"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/gl_1"
+        app:layout_constraintTop_toBottomOf="@+id/pic5"
+        tools:src="@drawable/unknown_gray" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pic1"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_marginTop="@dimen/l_dp"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="@id/gl_2"
+        app:layout_constraintTop_toBottomOf="@id/pic2"
+        tools:src="@drawable/unknown_gray" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/rank_btn"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/pic5"
+        app:layout_constraintEnd_toStartOf="@+id/pic2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/pic5"
+        app:layout_constraintTop_toTopOf="@id/pic5"
+        tools:text="RANK 12" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/equip_statistics"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/tab_height_1"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:text="@string/rank_equip_statistics"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/table_title_text_size"
+        app:layout_constraintEnd_toEndOf="@id/rank_btn"
+        app:layout_constraintStart_toStartOf="@id/rank_btn"
+        app:layout_constraintTop_toBottomOf="@id/rank_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

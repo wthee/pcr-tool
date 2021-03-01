@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/tool_pvp"
+        layout="@layout/view_toolbar" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/layout_select"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_back_drop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_toolbar_height"
+        android:background="@color/colorBg"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/pvp_pre"
+            style="@style/EfabStyle"
+            android:layout_width="@dimen/fab_text_3"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:contentDescription="@string/team_atk"
+            android:text="@string/team_atk"
+            android:visibility="invisible"
+            app:icon="@drawable/ic_pvp" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/pvp_next"
+            style="@style/EfabStyle"
+            android:layout_width="@dimen/fab_text_3"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginEnd="@dimen/xl_dp"
+            android:contentDescription="@string/team_def"
+            android:text="@string/team_def"
+            android:textColor="@color/colorPrimary"
+            app:icon="@drawable/ic_def" />
+    </LinearLayout>
+
+</LinearLayout>

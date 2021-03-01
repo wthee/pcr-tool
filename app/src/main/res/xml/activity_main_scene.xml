@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start">
+
+        <Constraint
+            android:id="@+id/layout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible">
+            <CustomAttribute
+                app:attributeName="backgroundColor"
+                app:customColorValue="@color/colorAlpha" />
+        </Constraint>
+
+
+        <Constraint
+            android:id="@+id/setting"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/xl_dp"
+            android:visibility="invisible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_guild"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/xl_dp"
+            android:visibility="invisible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/setting" />
+
+        <Constraint
+            android:id="@+id/tool_equip"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/xl_dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tool_guild" />
+
+        <Constraint
+            android:id="@+id/tool_pvp"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/setting"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_news"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/setting"
+            app:layout_constraintEnd_toStartOf="@id/tool_pvp" />
+
+        <Constraint
+            android:id="@+id/tool_calendar"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_guild"
+            app:layout_constraintEnd_toStartOf="@id/tool_news" />
+
+        <Constraint
+            android:id="@+id/tool_leader"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_calendar"
+            app:layout_constraintEnd_toEndOf="@id/tool_calendar" />
+
+        <Constraint
+            android:id="@+id/tool_gacha"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_event"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/layout_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <CustomAttribute
+                app:attributeName="backgroundColor"
+                app:customColorValue="@color/colorAlphaBlack" />
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/setting"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/xl_dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@id/tool_guild" />
+
+        <Constraint
+            android:id="@+id/tool_guild"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/xl_dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/setting"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@id/tool_equip" />
+
+        <Constraint
+            android:id="@+id/tool_equip"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/xl_dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tool_guild"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_pvp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/menu_item_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constraintBottom_toTopOf="@id/setting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toEndOf="@id/tool_news" />
+
+        <Constraint
+            android:id="@+id/tool_news"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/menu_item_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/setting"
+            app:layout_constraintEnd_toStartOf="@id/tool_pvp"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@id/tool_calendar" />
+
+        <Constraint
+            android:id="@+id/tool_calendar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_guild"
+            app:layout_constraintEnd_toStartOf="@id/tool_news"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_leader"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_calendar"
+            app:layout_constraintEnd_toEndOf="@id/tool_calendar"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_gacha"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/tool_event" />
+
+        <Constraint
+            android:id="@+id/tool_event"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constraintBottom_toTopOf="@id/tool_leader"
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </ConstraintSet>
+
+    <Transition
+        app:constraintSetEnd="@id/end"
+        app:constraintSetStart="@+id/start"
+        app:duration="@integer/menu_item">
+
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="70"
+                app:motionTarget="@id/tool_event" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_event" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="70"
+                app:motionTarget="@id/tool_gacha" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_gacha" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="60"
+                app:motionTarget="@id/tool_leader" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_leader" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="60"
+                app:motionTarget="@id/tool_calendar" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_calendar" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/tool_news" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_news" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/tool_pvp" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_pvp" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="60"
+                app:motionTarget="@id/tool_equip" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_equip" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/tool_guild" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_guild" />
+
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="50"
+                app:motionTarget="@id/setting" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/setting" />
+        </KeyFrameSet>
+    </Transition>
+
+</MotionScene>

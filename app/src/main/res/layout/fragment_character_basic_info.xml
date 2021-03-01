@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    app:layoutDescription="@xml/fragment_character_basic_info_scene">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/character_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/CardImageStyle"
+        tools:src="@drawable/unknown_gray" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/catah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorPrimary"
+        android:textIsSelectable="true"
+        android:textStyle="bold"
+        app:layout_constrainedWidth="true"
+        tools:text="@string/test" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/unit_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/colorAlpha"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/xs_dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/catah">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/basic_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/news_card_height">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/intro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_game_name"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_dp"
+                android:text="@string/game_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_dp"
+                android:paddingEnd="0dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_game_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/title_game_name"
+                app:layout_constraintTop_toTopOf="@id/title_game_name"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_name"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_dp"
+                android:text="@string/name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_game_name"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/true_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_dp"
+                android:paddingEnd="0dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/title_name"
+                app:layout_constraintTop_toTopOf="@id/title_name"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_height"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_dp"
+                android:text="@string/title_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_name"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/height"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_dp"
+                android:paddingEnd="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_height"
+                app:layout_constraintEnd_toStartOf="@id/title_weight"
+                app:layout_constraintStart_toEndOf="@id/title_height"
+                app:layout_constraintTop_toTopOf="@id/title_height"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_weight"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="@string/title_weight"
+                app:layout_constraintStart_toEndOf="@id/height"
+                app:layout_constraintTop_toTopOf="@id/title_height"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/title_weight"
+                app:layout_constraintTop_toTopOf="@id/title_height"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_birth"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_dp"
+                android:text="@string/title_birth"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_height"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/birth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_dp"
+                android:paddingEnd="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_birth"
+                app:layout_constraintEnd_toStartOf="@id/title_age"
+                app:layout_constraintStart_toEndOf="@id/title_birth"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_age"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="@string/age"
+                app:layout_constraintStart_toEndOf="@id/birth"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/title_age"
+                app:layout_constraintTop_toTopOf="@id/title_birth"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_bloold"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_dp"
+                android:text="@string/title_blood"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_birth"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/blood"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_dp"
+                android:paddingEnd="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedHeight="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/title_bloold"
+                app:layout_constraintEnd_toStartOf="@id/title_position"
+                app:layout_constraintStart_toEndOf="@id/title_bloold"
+                app:layout_constraintTop_toTopOf="@id/title_bloold"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_position"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="@string/title_position"
+                app:layout_constraintStart_toEndOf="@id/blood"
+                app:layout_constraintTop_toTopOf="@id/title_bloold"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/position_type"
+                android:layout_width="@dimen/m_icon"
+                android:layout_height="@dimen/m_icon"
+                android:layout_marginEnd="@dimen/s_dp"
+                app:layout_constraintBottom_toBottomOf="@id/position"
+                app:layout_constraintEnd_toStartOf="@id/position"
+                app:layout_constraintTop_toTopOf="@id/position"
+                tools:background="@drawable/ic_position_0" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title_bloold"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_race"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_dp"
+                android:text="@string/title_race"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_bloold"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/race"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/s_dp"
+                android:paddingEnd="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@id/title_race"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.35"
+                tools:text="@string/test" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title_cv"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="@string/cv"
+                app:layout_constraintStart_toEndOf="@id/race"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/cv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/title_cv"
+                app:layout_constraintTop_toTopOf="@id/title_race"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_guild"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xm_dp"
+                android:text="@string/title_guild"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_race"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/guild"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_guild"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_favorite"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/title_fav"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guild"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_favorite"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_self"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/title_self"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/favorite"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/self"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_self"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_comments"
+                style="@style/TitleStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/title_comments"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/self"
+                app:layout_constraintWidth_percent="0.15" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_comments"
+                tools:text="@string/test" />
+
+            <cn.wthee.pcrtool.utils.AutoScrollTextView
+                android:id="@+id/title_room_comments"
+                style="@style/TitleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_room_comments"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/comments" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/room_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="@dimen/s_dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                android:textIsSelectable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_room_comments"
+                tools:text="@string/test" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_love_cbi"
+        style="@style/FabStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/tab_love"
+        android:src="@drawable/ic_loved"
+        app:layout_anchor="@id/character_pic" />
+</androidx.constraintlayout.motion.widget.MotionLayout>

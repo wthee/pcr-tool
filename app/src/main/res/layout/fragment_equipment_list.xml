@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layoutDescription="@xml/fragment_tool_common_scene">
+
+    <include
+        android:id="@+id/tool_head"
+        layout="@layout/view_toolbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tool_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_back_drop"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_head"
+        app:spanCount="4"
+        tools:listitem="@layout/item_common" />
+
+    <LinearLayout
+        android:id="@+id/layout_fab"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_toolbar_height"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/equip_count"
+            style="@style/EfabStyle"
+            android:layout_width="@dimen/fab_text_2"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginEnd="@dimen/xl_dp"
+            android:contentDescription="@string/tool_equip"
+            android:text="@string/zero"
+            app:icon="@drawable/ic_equip" />
+    </LinearLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

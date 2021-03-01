@@ -1,0 +1,130 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="title_database"
+        app:title="@string/data">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="force_update_db"
+            app:title="@string/redownload_db"
+            app:summary="@string/redownload_db_summary" />
+
+        <ListPreference
+            app:defaultValue="@string/db_cn_value"
+            app:entries="@array/database_type"
+            app:entryValues="@array/database_type_value"
+            app:iconSpaceReserved="false"
+            app:key="change_database"
+            app:summary="@string/empty"
+            app:title="@string/game_version" />
+
+        <SwitchPreference
+            app:key="pvp_region"
+            app:iconSpaceReserved="false"
+            app:title="@string/pvp_search_jp"
+            app:summary="@string/pvp_search_summary" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="clean_database"
+            app:summary="@string/zero"
+            app:isPreferenceVisible="false"
+            app:title="@string/clean_database" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        app:key="title_app"
+        app:iconSpaceReserved="false"
+        app:title="@string/app_version">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="force_update_app"
+            app:summary="@string/app_version_summary"
+            app:title="@string/notice" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false"
+            app:key="auto_update_app"
+            app:summaryOff="@string/off_auto_app"
+            app:summaryOn="@string/on_auto_app"
+            app:title="@string/auto_update_app" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="https://github.com/wthee/pcr-tool"
+            app:title="@string/app_sourcce">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/wthee/pcr-tool" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="share_app"
+            app:summary="@string/share_app_sm"
+            app:title="@string/share_app" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/thanks">
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/data_from_hint"
+            app:title="@string/data_from">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://redive.estertion.win/" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/dev_tip"
+            app:title="@string/shizuru_note">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/MalitsPlus/ShizuruNotes" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/pvp_data"
+            app:title="@string/pcrdfans">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/url_pcrdfans_com" />
+        </Preference>
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:summary="@string/leader_data"
+            app:title="AppMedia">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/leader_source_url" />
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="egg"
+        app:title="@string/app_name">
+
+        <Preference
+            app:icon="@drawable/ic_hide"
+            app:key="kl"
+            app:summary="@string/egg_summary"
+            app:title="@string/egg_text" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

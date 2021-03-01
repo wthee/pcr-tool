@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/detail"
+            layout="@layout/layout_equip_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/xm_dp"
+            android:layout_marginEnd="@dimen/xm_dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/stared"
+            android:layout_width="@dimen/menu_icon"
+            android:layout_height="@dimen/menu_icon"
+            android:layout_margin="@dimen/s_dp"
+            android:src="@drawable/ic_loved"
+            android:layout_gravity="end" />
+
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/material_count"
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_dp"
+        android:layout_marginTop="@dimen/s_dp"
+        android:padding="@dimen/s_dp"
+        android:textColor="@color/colorPrimary"
+        tools:text="@string/title_material" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/material"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xm_dp"
+        android:layout_marginEnd="@dimen/xm_dp"
+        android:fadeScrollbars="false"
+        android:nestedScrollingEnabled="true"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_common" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/material_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/s_dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        tools:text="@string/app_name"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/material_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/drop_info"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/ProgressBarStyle"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/xs_dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/equip_drops"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="1"
+        tools:listitem="@layout/item_equipment_drop" />
+
+</LinearLayout>

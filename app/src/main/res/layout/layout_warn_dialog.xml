@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/card_height"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/xm_dp"
+    android:paddingTop="@dimen/s_dp"
+    android:paddingEnd="@dimen/xm_dp">
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m_dp"
+        android:gravity="center"
+        android:tag="label_feature"
+        android:text="@string/title_tip"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/xm_dp"
+        android:lineSpacingExtra="5dp"
+        android:maxHeight="@dimen/filter_scroller_height"
+        android:scrollbars="vertical"
+        android:nestedScrollingEnabled="true"
+        android:overScrollMode="always"
+        android:paddingStart="@dimen/s_dp"
+        android:paddingEnd="@dimen/s_dp"
+        android:tag="beta_upgrade_feature"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="@color/text"
+        tools:text="@string/app_name" />
+
+    <include
+        android:id="@+id/dialog_btns"
+        layout="@layout/layout_dialog_btns"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

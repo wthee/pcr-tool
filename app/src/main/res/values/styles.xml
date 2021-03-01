@@ -1,0 +1,121 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/colorAlpha</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+    </style>
+
+    <!-- 点击波浪-->
+    <style name="Ripple">
+        <item name="android:colorControlHighlight">@color/colorFg</item>
+        <item name="android:radius">18dp</item>
+    </style>
+
+    <!-- 自定义弹出/关闭动画   -->
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <!-- 主题设置   -->
+    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <!-- 带背景标题 -->
+    <style name="TitleStyle">
+        <item name="android:background">@drawable/bg_text_view</item>
+        <item name="android:gravity">start</item>
+        <item name="android:paddingStart">@dimen/s_dp</item>
+        <item name="android:paddingEnd">@dimen/s_dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:layout_marginTop">@dimen/xs_dp</item>
+        <item name="android:layout_marginStart">@dimen/xs_dp</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle2
+        </item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <!--  正常标题-->
+    <style name="NormalTitleStyle">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle2
+        </item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!--  悬浮按钮样式-->
+    <style name="FabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">@color/colorWhite</item>
+        <item name="borderWidth">0dp</item>
+        <item name="fabSize">mini</item>
+        <item name="tint">@color/colorPrimary</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
+    </style>
+
+    <!--  扩展悬浮按钮样式-->
+    <style name="EfabStyle" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:backgroundTint">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/fab_text_size</item>
+        <item name="borderWidth">0dp</item>
+        <item name="iconSize">@dimen/menu_icon</item>
+        <item name="iconTint">@color/colorPrimary</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
+        <item name="iconPadding">@dimen/xs_dp</item>
+    </style>
+
+    <!--  进度条-->
+    <style name="ProgressBarStyle">
+        <item name="android:layout_width">@dimen/progress_bar_size</item>
+        <item name="android:layout_height">@dimen/progress_bar_size</item>
+        <item name="android:indeterminateTint">@color/colorPrimary</item>
+    </style>
+    <!--  卡片-->
+    <style name="CardStyle">
+        <item name="android:background">@drawable/bg_card_no_shadow</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
+        <item name="android:layout_margin">@dimen/s_dp</item>
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+    </style>
+
+    <!-- 背景设置  -->
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_dialog</item>
+    </style>
+
+    <!-- 圆角图片 -->
+    <style name="CardImageStyle">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/card_radius</item>
+        <item name="cornerSizeTopRight">@dimen/card_radius</item>
+    </style>
+
+    <!-- 圆图片 -->
+    <style name="CircleImageStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!--三角图片  -->
+    <style name="AngleStyle">
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/card_radius</item>
+        <item name="cornerFamilyBottomLeft">cut</item>
+        <item name="cornerSizeBottomLeft">100%</item>
+    </style>
+</resources>

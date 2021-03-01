@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/index_foreground_0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/colorPrimary"
+            app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/index_0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/indicator_border"
+            android:src="@drawable/ic_position_0" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/index_foreground_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/colorPrimary"
+            android:visibility="invisible"
+            app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/index_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/indicator_border"
+            android:src="@drawable/ic_position_1" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/index_foreground_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/colorPrimary"
+            android:visibility="invisible"
+            app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/index_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/indicator_border"
+            android:src="@drawable/ic_position_2" />
+    </FrameLayout>
+</LinearLayout>
