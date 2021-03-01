@@ -83,7 +83,7 @@ class CharacterViewModel(
                     )
                 }
             } else {
-                character.postValue(data)
+                character.postValue(data!!)
             }
         }
     }

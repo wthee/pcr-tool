@@ -10,6 +10,9 @@ import androidx.paging.cachedIn
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.view.*
+import cn.wthee.pcrtool.utils.Constants
+import com.umeng.umcrash.UMCrash
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -65,7 +68,16 @@ class EquipmentViewModel(
     fun getUniqueEquipInfos(uid: Int, lv: Int) {
         viewModelScope.launch {
             val data = equipmentRepository.getUniqueEquipInfo(uid, lv)
-            uniqueEquip.postValue(data)
+            if (data == null) {
+                MainScope().launch {
+                    UMCrash.generateCustomLog(
+                        NullPointerException(),
+                        Constants.EXCEPTION_UNIT_NULL + "unit_id:$uid"
+                    )
+                }
+            } else {
+                uniqueEquip.postValue(data!!)
+            }
         }
     }
 

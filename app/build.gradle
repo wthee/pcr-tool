@@ -57,7 +57,6 @@ android {
             applicationId "cn.wthee.pcrtoolbeta"
             manifestPlaceholders = [icon: "@mipmap/ic_logo"]
             resValue("string", "app_name", "PCR Tool βeta")
-
         }
     }
     packagingOptions {

@@ -29,7 +29,7 @@ import java.io.File
  */
 object DatabaseUpdater {
 
-    val sp = MyApplication.context.getSharedPreferences("main", MODE_PRIVATE)
+    private val sp = MyApplication.context.getSharedPreferences("main", MODE_PRIVATE)
 
     /**
      * 检查是否需要更新

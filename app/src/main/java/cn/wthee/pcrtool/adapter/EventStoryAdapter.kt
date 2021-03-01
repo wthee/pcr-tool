@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.databinding.ItemEventStoryBinding
  *
  * 列表项数据 [EventStoryDetail]
  */
-class EventStoryAdapter(private val storyName: String) :
+class EventStoryAdapter :
     ListAdapter<EventStoryDetail, EventStoryAdapter.ViewHolder>(EventStoryDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

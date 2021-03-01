@@ -30,7 +30,7 @@ class CharacterAttrViewModel(
     var selData = MutableLiveData<MutableMap<String, Int>>()
 
     /**
-     * 根据角色 id [unitId] [rank] 星级 [rarity] 等级 [lv] 专武等级 [ueLv]
+     * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
      */
     fun getCharacterInfo(unitId: Int, data: MutableMap<String, Int>) {
@@ -43,7 +43,7 @@ class CharacterAttrViewModel(
     }
 
     /**
-     * 根据角色 id [unitId] [rank] 星级 [rarity] 等级 [lv] 专武等级 [ueLv]
+     * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
      */
     suspend fun getAttrs(unitId: Int, data: MutableMap<String, Int>): Attr {

@@ -6,9 +6,6 @@ import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.net.InetAddress
-import java.net.Socket
-import java.net.UnknownHostException
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import java.util.*
@@ -25,7 +22,7 @@ object ApiUtil {
     private fun OkHttpClient.Builder.setSSL(): OkHttpClient.Builder {
         val client = this
         //初始 SSL
-        val trustManagers: Array<TrustManager> = arrayOf<TrustManager>(
+        val trustManagers: Array<TrustManager> = arrayOf(
             object : X509TrustManager {
                 @Throws(CertificateException::class)
                 override fun checkClientTrusted(
@@ -135,67 +132,3 @@ class RetryInterceptor(  //最大重试次数
     }
 }
 
-/**
- * Enables TLS v1.2 when creating SSLSockets.
- *
- *
- * For some reason, android supports TLS v1.2 from API 16, but enables it by
- * default only from API 20.
- * @link https://developer.android.com/reference/javax/net/ssl/SSLSocket.html
- * @see SSLSocketFactory
- */
-class Tls12SocketFactory(private val delegate: SSLSocketFactory) : SSLSocketFactory() {
-    override fun getDefaultCipherSuites(): Array<String> {
-        return delegate.defaultCipherSuites
-    }
-
-    override fun getSupportedCipherSuites(): Array<String> {
-        return delegate.supportedCipherSuites
-    }
-
-    @Throws(IOException::class)
-    override fun createSocket(s: Socket?, host: String?, port: Int, autoClose: Boolean): Socket {
-        return patch(delegate.createSocket(s, host, port, autoClose))
-    }
-
-    @Throws(IOException::class, UnknownHostException::class)
-    override fun createSocket(host: String?, port: Int): Socket {
-        return patch(delegate.createSocket(host, port))
-    }
-
-    @Throws(IOException::class, UnknownHostException::class)
-    override fun createSocket(
-        host: String?,
-        port: Int,
-        localHost: InetAddress?,
-        localPort: Int
-    ): Socket {
-        return patch(delegate.createSocket(host, port, localHost, localPort))
-    }
-
-    @Throws(IOException::class)
-    override fun createSocket(host: InetAddress?, port: Int): Socket {
-        return patch(delegate.createSocket(host, port))
-    }
-
-    @Throws(IOException::class)
-    override fun createSocket(
-        address: InetAddress?,
-        port: Int,
-        localAddress: InetAddress?,
-        localPort: Int
-    ): Socket {
-        return patch(delegate.createSocket(address, port, localAddress, localPort))
-    }
-
-    private fun patch(s: Socket): Socket {
-        if (s is SSLSocket) {
-            s.enabledProtocols = TLS_V12_ONLY
-        }
-        return s
-    }
-
-    companion object {
-        private val TLS_V12_ONLY = arrayOf("TLSv1.2")
-    }
-}

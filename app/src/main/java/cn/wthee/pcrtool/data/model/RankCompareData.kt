@@ -31,7 +31,7 @@ fun getRankCompareList(attr0: Attr, attr1: Attr): List<RankCompareData> {
     val datas = arrayListOf<RankCompareData>()
     val list0 = attr0.all()
     val list1 = attr1.all()
-    val list2 = attr0.compare(attr1)
+    val list2 = attr1.compare(attr0)
     list0.forEachIndexed { index, attrValue ->
         datas.add(
             RankCompareData(

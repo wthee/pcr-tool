@@ -66,7 +66,7 @@ class EventStoryDetailsDialogFragment : CommonBottomSheetDialogFragment() {
 
     private fun init() {
         binding.apply {
-            adapter = EventStoryAdapter(storyName)
+            adapter = EventStoryAdapter()
             storyList.adapter = adapter
             toolbarTitle.text = storyName
         }

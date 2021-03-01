@@ -29,7 +29,3 @@ data class CharacterPromotionEquip(
     }
 }
 
-data class CharacterPromotionEquipCount(
-    val equipId: Int,
-    val equipCount: Int
-)

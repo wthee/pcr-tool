@@ -72,9 +72,6 @@ object Constants {
     //技能图标接口
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
-    //角色Rank
-    const val CHARACTER_MIN_RANK = 2
-
     //本地储存
     const val SP_DATABASE_VERSION = "database_version"
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
@@ -141,7 +138,6 @@ object Constants {
 
     // 异常
     const val EXCEPTION = "异常"
-    const val EXCEPTION_CANCEL_DOWNLOAD = "取消下载$EXCEPTION"
     const val EXCEPTION_BACK_TOP = "回到顶部$EXCEPTION"
     const val EXCEPTION_MENU_NAV = "菜单跳转$EXCEPTION"
     const val EXCEPTION_API = "接口$EXCEPTION"

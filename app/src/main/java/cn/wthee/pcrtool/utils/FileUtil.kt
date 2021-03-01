@@ -52,12 +52,6 @@ object FileUtil {
     private fun getDatabaseShmPath(type: Int) =
         getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_SHM else Constants.DATABASE_SHM_JP
 
-    /**
-     * shm 文件路径
-     */
-    private fun getDatabaseBackupShmPath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_SHM_BACKUP else Constants.DATABASE_SHM_JP_BACKUP
-
 
     /**
      * 数据库是否需要判断

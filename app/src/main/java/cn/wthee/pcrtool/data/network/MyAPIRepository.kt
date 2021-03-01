@@ -58,7 +58,7 @@ class MyAPIRepository(private val service: MyAPIService) {
         try {
             val response = service.getPVPData(body)
             if (response.message == "failure" || response.data == null) {
-                return cn.wthee.pcrtool.data.model.error()
+                return error()
             }
             return response
         } catch (e: Exception) {
@@ -70,7 +70,7 @@ class MyAPIRepository(private val service: MyAPIService) {
                 }
             }
         }
-        return cn.wthee.pcrtool.data.model.error()
+        return error()
 
     }
 
@@ -90,7 +90,7 @@ class MyAPIRepository(private val service: MyAPIService) {
         try {
             val response = service.getNewsData(body)
             if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
-                return cn.wthee.pcrtool.data.model.error()
+                return error()
             }
             return response
         } catch (e: Exception) {
@@ -102,7 +102,7 @@ class MyAPIRepository(private val service: MyAPIService) {
                 }
             }
         }
-        return cn.wthee.pcrtool.data.model.error()
+        return error()
     }
 
     /**
@@ -113,7 +113,7 @@ class MyAPIRepository(private val service: MyAPIService) {
         try {
             val response = service.getLeader()
             if (response.message == "failure" || response.data == null) {
-                return cn.wthee.pcrtool.data.model.error()
+                return error()
             }
             return response
         } catch (e: Exception) {
@@ -125,7 +125,7 @@ class MyAPIRepository(private val service: MyAPIService) {
                 }
             }
         }
-        return cn.wthee.pcrtool.data.model.error()
+        return error()
     }
 
     /**
@@ -136,7 +136,7 @@ class MyAPIRepository(private val service: MyAPIService) {
         try {
             val response = service.getCalendar()
             if (response.message == "failure" || response.data == null) {
-                return cn.wthee.pcrtool.data.model.error()
+                return error()
             }
             return response
         } catch (e: Exception) {
@@ -148,7 +148,7 @@ class MyAPIRepository(private val service: MyAPIService) {
                 }
             }
         }
-        return cn.wthee.pcrtool.data.model.error()
+        return error()
     }
 
     /**
@@ -159,7 +159,7 @@ class MyAPIRepository(private val service: MyAPIService) {
         try {
             val response = service.getAppNotice()
             if (response.message == "failure" || response.data == null) {
-                return cn.wthee.pcrtool.data.model.error()
+                return error()
             }
             return response
         } catch (e: Exception) {
@@ -171,7 +171,7 @@ class MyAPIRepository(private val service: MyAPIService) {
                 }
             }
         }
-        return cn.wthee.pcrtool.data.model.error()
+        return error()
     }
 
     /**
@@ -189,7 +189,7 @@ class MyAPIRepository(private val service: MyAPIService) {
             )
             val response = service.toUpdate(body)
             if (response.message == "failure" || response.data == null) {
-                return cn.wthee.pcrtool.data.model.error()
+                return error()
             }
             return response
         } catch (e: Exception) {
@@ -201,6 +201,6 @@ class MyAPIRepository(private val service: MyAPIService) {
                 }
             }
         }
-        return cn.wthee.pcrtool.data.model.error()
+        return error()
     }
 }

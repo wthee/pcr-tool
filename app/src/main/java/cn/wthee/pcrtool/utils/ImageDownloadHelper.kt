@@ -53,6 +53,10 @@ class ImageDownloadHelper(
                 )
             }
             // 判断是否已存在
+            val floder = File(path)
+            if (!floder.exists()) {
+                floder.mkdir()
+            }
             val file = File("$path/$displayName")
             if (file.exists() && toast) {
                 ToastUtil.short("图片已存在~")
