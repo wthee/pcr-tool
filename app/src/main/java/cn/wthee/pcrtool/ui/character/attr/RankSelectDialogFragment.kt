@@ -3,15 +3,20 @@ package cn.wthee.pcrtool.ui.character.attr
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.RankAdapter
 import cn.wthee.pcrtool.databinding.FragmentRankSelectDialogBinding
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.dp
 
 
 /**
@@ -74,14 +79,12 @@ class RankSelectDialogFragment(
     override fun onStart() {
         super.onStart()
         dialog?.window?.apply {
-//            val width = ScreenUtil.getWidth() - 42.dp
-//            setLayout(width, (width / 0.618f).toInt())
-//            setGravity(Gravity.BOTTOM)
-//            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            setWindowAnimations(R.style.DialogAnimation)
-//            val params = attributes
-//            params.y = 15.dp
-//            attributes = params
+            setGravity(Gravity.BOTTOM)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setWindowAnimations(R.style.DialogAnimation)
+            val params = attributes
+            params.y = 15.dp
+            attributes = params
         }
     }
 

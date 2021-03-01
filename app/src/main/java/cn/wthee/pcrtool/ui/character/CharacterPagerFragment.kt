@@ -123,10 +123,18 @@ class CharacterPagerFragment : Fragment() {
             }
             1 -> {
                 binding.fabCharacter.apply {
-                    text = getString(R.string.rank_compare)
+                    text = getString(R.string.rank_equip_statistics)
                     icon = ResourcesUtil.getDrawable(R.drawable.ic_compare)
                     setOnClickListener {
-                        findNavController().navigate(R.id.action_characterPagerFragment_to_characterRankCompareFragment)
+                        val args = Bundle().apply {
+                            putInt(UID, uid)
+                        }
+                        findNavController().navigate(
+                            R.id.action_characterPagerFragment_to_characterRankRangeEquipFragment,
+                            args,
+                            null,
+                            null
+                        )
                     }
                 }
                 binding.fabShare.apply {

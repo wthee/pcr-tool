@@ -60,11 +60,10 @@ class PvpIconFragment(private val customize: Int = -1) : Fragment() {
             val character3 = data.filter {
                 it.position in 600..9999
             }
-            if (allCharacters.size == 0) {
-                allCharacters.add(PvpPositionData(1, character1))
-                allCharacters.add(PvpPositionData(2, character2))
-                allCharacters.add(PvpPositionData(3, character3))
-            }
+            allCharacters.clear()
+            allCharacters.add(PvpPositionData(1, character1))
+            allCharacters.add(PvpPositionData(2, character2))
+            allCharacters.add(PvpPositionData(3, character3))
             adapter.submitList(allCharacters)
         }
         return binding.root

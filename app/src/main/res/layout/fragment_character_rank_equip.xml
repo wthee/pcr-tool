@@ -1,22 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/card_height"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/tool_head"
-        layout="@layout/view_toolbar" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/normal_icon"
+        android:layout_height="@dimen/normal_icon"
+        android:layout_margin="@dimen/xs_dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/unknown_gray" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        style="@style/TitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/m_dp"
+        android:text="@string/rank_equip_statistics"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/icon" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_equip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/s_dp"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        android:visibility="invisible"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/fab_top"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:spanCount="4"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_common"
+        tools:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/rank_btns"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/rank_compare">
+        android:visibility="invisible"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="@id/fab_top"
+        app:layout_constraintEnd_toStartOf="@id/fab_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fab_top"
+        tools:visibility="visible">
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/TitleStyle"
@@ -54,17 +95,20 @@
         android:id="@+id/loading"
         android:layout_width="@dimen/progress_bar_size"
         android:layout_height="@dimen/progress_bar_size"
-        android:layout_gravity="center" />
+        android:layout_margin="@dimen/s_dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_equip"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_top"
+        style="@style/FabStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="4"
-        tools:itemCount="5"
-        tools:listitem="@layout/item_common" />
-
-</LinearLayout>
+        android:layout_marginEnd="@dimen/m_dp"
+        android:layout_marginBottom="@dimen/m_dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

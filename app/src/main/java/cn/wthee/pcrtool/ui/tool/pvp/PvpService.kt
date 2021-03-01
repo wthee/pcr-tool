@@ -118,13 +118,14 @@ class PvpService : Service() {
             selectedAdapter.notifyDataSetChanged()
             fabSearch = binding.search
 
-            binding.apply {
+            binding.resultContent.apply {
                 //查询结果列表
                 adapter = PvpResultAdapter(true)
-                resultContent.pvpResultList.adapter = adapter
-                resultContent.root.visibility = View.GONE
-                resultContent.teamDef.visibility = View.GONE
-                resultContent.hr.visibility = View.GONE
+                pvpResultList.adapter = adapter
+                root.visibility = View.GONE
+                teamDef.visibility = View.GONE
+                hr.visibility = View.GONE
+                pvpResultList.setItemViewCacheSize(10)
             }
 
             //初始化列表

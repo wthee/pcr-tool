@@ -54,7 +54,6 @@ object DialogUtil {
             listener.onConfirm(dialog)
         }
         dialog.window?.setGravity(Gravity.BOTTOM)
-        dialog.setCancelable(false)
         return dialog
     }
 }

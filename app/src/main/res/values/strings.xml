@@ -121,7 +121,7 @@
     <string name="loading_news">正在获取最新数据…</string>
     <string name="stared">已收藏</string>
     <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
-    <string name="rank_compare">Rank对比</string>
+    <string name="rank_compare">对比</string>
     <string name="current">当前</string>
     <string name="compare">对比</string>
     <string name="jjc">竞技场</string>
@@ -172,7 +172,7 @@
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="backup_error">数据备份异常~</string>
     <string name="to_update"><![CDATA[去更新 > ]]></string>
-    <string name="rank_equip_statistics">装备统计              </string>
+    <string name="rank_equip_statistics">装备统计</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
     <string name="tip_download_pic">长按图片，保存至本地~</string>

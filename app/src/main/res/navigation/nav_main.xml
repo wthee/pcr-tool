@@ -24,6 +24,13 @@
             app:exitAnim="@anim/fragment_exit_no_scale"
             app:popEnterAnim="@anim/fragment_popenter_no_scale"
             app:popExitAnim="@anim/fragment_popexit" />
+        <action
+            android:id="@+id/action_characterPagerFragment_to_characterRankRangeEquipFragment"
+            app:destination="@id/characterRankRangeEquipFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit_no_scale"
+            app:popEnterAnim="@anim/fragment_popenter_no_scale"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -220,5 +227,9 @@
         android:name="cn.wthee.pcrtool.ui.character.attr.CharacterRankCompareFragment"
         android:label="fragment_character_rank_compare"
         tools:layout="@layout/fragment_character_rank_compare" />
+    <fragment
+        android:id="@+id/characterRankRangeEquipFragment"
+        android:name="cn.wthee.pcrtool.ui.character.attr.CharacterRankRangeEquipFragment"
+        android:label="CharacterRankRangeEquipFragment" />
 
 </navigation>

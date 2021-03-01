@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.startup.AppInitializer
@@ -22,8 +21,6 @@ import androidx.work.WorkManager
 import cn.wthee.circleprogressbar.CircleProgressView
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
-import cn.wthee.pcrtool.database.AppDatabase
-import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
@@ -54,7 +51,6 @@ class MainActivity : AppCompatActivity() {
 
         @JvmField
         var currentCharaPosition: Int = 0
-        var nowVersionName = "0.0.0"
 
         var pageLevel = 0
         var mFloatingWindowHeight = 0
@@ -81,23 +77,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        //获取 Uri
+        fixUriBug()
+        //全屏显示
+        setFullScreen()
+        setContentView(binding.root)
         //初始化
         init()
         //友盟初始化
         AppInitializer.getInstance(applicationContext)
             .initializeComponent(UMengInitializer::class.java)
         UMConfigure.setProcessEvent(true)
-        //获取 Uri
-        fixUriBug()
-        //初始化 handler
-        setHandler()
-        //全屏显示
-        setFullScreen()
-        setContentView(binding.root)
         //取消其它任务
         WorkManager.getInstance(this).cancelAllWork()
         //监听
         setListener()
+        //初始化 handler
+        setHandler()
         GlobalScope.launch {
             //应用版本校验
             AppUpdateUtil.init()
@@ -147,25 +143,23 @@ class MainActivity : AppCompatActivity() {
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
+            overridePendingTransition(R.anim.fragment_popenter, R.anim.fragment_exit)
+            viewModelStore.clear()
+            val fm = supportFragmentManager
+            for (i in 0..fm.backStackEntryCount) {
+                fm.popBackStack()
+            }
+            recreate()
             when (it.what) {
-                //获取版本失败
-                0 -> {
-                    lifecycleScope.launch {
-                        layoutDownload.visibility = View.GONE
-                        ToastUtil.short("获取数据版本信息失败~")
-                    }
+                //正常更新
+                -1, 0 -> {
+                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
                 }
                 //数据切换
                 1 -> {
-                    AppDatabase.close()
-                    AppDatabaseJP.close()
-                    viewModelStore.clear()
-                    recreate()
-                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                    //fixme 添加过渡，避免闪屏
+                    ToastUtil.short(Constants.NOTICE_TOAST_CHANGE_SUCCESS)
                 }
             }
-
             return@Callback true
         })
     }
@@ -229,11 +223,6 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_guild,
         )
         fabMain = binding.fab
-        //获取版本名
-        nowVersionName = packageManager.getPackageInfo(
-            packageName,
-            0
-        ).versionName
         //悬浮穿高度
         mFloatingWindowHeight = ScreenUtil.getWidth() - 48.dp
     }

@@ -97,9 +97,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/rank_btn"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="0dp"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/pic5"
         app:layout_constraintEnd_toStartOf="@+id/pic2"
@@ -110,14 +111,12 @@
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/equip_statistics"
+        android:id="@+id/rank_compare"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/tab_height_1"
-        android:layout_margin="0dp"
-        android:padding="0dp"
-        android:text="@string/rank_equip_statistics"
-        android:textColor="@color/colorPrimary"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:text="@string/rank_compare"
         android:textSize="@dimen/table_title_text_size"
         app:layout_constraintEnd_toEndOf="@id/rank_btn"
         app:layout_constraintStart_toStartOf="@id/rank_btn"

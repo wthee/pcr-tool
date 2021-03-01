@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankEquipBinding
-import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
+import coil.load
 
 /**
  * 角色提升 Rank 所需装备页面
@@ -19,16 +21,7 @@ import cn.wthee.pcrtool.utils.*
  *
  * ViewModels [EquipmentViewModel]
  */
-class CharacterRankRangeEquipFragment : CommonBottomSheetDialogFragment() {
-
-    companion object {
-        fun getInstance(uid: Int) =
-            CharacterRankRangeEquipFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(Constants.UID, uid)
-                }
-            }
-    }
+class CharacterRankRangeEquipFragment : Fragment() {
 
     private val REQUEST_CODE_0 = 20
     private val REQUEST_CODE_1 = 21
@@ -39,14 +32,12 @@ class CharacterRankRangeEquipFragment : CommonBottomSheetDialogFragment() {
     private var uid = -1
     private var startRank = 1
     private var endRank = CharacterAttrFragment.maxRank
-    private lateinit var toolbarHelper: ToolbarHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.apply {
             uid = getInt(Constants.UID)
         }
-
     }
 
     override fun onCreateView(
@@ -54,7 +45,7 @@ class CharacterRankRangeEquipFragment : CommonBottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        FabHelper.addBackFab(2)
         binding = FragmentCharacterRankEquipBinding.inflate(inflater, container, false)
         init()
         setListener()
@@ -82,10 +73,15 @@ class CharacterRankRangeEquipFragment : CommonBottomSheetDialogFragment() {
     private fun init() {
         val adapter = EquipmentMaterialAdapter(viewModel = sharedEquipViewModel)
         binding.listEquip.adapter = adapter
-        ToolbarHelper(binding.toolHead).setCenterTitle("所需装备")
+        binding.icon.load(CharacterAttrFragment.iconUrl) {
+            error(R.drawable.unknown_gray)
+            placeholder(R.drawable.unknown_gray)
+        }
         sharedEquipViewModel.rankEquipMaterials.observe(viewLifecycleOwner) {
             adapter.submitList(it) {
                 binding.loading.visibility = View.GONE
+                binding.listEquip.visibility = View.VISIBLE
+                binding.rankBtns.visibility = View.VISIBLE
             }
         }
     }

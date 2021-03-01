@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterAttrAdapter
 import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
@@ -148,9 +149,8 @@ class CharacterAttrFragment : Fragment() {
                 return@setOnLongClickListener true
             }
             //查看装备统计
-            rankEquip.equipStatistics.setOnClickListener {
-                CharacterRankRangeEquipFragment.getInstance(uid)
-                    .show(parentFragmentManager, "equip_statistics")
+            rankEquip.rankCompare.setOnClickListener {
+                findNavController().navigate(R.id.action_characterPagerFragment_to_characterRankCompareFragment)
             }
             //等级滑动条
             levelSeekBar.addOnSliderTouchListener(object :

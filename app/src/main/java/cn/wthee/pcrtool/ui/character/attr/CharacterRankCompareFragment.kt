@@ -66,8 +66,6 @@ class CharacterRankCompareFragment : Fragment() {
                 it
             )
             adapter.submitList(getRankCompareList(attr0, attr1)) {
-                binding.rankCompare.visibility = View.VISIBLE
-                binding.rankCompareTitle.visibility = View.VISIBLE
                 binding.loading.visibility = View.GONE
             }
         }
@@ -129,6 +127,8 @@ class CharacterRankCompareFragment : Fragment() {
             value0.setTextColor(getRankColor(selRank0))
             value1.text = getRankText(selRank1)
             value1.setTextColor(getRankColor(selRank1))
+            title0.setTextColor(getRankColor(selRank0))
+            title1.setTextColor(getRankColor(selRank1))
         }
     }
 

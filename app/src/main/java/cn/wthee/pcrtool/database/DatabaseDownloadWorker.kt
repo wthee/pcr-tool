@@ -62,14 +62,16 @@ class DatabaseDownloadWorker(
             MainActivity.layoutDownload.visibility = View.VISIBLE
             MainActivity.textDownload.text = Constants.NOTICE_TITLE
         }
-        return@coroutineScope download(
-            version, type, fileName
-                ?: Constants.DATABASE_DOWNLOAD_FILE_NAME, from
-        )
+        val result = download(version, type, fileName ?: "")
+        if (result == Result.success()) {
+            //通知更新数据
+            handler.sendEmptyMessage(from)
+        }
+        return@coroutineScope result
     }
 
 
-    private fun download(version: String, type: Int, fileName: String, from: Int): Result {
+    private fun download(version: String, type: Int, fileName: String): Result {
         var response: Response<ResponseBody>? = null
         try {
             //创建Retrofit服务
@@ -131,16 +133,6 @@ class DatabaseDownloadWorker(
             UnzippedUtil.deCompress(db, true)
             //更新数据库版本号
             DatabaseUpdater.updateLocalDataBaseVersion(version)
-            /**
-             * fixme 首次安装切换数据时，闪退，
-             * Failed to open database '/data/user/0/cn.wthee.pcrtoolbeta/databases/redive_cn.db'.
-             */
-            //通知更新数据
-            MainScope().launch {
-                MainActivity.textDownload.text = Constants.NOTICE_TOAST_SUCCESS
-                delay(500L)
-                handler.sendEmptyMessage(1)
-            }
             return Result.success()
         } catch (e: Exception) {
             MainScope().launch {
