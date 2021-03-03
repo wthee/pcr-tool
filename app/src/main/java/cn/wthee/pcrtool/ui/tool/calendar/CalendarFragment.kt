@@ -16,6 +16,8 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import java.util.*
 
 
@@ -69,27 +71,33 @@ class CalendarFragment : Fragment() {
             minCal = Calendar.getInstance()
             minCal.set(2020, 6 - 1, 6)
             setMinimumDate(minCal)
-            setOnDayClickListener { eventDay ->
-                cal = eventDay.calendar
-                showDayEvents(cal)
-            }
+            setOnDayClickListener(object : OnDayClickListener {
+                override fun onDayClick(eventDay: EventDay) {
+                    cal = eventDay.calendar
+                    showDayEvents(cal)
+                }
+            })
             //月份切换监听
-            setOnForwardPageChangeListener {
-                mMonth++
-                if (mMonth > 12) {
-                    mMonth = 1
-                    mYear++
+            setOnForwardPageChangeListener(object : OnCalendarPageChangeListener {
+                override fun onChange() {
+                    mMonth++
+                    if (mMonth > 12) {
+                        mMonth = 1
+                        mYear++
+                    }
+                    addIcon(mYear, mMonth)
                 }
-                addIcon(mYear, mMonth)
-            }
-            setOnPreviousPageChangeListener {
-                mMonth--
-                if (mMonth < 1) {
-                    mMonth = 12
-                    mYear--
+            })
+            setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
+                override fun onChange() {
+                    mMonth--
+                    if (mMonth < 1) {
+                        mMonth = 12
+                        mYear--
+                    }
+                    addIcon(mYear, mMonth)
                 }
-                addIcon(mYear, mMonth)
-            }
+            })
         }
 
         //回到今天

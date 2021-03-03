@@ -1,109 +1,95 @@
-package com.applandeo.materialcalendarview.utils;
+package com.applandeo.materialcalendarview.utils
 
-import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.applandeo.materialcalendarview.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.graphics.drawable.Drawable
+import android.view.View
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.applandeo.materialcalendarview.R
+import java.util.*
 
 /**
  * Created by Mateusz Kornakiewicz on 04.01.2018.
+ *
+ * Modified by wthee
  */
-
-public final class AppearanceUtils {
-
-    public static void setAbbreviationsLabels(View view, int color, int firstDayOfWeek) {
-        List<TextView> labels = new ArrayList<>();
-        labels.add((TextView) view.findViewById(R.id.mondayLabel));
-        labels.add((TextView) view.findViewById(R.id.tuesdayLabel));
-        labels.add((TextView) view.findViewById(R.id.wednesdayLabel));
-        labels.add((TextView) view.findViewById(R.id.thursdayLabel));
-        labels.add((TextView) view.findViewById(R.id.fridayLabel));
-        labels.add((TextView) view.findViewById(R.id.saturdayLabel));
-        labels.add((TextView) view.findViewById(R.id.sundayLabel));
-
-        String[] abbreviations = view.getContext().getResources().getStringArray(R.array.material_calendar_day_abbreviations_array);
-        for (int i = 0; i < 7; i++) {
-            TextView label = labels.get(i);
-            label.setText(abbreviations[(i + firstDayOfWeek - 1) % 7]);
-
+object AppearanceUtils {
+    fun setAbbreviationsLabels(view: View, color: Int, firstDayOfWeek: Int) {
+        val labels: MutableList<TextView> = ArrayList()
+        labels.add(view.findViewById<View>(R.id.mondayLabel) as TextView)
+        labels.add(view.findViewById<View>(R.id.tuesdayLabel) as TextView)
+        labels.add(view.findViewById<View>(R.id.wednesdayLabel) as TextView)
+        labels.add(view.findViewById<View>(R.id.thursdayLabel) as TextView)
+        labels.add(view.findViewById<View>(R.id.fridayLabel) as TextView)
+        labels.add(view.findViewById<View>(R.id.saturdayLabel) as TextView)
+        labels.add(view.findViewById<View>(R.id.sundayLabel) as TextView)
+        val abbreviations =
+            view.context.resources.getStringArray(R.array.material_calendar_day_abbreviations_array)
+        for (i in 0..6) {
+            val label = labels[i]
+            label.text = abbreviations[(i + firstDayOfWeek - 1) % 7]
             if (color != 0) {
-                label.setTextColor(color);
+                label.setTextColor(color)
             }
         }
     }
 
-    public static void setHeaderColor(View view, int color) {
+    fun setHeaderColor(view: View, color: Int) {
         if (color == 0) {
-            return;
+            return
         }
-
-        ConstraintLayout calendarHeader = (ConstraintLayout) view.findViewById(R.id.calendarHeader);
-        calendarHeader.setBackgroundColor(color);
+        val calendarHeader = view.findViewById<View>(R.id.calendarHeader) as ConstraintLayout
+        calendarHeader.setBackgroundColor(color)
     }
 
-    public static void setHeaderLabelColor(View view, int color) {
+    fun setHeaderLabelColor(view: View, color: Int) {
         if (color == 0) {
-            return;
+            return
         }
-
-        ((TextView) view.findViewById(R.id.currentDateLabel)).setTextColor(color);
+        (view.findViewById<View>(R.id.currentDateLabel) as TextView).setTextColor(color)
     }
 
-    public static void setAbbreviationsBarColor(View view, int color) {
+    fun setAbbreviationsBarColor(view: View, color: Int) {
         if (color == 0) {
-            return;
+            return
         }
-
-        view.findViewById(R.id.abbreviationsBar).setBackgroundColor(color);
+        view.findViewById<View>(R.id.abbreviationsBar).setBackgroundColor(color)
     }
 
-    public static void setPagesColor(View view, int color) {
+    fun setPagesColor(view: View, color: Int) {
         if (color == 0) {
-            return;
+            return
         }
-
-        view.findViewById(R.id.calendarViewPager).setBackgroundColor(color);
+        view.findViewById<View>(R.id.calendarViewPager).setBackgroundColor(color)
     }
 
-    private AppearanceUtils() {
-    }
-
-    public static void setPreviousButtonImage(View view, Drawable drawable) {
+    fun setPreviousButtonImage(view: View, drawable: Drawable?) {
         if (drawable == null) {
-            return;
+            return
         }
-
-        ((ImageButton) view.findViewById(R.id.previousButton)).setImageDrawable(drawable);
+        (view.findViewById<View>(R.id.previousButton) as ImageButton).setImageDrawable(drawable)
     }
 
-    public static void setForwardButtonImage(View view, Drawable drawable) {
+    fun setForwardButtonImage(view: View, drawable: Drawable?) {
         if (drawable == null) {
-            return;
+            return
         }
-
-        ((ImageButton) view.findViewById(R.id.forwardButton)).setImageDrawable(drawable);
+        (view.findViewById<View>(R.id.forwardButton) as ImageButton).setImageDrawable(drawable)
     }
 
-    public static void setHeaderVisibility(View view, int visibility) {
-        ConstraintLayout calendarHeader = view.findViewById(R.id.calendarHeader);
-        calendarHeader.setVisibility(visibility);
+    fun setHeaderVisibility(view: View, visibility: Int) {
+        val calendarHeader: ConstraintLayout = view.findViewById(R.id.calendarHeader)
+        calendarHeader.visibility = visibility
     }
 
-    public static void setNavigationVisibility(View view, int visibility) {
-        view.findViewById(R.id.previousButton).setVisibility(visibility);
-        view.findViewById(R.id.forwardButton).setVisibility(visibility);
+    fun setNavigationVisibility(view: View, visibility: Int) {
+        view.findViewById<View>(R.id.previousButton).visibility = visibility
+        view.findViewById<View>(R.id.forwardButton).visibility = visibility
     }
 
-    public static void setAbbreviationsBarVisibility(View view, int visibility) {
-        LinearLayout calendarAbbreviationsBar = view.findViewById(R.id.abbreviationsBar);
-        calendarAbbreviationsBar.setVisibility(visibility);
+    fun setAbbreviationsBarVisibility(view: View, visibility: Int) {
+        val calendarAbbreviationsBar = view.findViewById<LinearLayout>(R.id.abbreviationsBar)
+        calendarAbbreviationsBar.visibility = visibility
     }
 }

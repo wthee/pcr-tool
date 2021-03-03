@@ -1,9 +1,10 @@
-package com.applandeo.materialcalendarview.listeners;
+package com.applandeo.materialcalendarview.listeners
 
 /**
  * Created by Mateusz Kornakiewicz on 12.10.2017.
+ *
+ * Modified by wthee
  */
-
-public interface OnCalendarPageChangeListener {
-    void onChange();
+interface OnCalendarPageChangeListener {
+    fun onChange()
 }

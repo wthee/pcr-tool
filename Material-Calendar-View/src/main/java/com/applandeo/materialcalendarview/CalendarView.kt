@@ -1,34 +1,30 @@
-package com.applandeo.materialcalendarview;
+package com.applandeo.materialcalendarview
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import androidx.annotation.ColorRes;
-import androidx.viewpager.widget.ViewPager;
-
-import com.annimon.stream.Stream;
-import com.applandeo.materialcalendarview.adapters.CalendarPageAdapter;
-import com.applandeo.materialcalendarview.exceptions.ErrorsMessages;
-import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
-import com.applandeo.materialcalendarview.extensions.CalendarViewPager;
-import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
-import com.applandeo.materialcalendarview.utils.AppearanceUtils;
-import com.applandeo.materialcalendarview.utils.CalendarProperties;
-import com.applandeo.materialcalendarview.utils.DateUtils;
-import com.applandeo.materialcalendarview.utils.SelectedDay;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static com.applandeo.materialcalendarview.utils.CalendarProperties.FIRST_VISIBLE_PAGE;
+import android.content.Context
+import android.content.res.TypedArray
+import android.graphics.drawable.Drawable
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnClickListener
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.annotation.ColorRes
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.annimon.stream.Stream
+import com.applandeo.materialcalendarview.adapters.CalendarPageAdapter
+import com.applandeo.materialcalendarview.exceptions.ErrorsMessages
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException
+import com.applandeo.materialcalendarview.extensions.CalendarViewPager
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
+import com.applandeo.materialcalendarview.utils.AppearanceUtils
+import com.applandeo.materialcalendarview.utils.CalendarProperties
+import com.applandeo.materialcalendarview.utils.DateUtils
+import com.applandeo.materialcalendarview.utils.SelectedDay
+import java.util.*
 
 /**
  * This class represents a view, displays to user as calendar. It allows to work in date picker
@@ -37,9 +33,12 @@ import static com.applandeo.materialcalendarview.utils.CalendarProperties.FIRST_
  * OnDayClickListener which returns an EventDay object.
  *
  * @see EventDay
+ *
  * @see OnDayClickListener
- * <p>
- * <p>
+ *
+ *
+ *
+ *
  * XML attributes:
  * - Set calendar type: type="classic or one_day_picker or many_days_picker or range_picker"
  * - Set calendar header color: headerColor="@color/[color]"
@@ -48,61 +47,58 @@ import static com.applandeo.materialcalendarview.utils.CalendarProperties.FIRST_
  * - Ser forward button resource: forwardButtonSrc="@drawable/[drawable]"
  * - Set today label color: todayLabelColor="@color/[color]"
  * - Set selection color: selectionColor="@color/[color]"
- * <p>
+ *
+ *
  * Created by Mateusz Kornakiewicz on 23.05.2017.
+ *
+ * Modified by wthee
  */
+class CalendarView : LinearLayout {
+    private lateinit var mContext: Context
+    private lateinit var mCalendarPageAdapter: CalendarPageAdapter
+    private var mForwardButton: ImageButton? = null
+    private var mPreviousButton: ImageButton? = null
+    private var mCurrentMonthLabel: TextView? = null
+    private var mCurrentPage = 0
+    private var mFirstDayOfWeek = 1
+    private var mViewPager: CalendarViewPager? = null
+    private lateinit var mCalendarProperties: CalendarProperties
 
-public class CalendarView extends LinearLayout {
-
-    public static final int ONE_DAY_PICKER = 1;
-
-    private Context mContext;
-    private CalendarPageAdapter mCalendarPageAdapter;
-
-    private ImageButton mForwardButton;
-    private ImageButton mPreviousButton;
-    private TextView mCurrentMonthLabel;
-    private int mCurrentPage;
-    private int mFirstDayOfWeek = 1;
-    private CalendarViewPager mViewPager;
-
-    private CalendarProperties mCalendarProperties;
-
-    public CalendarView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initControl(context, attrs);
-        initCalendar();
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        initControl(context, attrs)
+        initCalendar()
     }
 
-    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initControl(context, attrs);
-        initCalendar();
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        initControl(context, attrs)
+        initCalendar()
     }
 
     //protected constructor to create CalendarView for the dialog date picker
-    protected CalendarView(Context context, CalendarProperties calendarProperties) {
-        super(context);
-        mContext = context;
-        mCalendarProperties = calendarProperties;
-
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.calendar_view, this);
-
-        initUiElements();
-        initAttributes();
-        initCalendar();
+    protected constructor(context: Context, calendarProperties: CalendarProperties) : super(
+        context
+    ) {
+        mContext = context
+        mCalendarProperties = calendarProperties
+        val inflater =
+            mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        inflater.inflate(R.layout.calendar_view, this)
+        initUiElements()
+        initAttributes()
+        initCalendar()
     }
 
-    private void initControl(Context context, AttributeSet attrs) {
-        mContext = context;
-        mCalendarProperties = new CalendarProperties(context);
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.calendar_view, this);
-
-        initUiElements();
-        setAttributes(attrs);
+    private fun initControl(context: Context, attrs: AttributeSet?) {
+        mContext = context
+        mCalendarProperties = CalendarProperties(context)
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        inflater.inflate(R.layout.calendar_view, this)
+        initUiElements()
+        setAttributes(attrs)
     }
 
     /**
@@ -110,194 +106,179 @@ public class CalendarView extends LinearLayout {
      *
      * @param attrs A set of xml attributes
      */
-    private void setAttributes(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CalendarView);
-
+    private fun setAttributes(attrs: AttributeSet?) {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CalendarView)
         try {
-            initCalendarProperties(typedArray);
-            initAttributes();
+            initCalendarProperties(typedArray)
+            initAttributes()
         } finally {
-            typedArray.recycle();
+            typedArray.recycle()
         }
     }
 
-    private void initCalendarProperties(TypedArray typedArray) {
-        int headerColor = typedArray.getColor(R.styleable.CalendarView_headerColor, 0);
-        mCalendarProperties.setHeaderColor(headerColor);
-
-        int headerLabelColor = typedArray.getColor(R.styleable.CalendarView_headerLabelColor, 0);
-        mCalendarProperties.setHeaderLabelColor(headerLabelColor);
-
-        int abbreviationsBarColor = typedArray.getColor(R.styleable.CalendarView_abbreviationsBarColor, 0);
-        mCalendarProperties.setAbbreviationsBarColor(abbreviationsBarColor);
-
-        int abbreviationsLabelsColor = typedArray.getColor(R.styleable.CalendarView_abbreviationsLabelsColor, 0);
-        mCalendarProperties.setAbbreviationsLabelsColor(abbreviationsLabelsColor);
-
-        int pagesColor = typedArray.getColor(R.styleable.CalendarView_pagesColor, 0);
-        mCalendarProperties.setPagesColor(pagesColor);
-
-        int daysLabelsColor = typedArray.getColor(R.styleable.CalendarView_daysLabelsColor, 0);
-        mCalendarProperties.setDaysLabelsColor(daysLabelsColor);
-
-        int anotherMonthsDaysLabelsColor = typedArray.getColor(R.styleable.CalendarView_anotherMonthsDaysLabelsColor, 0);
-        mCalendarProperties.setAnotherMonthsDaysLabelsColor(anotherMonthsDaysLabelsColor);
-
-        int todayLabelColor = typedArray.getColor(R.styleable.CalendarView_todayLabelColor, 0);
-        mCalendarProperties.setTodayLabelColor(todayLabelColor);
-
-        int selectionColor = typedArray.getColor(R.styleable.CalendarView_selectionColor, 0);
-        mCalendarProperties.setSelectionColor(selectionColor);
-
-        int selectionLabelColor = typedArray.getColor(R.styleable.CalendarView_selectionLabelColor, 0);
-        mCalendarProperties.setSelectionLabelColor(selectionLabelColor);
-
-        int disabledDaysLabelsColor = typedArray.getColor(R.styleable.CalendarView_disabledDaysLabelsColor, 0);
-        mCalendarProperties.setDisabledDaysLabelsColor(disabledDaysLabelsColor);
-
-        int highlightedDaysLabelsColor = typedArray.getColor(R.styleable.CalendarView_highlightedDaysLabelsColor, 0);
-        mCalendarProperties.setHighlightedDaysLabelsColor(highlightedDaysLabelsColor);
-
-        int calendarType = typedArray.getInt(R.styleable.CalendarView_type, ONE_DAY_PICKER);
-        mCalendarProperties.setCalendarType(calendarType);
-
-        int maximumDaysRange = typedArray.getInt(R.styleable.CalendarView_maximumDaysRange, 0);
-        mCalendarProperties.setMaximumDaysRange(maximumDaysRange);
+    private fun initCalendarProperties(typedArray: TypedArray) {
+        val headerColor = typedArray.getColor(R.styleable.CalendarView_headerColor, 0)
+        mCalendarProperties.headerColor = headerColor
+        val headerLabelColor = typedArray.getColor(R.styleable.CalendarView_headerLabelColor, 0)
+        mCalendarProperties.headerLabelColor = headerLabelColor
+        val abbreviationsBarColor =
+            typedArray.getColor(R.styleable.CalendarView_abbreviationsBarColor, 0)
+        mCalendarProperties.abbreviationsBarColor = abbreviationsBarColor
+        val abbreviationsLabelsColor =
+            typedArray.getColor(R.styleable.CalendarView_abbreviationsLabelsColor, 0)
+        mCalendarProperties.abbreviationsLabelsColor = abbreviationsLabelsColor
+        val pagesColor = typedArray.getColor(R.styleable.CalendarView_pagesColor, 0)
+        mCalendarProperties.pagesColor = pagesColor
+        val daysLabelsColor = typedArray.getColor(R.styleable.CalendarView_daysLabelsColor, 0)
+        mCalendarProperties.daysLabelsColor = daysLabelsColor
+        val anotherMonthsDaysLabelsColor =
+            typedArray.getColor(R.styleable.CalendarView_anotherMonthsDaysLabelsColor, 0)
+        mCalendarProperties.anotherMonthsDaysLabelsColor = anotherMonthsDaysLabelsColor
+        val todayLabelColor = typedArray.getColor(R.styleable.CalendarView_todayLabelColor, 0)
+        mCalendarProperties.todayLabelColor = todayLabelColor
+        val selectionColor = typedArray.getColor(R.styleable.CalendarView_selectionColor, 0)
+        mCalendarProperties.selectionColor = selectionColor
+        val selectionLabelColor =
+            typedArray.getColor(R.styleable.CalendarView_selectionLabelColor, 0)
+        mCalendarProperties.selectionLabelColor = selectionLabelColor
+        val disabledDaysLabelsColor =
+            typedArray.getColor(R.styleable.CalendarView_disabledDaysLabelsColor, 0)
+        mCalendarProperties.disabledDaysLabelsColor = disabledDaysLabelsColor
+        val highlightedDaysLabelsColor =
+            typedArray.getColor(R.styleable.CalendarView_highlightedDaysLabelsColor, 0)
+        mCalendarProperties.highlightedDaysLabelsColor = highlightedDaysLabelsColor
+        val calendarType = typedArray.getInt(R.styleable.CalendarView_type, ONE_DAY_PICKER)
+        mCalendarProperties.calendarType = calendarType
+        val maximumDaysRange = typedArray.getInt(R.styleable.CalendarView_maximumDaysRange, 0)
+        mCalendarProperties.maximumDaysRange = maximumDaysRange
 
         // Set picker mode !DEPRECATED!
         if (typedArray.getBoolean(R.styleable.CalendarView_datePicker, false)) {
-            mCalendarProperties.setCalendarType(ONE_DAY_PICKER);
+            mCalendarProperties.calendarType = ONE_DAY_PICKER
         }
-
-        boolean eventsEnabled = typedArray.getBoolean(R.styleable.CalendarView_eventsEnabled, true);
-        mCalendarProperties.setEventsEnabled(eventsEnabled);
-
-        boolean swipeEnabled = typedArray.getBoolean(R.styleable.CalendarView_swipeEnabled, true);
-        mCalendarProperties.setSwipeEnabled(swipeEnabled);
-
-        Drawable previousButtonSrc = typedArray.getDrawable(R.styleable.CalendarView_previousButtonSrc);
-        mCalendarProperties.setPreviousButtonSrc(previousButtonSrc);
-
-        Drawable forwardButtonSrc = typedArray.getDrawable(R.styleable.CalendarView_forwardButtonSrc);
-        mCalendarProperties.setForwardButtonSrc(forwardButtonSrc);
-
-        int firstDayOfWeek = typedArray.getInt(R.styleable.CalendarView_firstDayOfWeek, 1);
-        setmFirstDayOfWeek(firstDayOfWeek);
+        val eventsEnabled = typedArray.getBoolean(R.styleable.CalendarView_eventsEnabled, true)
+        mCalendarProperties.eventsEnabled = eventsEnabled
+        val swipeEnabled = typedArray.getBoolean(R.styleable.CalendarView_swipeEnabled, true)
+        mCalendarProperties.swipeEnabled = swipeEnabled
+        val previousButtonSrc = typedArray.getDrawable(R.styleable.CalendarView_previousButtonSrc)
+        mCalendarProperties.previousButtonSrc = previousButtonSrc
+        val forwardButtonSrc = typedArray.getDrawable(R.styleable.CalendarView_forwardButtonSrc)
+        mCalendarProperties.forwardButtonSrc = forwardButtonSrc
+        val firstDayOfWeek = typedArray.getInt(R.styleable.CalendarView_firstDayOfWeek, 1)
+        setmFirstDayOfWeek(firstDayOfWeek)
     }
 
-    private void initAttributes() {
-        AppearanceUtils.setHeaderColor(getRootView(), mCalendarProperties.getHeaderColor());
-
-        AppearanceUtils.setHeaderVisibility(getRootView(), mCalendarProperties.getHeaderVisibility());
-
-        AppearanceUtils.setAbbreviationsBarVisibility(getRootView(), mCalendarProperties.getAbbreviationsBarVisibility());
-
-        AppearanceUtils.setNavigationVisibility(getRootView(), mCalendarProperties.getNavigationVisibility());
-
-        AppearanceUtils.setHeaderLabelColor(getRootView(), mCalendarProperties.getHeaderLabelColor());
-
-        AppearanceUtils.setAbbreviationsBarColor(getRootView(), mCalendarProperties.getAbbreviationsBarColor());
-
-        AppearanceUtils.setAbbreviationsLabels(getRootView(), mCalendarProperties.getAbbreviationsLabelsColor(),
-                mFirstDayOfWeek);
-
-        AppearanceUtils.setPagesColor(getRootView(), mCalendarProperties.getPagesColor());
-
-        AppearanceUtils.setPreviousButtonImage(getRootView(), mCalendarProperties.getPreviousButtonSrc());
-
-        AppearanceUtils.setForwardButtonImage(getRootView(), mCalendarProperties.getForwardButtonSrc());
-
-        mViewPager.setSwipeEnabled(mCalendarProperties.getSwipeEnabled());
+    private fun initAttributes() {
+        AppearanceUtils.setHeaderColor(rootView, mCalendarProperties.headerColor)
+        AppearanceUtils.setHeaderVisibility(rootView, mCalendarProperties.headerVisibility)
+        AppearanceUtils.setAbbreviationsBarVisibility(
+            rootView,
+            mCalendarProperties.abbreviationsBarVisibility
+        )
+        AppearanceUtils.setNavigationVisibility(
+            rootView,
+            mCalendarProperties.navigationVisibility
+        )
+        AppearanceUtils.setHeaderLabelColor(rootView, mCalendarProperties.headerLabelColor)
+        AppearanceUtils.setAbbreviationsBarColor(
+            rootView,
+            mCalendarProperties.abbreviationsBarColor
+        )
+        AppearanceUtils.setAbbreviationsLabels(
+            rootView, mCalendarProperties.abbreviationsLabelsColor,
+            mFirstDayOfWeek
+        )
+        AppearanceUtils.setPagesColor(rootView, mCalendarProperties.pagesColor)
+        AppearanceUtils.setPreviousButtonImage(rootView, mCalendarProperties.previousButtonSrc)
+        AppearanceUtils.setForwardButtonImage(rootView, mCalendarProperties.forwardButtonSrc)
+        mViewPager!!.setSwipeEnabled(mCalendarProperties.swipeEnabled)
 
         // Sets layout for date picker or normal calendar
-        setCalendarRowLayout();
+        setCalendarRowLayout()
     }
 
-    public void setHeaderColor(@ColorRes int color) {
-        mCalendarProperties.setHeaderColor(color);
-        AppearanceUtils.setHeaderColor(getRootView(), mCalendarProperties.getHeaderColor());
+    fun setHeaderColor(@ColorRes color: Int) {
+        mCalendarProperties.headerColor = color
+        AppearanceUtils.setHeaderColor(rootView, mCalendarProperties.headerColor)
     }
 
-    public void setHeaderVisibility(int visibility) {
-        mCalendarProperties.setHeaderVisibility(visibility);
-        AppearanceUtils.setHeaderVisibility(getRootView(), mCalendarProperties.getHeaderVisibility());
+    fun setHeaderVisibility(visibility: Int) {
+        mCalendarProperties.headerVisibility = visibility
+        AppearanceUtils.setHeaderVisibility(rootView, mCalendarProperties.headerVisibility)
     }
 
-    public void setAbbreviationsBarVisibility(int visibility) {
-        mCalendarProperties.setAbbreviationsBarVisibility(visibility);
-        AppearanceUtils.setAbbreviationsBarVisibility(getRootView(), mCalendarProperties.getAbbreviationsBarVisibility());
+    fun setAbbreviationsBarVisibility(visibility: Int) {
+        mCalendarProperties.abbreviationsBarVisibility = visibility
+        AppearanceUtils.setAbbreviationsBarVisibility(
+            rootView,
+            mCalendarProperties.abbreviationsBarVisibility
+        )
     }
 
-    public void setHeaderLabelColor(@ColorRes int color) {
-        mCalendarProperties.setHeaderLabelColor(color);
-        AppearanceUtils.setHeaderLabelColor(getRootView(), mCalendarProperties.getHeaderLabelColor());
+    fun setHeaderLabelColor(@ColorRes color: Int) {
+        mCalendarProperties.headerLabelColor = color
+        AppearanceUtils.setHeaderLabelColor(rootView, mCalendarProperties.headerLabelColor)
     }
 
-    public void setPreviousButtonImage(Drawable drawable) {
-        mCalendarProperties.setPreviousButtonSrc(drawable);
-        AppearanceUtils.setPreviousButtonImage(getRootView(), mCalendarProperties.getPreviousButtonSrc());
+    fun setPreviousButtonImage(drawable: Drawable?) {
+        mCalendarProperties.previousButtonSrc = drawable
+        AppearanceUtils.setPreviousButtonImage(rootView, mCalendarProperties.previousButtonSrc)
     }
 
-    public void setForwardButtonImage(Drawable drawable) {
-        mCalendarProperties.setForwardButtonSrc(drawable);
-        AppearanceUtils.setForwardButtonImage(getRootView(), mCalendarProperties.getForwardButtonSrc());
+    fun setForwardButtonImage(drawable: Drawable?) {
+        mCalendarProperties.forwardButtonSrc = drawable
+        AppearanceUtils.setForwardButtonImage(rootView, mCalendarProperties.forwardButtonSrc)
     }
 
-    private void setCalendarRowLayout() {
-        mCalendarProperties.setItemLayoutResource(R.layout.calendar_view_day);
+    private fun setCalendarRowLayout() {
+        mCalendarProperties.itemLayoutResource = R.layout.calendar_view_day
     }
 
-    private void initUiElements() {
-        mForwardButton = (ImageButton) findViewById(R.id.forwardButton);
-        mForwardButton.setOnClickListener(onNextClickListener);
-
-        mPreviousButton = (ImageButton) findViewById(R.id.previousButton);
-        mPreviousButton.setOnClickListener(onPreviousClickListener);
-
-        mCurrentMonthLabel = (TextView) findViewById(R.id.currentDateLabel);
-
-        mViewPager = (CalendarViewPager) findViewById(R.id.calendarViewPager);
+    private fun initUiElements() {
+        mForwardButton = findViewById<View>(R.id.forwardButton) as ImageButton
+        mForwardButton!!.setOnClickListener(onNextClickListener)
+        mPreviousButton = findViewById<View>(R.id.previousButton) as ImageButton
+        mPreviousButton!!.setOnClickListener(onPreviousClickListener)
+        mCurrentMonthLabel = findViewById<View>(R.id.currentDateLabel) as TextView
+        mViewPager = findViewById<View>(R.id.calendarViewPager) as CalendarViewPager
     }
 
-    private void initCalendar() {
-        mCalendarPageAdapter = new CalendarPageAdapter(mContext, mCalendarProperties);
-
-        mViewPager.setAdapter(mCalendarPageAdapter);
-        mViewPager.addOnPageChangeListener(onPageChangeListener);
-
-        setUpCalendarPosition(Calendar.getInstance());
+    private fun initCalendar() {
+        mCalendarPageAdapter = CalendarPageAdapter(mContext, mCalendarProperties)
+        mViewPager!!.adapter = mCalendarPageAdapter
+        mViewPager!!.addOnPageChangeListener(onPageChangeListener)
+        setUpCalendarPosition(Calendar.getInstance())
     }
 
-    private void setUpCalendarPosition(Calendar calendar) {
-        DateUtils.setMidnight(calendar);
-
-        if (mCalendarProperties.getCalendarType() == CalendarView.ONE_DAY_PICKER) {
-            mCalendarProperties.setSelectedDay(calendar);
+    private fun setUpCalendarPosition(calendar: Calendar) {
+        DateUtils.setMidnight(calendar)
+        if (mCalendarProperties.calendarType == ONE_DAY_PICKER) {
+            mCalendarProperties.setSelectedDay(calendar)
         }
-
-        mCalendarProperties.getFirstPageCalendarDate().setTime(calendar.getTime());
-        mCalendarProperties.getFirstPageCalendarDate().add(Calendar.MONTH, -FIRST_VISIBLE_PAGE);
-
-        mViewPager.setCurrentItem(FIRST_VISIBLE_PAGE);
+        mCalendarProperties.firstPageCalendarDate.time = calendar.time
+        mCalendarProperties.firstPageCalendarDate
+            .add(Calendar.MONTH, -CalendarProperties.FIRST_VISIBLE_PAGE)
+        mViewPager!!.currentItem = CalendarProperties.FIRST_VISIBLE_PAGE
     }
 
-    public void setOnPreviousPageChangeListener(OnCalendarPageChangeListener listener) {
-        mCalendarProperties.setOnPreviousPageChangeListener(listener);
+    fun setOnPreviousPageChangeListener(listener: OnCalendarPageChangeListener?) {
+        mCalendarProperties.onPreviousPageChangeListener = listener
     }
 
-    public void setOnForwardPageChangeListener(OnCalendarPageChangeListener listener) {
-        mCalendarProperties.setOnForwardPageChangeListener(listener);
+    fun setOnForwardPageChangeListener(listener: OnCalendarPageChangeListener?) {
+        mCalendarProperties.onForwardPageChangeListener = listener
     }
 
-    private final OnClickListener onNextClickListener =
-            v -> mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-
-    private final OnClickListener onPreviousClickListener =
-            v -> mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-
-    private final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    private val onNextClickListener =
+        OnClickListener { v: View? -> mViewPager!!.currentItem = mViewPager!!.currentItem + 1 }
+    private val onPreviousClickListener =
+        OnClickListener { v: View? -> mViewPager!!.currentItem = mViewPager!!.currentItem - 1 }
+    private val onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int
+        ) {
         }
 
         /**
@@ -306,61 +287,54 @@ public class CalendarView extends LinearLayout {
          * @param position Current ViewPager position
          * @see ViewPager.OnPageChangeListener
          */
-        @Override
-        public void onPageSelected(int position) {
-            Calendar calendar = (Calendar) mCalendarProperties.getFirstPageCalendarDate().clone();
-            calendar.add(Calendar.MONTH, position);
-
+        override fun onPageSelected(position: Int) {
+            val calendar = mCalendarProperties.firstPageCalendarDate.clone() as Calendar
+            calendar.add(Calendar.MONTH, position)
             if (!isScrollingLimited(calendar, position)) {
-                setHeaderName(calendar, position);
+                setHeaderName(calendar, position)
             }
         }
 
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
-    };
-
-    private boolean isScrollingLimited(Calendar calendar, int position) {
-        if (DateUtils.isMonthBefore(mCalendarProperties.getMinimumDate(), calendar)) {
-            mViewPager.setCurrentItem(position + 1);
-            return true;
-        }
-
-        if (DateUtils.isMonthAfter(mCalendarProperties.getMaximumDate(), calendar)) {
-            mViewPager.setCurrentItem(position - 1);
-            return true;
-        }
-
-        return false;
+        override fun onPageScrollStateChanged(state: Int) {}
     }
 
-    private void setHeaderName(Calendar calendar, int position) {
-        mCurrentMonthLabel.setText(DateUtils.getMonthAndYearDate(mContext, calendar));
-        callOnPageChangeListeners(position);
+    private fun isScrollingLimited(calendar: Calendar, position: Int): Boolean {
+        if (DateUtils.isMonthBefore(mCalendarProperties.minimumDate, calendar)) {
+            mViewPager!!.currentItem = position + 1
+            return true
+        }
+        if (DateUtils.isMonthAfter(mCalendarProperties.maximumDate, calendar)) {
+            mViewPager!!.currentItem = position - 1
+            return true
+        }
+        return false
+    }
+
+    private fun setHeaderName(calendar: Calendar, position: Int) {
+        mCurrentMonthLabel!!.text =
+            DateUtils.getMonthAndYearDate(mContext, calendar)
+        callOnPageChangeListeners(position)
     }
 
     // This method calls page change listeners after swipe calendar or click arrow buttons
-    private void callOnPageChangeListeners(int position) {
-        if (position > mCurrentPage && mCalendarProperties.getOnForwardPageChangeListener() != null) {
-            mViewPager.reMeasureCurrentPage();
-            mCalendarProperties.getOnForwardPageChangeListener().onChange();
+    private fun callOnPageChangeListeners(position: Int) {
+        if (position > mCurrentPage && mCalendarProperties.onForwardPageChangeListener != null) {
+            mViewPager!!.reMeasureCurrentPage()
+            mCalendarProperties.onForwardPageChangeListener!!.onChange()
         }
-
-        if (position < mCurrentPage && mCalendarProperties.getOnPreviousPageChangeListener() != null) {
-            mViewPager.reMeasureCurrentPage();
-            mCalendarProperties.getOnPreviousPageChangeListener().onChange();
+        if (position < mCurrentPage && mCalendarProperties.onPreviousPageChangeListener != null) {
+            mViewPager!!.reMeasureCurrentPage()
+            mCalendarProperties.onPreviousPageChangeListener!!.onChange()
         }
-
-        mCurrentPage = position;
+        mCurrentPage = position
     }
 
     /**
      * @param onDayClickListener OnDayClickListener interface responsible for handle clicks on calendar cells
      * @see OnDayClickListener
      */
-    public void setOnDayClickListener(OnDayClickListener onDayClickListener) {
-        mCalendarProperties.setOnDayClickListener(onDayClickListener);
+    fun setOnDayClickListener(onDayClickListener: OnDayClickListener?) {
+        mCalendarProperties.onDayClickListener = onDayClickListener
     }
 
     /**
@@ -368,19 +342,18 @@ public class CalendarView extends LinearLayout {
      *
      * @param date A Calendar object representing a date to which the calendar will be set
      */
-    public void setDate(Calendar date) throws OutOfDateRangeException {
-        if (mCalendarProperties.getMinimumDate() != null && date.before(mCalendarProperties.getMinimumDate())) {
-            throw new OutOfDateRangeException(ErrorsMessages.OUT_OF_RANGE_MIN);
+    @Throws(OutOfDateRangeException::class)
+    fun setDate(date: Calendar) {
+        if (mCalendarProperties.minimumDate != null && date.before(mCalendarProperties.minimumDate)) {
+            throw OutOfDateRangeException(ErrorsMessages.OUT_OF_RANGE_MIN)
         }
-
-        if (mCalendarProperties.getMaximumDate() != null && date.after(mCalendarProperties.getMaximumDate())) {
-            throw new OutOfDateRangeException(ErrorsMessages.OUT_OF_RANGE_MAX);
+        if (mCalendarProperties.maximumDate != null && date.after(mCalendarProperties.maximumDate)) {
+            throw OutOfDateRangeException(ErrorsMessages.OUT_OF_RANGE_MAX)
         }
-
-        setUpCalendarPosition(date);
-
-        mCurrentMonthLabel.setText(DateUtils.getMonthAndYearDate(mContext, date));
-        mCalendarPageAdapter.notifyDataSetChanged();
+        setUpCalendarPosition(date)
+        mCurrentMonthLabel!!.text =
+            DateUtils.getMonthAndYearDate(mContext, date)
+        mCalendarPageAdapter!!.notifyDataSetChanged()
     }
 
     /**
@@ -388,11 +361,11 @@ public class CalendarView extends LinearLayout {
      *
      * @param currentDate A date to which the calendar will be set
      */
-    public void setDate(Date currentDate) throws OutOfDateRangeException {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-
-        setDate(calendar);
+    @Throws(OutOfDateRangeException::class)
+    fun setDate(currentDate: Date?) {
+        val calendar = Calendar.getInstance()
+        calendar.time = currentDate
+        setDate(calendar)
     }
 
     /**
@@ -402,60 +375,58 @@ public class CalendarView extends LinearLayout {
      * @param eventDays List of EventDay objects
      * @see EventDay
      */
-    public void setEvents(List<EventDay> eventDays) {
-        if (mCalendarProperties.getEventsEnabled()) {
-            mCalendarProperties.setEventDays(eventDays);
-            mCalendarPageAdapter.notifyDataSetChanged();
+    fun setEvents(eventDays: List<EventDay>) {
+        if (mCalendarProperties.eventsEnabled) {
+            mCalendarProperties.setEventDays(eventDays)
+            mCalendarPageAdapter.notifyDataSetChanged()
         }
     }
 
     /**
      * @return List of Calendar object representing a selected dates
      */
-    public List<Calendar> getSelectedDates() {
-        return Stream.of(mCalendarPageAdapter.getSelectedDays())
-                .map(SelectedDay::getCalendar)
-                .sortBy(calendar -> calendar).toList();
-    }
+    val selectedDates: List<Calendar?>
+        get() = Stream.of(mCalendarPageAdapter.selectedDays)
+            .map { obj: SelectedDay -> obj.calendar }
+            .sortBy { calendar: Calendar? -> calendar }.toList()
 
-    public void setSelectedDates(List<Calendar> selectedDates) {
-        mCalendarProperties.setSelectedDays(selectedDates);
-        mCalendarPageAdapter.notifyDataSetChanged();
-    }
-
-    /**
-     * @return Calendar object representing a selected date
-     */
-    @Deprecated
-    public Calendar getSelectedDate() {
-        return getFirstSelectedDate();
+    fun setSelectedDates(selectedDates: List<Calendar>?) {
+        mCalendarProperties.setSelectedDays(selectedDates)
+        mCalendarPageAdapter.notifyDataSetChanged()
     }
 
     /**
      * @return Calendar object representing a selected date
      */
-    public Calendar getFirstSelectedDate() {
-        return Stream.of(mCalendarPageAdapter.getSelectedDays())
-                .map(SelectedDay::getCalendar).findFirst().get();
-    }
+    @get:Deprecated("")
+    val selectedDate: Calendar?
+        get() = firstSelectedDate
+
+    /**
+     * @return Calendar object representing a selected date
+     */
+    val firstSelectedDate: Calendar?
+        get() = Stream.of(mCalendarPageAdapter.selectedDays)
+            .map { obj: SelectedDay -> obj.calendar }.findFirst().get()
 
     /**
      * @return Calendar object representing a date of current calendar page
      */
-    public Calendar getCurrentPageDate() {
-        Calendar calendar = (Calendar) mCalendarProperties.getFirstPageCalendarDate().clone();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.add(Calendar.MONTH, mViewPager.getCurrentItem());
-        return calendar;
-    }
+    val currentPageDate: Calendar
+        get() {
+            val calendar = mCalendarProperties.firstPageCalendarDate.clone() as Calendar
+            calendar[Calendar.DAY_OF_MONTH] = 1
+            calendar.add(Calendar.MONTH, mViewPager!!.currentItem)
+            return calendar
+        }
 
     /**
      * This method set a minimum available date in calendar
      *
      * @param calendar Calendar object representing a minimum date
      */
-    public void setMinimumDate(Calendar calendar) {
-        mCalendarProperties.setMinimumDate(calendar);
+    fun setMinimumDate(calendar: Calendar?) {
+        mCalendarProperties.minimumDate = calendar
     }
 
     /**
@@ -463,34 +434,40 @@ public class CalendarView extends LinearLayout {
      *
      * @param calendar Calendar object representing a maximum date
      */
-    public void setMaximumDate(Calendar calendar) {
-        mCalendarProperties.setMaximumDate(calendar);
+    fun setMaximumDate(calendar: Calendar?) {
+        mCalendarProperties.maximumDate = calendar
     }
 
     /**
      * This method is used to return to current month page
      */
-    public void showCurrentMonthPage() {
-        mViewPager.setCurrentItem(mViewPager.getCurrentItem()
-                - DateUtils.getMonthsBetweenDates(DateUtils.getCalendar(), getCurrentPageDate()), true);
+    fun showCurrentMonthPage() {
+        mViewPager!!.setCurrentItem(
+            mViewPager!!.currentItem
+                    - DateUtils.getMonthsBetweenDates(DateUtils.calendar, currentPageDate),
+            true
+        )
     }
 
-    public void setDisabledDays(List<Calendar> disabledDays) {
-        mCalendarProperties.setDisabledDays(disabledDays);
+    fun setDisabledDays(disabledDays: List<Calendar>) {
+        mCalendarProperties.setDisabledDays(disabledDays)
     }
 
-    public void setHighlightedDays(List<Calendar> highlightedDays) {
-        mCalendarProperties.setHighlightedDays(highlightedDays);
+    fun setHighlightedDays(highlightedDays: List<Calendar>) {
+        mCalendarProperties.highlightedDays = highlightedDays
     }
 
-    public void setSwipeEnabled(boolean swipeEnabled) {
-        mCalendarProperties.setSwipeEnabled(swipeEnabled);
-        mViewPager.setSwipeEnabled(mCalendarProperties.getSwipeEnabled());
+    fun setSwipeEnabled(swipeEnabled: Boolean) {
+        mCalendarProperties.swipeEnabled = swipeEnabled
+        mViewPager!!.setSwipeEnabled(mCalendarProperties.swipeEnabled)
     }
 
+    fun setmFirstDayOfWeek(mFirstDayOfWeek: Int) {
+        mCalendarProperties!!.setmFirstDayOfWeek(mFirstDayOfWeek)
+        this.mFirstDayOfWeek = mFirstDayOfWeek
+    }
 
-    public void setmFirstDayOfWeek(int mFirstDayOfWeek) {
-        mCalendarProperties.setmFirstDayOfWeek(mFirstDayOfWeek);
-        this.mFirstDayOfWeek = mFirstDayOfWeek;
+    companion object {
+        const val ONE_DAY_PICKER = 1
     }
 }

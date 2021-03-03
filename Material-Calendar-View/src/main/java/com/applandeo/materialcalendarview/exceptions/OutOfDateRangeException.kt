@@ -1,11 +1,8 @@
-package com.applandeo.materialcalendarview.exceptions;
+package com.applandeo.materialcalendarview.exceptions
 
 /**
  * Created by Mateusz Kornakiewicz on 27.10.2017.
+ *
+ * Modified by wthee
  */
-
-public class OutOfDateRangeException extends Exception {
-    public OutOfDateRangeException(String message) {
-        super(message);
-    }
-}
+class OutOfDateRangeException(message: String?) : Exception(message)

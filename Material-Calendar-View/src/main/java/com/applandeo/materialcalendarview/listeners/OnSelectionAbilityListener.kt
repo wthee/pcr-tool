@@ -1,11 +1,13 @@
-package com.applandeo.materialcalendarview.listeners;
+package com.applandeo.materialcalendarview.listeners
 
 /**
  * This interface is used to inform DatePicker that user selected any days
- * <p>
+ *
+ *
  * Created by Mateusz Kornakiewicz on 24.10.2017.
+ *
+ * Modified by wthee
  */
-
-public interface OnSelectionAbilityListener {
-    void onChange(boolean enabled);
+interface OnSelectionAbilityListener {
+    fun onChange(enabled: Boolean)
 }

@@ -13,6 +13,8 @@ import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.*
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import java.util.*
 
 
@@ -62,26 +64,32 @@ class CalendarJPFragment : Fragment() {
             setDate(cal)
             //最大日期
             setMaximumDate(cal)
-            setOnDayClickListener { eventDay ->
-                showDayEvents(eventDay.calendar)
-            }
+            setOnDayClickListener(object : OnDayClickListener {
+                override fun onDayClick(eventDay: EventDay) {
+                    showDayEvents(eventDay.calendar)
+                }
+            })
             //月份切换监听
-            setOnForwardPageChangeListener {
-                mMonth++
-                if (mMonth > 12) {
-                    mMonth = 1
-                    mYear++
+            setOnForwardPageChangeListener(object : OnCalendarPageChangeListener {
+                override fun onChange() {
+                    mMonth++
+                    if (mMonth > 12) {
+                        mMonth = 1
+                        mYear++
+                    }
+                    addIcon(mYear, mMonth)
                 }
-                addIcon(mYear, mMonth)
-            }
-            setOnPreviousPageChangeListener {
-                mMonth--
-                if (mMonth < 1) {
-                    mMonth = 12
-                    mYear--
+            })
+            setOnPreviousPageChangeListener(object : OnCalendarPageChangeListener {
+                override fun onChange() {
+                    mMonth--
+                    if (mMonth < 1) {
+                        mMonth = 12
+                        mYear--
+                    }
+                    addIcon(mYear, mMonth)
                 }
-                addIcon(mYear, mMonth)
-            }
+            })
         }
 
         //回到今天

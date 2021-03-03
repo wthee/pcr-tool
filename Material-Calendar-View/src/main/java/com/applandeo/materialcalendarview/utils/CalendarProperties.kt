@@ -1,432 +1,194 @@
-package com.applandeo.materialcalendarview.utils;
+package com.applandeo.materialcalendarview.utils
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-
-import androidx.core.content.ContextCompat;
-
-import com.annimon.stream.Stream;
-import com.applandeo.materialcalendarview.CalendarView;
-import com.applandeo.materialcalendarview.EventDay;
-import com.applandeo.materialcalendarview.R;
-import com.applandeo.materialcalendarview.exceptions.ErrorsMessages;
-import com.applandeo.materialcalendarview.exceptions.UnsupportedMethodsException;
-import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
-import com.applandeo.materialcalendarview.listeners.OnSelectDateListener;
-import com.applandeo.materialcalendarview.listeners.OnSelectionAbilityListener;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
+import com.annimon.stream.Stream
+import com.applandeo.materialcalendarview.CalendarView
+import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.R
+import com.applandeo.materialcalendarview.exceptions.ErrorsMessages
+import com.applandeo.materialcalendarview.exceptions.UnsupportedMethodsException
+import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
+import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
+import com.applandeo.materialcalendarview.listeners.OnSelectionAbilityListener
+import java.util.*
 
 /**
  * This class contains all properties of the calendar
- * <p>
+ *
+ *
  * Created by Mateusz Kornakiewicz on 30.10.2017.
+ *
+ * Modified by wthee
  */
-
-public class CalendarProperties {
-
-    /**
-     * A number of months (pages) in the calendar
-     * 481 months means 240 months (20 years) before and 240 months after the current month
-     */
-    public static final int CALENDAR_SIZE = 481;
-    public static final int FIRST_VISIBLE_PAGE = CALENDAR_SIZE / 2;
-
-    private int mFirstDayOfWeek, mCalendarType, mHeaderColor, mHeaderLabelColor, mSelectionColor, mTodayLabelColor, mTodayColor,
-            mDialogButtonsColor, mItemLayoutResource, mDisabledDaysLabelsColor, mHighlightedDaysLabelsColor, mPagesColor,
-            mAbbreviationsBarColor, mAbbreviationsLabelsColor, mDaysLabelsColor, mSelectionLabelColor,
-            mAnotherMonthsDaysLabelsColor, mHeaderVisibility, mNavigationVisibility, mAbbreviationsBarVisibility, mMaximumDaysRange;
-
-    private boolean mEventsEnabled;
-    private boolean mSwipeEnabled;
-
-    private Drawable mPreviousButtonSrc, mForwardButtonSrc;
-
-    private Calendar mFirstPageCalendarDate = DateUtils.getCalendar();
-    private Calendar mCalendar, mMinimumDate, mMaximumDate;
-
-    private OnDayClickListener mOnDayClickListener;
-    private OnSelectDateListener mOnSelectDateListener;
-    private OnSelectionAbilityListener mOnSelectionAbilityListener;
-    private OnCalendarPageChangeListener mOnPreviousPageChangeListener;
-    private OnCalendarPageChangeListener mOnForwardPageChangeListener;
-
-    private List<EventDay> mEventDays = new ArrayList<>();
-    private List<Calendar> mDisabledDays = new ArrayList<>();
-    private List<Calendar> mHighlightedDays = new ArrayList<>();
-    private List<SelectedDay> mSelectedDays = new ArrayList<>();
-
-    private Context mContext;
-
-    public CalendarProperties(Context context) {
-        mContext = context;
-    }
-
-    public int getCalendarType() {
-        return mCalendarType;
-    }
-
-    public void setCalendarType(int calendarType) {
-        mCalendarType = calendarType;
-    }
-
-    public boolean getEventsEnabled() {
-        return mEventsEnabled;
-    }
-
-    public void setEventsEnabled(boolean eventsEnabled) {
-        mEventsEnabled = eventsEnabled;
-    }
-
-    public boolean getSwipeEnabled() {
-        return mSwipeEnabled;
-    }
-
-    public void setSwipeEnabled(boolean swipeEnabled) {
-        mSwipeEnabled = swipeEnabled;
-    }
-
-    public Calendar getCalendar() {
-        return mCalendar;
-    }
-
-    public void setCalendar(Calendar calendar) {
-        mCalendar = calendar;
-    }
-
-    public OnSelectDateListener getOnSelectDateListener() {
-        return mOnSelectDateListener;
-    }
-
-    public void setOnSelectDateListener(OnSelectDateListener onSelectDateListener) {
-        mOnSelectDateListener = onSelectDateListener;
-    }
-
-    public int getHeaderColor() {
-        if (mHeaderColor <= 0) {
-            return mHeaderColor;
+class CalendarProperties(private val mContext: Context) {
+    private var mFirstDayOfWeek = 0
+    var calendarType = 0
+    private var mHeaderColor = 0
+    private var mHeaderLabelColor = 0
+    private var mSelectionColor = 0
+    private var mTodayLabelColor = 0
+    var todayColor = 0
+    var dialogButtonsColor = 0
+    var itemLayoutResource = 0
+    private var mDisabledDaysLabelsColor = 0
+    private var mHighlightedDaysLabelsColor = 0
+    var pagesColor = 0
+    var abbreviationsBarColor = 0
+    var abbreviationsLabelsColor = 0
+    private var mDaysLabelsColor = 0
+    private var mSelectionLabelColor = 0
+    private var mAnotherMonthsDaysLabelsColor = 0
+    var headerVisibility = 0
+    var navigationVisibility = 0
+    var abbreviationsBarVisibility = 0
+    var maximumDaysRange = 0
+    var eventsEnabled = false
+    var swipeEnabled = false
+    var previousButtonSrc: Drawable? = null
+    var forwardButtonSrc: Drawable? = null
+    val firstPageCalendarDate = DateUtils.calendar
+    var calendar: Calendar? = null
+    var minimumDate: Calendar? = null
+    var maximumDate: Calendar? = null
+    var onDayClickListener: OnDayClickListener? = null
+    var onSelectDateListener: OnSelectDateListener? = null
+    var onSelectionAbilityListener: OnSelectionAbilityListener? = null
+    var onPreviousPageChangeListener: OnCalendarPageChangeListener? = null
+    var onForwardPageChangeListener: OnCalendarPageChangeListener? = null
+    private var mEventDays: List<EventDay> = ArrayList()
+    var disabledDays: List<Calendar> = ArrayList()
+        private set
+    private var mHighlightedDays: List<Calendar> = ArrayList()
+    var selectedDays: MutableList<SelectedDay> = ArrayList()
+        private set
+    var headerColor: Int
+        get() = if (mHeaderColor <= 0) {
+            mHeaderColor
+        } else ContextCompat.getColor(mContext, mHeaderColor)
+        set(headerColor) {
+            mHeaderColor = headerColor
+        }
+    var headerLabelColor: Int
+        get() = if (mHeaderLabelColor <= 0) {
+            mHeaderLabelColor
+        } else ContextCompat.getColor(mContext, mHeaderLabelColor)
+        set(headerLabelColor) {
+            mHeaderLabelColor = headerLabelColor
+        }
+    var selectionColor: Int
+        get() = if (mSelectionColor == 0) {
+            ContextCompat.getColor(mContext, R.color.defaultColor)
+        } else mSelectionColor
+        set(selectionColor) {
+            mSelectionColor = selectionColor
+        }
+    var todayLabelColor: Int
+        get() = if (mTodayLabelColor == 0) {
+            ContextCompat.getColor(mContext, R.color.defaultColor)
+        } else mTodayLabelColor
+        set(todayLabelColor) {
+            mTodayLabelColor = todayLabelColor
         }
 
-        return ContextCompat.getColor(mContext, mHeaderColor);
+    fun getEventDays() = mEventDays
+
+    fun setEventDays(eventDays: List<EventDay>) {
+        mEventDays = eventDays
     }
 
-    public void setHeaderColor(int headerColor) {
-        mHeaderColor = headerColor;
+    fun setDisabledDays(disabledDays: List<Calendar>) {
+        selectedDays.removeAll(disabledDays)
+        this.disabledDays = Stream.of(disabledDays)
+            .map { calendar: Calendar ->
+                DateUtils.setMidnight(calendar)
+                calendar
+            }.toList()
     }
 
-    public int getHeaderLabelColor() {
-        if (mHeaderLabelColor <= 0) {
-            return mHeaderLabelColor;
+    var highlightedDays: List<Calendar>
+        get() = mHighlightedDays
+        set(highlightedDays) {
+            mHighlightedDays = Stream.of(highlightedDays)
+                .map { calendar: Calendar ->
+                    DateUtils.setMidnight(calendar)
+                    calendar
+                }.toList()
         }
 
-        return ContextCompat.getColor(mContext, mHeaderLabelColor);
+    fun setSelectedDay(calendar: Calendar?) {
+        setSelectedDay(SelectedDay(calendar))
     }
 
-    public void setHeaderLabelColor(int headerLabelColor) {
-        mHeaderLabelColor = headerLabelColor;
+    fun setSelectedDay(selectedDay: SelectedDay) {
+        selectedDays.clear()
+        selectedDays.add(selectedDay)
     }
 
-    public Drawable getPreviousButtonSrc() {
-        return mPreviousButtonSrc;
+    fun setSelectedDays(selectedDays: List<Calendar>?) {
+        if (calendarType == CalendarView.ONE_DAY_PICKER) {
+            throw UnsupportedMethodsException(ErrorsMessages.ONE_DAY_PICKER_MULTIPLE_SELECTION)
+        }
+        this.selectedDays = Stream.of(selectedDays)
+            .map { calendar: Calendar? ->
+                DateUtils.setMidnight(calendar)
+                SelectedDay(calendar)
+            }.filterNot { value: SelectedDay -> disabledDays.contains(value.calendar) }
+            .toList()
     }
 
-    public void setPreviousButtonSrc(Drawable previousButtonSrc) {
-        mPreviousButtonSrc = previousButtonSrc;
-    }
-
-    public Drawable getForwardButtonSrc() {
-        return mForwardButtonSrc;
-    }
-
-    public void setForwardButtonSrc(Drawable forwardButtonSrc) {
-        mForwardButtonSrc = forwardButtonSrc;
-    }
-
-    public int getSelectionColor() {
-        if (mSelectionColor == 0) {
-            return ContextCompat.getColor(mContext, R.color.defaultColor);
+    var disabledDaysLabelsColor: Int
+        get() = if (mDisabledDaysLabelsColor == 0) {
+            ContextCompat.getColor(mContext, R.color.nextMonthDayColor)
+        } else mDisabledDaysLabelsColor
+        set(disabledDaysLabelsColor) {
+            mDisabledDaysLabelsColor = disabledDaysLabelsColor
+        }
+    var highlightedDaysLabelsColor: Int
+        get() = if (mHighlightedDaysLabelsColor == 0) {
+            ContextCompat.getColor(mContext, R.color.nextMonthDayColor)
+        } else mHighlightedDaysLabelsColor
+        set(highlightedDaysLabelsColor) {
+            mHighlightedDaysLabelsColor = highlightedDaysLabelsColor
+        }
+    var daysLabelsColor: Int
+        get() = if (mDaysLabelsColor == 0) {
+            ContextCompat.getColor(mContext, R.color.currentMonthDayColor)
+        } else mDaysLabelsColor
+        set(daysLabelsColor) {
+            mDaysLabelsColor = daysLabelsColor
+        }
+    var selectionLabelColor: Int
+        get() = if (mSelectionLabelColor == 0) {
+            ContextCompat.getColor(mContext, android.R.color.white)
+        } else mSelectionLabelColor
+        set(selectionLabelColor) {
+            mSelectionLabelColor = selectionLabelColor
+        }
+    var anotherMonthsDaysLabelsColor: Int
+        get() = if (mAnotherMonthsDaysLabelsColor == 0) {
+            ContextCompat.getColor(mContext, R.color.nextMonthDayColor)
+        } else mAnotherMonthsDaysLabelsColor
+        set(anotherMonthsDaysLabelsColor) {
+            mAnotherMonthsDaysLabelsColor = anotherMonthsDaysLabelsColor
         }
 
-        return mSelectionColor;
+    fun getmFirstDayOfWeek(): Int {
+        return mFirstDayOfWeek
     }
 
-    public void setSelectionColor(int selectionColor) {
-        mSelectionColor = selectionColor;
+    fun setmFirstDayOfWeek(mFirstDayOfWeek: Int) {
+        this.mFirstDayOfWeek = mFirstDayOfWeek
     }
 
-    public int getTodayLabelColor() {
-        if (mTodayLabelColor == 0) {
-            return ContextCompat.getColor(mContext, R.color.defaultColor);
-        }
-
-        return mTodayLabelColor;
-    }
-
-    public void setTodayLabelColor(int todayLabelColor) {
-        mTodayLabelColor = todayLabelColor;
-    }
-
-    public int getDialogButtonsColor() {
-        return mDialogButtonsColor;
-    }
-
-    public void setDialogButtonsColor(int dialogButtonsColor) {
-        mDialogButtonsColor = dialogButtonsColor;
-    }
-
-    public Calendar getMinimumDate() {
-        return mMinimumDate;
-    }
-
-    public void setMinimumDate(Calendar minimumDate) {
-        mMinimumDate = minimumDate;
-    }
-
-    public Calendar getMaximumDate() {
-        return mMaximumDate;
-    }
-
-    public void setMaximumDate(Calendar maximumDate) {
-        mMaximumDate = maximumDate;
-    }
-
-    public OnSelectionAbilityListener getOnSelectionAbilityListener() {
-        return mOnSelectionAbilityListener;
-    }
-
-    public void setOnSelectionAbilityListener(OnSelectionAbilityListener onSelectionAbilityListener) {
-        mOnSelectionAbilityListener = onSelectionAbilityListener;
-    }
-
-    public int getItemLayoutResource() {
-        return mItemLayoutResource;
-    }
-
-    public void setItemLayoutResource(int itemLayoutResource) {
-        mItemLayoutResource = itemLayoutResource;
-    }
-
-    public OnCalendarPageChangeListener getOnPreviousPageChangeListener() {
-        return mOnPreviousPageChangeListener;
-    }
-
-    public void setOnPreviousPageChangeListener(OnCalendarPageChangeListener onPreviousButtonClickListener) {
-        mOnPreviousPageChangeListener = onPreviousButtonClickListener;
-    }
-
-    public OnCalendarPageChangeListener getOnForwardPageChangeListener() {
-        return mOnForwardPageChangeListener;
-    }
-
-    public void setOnForwardPageChangeListener(OnCalendarPageChangeListener onForwardButtonClickListener) {
-        mOnForwardPageChangeListener = onForwardButtonClickListener;
-    }
-
-    public Calendar getFirstPageCalendarDate() {
-        return mFirstPageCalendarDate;
-    }
-
-    public OnDayClickListener getOnDayClickListener() {
-        return mOnDayClickListener;
-    }
-
-    public void setOnDayClickListener(OnDayClickListener onDayClickListener) {
-        mOnDayClickListener = onDayClickListener;
-    }
-
-    public List<EventDay> getEventDays() {
-        return mEventDays;
-    }
-
-    public void setEventDays(List<EventDay> eventDays) {
-        mEventDays = eventDays;
-    }
-
-    public List<Calendar> getDisabledDays() {
-        return mDisabledDays;
-    }
-
-    public void setDisabledDays(List<Calendar> disabledDays) {
-        mSelectedDays.removeAll(disabledDays);
-
-        mDisabledDays = Stream.of(disabledDays)
-                .map(calendar -> {
-                    DateUtils.setMidnight(calendar);
-                    return calendar;
-                }).toList();
-    }
-
-    public List<Calendar> getHighlightedDays() {
-        return mHighlightedDays;
-    }
-
-    public void setHighlightedDays(List<Calendar> highlightedDays) {
-        mHighlightedDays = Stream.of(highlightedDays)
-                .map(calendar -> {
-                    DateUtils.setMidnight(calendar);
-                    return calendar;
-                }).toList();
-    }
-
-    public List<SelectedDay> getSelectedDays() {
-        return mSelectedDays;
-    }
-
-    public void setSelectedDay(Calendar calendar) {
-        setSelectedDay(new SelectedDay(calendar));
-    }
-
-    public void setSelectedDay(SelectedDay selectedDay) {
-        mSelectedDays.clear();
-        mSelectedDays.add(selectedDay);
-    }
-
-    public void setSelectedDays(List<Calendar> selectedDays) {
-        if (mCalendarType == CalendarView.ONE_DAY_PICKER) {
-            throw new UnsupportedMethodsException(ErrorsMessages.ONE_DAY_PICKER_MULTIPLE_SELECTION);
-        }
-
-        mSelectedDays = Stream.of(selectedDays)
-                .map(calendar -> {
-                    DateUtils.setMidnight(calendar);
-                    return new SelectedDay(calendar);
-                }).filterNot(value -> mDisabledDays.contains(value.getCalendar()))
-                .toList();
-    }
-
-    public int getDisabledDaysLabelsColor() {
-        if (mDisabledDaysLabelsColor == 0) {
-            return ContextCompat.getColor(mContext, R.color.nextMonthDayColor);
-        }
-
-        return mDisabledDaysLabelsColor;
-    }
-
-    public void setDisabledDaysLabelsColor(int disabledDaysLabelsColor) {
-        mDisabledDaysLabelsColor = disabledDaysLabelsColor;
-    }
-
-    public int getHighlightedDaysLabelsColor() {
-        if (mHighlightedDaysLabelsColor == 0) {
-            return ContextCompat.getColor(mContext, R.color.nextMonthDayColor);
-        }
-
-        return mHighlightedDaysLabelsColor;
-    }
-
-    public void setHighlightedDaysLabelsColor(int highlightedDaysLabelsColor) {
-        mHighlightedDaysLabelsColor = highlightedDaysLabelsColor;
-    }
-
-    public int getPagesColor() {
-        return mPagesColor;
-    }
-
-    public void setPagesColor(int pagesColor) {
-        mPagesColor = pagesColor;
-    }
-
-    public int getAbbreviationsBarColor() {
-        return mAbbreviationsBarColor;
-    }
-
-    public void setAbbreviationsBarColor(int abbreviationsBarColor) {
-        mAbbreviationsBarColor = abbreviationsBarColor;
-    }
-
-    public int getAbbreviationsLabelsColor() {
-        return mAbbreviationsLabelsColor;
-    }
-
-    public void setAbbreviationsLabelsColor(int abbreviationsLabelsColor) {
-        mAbbreviationsLabelsColor = abbreviationsLabelsColor;
-    }
-
-    public int getDaysLabelsColor() {
-        if (mDaysLabelsColor == 0) {
-            return ContextCompat.getColor(mContext, R.color.currentMonthDayColor);
-        }
-
-        return mDaysLabelsColor;
-    }
-
-    public void setDaysLabelsColor(int daysLabelsColor) {
-        mDaysLabelsColor = daysLabelsColor;
-    }
-
-    public int getSelectionLabelColor() {
-        if (mSelectionLabelColor == 0) {
-            return ContextCompat.getColor(mContext, android.R.color.white);
-        }
-
-        return mSelectionLabelColor;
-    }
-
-    public void setSelectionLabelColor(int selectionLabelColor) {
-        mSelectionLabelColor = selectionLabelColor;
-    }
-
-    public int getAnotherMonthsDaysLabelsColor() {
-        if (mAnotherMonthsDaysLabelsColor == 0) {
-            return ContextCompat.getColor(mContext, R.color.nextMonthDayColor);
-        }
-
-        return mAnotherMonthsDaysLabelsColor;
-    }
-
-    public void setAnotherMonthsDaysLabelsColor(int anotherMonthsDaysLabelsColor) {
-        mAnotherMonthsDaysLabelsColor = anotherMonthsDaysLabelsColor;
-    }
-
-    public int getHeaderVisibility() {
-        return mHeaderVisibility;
-    }
-
-    public void setHeaderVisibility(int headerVisibility) {
-        mHeaderVisibility = headerVisibility;
-    }
-
-    public int getNavigationVisibility() {
-        return mNavigationVisibility;
-    }
-
-    public void setNavigationVisibility(int navigationVisibility) {
-        mNavigationVisibility = navigationVisibility;
-    }
-
-
-    public int getAbbreviationsBarVisibility() {
-        return mAbbreviationsBarVisibility;
-    }
-
-    public void setAbbreviationsBarVisibility(int abbreviationsBarVisbility) {
-        mAbbreviationsBarVisibility = abbreviationsBarVisbility;
-    }
-
-    public int getMaximumDaysRange() {
-        return mMaximumDaysRange;
-    }
-
-    public void setMaximumDaysRange(int maximumDaysRange) {
-        mMaximumDaysRange = maximumDaysRange;
-    }
-
-    public int getTodayColor() {
-        return mTodayColor;
-    }
-
-    public void setTodayColor(int todayColor) {
-        mTodayColor = todayColor;
-    }
-
-    public int getmFirstDayOfWeek() {
-        return mFirstDayOfWeek;
-    }
-
-    public void setmFirstDayOfWeek(int mFirstDayOfWeek) {
-        this.mFirstDayOfWeek = mFirstDayOfWeek;
+    companion object {
+        /**
+         * A number of months (pages) in the calendar
+         * 481 months means 240 months (20 years) before and 240 months after the current month
+         */
+        const val CALENDAR_SIZE = 481
+        const val FIRST_VISIBLE_PAGE = CALENDAR_SIZE / 2
     }
 }

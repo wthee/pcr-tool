@@ -19,7 +19,6 @@ import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import coil.load
 
 /**
  * 角色列表适配器
@@ -66,15 +65,15 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
                 val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
-                characterPic.load(picUrl) {
-                    error(R.drawable.error)
-                    placeholder(R.drawable.load)
-                    listener(
-                        onStart = {
-                            startEnter()
-                        }
-                    )
-                }
+//                characterPic.load(picUrl) {
+//                    error(R.drawable.error)
+//                    placeholder(R.drawable.load)
+//                    listener(
+//                        onStart = {
+//                            startEnter()
+//                        }
+//                    )
+//                }
                 //角色位置
                 positionType.background =
                     ResourcesUtil.getDrawable(getPositionIcon(character.position))

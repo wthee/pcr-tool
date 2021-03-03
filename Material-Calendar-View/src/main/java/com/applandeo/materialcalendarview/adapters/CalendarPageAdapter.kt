@@ -1,106 +1,82 @@
-package com.applandeo.materialcalendarview.adapters;
+package com.applandeo.materialcalendarview.adapters
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.viewpager.widget.PagerAdapter;
-
-import com.applandeo.materialcalendarview.R;
-import com.applandeo.materialcalendarview.extensions.CalendarGridView;
-import com.applandeo.materialcalendarview.listeners.DayRowClickListener;
-import com.applandeo.materialcalendarview.utils.CalendarProperties;
-import com.applandeo.materialcalendarview.utils.SelectedDay;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static com.applandeo.materialcalendarview.utils.CalendarProperties.CALENDAR_SIZE;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
+import com.applandeo.materialcalendarview.R
+import com.applandeo.materialcalendarview.extensions.CalendarGridView
+import com.applandeo.materialcalendarview.listeners.DayRowClickListener
+import com.applandeo.materialcalendarview.utils.CalendarProperties
+import com.applandeo.materialcalendarview.utils.SelectedDay
+import java.util.*
 
 /**
  * This class is responsible for loading a calendar page content.
- * <p>
+ *
+ *
  * Created by Mateusz Kornakiewicz on 24.05.2017.
+ *
+ * Modified by wthee
  */
-
-public class CalendarPageAdapter extends PagerAdapter {
-
-    private Context mContext;
-    private CalendarGridView mCalendarGridView;
-
-    private CalendarProperties mCalendarProperties;
-
-    private int mPageMonth;
-
-    public CalendarPageAdapter(Context context, CalendarProperties calendarProperties) {
-        mContext = context;
-        mCalendarProperties = calendarProperties;
-        informDatePicker();
+class CalendarPageAdapter(
+    private val mContext: Context,
+    private val mCalendarProperties: CalendarProperties
+) : PagerAdapter() {
+    private var mCalendarGridView: CalendarGridView? = null
+    private var mPageMonth = 0
+    override fun getCount(): Int {
+        return CalendarProperties.CALENDAR_SIZE
     }
 
-    @Override
-    public int getCount() {
-        return CALENDAR_SIZE;
+    override fun getItemPosition(`object`: Any): Int {
+        return POSITION_NONE
     }
 
-    @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+        return view === `object`
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val inflater =
+            mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        mCalendarGridView = inflater.inflate(R.layout.calendar_view_grid, null) as CalendarGridView
+        loadMonth(position)
+        mCalendarGridView!!.onItemClickListener = DayRowClickListener(
+            this,
+            mCalendarProperties, mPageMonth
+        )
+        container.addView(mCalendarGridView)
+        return mCalendarGridView!!
     }
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mCalendarGridView = (CalendarGridView) inflater.inflate(R.layout.calendar_view_grid, null);
-
-        loadMonth(position);
-
-        mCalendarGridView.setOnItemClickListener(new DayRowClickListener(this,
-                mCalendarProperties, mPageMonth));
-
-        container.addView(mCalendarGridView);
-        return mCalendarGridView;
-    }
-
-
-    public void addSelectedDay(SelectedDay selectedDay) {
-        if (!mCalendarProperties.getSelectedDays().contains(selectedDay)) {
-            mCalendarProperties.getSelectedDays().add(selectedDay);
-            informDatePicker();
-            return;
+    fun addSelectedDay(selectedDay: SelectedDay) {
+        if (!mCalendarProperties.selectedDays.contains(selectedDay)) {
+            mCalendarProperties.selectedDays.add(selectedDay)
+            informDatePicker()
+            return
         }
-
-        mCalendarProperties.getSelectedDays().remove(selectedDay);
-        informDatePicker();
+        mCalendarProperties.selectedDays.remove(selectedDay)
+        informDatePicker()
     }
 
-    public List<SelectedDay> getSelectedDays() {
-        return mCalendarProperties.getSelectedDays();
-    }
-
-    public SelectedDay getSelectedDay() {
-        return mCalendarProperties.getSelectedDays().get(0);
-    }
-
-    public void setSelectedDay(SelectedDay selectedDay) {
-        mCalendarProperties.setSelectedDay(selectedDay);
-        informDatePicker();
-    }
+    val selectedDays: MutableList<SelectedDay>
+        get() = mCalendarProperties.selectedDays
+    var selectedDay: SelectedDay
+        get() = mCalendarProperties.selectedDays[0]
+        set(selectedDay) {
+            mCalendarProperties.setSelectedDay(selectedDay)
+            informDatePicker()
+        }
 
     /**
      * This method inform DatePicker about ability to return selected days
      */
-    private void informDatePicker() {
-        if (mCalendarProperties.getOnSelectionAbilityListener() != null) {
-            mCalendarProperties.getOnSelectionAbilityListener().onChange(mCalendarProperties.getSelectedDays().size() > 0);
+    private fun informDatePicker() {
+        if (mCalendarProperties.onSelectionAbilityListener != null) {
+            mCalendarProperties.onSelectionAbilityListener!!
+                .onChange(mCalendarProperties.selectedDays.size > 0)
         }
     }
 
@@ -109,54 +85,55 @@ public class CalendarPageAdapter extends PagerAdapter {
      *
      * @param position Position of current page in ViewPager
      */
-    private void loadMonth(int position) {
-        ArrayList<Date> days = new ArrayList<>();
+    private fun loadMonth(position: Int) {
+        val days = ArrayList<Date>()
 
         // Get Calendar object instance
-        Calendar calendar = (Calendar) mCalendarProperties.getFirstPageCalendarDate().clone();
+        val calendar = mCalendarProperties.firstPageCalendarDate.clone() as Calendar
 
         // Add months to Calendar (a number of months depends on ViewPager position)
-        calendar.add(Calendar.MONTH, position);
+        calendar.add(Calendar.MONTH, position)
 
         // Set day of month as 1
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar[Calendar.DAY_OF_MONTH] = 1
 
         // Get a number of the first day of the week
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        val dayOfWeek = calendar[Calendar.DAY_OF_WEEK]
+        val currentMonth = calendar[Calendar.MONTH] + 1
 
         // Count when month is beginning
-        int firstDayOfWeek = mCalendarProperties.getmFirstDayOfWeek();
-        int monthBeginningCell = (dayOfWeek < firstDayOfWeek ? 7 : 0) + dayOfWeek - firstDayOfWeek;
+        val firstDayOfWeek = mCalendarProperties.getmFirstDayOfWeek()
+        val monthBeginningCell =
+            (if (dayOfWeek < firstDayOfWeek) 7 else 0) + dayOfWeek - firstDayOfWeek
 
         // Subtract a number of beginning days, it will let to load a part of a previous month
-        calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
+        calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell)
 
         /*
         Get all days of a month
-         */
-        while (days.size() < monthBeginningCell + calendar.get(Calendar.DAY_OF_MONTH)) {
+         */while (days.size < monthBeginningCell + calendar[Calendar.DAY_OF_MONTH]) {
             // days of the month
-            if (currentMonth == calendar.get(Calendar.MONTH) + 1) {
-                days.add(calendar.getTime());
+            if (currentMonth == calendar[Calendar.MONTH] + 1) {
+                days.add(calendar.time)
             } else {
                 // hide days of pre month
-                days.add(new Date(0));
+                days.add(Date(0))
             }
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
-
-
-        mPageMonth = calendar.get(Calendar.MONTH) - 1;
-        CalendarDayAdapter calendarDayAdapter = new CalendarDayAdapter(this, mContext,
-                mCalendarProperties, days, mPageMonth);
-
-        mCalendarGridView.setAdapter(calendarDayAdapter);
+        mPageMonth = calendar[Calendar.MONTH] - 1
+        val calendarDayAdapter = CalendarDayAdapter(
+            this, mContext,
+            mCalendarProperties, days, mPageMonth
+        )
+        mCalendarGridView!!.adapter = calendarDayAdapter
     }
 
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View)
+    }
+
+    init {
+        informDatePicker()
     }
 }

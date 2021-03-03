@@ -1,37 +1,31 @@
-package com.applandeo.materialcalendarview.utils;
+package com.applandeo.materialcalendarview.utils
 
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-
-import androidx.core.content.ContextCompat;
+import android.graphics.drawable.Drawable
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 
 /**
  * This class is used to load event image in a day cell
- * <p>
+ *
+ *
  * Created by Mateusz Kornakiewicz on 23.05.2017.
+ *
+ * Modified by wthee
  */
-
-public class ImageUtils {
-
-    public static void loadImage(ImageView imageView, Object image) {
+object ImageUtils {
+    fun loadImage(imageView: ImageView, image: Any?) {
         if (image == null) {
-            return;
+            return
         }
-
-        Drawable drawable = null;
-        if (image instanceof Drawable) {
-            drawable = (Drawable) image;
-        } else if (image instanceof Integer) {
-            drawable = ContextCompat.getDrawable(imageView.getContext(), (Integer) image);
+        var drawable: Drawable? = null
+        if (image is Drawable) {
+            drawable = image
+        } else if (image is Int) {
+            drawable = ContextCompat.getDrawable(imageView.context, (image as Int?)!!)
         }
-
         if (drawable == null) {
-            return;
+            return
         }
-
-        imageView.setImageDrawable(drawable);
-    }
-
-    private ImageUtils() {
+        imageView.setImageDrawable(drawable)
     }
 }

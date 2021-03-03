@@ -1,11 +1,8 @@
-package com.applandeo.materialcalendarview.exceptions;
+package com.applandeo.materialcalendarview.exceptions
 
 /**
  * Created by Mateusz Kornakiewicz on 09.08.2018.
+ *
+ * Modified by wthee
  */
-
-public class UnsupportedMethodsException extends RuntimeException {
-    public UnsupportedMethodsException(String message) {
-        super(message);
-    }
-}
+class UnsupportedMethodsException(message: String?) : RuntimeException(message)

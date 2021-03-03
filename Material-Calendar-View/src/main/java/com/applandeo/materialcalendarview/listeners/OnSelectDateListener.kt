@@ -1,12 +1,12 @@
-package com.applandeo.materialcalendarview.listeners;
+package com.applandeo.materialcalendarview.listeners
 
-import java.util.Calendar;
-import java.util.List;
+import java.util.*
 
 /**
  * Created by Mateusz Kornakiewicz on 27.07.2017.
+ *
+ * Modified by wthee
  */
-
-public interface OnSelectDateListener {
-    void onSelect(List<Calendar> calendar);
+interface OnSelectDateListener {
+    fun onSelect(calendar: List<Calendar?>?)
 }

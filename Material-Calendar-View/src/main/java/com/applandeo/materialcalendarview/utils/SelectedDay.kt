@@ -1,62 +1,48 @@
-package com.applandeo.materialcalendarview.utils;
+package com.applandeo.materialcalendarview.utils
 
-import android.view.View;
-
-import java.util.Calendar;
+import android.view.View
+import java.util.*
 
 /**
  * This helper class represent a selected day when calendar is in a picker date mode.
  * It is used to remember a selected calendar cell.
- * <p>
+ *
+ *
  * Created by Mateusz Kornakiewicz on 23.05.2017.
+ *
+ * Modified by wthee
  */
+class SelectedDay {
+    /**
+     * @return View representing selected calendar cell
+     */
+    var view: View? = null
 
-public class SelectedDay {
-    private View mView;
-    private Calendar mCalendar;
+    /**
+     * @return Calendar instance representing selected cell date
+     */
+    var calendar: Calendar?
+        private set
 
-    public SelectedDay(Calendar calendar) {
-        mCalendar = calendar;
+    constructor(calendar: Calendar?) {
+        this.calendar = calendar
     }
 
     /**
      * @param view     View representing selected calendar cell
      * @param calendar Calendar instance representing selected cell date
      */
-    public SelectedDay(View view, Calendar calendar) {
-        mView = view;
-        mCalendar = calendar;
+    constructor(view: View?, calendar: Calendar?) {
+        this.view = view
+        this.calendar = calendar
     }
 
-    /**
-     * @return View representing selected calendar cell
-     */
-    public View getView() {
-        return mView;
-    }
-
-    public void setView(View view) {
-        mView = view;
-    }
-
-    /**
-     * @return Calendar instance representing selected cell date
-     */
-    public Calendar getCalendar() {
-        return mCalendar;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof SelectedDay) {
-            return getCalendar().equals(((SelectedDay) obj).getCalendar());
+    override fun equals(obj: Any?): Boolean {
+        if (obj is SelectedDay) {
+            return calendar == obj.calendar
         }
-
-        if (obj instanceof Calendar) {
-            return getCalendar().equals(obj);
-        }
-
-        return super.equals(obj);
+        return if (obj is Calendar) {
+            calendar == obj
+        } else super.equals(obj)
     }
 }
-
