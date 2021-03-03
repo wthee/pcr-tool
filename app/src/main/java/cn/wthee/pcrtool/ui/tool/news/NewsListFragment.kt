@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.utils.Constants.REGION
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

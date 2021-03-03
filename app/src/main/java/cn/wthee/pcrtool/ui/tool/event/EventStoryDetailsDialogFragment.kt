@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.databinding.FragmentEventStoryDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.viewmodel.EventViewModel
 
 
 private const val STORY_ID = "storyId"

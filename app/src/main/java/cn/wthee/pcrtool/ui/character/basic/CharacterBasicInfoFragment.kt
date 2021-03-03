@@ -17,9 +17,9 @@ import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
 import kotlinx.coroutines.launch
 

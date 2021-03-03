@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.adapter.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel
 
 /**
  * 角色技能页面

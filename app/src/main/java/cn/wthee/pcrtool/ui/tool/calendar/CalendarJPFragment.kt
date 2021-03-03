@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.adapter.CalendarDropEventAdapter
 import cn.wthee.pcrtool.data.view.DropEvent
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener

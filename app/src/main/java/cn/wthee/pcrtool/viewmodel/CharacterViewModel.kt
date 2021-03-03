@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.home
+package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.view.CharacterInfo
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.view.PvpCharacterData
+import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope

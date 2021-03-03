@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.news
+package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

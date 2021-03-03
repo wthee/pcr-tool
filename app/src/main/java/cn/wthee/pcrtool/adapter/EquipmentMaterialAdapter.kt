@@ -12,9 +12,9 @@ import cn.wthee.pcrtool.data.view.EquipmentMaterial
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.coroutines.MainScope

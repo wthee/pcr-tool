@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.databinding.FragmentFilterEquipmentBinding
 import cn.wthee.pcrtool.databinding.LayoutChipBinding
 import cn.wthee.pcrtool.ui.common.CommonDialogFragment
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 

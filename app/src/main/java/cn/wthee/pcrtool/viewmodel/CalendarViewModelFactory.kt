@@ -1,17 +1,17 @@
-package cn.wthee.pcrtool.ui.tool.pvp
+package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import cn.wthee.pcrtool.data.db.repository.PvpRepository
+import cn.wthee.pcrtool.data.db.repository.EventRepository
 
-class PvpLikedViewModelFactory(
-    private val repository: PvpRepository
+class CalendarViewModelFactory(
+    private val repository: EventRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return PvpLikedViewModel(
+        return CalendarViewModel(
             repository
         ) as T
     }

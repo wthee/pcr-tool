@@ -10,10 +10,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterDropAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterDropInfoBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
 import kotlinx.coroutines.launch
 

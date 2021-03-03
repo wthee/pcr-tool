@@ -31,7 +31,7 @@ import java.util.*
  *
  * ViewModels []
  */
-class PvpLikedCusFragment : Fragment() {
+class PvpLikedSelectFragment : Fragment() {
 
     companion object {
         var atkSelected = getDefault()

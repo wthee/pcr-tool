@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
 
 

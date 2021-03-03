@@ -15,6 +15,7 @@ import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.viewmodel.PvpLikedViewModel
 import com.google.gson.JsonArray
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.Job

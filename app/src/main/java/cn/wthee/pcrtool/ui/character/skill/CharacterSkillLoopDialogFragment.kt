@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterSkillLoopBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel
 
 /**
  * 角色技能循环页面

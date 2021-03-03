@@ -10,8 +10,8 @@ import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankEquipBinding
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
 
 /**

@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.data.view.Attr
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import coil.load
 import kotlinx.coroutines.launch
 

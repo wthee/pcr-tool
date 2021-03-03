@@ -11,9 +11,9 @@ import cn.wthee.pcrtool.adapter.PvpPositionAdapter
 import cn.wthee.pcrtool.data.model.PvpPositionData
 import cn.wthee.pcrtool.data.view.getDefault
 import cn.wthee.pcrtool.databinding.LayoutPvpIconBinding
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.init
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
 
 /**
@@ -71,10 +71,10 @@ class PvpIconFragment(private val customize: Int = -1) : Fragment() {
 
     private fun initList() {
         if (customize == 0) {
-            selects = PvpLikedCusFragment.atkSelected
+            selects = PvpLikedSelectFragment.atkSelected
         }
         if (customize == 1) {
-            selects = PvpLikedCusFragment.defSelected
+            selects = PvpLikedSelectFragment.defSelected
         }
 
         selectedAdapter = PvpIconAdapter(false)

@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
+import cn.wthee.pcrtool.viewmodel.EventViewModel
 
 /**
  * 活动

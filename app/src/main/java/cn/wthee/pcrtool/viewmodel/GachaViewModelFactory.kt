@@ -1,17 +1,17 @@
-package cn.wthee.pcrtool.ui.tool.calendar
+package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import cn.wthee.pcrtool.data.db.repository.EventRepository
+import cn.wthee.pcrtool.data.db.repository.GachaRepository
 
-class CalendarViewModelFactory(
-    private val repository: EventRepository
+class GachaViewModelFactory(
+    private val repository: GachaRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CalendarViewModel(
+        return GachaViewModel(
             repository
         ) as T
     }

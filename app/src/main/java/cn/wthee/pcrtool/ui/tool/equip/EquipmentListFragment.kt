@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.adapter.EquipmentListAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest

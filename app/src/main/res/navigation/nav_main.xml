@@ -99,7 +99,7 @@
     </fragment>
     <fragment
         android:id="@+id/pvpLikedCustomize"
-        android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedCusFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.pvp.PvpLikedSelectFragment"
         android:label="PvpLikedCustomize" />
     <fragment
         android:id="@+id/characterListFragment"

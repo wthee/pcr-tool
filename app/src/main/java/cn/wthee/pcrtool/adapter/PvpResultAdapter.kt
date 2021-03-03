@@ -14,9 +14,9 @@ import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.ItemPvpResultBinding
-import cn.wthee.pcrtool.ui.tool.pvp.PvpLikedViewModel
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.dp
+import cn.wthee.pcrtool.viewmodel.PvpLikedViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat

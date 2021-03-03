@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
+import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener

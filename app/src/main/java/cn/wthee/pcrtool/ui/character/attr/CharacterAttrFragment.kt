@@ -16,11 +16,12 @@ import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment.Companion.uid
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
+import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
 import com.google.android.material.slider.Slider
 import com.umeng.umcrash.UMCrash

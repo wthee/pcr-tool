@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.tool.equip
+package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

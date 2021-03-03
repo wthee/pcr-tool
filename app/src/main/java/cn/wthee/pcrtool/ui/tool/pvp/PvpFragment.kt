@@ -19,9 +19,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.data.view.getIdStr
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.ui.tool.pvp.PvpIconFragment.Companion.selects
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.Serializable

@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest

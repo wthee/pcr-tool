@@ -17,16 +17,16 @@ import cn.wthee.pcrtool.adapter.viewpager.HorizontalMarginItemDecoration
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
-import cn.wthee.pcrtool.ui.character.attr.CharacterAttrViewModel
 import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
 import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.character.skill.CharacterSkillFragment
 import cn.wthee.pcrtool.ui.character.skill.CharacterSkillLoopDialogFragment
-import cn.wthee.pcrtool.ui.home.CharacterViewModel
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
+import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.launch
 

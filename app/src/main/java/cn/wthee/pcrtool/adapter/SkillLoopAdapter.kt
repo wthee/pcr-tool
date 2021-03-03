@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.character.skill.CharacterSkillViewModel.Companion.iconTypes
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel.Companion.iconTypes
 import coil.load
 
 /**

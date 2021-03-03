@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.databinding.FragmentNoticeListBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 
 /**
  * 消息通知列表
