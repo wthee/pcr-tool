@@ -83,7 +83,9 @@ class CharacterPagerFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.characterPager.adapter = null
+        if (this::binding.isInitialized) {
+            binding.characterPager.adapter = null
+        }
     }
 
     private fun init() {
