@@ -60,8 +60,8 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(version.data!!, from, force)
         } catch (e: Exception) {
-            MainActivity.textDownload.text = Constants.NOTICE_TOAST_NETWORK_ERROR
             MainScope().launch {
+                MainActivity.textDownload.text = Constants.NOTICE_TOAST_NETWORK_ERROR
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
                 UMCrash.generateCustomLog("OpenDatabaseException", "数据接口访问异常，请尝试重启后台服务！")
             }
