@@ -179,7 +179,7 @@ object DatabaseUpdater {
             try {
                 //尝试打开数据库
                 if (File(FileUtil.getDatabasePath(2)).exists()) {
-                    openDatabase(AppDatabase.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
+                    openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
                 }
             } catch (e: Exception) {
                 //启用远程备份数据库
@@ -197,7 +197,6 @@ object DatabaseUpdater {
      * 打开数据库
      */
     private fun openDatabase(helper: SupportSQLiteOpenHelper) {
-        helper.close()
         helper.readableDatabase
         helper.close()
     }

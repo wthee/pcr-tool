@@ -8,9 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.adapter.SkillAdapter
+import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
+import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel
 
 /**
@@ -42,6 +46,9 @@ class CharacterSkillFragment : Fragment() {
     private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
         InjectorUtil.provideCharacterSkillViewModelFactory()
     }
+    private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
+        InjectorUtil.provideCharacterAttrViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,10 +78,21 @@ class CharacterSkillFragment : Fragment() {
             adapter = SkillAdapter()
             skillList.adapter = adapter
         }
-        sharedSkillViewModel.getCharacterSkills(uid)
+        var level = CharacterAttrFragment.maxLv
+        var atk = 0.0
+        characterAttrViewModel.sumInfo.observe(viewLifecycleOwner) {
+            atk = if (it.atk != 0.0) it.atk else it.magicStr
+            sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
+        }
+        characterAttrViewModel.selData.observe(viewLifecycleOwner) {
+            level = it[Constants.LEVEL] ?: level
+            sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
+        }
         sharedSkillViewModel.skills.observe(viewLifecycleOwner) {
             adapter.setSize(it.size)
-            adapter.submitList(it)
+            adapter.submitList(it) {
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 

@@ -78,7 +78,6 @@ abstract class AppDatabase : RoomDatabase() {
          * 自动获取数据库、远程备份数据
          */
         fun getInstance(): AppDatabase {
-            instance?.close()
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(
                     if (MyApplication.backupMode) {

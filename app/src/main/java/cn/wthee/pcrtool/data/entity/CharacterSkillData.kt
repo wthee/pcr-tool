@@ -54,7 +54,10 @@ CharacterSkillData(
             if (it != 0) list.add(it)
         }
         main_skill_evolution_1.also {
-            if (it != 0) list.add(it)
+            //日服雪菲
+            if ((sp_skill_1 != 1064101 || it != 1065012) && it != 0) {
+                if (it != 0) list.add(it)
+            }
         }
         main_skill_2.also {
             if (it != 0) list.add(it)
@@ -69,6 +72,10 @@ CharacterSkillData(
             if (it != 0) list.add(it)
         }
         //sp skill
+        //日服莉玛
+        if (sp_skill_1 == 1158101) {
+            list.add(1158100)
+        }
         sp_skill_1.also {
             if (it != 0) list.add(it)
         }

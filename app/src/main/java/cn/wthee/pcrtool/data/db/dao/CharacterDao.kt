@@ -201,6 +201,8 @@ interface CharacterDao {
     @Query(
         """
         SELECT
+            :lv as lv,
+            :atk as atk,
             a.*,
            COALESCE( b.ailment_name,"") as ailment_name
         FROM
@@ -209,7 +211,7 @@ interface CharacterDao {
          WHERE action_id IN (:aid)
     """
     )
-    suspend fun getSkillActions(aid: List<Int>): List<SkillActionPro>
+    suspend fun getSkillActions(lv: Int, atk: Int, aid: List<Int>): List<SkillActionPro>
 
     /**
      * 获取角色最大等级

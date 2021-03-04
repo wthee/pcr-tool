@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.setting
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +16,6 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -63,15 +63,18 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         //数据版本
         lifecycleScope.launch {
-            DataStoreUtil.get(
-                if (changeDbType.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP
-            ).collect { str ->
-                titleDatabase.title = getString(R.string.data) + if (str != null) {
-                    str.split("/")[0]
-                } else {
-                    ""
-                }
-
+            val sp = MyApplication.context.getSharedPreferences(
+                "main",
+                Context.MODE_PRIVATE
+            )
+            val localVersion = sp.getString(
+                if (changeDbType.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+                ""
+            )
+            titleDatabase.title = getString(R.string.data) + if (localVersion != null) {
+                localVersion.split("/")[0]
+            } else {
+                ""
             }
         }
         //强制更新数据库

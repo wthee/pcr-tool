@@ -50,7 +50,9 @@ class SkillActionAdapter :
                 //改变颜色
                 val spannable = SpannableStringBuilder(fixed)
                 val starts = arrayListOf<Int>()
+                val starts0 = arrayListOf<Int>()
                 val ends = arrayListOf<Int>()
+                val ends0 = arrayListOf<Int>()
                 fixed.filterIndexed { index, c ->
                     if (c == '<') {
                         starts.add(index)
@@ -58,7 +60,13 @@ class SkillActionAdapter :
                     if (c == '>') {
                         ends.add(index)
                     }
-                    c == '<' || c == '>'
+                    if (c == '[') {
+                        starts0.add(index)
+                    }
+                    if (c == ']') {
+                        ends0.add(index)
+                    }
+                    false
                 }
                 starts.forEachIndexed { index, _ ->
                     //变色
@@ -75,6 +83,22 @@ class SkillActionAdapter :
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                 }
+                starts0.forEachIndexed { index, _ ->
+                    //变色
+                    spannable.setSpan(
+                        ForegroundColorSpan(
+                            ResourcesUtil.getColor(R.color.cool_apk)
+                        ), starts0[index], ends0[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    //加粗
+                    spannable.setSpan(
+                        StyleSpan(Typeface.BOLD),
+                        starts0[index],
+                        ends0[index] + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+
                 action.text = spannable
             }
         }

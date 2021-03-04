@@ -74,9 +74,10 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
                     13 -> "技能2+"
                     501 -> "EX技能"
                     511 -> "EX技能+"
+                    100 -> "SP连结爆发"
                     101 -> "SP技能1"
                     102 -> "SP技能2"
-                    103 -> "SP连结爆发"
+                    103 -> "SP技能3"
                     else -> ""
                 }
                 //加载图片

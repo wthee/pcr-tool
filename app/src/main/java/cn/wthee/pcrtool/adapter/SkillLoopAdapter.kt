@@ -52,15 +52,21 @@ class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoop
                     pic.load(EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP)
                 } else {
                     //技能图标
-                    name.text = if (atkId == 1001 || atkId == 2001)
-                        "技能1"
-                    else
-                        "技能2"
+                    name.text = when (atkId) {
+                        1001 -> "技能1"
+                        1002 -> "技能2"
+                        2001 -> "SP技能1"
+                        2002 -> "SP技能2"
+                        2003 -> "SP技能3"
+                        else -> ""
+                    }
                     val iconType = when (atkId) {
-                        2001 -> iconTypes[101]
-                        2002 -> iconTypes[102]
                         1001 -> iconTypes[2]
                         1002 -> iconTypes[3]
+                        1003 -> iconTypes[1]
+                        2001 -> iconTypes[101]
+                        2002 -> iconTypes[102]
+                        2003 -> iconTypes[103]
                         else -> ""
                     }
                     //图标地址

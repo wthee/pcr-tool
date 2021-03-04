@@ -61,7 +61,8 @@ class CharacterRepository(private val characterDao: CharacterDao) {
 
     suspend fun getSkillData(sid: Int) = characterDao.getSkillData(sid)
 
-    suspend fun getSkillActions(aids: List<Int>) = characterDao.getSkillActions(aids)
+    suspend fun getSkillActions(lv: Int, atk: Int, aids: List<Int>) =
+        characterDao.getSkillActions(lv, atk, aids)
 
     suspend fun getMaxLevel() = characterDao.getMaxLevel()
 
