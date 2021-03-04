@@ -72,7 +72,7 @@ class CharacterListFragment : CommonListFragment() {
         sortType = SortType.SORT_DATE
         sortAsc = false
         characterName = ""
-        load()
+        load(true)
     }
 
     //加载数据
@@ -95,11 +95,11 @@ class CharacterListFragment : CommonListFragment() {
             }
         }
         //获取角色
-        load()
+        load(false)
         binding.toolList.adapter = listAdapter
     }
 
-    private fun load() {
+    private fun load(reload: Boolean) {
         lifecycleScope.launch {
             //获取角色
             DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
@@ -110,7 +110,7 @@ class CharacterListFragment : CommonListFragment() {
                     sortType,
                     sortAsc,
                     characterName,
-                    false
+                    reload
                 )
             }
         }

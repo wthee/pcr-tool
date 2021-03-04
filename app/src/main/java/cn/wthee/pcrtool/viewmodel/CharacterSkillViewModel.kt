@@ -32,7 +32,7 @@ class CharacterSkillViewModel(
     /**
      * 根据 [unitId]， 获取角色技能信息
      */
-    fun getCharacterSkills(unitId: Int) {
+    fun getCharacterSkills(lv: Int, atk: Int, unitId: Int) {
         isLoading.postValue(true)
         iconTypes.clear()
         viewModelScope.launch {
@@ -50,7 +50,7 @@ class CharacterSkillViewModel(
                         skill.description,
                         skill.icon_type
                     )
-                    info.actions = repository.getSkillActions(skill.getAllActionId())
+                    info.actions = repository.getSkillActions(lv, atk, skill.getAllActionId())
                     infos.add(info)
                 }
                 isLoading.postValue(false)

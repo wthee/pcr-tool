@@ -4,6 +4,7 @@ import android.content.Context.MODE_PRIVATE
 import android.view.View
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -63,48 +64,7 @@ object DatabaseUpdater {
             MainScope().launch {
                 MainActivity.textDownload.text = Constants.NOTICE_TOAST_NETWORK_ERROR
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
-                UMCrash.generateCustomLog("OpenDatabaseException", "数据接口访问异常，请尝试重启后台服务！")
             }
-        }
-    }
-
-    /**
-     * 尝试打开本地数据库
-     *
-     * 1：正常打开  0：启用备用数据库
-     */
-    fun tryOpenDatabase(): Int {
-        if (getDatabaseType() == 1) {
-            try {
-                //尝试打开数据库
-                if (File(FileUtil.getDatabasePath(1)).exists()) {
-                    AppDatabase.buildDatabase(Constants.DATABASE_NAME).openHelper.readableDatabase
-                }
-            } catch (e: Exception) {
-                //启用远程备份数据库
-                MainScope().launch {
-                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-                    UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
-                }
-                return 0
-            }
-            //正常打开
-            return 1
-        } else {
-            try {
-                //尝试打开数据库
-                if (File(FileUtil.getDatabasePath(2)).exists()) {
-                    AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper.readableDatabase
-                }
-            } catch (e: Exception) {
-                //启用远程备份数据库
-                MainScope().launch {
-                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-                    UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
-                }
-                return 0
-            }
-            return 1
         }
     }
 
@@ -191,6 +151,54 @@ object DatabaseUpdater {
                 updateLocalDataBaseVersion(ver.toString())
             }
         }
+    }
+
+    /**
+     * 尝试打开本地数据库
+     *
+     * 1：正常打开  0：启用备用数据库
+     */
+    fun tryOpenDatabase(): Int {
+        if (getDatabaseType() == 1) {
+            try {
+                //尝试打开数据库
+                if (File(FileUtil.getDatabasePath(1)).exists()) {
+                    openDatabase(AppDatabase.buildDatabase(Constants.DATABASE_NAME).openHelper)
+                }
+            } catch (e: Exception) {
+                //启用远程备份数据库
+                MainScope().launch {
+                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                    UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
+                }
+                return 0
+            }
+            //正常打开
+            return 1
+        } else {
+            try {
+                //尝试打开数据库
+                if (File(FileUtil.getDatabasePath(2)).exists()) {
+                    openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
+                }
+            } catch (e: Exception) {
+                //启用远程备份数据库
+                MainScope().launch {
+                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                    UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
+                }
+                return 0
+            }
+            return 1
+        }
+    }
+
+    /**
+     * 打开数据库
+     */
+    private fun openDatabase(helper: SupportSQLiteOpenHelper) {
+        helper.readableDatabase
+        helper.close()
     }
 
     /**

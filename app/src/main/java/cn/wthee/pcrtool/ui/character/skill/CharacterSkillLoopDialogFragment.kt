@@ -60,10 +60,14 @@ class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
         sharedSkillViewModel.atlPattern.observe(viewLifecycleOwner) {
             val loops = arrayListOf<SkillLoop>()
             if (it.size > 1) {
-                loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))
-                loops.add(SkillLoop(getString(R.string.looping), it[0].getLoop()))
-                loops.add(SkillLoop(getString(R.string.before_loop), it[1].getBefore()))
-                loops.add(SkillLoop(getString(R.string.title_looping_sp), it[1].getLoop()))
+                it.forEach {
+                    if (it.getBefore().size > 0) {
+                        loops.add(SkillLoop(getString(R.string.before_loop), it.getBefore()))
+                    }
+                    if (it.getLoop().size > 0) {
+                        loops.add(SkillLoop(getString(R.string.looping), it.getLoop()))
+                    }
+                }
             } else {
                 loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))
                 loops.add(SkillLoop(getString(R.string.looping), it[0].getLoop()))

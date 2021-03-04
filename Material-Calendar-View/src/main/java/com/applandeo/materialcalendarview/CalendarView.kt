@@ -270,9 +270,9 @@ class CalendarView : LinearLayout {
     }
 
     private val onNextClickListener =
-        OnClickListener { v: View? -> mViewPager!!.currentItem = mViewPager!!.currentItem + 1 }
+        OnClickListener { _ -> mViewPager!!.currentItem = mViewPager!!.currentItem + 1 }
     private val onPreviousClickListener =
-        OnClickListener { v: View? -> mViewPager!!.currentItem = mViewPager!!.currentItem - 1 }
+        OnClickListener { _ -> mViewPager!!.currentItem = mViewPager!!.currentItem - 1 }
     private val onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(
             position: Int,
@@ -353,7 +353,7 @@ class CalendarView : LinearLayout {
         setUpCalendarPosition(date)
         mCurrentMonthLabel!!.text =
             DateUtils.getMonthAndYearDate(mContext, date)
-        mCalendarPageAdapter!!.notifyDataSetChanged()
+        mCalendarPageAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -463,7 +463,7 @@ class CalendarView : LinearLayout {
     }
 
     fun setmFirstDayOfWeek(mFirstDayOfWeek: Int) {
-        mCalendarProperties!!.setmFirstDayOfWeek(mFirstDayOfWeek)
+        mCalendarProperties.setmFirstDayOfWeek(mFirstDayOfWeek)
         this.mFirstDayOfWeek = mFirstDayOfWeek
     }
 

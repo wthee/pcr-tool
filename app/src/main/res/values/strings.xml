@@ -23,7 +23,7 @@
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
     <string name="skill_loop">技能循环</string>
-    <string name="before_loop">入场动作</string>
+    <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
     <string name="equip_details">道具详情</string>
     <string name="title_comments">交流</string>
