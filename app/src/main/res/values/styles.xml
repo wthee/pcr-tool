@@ -9,6 +9,7 @@
         <item name="android:navigationBarColor">@color/colorAlpha</item>
         <item name="android:windowFullscreen">true</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="textColor">@color/colorPrimary</item>
     </style>
 
     <!-- 点击波浪-->
