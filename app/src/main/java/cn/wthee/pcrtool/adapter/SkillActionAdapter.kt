@@ -68,36 +68,42 @@ class SkillActionAdapter :
                     }
                     false
                 }
-                starts.forEachIndexed { index, _ ->
-                    //变色
-                    spannable.setSpan(
-                        ForegroundColorSpan(
-                            ResourcesUtil.getColor(R.color.colorPrimary)
-                        ), starts[index], ends[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    //加粗
-                    spannable.setSpan(
-                        StyleSpan(Typeface.BOLD),
-                        starts[index],
-                        ends[index] + 1,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
+                //忽略越界异常
+                try {
+                    starts.forEachIndexed { index, _ ->
+                        //变色
+                        spannable.setSpan(
+                            ForegroundColorSpan(
+                                ResourcesUtil.getColor(R.color.colorPrimary)
+                            ), starts[index], ends[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        //加粗
+                        spannable.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            starts[index],
+                            ends[index] + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+                    starts0.forEachIndexed { index, _ ->
+                        //变色
+                        spannable.setSpan(
+                            ForegroundColorSpan(
+                                ResourcesUtil.getColor(R.color.cool_apk)
+                            ), starts0[index], ends0[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        //加粗
+                        spannable.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            starts0[index],
+                            ends0[index] + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+                } catch (e: Exception) {
+
                 }
-                starts0.forEachIndexed { index, _ ->
-                    //变色
-                    spannable.setSpan(
-                        ForegroundColorSpan(
-                            ResourcesUtil.getColor(R.color.cool_apk)
-                        ), starts0[index], ends0[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    //加粗
-                    spannable.setSpan(
-                        StyleSpan(Typeface.BOLD),
-                        starts0[index],
-                        ends0[index] + 1,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                }
+
 
                 action.text = spannable
             }

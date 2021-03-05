@@ -104,6 +104,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        mFloatingWindowHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            ScreenUtil.getHeight() - 48.dp
+        else
+            ScreenUtil.getWidth() - 48.dp
+        super.onConfigurationChanged(newConfig)
+    }
+
+    //动画执行完之前，禁止直接返回
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        super.dispatchKeyEvent(event)
+        binding.fab.setImageResource(R.drawable.ic_function)
+        return true
+    }
+
     private fun fixUriBug() {
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
@@ -123,27 +138,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        mFloatingWindowHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            ScreenUtil.getHeight() - 48.dp
-        else
-            ScreenUtil.getWidth() - 48.dp
-        super.onConfigurationChanged(newConfig)
-    }
-
-    //动画执行完之前，禁止直接返回
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        super.dispatchKeyEvent(event)
-        binding.fab.setImageResource(R.drawable.ic_function)
-        return true
-    }
-
     @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
-            overridePendingTransition(R.anim.fragment_popenter, R.anim.fragment_exit)
             viewModelStore.clear()
             val fm = supportFragmentManager
             for (i in 0..fm.backStackEntryCount) {
