@@ -87,7 +87,12 @@ class CharacterAttrViewModel(
             MainScope().launch {
                 UMCrash.generateCustomLog(
                     e,
-                    Constants.EXCEPTION_LOAD_ATTR + "uid:$unitId,data:$selData"
+                    Constants.EXCEPTION_LOAD_ATTR +
+                            "uid:$unitId," +
+                            "rank:${data[Constants.RANK]}," +
+                            "ratity:${data[Constants.RARITY]}" +
+                            "lv:${data[Constants.LEVEL]}" +
+                            "ueLv:${data[Constants.UNIQUE_EQUIP_LEVEL]}"
                 )
             }
         }
