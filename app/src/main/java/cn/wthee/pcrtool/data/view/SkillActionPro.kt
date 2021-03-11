@@ -89,7 +89,7 @@ data class SkillActionPro(
                 " [${(action_value_2 + action_value_3 * level + action_value_4 * atk).int}] <$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力> "
             }
             SkillActionType.SHIELD -> {
-                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级] ，持续 [${(action_value_3).int}] 秒"
+                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级] ，持续 [${action_value_3}] 秒"
             }
             SkillActionType.CHANGE_ACTION_SPEED -> {
                 //判断异常状态
@@ -108,9 +108,9 @@ data class SkillActionPro(
                     else -> ""
                 }
                 if (action_value_1 != 0.toDouble()) {
-                    "，速度 *  [${(action_value_1).int}] ， 持续 [${(action_value_3).int}] 秒"
+                    "，速度 *  [${action_value_1}] ， 持续 [${action_value_3}] 秒"
                 } else {
-                    "，持续 [${(action_value_3).int}] 秒"
+                    "，持续 [${action_value_3}] 秒"
                 }
             }
             SkillActionType.DOT -> {
@@ -122,7 +122,7 @@ data class SkillActionPro(
                     4 -> "猛毒"
                     else -> ""
                 }
-                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${(action_value_3).int}] 秒"
+                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${action_value_3}] 秒"
             }
             SkillActionType.AURA -> {
                 ailmentName = if (target_assignment == 1) "DEBUFF" else "BUFF"
@@ -130,7 +130,7 @@ data class SkillActionPro(
                     " [${(action_value_2 + action_value_3 * level).int}] <$action_value_2 + $action_value_3 * 技能等级> "
                 } else {
                     " [${(action_value_2).int}] "
-                } + "，持续 [${(action_value_4).int}] 秒"
+                } + "，持续 [${action_value_4}] 秒"
             }
             SkillActionType.CHARM -> {
                 ailmentName = when (action_detail_1) {
@@ -138,10 +138,10 @@ data class SkillActionPro(
                     1 -> "混乱"
                     else -> ""
                 }
-                "，持续 [${(action_value_1).int}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
+                "，持续 [${action_value_1}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
             }
             SkillActionType.BLIND -> {
-                "，持续 [${(action_value_1).int}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
+                "，持续 [${action_value_1}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
             }
             SkillActionType.CHANGE_MODE -> {
                 if (action_value_1 > 0) "每秒降低TP  [${(action_value_1).int}] " else ""
@@ -153,7 +153,7 @@ data class SkillActionPro(
                     " [${(action_value_1).int}] "
             }
             SkillActionType.TAUNT, SkillActionType.INVINCIBLE -> {
-                if (action_value_2 > 0) ", 持续 [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> 秒" else ", 持续 [${(action_value_1).int}] 秒"
+                if (action_value_2 > 0) ", 持续 [${action_value_1 + action_value_2 * level}] <$action_value_1 + $action_value_2 * 技能等级> 秒" else ", 持续 [${action_value_1}] 秒"
             }
             //反伤
             SkillActionType.STRIKE_BACK -> {
@@ -164,19 +164,19 @@ data class SkillActionPro(
                 " [${(action_value_2 + action_value_3 * level).int}] <$action_value_2 + $action_value_3 * 技能等级> , 叠加上限 [${(action_value_4).int}] "
             }
             SkillActionType.ATTACK_FIELD -> {
-                " [${(action_value_1 + action_value_2 * level + action_value_3 * atk).int}] <$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力> ，持续 [${(action_value_5).int}] 秒，范围 [${(action_value_7).int}] "
+                " [${(action_value_1 + action_value_2 * level + action_value_3 * atk).int}] <$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力> ，持续 [${action_value_5}] 秒，范围 [${(action_value_7).int}] "
             }
             SkillActionType.HEAL_FIELD,
             SkillActionType.DEBUFF_FIELD,
             SkillActionType.DOT_FIELD -> {
                 if (action_value_2 == 0.toDouble()) {
-                    "$action_value_1 ，持续 [${(action_value_4).int}] 秒"
+                    "$action_value_1 ，持续 [${action_value_4}] 秒"
                 } else {
-                    " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${(action_value_3).int}] 秒"
+                    " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${action_value_3}] 秒"
                 } + "，范围 <$action_value_7> ；"
             }
             SkillActionType.CHANNEL -> {
-                " [${(action_value_2 + action_value_3 * level).int}] <$action_value_2 + $action_value_3 * 技能等级> ，持续 [${(action_value_4).int}] 秒"
+                " [${(action_value_2 + action_value_3 * level).int}] <$action_value_2 + $action_value_3 * 技能等级> ，持续 [${action_value_4}] 秒"
             }
             SkillActionType.EX -> if (action_value_3 == 0.toDouble()) {
                 " [$action_value_2] "
