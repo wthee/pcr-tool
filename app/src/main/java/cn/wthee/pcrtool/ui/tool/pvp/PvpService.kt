@@ -65,7 +65,12 @@ class PvpService : Service() {
     @Suppress("UNCHECKED_CAST")
     override fun onStartCommand(intent: Intent?, flg: Int, startId: Int): Int {
         activity = ActivityHelper.instance.currentActivity
-        allCharacters = intent?.getSerializableExtra("allCharacters") as ArrayList<PvpPositionData>
+
+        val bundle = intent?.getBundleExtra("data")
+        val data = bundle?.getSerializable("allCharacters")
+        if (data != null) {
+            allCharacters = data as ArrayList<PvpPositionData>
+        }
         if (mFloatingWindowHeight > 300.dp) mFloatingWindowHeight = 300.dp
         //窗口设置
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager?

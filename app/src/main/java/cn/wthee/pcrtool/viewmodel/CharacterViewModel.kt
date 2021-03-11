@@ -99,6 +99,8 @@ class CharacterViewModel(
         }
     }
 
+    suspend fun getAllPvp() = repository.getCharacterByPosition(0, 999)
+
     /**
      * 六星 id 列表
      */

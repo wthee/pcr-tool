@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.PvpPositionData
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.data.view.getIdStr
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
@@ -24,7 +25,6 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.io.Serializable
 
 
 /**
@@ -60,31 +60,15 @@ class PvpFragment : Fragment() {
         )
         //监听
         setListener()
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //过渡动画结束后，显示选择角色布局
-        job = lifecycleScope.launch {
+        lifecycleScope.launch {
             //获取六星id
             r6Ids = sharedCharacterViewModel.getR6Ids()
             childFragmentManager.beginTransaction()
                 .replace(R.id.layout_select, PvpIconFragment())
                 .commit()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //返回时，取消加载布局
-        try {
-            if (!job.isCompleted) {
-                job.cancel()
-            }
-        } catch (e: Exception) {
-
-        }
+        return binding.root
     }
 
     private fun setListener() {
@@ -127,16 +111,39 @@ class PvpFragment : Fragment() {
                     //若未授权则请求权限
                     getOverlayPermission()
                 } else {
-                    val intent =
-                        Intent(requireActivity().applicationContext, PvpService::class.java)
+                    lifecycleScope.launch {
+                        val list = sharedCharacterViewModel.getAllPvp()
+                        if (list != null && list.isNotEmpty()) {
+                            val allCharacter = arrayListOf<PvpPositionData>()
+                            val character1 = list.filter {
+                                it.position in 0..299
+                            }
+                            val character2 = list.filter {
+                                it.position in 300..599
+                            }
+                            val character3 = list.filter {
+                                it.position in 600..9999
+                            }
+                            allCharacter.add(PvpPositionData(1, character1))
+                            allCharacter.add(PvpPositionData(2, character2))
+                            allCharacter.add(PvpPositionData(3, character3))
+                            val intent =
+                                Intent(requireActivity().applicationContext, PvpService::class.java)
+                            requireActivity().stopService(intent)
+                            val bundle = Bundle().also {
+                                it.putSerializable("allCharacters", allCharacter)
+                            }
+                            intent.putExtra("data", bundle)
+                            requireActivity().startService(intent)
+                            //退回桌面
+                            val home = Intent(Intent.ACTION_MAIN)
+                            home.addCategory(Intent.CATEGORY_HOME)
+                            startActivity(home)
+                        } else {
+                            ToastUtil.short("悬浮窗打开异常，请重试~")
+                        }
 
-                    requireActivity().stopService(intent)
-                    intent.putExtra("allCharacters", PvpIconFragment.allCharacters as Serializable)
-                    requireActivity().startService(intent)
-                    //退回桌面
-                    val home = Intent(Intent.ACTION_MAIN)
-                    home.addCategory(Intent.CATEGORY_HOME)
-                    startActivity(home)
+                    }
                 }
             }
         }
