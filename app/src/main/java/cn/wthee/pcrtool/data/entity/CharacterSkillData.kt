@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey
  * 角色技能信息
  */
 @Entity(tableName = "unit_skill_data")
-data class
-CharacterSkillData(
+data class CharacterSkillData(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val unit_id: Int,
     @ColumnInfo(name = "union_burst") val union_burst: Int,
@@ -42,6 +41,7 @@ CharacterSkillData(
     @ColumnInfo(name = "main_skill_evolution_1") val main_skill_evolution_1: Int,
     @ColumnInfo(name = "main_skill_evolution_2") val main_skill_evolution_2: Int,
 ) {
+
     fun getAllSkillId(): ArrayList<Int> {
         val list = arrayListOf<Int>()
         union_burst.also {
@@ -56,7 +56,7 @@ CharacterSkillData(
         main_skill_evolution_1.also {
             //日服雪菲
             if ((sp_skill_1 != 1064101 || it != 1065012) && it != 0) {
-                if (it != 0) list.add(it)
+                list.add(it)
             }
         }
         main_skill_2.also {

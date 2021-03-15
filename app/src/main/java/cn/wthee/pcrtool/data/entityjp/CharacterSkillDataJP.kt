@@ -32,7 +32,6 @@ data class CharacterSkillDataJP(
     @ColumnInfo(name = "ex_skill_evolution_4") var ex_skill_evolution_4: Int = 0,
     @ColumnInfo(name = "ex_skill_5") var ex_skill_5: Int = 0,
     @ColumnInfo(name = "ex_skill_evolution_5") var ex_skill_evolution_5: Int = 0,
-    @ColumnInfo(name = "sp_union_burst") var sp_union_burst: Int = 0,
     @ColumnInfo(name = "sp_skill_1") var sp_skill_1: Int = 0,
     @ColumnInfo(name = "sp_skill_2") var sp_skill_2: Int = 0,
     @ColumnInfo(name = "sp_skill_3") var sp_skill_3: Int = 0,
@@ -42,8 +41,7 @@ data class CharacterSkillDataJP(
     @ColumnInfo(name = "main_skill_evolution_1") var main_skill_evolution_1: Int = 0,
     @ColumnInfo(name = "main_skill_evolution_2") var main_skill_evolution_2: Int = 0,
     //jp
-//    @Ignore
     @ColumnInfo(name = "sp_skill_evolution_1") var sp_skill_evolution_1: Int = 0,
-//    @Ignore
-    @ColumnInfo(name = "sp_skill_evolution_2") var sp_skill_evolution_2: Int = 0
+    @ColumnInfo(name = "sp_skill_evolution_2") var sp_skill_evolution_2: Int = 0,
+    @ColumnInfo(name = "sp_union_burst") var sp_union_burst: Int = 0,
 )
