@@ -63,10 +63,15 @@ class PvpFragment : Fragment() {
 
         lifecycleScope.launch {
             //获取六星id
-            r6Ids = sharedCharacterViewModel.getR6Ids()
-            childFragmentManager.beginTransaction()
-                .replace(R.id.layout_select, PvpIconFragment())
-                .commit()
+            try {
+                r6Ids = sharedCharacterViewModel.getR6Ids()
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.layout_select, PvpIconFragment())
+                    .commit()
+            } catch (e: Exception) {
+
+            }
+
         }
         return binding.root
     }
