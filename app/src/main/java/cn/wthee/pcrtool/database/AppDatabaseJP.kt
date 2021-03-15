@@ -54,6 +54,8 @@ import cn.wthee.pcrtool.utils.Constants
         CampaignScheduleJP::class,
         CharacterRoomComments::class,
         AilmentData::class,
+        ClanBattleBossDataJP::class,
+        EnemyParameterJP::class
     ],
     version = BuildConfig.SQLITE_VERSION,
     exportSchema = false
