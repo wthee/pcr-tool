@@ -11,7 +11,7 @@ import cn.wthee.pcrtool.databinding.ViewMenuItemBinding
 class MenuItemViewHelper(private val binding: ViewMenuItemBinding) {
 
     private val centerIcons =
-        arrayListOf(R.drawable.ic_equip)
+        arrayListOf<Int>()
 
 
     /**
