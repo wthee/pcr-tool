@@ -76,8 +76,8 @@ class GachaHistoryAdapter :
             "ピックアップガチャ" -> "PICK UP 扭蛋"
             "プライズガチャ" -> "复刻扭蛋"
             "プリンセスフェス" -> "公主庆典"
-            else -> ""
-        }.replace("ガチャ", "扭蛋")
+            else -> name
+        }.replace("ガチャ", " 扭蛋")
     }
 
 }

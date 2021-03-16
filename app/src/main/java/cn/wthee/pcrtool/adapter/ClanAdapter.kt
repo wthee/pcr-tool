@@ -12,7 +12,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.ItemClanBinding
 import cn.wthee.pcrtool.utils.fillZero
-import cn.wthee.pcrtool.utils.intArrayList
 
 /**
  * 团队战记录列表适配器
@@ -25,11 +24,7 @@ class ClanAdapter :
     ListAdapter<ClanBattleInfo, ClanAdapter.ViewHolder>(ClanDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemClanBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+            ItemClanBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -47,15 +42,16 @@ class ClanAdapter :
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
                 //起止日期
-                val startDate = clan.start_time.substring(0, 10)
-                title.text = startDate
+                val startDate = clan.start_time.substring(0, 4)
+                year.text = startDate
                 //时间
-                days.text = "${clan.release_month.toString().fillZero()} 月"
-
+                month.text = clan.release_month.toString().fillZero()
                 //图片
-                val adapter = ClanBossIconAdapter("${startDate.substring(0, 4)} 年 ${days.text}")
+                val list = clan.getUnitIdList()
+                val adapter =
+                    ClanBossIconAdapter(list[4].toString(), "${year.text} 年 ${month.text}", this)
                 icons.adapter = adapter
-                adapter.submitList(clan.enemyIds.intArrayList())
+                adapter.submitList(list.subList(0, 4))
 
             }
         }

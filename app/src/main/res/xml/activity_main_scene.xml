@@ -82,34 +82,13 @@
             app:layout_constraintEnd_toEndOf="@id/tool_calendar" />
 
         <Constraint
-            android:id="@+id/tool_gacha"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/small_card_height"
-            android:layout_marginStart="@dimen/m_dp"
-            android:layout_marginEnd="@dimen/m_dp"
-            android:layout_marginBottom="@dimen/m_dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/tool_leader"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Constraint
-            android:id="@+id/tool_event"
-            android:layout_width="@dimen/normal_icon"
-            android:layout_height="@dimen/small_card_height"
-            android:layout_marginStart="@dimen/m_dp"
-            android:layout_marginBottom="@dimen/m_dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/tool_leader"
-            app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
-
-        <Constraint
             android:id="@+id/tool_clan"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_dp"
             android:layout_marginBottom="@dimen/m_dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
+            app:layout_constraintBottom_toTopOf="@id/tool_guild"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Constraint
@@ -120,8 +99,29 @@
             android:layout_marginBottom="@dimen/m_dp"
             android:visibility="invisible"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
-            app:layout_constraintEnd_toStartOf="@id/tool_clan" />
+            app:layout_constraintBottom_toTopOf="@id/tool_pvp"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Constraint
+            android:id="@+id/tool_gacha"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/tool_pvp"
+            app:layout_constraintEnd_toStartOf="@id/tool_guild" />
+
+        <Constraint
+            android:id="@+id/tool_event"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/tool_pvp"
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
 
     </ConstraintSet>
 
@@ -145,7 +145,7 @@
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="4"
             app:layout_constraintStart_toEndOf="@id/tool_equip" />
 
         <Constraint
@@ -156,7 +156,7 @@
             android:layout_marginBottom="@dimen/xl_dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/setting"
-            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintHorizontal_weight="4"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Constraint
@@ -168,7 +168,7 @@
             android:layout_marginBottom="@dimen/m_dp"
             app:layout_constraintBottom_toTopOf="@id/setting"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="3"
             app:layout_constraintStart_toEndOf="@id/tool_news" />
 
         <Constraint
@@ -180,7 +180,7 @@
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@id/setting"
             app:layout_constraintEnd_toStartOf="@id/tool_pvp"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="2"
             app:layout_constraintStart_toEndOf="@id/tool_calendar" />
 
         <Constraint
@@ -204,52 +204,55 @@
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@id/tool_calendar"
             app:layout_constraintEnd_toEndOf="@id/tool_calendar"
-            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Constraint
-            android:id="@+id/tool_gacha"
+            android:id="@+id/tool_guild"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_pvp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@id/tool_gacha" />
+
+        <Constraint
+            android:id="@+id/tool_clan"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_card_height"
             android:layout_marginStart="@dimen/m_dp"
             android:layout_marginEnd="@dimen/m_dp"
             android:layout_marginBottom="@dimen/m_dp"
-            app:layout_constraintBottom_toTopOf="@id/tool_leader"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_guild"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toEndOf="@id/tool_gacha" />
+
+        <Constraint
+            android:id="@+id/tool_gacha"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/menu_item_card_height"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/tool_pvp"
+            app:layout_constraintEnd_toStartOf="@id/tool_guild"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/tool_event" />
 
         <Constraint
             android:id="@+id/tool_event"
             android:layout_width="0dp"
-            android:layout_height="@dimen/small_card_height"
+            android:layout_height="@dimen/menu_item_card_height"
             android:layout_marginStart="@dimen/m_dp"
-            android:layout_marginBottom="@dimen/m_dp"
-            app:layout_constraintBottom_toTopOf="@id/tool_leader"
-            app:layout_constraintEnd_toStartOf="@id/tool_gacha"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Constraint
-            android:id="@+id/tool_clan"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/small_card_height"
             android:layout_marginEnd="@dimen/m_dp"
             android:layout_marginBottom="@dimen/m_dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
-            app:layout_constraintStart_toEndOf="@id/tool_guild"
-            app:layout_constraintHorizontal_weight="1" />
-
-        <Constraint
-            android:id="@+id/tool_guild"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/small_card_height"
-            android:layout_marginStart="@dimen/m_dp"
-            android:layout_marginBottom="@dimen/m_dp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@id/tool_gacha"
-            app:layout_constraintEnd_toStartOf="@id/tool_clan"
+            app:layout_constraintBottom_toTopOf="@id/tool_pvp"
+            app:layout_constraintEnd_toStartOf="@id/tool_gacha"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
@@ -263,11 +266,11 @@
             <KeyAttribute
                 android:alpha="0"
                 app:framePosition="80"
-                app:motionTarget="@id/tool_event" />
+                app:motionTarget="@id/tool_clan" />
             <KeyAttribute
                 android:alpha="1.0"
                 app:framePosition="100"
-                app:motionTarget="@id/tool_event" />
+                app:motionTarget="@id/tool_clan" />
 
             <KeyAttribute
                 android:alpha="0"

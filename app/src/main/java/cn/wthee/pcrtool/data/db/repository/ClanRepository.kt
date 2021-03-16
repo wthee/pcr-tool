@@ -9,8 +9,8 @@ import cn.wthee.pcrtool.data.db.dao.ClanBattleDao
  */
 class ClanRepository(private val clanBattleDao: ClanBattleDao) {
 
-    suspend fun getAllClanBattleData(type: Int) = clanBattleDao.getAllClanBattleData()
-//        if (type == 1) clanBattleDao.getAllClanBattleData() else clanBattleDao.getAllClanBattleDataJP()
+    suspend fun getAllClanBattleData(type: Int) =
+        if (type == 1) clanBattleDao.getAllClanBattleData() else clanBattleDao.getAllClanBattleDataJP()
 
     companion object {
 

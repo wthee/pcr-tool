@@ -7,34 +7,48 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/title"
-        style="@style/TitleStyle"
-        android:layout_width="wrap_content"
+        android:id="@+id/month"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/app_name" />
+        tools:text="11-12" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/days"
-        style="@style/TitleStyle"
-        android:layout_width="wrap_content"
+        android:id="@+id/year"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/title"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/app_name" />
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        tools:text="@string/title_quest" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/icons"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        android:padding="@dimen/xs_dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_weight="3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:spanCount="2"
-        tools:itemCount="2"
+        app:layout_constraintTop_toBottomOf="@id/year"
+        app:spanCount="5"
+        tools:itemCount="5"
+
         tools:listitem="@layout/item_common" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/boss_icon"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_character" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

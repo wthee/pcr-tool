@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
             R.string.tool_event,
             R.string.tool_calendar_title,
             R.string.tool_gacha,
-            R.string.title_guild,
+            R.string.tool_guild,
             R.string.tool_clan,
         )
         //菜单图标

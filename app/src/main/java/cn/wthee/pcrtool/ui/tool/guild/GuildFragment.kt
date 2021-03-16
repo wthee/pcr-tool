@@ -44,7 +44,7 @@ class GuildFragment : CommonListFragment() {
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(
             R.drawable.ic_guild,
-            getString(R.string.title_guild)
+            getString(R.string.tool_guild)
         )
         return binding.root
     }
