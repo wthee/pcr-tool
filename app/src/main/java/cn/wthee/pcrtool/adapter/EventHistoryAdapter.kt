@@ -59,8 +59,8 @@ class EventHistoryAdapter(
                 val adapter = IconListAdapter()
                 icons.adapter = adapter
                 adapter.submitList(event.unitIds.intArrayList())
-                val startDate = event.startTime.subSequence(0, 10).toString()
-                val endDate = event.endTime.subSequence(0, 10).toString()
+                val startDate = event.startTime.substring(0, 10)
+                val endDate = event.endTime.substring(0, 10)
                 if (startDate == "2030/12/30") {
                     title.text = "活动预告"
                 } else {

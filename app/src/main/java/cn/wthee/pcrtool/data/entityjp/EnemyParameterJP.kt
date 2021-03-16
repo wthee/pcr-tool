@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.wthee.pcrtool.data.view.Attr
+import cn.wthee.pcrtool.data.view.AttrInt
 
 @Entity(tableName = "enemy_parameter")
 data class EnemyParameterJP(
@@ -32,8 +32,9 @@ data class EnemyParameterJP(
     @ColumnInfo(name = "ex_skill_lv_4") val ex_skill_lv_4: Int,
     @ColumnInfo(name = "ex_skill_lv_5") val ex_skill_lv_5: Int,
     @ColumnInfo(name = "resist_status_id") val resist_status_id: Int,
+    @Embedded var attr: AttrInt = AttrInt(),
+    //JP
     @ColumnInfo(name = "unique_equipment_flag_1") val unique_equipment_flag_1: Int,
     @ColumnInfo(name = "break_durability") val break_durability: Int,
     @ColumnInfo(name = "virtual_hp") val virtual_hp: Int,
-    @Embedded var attr: Attr = Attr(),
 )

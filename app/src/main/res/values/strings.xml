@@ -100,6 +100,7 @@
     <string name="tool_calendar_title">日历</string>
     <string name="tool_pvp">竞技场</string>
     <string name="tool_pvp_liked">收藏</string>
+    <string name="tool_clan">团队战</string>
     <string name="liked_count">已收藏： %d </string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>

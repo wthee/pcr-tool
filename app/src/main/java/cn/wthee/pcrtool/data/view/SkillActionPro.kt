@@ -89,7 +89,7 @@ data class SkillActionPro(
                 " [${(action_value_2 + action_value_3 * level + action_value_4 * atk).int}] <$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力> "
             }
             SkillActionType.SHIELD -> {
-                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级] ，持续 [${action_value_3}] 秒"
+                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${action_value_3}] 秒"
             }
             SkillActionType.CHANGE_ACTION_SPEED -> {
                 //判断异常状态

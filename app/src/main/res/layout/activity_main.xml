@@ -145,6 +145,11 @@
         <include
             android:id="@+id/tool_guild"
             layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/tool_clan"
+            layout="@layout/view_menu_item" />
+
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
 

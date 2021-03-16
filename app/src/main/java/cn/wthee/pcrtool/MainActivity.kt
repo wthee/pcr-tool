@@ -184,6 +184,7 @@ class MainActivity : AppCompatActivity() {
             binding.toolCalendar,
             binding.toolGacha,
             binding.toolGuild,
+            binding.toolClan
         )
         //菜单跳转
         menuItemIds = arrayListOf(
@@ -199,6 +200,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_characterListFragment_to_calendarJPFragment,
             R.id.action_characterListFragment_to_toolGachaFragment,
             R.id.action_characterListFragment_to_guildFragment,
+            R.id.action_characterListFragment_to_clanFragment,
         )
         //菜单标题
         menuItemTitles = arrayListOf(
@@ -211,6 +213,7 @@ class MainActivity : AppCompatActivity() {
             R.string.tool_calendar_title,
             R.string.tool_gacha,
             R.string.title_guild,
+            R.string.tool_clan,
         )
         //菜单图标
         menuItemDrawable = arrayListOf(
@@ -223,6 +226,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_calendar,
             R.drawable.ic_gacha,
             R.drawable.ic_guild,
+            R.drawable.ic_def,
         )
         fabMain = binding.fab
         //悬浮穿高度

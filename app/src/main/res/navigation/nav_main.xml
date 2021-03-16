@@ -182,6 +182,13 @@
             app:exitAnim="@anim/fragment_exit_no_scale"
             app:popEnterAnim="@anim/fragment_popenter_no_scale"
             app:popExitAnim="@anim/fragment_popexit" />
+        <action
+            android:id="@+id/action_characterListFragment_to_clanFragment"
+            app:destination="@id/clanFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit_no_scale"
+            app:popEnterAnim="@anim/fragment_popenter_no_scale"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
     <fragment
         android:id="@+id/equipmentListFragment"
@@ -231,5 +238,9 @@
         android:id="@+id/characterRankRangeEquipFragment"
         android:name="cn.wthee.pcrtool.ui.character.attr.CharacterRankRangeEquipFragment"
         android:label="CharacterRankRangeEquipFragment" />
+    <fragment
+        android:id="@+id/clanFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.clan.ClanFragment"
+        android:label="ClanFragment" />
 
 </navigation>

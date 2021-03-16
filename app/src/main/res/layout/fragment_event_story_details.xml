@@ -13,6 +13,7 @@
         android:layout_margin="@dimen/s_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textColor="@color/colorPrimary"
+        android:gravity="center"
         android:textStyle="bold"
         tools:text="@string/app_name" />
 

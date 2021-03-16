@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "clan_battle_2_boss_data")
+@Entity(tableName = "clan_battle_boss_data")
 data class ClanBattleBossData(
     @PrimaryKey
     @ColumnInfo(name = "boss_id") val boss_id: Int,

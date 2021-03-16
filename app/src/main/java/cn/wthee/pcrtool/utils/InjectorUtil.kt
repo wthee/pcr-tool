@@ -62,6 +62,16 @@ object InjectorUtil {
         )
     }
 
+    private fun getClanRepository(): ClanRepository {
+        return ClanRepository.getInstance(
+            if (getType() == 1) {
+                AppDatabase.getInstance().getClanDao()
+            } else {
+                AppDatabaseJP.getInstance().getClanDao()
+            }
+        )
+    }
+
     fun provideCharacterViewModelFactory(): CharacterViewModelFactory {
         val repository = getCharacterRepository()
         return CharacterViewModelFactory(
@@ -116,5 +126,10 @@ object InjectorUtil {
     fun provideCalendarViewModelFactory(): CalendarViewModelFactory {
         val repository = getEventRepository()
         return CalendarViewModelFactory(repository)
+    }
+
+    fun provideClanViewModelFactory(): ClanViewModelFactory {
+        val repository = getClanRepository()
+        return ClanViewModelFactory(repository)
     }
 }

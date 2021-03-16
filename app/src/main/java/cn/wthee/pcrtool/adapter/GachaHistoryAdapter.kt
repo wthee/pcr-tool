@@ -48,13 +48,13 @@ class GachaHistoryAdapter :
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
                 //起止日期
-                val startDate = gacha.start_time.subSequence(0, 10).toString()
-                val endDate = gacha.end_time.subSequence(0, 10).toString()
+                val startDate = gacha.start_time.substring(0, 10)
+                val endDate = gacha.end_time.substring(0, 10)
                 title.text = "$startDate ~ $endDate"
                 //时间
                 days.text = "${endDate.days(startDate)} 天"
                 //卡池名
-                subTitle.text = gacha.gacha_name
+                subTitle.text = translate(gacha.gacha_name)
                 //角色图片
                 val adapter = IconListAdapter()
                 icons.adapter = adapter
@@ -71,6 +71,13 @@ class GachaHistoryAdapter :
                 }
             }
         }
+
+        private fun translate(name: String) = when (name) {
+            "ピックアップガチャ" -> "PICK UP 扭蛋"
+            "プライズガチャ" -> "复刻扭蛋"
+            "プリンセスフェス" -> "公主庆典"
+            else -> ""
+        }.replace("ガチャ", "扭蛋")
     }
 
 }

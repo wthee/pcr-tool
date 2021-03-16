@@ -112,6 +112,16 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/tool_leader"
             app:layout_constraintEnd_toStartOf="@id/tool_gacha" />
+
+        <Constraint
+            android:id="@+id/tool_clan"
+            android:layout_width="@dimen/normal_icon"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/tool_event"
+            app:layout_constraintEnd_toEndOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -231,7 +241,16 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent" />
 
-
+        <Constraint
+            android:id="@+id/tool_clan"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_card_height"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tool_event"
+            app:layout_constraintStart_toEndOf="@id/tool_event"
+            app:layout_constraintHorizontal_weight="1" />
     </ConstraintSet>
 
     <Transition
@@ -240,6 +259,15 @@
         app:duration="@integer/menu_item">
 
         <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="80"
+                app:motionTarget="@id/tool_event" />
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="100"
+                app:motionTarget="@id/tool_event" />
+
             <KeyAttribute
                 android:alpha="0"
                 app:framePosition="70"

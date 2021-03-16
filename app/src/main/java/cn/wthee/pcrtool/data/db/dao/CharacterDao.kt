@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.entity.*
 import cn.wthee.pcrtool.data.view.*
@@ -186,6 +187,7 @@ interface CharacterDao {
     /**
      * 根据 [unitId]，获取角色技能基本信息 [CharacterSkillData]
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM unit_skill_data  WHERE unit_id = :unitId")
     suspend fun getCharacterSkill(unitId: Int): CharacterSkillData
 
