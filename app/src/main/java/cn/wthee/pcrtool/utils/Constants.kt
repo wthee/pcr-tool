@@ -99,6 +99,8 @@ object Constants {
     const val RARITY = "rarity"
     const val LEVEL = "level"
     const val UNIQUE_EQUIP_LEVEL = "ueLv"
+    const val CLAN_DATE = "clan_date"
+    const val CLAN_BOSS_NO = "clan_boss_no"
 
     val ATTR = arrayListOf(
         "HP",
