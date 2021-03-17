@@ -26,14 +26,11 @@ class SkillViewModel(
 
     var skills = MutableLiveData<List<SkillInfo>>()
     var atlPattern = MutableLiveData<List<AttackPattern>>()
-    private var refresh = MutableLiveData<Boolean>()
-    private var isLoading = MutableLiveData<Boolean>()
 
     /**
      * 根据 [unitId]， 获取角色技能信息
      */
     fun getCharacterSkills(lv: Int, atk: Int, unitId: Int) {
-        isLoading.postValue(true)
         iconTypes.clear()
         viewModelScope.launch {
             try {
@@ -53,8 +50,6 @@ class SkillViewModel(
                     info.actions = repository.getSkillActions(lv, atk, skill.getAllActionId())
                     infos.add(info)
                 }
-                isLoading.postValue(false)
-                refresh.postValue(false)
                 skills.postValue(infos)
             } catch (e: Exception) {
                 MainScope().launch {
@@ -69,7 +64,6 @@ class SkillViewModel(
      * 根据 [unitId]，角色技能循环
      */
     fun getCharacterSkillLoops(unitId: Int) {
-        isLoading.postValue(true)
         viewModelScope.launch {
             //技能循环
             val pattern = repository.getAttackPattern(unitId)

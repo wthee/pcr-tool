@@ -90,6 +90,7 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
+    const val TYPE_SKILL = "type_skill"
     const val REGION = "region"
     const val SELECT_RANK = "select_rank"
     const val START_RANK = "start_rank"
@@ -101,6 +102,7 @@ object Constants {
     const val UNIQUE_EQUIP_LEVEL = "ueLv"
     const val CLAN_DATE = "clan_date"
     const val CLAN_BOSS_NO = "clan_boss_no"
+    const val CLAN_DATA = "clan_data"
 
     val ATTR = arrayListOf(
         "HP",

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.view
 
 import androidx.room.ColumnInfo
+import java.io.Serializable
 
 data class ClanBattleInfo(
     @ColumnInfo(name = "start_time") val start_time: String,
@@ -9,12 +10,12 @@ data class ClanBattleInfo(
     @ColumnInfo(name = "section") val section: Int,
     @ColumnInfo(name = "enemyIds") val enemyIds: String,
     @ColumnInfo(name = "unitIds") val unitIds: String,
-) {
-    fun getUnitIdList(): ArrayList<Int> {
+) : Serializable {
+    fun getUnitIdList(selectedSection: Int): ArrayList<Int> {
         val list = unitIds.split("-")
         val intList = arrayListOf<Int>()
         list.forEachIndexed { index, s ->
-            if (index % section == 0) {
+            if (index % section == selectedSection - 1) {
                 intList.add(s.toInt())
             }
         }

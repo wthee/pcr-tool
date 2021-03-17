@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.character.skill
+package cn.wthee.pcrtool.ui.skill
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,14 +26,15 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  *
  * ViewModels [SkillViewModel]
  */
-class CharacterSkillFragment : Fragment() {
+class SkillFragment : Fragment() {
 
 
     companion object {
-        fun getInstance(uid: Int) =
-            CharacterSkillFragment().apply {
+        fun getInstance(uid: Int, type: Int) =
+            SkillFragment().apply {
                 arguments = Bundle().apply {
                     putInt(UID, uid)
+                    putInt(Constants.TYPE_SKILL, type)
                 }
             }
 
@@ -43,6 +44,7 @@ class CharacterSkillFragment : Fragment() {
     private lateinit var binding: FragmentCharacterSkillBinding
     private lateinit var adapter: SkillAdapter
     private var uid = 0
+    private var type = 0
     private val sharedSkillViewModel by activityViewModels<SkillViewModel> {
         InjectorUtil.provideSkillViewModelFactory()
     }
@@ -54,6 +56,7 @@ class CharacterSkillFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
             uid = getInt(UID)
+            type = getInt(Constants.TYPE_SKILL)
         }
     }
 
@@ -62,11 +65,6 @@ class CharacterSkillFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
-        //延迟绘制页面
-        binding.skillList.visibility = View.GONE
-        binding.skillList.postDelayed({
-            binding.skillList.visibility = View.VISIBLE
-        }, 600L)
         init()
         return binding.root
     }
@@ -78,16 +76,30 @@ class CharacterSkillFragment : Fragment() {
             adapter = SkillAdapter()
             skillList.adapter = adapter
         }
-        var level = CharacterAttrFragment.maxLv
-        var atk = 0.0
-        characterAttrViewModel.sumInfo.observe(viewLifecycleOwner) {
-            atk = if (it.atk != 0.0) it.atk else it.magicStr
-            sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
+        if (type == 0) {
+            //延迟绘制页面
+            binding.skillList.visibility = View.GONE
+            binding.skillList.postDelayed({
+                binding.skillList.visibility = View.VISIBLE
+            }, 600L)
+            //角色技能
+            var level = CharacterAttrFragment.maxLv
+            var atk = 0.0
+            characterAttrViewModel.sumInfo.observe(viewLifecycleOwner) {
+                atk = if (it.atk != 0.0) it.atk else it.magicStr
+                sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
+            }
+            characterAttrViewModel.selData.observe(viewLifecycleOwner) {
+                level = it[Constants.LEVEL] ?: level
+                sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
+            }
+        } else {
+            //fixme 其它技能
+            var level = 70
+            var atk = 100
+            sharedSkillViewModel.getCharacterSkills(level, atk, uid)
         }
-        characterAttrViewModel.selData.observe(viewLifecycleOwner) {
-            level = it[Constants.LEVEL] ?: level
-            sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
-        }
+
         sharedSkillViewModel.skills.observe(viewLifecycleOwner) {
             adapter.setSize(it.size)
             adapter.submitList(it) {

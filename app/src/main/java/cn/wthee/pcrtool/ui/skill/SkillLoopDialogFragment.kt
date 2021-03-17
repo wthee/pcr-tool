@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.character.skill
+package cn.wthee.pcrtool.ui.skill
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,11 +23,11 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  *
  * ViewModels [SkillViewModel]
  */
-class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
+class SkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
     companion object {
         fun getInstance(uid: Int) =
-            CharacterSkillLoopDialogFragment().apply {
+            SkillLoopDialogFragment().apply {
                 arguments = Bundle().apply {
                     putInt(UID, uid)
                 }

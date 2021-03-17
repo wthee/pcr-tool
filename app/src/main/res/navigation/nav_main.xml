@@ -241,6 +241,18 @@
     <fragment
         android:id="@+id/clanFragment"
         android:name="cn.wthee.pcrtool.ui.tool.clan.ClanFragment"
-        android:label="ClanFragment" />
+        android:label="ClanFragment">
+        <action
+            android:id="@+id/action_clanFragment_to_clanDetailFragment"
+            app:destination="@id/clanDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/clanDetailFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.clan.ClanDetailFragment"
+        android:label="ClanDetailFragment"
+        app:enterAnim="@anim/fragment_enter"
+        app:exitAnim="@anim/fragment_exit_no_scale"
+        app:popEnterAnim="@anim/fragment_popenter_no_scale"
+        app:popExitAnim="@anim/fragment_popexit" />
 
 </navigation>

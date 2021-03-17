@@ -47,12 +47,11 @@ class ClanAdapter :
                 //时间
                 month.text = clan.release_month.toString().fillZero()
                 //图片
-                val list = clan.getUnitIdList()
-                val adapter =
-                    ClanBossIconAdapter(list[4].toString(), "${year.text} 年 ${month.text}", this)
+                val list = clan.getUnitIdList(1)
+                val date = "${year.text} 年 ${month.text}"
+                val adapter = ClanBossIconAdapter(date, clan)
                 icons.adapter = adapter
-                adapter.submitList(list.subList(0, 4))
-
+                adapter.submitList(list)
             }
         }
 

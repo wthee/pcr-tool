@@ -19,8 +19,8 @@ import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
 import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
-import cn.wthee.pcrtool.ui.character.skill.CharacterSkillFragment
-import cn.wthee.pcrtool.ui.character.skill.CharacterSkillLoopDialogFragment
+import cn.wthee.pcrtool.ui.skill.SkillFragment
+import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
@@ -160,7 +160,7 @@ class CharacterPagerFragment : Fragment() {
                     text = getString(R.string.skill_loop)
                     icon = ResourcesUtil.getDrawable(R.drawable.ic_loop)
                     setOnClickListener {
-                        CharacterSkillLoopDialogFragment.getInstance(uid)
+                        SkillLoopDialogFragment.getInstance(uid)
                             .show(parentFragmentManager, "loop")
                     }
                 }
@@ -170,7 +170,7 @@ class CharacterPagerFragment : Fragment() {
                     setOnClickListener {
                         ShareIntentUtil.imageLong(
                             requireActivity(),
-                            CharacterSkillFragment.shareSkillList,
+                            SkillFragment.shareSkillList,
                             "skill_${uid}.png"
                         )
                     }

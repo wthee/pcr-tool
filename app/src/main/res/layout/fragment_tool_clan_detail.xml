@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_motion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorBg"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/tool_head"
+        layout="@layout/view_toolbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tool_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_back_drop"
+        android:focusable="false"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/s_dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintTop_toBottomOf="@id/tool_head"
+        app:spanCount="5"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_common" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/clan_detail_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tool_list" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/layout_skill"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_back_drop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_list" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_boss_skill_loop"
+        style="@style/EfabStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fab_size"
+        android:layout_marginEnd="@dimen/xl_dp"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:contentDescription="@string/function"
+        android:text="@string/app_name"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_function"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
