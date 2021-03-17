@@ -1,10 +1,13 @@
 package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,6 +17,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
 /**
@@ -26,8 +30,13 @@ import coil.load
 class ClanBossIconAdapter(
     private val date: String,
     private val clan: ClanBattleInfo
-) :
-    ListAdapter<Int, ClanBossIconAdapter.ViewHolder>(ClanIconListDiffCallback()) {
+) : ListAdapter<Int, ClanBossIconAdapter.ViewHolder>(ClanIconListDiffCallback()) {
+    private var selectedIndex = 0
+
+    fun setSelectedIndex(index: Int) {
+        selectedIndex = index
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -39,6 +48,17 @@ class ClanBossIconAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val image = holder.itemView.findViewById<AppCompatImageView>(R.id.pic)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            image?.foreground = ColorDrawable(
+                ResourcesUtil.getColor(
+                    if (MainActivity.pageLevel == 2 && selectedIndex == position)
+                        R.color.colorAlphaBlack
+                    else
+                        R.color.colorAlpha
+                )
+            )
+        }
         holder.bind(getItem(position))
     }
 
@@ -56,6 +76,7 @@ class ClanBossIconAdapter(
                     placeholder(R.drawable.unknown_gray)
                     error(R.drawable.unknown_gray)
                 }
+                //点击监听
                 pic.setOnClickListener {
                     if (MainActivity.pageLevel == 1) {
                         //打开详情页
@@ -71,8 +92,9 @@ class ClanBossIconAdapter(
                         )
                     } else {
                         //切换页面，选中效果
+                        setSelectedIndex(layoutPosition)
+                        notifyDataSetChanged()
                     }
-
                 }
             }
         }

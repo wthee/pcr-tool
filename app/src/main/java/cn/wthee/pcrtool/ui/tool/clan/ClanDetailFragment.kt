@@ -56,6 +56,7 @@ class ClanDetailFragment : Fragment() {
         val list = clan.getUnitIdList(1)
         val adapter = ClanBossIconAdapter(date, clan)
         binding.toolList.adapter = adapter
+        adapter.setSelectedIndex(index)
         adapter.submitList(list)
         //技能
         parentFragmentManager.beginTransaction()
