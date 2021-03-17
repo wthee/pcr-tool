@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
@@ -12,7 +13,6 @@ import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
-import cn.wthee.pcrtool.ui.common.CommonListFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel]
  */
-class CharacterListFragment : CommonListFragment() {
+class CharacterListFragment : Fragment() {
 
     companion object {
         var characterFilterParams = FilterCharacter(

@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel
+import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 /**
  * 角色技能页面
@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel
  *
  * 页面布局 [FragmentCharacterSkillBinding]
  *
- * ViewModels [CharacterSkillViewModel]
+ * ViewModels [SkillViewModel]
  */
 class CharacterSkillFragment : Fragment() {
 
@@ -43,8 +43,8 @@ class CharacterSkillFragment : Fragment() {
     private lateinit var binding: FragmentCharacterSkillBinding
     private lateinit var adapter: SkillAdapter
     private var uid = 0
-    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
-        InjectorUtil.provideCharacterSkillViewModelFactory()
+    private val sharedSkillViewModel by activityViewModels<SkillViewModel> {
+        InjectorUtil.provideSkillViewModelFactory()
     }
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()

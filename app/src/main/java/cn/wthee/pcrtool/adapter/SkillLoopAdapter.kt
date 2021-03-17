@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel.Companion.iconTypes
+import cn.wthee.pcrtool.viewmodel.SkillViewModel.Companion.iconTypes
 import coil.load
 
 /**

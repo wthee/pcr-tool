@@ -16,7 +16,7 @@ import androidx.room.Index
     )],
     primaryKeys = ["unit_id", "promotion_level"]
 )
-data class CharacterPromotion(
+data class UnitPromotion(
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "promotion_level") val promotionLevel: Int,
     @ColumnInfo(name = "equip_slot_1") val equipSlot1: Int,

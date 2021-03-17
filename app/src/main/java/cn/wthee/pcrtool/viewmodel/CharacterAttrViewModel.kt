@@ -3,8 +3,8 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.repository.CharacterRepository
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
+import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.view.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
@@ -15,11 +15,11 @@ import kotlinx.coroutines.launch
 /**
  * 角色面板属性 ViewModel
  *
- * 数据来源 [CharacterRepository] [EquipmentRepository]
+ * 数据来源 [UnitRepository] [EquipmentRepository]
  *
  */
 class CharacterAttrViewModel(
-    private val characterRepository: CharacterRepository,
+    private val unitRepository: UnitRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
@@ -52,9 +52,9 @@ class CharacterAttrViewModel(
             val rarity = data[Constants.RARITY]!!
             val lv = data[Constants.LEVEL]!!
             val ueLv = data[Constants.UNIQUE_EQUIP_LEVEL]!!
-            val rankData = characterRepository.getRankStatus(unitId, rank)
-            val rarityData = characterRepository.getRarity(unitId, rarity)
-            val ids = characterRepository.getEquipmentIds(unitId, rank).getAllIds()
+            val rankData = unitRepository.getRankStatus(unitId, rank)
+            val rarityData = unitRepository.getRarity(unitId, rarity)
+            val ids = unitRepository.getEquipmentIds(unitId, rank).getAllIds()
             //计算指定rank星级下的角色属性
             val info = rankData.attr
                 .add(rarityData.attr)
@@ -104,7 +104,7 @@ class CharacterAttrViewModel(
      */
     private suspend fun getStoryAttrs(unitId: Int): Attr {
         val storyAttr = Attr()
-        val storyInfo = characterRepository.getCharacterStoryStatus(unitId)
+        val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
         storyInfo.forEach {
             storyAttr.add(it.getAttr())
         }
@@ -117,9 +117,9 @@ class CharacterAttrViewModel(
     fun getMaxRankAndRarity(unitId: Int) {
         viewModelScope.launch {
             try {
-                val rank = characterRepository.getMaxRank(unitId)
-                val rarity = characterRepository.getMaxRarity(unitId)
-                val level = characterRepository.getMaxLevel()
+                val rank = unitRepository.getMaxRank(unitId)
+                val rarity = unitRepository.getMaxRarity(unitId)
+                val level = unitRepository.getMaxLevel()
                 val ueLv = equipmentRepository.getUniqueEquipMaxLv()
                 val map = HashMap<String, Int>()
                 map["rank"] = rank
@@ -138,9 +138,9 @@ class CharacterAttrViewModel(
      */
     suspend fun isUnknown(unitId: Int): Boolean {
         try {
-            characterRepository.getMaxRank(unitId)
-            characterRepository.getMaxRarity(unitId)
-            if (characterRepository.getEquipmentIds(unitId, 2).getAllIds().isEmpty()) {
+            unitRepository.getMaxRank(unitId)
+            unitRepository.getMaxRarity(unitId)
+            if (unitRepository.getEquipmentIds(unitId, 2).getAllIds().isEmpty()) {
                 return true
             }
         } catch (e: Exception) {

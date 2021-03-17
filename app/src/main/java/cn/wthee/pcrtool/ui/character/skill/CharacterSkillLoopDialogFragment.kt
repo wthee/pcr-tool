@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterSkillLoopBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel
+import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 /**
  * 角色技能循环页面
@@ -21,7 +21,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel
  *
  * 页面布局 [FragmentCharacterSkillLoopBinding]
  *
- * ViewModels [CharacterSkillViewModel]
+ * ViewModels [SkillViewModel]
  */
 class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
@@ -36,8 +36,8 @@ class CharacterSkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
     private lateinit var binding: FragmentCharacterSkillLoopBinding
     private var uid = 0
-    private val sharedSkillViewModel by activityViewModels<CharacterSkillViewModel> {
-        InjectorUtil.provideCharacterSkillViewModelFactory()
+    private val sharedSkillViewModel by activityViewModels<SkillViewModel> {
+        InjectorUtil.provideSkillViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

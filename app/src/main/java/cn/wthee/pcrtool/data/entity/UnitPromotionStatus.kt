@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.data.view.Attr
     tableName = "unit_promotion_status",
     primaryKeys = ["unit_id", "promotion_level"]
 )
-data class CharacterPromotionStatus(
+data class UnitPromotionStatus(
     @ColumnInfo(name = "unit_id") val unitId: Int,
     @ColumnInfo(name = "promotion_level") val promotionLevel: Int,
     @Embedded val attr: Attr,

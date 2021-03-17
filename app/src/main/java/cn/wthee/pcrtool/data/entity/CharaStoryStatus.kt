@@ -9,7 +9,7 @@ import java.io.Serializable
  * 角色剧情属性
  */
 @Entity(tableName = "chara_story_status")
-data class CharacterStoryStatus(
+data class CharaStoryStatus(
     @PrimaryKey
     @ColumnInfo(name = "story_id") val story_id: Int,
     @ColumnInfo(name = "unlock_story_name") val unlock_story_name: String,

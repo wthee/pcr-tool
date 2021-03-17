@@ -20,7 +20,7 @@ import androidx.room.PrimaryKey
         name = "unit_comments_0_unit_id_1_use_type"
     )]
 )
-data class CharacterComments(
+data class UnitComments(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Int,

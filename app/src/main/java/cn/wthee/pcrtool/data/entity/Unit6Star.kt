@@ -17,7 +17,7 @@ import java.io.Serializable
         name = "rarity_6_quest_data_0_rarity_6_quest_id"
     )]
 )
-data class Character6Star(
+data class Unit6Star(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val dataId: Int,
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,

@@ -16,12 +16,22 @@ object InjectorUtil {
         PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
             .getString("change_database", "1")?.toInt() ?: 1
 
-    private fun getCharacterRepository(): CharacterRepository {
-        return CharacterRepository.getInstance(
+    private fun getUnitRepository(): UnitRepository {
+        return UnitRepository.getInstance(
             if (getType() == 1) {
-                AppDatabase.getInstance().getCharacterDao()
+                AppDatabase.getInstance().getUnitDao()
             } else {
-                AppDatabaseJP.getInstance().getCharacterDao()
+                AppDatabaseJP.getInstance().getUnitDao()
+            }
+        )
+    }
+
+    private fun getSkillRepository(): SkillRepository {
+        return SkillRepository.getInstance(
+            if (getType() == 1) {
+                AppDatabase.getInstance().getSkillDao()
+            } else {
+                AppDatabaseJP.getInstance().getSkillDao()
             }
         )
     }
@@ -73,21 +83,21 @@ object InjectorUtil {
     }
 
     fun provideCharacterViewModelFactory(): CharacterViewModelFactory {
-        val repository = getCharacterRepository()
+        val repository = getUnitRepository()
         return CharacterViewModelFactory(
             repository
         )
     }
 
     fun provideGuildViewModelFactory(): GuildViewModelFactory {
-        val repository = getCharacterRepository()
+        val repository = getUnitRepository()
         return GuildViewModelFactory(
             repository
         )
     }
 
     fun provideCharacterAttrViewModelFactory(): CharacterAttrViewModelFactory {
-        val repository1 = getCharacterRepository()
+        val repository1 = getUnitRepository()
         val repository2 = getEquipmentRepository()
         return CharacterAttrViewModelFactory(
             repository1, repository2
@@ -101,9 +111,9 @@ object InjectorUtil {
         )
     }
 
-    fun provideCharacterSkillViewModelFactory(): CharacterSkillViewModelFactory {
-        val repository = getCharacterRepository()
-        return CharacterSkillViewModelFactory(
+    fun provideSkillViewModelFactory(): SkillViewModelFactory {
+        val repository = getSkillRepository()
+        return SkillViewModelFactory(
             repository
         )
     }

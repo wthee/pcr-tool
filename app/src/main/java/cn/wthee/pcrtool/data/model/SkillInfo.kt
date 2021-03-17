@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.data.view.SkillActionPro
 /**
  * 角色技能信息
  */
-data class CharacterSkillInfo(
+data class SkillInfo(
     val skillId: Int,
     val name: String,
     val desc: String,

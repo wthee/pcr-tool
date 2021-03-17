@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
  * 角色等级信息
  */
 @Entity(tableName = "experience_unit")
-data class CharacterExperience(
+data class ExperienceUnit(
     @PrimaryKey
     @ColumnInfo(name = "unit_level") val level: Int,
     @ColumnInfo(name = "total_exp") val exp: Int

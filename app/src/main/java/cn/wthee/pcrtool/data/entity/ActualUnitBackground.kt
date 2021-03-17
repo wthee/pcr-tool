@@ -10,7 +10,7 @@ import java.io.Serializable
  * 角色现实资料
  */
 @Entity(tableName = "actual_unit_background")
-data class CharacterActualData(
+data class ActualUnitBackground(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,

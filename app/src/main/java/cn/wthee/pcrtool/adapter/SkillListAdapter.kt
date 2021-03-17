@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.CharacterSkillInfo
+import cn.wthee.pcrtool.data.model.SkillInfo
 import cn.wthee.pcrtool.data.view.SkillActionLite
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
@@ -28,9 +28,9 @@ import kotlinx.coroutines.launch
  *
  * 列表项布局 [ItemSkillBinding]
  *
- * 列表项数据 [CharacterSkillInfo]
+ * 列表项数据 [SkillInfo]
  */
-class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
+class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
 
     private var mSize = 0
 
@@ -54,7 +54,7 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
 
     inner class ViewHolder(private val binding: ItemSkillBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(skill: CharacterSkillInfo) {
+        fun bind(skill: SkillInfo) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.context
@@ -150,18 +150,18 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
 
 }
 
-class SkillDiffCallback : DiffUtil.ItemCallback<CharacterSkillInfo>() {
+class SkillDiffCallback : DiffUtil.ItemCallback<SkillInfo>() {
 
     override fun areItemsTheSame(
-        oldItem: CharacterSkillInfo,
-        newItem: CharacterSkillInfo
+        oldItem: SkillInfo,
+        newItem: SkillInfo
     ): Boolean {
         return oldItem.name == newItem.name
     }
 
     override fun areContentsTheSame(
-        oldItem: CharacterSkillInfo,
-        newItem: CharacterSkillInfo
+        oldItem: SkillInfo,
+        newItem: SkillInfo
     ): Boolean {
         return oldItem == newItem
     }

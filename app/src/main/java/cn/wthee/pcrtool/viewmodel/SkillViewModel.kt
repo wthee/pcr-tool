@@ -3,9 +3,9 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.repository.CharacterRepository
+import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.entity.AttackPattern
-import cn.wthee.pcrtool.data.model.CharacterSkillInfo
+import cn.wthee.pcrtool.data.model.SkillInfo
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
@@ -14,17 +14,17 @@ import kotlinx.coroutines.launch
 /**
  * 角色技能 ViewModel
  *
- * 数据来源 [CharacterRepository]
+ * 数据来源 [SkillRepository]
  */
-class CharacterSkillViewModel(
-    private val repository: CharacterRepository
+class SkillViewModel(
+    private val repository: SkillRepository
 ) : ViewModel() {
 
     companion object {
         var iconTypes = hashMapOf<Int, Int>()
     }
 
-    var skills = MutableLiveData<List<CharacterSkillInfo>>()
+    var skills = MutableLiveData<List<SkillInfo>>()
     var atlPattern = MutableLiveData<List<AttackPattern>>()
     private var refresh = MutableLiveData<Boolean>()
     private var isLoading = MutableLiveData<Boolean>()
@@ -37,14 +37,14 @@ class CharacterSkillViewModel(
         iconTypes.clear()
         viewModelScope.launch {
             try {
-                val infos = mutableListOf<CharacterSkillInfo>()
-                val data = repository.getCharacterSkill(unitId)
+                val infos = mutableListOf<SkillInfo>()
+                val data = repository.getUnitSkill(unitId)
                 //技能信息
                 data.getAllSkillId().forEach { sid ->
                     val skill = repository.getSkillData(sid)
                     val aid = skill.skill_id % 1000
                     iconTypes[aid] = skill.icon_type
-                    val info = CharacterSkillInfo(
+                    val info = SkillInfo(
                         skill.skill_id,
                         skill.name ?: "",
                         skill.description,

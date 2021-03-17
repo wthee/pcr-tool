@@ -13,7 +13,7 @@ import androidx.room.Index
     )],
     primaryKeys = ["unit_id", "trigger", "voice_id", "time"]
 )
-data class CharacterRoomComments(
+data class RoomUnitComments(
     @ColumnInfo(name = "id") val id: Int,
     @ColumnInfo(name = "unit_id") val unit_id: Int,
     @ColumnInfo(name = "trigger") val trigger: Int,

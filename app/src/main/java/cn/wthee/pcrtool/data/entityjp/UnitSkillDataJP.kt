@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
  * 技能信息
  */
 @Entity(tableName = "unit_skill_data")
-data class CharacterSkillDataJP(
+data class UnitSkillDataJP(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") var unit_id: Int = 0,
     @ColumnInfo(name = "union_burst") var union_burst: Int = 0,

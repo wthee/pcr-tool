@@ -14,15 +14,15 @@ import cn.wthee.pcrtool.utils.Constants
 
 @Database(
     entities = [
-        CharacterProfile::class,
-        Character6Star::class,
-        CharacterActualData::class,
-        CharacterDataJP::class,
-        CharacterPromotion::class,
-        CharacterPromotionStatus::class,
-        CharacterExperience::class,
-        CharacterRarity::class,
-        CharacterSkillDataJP::class,
+        UnitProfile::class,
+        Unit6Star::class,
+        ActualUnitBackground::class,
+        UnitDataJP::class,
+        UnitPromotion::class,
+        UnitPromotionStatus::class,
+        ExperienceUnit::class,
+        UnitRarity::class,
+        UnitSkillDataJP::class,
         EnemyRewardData::class,
         EquipmentCraft::class,
         EquipmentDataJP::class,
@@ -37,11 +37,11 @@ import cn.wthee.pcrtool.utils.Constants
         WaveGroupDataJP::class,
         AttackPattern::class,
         GuildData::class,
-        CharacterComments::class,
+        UnitComments::class,
         GachaDataJP::class,
         GachaExchangeJP::class,
         ItemDataJP::class,
-        CharacterStoryStatus::class,
+        CharaStoryStatus::class,
         CharacterType::class,
         EventStoryData::class,
         EventStoryDetail::class,
@@ -49,7 +49,7 @@ import cn.wthee.pcrtool.utils.Constants
         OddsNameData::class,
         HatsuneScheduleJP::class,
         CampaignScheduleJP::class,
-        CharacterRoomComments::class,
+        RoomUnitComments::class,
         AilmentData::class,
         ClanBattleBossDataJP::class,
         ClanBattleScheduleJP::class,
@@ -63,7 +63,8 @@ import cn.wthee.pcrtool.utils.Constants
  */
 abstract class AppDatabaseJP : RoomDatabase() {
 
-    abstract fun getCharacterDao(): CharacterDao
+    abstract fun getUnitDao(): UnitDao
+    abstract fun getSkillDao(): SkillDao
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao

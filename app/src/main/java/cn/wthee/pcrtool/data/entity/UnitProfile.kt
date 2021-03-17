@@ -9,7 +9,7 @@ import java.io.Serializable
  * 角色资料
  */
 @Entity(tableName = "unit_profile")
-data class CharacterProfile(
+data class UnitProfile(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,

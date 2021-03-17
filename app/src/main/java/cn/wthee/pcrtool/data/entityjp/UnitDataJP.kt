@@ -9,7 +9,7 @@ import java.io.Serializable
  * 角色属性
  */
 @Entity(tableName = "unit_data")
-data class CharacterDataJP(
+data class UnitDataJP(
     @PrimaryKey
     @ColumnInfo(name = "unit_id") var dataId: Int = 0,
     @ColumnInfo(name = "unit_name") var name: String = "",

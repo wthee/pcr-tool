@@ -3,9 +3,11 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.SkipQueryVerification
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.entity.*
+import cn.wthee.pcrtool.data.entity.GuildData
+import cn.wthee.pcrtool.data.entity.UnitPromotion
+import cn.wthee.pcrtool.data.entity.UnitPromotionStatus
+import cn.wthee.pcrtool.data.entity.UnitRarity
 import cn.wthee.pcrtool.data.view.*
 
 //角色筛选条件
@@ -40,7 +42,7 @@ const val characterWhere =
  * 角色数据 DAO
  */
 @Dao
-interface CharacterDao {
+interface UnitDao {
 
     /**
      * 根据筛选、排序条件，获取角色分页列表 [CharacterInfo]
@@ -155,22 +157,22 @@ interface CharacterDao {
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
 
     /**
-     * 根据 [unitId] 和 [rank] ,获取所需装备数据 [CharacterPromotion]
+     * 根据 [unitId] 和 [rank] ,获取所需装备数据 [UnitPromotion]
      */
     @Query("SELECT * FROM unit_promotion WHERE unit_promotion.unit_id = :unitId AND unit_promotion.promotion_level = :rank ")
-    suspend fun getRankEquipment(unitId: Int, rank: Int): CharacterPromotion
+    suspend fun getRankEquipment(unitId: Int, rank: Int): UnitPromotion
 
     /**
-     * 根据 [unitId] 和 [rank]，获取角色 Rank 属性状态 [CharacterPromotionStatus]
+     * 根据 [unitId] 和 [rank]，获取角色 Rank 属性状态 [UnitPromotionStatus]
      */
     @Query("SELECT * FROM unit_promotion_status WHERE unit_promotion_status.unit_id = :unitId AND unit_promotion_status.promotion_level = :rank ")
-    suspend fun getRankStatus(unitId: Int, rank: Int): CharacterPromotionStatus
+    suspend fun getRankStatus(unitId: Int, rank: Int): UnitPromotionStatus
 
     /**
-     * 根据 [unitId] 和 [rarity]，获取角色角色星级提供的属性 [CharacterRarity]
+     * 根据 [unitId] 和 [rarity]，获取角色角色星级提供的属性 [UnitRarity]
      */
     @Query("SELECT * FROM unit_rarity WHERE unit_rarity.unit_id = :unitId AND unit_rarity.rarity = :rarity ")
-    suspend fun getRarity(unitId: Int, rarity: Int): CharacterRarity
+    suspend fun getRarity(unitId: Int, rarity: Int): UnitRarity
 
     /**
      *  根据 [unitId]，获取角色 Rank 最大值 [Int]
@@ -183,49 +185,6 @@ interface CharacterDao {
      */
     @Query("SELECT MAX( rarity ) FROM unit_rarity  WHERE unit_id = :unitId")
     suspend fun getMaxRarity(unitId: Int): Int
-
-    /**
-     * 根据 [unitId]，获取角色技能基本信息 [CharacterSkillData]
-     */
-    @SkipQueryVerification
-    @Query("SELECT * FROM unit_skill_data  WHERE unit_id = :unitId")
-    suspend fun getCharacterSkill(unitId: Int): CharacterSkillData
-
-    /**
-     * 根据 [sid]，获取技能数据 [SkillData]
-     */
-    @Query("SELECT * FROM skill_data  WHERE skill_id = :sid")
-    suspend fun getSkillData(sid: Int): SkillData
-
-    /**
-     * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillActionPro]
-     */
-    @Query(
-        """
-        SELECT
-            :lv as lv,
-            :atk as atk,
-            a.*,
-           COALESCE( b.ailment_name,"") as ailment_name
-        FROM
-            skill_action AS a
-            LEFT JOIN ailment_data as b ON a.action_type = b.ailment_action AND (a.action_detail_1 = b.ailment_detail_1 OR b.ailment_detail_1 = -1)
-         WHERE action_id IN (:aid)
-    """
-    )
-    suspend fun getSkillActions(lv: Int, atk: Int, aid: List<Int>): List<SkillActionPro>
-
-    /**
-     * 获取角色最大等级
-     */
-    @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
-    suspend fun getMaxLevel(): Int
-
-    /**
-     * 根据 [unitId]，获取角色动作循环列表 [AttackPattern]
-     */
-    @Query("SELECT * FROM unit_attack_pattern where unit_id = :unitId")
-    suspend fun getAttackPattern(unitId: Int): List<AttackPattern>
 
     /**
      * 获取所有公会信息 [GuildData]
@@ -301,4 +260,9 @@ interface CharacterDao {
     )
     suspend fun getCharacterStoryStatus(unitId: Int): List<CharacterStoryAttr>
 
+    /**
+     * 获取角色最大等级
+     */
+    @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
+    suspend fun getMaxLevel(): Int
 }

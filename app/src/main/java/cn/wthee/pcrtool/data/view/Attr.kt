@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.data.entity.CharacterRarity
+import cn.wthee.pcrtool.data.entity.UnitRarity
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
@@ -33,7 +33,7 @@ data class Attr(
         /**
          * 属性成长
          */
-        fun setGrowthValue(rarityGrowth: CharacterRarity): Attr {
+        fun setGrowthValue(rarityGrowth: UnitRarity): Attr {
             return Attr(
                 rarityGrowth.hpGrowth,
                 rarityGrowth.atkGrowth,

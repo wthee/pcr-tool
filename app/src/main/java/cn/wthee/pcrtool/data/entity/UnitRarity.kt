@@ -22,7 +22,7 @@ import cn.wthee.pcrtool.data.view.Attr
     )],
     primaryKeys = ["unit_id", "rarity"]
 )
-data class CharacterRarity(
+data class UnitRarity(
     @ColumnInfo(name = "unit_id") val unitid: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
     @Embedded val attr: Attr,
