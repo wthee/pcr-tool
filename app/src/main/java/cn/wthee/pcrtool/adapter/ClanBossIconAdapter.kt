@@ -91,7 +91,7 @@ class ClanBossIconAdapter(
                             null
                         )
                     } else {
-                        //切换页面，选中效果
+                        //fixme 切换页面，选中效果
                         setSelectedIndex(layoutPosition)
                         notifyDataSetChanged()
                     }

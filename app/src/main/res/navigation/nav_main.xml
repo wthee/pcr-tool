@@ -248,7 +248,7 @@
     </fragment>
     <fragment
         android:id="@+id/clanDetailFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.clan.ClanDetailFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.clan.ClanBossInfoFragment"
         android:label="ClanDetailFragment"
         app:enterAnim="@anim/fragment_enter"
         app:exitAnim="@anim/fragment_exit_no_scale"
