@@ -30,6 +30,27 @@ fun getFormatText(rank: Int, preStr: String = Constants.RANK_UPPER): String {
     return "$preStr $text"
 }
 
+/**
+ * 阶段格式化
+ */
+fun getSectionText(section: Int): String {
+    val text = when (section) {
+        1 -> "一"
+        2 -> "二"
+        3 -> "三"
+        4 -> "四"
+        5 -> "五"
+        6 -> "六"
+        7 -> "七"
+        else -> section
+
+    }
+    return "${text}阶段"
+}
+
+/**
+ * 获取团队战阶段字体颜色
+ */
 fun getSectionTextColor(section: Int): Int {
     val color = when (section) {
         1 -> R.color.color_rank_2_3

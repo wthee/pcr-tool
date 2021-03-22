@@ -1,12 +1,12 @@
 package cn.wthee.pcrtool.ui.tool.clan
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.ClanBossIconAdapter
@@ -14,10 +14,7 @@ import cn.wthee.pcrtool.adapter.viewpager.ClanBossPagerAdapter
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ToolbarHelper
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 
 /**
@@ -33,9 +30,6 @@ class ClanPagerFragment : Fragment() {
         lateinit var clan: ClanBattleInfo
     }
 
-    private val viewModel by activityViewModels<ClanViewModel> {
-        InjectorUtil.provideClanViewModelFactory()
-    }
     private lateinit var binding: FragmentToolClanPagerBinding
     private var date = ""
     private var index = 0
@@ -63,7 +57,7 @@ class ClanPagerFragment : Fragment() {
         setListener()
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(
-            R.drawable.ic_def, getTitle(date, index)
+            R.drawable.ic_def, date
         )
         return binding.root
     }
@@ -83,24 +77,21 @@ class ClanPagerFragment : Fragment() {
     }
 
     private fun setListener() {
-        var pageIndex = 0
         binding.clanBossPager.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                pageIndex = position
+                index = position
                 //更新图标列表
-                adapter.setSelectedIndex(pageIndex)
+                adapter.setSelectedIndex(index)
                 adapter.notifyDataSetChanged()
-                //更新标题
-                binding.toolHead.title.text = getTitle(date, pageIndex)
             }
 
         })
-        //fixme 技能循环
+        //技能循环
         binding.fabBossSkillLoop.setOnClickListener {
-            SkillLoopDialogFragment.getInstance(clan.getUnitIdList(clan.section)[pageIndex])
+            SkillLoopDialogFragment.getInstance(clan.getUnitIdList(selSection)[index])
                 .show(parentFragmentManager, "loop")
         }
         //阶段选择
@@ -127,10 +118,11 @@ class ClanPagerFragment : Fragment() {
         val viewPagerAdapter = ClanBossPagerAdapter(parentFragmentManager, lifecycle, selSection)
         binding.clanBossPager.offscreenPageLimit = 5
         binding.clanBossPager.adapter = viewPagerAdapter
-        binding.fabSection.text = getString(R.string.section, selSection)
+        binding.clanBossPager.setCurrentItem(index, false)
+        binding.fabSection.text = getSectionText(selSection)
+        val fabColor = getSectionTextColor(selSection)
+        binding.fabSection.setTextColor(fabColor)
+        binding.fabSection.iconTint = ColorStateList.valueOf(fabColor)
     }
-
-    private fun getTitle(date: String, index: Int) =
-        "$date - BOSS ${index + 1}"
 
 }

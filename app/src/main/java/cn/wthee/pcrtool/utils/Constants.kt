@@ -89,6 +89,7 @@ object Constants {
     const val NOTICE_TOAST_NETWORK_ERROR = "网络异常..."
     const val RANK_UPPER = "RANK"
     const val SECTION = "阶段"
+    const val UNKNOWN = "未知"
 
     //常量值
     const val UID = "unit_id"

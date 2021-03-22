@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.view.SkillActionLite
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
@@ -25,7 +26,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
  * 列表项数据 [String]
  */
 class SkillActionAdapter :
-    ListAdapter<String, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
+    ListAdapter<SkillActionLite, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSkillActionBinding.inflate(
@@ -43,17 +44,19 @@ class SkillActionAdapter :
     class ViewHolder(private val binding: ItemSkillActionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(fixed: String) {
+        fun bind(skillAction: SkillActionLite) {
             binding.apply {
                 action.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
+                //目标描述
+                target.text = skillAction.target
                 //改变颜色
-                val spannable = SpannableStringBuilder(fixed)
+                val spannable = SpannableStringBuilder(skillAction.action)
                 val starts = arrayListOf<Int>()
                 val starts0 = arrayListOf<Int>()
                 val ends = arrayListOf<Int>()
                 val ends0 = arrayListOf<Int>()
-                fixed.filterIndexed { index, c ->
+                skillAction.action.filterIndexed { index, c ->
                     if (c == '<') {
                         starts.add(index)
                     }
@@ -112,18 +115,18 @@ class SkillActionAdapter :
 
 }
 
-private class ActionDiffCallback : DiffUtil.ItemCallback<String>() {
+private class ActionDiffCallback : DiffUtil.ItemCallback<SkillActionLite>() {
 
     override fun areItemsTheSame(
-        oldItem: String,
-        newItem: String
+        oldItem: SkillActionLite,
+        newItem: SkillActionLite
     ): Boolean {
         return oldItem == newItem
     }
 
     override fun areContentsTheSame(
-        oldItem: String,
-        newItem: String
+        oldItem: SkillActionLite,
+        newItem: SkillActionLite
     ): Boolean {
         return oldItem == newItem
     }

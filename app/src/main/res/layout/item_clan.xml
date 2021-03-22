@@ -7,35 +7,36 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/month"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textColor="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="11-12" />
+        tools:text="11" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/year"
+        android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        app:layout_constraintTop_toBottomOf="@+id/month"
-        tools:text="@string/title_quest" />
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:text="2020" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/icons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         android:padding="@dimen/xs_dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/year"
+        app:layout_constraintTop_toBottomOf="@id/date"
         app:spanCount="5"
         tools:itemCount="5"
         tools:listitem="@layout/item_common" />

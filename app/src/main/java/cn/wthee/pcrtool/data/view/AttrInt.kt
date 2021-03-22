@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.data.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.data.model.AttrValue
+import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
 
 /**
@@ -45,4 +47,44 @@ data class AttrInt(
         0,
         0,
     )
+}
+
+/**
+ * 全部属性
+ */
+fun AttrInt.all(): ArrayList<AttrValue> {
+    val attrs = arrayListOf<AttrValue>()
+    for (i in 0..16) {
+        val value = when (i) {
+            0 -> this.hp
+            1 -> this.lifeSteal
+            2 -> this.atk
+            3 -> this.magicStr
+            4 -> this.def
+            5 -> this.magicDef
+            6 -> this.physicalCritical
+            7 -> this.magicCritical
+            8 -> this.physicalPenetrate
+            9 -> this.magicPenetrate
+            10 -> this.accuracy
+            11 -> this.dodge
+            12 -> this.waveHpRecovery
+            13 -> this.hpRecoveryRate
+            14 -> this.waveEnergyRecovery
+            15 -> this.energyRecoveryRate
+            16 -> this.energyReduceRate
+            else -> 0.0
+        }
+        attrs.add(AttrValue(Constants.ATTR[i], value.toDouble()))
+    }
+    return attrs
+}
+
+/**
+ * 非零属性
+ */
+fun AttrInt.allNotZero(): List<AttrValue> {
+    val attrs = all()
+    attrs.removeAll { it.value == 0.0 }
+    return attrs
 }

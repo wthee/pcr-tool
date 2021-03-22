@@ -11,8 +11,20 @@ data class ClanBattleInfo(
     @ColumnInfo(name = "enemyIds") val enemyIds: String,
     @ColumnInfo(name = "unitIds") val unitIds: String,
 ) : Serializable {
+
     fun getUnitIdList(selectedSection: Int): ArrayList<Int> {
         val list = unitIds.split("-")
+        val intList = arrayListOf<Int>()
+        list.forEachIndexed { index, s ->
+            if (index % section == selectedSection - 1) {
+                intList.add(s.toInt())
+            }
+        }
+        return intList
+    }
+
+    fun getEnemyList(selectedSection: Int): ArrayList<Int> {
+        val list = enemyIds.split("-")
         val intList = arrayListOf<Int>()
         list.forEachIndexed { index, s ->
             if (index % section == selectedSection - 1) {

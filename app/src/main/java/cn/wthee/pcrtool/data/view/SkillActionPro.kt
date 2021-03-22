@@ -42,34 +42,36 @@ data class SkillActionPro(
     /**
      * 获取技能效果
      *
-     * fixme 优化判断逻辑
      */
-    fun getFixedDesc(): SkillActionLite {
-        val fixed: String
-
-        /**
-         * 技能施放对象
-         *  [target_assignment]
-         * 0：自身 1：敌方 2：自身或己方
-         *
-         * 技能施放方向
-         *  [target_area]
-         * 1：前方 2：前后 3：全体
-         *
-         * 技能施放对象数量
-         *  [target_count]
-         * 0,1,2,3 99：范围内全体
-         *
-         * 技能范围
-         *  [target_range]
-         * >  2160: 全体
-         * <2160 ：范围
-         */
+    fun getActionDesc(): SkillActionLite {
+        val action: String
         //设置状态标签
         val p = getAilment(action_type)
         if (p.isNotEmpty()) {
             ailmentName = p
         }
+        val targetAssignment = "作用对象：" + when (target_assignment) {
+            0 -> "自身"
+            1 -> "敌方"
+            2 -> "己方"
+            3 -> "敌方和己方"
+            else -> "作用对象未知"
+        } + "\n"
+        val targetCount = "作用数量：" + when (target_count) {
+            0, 1 -> "1"
+            99 -> "全体"
+            else -> target_count.toString()
+        } + "\n"
+        val targetRange = "作用范围：" + target_range + "\n"
+        val targetArea = "施放区域：" + when (target_area) {
+            0 -> "自身"
+            1 -> "前方"
+            2 -> "范围"
+            3 -> "全体"
+            else -> "未知"
+        } + "\n"
+
+        //TODO 细化判断，替代默认描述
         val desc = when (toSkillActionType(action_type)) {
             SkillActionType.DAMAGE, SkillActionType.HOT -> {
                 " [${(action_value_1 + action_value_2 * level + action_value_3 * atk).int}] <$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力> "
@@ -185,12 +187,16 @@ data class SkillActionPro(
             }
             else -> ""
         }
-        fixed = when {
+        action = when {
             description.contains("0") -> description.replace("{0}", desc)
             else -> description.plus(desc)
         }
 
-        return SkillActionLite(ailmentName, fixed)
+        return SkillActionLite(
+            ailmentName,
+            action,
+            targetAssignment + targetArea + targetRange + targetCount
+        )
     }
 }
 
@@ -199,5 +205,6 @@ data class SkillActionPro(
  */
 data class SkillActionLite(
     val ailmentName: String,
-    val action: String
+    val action: String,
+    val target: String
 )

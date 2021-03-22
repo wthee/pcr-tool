@@ -45,9 +45,7 @@ class SkillFragment : Fragment() {
     private lateinit var adapter: SkillAdapter
     private var uid = 0
     private var type = 0
-    private val sharedSkillViewModel by activityViewModels<SkillViewModel> {
-        InjectorUtil.provideSkillViewModelFactory()
-    }
+    private lateinit var skillViewModel: SkillViewModel
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
     }
@@ -70,6 +68,8 @@ class SkillFragment : Fragment() {
     }
 
     private fun init() {
+        skillViewModel =
+            InjectorUtil.provideSkillViewModelFactory().create(SkillViewModel::class.java)
         binding.apply {
             shareSkillList = skillList
             //技能信息
@@ -87,20 +87,20 @@ class SkillFragment : Fragment() {
             var atk = 0.0
             characterAttrViewModel.sumInfo.observe(viewLifecycleOwner) {
                 atk = if (it.atk != 0.0) it.atk else it.magicStr
-                sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
+                skillViewModel.getCharacterSkills(level, atk.int, uid)
             }
             characterAttrViewModel.selData.observe(viewLifecycleOwner) {
                 level = it[Constants.LEVEL] ?: level
-                sharedSkillViewModel.getCharacterSkills(level, atk.int, uid)
+                skillViewModel.getCharacterSkills(level, atk.int, uid)
             }
         } else {
-            //fixme 其它技能
+            //fixme enemy skill
             var level = 70
             var atk = 100
-            sharedSkillViewModel.getCharacterSkills(level, atk, uid)
+            skillViewModel.getCharacterSkills(level, atk, uid)
         }
 
-        sharedSkillViewModel.skills.observe(viewLifecycleOwner) {
+        skillViewModel.skills.observe(viewLifecycleOwner) {
             adapter.setSize(it.size)
             adapter.submitList(it) {
                 adapter.notifyDataSetChanged()

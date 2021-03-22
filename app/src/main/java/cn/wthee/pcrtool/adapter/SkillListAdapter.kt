@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.adapter
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
@@ -61,16 +62,14 @@ class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCa
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
-                //技能名称
-                name.text = skill.name
                 //技能描述
                 desc.text = skill.desc
                 type.text = when (skill.skillId % 1000) {
-                    1 -> "连结爆发"
+                    1, 21 -> "连结爆发"
                     11 -> "连结爆发+"
-                    2 -> "技能1"
+                    2, 22 -> "技能1"
                     12 -> "技能1+"
-                    3 -> "技能2"
+                    3, 23 -> "技能2"
                     13 -> "技能2+"
                     501 -> "EX技能"
                     511 -> "EX技能+"
@@ -78,8 +77,13 @@ class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCa
                     101 -> "SP技能1"
                     102 -> "SP技能2"
                     103 -> "SP技能3"
-                    else -> ""
+                    else -> {
+                        type.visibility = View.GONE
+                        ""
+                    }
                 }
+                //技能名称
+                name.text = if (skill.name.isBlank()) type.text else skill.name
                 //加载图片
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 itemPic.load(picUrl) {
@@ -124,11 +128,11 @@ class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCa
         /**
          * 获取动作
          */
-        private fun getActions(data: ArrayList<SkillActionLite>): ArrayList<String> {
-            val list = arrayListOf<String>()
+        private fun getActions(data: ArrayList<SkillActionLite>): ArrayList<SkillActionLite> {
+            val list = arrayListOf<SkillActionLite>()
             data.forEach {
                 if (it.action.isNotEmpty()) {
-                    list.add(it.action)
+                    list.add(it)
                 }
             }
             return list

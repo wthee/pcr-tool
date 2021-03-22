@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.ItemClanBinding
 import cn.wthee.pcrtool.utils.fillZero
+import cn.wthee.pcrtool.utils.getSectionTextColor
 
 /**
  * 团队战记录列表适配器
@@ -41,17 +44,25 @@ class ClanAdapter :
             binding.apply {
                 root.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
-                //起止日期
-                val startDate = clan.start_time.substring(0, 4)
-                year.text = startDate
                 //时间
-                month.text = clan.release_month.toString().fillZero()
+                val ymd = clan.start_time.split("/")
+                title.text = ymd[1]
+                title.setTextColor(getSectionTextColor(clan.section))
+                //起止日期
+                date.text = ymd[0]
                 //图片
+                val startYear = clan.start_time.substring(0, 4)
                 val list = clan.getUnitIdList(1)
-                val date = "${year.text} 年 ${month.text} 月"
+                val date = "$startYear 年 ${clan.release_month.toString().fillZero()} 月"
                 val adapter = ClanBossIconAdapter(date, clan)
                 icons.adapter = adapter
                 adapter.submitList(list)
+                root.setOnClickListener {
+                    try {
+                        icons[0].findViewById<AppCompatImageView>(R.id.pic).callOnClick()
+                    } catch (e: Exception) {
+                    }
+                }
             }
         }
 

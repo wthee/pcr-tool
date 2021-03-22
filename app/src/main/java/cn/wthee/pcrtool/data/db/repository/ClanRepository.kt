@@ -12,6 +12,8 @@ class ClanRepository(private val clanBattleDao: ClanBattleDao) {
     suspend fun getAllClanBattleData(type: Int) =
         if (type == 1) clanBattleDao.getAllClanBattleData() else clanBattleDao.getAllClanBattleDataJP()
 
+    suspend fun getBossAttr(enemyId: Int) = clanBattleDao.getBossAttr(enemyId)
+
     companion object {
 
         fun getInstance(clanBattleDao: ClanBattleDao) = ClanRepository(clanBattleDao)

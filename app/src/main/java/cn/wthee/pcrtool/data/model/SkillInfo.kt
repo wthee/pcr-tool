@@ -21,7 +21,7 @@ data class SkillInfo(
     fun getActionInfo(): ArrayList<SkillActionLite> {
         val list = arrayListOf<SkillActionLite>()
         actions.forEach {
-            list.add(it.getFixedDesc())
+            list.add(it.getActionDesc())
         }
         return list
     }

@@ -60,7 +60,7 @@ class NumberSelectAdapter(private val dialog: DialogFragment, private val type: 
                         number.setTextColor(getRankColor(r))
                     }
                     NumberSelectType.SECTION -> {
-                        number.text = getFormatText(r, Constants.SECTION)
+                        number.text = getSectionText(r)
                         number.setTextColor(getSectionTextColor(r))
                     }
                 }

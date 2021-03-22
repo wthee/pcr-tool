@@ -55,7 +55,7 @@ class ClanBossIconAdapter(
             image?.foreground = ColorDrawable(
                 ResourcesUtil.getColor(
                     if (MainActivity.pageLevel == 2 && selectedIndex == position)
-                        R.color.colorAlphaBlack
+                        R.color.colorHalfAccent
                     else
                         R.color.colorAlpha
                 )
@@ -79,7 +79,7 @@ class ClanBossIconAdapter(
                     error(R.drawable.unknown_gray)
                 }
                 //点击监听
-                pic.setOnClickListener {
+                root.setOnClickListener {
                     if (MainActivity.pageLevel == 1) {
                         //打开详情页
                         val bundle = Bundle()
@@ -87,7 +87,7 @@ class ClanBossIconAdapter(
                         bundle.putInt(Constants.CLAN_BOSS_NO, layoutPosition)
                         bundle.putSerializable(Constants.CLAN_DATA, clan)
                         root.findNavController().navigate(
-                            R.id.action_clanFragment_to_clanDetailFragment,
+                            R.id.action_clanFragment_to_clanPagerFragment,
                             bundle,
                             null,
                             null

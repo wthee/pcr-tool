@@ -243,8 +243,8 @@
         android:name="cn.wthee.pcrtool.ui.tool.clan.ClanFragment"
         android:label="ClanFragment">
         <action
-            android:id="@+id/action_clanFragment_to_clanDetailFragment"
-            android:label="ClanDetailFragment"
+            android:id="@+id/action_clanFragment_to_clanPagerFragment"
+            android:label="ClanPagerFragment"
             app:destination="@id/ClanPagerFragment"
             app:enterAnim="@anim/fragment_enter"
             app:exitAnim="@anim/fragment_exit_no_scale"

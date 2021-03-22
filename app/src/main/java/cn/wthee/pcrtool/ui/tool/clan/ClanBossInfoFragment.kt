@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
+import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentToolClanBossInfoBinding
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.ui.tool.clan.ClanPagerFragment.Companion.clan
@@ -33,11 +34,10 @@ class ClanBossInfoFragment : Fragment() {
             }
     }
 
-    private val viewModel by activityViewModels<ClanViewModel> {
-        InjectorUtil.provideClanViewModelFactory()
-    }
+    private lateinit var viewModel: ClanViewModel
     private lateinit var binding: FragmentToolClanBossInfoBinding
     private var uid = -1
+    private var enemyId = -1
     private var index = 0
     private var selectSection = 0
 
@@ -55,10 +55,24 @@ class ClanBossInfoFragment : Fragment() {
     ): View {
         binding = FragmentToolClanBossInfoBinding.inflate(inflater, container, false)
         uid = clan.getUnitIdList(selectSection)[index]
-        //技能
-        childFragmentManager.beginTransaction()
-            .replace(R.id.layout_skill, SkillFragment.getInstance(uid, 1))
-            .commit()
+        enemyId = clan.getEnemyList(selectSection)[index]
+        val attrAdapter = EquipmentAttrAdapter()
+        binding.listAttr.adapter = attrAdapter
+        //隐藏布局
+        binding.listAttr.visibility = View.GONE
+        //属性
+        viewModel = InjectorUtil.provideClanViewModelFactory().create(ClanViewModel::class.java)
+        viewModel.getBossAttr(enemyId)
+        viewModel.clanBossAttr.observe(viewLifecycleOwner) {
+            attrAdapter.submitList(it.attr.allNotZero()) {
+                binding.listAttr.visibility = View.VISIBLE
+                //技能
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.layout_skill, SkillFragment.getInstance(uid, 1))
+                    .commit()
+            }
+        }
+
         return binding.root
     }
 }

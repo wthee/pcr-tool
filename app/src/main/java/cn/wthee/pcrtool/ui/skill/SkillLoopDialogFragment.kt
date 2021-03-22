@@ -59,18 +59,13 @@ class SkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
         //技能动作循环
         sharedSkillViewModel.atlPattern.observe(viewLifecycleOwner) {
             val loops = arrayListOf<SkillLoop>()
-            if (it.size > 1) {
-                it.forEach {
-                    if (it.getBefore().size > 0) {
-                        loops.add(SkillLoop(getString(R.string.before_loop), it.getBefore()))
-                    }
-                    if (it.getLoop().size > 0) {
-                        loops.add(SkillLoop(getString(R.string.looping), it.getLoop()))
-                    }
+            it.forEach { ap ->
+                if (ap.getBefore().size > 0) {
+                    loops.add(SkillLoop(getString(R.string.before_loop), ap.getBefore()))
                 }
-            } else {
-                loops.add(SkillLoop(getString(R.string.before_loop), it[0].getBefore()))
-                loops.add(SkillLoop(getString(R.string.looping), it[0].getLoop()))
+                if (ap.getLoop().size > 0) {
+                    loops.add(SkillLoop(getString(R.string.looping), ap.getLoop()))
+                }
             }
             adapter.submitList(loops) {
                 adapter.notifyDataSetChanged()
