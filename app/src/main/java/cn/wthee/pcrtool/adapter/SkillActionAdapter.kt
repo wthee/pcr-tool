@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
  *
  * 列表项布局 [ItemSkillActionBinding]
  *
- * 列表项数据 [String]
+ * 列表项数据 [SkillActionLite]
  */
 class SkillActionAdapter :
     ListAdapter<SkillActionLite, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
@@ -50,7 +50,7 @@ class SkillActionAdapter :
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
                 //目标描述
                 target.text = skillAction.target
-                //改变颜色
+                //详细描述
                 val spannable = SpannableStringBuilder(skillAction.action)
                 val starts = arrayListOf<Int>()
                 val starts0 = arrayListOf<Int>()

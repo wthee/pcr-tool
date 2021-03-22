@@ -108,10 +108,10 @@ class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCa
                 }
 
                 val actionData = skill.getActionInfo()
-                //技能属性
+                //技能动作属性
                 val adapter = SkillActionAdapter()
                 actions.adapter = adapter
-                adapter.submitList(getActions(actionData))
+                adapter.submitList(actionData)
                 //异常状态属性
                 val ailmentAdapter = TagAdapter()
                 ailments.adapter = ailmentAdapter
@@ -123,19 +123,6 @@ class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCa
                 params.bottomMargin = 42.dp
                 binding.root.layoutParams = params
             }
-        }
-
-        /**
-         * 获取动作
-         */
-        private fun getActions(data: ArrayList<SkillActionLite>): ArrayList<SkillActionLite> {
-            val list = arrayListOf<SkillActionLite>()
-            data.forEach {
-                if (it.action.isNotEmpty()) {
-                    list.add(it)
-                }
-            }
-            return list
         }
 
         /**
