@@ -35,18 +35,30 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tool_list" />
 
-
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_boss_skill_loop"
+        android:id="@+id/fab_section"
         style="@style/EfabStyle"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/fab_size"
-        android:layout_marginEnd="@dimen/xl_dp"
+        android:layout_marginEnd="@dimen/m_dp"
         android:layout_marginBottom="@dimen/efab_margin"
         android:contentDescription="@string/function"
         android:text="@string/app_name"
         android:textAllCaps="false"
         app:icon="@drawable/ic_function"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/fab_boss_skill_loop" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_boss_skill_loop"
+        style="@style/FabStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/xl_dp"
+        android:layout_marginBottom="@dimen/m_dp"
+        android:contentDescription="@string/function"
+        android:src="@drawable/ic_loop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

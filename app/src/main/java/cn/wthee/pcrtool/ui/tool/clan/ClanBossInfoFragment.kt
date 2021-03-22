@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.FragmentToolClanBossInfoBinding
 import cn.wthee.pcrtool.ui.skill.SkillFragment
+import cn.wthee.pcrtool.ui.tool.clan.ClanPagerFragment.Companion.clan
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
@@ -24,12 +24,11 @@ import cn.wthee.pcrtool.viewmodel.ClanViewModel
 class ClanBossInfoFragment : Fragment() {
 
     companion object {
-        fun getInstance(date: String, index: Int, clan: ClanBattleInfo) =
+        fun getInstance(index: Int, section: Int) =
             ClanBossInfoFragment().apply {
                 arguments = Bundle().apply {
-                    putString(Constants.CLAN_DATE, date)
                     putInt(Constants.CLAN_BOSS_NO, index)
-                    putSerializable(Constants.CLAN_DATA, clan)
+                    putInt(Constants.CLAN_SELECT_SECTION, section)
                 }
             }
     }
@@ -39,16 +38,14 @@ class ClanBossInfoFragment : Fragment() {
     }
     private lateinit var binding: FragmentToolClanBossInfoBinding
     private var uid = -1
-    private var date = ""
     private var index = 0
-    private lateinit var clan: ClanBattleInfo
+    private var selectSection = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().let {
-            date = it.getString(Constants.CLAN_DATE) ?: ""
             index = it.getInt(Constants.CLAN_BOSS_NO)
-            clan = it.getSerializable(Constants.CLAN_DATA) as ClanBattleInfo
+            selectSection = it.getInt(Constants.CLAN_SELECT_SECTION)
         }
     }
 
@@ -57,9 +54,9 @@ class ClanBossInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolClanBossInfoBinding.inflate(inflater, container, false)
-        uid = clan.getUnitIdList(clan.section)[index]
+        uid = clan.getUnitIdList(selectSection)[index]
         //技能
-        parentFragmentManager.beginTransaction()
+        childFragmentManager.beginTransaction()
             .replace(R.id.layout_skill, SkillFragment.getInstance(uid, 1))
             .commit()
         return binding.root

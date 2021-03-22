@@ -21,11 +21,22 @@ fun getRankColor(rank: Int): Int {
 /**
  * Rank 格式化
  */
-fun getRankText(rank: Int): String {
+fun getFormatText(rank: Int, preStr: String = Constants.RANK_UPPER): String {
     val text = when (rank) {
         in 0..9 -> "  $rank"
         else -> "$rank"
 
     }
-    return "RANK $text"
+    return "$preStr $text"
+}
+
+fun getSectionTextColor(section: Int): Int {
+    val color = when (section) {
+        1 -> R.color.color_rank_2_3
+        2 -> R.color.color_rank_4_6
+        3 -> R.color.color_rank_7_10
+        4 -> R.color.color_rank_11_17
+        else -> R.color.color_rank_18
+    }
+    return ResourcesUtil.getColor(color)
 }

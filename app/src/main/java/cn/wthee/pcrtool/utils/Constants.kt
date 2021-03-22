@@ -87,6 +87,8 @@ object Constants {
     const val NOTICE_TOAST_CHANGE = "数据切换中..."
     const val NOTICE_TOAST_CHECKING = "正在获取信息"
     const val NOTICE_TOAST_NETWORK_ERROR = "网络异常..."
+    const val RANK_UPPER = "RANK"
+    const val SECTION = "阶段"
 
     //常量值
     const val UID = "unit_id"
@@ -103,6 +105,8 @@ object Constants {
     const val CLAN_DATE = "clan_date"
     const val CLAN_BOSS_NO = "clan_boss_no"
     const val CLAN_DATA = "clan_data"
+    const val CLAN_MAX_SECTION = "clan_max_section"
+    const val CLAN_SELECT_SECTION = "clan_select_section"
 
     val ATTR = arrayListOf(
         "HP",

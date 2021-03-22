@@ -244,15 +244,16 @@
         android:label="ClanFragment">
         <action
             android:id="@+id/action_clanFragment_to_clanDetailFragment"
-            app:destination="@id/clanDetailFragment" />
+            android:label="ClanDetailFragment"
+            app:destination="@id/ClanPagerFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit_no_scale"
+            app:popEnterAnim="@anim/fragment_popenter_no_scale"
+            app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
+
     <fragment
-        android:id="@+id/clanDetailFragment"
-        android:name="cn.wthee.pcrtool.ui.tool.clan.ClanBossInfoFragment"
-        android:label="ClanDetailFragment"
-        app:enterAnim="@anim/fragment_enter"
-        app:exitAnim="@anim/fragment_exit_no_scale"
-        app:popEnterAnim="@anim/fragment_popenter_no_scale"
-        app:popExitAnim="@anim/fragment_popexit" />
+        android:id="@+id/ClanPagerFragment"
+        android:name="cn.wthee.pcrtool.ui.tool.clan.ClanPagerFragment" />
 
 </navigation>

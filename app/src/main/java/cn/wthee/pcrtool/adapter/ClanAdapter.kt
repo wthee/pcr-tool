@@ -48,7 +48,7 @@ class ClanAdapter :
                 month.text = clan.release_month.toString().fillZero()
                 //图片
                 val list = clan.getUnitIdList(1)
-                val date = "${year.text} 年 ${month.text}"
+                val date = "${year.text} 年 ${month.text} 月"
                 val adapter = ClanBossIconAdapter(date, clan)
                 icons.adapter = adapter
                 adapter.submitList(list)

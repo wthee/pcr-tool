@@ -7,33 +7,32 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.databinding.ItemRankBinding
-import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.utils.getRankColor
-import cn.wthee.pcrtool.utils.getRankText
+import cn.wthee.pcrtool.data.enums.NumberSelectType
+import cn.wthee.pcrtool.databinding.ItemNumberBinding
+import cn.wthee.pcrtool.utils.*
 
 /**
- * Rank 列表适配器
+ * 数字选择 列表适配器
  *
- * 列表项布局 [ItemRankBinding]
+ * 列表项布局 [ItemNumberBinding]
  *
  * 列表项数据 [Int]
  */
-class RankAdapter(private val dialog: DialogFragment) :
-    ListAdapter<Int, RankAdapter.ViewHolder>(RankDiffCallback()) {
+class NumberSelectAdapter(private val dialog: DialogFragment, private val type: NumberSelectType) :
+    ListAdapter<Int, NumberSelectAdapter.ViewHolder>(RankDiffCallback()) {
 
-    private var selectedRank = 0
+    private var selectNumber = 0
 
-    fun getRank() = selectedRank
+    fun getSelect() = selectNumber
 
-    fun setRank(sel: Int) {
-        selectedRank = sel
+    fun setSelect(sel: Int) {
+        selectNumber = sel
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemRankBinding.inflate(
+            ItemNumberBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -45,21 +44,28 @@ class RankAdapter(private val dialog: DialogFragment) :
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val binding: ItemRankBinding) :
+    inner class ViewHolder(private val binding: ItemNumberBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(r: Int) {
             //设置数据
             binding.apply {
-                rank.setBackgroundColor(
+                number.setBackgroundColor(
                     ResourcesUtil.getColor(
-                        if (r == selectedRank) R.color.colorHalfAccent else R.color.colorAlpha
+                        if (r == selectNumber) R.color.colorHalfAccent else R.color.colorAlpha
                     )
                 )
-
-                rank.text = getRankText(r)
-                rank.setTextColor(getRankColor(r))
+                when (type) {
+                    NumberSelectType.RANK -> {
+                        number.text = getFormatText(r, Constants.RANK_UPPER)
+                        number.setTextColor(getRankColor(r))
+                    }
+                    NumberSelectType.SECTION -> {
+                        number.text = getFormatText(r, Constants.SECTION)
+                        number.setTextColor(getSectionTextColor(r))
+                    }
+                }
                 root.setOnClickListener {
-                    selectedRank = r
+                    selectNumber = r
                     dialog.dismiss()
                 }
             }

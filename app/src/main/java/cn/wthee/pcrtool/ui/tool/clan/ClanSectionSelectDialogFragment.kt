@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.character.attr
+package cn.wthee.pcrtool.ui.tool.clan
 
 import android.app.Activity
 import android.content.DialogInterface
@@ -27,23 +27,22 @@ import cn.wthee.pcrtool.utils.dp
  *
  * ViewModels []
  */
-class RankSelectDialogFragment(
+class ClanSectionSelectDialogFragment(
     private val preFragment: Fragment,
     private val requestCode: Int
 ) : DialogFragment() {
 
+
     private lateinit var binding: FragmentRankSelectDialogBinding
-    private var selectRank = 1
-    private var startRank = 1
-    private var endRank = 1
+    private var maxSection = 3
+    private var selSection = 3
     private lateinit var adapter: NumberSelectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
-            selectRank = getInt(Constants.SELECT_RANK)
-            startRank = getInt(Constants.START_RANK)
-            endRank = getInt(Constants.END_RANK)
+            maxSection = getInt(Constants.CLAN_MAX_SECTION)
+            selSection = getInt(Constants.CLAN_SELECT_SECTION)
         }
     }
 
@@ -54,13 +53,13 @@ class RankSelectDialogFragment(
     ): View {
         binding = FragmentRankSelectDialogBinding.inflate(layoutInflater, container, false)
         val ranks = arrayListOf<Int>()
-        for (i in endRank downTo startRank) {
+        for (i in 1..maxSection) {
             ranks.add(i)
         }
-        adapter = NumberSelectAdapter(this, NumberSelectType.RANK)
+        adapter = NumberSelectAdapter(this, NumberSelectType.SECTION)
         binding.listRank.adapter = adapter
         adapter.submitList(ranks)
-        adapter.setSelect(selectRank)
+        adapter.setSelect(selSection)
 
         setTargetFragment(preFragment, requestCode)
 
@@ -72,7 +71,7 @@ class RankSelectDialogFragment(
         //获取已选择的数据，并返回
         val intent = Intent()
         val bundle = Bundle()
-        bundle.putInt(Constants.SELECT_RANK, adapter.getSelect())
+        bundle.putInt(Constants.CLAN_SELECT_SECTION, adapter.getSelect())
         intent.putExtras(bundle)
         targetFragment?.onActivityResult(requestCode, Activity.RESULT_OK, intent)
     }
@@ -89,12 +88,11 @@ class RankSelectDialogFragment(
         }
     }
 
-    fun getInstance(selectRank: Int, startRank: Int, endRank: Int) =
+    fun getInstance(maxSection: Int, selSection: Int) =
         this.apply {
             arguments = Bundle().apply {
-                putInt(Constants.SELECT_RANK, selectRank)
-                putInt(Constants.START_RANK, startRank)
-                putInt(Constants.END_RANK, endRank)
+                putInt(Constants.CLAN_MAX_SECTION, maxSection)
+                putInt(Constants.CLAN_SELECT_SECTION, selSection)
             }
         }
 }

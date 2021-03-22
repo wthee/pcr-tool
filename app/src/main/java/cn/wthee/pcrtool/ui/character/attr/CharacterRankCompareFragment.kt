@@ -124,9 +124,9 @@ class CharacterRankCompareFragment : Fragment() {
 
     private fun updateRankBtn() {
         binding.apply {
-            value0.text = getRankText(selRank0)
+            value0.text = getFormatText(selRank0)
             value0.setTextColor(getRankColor(selRank0))
-            value1.text = getRankText(selRank1)
+            value1.text = getFormatText(selRank1)
             value1.setTextColor(getRankColor(selRank1))
             title0.setTextColor(getRankColor(selRank0))
             title1.setTextColor(getRankColor(selRank1))

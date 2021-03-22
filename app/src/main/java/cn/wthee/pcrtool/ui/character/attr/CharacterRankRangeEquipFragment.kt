@@ -104,9 +104,9 @@ class CharacterRankRangeEquipFragment : Fragment() {
     private fun load() {
         sharedEquipViewModel.getEquipByRank(uid, startRank, endRank)
         binding.apply {
-            value0.text = getRankText(startRank)
+            value0.text = getFormatText(startRank)
             value0.setTextColor(getRankColor(startRank))
-            value1.text = getRankText(endRank)
+            value1.text = getFormatText(endRank)
             value1.setTextColor(getRankColor(endRank))
         }
     }

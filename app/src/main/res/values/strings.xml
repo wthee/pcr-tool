@@ -8,6 +8,7 @@
     <string name="quest_name">%s-%s</string>
     <string name="percent">%d%%</string>
     <string name="equip_count">x %d</string>
+    <string name="section">%d 阶段</string>
     <string name="empty"> </string>
     <!-- 角色 -->
     <string name="title_quest">？？？</string>
