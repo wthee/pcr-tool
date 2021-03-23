@@ -119,7 +119,7 @@ class ClanPagerFragment : Fragment() {
         binding.clanBossPager.offscreenPageLimit = 5
         binding.clanBossPager.adapter = viewPagerAdapter
         binding.clanBossPager.setCurrentItem(index, false)
-        binding.fabSection.text = getSectionText(selSection)
+        binding.fabSection.text = getZhNumberText(selSection) + "阶段"
         val fabColor = getSectionTextColor(selSection)
         binding.fabSection.setTextColor(fabColor)
         binding.fabSection.iconTint = ColorStateList.valueOf(fabColor)

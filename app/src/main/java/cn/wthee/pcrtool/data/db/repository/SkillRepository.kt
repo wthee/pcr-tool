@@ -11,10 +11,12 @@ class SkillRepository(private val skillDao: SkillDao) {
 
     suspend fun getUnitSkill(id: Int) = skillDao.getUnitSkill(id)
 
+    suspend fun getAllUnitSkill() = skillDao.getAllUnitSkill()
+
     suspend fun getSkillData(sid: Int) = skillDao.getSkillData(sid)
 
-    suspend fun getSkillActions(lv: Int, atk: Int, aids: List<Int>) =
-        skillDao.getSkillActions(lv, atk, aids)
+    suspend fun getSkillActions(type: Int, lv: Int, atk: Int, aids: List<Int>) =
+        skillDao.getSkillActions(type, lv, atk, aids)
 
     suspend fun getAttackPattern(unitId: Int) = skillDao.getAttackPattern(unitId)
 

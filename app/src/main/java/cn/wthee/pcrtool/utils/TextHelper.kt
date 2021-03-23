@@ -33,8 +33,8 @@ fun getFormatText(rank: Int, preStr: String = Constants.RANK_UPPER): String {
 /**
  * 阶段格式化
  */
-fun getSectionText(section: Int): String {
-    val text = when (section) {
+fun getZhNumberText(section: Int): String {
+    return when (section) {
         1 -> "一"
         2 -> "二"
         3 -> "三"
@@ -42,10 +42,9 @@ fun getSectionText(section: Int): String {
         5 -> "五"
         6 -> "六"
         7 -> "七"
-        else -> section
+        else -> section.toString()
 
     }
-    return "${text}阶段"
 }
 
 /**

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
@@ -46,6 +47,7 @@ class NumberSelectAdapter(private val dialog: DialogFragment, private val type: 
 
     inner class ViewHolder(private val binding: ItemNumberBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(r: Int) {
             //设置数据
             binding.apply {
@@ -60,7 +62,7 @@ class NumberSelectAdapter(private val dialog: DialogFragment, private val type: 
                         number.setTextColor(getRankColor(r))
                     }
                     NumberSelectType.SECTION -> {
-                        number.text = getSectionText(r)
+                        number.text = getZhNumberText(r) + "阶段"
                         number.setTextColor(getSectionTextColor(r))
                     }
                 }

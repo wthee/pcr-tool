@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.SkillInfo
-import cn.wthee.pcrtool.data.view.SkillActionLite
+import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -128,7 +128,7 @@ class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCa
         /**
          * 获取异常状态
          */
-        private fun getAilments(data: ArrayList<SkillActionLite>): ArrayList<String> {
+        private fun getAilments(data: ArrayList<SkillActionText>): ArrayList<String> {
             val list = arrayListOf<String>()
             data.forEach {
                 if (it.ailmentName.isNotEmpty() && !list.contains(it.ailmentName)) {
