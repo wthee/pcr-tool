@@ -47,7 +47,7 @@ class SkillViewModel(
                         skill.description,
                         skill.icon_type
                     )
-                    info.actions = repository.getSkillActions(lv, atk, skill.getAllActionId())
+                    info.actions = repository.getSkillActions(0, lv, atk, skill.getAllActionId())
                     infos.add(info)
                 }
                 skills.postValue(infos)

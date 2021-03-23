@@ -40,10 +40,6 @@ data class SkillActionPro(
     @ColumnInfo(name = "ailment_name") var ailmentName: String
 ) {
 
-    private fun getTarget(): String {
-        return ""
-    }
-
     /**
      * fixme 技能目标
      */
@@ -87,8 +83,8 @@ data class SkillActionPro(
         0 -> ""
         1 -> "以目标为中心"
         2 -> "随机"
-        3 -> "最前方一名"
-        4 -> "最远方一名"
+        3 -> "前方"
+        4 -> "最远方"
         5 -> "生命值比率最低的"
         6 -> "剩余生命值最高的"
         7 -> "自身"
@@ -96,7 +92,12 @@ data class SkillActionPro(
         16 -> "魔法攻击力最高的"
         20 -> "使用物理攻击的"
         else -> ""
-    } + getTargetAssignment()
+    }
+
+    private fun getTarget(): String {
+        return getTargetType() + getTargetNumber() + getTargetRange() + getTargetAssignment() + getTargetCount()
+    }
+
 
     /**
      * 获取技能效果
@@ -119,16 +120,12 @@ data class SkillActionPro(
                 }
                 val expr =
                     "[${(action_value_1 + action_value_2 * level + action_value_3 * atk).int}] <$action_value_1 + $action_value_2 * 技能等级 + $action_value_3 * 攻击力>"
-                if (target_type == 7) {
-                    "${getTargetType()} $expr"
-                } else {
-                    "${getTargetType()}${getTargetNumber()}${getTargetRange()}${getTargetAssignment()}${getTargetCount()}造成 $expr 的${atkType}伤害"
-                }
+                "对${getTarget()}造成 $expr 的${atkType}伤害"
             }
             SkillActionType.MOVE -> {
                 val directionText = if (action_value_1 > 0) "向前" else "向后"
-                val postionText = if (action_value_1 > 0) "前方" else "后方"
-                val moveText = "移动至${getTargetType()}前[$action_value_1]"
+                val positionText = if (action_value_1 > 0) "前方" else "后方"
+                val moveText = "移动至${getTarget()}前[$action_value_1]"
                 val returnText = "，动作结束后回到原来位置"
                 val speedText = "，移动速度 [${action_value_2}] "
                 when (action_detail_1) {
@@ -141,29 +138,48 @@ data class SkillActionPro(
                     //方向
                     4, 7 -> directionText + moveText
                     //方向、速度
-                    5 -> moveText + postionText + speedText
+                    5 -> moveText + positionText + speedText
                     6 -> directionText + moveText + speedText
                     else -> ""
                 }
 
             }
             SkillActionType.CHANGE_ENEMY_POSITION -> {
-                ailmentName = if (action_detail_2 == 0) {
-                    "击飞"
-                } else {
-                    if (action_value_1 > 0) "击退" else "拉近"
+                when (action_detail_1) {
+                    1 -> {
+                        ailmentName = "击飞"
+                        "${ailmentName}${getTarget()}，高度[${(abs(action_value_1)).int}]"
+                    }
+                    3, 6 -> {
+                        ailmentName = if (action_value_1 > 0) "击退" else "拉近"
+                        "${ailmentName}${getTarget()}，距离[${(abs(action_value_1)).int}]"
+                    }
+                    else -> ""
                 }
-                "${ailmentName} [${(abs(action_value_4)).int}}] "
             }
             SkillActionType.HEAL -> {
-                " [${(action_value_2 + action_value_3 * level + action_value_4 * atk).int}] <$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力> "
+                "恢复生命值 [${(action_value_2 + action_value_3 * level + action_value_4 * atk).int}] <$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力> "
             }
             SkillActionType.SHIELD -> {
-                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${action_value_3}] 秒"
+                val expr =
+                    "[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级>"
+                val shieldText = "对${getTarget()}展开"
+                val timeText = " 的护盾${expr}，持续 [${action_value_3}] 秒"
+                when (action_detail_1) {
+                    1 -> "${shieldText}承受物理伤害${timeText}"
+                    2 -> "${shieldText}承受魔法伤害${timeText}"
+                    3 -> "${shieldText}物理伤害无效${timeText}"
+                    4 -> "${shieldText}魔法伤害无效${timeText}"
+                    5 -> "${shieldText}所有伤害无效${timeText}"
+                    else -> ""
+                }
+            }
+            SkillActionType.CHOOSE_ENEMY -> {
+                "视点切换到${getTarget()}"
             }
             SkillActionType.CHANGE_ACTION_SPEED -> {
                 //判断异常状态
-                ailmentName = when (action_detail_1) {
+                when (action_detail_1) {
                     1 -> "减速"
                     2 -> "加速"
                     3 -> "麻痹"
@@ -177,11 +193,10 @@ data class SkillActionPro(
                     11 -> "时停"
                     else -> ""
                 }
-                if (action_value_1 != 0.toDouble()) {
-                    "，速度 *  [${action_value_1}] ， 持续 [${action_value_3}] 秒"
-                } else {
-                    "，持续 [${action_value_3}] 秒"
-                }
+                "${ailmentName}${getTarget()}" + if (action_value_1 != 0.toDouble())
+                    "，速度 *  [${action_value_1}] ， 持续 [${action_value_3 + action_value_4 * level}.int] 秒"
+                else
+                    "，持续 [${action_value_3 + action_value_4 * level}.int] 秒"
             }
             SkillActionType.DOT -> {
                 ailmentName = when (action_detail_1) {
@@ -192,7 +207,10 @@ data class SkillActionPro(
                     4 -> "猛毒"
                     else -> ""
                 }
-                " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${action_value_3}] 秒"
+                val expr =
+                    "[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级>"
+                val timeText = "，持续 [${action_value_3 + action_value_4 * level}.int] 秒"
+                "${ailmentName}${getTarget()} ${expr}${timeText}"
             }
             SkillActionType.AURA -> {
                 ailmentName = if (target_assignment == 1) "DEBUFF" else "BUFF"
