@@ -31,7 +31,8 @@ import kotlinx.coroutines.launch
  *
  * 列表项数据 [SkillInfo]
  */
-class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
+class SkillAdapter() :
+    ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
 
     private var mSize = 0
 
@@ -131,8 +132,8 @@ class SkillAdapter : ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCa
         private fun getAilments(data: ArrayList<SkillActionText>): ArrayList<String> {
             val list = arrayListOf<String>()
             data.forEach {
-                if (it.ailmentName.isNotEmpty() && !list.contains(it.ailmentName)) {
-                    list.add(it.ailmentName)
+                if (it.tag.isNotEmpty() && !list.contains(it.tag)) {
+                    list.add(it.tag)
                 }
             }
             return list

@@ -37,7 +37,7 @@ data class SkillActionPro(
     @ColumnInfo(name = "target_count") val target_count: Int,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "level_up_disp") val level_up_disp: String,
-    @ColumnInfo(name = "ailment_name") var ailmentName: String
+    @ColumnInfo(name = "ailment_name") var tag: String
 ) {
 
     /**
@@ -55,18 +55,18 @@ data class SkillActionPro(
      * 首个目标位置
      */
     private fun getTargetNumber() = when (target_number) {
-        in 1..10 -> "第${getZhNumberText(target_number + 1)}近的"
+        in 1..10 -> "(第${getZhNumberText(target_number + 1)}近)"
         else -> ""
     }
 
     /**
      * 作用对象数量
      */
-    private fun getTargetCount() = "(" + when (target_count) {
-        0, 1 -> "1"
-        99 -> "全体"
-        else -> "$target_count"
-    } + ")"
+    private fun getTargetCount() = when (target_count) {
+        0, 1 -> ""
+        99 -> "(全体)"
+        else -> "($target_count)"
+    }
 
     /**
      * 作用范围
@@ -80,22 +80,41 @@ data class SkillActionPro(
      * fixme 目标类型
      */
     private fun getTargetType() = when (target_type) {
-        0 -> ""
-        1 -> "以目标为中心"
-        2 -> "随机"
-        3 -> "前方"
-        4 -> "最远方"
-        5 -> "生命值比率最低的"
-        6 -> "剩余生命值最高的"
+        0, 1, 3 -> ""
+        2, 8 -> "随机的"
+        4 -> "最远的"
+        5, 26 -> "生命值比例最低的"
+        6, 25 -> "生命值比例最高的"
         7 -> "自身"
-        14 -> "物理攻击力最高的"
-        16 -> "魔法攻击力最高的"
-        20 -> "使用物理攻击的"
+        9 -> "最前方的"
+        10 -> "最后方的"
+        11 -> "范围内的"
+        12, 27, 37 -> "TP 最高的"
+        13, 19, 28 -> "TP 最低的"
+        14, 29 -> "物理攻击力最高的"
+        15, 30 -> "物理攻击力最低的"
+        16, 31 -> "魔法攻击力最高的"
+        17, 32 -> "魔法攻击力最低的"
+        18 -> "召唤物"
+        20 -> "物理攻击的"
+        21 -> "魔法攻击的"
+        22 -> "随机的召唤物"
+        23 -> "自身的随机召唤物"
+        24 -> "领主"
+        33 -> "暗影"
+        34 -> "除自身以外"
+        35 -> "生命值最高的"
+        36 -> "生命值最低的"
+        38 -> "物理或魔法攻击力最高的"
+        39 -> "物理或魔法攻击力最低的"
         else -> ""
     }
 
     private fun getTarget(): String {
-        return getTargetType() + getTargetNumber() + getTargetRange() + getTargetAssignment() + getTargetCount()
+        return (getTargetType() + getTargetNumber() + getTargetRange() + getTargetAssignment() + getTargetCount())
+            .replace("己方自身", "自身")
+            .replace("自身己方", "自身")
+
     }
 
 
@@ -107,7 +126,7 @@ data class SkillActionPro(
         //设置状态标签
         val p = getAilment(action_type)
         if (p.isNotEmpty()) {
-            ailmentName = p
+            tag = p
         }
 
         val desc = when (toSkillActionType(action_type)) {
@@ -118,12 +137,12 @@ data class SkillActionPro(
                 "移动至最近敌人前 [$action_value_1] " + if (action_value_2 > 0) "，移动速度 [${action_value_2}] " else ""
             }
             SkillActionType.CHANGE_ENEMY_POSITION -> {
-                ailmentName = if (action_detail_2 == 0) {
+                tag = if (action_detail_2 == 0) {
                     "击飞"
                 } else {
                     if (action_value_1 > 0) "击退" else "拉近"
                 }
-                "${ailmentName} [${(abs(action_value_4)).int}}] "
+                "${tag} [${(abs(action_value_4)).int}] "
             }
             SkillActionType.HEAL -> {
                 " [${(action_value_2 + action_value_3 * level + action_value_4 * atk).int}] <$action_value_2 + $action_value_3 * 技能等级 + $action_value_4 * 攻击力> "
@@ -133,7 +152,7 @@ data class SkillActionPro(
             }
             SkillActionType.CHANGE_ACTION_SPEED -> {
                 //判断异常状态
-                ailmentName = when (action_detail_1) {
+                tag = when (action_detail_1) {
                     1 -> "减速"
                     2 -> "加速"
                     3 -> "麻痹"
@@ -154,7 +173,7 @@ data class SkillActionPro(
                 }
             }
             SkillActionType.DOT -> {
-                ailmentName = when (action_detail_1) {
+                tag = when (action_detail_1) {
                     0 -> "拘留（造成伤害）"
                     1 -> "毒"
                     2 -> "烧伤"
@@ -165,7 +184,7 @@ data class SkillActionPro(
                 " [${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> ，持续 [${action_value_3}] 秒"
             }
             SkillActionType.AURA -> {
-                ailmentName = if (target_assignment == 1) "DEBUFF" else "BUFF"
+                tag = if (target_assignment == 1) "DEBUFF" else "BUFF"
                 if (action_value_3 > 0) {
                     " [${(action_value_2 + action_value_3 * level).int}] <$action_value_2 + $action_value_3 * 技能等级> "
                 } else {
@@ -173,7 +192,7 @@ data class SkillActionPro(
                 } + "，持续 [${action_value_4}] 秒"
             }
             SkillActionType.CHARM -> {
-                ailmentName = when (action_detail_1) {
+                tag = when (action_detail_1) {
                     0 -> "魅惑"
                     1 -> "混乱"
                     else -> ""
@@ -228,7 +247,7 @@ data class SkillActionPro(
         //TODO 细化判断，替代默认描述
         //持续时间
         val timeText = "，持续 [${(action_value_3 + action_value_4 * level).int}] 秒"
-
+        var summonUnitId = 0
         val formatDesc = when (toSkillActionType(action_type)) {
             SkillActionType.DAMAGE -> {
                 val atkType = when (action_detail_1) {
@@ -265,12 +284,12 @@ data class SkillActionPro(
             SkillActionType.CHANGE_ENEMY_POSITION -> {
                 when (action_detail_1) {
                     1 -> {
-                        ailmentName = "击飞"
-                        "${ailmentName}${getTarget()}，高度[${(abs(action_value_1)).int}]"
+                        tag = "击飞"
+                        "${tag}${getTarget()}，高度[${(abs(action_value_1)).int}]"
                     }
                     3, 6 -> {
-                        ailmentName = if (action_value_1 > 0) "击退" else "拉近"
-                        "${ailmentName}${getTarget()}，距离[${(abs(action_value_1)).int}]"
+                        tag = if (action_value_1 > 0) "击退" else "拉近"
+                        "${tag}${getTarget()}，距离[${(abs(action_value_1)).int}]"
                     }
                     else -> ""
                 }
@@ -297,7 +316,7 @@ data class SkillActionPro(
             }
             SkillActionType.CHANGE_ACTION_SPEED -> {
                 //判断异常状态
-                ailmentName = when (action_detail_1) {
+                tag = when (action_detail_1) {
                     1 -> "减速"
                     2 -> "加速"
                     3 -> "麻痹"
@@ -311,14 +330,14 @@ data class SkillActionPro(
                     11 -> "时停"
                     else -> ""
                 }
-                "${ailmentName}${getTarget()}" + if (action_value_1 != 0.toDouble()) {
+                "${tag}${getTarget()}" + if (action_value_1 != 0.toDouble()) {
                     "，速度 * [${action_value_1}]"
                 } else {
                     ""
                 } + timeText
             }
             SkillActionType.DOT -> {
-                ailmentName = when (action_detail_1) {
+                tag = when (action_detail_1) {
                     0 -> "拘留（造成伤害）"
                     1 -> "毒"
                     2 -> "烧伤"
@@ -328,39 +347,58 @@ data class SkillActionPro(
                 }
                 val expr =
                     "[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级>"
-                "${ailmentName}${getTarget()}${expr}${timeText}"
+                "${tag}${getTarget()}${expr}${timeText}"
             }
             SkillActionType.AURA -> {
-                ailmentName = when (action_detail_1) {
-                    10 -> "物攻提升"
-                    11 -> "物攻下降"
-                    20 -> "物防提升"
-                    21 -> "物防下降"
-                    30 -> "魔攻提升"
-                    31 -> "魔攻下降"
-                    40 -> "魔防提升"
-                    41 -> "魔防下降"
+                tag = if (action_detail_1 % 10 == 0) "BUFF" else "DEBUFF"
+                val aura = when (action_detail_1) {
+                    10 -> "物理攻击力提升"
+                    11 -> "物理攻击力下降"
+                    20 -> "物理防御力提升"
+                    21 -> "物理防御力下降"
+                    30 -> "魔法攻击力提升"
+                    31 -> "魔法攻击力下降"
+                    40 -> "魔法防御力提升"
+                    41 -> "魔法防御力下降"
                     else -> ""
                 }
-                "使${getTarget()}${ailmentName}" + if (action_value_3 > 0) {
+                "使${getTarget()}${aura}" + if (action_value_3 > 0) {
                     " [${(action_value_2 + action_value_3 * level).int}] <$action_value_2 + $action_value_3 * 技能等级> "
                 } else {
                     " [${(action_value_2).int}] "
                 } + "，持续 [${(action_value_4 + action_value_5 * level).int}] 秒"
             }
             SkillActionType.CHARM -> {
-                ailmentName = when (action_detail_1) {
+                tag = when (action_detail_1) {
                     0 -> "魅惑"
                     1 -> "混乱"
                     else -> ""
                 }
-                "，持续 [${action_value_1}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
+                "${tag}${getTarget()}，持续 [${action_value_1}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
             }
             SkillActionType.BLIND -> {
-                "，持续 [${action_value_1}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
+                "失明${getTarget()}，持续 [${action_value_1}] 秒，" + if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
             }
-            SkillActionType.CHANGE_MODE -> {
-                if (action_value_1 > 0) "每秒降低TP  [${(action_value_1).int}] " else ""
+            SkillActionType.SILENCE -> {
+                "${toSkillActionType(action_type).desc}${getTarget()}，成功率 [${action_value_3.int}]"
+            }
+            SkillActionType.CHANGE_PATTERN -> {
+                when (action_detail_1) {
+                    1 -> "技能循环改变，持续 [${action_value_1}] 秒"
+                    2 -> "技能循环改变，每秒降低TP [${action_value_1}]"
+                    3 -> "技能动画改变"
+                    else -> ""
+                }
+            }
+            SkillActionType.SUMMON -> {
+                summonUnitId = action_detail_2
+                if (action_value_7 > 0) {
+                    "在${getTarget()}前方 [${action_value_7.int}] 的位置，召唤 [${action_detail_2}] 的召唤物"
+                } else if (action_value_7 < 0) {
+                    "在${getTarget()}后方 [${kotlin.math.abs(action_value_7).int}] 的位置，召唤 [${action_detail_2}] 的召唤物"
+                } else {
+                    "在${getTarget()}，召唤 [${action_detail_2}] 的召唤物。"
+                }
             }
             SkillActionType.CHANGE_TP -> {
                 if (action_value_2 > 0)
@@ -408,9 +446,9 @@ data class SkillActionPro(
         }
 
         return SkillActionText(
-            ailmentName,
+            tag,
             action_id.toString() + "\n" + action + "\n" + formatDesc,
-            ""
+            summonUnitId
         )
     }
 
@@ -421,9 +459,9 @@ data class SkillActionPro(
  * 简化技能效果数据
  */
 data class SkillActionText(
-    val ailmentName: String,
+    val tag: String,
     val action: String,
-    val target: String
+    val summonUnitId: Int
 )
 
 //    val desc = when (toSkillActionType(action_type)) {

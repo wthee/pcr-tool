@@ -75,9 +75,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     SILENCE(13, "沉默"),
 
     /**
-     * 14：改变模式
+     * 14：行动模式变更
      */
-    CHANGE_MODE(14, "行动改变"),
+    CHANGE_PATTERN(14, "行动改变"),
 
     /**
      * 15：召唤
@@ -115,9 +115,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     INVINCIBLE(21, "回避"),
 
     /**
-     * 22：行动模式变更
+     * 22：改变模式
      */
-    CHANGE_PATTERN(22, "行动改变"),
+    CHANGE_MODE(22, "模式变更"),
 
     /**
      * 23：判定对象状态

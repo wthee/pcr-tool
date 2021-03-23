@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
+import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -9,13 +10,16 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
 /**
@@ -48,8 +52,6 @@ class SkillActionAdapter :
             binding.apply {
                 action.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
-                //目标描述
-                target.text = skillAction.target
                 //详细描述
                 val spannable = SpannableStringBuilder(skillAction.action)
                 val starts = arrayListOf<Int>()
@@ -138,6 +140,23 @@ class SkillActionAdapter :
                     }
                 } catch (e: Exception) {
 
+                }
+
+                //获取召唤物信息
+                if (skillAction.summonUnitId != 0) {
+                    root.setOnClickListener {
+                        //打开详情页
+                        MainActivity.pageLevel = 2
+                        val bundle = Bundle()
+                        bundle.putInt(Constants.UID, skillAction.summonUnitId)
+                        bundle.putInt(Constants.TYPE_SKILL, 1)
+                        root.findNavController().navigate(
+                            R.id.action_characterPagerFragment_to_skillFragment,
+                            bundle,
+                            null,
+                            null
+                        )
+                    }
                 }
 
 

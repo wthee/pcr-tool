@@ -12,7 +12,6 @@
         android:paddingStart="@dimen/s_dp"
         android:paddingEnd="@dimen/s_dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:textIsSelectable="true"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/test" />
 
