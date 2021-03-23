@@ -111,6 +111,9 @@ data class SkillActionPro(
         }
 
         //TODO 细化判断，替代默认描述
+        //持续时间
+        val timeText = "，持续 [${(action_value_3 + action_value_4 * level).int}] 秒"
+
         val formatDesc = when (toSkillActionType(action_type)) {
             SkillActionType.DAMAGE -> {
                 val atkType = when (action_detail_1) {
@@ -164,13 +167,13 @@ data class SkillActionPro(
                 val expr =
                     "[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级>"
                 val shieldText = "对${getTarget()}展开"
-                val timeText = " 的护盾${expr}，持续 [${action_value_3}] 秒"
+                val suffix = "的护盾${expr}${timeText}"
                 when (action_detail_1) {
-                    1 -> "${shieldText}承受物理伤害${timeText}"
-                    2 -> "${shieldText}承受魔法伤害${timeText}"
-                    3 -> "${shieldText}物理伤害无效${timeText}"
-                    4 -> "${shieldText}魔法伤害无效${timeText}"
-                    5 -> "${shieldText}所有伤害无效${timeText}"
+                    1 -> "${shieldText}承受物理伤害${suffix}"
+                    2 -> "${shieldText}承受魔法伤害${suffix}"
+                    3 -> "${shieldText}物理伤害无效${suffix}"
+                    4 -> "${shieldText}魔法伤害无效${suffix}"
+                    5 -> "${shieldText}所有伤害无效${suffix}"
                     else -> ""
                 }
             }
@@ -193,10 +196,11 @@ data class SkillActionPro(
                     11 -> "时停"
                     else -> ""
                 }
-                "${ailmentName}${getTarget()}" + if (action_value_1 != 0.toDouble())
-                    "，速度 *  [${action_value_1}] ， 持续 [${action_value_3 + action_value_4 * level}.int] 秒"
-                else
-                    "，持续 [${action_value_3 + action_value_4 * level}.int] 秒"
+                "${ailmentName}${getTarget()}" + if (action_value_1 != 0.toDouble()) {
+                    "，速度 * [${action_value_1}]"
+                } else {
+                    ""
+                } + timeText
             }
             SkillActionType.DOT -> {
                 ailmentName = when (action_detail_1) {
@@ -209,8 +213,7 @@ data class SkillActionPro(
                 }
                 val expr =
                     "[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级>"
-                val timeText = "，持续 [${action_value_3 + action_value_4 * level}.int] 秒"
-                "${ailmentName}${getTarget()} ${expr}${timeText}"
+                "${ailmentName}${getTarget()}${expr}${timeText}"
             }
             SkillActionType.AURA -> {
                 ailmentName = if (target_assignment == 1) "DEBUFF" else "BUFF"
