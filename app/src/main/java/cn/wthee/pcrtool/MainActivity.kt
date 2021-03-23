@@ -3,6 +3,7 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.*
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -105,10 +106,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        mFloatingWindowHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            ScreenUtil.getHeight() - 48.dp
-        else
-            ScreenUtil.getWidth() - 48.dp
+        val width = ScreenUtil.getWidth()
+        val height = ScreenUtil.getHeight()
+        Log.e("DEBUG", "$width ? $height")
+        mFloatingWindowHeight = if (width > height) height - 48.dp else width - 48.dp
         super.onConfigurationChanged(newConfig)
     }
 

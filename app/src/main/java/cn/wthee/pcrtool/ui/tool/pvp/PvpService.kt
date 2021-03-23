@@ -71,7 +71,7 @@ class PvpService : Service() {
         if (data != null) {
             allCharacters = data as ArrayList<PvpPositionData>
         }
-        if (mFloatingWindowHeight > 300.dp) mFloatingWindowHeight = 300.dp
+        setHeight()
         //窗口设置
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager?
         params = WindowManager.LayoutParams().apply {
@@ -100,6 +100,13 @@ class PvpService : Service() {
         //前台通知
         NotificationUtil.createForeground(this, "竞技场查询服务运行中...")
         return super.onStartCommand(intent, flg, startId)
+    }
+
+    private fun setHeight() {
+        val sWidth = ScreenUtil.getWidth()
+        val sHeight = ScreenUtil.getHeight()
+        mFloatingWindowHeight = if (sWidth > sHeight) sHeight - 48.dp else sWidth - 48.dp
+        if (mFloatingWindowHeight > 1080 || mFloatingWindowHeight <= 0) mFloatingWindowHeight = 900
     }
 
 
@@ -335,6 +342,7 @@ class PvpService : Service() {
      */
     private fun minWindow() {
         binding.apply {
+            setHeight()
             if (isMin) {
                 search.visibility = View.VISIBLE
                 floatRight.visibility = View.VISIBLE
