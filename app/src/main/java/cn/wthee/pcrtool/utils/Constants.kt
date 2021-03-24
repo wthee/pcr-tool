@@ -110,23 +110,23 @@ object Constants {
     const val CLAN_SELECT_SECTION = "clan_select_section"
 
     val ATTR = arrayListOf(
-        "HP",
-        "HP吸收",
+        "生命值",
+        "生命吸收",
         "物理攻击力",
         "魔法攻击力",
         "物理防御力",
         "魔法防御力",
         "物理暴击",
         "魔法暴击",
-        "物理贯穿",
-        "魔法贯穿",
+        "物理穿透",
+        "魔法穿透",
         "命中",
         "回避",
-        "HP自动回复",
+        "生命值自动回复",
         "回复量上升",
-        "TP自动回复",
-        "TP上升",
-        "TP消耗减轻",
+        "技能值自动回复",
+        "技能值上升",
+        "技能值消耗减少",
     )
 
     val errorIDs = arrayListOf(

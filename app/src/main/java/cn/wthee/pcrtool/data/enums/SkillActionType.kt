@@ -77,7 +77,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 14：行动模式变更
      */
-    CHANGE_PATTERN(14, "行动改变"),
+    CHANGE_MODE(14, "模式变更"),
 
     /**
      * 15：召唤
@@ -87,7 +87,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 16：TP相关
      */
-    CHANGE_TP(16, "TP"),
+    CHANGE_TP(16, "技能值"),
 
     /**
      * 17：触发条件
@@ -95,14 +95,14 @@ enum class SkillActionType(val type: Int, val desc: String) {
     TRIGGER(17, "条件触发"),
 
     /**
-     * fixme 18：充能
+     * 18：蓄力
      */
-    CHARGE(18, ""),
+    CHARGE(18, "蓄力"),
 
     /**
      * 19：伤害充能
      */
-    DAMAGE_CHARGE(19, "充能"),
+    DAMAGE_CHARGE(19, "蓄力"),
 
     /**
      * 20：挑衅
@@ -117,12 +117,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 22：改变模式
      */
-    CHANGE_MODE(22, "模式变更"),
+    CHANGE_PATTERN(22, "行动变更"),
 
     /**
      * 23：判定对象状态
      */
-    ACCORD_STATUS(23, "状态增伤"),
+    IF_FOR_CHILDREN(23, "状态增伤"),
 
     /**
      * 24：复活
@@ -169,7 +169,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 32：吸血效果
      */
-    LIFE_STEAL(32, "吸血"),
+    LIFE_STEAL(32, "生命吸收"),
 
     /**
      * 33：消失时造成伤害

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +32,7 @@ import kotlinx.coroutines.launch
  *
  * 列表项数据 [SkillInfo]
  */
-class SkillAdapter() :
+class SkillAdapter(private val fragmentManager: FragmentManager) :
     ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
 
     private var mSize = 0
@@ -110,7 +111,7 @@ class SkillAdapter() :
 
                 val actionData = skill.getActionInfo()
                 //技能动作属性
-                val adapter = SkillActionAdapter()
+                val adapter = SkillActionAdapter(fragmentManager)
                 actions.adapter = adapter
                 adapter.submitList(actionData)
                 //异常状态属性

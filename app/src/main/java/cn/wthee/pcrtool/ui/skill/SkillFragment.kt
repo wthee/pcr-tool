@@ -73,7 +73,7 @@ class SkillFragment : Fragment() {
         binding.apply {
             shareSkillList = skillList
             //技能信息
-            adapter = SkillAdapter()
+            adapter = SkillAdapter(parentFragmentManager)
             skillList.adapter = adapter
         }
         if (type == 0) {

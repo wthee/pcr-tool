@@ -10,6 +10,7 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -19,6 +20,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
+import cn.wthee.pcrtool.ui.common.CommonDialogContainerFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
@@ -29,7 +31,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
  *
  * 列表项数据 [SkillActionText]
  */
-class SkillActionAdapter :
+class SkillActionAdapter(private val fragmentManager: FragmentManager) :
     ListAdapter<SkillActionText, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -45,7 +47,7 @@ class SkillActionAdapter :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemSkillActionBinding) :
+    inner class ViewHolder(private val binding: ItemSkillActionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(skillAction: SkillActionText) {
@@ -156,6 +158,8 @@ class SkillActionAdapter :
                             null,
                             null
                         )
+                        CommonDialogContainerFragment.loadSkillFragment(skillAction.summonUnitId, 1)
+                            .show(fragmentManager, "summon_skill")
                     }
                 }
 
