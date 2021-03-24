@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 
-/**
+/**.
  * 角色详情页面适配器
  * 角色基本信息 [CharacterBasicInfoFragment]
  * 角色属性信息 [CharacterAttrFragment]

@@ -87,7 +87,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 16：TP相关
      */
-    CHANGE_TP(16, "技能值"),
+    CHANGE_TP(16, "TP"),
 
     /**
      * 17：触发条件
@@ -179,7 +179,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 34：伤害递增
      */
-    INCREASED_DAMAGE(34, "伤害递增"),
+    ACCUMULATIVE_DAMAGE(34, "伤害递增"),
 
     /**
      * 35：特殊刻印
