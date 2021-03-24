@@ -719,7 +719,7 @@ data class SkillActionPro(
             SkillActionType.KILL_ME -> "${getTargetType()}死亡"
             SkillActionType.CONTINUOUS_ATTACK_NEARBY -> ""
             SkillActionType.LIFE_STEAL -> {
-                "为${getTarget()}的下 [${action_value_3.int}] 次攻击附加 ${toSkillActionType(action_type)}[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> 效果"
+                "为${getTarget()}的下 [${action_value_3.int}] 次攻击附加 ${toSkillActionType(action_type).desc}[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> 效果"
             }
             //反伤
             SkillActionType.STRIKE_BACK -> {
