@@ -146,7 +146,8 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
 
                 //获取召唤物信息
                 if (skillAction.summonUnitId != 0) {
-                    root.setOnClickListener {
+                    target.text = "查看召唤物：${skillAction.summonUnitId}"
+                    target.setOnClickListener {
                         //打开详情页
                         MainActivity.pageLevel = 2
                         val bundle = Bundle()

@@ -37,12 +37,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 6：护盾
      */
-    SHIELD(6, "护盾"),
+    BARRIER(6, "护盾"),
 
     /**
      * 7：指定攻击对象
      */
-    CHOOSE_ENEMY(7, "指定"),
+    CHOOSE_ENEMY(7, ""),
 
     /**
      * 8：行动速度变更：行动速度提升/降低；无法行动
@@ -122,7 +122,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 23：判定对象状态
      */
-    IF_FOR_CHILDREN(23, "状态增伤"),
+    IF_FOR_CHILDREN(23, ""),
 
     /**
      * 24：复活
@@ -169,7 +169,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 32：吸血效果
      */
-    LIFE_STEAL(32, "HP吸收"),
+    LIFE_STEAL(32, "HP 吸收"),
 
     /**
      * 33：消失时造成伤害
