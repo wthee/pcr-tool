@@ -140,9 +140,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     ADDITIVE(26, "条件"),
 
     /**
-     * 27：击杀敌人
+     * 27：倍率
      */
-    MULTIPLE(27, "击杀"),
+    MULTIPLE(27, "倍率"),
 
     /**
      * 28：特殊条件
