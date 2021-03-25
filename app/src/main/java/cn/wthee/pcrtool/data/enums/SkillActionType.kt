@@ -25,12 +25,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANGE_ENEMY_POSITION(3, ""),
 
     /**
-     * 4：回复生命
+     * 4：回复HP
      */
     HEAL(4, "治疗"),
 
     /**
-     * 5：回复生命
+     * 5：回复HP
      */
     CURE(5, "治疗"),
 
@@ -169,7 +169,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 32：吸血效果
      */
-    LIFE_STEAL(32, "生命吸收"),
+    LIFE_STEAL(32, "HP吸收"),
 
     /**
      * 33：消失时造成伤害
@@ -199,7 +199,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 38：范围减益
      */
-    DEBUFF_FIELD(38, "领域"),
+    AURA_FIELD(38, "领域"),
 
     /**
      * 39：范围持续伤害
@@ -219,7 +219,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 42：循环触发：哈哈剑大笑时...等状态触发
      */
-    LOOP_TRIGGER(42, "反击"),
+    LOOP_TRIGGER(42, "条件触发"),
 
     /**
      * 43：拥有标记时触发
@@ -249,7 +249,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 48：持续治疗
      */
-    HOT(48, "持续治疗"),
+    HOT(48, "持续回复"),
 
     /**
      * 49：移除增益
@@ -262,7 +262,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANNEL(50, "铃铛"),
 
     /**
-     * 51：分裂？
+     * fixme 51：分裂
      */
     DIVISION(51, ""),
 
@@ -287,9 +287,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     MOVE_PART(55, ""),
 
     /**
-     * 56：千里眼
+     * 56：闪避
      */
-    COUNT_BLIND(56, "千里眼"),
+    COUNT_BLIND(56, "闪避"),
 
     /**
      * 57：延迟攻击 如：万圣炸弹人的 UB
@@ -319,12 +319,33 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 62：敬畏
      */
-    AWE(61, "敬畏"),
+    AWE(62, "敬畏"),
+
+
+    /**
+     * 63: 循环
+     */
+    LOOP(63, ""),
+
+    /**
+     * 蛤？
+     */
+    TOAD(69, ""),
 
     /**
      * 71：特殊状态：公主佩可 UB 后不死BUFF
      */
-    PR_PEKO_UB(71, "骑士"),
+    KNIGHT_GUARD(71, "骑士"),
+
+    /**
+     * 伤害护盾
+     */
+    LOG_GUARD(73, "伤害护盾"),
+
+    /**
+     * 划分？
+     */
+    DIVIDE(74, ""),
 
     /**
      * 75：依据攻击次数增伤：水流夏
@@ -333,7 +354,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
 
 
     /**
-     * 76：依据攻击次数增伤：水流夏
+     * 76：减疗
      */
     HEAL_DOWN(76, "减疗"),
 
@@ -347,6 +368,21 @@ enum class SkillActionType(val type: Int, val desc: String) {
      * 90：EX被动
      */
     EX(90, "被动"),
+
+    /**
+     * 91：EX+被动
+     */
+    EX_PLUS(91, "被动"),
+
+    /**
+     * 92：EX+被动
+     */
+    CHANGE_TP_RATIO(92, ""),
+
+    /**
+     * 93：无视挑衅
+     */
+    IGNOR_TAUNT(93, ""),
 }
 
 /**

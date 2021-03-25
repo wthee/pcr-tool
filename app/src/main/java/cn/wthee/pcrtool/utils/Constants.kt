@@ -111,7 +111,7 @@ object Constants {
 
     val ATTR = arrayListOf(
         "HP",
-        "生命吸收",
+        "HP吸收",
         "物理攻击力",
         "魔法攻击力",
         "物理防御力",
