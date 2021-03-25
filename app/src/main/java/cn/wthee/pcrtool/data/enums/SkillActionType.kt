@@ -92,7 +92,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 17：触发条件
      */
-    TRIGGER(17, "条件触发"),
+    TRIGGER(17, "条件"),
 
     /**
      * 18：蓄力
@@ -137,7 +137,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 26：增伤
      */
-    ADDITIVE(26, "条件"),
+    ADDITIVE(26, "增伤"),
 
     /**
      * 27：倍率
@@ -219,7 +219,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 42：循环触发：哈哈剑大笑时...等状态触发
      */
-    LOOP_TRIGGER(42, "条件触发"),
+    LOOP_TRIGGER(42, "条件"),
 
     /**
      * 43：拥有标记时触发

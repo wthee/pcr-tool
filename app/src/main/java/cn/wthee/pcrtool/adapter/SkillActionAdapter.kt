@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -59,9 +60,11 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
                 val starts = arrayListOf<Int>()
                 val starts0 = arrayListOf<Int>()
                 val starts1 = arrayListOf<Int>()
+                val starts2 = arrayListOf<Int>()
                 val ends = arrayListOf<Int>()
                 val ends0 = arrayListOf<Int>()
                 val ends1 = arrayListOf<Int>()
+                val ends2 = arrayListOf<Int>()
                 skillAction.action.filterIndexed { index, c ->
                     if (c == '<') {
                         starts.add(index)
@@ -80,6 +83,12 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
                     }
                     if (c == ')') {
                         ends1.add(index)
+                    }
+                    if (c == '{') {
+                        starts2.add(index)
+                    }
+                    if (c == '}') {
+                        ends2.add(index)
                     }
                     false
                 }
@@ -132,13 +141,29 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
                             ends1[index] + 1,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
+                    }
+                    //系数
+                    starts2.forEachIndexed { index, _ ->
+                        //变色
+                        spannable.setSpan(
+                            ForegroundColorSpan(
+                                ResourcesUtil.getColor(R.color.color_rank_11_17)
+                            ), starts2[index], ends2[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        //加粗
+                        spannable.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            starts2[index],
+                            ends2[index] + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                         //字体大小
-//                        spannable.setSpan(
-//                            RelativeSizeSpan(0.8f),
-//                            starts1[index],
-//                            ends1[index] + 1,
-//                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-//                        )
+                        spannable.setSpan(
+                            RelativeSizeSpan(0.85f),
+                            starts2[index],
+                            ends2[index] + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                     }
                 } catch (e: Exception) {
 

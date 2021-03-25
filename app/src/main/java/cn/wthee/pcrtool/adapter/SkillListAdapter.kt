@@ -110,6 +110,18 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
                 }
 
                 val actionData = skill.getActionInfo()
+                //是否显示参数判断
+                var showCoe = false
+                actionData.forEach {
+                    if (it.showCoe) {
+                        showCoe = true
+                    }
+                }
+                if (!showCoe) {
+                    actionData.map {
+                        it.action = it.action.replace(Regex("\\{.*?\\}"), "")
+                    }
+                }
                 //技能动作属性
                 val adapter = SkillActionAdapter(fragmentManager)
                 actions.adapter = adapter
