@@ -64,12 +64,17 @@ class ClanBossInfoFragment : Fragment() {
         viewModel = InjectorUtil.provideClanViewModelFactory().create(ClanViewModel::class.java)
         viewModel.getBossAttr(enemyId)
         viewModel.clanBossAttr.observe(viewLifecycleOwner) {
-            attrAdapter.submitList(it.attr.allNotZero()) {
-                binding.listAttr.visibility = View.VISIBLE
-                //技能
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.layout_skill, SkillFragment.getInstance(uid, 1))
-                    .commit()
+            if (it != null) {
+                attrAdapter.submitList(it.attr.allNotZero()) {
+                    binding.listAttr.visibility = View.VISIBLE
+                    //技能
+                    childFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.layout_skill,
+                            SkillFragment.getInstance(uid, 1, it.getSkillLv(), it.attr.atk)
+                        )
+                        .commit()
+                }
             }
         }
 

@@ -126,7 +126,10 @@ data class SkillActionPro(
      * 技能效果判断逻辑来源 @author MalitsPlus[https://github.com/MalitsPlus]
      *
      */
-    fun getActionDesc(): SkillActionText {
+    fun getActionDesc(): SkillActionText? {
+        if (isEmptyAction()) {
+            return null
+        }
         //设置状态标签
         val p = getAilment(action_type)
         if (p.isNotEmpty()) {
@@ -802,7 +805,7 @@ data class SkillActionPro(
                 "计数器 [${action_detail_1}] 增加 [${action_value_1.toInt()}]"
             }
             SkillActionType.RATE_DAMAGE -> {
-                val value = getValueText(1, action_value_1, action_value_2)
+                val value = getValueText(1, action_value_1, action_value_2, percent = "%")
                 when (action_detail_1) {
                     1 -> "对${getTarget()}造成最大HP  $value 伤害"
                     2 -> "对${getTarget()}造成剩余HP  $value 伤害"
@@ -992,7 +995,7 @@ data class SkillActionPro(
         }
         return SkillActionText(
             tag,
-            "(${action_id % 10})$action \n$formatDesc",
+            "${action_id} \n (${action_id % 10})$action \n$formatDesc",
             summonUnitId,
             showCoe
         )
@@ -1016,7 +1019,9 @@ data class SkillActionPro(
         v3: Double = 0.0,
         percent: String = ""
     ): String {
-        return if (v2.int == 0) {
+        return if (v1.int == 0) {
+            "[${(v2 * level).int}$percent] <{{系数${index + 1}}$v2 * 技能等级>"
+        } else if (v2.int == 0) {
             "[${v1}$percent]"
         } else if (v3.int == 0) {
             "[${(v1 + v2 * level).int}$percent] <{系数${index}}$v1 + {系数${index + 1}}$v2 * 技能等级>"
@@ -1067,6 +1072,19 @@ data class SkillActionPro(
             6 -> "吸收所有伤害的护盾"
             else -> "?"
         }
+    }
+
+    /**
+     * 动作空值
+     */
+    private fun isEmptyAction(): Boolean {
+        val values = arrayListOf(
+            action_value_1, action_value_2, action_value_3, action_value_4,
+            action_value_5, action_value_6, action_value_7
+        ).filter {
+            it.toInt() != 0
+        }
+        return values.isEmpty()
     }
 }
 

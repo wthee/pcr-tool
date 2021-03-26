@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.SkillInfo
+import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
@@ -30,10 +31,10 @@ import kotlinx.coroutines.launch
  *
  * 列表项布局 [ItemSkillBinding]
  *
- * 列表项数据 [SkillInfo]
+ * 列表项数据 [SkillDetail]
  */
 class SkillAdapter(private val fragmentManager: FragmentManager) :
-    ListAdapter<SkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
+    ListAdapter<SkillDetail, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
 
     private var mSize = 0
 
@@ -57,7 +58,8 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
 
     inner class ViewHolder(private val binding: ItemSkillBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(skill: SkillInfo) {
+        @SuppressLint("SetTextI18n")
+        fun bind(skill: SkillDetail) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.context
@@ -86,6 +88,8 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
                 }
                 //技能名称
                 name.text = if (skill.name.isBlank()) type.text else skill.name
+                //等级
+                level.text = "技能等级：${skill.level}"
                 //加载图片
                 val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
                 itemPic.load(picUrl) {
@@ -111,17 +115,25 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
 
                 val actionData = skill.getActionInfo()
                 //是否显示参数判断
-                var showCoe = false
-                actionData.forEach {
-                    if (it.showCoe) {
-                        showCoe = true
+                val showCoeIndex = skill.getActionIndexWithCoe()
+                actionData.mapIndexed { index, skillActionText ->
+                    val s = showCoeIndex.filter {
+                        it.actionIndex == index
+                    }
+                    val show = s.isNotEmpty()
+                    if (show) {
+                        Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
+                            if (it.value != s[0].coe) {
+                                skillActionText.action =
+                                    skillActionText.action.replace(it.value, "")
+                            }
+                        }
+                    } else {
+                        skillActionText.action =
+                            skillActionText.action.replace(Regex("\\{.*?\\}"), "")
                     }
                 }
-                if (!showCoe) {
-                    actionData.map {
-                        it.action = it.action.replace(Regex("\\{.*?\\}"), "")
-                    }
-                }
+
                 //技能动作属性
                 val adapter = SkillActionAdapter(fragmentManager)
                 actions.adapter = adapter
@@ -155,18 +167,18 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
 
 }
 
-class SkillDiffCallback : DiffUtil.ItemCallback<SkillInfo>() {
+class SkillDiffCallback : DiffUtil.ItemCallback<SkillDetail>() {
 
     override fun areItemsTheSame(
-        oldItem: SkillInfo,
-        newItem: SkillInfo
+        oldItem: SkillDetail,
+        newItem: SkillDetail
     ): Boolean {
         return oldItem.name == newItem.name
     }
 
     override fun areContentsTheSame(
-        oldItem: SkillInfo,
-        newItem: SkillInfo
+        oldItem: SkillDetail,
+        newItem: SkillDetail
     ): Boolean {
         return oldItem == newItem
     }

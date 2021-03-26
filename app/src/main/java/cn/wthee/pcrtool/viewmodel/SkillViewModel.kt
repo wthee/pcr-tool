@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.entity.AttackPattern
-import cn.wthee.pcrtool.data.model.SkillInfo
+import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
@@ -24,7 +24,7 @@ class SkillViewModel(
         var iconTypes = hashMapOf<Int, Int>()
     }
 
-    var skills = MutableLiveData<List<SkillInfo>>()
+    var skills = MutableLiveData<List<SkillDetail>>()
     var atlPattern = MutableLiveData<List<AttackPattern>>()
 
     /**
@@ -34,30 +34,60 @@ class SkillViewModel(
         iconTypes.clear()
         viewModelScope.launch {
             try {
-                val infos = mutableListOf<SkillInfo>()
                 val data = repository.getUnitSkill(unitId)
-                //技能信息
-                data.getAllSkillId().forEach { sid ->
-                    val skill = repository.getSkillData(sid)
-                    val aid = skill.skill_id % 1000
-                    iconTypes[aid] = skill.icon_type
-                    val info = SkillInfo(
-                        skill.skill_id,
-                        skill.name ?: "",
-                        skill.description,
-                        skill.icon_type
-                    )
-                    info.actions = repository.getSkillActions(0, lv, atk, skill.getAllActionId())
-                    infos.add(info)
-                }
-                skills.postValue(infos)
+                getSkillInfo(data.getAllSkillId(), atk, arrayListOf(lv))
             } catch (e: Exception) {
                 MainScope().launch {
                     UMCrash.generateCustomLog(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
                 }
             }
-
         }
+    }
+
+    /**
+     * 获取怪物技能信息
+     */
+    fun getEnemySkill(lvs: List<Int>, atk: Int, unitId: Int) {
+        iconTypes.clear()
+        viewModelScope.launch {
+            try {
+                val data = repository.getUnitSkill(unitId)
+                getSkillInfo(data.getEnemySkillId(), atk, lvs)
+            } catch (e: Exception) {
+                MainScope().launch {
+                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取技能信息
+     */
+    private fun getSkillInfo(skillIds: List<Int>, atk: Int, lvs: List<Int>) {
+        viewModelScope.launch {
+            val infos = mutableListOf<SkillDetail>()
+            //技能信息
+            skillIds.forEachIndexed { index, sid ->
+                val skill = repository.getSkillData(sid)
+                if (skill != null) {
+                    val lv = if (lvs.size == 1) lvs[0] else lvs[index]
+                    val aid = skill.skill_id % 1000
+                    iconTypes[aid] = skill.icon_type
+                    val info = SkillDetail(
+                        skill.skill_id,
+                        skill.name ?: "",
+                        skill.description,
+                        skill.icon_type,
+                        lv, atk
+                    )
+                    info.actions = repository.getSkillActions(0, lv, atk, skill.getAllActionId())
+                    infos.add(info)
+                }
+            }
+            skills.postValue(infos)
+        }
+
     }
 
     /**

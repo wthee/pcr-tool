@@ -28,7 +28,7 @@ interface SkillDao {
      * 根据 [sid]，获取技能数据 [SkillData]
      */
     @Query("SELECT * FROM skill_data  WHERE skill_id = :sid")
-    suspend fun getSkillData(sid: Int): SkillData
+    suspend fun getSkillData(sid: Int): SkillData?
 
     /**
      * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillActionPro]

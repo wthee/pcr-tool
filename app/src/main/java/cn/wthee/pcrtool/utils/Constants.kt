@@ -108,6 +108,8 @@ object Constants {
     const val CLAN_DATA = "clan_data"
     const val CLAN_MAX_SECTION = "clan_max_section"
     const val CLAN_SELECT_SECTION = "clan_select_section"
+    const val CLAN_SKILL_LVS = "clan_skill_lvs"
+    const val CLAN_BOSS_ATK = "clan_boss_atk"
 
     val ATTR = arrayListOf(
         "HP ",

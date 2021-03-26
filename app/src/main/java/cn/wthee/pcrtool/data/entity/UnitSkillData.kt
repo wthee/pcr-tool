@@ -87,4 +87,12 @@ data class UnitSkillData(
         }
         return list
     }
+
+    fun getEnemySkillId(): ArrayList<Int> {
+        return arrayListOf(
+            union_burst,
+            main_skill_1, main_skill_2, main_skill_3, main_skill_4, main_skill_5,
+            main_skill_6, main_skill_7, main_skill_8, main_skill_9, main_skill_10,
+        )
+    }
 }

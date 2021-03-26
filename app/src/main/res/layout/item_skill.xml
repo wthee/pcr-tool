@@ -31,6 +31,7 @@
         app:layout_constraintTop_toTopOf="@id/name"
         tools:text="必杀技" />
 
+
     <LinearLayout
         android:id="@+id/layout_skill_desc"
         android:layout_width="match_parent"
@@ -47,15 +48,31 @@
             android:adjustViewBounds="true"
             tools:src="@drawable/unknown_gray" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/desc"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/m_dp"
-            android:nestedScrollingEnabled="false"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:textIsSelectable="true"
-            tools:text="@string/test" />
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                tools:text="等级" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textIsSelectable="true"
+                tools:text="@string/test" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

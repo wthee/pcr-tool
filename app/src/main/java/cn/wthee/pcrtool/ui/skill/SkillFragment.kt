@@ -30,11 +30,13 @@ class SkillFragment : Fragment() {
 
 
     companion object {
-        fun getInstance(uid: Int, type: Int) =
+        fun getInstance(uid: Int, type: Int, lvs: ArrayList<Int> = arrayListOf(), atk: Int = 0) =
             SkillFragment().apply {
                 arguments = Bundle().apply {
                     putInt(UID, uid)
                     putInt(Constants.TYPE_SKILL, type)
+                    putSerializable(Constants.CLAN_SKILL_LVS, lvs)
+                    putInt(Constants.CLAN_BOSS_ATK, atk)
                 }
             }
 
@@ -45,6 +47,8 @@ class SkillFragment : Fragment() {
     private lateinit var adapter: SkillAdapter
     private var uid = 0
     private var type = 0
+    private var lvs = arrayListOf<Int>()
+    private var bossAtk = 0
     private lateinit var skillViewModel: SkillViewModel
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
@@ -55,6 +59,8 @@ class SkillFragment : Fragment() {
         requireArguments().apply {
             uid = getInt(UID)
             type = getInt(Constants.TYPE_SKILL)
+            lvs = getSerializable(Constants.CLAN_SKILL_LVS) as ArrayList<Int>
+            bossAtk = getInt(Constants.CLAN_BOSS_ATK)
         }
     }
 
@@ -95,9 +101,7 @@ class SkillFragment : Fragment() {
             }
         } else {
             //fixme enemy skill
-            var level = 70
-            var atk = 100
-            skillViewModel.getCharacterSkills(level, atk, uid)
+            skillViewModel.getEnemySkill(lvs, bossAtk, uid)
         }
 
         skillViewModel.skills.observe(viewLifecycleOwner) {
