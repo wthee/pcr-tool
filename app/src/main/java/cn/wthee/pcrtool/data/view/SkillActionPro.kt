@@ -1019,14 +1019,26 @@ data class SkillActionPro(
         v3: Double = 0.0,
         percent: String = ""
     ): String {
-        return if (v1.int == 0) {
-            "[${(v2 * level).int}$percent] <{{系数${index + 1}}$v2 * 技能等级>"
-        } else if (v2.int == 0) {
-            "[${v1}$percent]"
-        } else if (v3.int == 0) {
-            "[${(v1 + v2 * level).int}$percent] <{系数${index}}$v1 + {系数${index + 1}}$v2 * 技能等级>"
+        return if (v3.int == 0) {
+            if (v1.int == 0 && v2.int != 0) {
+                "[${(v2 * level).int}$percent] <{{系数${index + 1}}$v2 * 技能等级>"
+            } else if (v1.int != 0 && v2.int == 0) {
+                "[${v1}$percent]"
+            } else if (v1.int != 0 && v2.int != 0) {
+                "[${(v1 + v2 * level).int}$percent] <{系数${index}}$v1 + {系数${index + 1}}$v2 * 技能等级>"
+            } else {
+                "?"
+            }
         } else {
-            "[${(v1 + v2 * level + v3 * atk).int}$percent] <{系数${index}}$v1 + {系数${index + 1}}$v2 * 技能等级 + {系数${index + 2}}$v3 * 攻击力>"
+            if (v1.int == 0 && v2.int != 0) {
+                "[${(v2 + v3 * atk).int}$percent] <{系数${index + 1}}$v2 + {系数${index + 2}}$v3 * 攻击力>"
+            } else if (v1.int == 0 && v2.int == 0) {
+                "[${(v3 * atk).int}$percent] <{系数${index + 2}}$v3 * 攻击力>"
+            } else if (v1.int != 0 && v2.int != 0) {
+                "[${(v1 + v2 * level + v3 * atk).int}$percent] <{系数${index}}$v1 + {系数${index + 1}}$v2 * 技能等级 + {系数${index + 2}}$v3 * 攻击力>"
+            } else {
+                "?"
+            }
         }
     }
 
