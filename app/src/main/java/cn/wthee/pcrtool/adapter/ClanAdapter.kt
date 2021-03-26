@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -59,7 +58,7 @@ class ClanAdapter :
                 adapter.submitList(list)
                 root.setOnClickListener {
                     try {
-                        icons[0].findViewById<AppCompatImageView>(R.id.pic).callOnClick()
+                        icons[0].callOnClick()
                     } catch (e: Exception) {
                     }
                 }

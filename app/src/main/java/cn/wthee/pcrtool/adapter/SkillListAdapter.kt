@@ -115,24 +115,29 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
 
                 val actionData = skill.getActionInfo()
                 //是否显示参数判断
-                val showCoeIndex = skill.getActionIndexWithCoe()
-                actionData.mapIndexed { index, skillActionText ->
-                    val s = showCoeIndex.filter {
-                        it.actionIndex == index
-                    }
-                    val show = s.isNotEmpty()
-                    if (show) {
-                        Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
-                            if (it.value != s[0].coe) {
-                                skillActionText.action =
-                                    skillActionText.action.replace(it.value, "")
-                            }
+                try {
+                    val showCoeIndex = skill.getActionIndexWithCoe()
+                    actionData.mapIndexed { index, skillActionText ->
+                        val s = showCoeIndex.filter {
+                            it.actionIndex == index
                         }
-                    } else {
-                        skillActionText.action =
-                            skillActionText.action.replace(Regex("\\{.*?\\}"), "")
+                        val show = s.isNotEmpty()
+                        if (show) {
+                            Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
+                                if (it.value != s[0].coe) {
+                                    skillActionText.action =
+                                        skillActionText.action.replace(it.value, "")
+                                }
+                            }
+                        } else {
+                            skillActionText.action =
+                                skillActionText.action.replace(Regex("\\{.*?\\}"), "")
+                        }
                     }
+                } catch (e: Exception) {
+
                 }
+
 
                 //技能动作属性
                 val adapter = SkillActionAdapter(fragmentManager)
