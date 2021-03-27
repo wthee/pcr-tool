@@ -79,31 +79,36 @@ class SkillFragment : Fragment() {
         binding.apply {
             shareSkillList = skillList
             //技能信息
-            adapter = SkillAdapter(parentFragmentManager)
+            adapter = SkillAdapter(parentFragmentManager, type)
             skillList.adapter = adapter
         }
-        if (type == 0) {
-            //延迟绘制页面
-            binding.skillList.visibility = View.GONE
-            binding.skillList.postDelayed({
-                binding.skillList.visibility = View.VISIBLE
-            }, 600L)
-            //角色技能
-            var level = CharacterAttrFragment.maxLv
-            var atk = 0.0
-            characterAttrViewModel.sumInfo.observe(viewLifecycleOwner) {
-                atk = if (it.atk != 0.0) it.atk else it.magicStr
-                skillViewModel.getCharacterSkills(level, atk.int, uid)
+        when (type) {
+            0 -> { //延迟绘制页面
+                binding.skillList.visibility = View.GONE
+                binding.skillList.postDelayed({
+                    binding.skillList.visibility = View.VISIBLE
+                }, 600L)
+                //角色技能
+                var level = CharacterAttrFragment.maxLv
+                var atk = 0.0
+                characterAttrViewModel.sumInfo.observe(viewLifecycleOwner) {
+                    atk = if (it.atk != 0.0) it.atk else it.magicStr
+                    skillViewModel.getCharacterSkills(level, atk.int, uid)
+                }
+                characterAttrViewModel.selData.observe(viewLifecycleOwner) {
+                    level = it[Constants.LEVEL] ?: level
+                    skillViewModel.getCharacterSkills(level, atk.int, uid)
+                }
             }
-            characterAttrViewModel.selData.observe(viewLifecycleOwner) {
-                level = it[Constants.LEVEL] ?: level
-                skillViewModel.getCharacterSkills(level, atk.int, uid)
-            }
-        } else {
-            //fixme enemy skill
-            skillViewModel.getEnemySkill(lvs, bossAtk, uid)
-        }
 
+            1 -> {
+                //fixme enemy skill
+                skillViewModel.getEnemySkill(lvs, bossAtk, uid)
+            }
+            2 -> {
+                skillViewModel.getCharacterSkills(lvs[0], bossAtk, uid)
+            }
+        }
         skillViewModel.skills.observe(viewLifecycleOwner) {
             adapter.setSize(it.size)
             adapter.submitList(it) {
@@ -111,5 +116,4 @@ class SkillFragment : Fragment() {
             }
         }
     }
-
 }

@@ -127,9 +127,9 @@ data class SkillActionPro(
      *
      */
     fun getActionDesc(): SkillActionText? {
-        if (isEmptyAction()) {
-            return null
-        }
+//        if (isEmptyAction()) {
+//            return null
+//        }
         //设置状态标签
         val p = getAilment(action_type)
         if (p.isNotEmpty()) {
@@ -419,10 +419,10 @@ data class SkillActionPro(
                 summonUnitId = action_detail_2
                 when {
                     action_value_7 > 0 -> {
-                        "在${getTarget()}前方 [${action_value_7.toInt()}] 的位置，召唤 [${action_detail_2}] 的召唤物"
+                        "在${getTarget()}前方 [${action_value_7.toInt()}] 的位置，召唤友方单位"
                     }
                     action_value_7 < 0 -> {
-                        "在${getTarget()}后方 [${abs(action_value_7).int}] 的位置，召唤 [${action_detail_2}] 的召唤物"
+                        "在${getTarget()}后方 [${abs(action_value_7).int}] 的位置，召唤友方单位"
                     }
                     else -> {
                         "在${getTarget()}，召唤 [${action_detail_2}] 的召唤物。"
@@ -458,10 +458,10 @@ data class SkillActionPro(
             SkillActionType.CHARGE, SkillActionType.DAMAGE_CHARGE -> {
                 "蓄力 [${action_value_3}] 秒" + when {
                     action_detail_2 > 0 -> {
-                        "，下一个动作的效果提高 [${(action_value_1 + action_value_2 * level)}] <$action_value_1 + $action_value_2 * 技能等级> * 蓄力中受到的伤害"
+                        "，下一个动作的效果增加 [${(action_value_1 + action_value_2 * level)}] <$action_value_1 + $action_value_2 * 技能等级> * 蓄力中受到的伤害"
                     }
                     action_value_1 > 0 -> {
-                        "，下一个动作的效果提高 [${action_value_1}] * 蓄力中受到的伤害"
+                        "，下一个动作的效果增加 [${action_value_1}] * 蓄力中受到的伤害"
                     }
                     else -> {
                         ""
@@ -659,7 +659,7 @@ data class SkillActionPro(
                 }
                 val commonExpr = getValueText(2, action_value_2, action_value_3)
                 val commonDesc =
-                    "动作(${action_detail_1 % 10}) 的{系数${action_detail_2}} 提高 $commonExpr"
+                    "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $commonExpr"
 
                 val additive = when (action_value_1.toInt()) {
                     2 -> {
@@ -670,7 +670,7 @@ data class SkillActionPro(
                         } else {
                             "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
                         }
-                        "动作(${action_detail_1 % 10}) 的{系数${action_detail_2}} 提高 $expr * 击杀的敌方数量"
+                        "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * 击杀的敌方数量"
                     }
                     0 -> "$commonDesc * HP "
                     1 -> "$commonDesc * 损失的HP "
@@ -695,7 +695,7 @@ data class SkillActionPro(
             SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
                 val commonExpr = getValueText(2, action_value_2, action_value_3)
                 val commonDesc =
-                    "动作(${action_detail_1 % 10}) 的{系数${action_detail_2}} 提高 $commonExpr"
+                    "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $commonExpr"
 
                 when (action_value_1.toInt()) {
                     2 -> {
@@ -706,7 +706,7 @@ data class SkillActionPro(
                         } else {
                             "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
                         }
-                        "动作(${action_detail_1 % 10}) 的{系数${action_detail_2}} 提高 $expr * 击杀的敌方数量"
+                        "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * 击杀的敌方数量"
                     }
                     0 -> "$commonDesc * HP "
                     1 -> "$commonDesc * 损失的HP "
@@ -891,7 +891,7 @@ data class SkillActionPro(
                 val time = getTimeText(action_value_3, action_value_4)
                 val target = getTarget()
                 if (action_detail_1 == 3) {
-                    "自身每hit${target}时，对其增加1层标记 [ID: ${action_value_2.toInt()}]${time}$limit"
+                    "自身每次攻击${target}，对其增加1层标记 [ID: ${action_value_2.toInt()}]${time}$limit"
                 } else if (action_detail_1 == 1 && action_detail_3 == 1) {
                     "${target}每次造成伤害时，增加1层标记 [ID: ${action_value_2.toInt()}]${time}$limit"
                 } else if (action_detail_1 == 4 && action_detail_3 == 1) {
@@ -947,7 +947,7 @@ data class SkillActionPro(
             SkillActionType.LOG_GUARD -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(action_value_3, action_value_4)
-                "为${getTarget()}展开护盾，在一次行动中受到的伤害超过 [${action_value_5.toInt()}] 时，伤害值将会被衰减，衰减系数 $value（值越小衰减量越大）$time"
+                "为${getTarget()}展开护盾，在一次行动中受到的伤害超过 [${action_value_5.toInt()}] 时，伤害值将会被衰减$time"
             }
             SkillActionType.HIT_COUNT -> {
                 val limit = if (action_value_5 > 0) {
@@ -957,7 +957,7 @@ data class SkillActionPro(
                 }
                 val time = getTimeText(action_value_3, action_value_4)
                 when (action_detail_1) {
-                    3 -> "每 [$action_value_1] Hit即使用动作(${action_detail_2 % 10}) $limit$time"
+                    3 -> "每造成伤害[$action_value_1] 时，使用动作(${action_detail_2 % 10}) $limit$time"
                     else -> "?"
                 }
             }
@@ -993,11 +993,21 @@ data class SkillActionPro(
             SkillActionType.ADDITIVE, SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> true
             else -> false
         }
+//        return SkillActionText(
+//            tag,
+//            "${action_id} \n (${action_id % 10})$action \n$formatDesc",
+//            summonUnitId,
+//            showCoe,
+//            level,
+//            atk
+//        )
         return SkillActionText(
             tag,
-            "${action_id} \n (${action_id % 10})$action \n$formatDesc",
+            "(${action_id % 10}) $formatDesc",
             summonUnitId,
-            showCoe
+            showCoe,
+            level,
+            atk
         )
     }
 
@@ -1021,21 +1031,21 @@ data class SkillActionPro(
     ): String {
         return if (v3.int == 0) {
             if (v1.int == 0 && v2.int != 0) {
-                "[${(v2 * level).int}$percent] <{{系数${index + 1}}$v2 * 技能等级>"
+                "[${(v2 * level).int}$percent] <{{${index + 1}}$v2 * 技能等级>"
             } else if (v1.int != 0 && v2.int == 0) {
                 "[${v1}$percent]"
             } else if (v1.int != 0 && v2.int != 0) {
-                "[${(v1 + v2 * level).int}$percent] <{系数${index}}$v1 + {系数${index + 1}}$v2 * 技能等级>"
+                "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级>"
             } else {
                 "?"
             }
         } else {
             if (v1.int == 0 && v2.int != 0) {
-                "[${(v2 + v3 * atk).int}$percent] <{系数${index + 1}}$v2 + {系数${index + 2}}$v3 * 攻击力>"
+                "[${(v2 + v3 * atk).int}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * 攻击力>"
             } else if (v1.int == 0 && v2.int == 0) {
-                "[${(v3 * atk).int}$percent] <{系数${index + 2}}$v3 * 攻击力>"
+                "[${(v3 * atk).int}$percent] <{${index + 2}}$v3 * 攻击力>"
             } else if (v1.int != 0 && v2.int != 0) {
-                "[${(v1 + v2 * level + v3 * atk).int}$percent] <{系数${index}}$v1 + {系数${index + 1}}$v2 * 技能等级 + {系数${index + 2}}$v3 * 攻击力>"
+                "[${(v1 + v2 * level + v3 * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级 + {${index + 2}}$v3 * 攻击力>"
             } else {
                 "?"
             }
@@ -1107,5 +1117,7 @@ data class SkillActionText(
     val tag: String,
     var action: String,
     val summonUnitId: Int,
-    val showCoe: Boolean
+    val showCoe: Boolean,
+    val level: Int,
+    val atk: Int
 )

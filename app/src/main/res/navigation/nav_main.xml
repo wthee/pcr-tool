@@ -31,9 +31,6 @@
             app:exitAnim="@anim/fragment_exit_no_scale"
             app:popEnterAnim="@anim/fragment_popenter_no_scale"
             app:popExitAnim="@anim/fragment_popexit" />
-        <action
-            android:id="@+id/action_characterPagerFragment_to_skillFragment"
-            app:destination="@id/skillFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -258,9 +255,12 @@
     <fragment
         android:id="@+id/ClanPagerFragment"
         android:name="cn.wthee.pcrtool.ui.tool.clan.ClanPagerFragment" />
-    <fragment
-        android:id="@+id/skillFragment"
-        android:name="cn.wthee.pcrtool.ui.skill.SkillFragment"
-        android:label="SkillFragment" />
+    <dialog
+        android:id="@+id/commonDialogContainerFragment"
+        android:name="cn.wthee.pcrtool.ui.common.CommonDialogContainerFragment"
+        android:label="CommonDialogContainerFragment" />
+    <action
+        android:id="@+id/action_global_commonDialogContainerFragment"
+        app:destination="@id/commonDialogContainerFragment" />
 
 </navigation>

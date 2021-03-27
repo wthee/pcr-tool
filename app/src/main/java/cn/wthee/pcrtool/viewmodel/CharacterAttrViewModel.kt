@@ -52,6 +52,7 @@ class CharacterAttrViewModel(
             val rarity = data[Constants.RARITY]!!
             val lv = data[Constants.LEVEL]!!
             val ueLv = data[Constants.UNIQUE_EQUIP_LEVEL]!!
+
             val rankData = unitRepository.getRankStatus(unitId, rank)
             val rarityData = unitRepository.getRarity(unitId, rarity)
             val ids = unitRepository.getEquipmentIds(unitId, rank).getAllIds()
@@ -61,7 +62,7 @@ class CharacterAttrViewModel(
                 .add(Attr.setGrowthValue(rarityData).multiply(lv + rank))
             val eqs = arrayListOf<EquipmentMaxData>()
             ids.forEach {
-                if (it == UNKNOWN_EQUIP_ID)
+                if (it == UNKNOWN_EQUIP_ID || it == 0)
                     eqs.add(EquipmentMaxData.unknown())
                 else
                     eqs.add(equipmentRepository.getEquipmentData(it))
@@ -104,9 +105,13 @@ class CharacterAttrViewModel(
      */
     private suspend fun getStoryAttrs(unitId: Int): Attr {
         val storyAttr = Attr()
-        val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
-        storyInfo.forEach {
-            storyAttr.add(it.getAttr())
+        try {
+            val storyInfo = unitRepository.getCharacterStoryStatus(unitId)
+            storyInfo.forEach {
+                storyAttr.add(it.getAttr())
+            }
+        } catch (e: Exception) {
+
         }
         return storyAttr
     }

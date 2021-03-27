@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
@@ -33,7 +32,7 @@ import kotlinx.coroutines.launch
  *
  * 列表项数据 [SkillDetail]
  */
-class SkillAdapter(private val fragmentManager: FragmentManager) :
+class SkillAdapter(private val fragmentManager: FragmentManager, private val skillType: Int) :
     ListAdapter<SkillDetail, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
 
     private var mSize = 0
@@ -66,24 +65,34 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
-                //技能描述
-                desc.text = skill.desc
+                when (skillType) {
+                    1, 2 -> {
+                        //BOSS 技能
+                        //技能描述
+                        desc.text = "？？？"
+                    }
+                    else -> {
+                        //技能描述
+                        desc.text = skill.desc
+                    }
+
+                }
                 type.text = when (skill.skillId % 1000) {
-                    1, 21 -> "连结爆发"
-                    11 -> "连结爆发+"
-                    2, 22 -> "技能1"
-                    12 -> "技能1+"
-                    3, 23 -> "技能2"
-                    13 -> "技能2+"
                     501 -> "EX技能"
                     511 -> "EX技能+"
                     100 -> "SP连结爆发"
-                    101 -> "SP技能1"
-                    102 -> "SP技能2"
-                    103 -> "SP技能3"
+                    101 -> "SP技能 1"
+                    102 -> "SP技能 2"
+                    103 -> "SP技能 3"
+                    1, 21 -> "连结爆发"
+                    11 -> "连结爆发+"
                     else -> {
-                        type.visibility = View.GONE
-                        ""
+                        val skillIndex = skill.skillId % 1000 % 10 - 1
+                        if (skill.skillId % 1000 / 10 == 1) {
+                            "技能 ${skillIndex}+"
+                        } else {
+                            "技能 ${skillIndex}"
+                        }
                     }
                 }
                 //技能名称
@@ -122,22 +131,30 @@ class SkillAdapter(private val fragmentManager: FragmentManager) :
                             it.actionIndex == index
                         }
                         val show = s.isNotEmpty()
+                        val str = skillActionText.action
                         if (show) {
-                            Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
-                                if (it.value != s[0].coe) {
-                                    skillActionText.action =
-                                        skillActionText.action.replace(it.value, "")
+                            //系数表达式开始位置
+                            val startIndex = str.indexOfFirst { ch -> ch == '<' }
+                            if (startIndex != -1) {
+                                var coeExpr = str.substring(startIndex, str.length)
+                                Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
+                                    if (s[0].type == 0) {
+                                        coeExpr = coeExpr.replace(it.value, "")
+                                    } else if (s[0].coe != it.value) {
+                                        coeExpr = coeExpr.replace(it.value, "")
+                                    }
                                 }
+                                skillActionText.action =
+                                    str.substring(0, startIndex) + coeExpr
                             }
                         } else {
                             skillActionText.action =
-                                skillActionText.action.replace(Regex("\\{.*?\\}"), "")
+                                str.replace(Regex("\\{.*?\\}"), "")
                         }
                     }
                 } catch (e: Exception) {
-
+                    skill
                 }
-
 
                 //技能动作属性
                 val adapter = SkillActionAdapter(fragmentManager)

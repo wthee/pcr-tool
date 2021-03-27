@@ -2,6 +2,10 @@ package cn.wthee.pcrtool.data.model
 
 import cn.wthee.pcrtool.data.view.SkillActionPro
 import cn.wthee.pcrtool.data.view.SkillActionText
+import cn.wthee.pcrtool.utils.Constants
+import com.umeng.umcrash.UMCrash
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 /**
  * 角色技能信息
@@ -38,22 +42,26 @@ data class SkillDetail(
      */
     fun getActionIndexWithCoe(): ArrayList<ShowCoe> {
         val list = arrayListOf<ShowCoe>()
-        actions.forEachIndexed { index, skillActionPro ->
-            skillActionPro.getActionDesc()?.let { actionDesc ->
-                if (actionDesc.showCoe) {
-                    var coe = ""
-                    Regex("\\{系数.\\}").findAll(actionDesc.action).forEach { result ->
-                        coe = result.value
+        try {
+            actions.forEachIndexed { index, skillActionPro ->
+                skillActionPro.getActionDesc()?.let { actionDesc ->
+                    if (actionDesc.showCoe) {
+                        val coe = Regex("\\{.\\}").findAll(actionDesc.action).first().value
+                        list.add(ShowCoe(index, 0, coe))
+                        Regex("动作\\(.\\)").findAll(actionDesc.action).forEach { result ->
+                            val next = result.value.substring(3, 4).toInt() - 1
+                            list.add(ShowCoe(next, 1, coe))
+                        }
                     }
-                    list.add(ShowCoe(index, coe))
-                    Regex("动作\\(.\\)").findAll(actionDesc.action).forEach { result ->
-                        val next = result.value.substring(3, 4).toInt() - 1
-                        list.add(ShowCoe(next, coe))
-                    }
-                }
 
+                }
+            }
+        } catch (e: Exception) {
+            MainScope().launch {
+                UMCrash.generateCustomLog(e, Constants.EXCEPTION_SKILL + "skill_id:$skillId")
             }
         }
+
         return list
     }
 
@@ -61,6 +69,7 @@ data class SkillDetail(
 
 data class ShowCoe(
     val actionIndex: Int,
+    val type: Int,
     val coe: String
 )
 

@@ -9,6 +9,8 @@ import cn.wthee.pcrtool.data.view.ClanBattleInfo
 const val join = """
     b.enemy_id LIKE '401%' 
 AND
+CASE WHEN a.clan_battle_id % 100 =37  THEN a.clan_battle_id % 100 - 34 = b.enemy_id / 1000 % 100 AND b.enemy_id % 1000 / 100 < 6 AND b.enemy_id like '4014%' AND ((a.boss_id % 100 <5 AND a.boss_id % 100 = b.enemy_id % 100) OR (a.boss_id % 100 = 5 AND b.enemy_id % 100 = 8))
+ELSE 
 CASE WHEN a.clan_battle_id % 100 > 34  THEN a.clan_battle_id % 100 - 34 = b.enemy_id / 1000 % 100 AND b.enemy_id % 1000 / 100 < 6 AND b.enemy_id like '4014%' AND a.boss_id % 100 = b.enemy_id % 100
 ELSE 
 CASE WHEN a.clan_battle_id % 100 = 34  THEN a.clan_battle_id % 100 - 22 = b.enemy_id / 1000 % 100 AND b.enemy_id % 1000 / 100 < 6 AND b.enemy_id like '4013%' AND ((a.boss_id % 100 <5 AND a.boss_id % 100 = b.enemy_id % 100) OR (a.boss_id % 100 = 5 AND b.enemy_id % 100 = 8))
@@ -28,6 +30,7 @@ ELSE
 CASE WHEN a.clan_battle_id % 100 < 10 AND a.clan_battle_id % 100 > 1 THEN a.clan_battle_id % 10 = b.enemy_id / 100 % 10  AND b.enemy_id % 100000 / 10000 = 1 AND a.boss_id % 100 = b.enemy_id % 100
 ELSE 
 a.clan_battle_id % 10 = b.enemy_id / 100 % 10 AND b.enemy_id % 10000 / 1000 = 0 AND a.boss_id % 100 = b.enemy_id % 100 
+END
 END
 END
 END

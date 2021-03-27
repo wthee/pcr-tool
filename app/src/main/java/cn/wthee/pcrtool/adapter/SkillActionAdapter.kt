@@ -2,17 +2,14 @@ package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
-import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +19,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
 import cn.wthee.pcrtool.ui.common.CommonDialogContainerFragment
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
 /**
@@ -158,12 +154,12 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                         //字体大小
-                        spannable.setSpan(
-                            RelativeSizeSpan(0.85f),
-                            starts2[index],
-                            ends2[index] + 1,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
+//                        spannable.setSpan(
+//                            RelativeSizeSpan(0.85f),
+//                            starts2[index],
+//                            ends2[index] + 1,
+//                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+//                        )
                     }
                 } catch (e: Exception) {
 
@@ -171,24 +167,17 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
 
                 //获取召唤物信息
                 if (skillAction.summonUnitId != 0) {
-                    target.text = "查看召唤物：${skillAction.summonUnitId}"
+                    target.text = "查看召唤物技能 >"
                     target.setOnClickListener {
                         //打开详情页
                         MainActivity.pageLevel = 2
-                        val bundle = Bundle()
-                        bundle.putInt(Constants.UID, skillAction.summonUnitId)
-                        bundle.putInt(Constants.TYPE_SKILL, 1)
-                        root.findNavController().navigate(
-                            R.id.action_characterPagerFragment_to_skillFragment,
-                            bundle,
-                            null,
-                            null
+                        CommonDialogContainerFragment.loadSkillFragment(
+                            skillAction.summonUnitId, skillAction.level,
+                            skillAction.atk
                         )
-                        CommonDialogContainerFragment.loadSkillFragment(skillAction.summonUnitId, 1)
                             .show(fragmentManager, "summon_skill")
                     }
                 }
-
 
                 action.text = spannable
             }
