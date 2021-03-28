@@ -13,7 +13,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapter.RankAdapter
+import cn.wthee.pcrtool.adapter.NumberSelectAdapter
+import cn.wthee.pcrtool.data.enums.NumberSelectType
 import cn.wthee.pcrtool.databinding.FragmentRankSelectDialogBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.dp
@@ -35,7 +36,7 @@ class RankSelectDialogFragment(
     private var selectRank = 1
     private var startRank = 1
     private var endRank = 1
-    private lateinit var adapter: RankAdapter
+    private lateinit var adapter: NumberSelectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +57,10 @@ class RankSelectDialogFragment(
         for (i in endRank downTo startRank) {
             ranks.add(i)
         }
-        adapter = RankAdapter(this)
+        adapter = NumberSelectAdapter(this, NumberSelectType.RANK)
         binding.listRank.adapter = adapter
         adapter.submitList(ranks)
-        adapter.setRank(selectRank)
+        adapter.setSelect(selectRank)
 
         setTargetFragment(preFragment, requestCode)
 
@@ -71,7 +72,7 @@ class RankSelectDialogFragment(
         //获取已选择的数据，并返回
         val intent = Intent()
         val bundle = Bundle()
-        bundle.putInt(Constants.SELECT_RANK, adapter.getRank())
+        bundle.putInt(Constants.SELECT_RANK, adapter.getSelect())
         intent.putExtras(bundle)
         targetFragment?.onActivityResult(requestCode, Activity.RESULT_OK, intent)
     }

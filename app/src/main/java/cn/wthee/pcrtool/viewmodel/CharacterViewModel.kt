@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import cn.wthee.pcrtool.data.db.repository.CharacterRepository
+import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.view.CharacterInfo
@@ -22,10 +22,10 @@ import kotlinx.coroutines.launch
 /**
  * 角色 ViewModel
  *
- * 数据来源 [CharacterRepository]
+ * 数据来源 [UnitRepository]
  */
 class CharacterViewModel(
-    private val repository: CharacterRepository
+    private val repository: UnitRepository
 ) : ViewModel() {
 
     lateinit var characters: Flow<PagingData<CharacterInfo>>
@@ -98,6 +98,8 @@ class CharacterViewModel(
             allPvpCharacterData.postValue(data)
         }
     }
+
+    suspend fun getAllPvp() = repository.getCharacterByPosition(0, 999)
 
     /**
      * 六星 id 列表

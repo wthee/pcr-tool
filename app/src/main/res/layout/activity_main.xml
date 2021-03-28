@@ -24,21 +24,6 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/xl_dp">
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fab_notice"
-            style="@style/EfabStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/fab_size"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/xs_dp"
-            android:layout_marginEnd="@dimen/xm_dp"
-            android:layout_marginBottom="@dimen/xm_dp"
-            android:contentDescription="@string/notice"
-            android:elevation="@dimen/card_elevation"
-            android:text="@string/notice"
-            android:textColor="@color/cool_apk"
-            app:icon="@drawable/ic_notice"
-            app:iconTint="@color/cool_apk" />
 
         <FrameLayout
             android:id="@+id/layout_download"
@@ -96,6 +81,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_update"
+            style="@style/FabStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/m_dp"
+            android:layout_marginBottom="@dimen/m_dp"
+            android:contentDescription="@string/notice"
+            android:src="@drawable/ic_notice"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fab_change_db" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_change_db"
+            style="@style/EfabStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fab_size"
+            android:contentDescription="@string/change_db"
+            android:text="@string/change_db"
+            android:textAllCaps="false"
+            app:icon="@drawable/ic_change" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             style="@style/FabStyle"
@@ -145,6 +153,11 @@
         <include
             android:id="@+id/tool_guild"
             layout="@layout/view_menu_item" />
+
+        <include
+            android:id="@+id/tool_clan"
+            layout="@layout/view_menu_item" />
+
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
 

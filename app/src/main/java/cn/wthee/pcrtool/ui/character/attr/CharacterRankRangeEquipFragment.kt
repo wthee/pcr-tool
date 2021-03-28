@@ -91,12 +91,12 @@ class CharacterRankRangeEquipFragment : Fragment() {
             value0.setOnClickListener {
                 RankSelectDialogFragment(this@CharacterRankRangeEquipFragment, REQUEST_CODE_0)
                     .getInstance(startRank, 1, endRank)
-                    .show(requireFragmentManager(), "rank_select_0")
+                    .show(parentFragmentManager, "rank_select_0")
             }
             value1.setOnClickListener {
                 RankSelectDialogFragment(this@CharacterRankRangeEquipFragment, REQUEST_CODE_1)
                     .getInstance(endRank, startRank, CharacterAttrFragment.maxRank)
-                    .show(requireFragmentManager(), "rank_select_1")
+                    .show(parentFragmentManager, "rank_select_1")
             }
         }
     }
@@ -104,9 +104,9 @@ class CharacterRankRangeEquipFragment : Fragment() {
     private fun load() {
         sharedEquipViewModel.getEquipByRank(uid, startRank, endRank)
         binding.apply {
-            value0.text = getRankText(startRank)
+            value0.text = getFormatText(startRank)
             value0.setTextColor(getRankColor(startRank))
-            value1.text = getRankText(endRank)
+            value1.text = getFormatText(endRank)
             value1.setTextColor(getRankColor(endRank))
         }
     }

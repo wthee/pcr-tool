@@ -39,15 +39,39 @@ data class SkillData(
         action_4,
         action_5,
         action_6,
-        action_7,
-        depend_action_1,
-        depend_action_2,
-        depend_action_3,
-        depend_action_4,
-        depend_action_5,
-        depend_action_6,
-        depend_action_7,
+        action_7
     ).filter {
         it != 0
     }
+
+    fun getSkillDependData(): MutableMap<Int, Int> {
+        val map = mutableMapOf<Int, Int>()
+        val actionList = arrayListOf(
+            action_1,
+            action_2,
+            action_3,
+            action_4,
+            action_5,
+            action_6,
+            action_7
+        )
+        val dependActionList = arrayListOf(
+            depend_action_1,
+            depend_action_2,
+            depend_action_3,
+            depend_action_4,
+            depend_action_5,
+            depend_action_6,
+            depend_action_7,
+        )
+        actionList.forEachIndexed { index, action ->
+            map[action] = dependActionList[index]
+        }
+        return map
+    }
 }
+
+data class SkillDependData(
+    val action: Int,
+    val dependAction: Int
+)

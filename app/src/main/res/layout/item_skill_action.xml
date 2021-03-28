@@ -1,11 +1,31 @@
-<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/action"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/m_dp"
-    android:paddingStart="@dimen/s_dp"
-    android:paddingEnd="@dimen/s_dp"
-    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-    android:textIsSelectable="true"
-    tools:text="@string/test" />
+    android:layout_marginBottom="@dimen/m_dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/s_dp"
+        android:paddingEnd="@dimen/s_dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/test" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/target"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/s_dp"
+        android:paddingEnd="@dimen/s_dp"
+        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/cool_apk"
+        app:layout_constraintTop_toBottomOf="@id/action"
+        tools:text="@string/test" />
+</androidx.constraintlayout.widget.ConstraintLayout>

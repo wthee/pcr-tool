@@ -1,27 +1,35 @@
 package cn.wthee.pcrtool.utils
 
-import androidx.preference.PreferenceManager
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.repository.*
 import cn.wthee.pcrtool.database.AppDatabase
 import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.AppPvpDatabase
+import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.viewmodel.*
 
 /**
  * ViewModel 注射工具
  */
 object InjectorUtil {
-    private fun getType() =
-        PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
-            .getString("change_database", "1")?.toInt() ?: 1
 
-    private fun getCharacterRepository(): CharacterRepository {
-        return CharacterRepository.getInstance(
+    private fun getType() = DatabaseUpdater.getDatabaseType()
+
+    private fun getUnitRepository(): UnitRepository {
+        return UnitRepository.getInstance(
             if (getType() == 1) {
-                AppDatabase.getInstance().getCharacterDao()
+                AppDatabase.getInstance().getUnitDao()
             } else {
-                AppDatabaseJP.getInstance().getCharacterDao()
+                AppDatabaseJP.getInstance().getUnitDao()
+            }
+        )
+    }
+
+    private fun getSkillRepository(): SkillRepository {
+        return SkillRepository.getInstance(
+            if (getType() == 1) {
+                AppDatabase.getInstance().getSkillDao()
+            } else {
+                AppDatabaseJP.getInstance().getSkillDao()
             }
         )
     }
@@ -62,22 +70,32 @@ object InjectorUtil {
         )
     }
 
+    private fun getClanRepository(): ClanRepository {
+        return ClanRepository.getInstance(
+            if (getType() == 1) {
+                AppDatabase.getInstance().getClanDao()
+            } else {
+                AppDatabaseJP.getInstance().getClanDao()
+            }
+        )
+    }
+
     fun provideCharacterViewModelFactory(): CharacterViewModelFactory {
-        val repository = getCharacterRepository()
+        val repository = getUnitRepository()
         return CharacterViewModelFactory(
             repository
         )
     }
 
     fun provideGuildViewModelFactory(): GuildViewModelFactory {
-        val repository = getCharacterRepository()
+        val repository = getUnitRepository()
         return GuildViewModelFactory(
             repository
         )
     }
 
     fun provideCharacterAttrViewModelFactory(): CharacterAttrViewModelFactory {
-        val repository1 = getCharacterRepository()
+        val repository1 = getUnitRepository()
         val repository2 = getEquipmentRepository()
         return CharacterAttrViewModelFactory(
             repository1, repository2
@@ -91,9 +109,9 @@ object InjectorUtil {
         )
     }
 
-    fun provideCharacterSkillViewModelFactory(): CharacterSkillViewModelFactory {
-        val repository = getCharacterRepository()
-        return CharacterSkillViewModelFactory(
+    fun provideSkillViewModelFactory(): SkillViewModelFactory {
+        val repository = getSkillRepository()
+        return SkillViewModelFactory(
             repository
         )
     }
@@ -116,5 +134,10 @@ object InjectorUtil {
     fun provideCalendarViewModelFactory(): CalendarViewModelFactory {
         val repository = getEventRepository()
         return CalendarViewModelFactory(repository)
+    }
+
+    fun provideClanViewModelFactory(): ClanViewModelFactory {
+        val repository = getClanRepository()
+        return ClanViewModelFactory(repository)
     }
 }

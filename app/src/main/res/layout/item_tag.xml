@@ -5,5 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     style="@style/TitleStyle"
+    android:textSize="12sp"
     android:textIsSelectable="true"
     tools:text="@string/app_name" />

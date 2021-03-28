@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def VERSION_NAME = "0.7.2"
-def VERSION_CODE = 72
+def VERSION_NAME = "0.8.0"
+def VERSION_CODE = 80
 
 android {
     compileSdkVersion 30
@@ -18,7 +18,7 @@ android {
         multiDexEnabled true
 
         flavorDimensions "default"
-        buildConfigField ("int", "SQLITE_VERSION", "70")
+        buildConfigField ("int", "SQLITE_VERSION", "80")
 
     }
 
@@ -81,7 +81,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation "androidx.activity:activity-ktx:1.2.0"
+    implementation "androidx.activity:activity-ktx:1.2.1"
 
     //CircleProgressBar
     implementation 'com.github.wthee:CircleProgressBar:1.0.3'
@@ -92,7 +92,7 @@ dependencies {
     implementation "io.coil-kt:coil-gif:$coil_version"
 
     //DataStore
-    def data_store_version = '1.0.0-alpha07'
+    def data_store_version = '1.0.0-alpha08'
     implementation "androidx.datastore:datastore-preferences:$data_store_version"
 
     //Lifecycle
@@ -109,7 +109,7 @@ dependencies {
     implementation project(':Material-Calendar-View')
 
     //Navigation
-    def nav_version = "2.3.3"
+    def nav_version = "2.3.4"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
@@ -122,7 +122,7 @@ dependencies {
     implementation "com.permissionx.guolindev:permissionx:$permissionx_version"
 
     //Paging3
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0-beta01"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-beta02"
 
     //Retrofit
     def retrofit_version = '2.9.0'
@@ -131,7 +131,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
     //Room
-    def room_version = "2.3.0-beta02"
+    def room_version = "2.3.0-beta03"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"

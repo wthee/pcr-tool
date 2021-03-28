@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/s_dp">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
@@ -14,6 +13,7 @@
         android:textColor="@color/colorPrimary"
         android:textIsSelectable="true"
         android:textStyle="bold"
+        android:layout_margin="@dimen/s_dp"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/type"
         app:layout_constraintHorizontal_weight="1"
@@ -26,16 +26,18 @@
         style="@style/TitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/s_dp"
         app:layout_constraintBottom_toBottomOf="@id/name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/name"
         tools:text="必杀技" />
 
+
     <LinearLayout
         android:id="@+id/layout_skill_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/xs_dp"
+        android:padding="@dimen/s_dp"
         android:nestedScrollingEnabled="false"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/name">
@@ -47,15 +49,31 @@
             android:adjustViewBounds="true"
             tools:src="@drawable/unknown_gray" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/desc"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/m_dp"
-            android:nestedScrollingEnabled="false"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:textIsSelectable="true"
-            tools:text="@string/test" />
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                tools:text="等级" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textIsSelectable="true"
+                tools:text="@string/test" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -64,11 +82,12 @@
         android:id="@+id/ailments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_dp"
+        android:layout_margin="@dimen/s_dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_skill_desc"
+        app:layout_constraintBottom_toTopOf="@id/actions"
         tools:itemCount="3"
         tools:listitem="@layout/item_tag" />
 
@@ -76,8 +95,7 @@
         android:id="@+id/actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_dp"
-        android:nestedScrollingEnabled="false"
+        android:padding="@dimen/s_dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"

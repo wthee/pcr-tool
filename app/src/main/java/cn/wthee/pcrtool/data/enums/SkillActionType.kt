@@ -25,24 +25,24 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANGE_ENEMY_POSITION(3, ""),
 
     /**
-     * 4：回复生命
+     * 4：回复HP
      */
     HEAL(4, "治疗"),
 
     /**
-     * 5：回复生命
+     * 5：回复HP
      */
     CURE(5, "治疗"),
 
     /**
      * 6：护盾
      */
-    SHIELD(6, "护盾"),
+    BARRIER(6, "护盾"),
 
     /**
      * 7：指定攻击对象
      */
-    CHOOSE_ENEMY(7, "指定"),
+    CHOOSE_ENEMY(7, ""),
 
     /**
      * 8：行动速度变更：行动速度提升/降低；无法行动
@@ -75,9 +75,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     SILENCE(13, "沉默"),
 
     /**
-     * 14：改变模式
+     * 14：行动模式变更
      */
-    CHANGE_MODE(14, "行动改变"),
+    CHANGE_MODE(14, "模式变更"),
 
     /**
      * 15：召唤
@@ -92,17 +92,17 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 17：触发条件
      */
-    TRIGGER(17, "条件触发"),
+    TRIGGER(17, "条件"),
 
     /**
-     * fixme 18：充能
+     * 18：蓄力
      */
-    CHARGE(18, ""),
+    CHARGE(18, "蓄力"),
 
     /**
      * 19：伤害充能
      */
-    DAMAGE_CHARGE(19, "充能"),
+    DAMAGE_CHARGE(19, "蓄力"),
 
     /**
      * 20：挑衅
@@ -115,14 +115,14 @@ enum class SkillActionType(val type: Int, val desc: String) {
     INVINCIBLE(21, "回避"),
 
     /**
-     * 22：行动模式变更
+     * 22：改变模式
      */
-    CHANGE_PATTERN(22, "行动改变"),
+    CHANGE_PATTERN(22, "行动变更"),
 
     /**
      * 23：判定对象状态
      */
-    ACCORD_STATUS(23, "状态增伤"),
+    IF_FOR_CHILDREN(23, ""),
 
     /**
      * 24：复活
@@ -137,12 +137,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 26：增伤
      */
-    ADDITIVE(26, "条件"),
+    ADDITIVE(26, "增伤"),
 
     /**
-     * 27：击杀敌人
+     * 27：倍率
      */
-    MULTIPLE(27, "击杀"),
+    MULTIPLE(27, "倍率"),
 
     /**
      * 28：特殊条件
@@ -169,7 +169,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 32：吸血效果
      */
-    LIFE_STEAL(32, "吸血"),
+    LIFE_STEAL(32, "HP 吸收"),
 
     /**
      * 33：消失时造成伤害
@@ -179,7 +179,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 34：伤害递增
      */
-    INCREASED_DAMAGE(34, "伤害递增"),
+    ACCUMULATIVE_DAMAGE(34, "伤害递增"),
 
     /**
      * 35：特殊刻印
@@ -199,7 +199,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 38：范围减益
      */
-    DEBUFF_FIELD(38, "领域"),
+    AURA_FIELD(38, "领域"),
 
     /**
      * 39：范围持续伤害
@@ -219,7 +219,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 42：循环触发：哈哈剑大笑时...等状态触发
      */
-    LOOP_TRIGGER(42, "反击"),
+    LOOP_TRIGGER(42, "条件"),
 
     /**
      * 43：拥有标记时触发
@@ -249,7 +249,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 48：持续治疗
      */
-    HOT(48, "持续治疗"),
+    HOT(48, "持续回复"),
 
     /**
      * 49：移除增益
@@ -262,7 +262,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANNEL(50, "铃铛"),
 
     /**
-     * 51：分裂？
+     * fixme 51：分裂
      */
     DIVISION(51, ""),
 
@@ -287,9 +287,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     MOVE_PART(55, ""),
 
     /**
-     * 56：千里眼
+     * 56：闪避
      */
-    COUNT_BLIND(56, "千里眼"),
+    COUNT_BLIND(56, "闪避"),
 
     /**
      * 57：延迟攻击 如：万圣炸弹人的 UB
@@ -319,12 +319,33 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 62：敬畏
      */
-    AWE(61, "敬畏"),
+    AWE(62, "敬畏"),
+
+
+    /**
+     * 63: 循环
+     */
+    LOOP(63, ""),
+
+    /**
+     * 蛤？
+     */
+    TOAD(69, ""),
 
     /**
      * 71：特殊状态：公主佩可 UB 后不死BUFF
      */
-    PR_PEKO_UB(71, "骑士"),
+    KNIGHT_GUARD(71, "骑士"),
+
+    /**
+     * 伤害护盾
+     */
+    LOG_GUARD(73, "伤害护盾"),
+
+    /**
+     * 划分？
+     */
+    DIVIDE(74, ""),
 
     /**
      * 75：依据攻击次数增伤：水流夏
@@ -333,7 +354,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
 
 
     /**
-     * 76：依据攻击次数增伤：水流夏
+     * 76：减疗
      */
     HEAL_DOWN(76, "减疗"),
 
@@ -347,6 +368,21 @@ enum class SkillActionType(val type: Int, val desc: String) {
      * 90：EX被动
      */
     EX(90, "被动"),
+
+    /**
+     * 91：EX+被动
+     */
+    EX_PLUS(91, "被动"),
+
+    /**
+     * 92：EX+被动
+     */
+    CHANGE_TP_RATIO(92, ""),
+
+    /**
+     * 93：无视挑衅
+     */
+    IGNOR_TAUNT(93, ""),
 }
 
 /**

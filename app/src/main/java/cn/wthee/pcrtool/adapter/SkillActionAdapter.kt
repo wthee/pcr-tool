@@ -7,14 +7,19 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
+import cn.wthee.pcrtool.ui.common.CommonDialogContainerFragment
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
 /**
@@ -22,10 +27,10 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
  *
  * 列表项布局 [ItemSkillActionBinding]
  *
- * 列表项数据 [String]
+ * 列表项数据 [SkillActionText]
  */
-class SkillActionAdapter :
-    ListAdapter<String, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
+class SkillActionAdapter(private val fragmentManager: FragmentManager) :
+    ListAdapter<SkillActionText, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSkillActionBinding.inflate(
@@ -40,20 +45,24 @@ class SkillActionAdapter :
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(private val binding: ItemSkillActionBinding) :
+    inner class ViewHolder(private val binding: ItemSkillActionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(fixed: String) {
+        fun bind(skillAction: SkillActionText) {
             binding.apply {
                 action.animation =
                     AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
-                //改变颜色
-                val spannable = SpannableStringBuilder(fixed)
+                //详细描述
+                val spannable = SpannableStringBuilder(skillAction.action)
                 val starts = arrayListOf<Int>()
                 val starts0 = arrayListOf<Int>()
+                val starts1 = arrayListOf<Int>()
+                val starts2 = arrayListOf<Int>()
                 val ends = arrayListOf<Int>()
                 val ends0 = arrayListOf<Int>()
-                fixed.filterIndexed { index, c ->
+                val ends1 = arrayListOf<Int>()
+                val ends2 = arrayListOf<Int>()
+                skillAction.action.filterIndexed { index, c ->
                     if (c == '<') {
                         starts.add(index)
                     }
@@ -66,10 +75,23 @@ class SkillActionAdapter :
                     if (c == ']') {
                         ends0.add(index)
                     }
+                    if (c == '(') {
+                        starts1.add(index)
+                    }
+                    if (c == ')') {
+                        ends1.add(index)
+                    }
+                    if (c == '{') {
+                        starts2.add(index)
+                    }
+                    if (c == '}') {
+                        ends2.add(index)
+                    }
                     false
                 }
                 //忽略越界异常
                 try {
+                    //公式
                     starts.forEachIndexed { index, _ ->
                         //变色
                         spannable.setSpan(
@@ -85,6 +107,7 @@ class SkillActionAdapter :
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                     }
+                    //数值
                     starts0.forEachIndexed { index, _ ->
                         //变色
                         spannable.setSpan(
@@ -100,10 +123,63 @@ class SkillActionAdapter :
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                     }
+                    //范围等
+                    starts1.forEachIndexed { index, _ ->
+                        //变色
+                        spannable.setSpan(
+                            ForegroundColorSpan(
+                                ResourcesUtil.getColor(R.color.colorBlack)
+                            ), starts1[index], ends1[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        //加粗
+                        spannable.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            starts1[index],
+                            ends1[index] + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+                    //系数
+                    starts2.forEachIndexed { index, _ ->
+                        //变色
+                        spannable.setSpan(
+                            ForegroundColorSpan(
+                                ResourcesUtil.getColor(R.color.color_rank_11_17)
+                            ), starts2[index], ends2[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        //加粗
+                        spannable.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            starts2[index],
+                            ends2[index] + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        //字体大小
+//                        spannable.setSpan(
+//                            RelativeSizeSpan(0.85f),
+//                            starts2[index],
+//                            ends2[index] + 1,
+//                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+//                        )
+                    }
                 } catch (e: Exception) {
 
                 }
 
+                //获取召唤物信息
+                if (skillAction.summonUnitId != 0) {
+                    target.visibility = View.VISIBLE
+                    target.text = "查看召唤物技能 >"
+                    target.setOnClickListener {
+                        //打开详情页
+                        MainActivity.pageLevel = 2
+                        CommonDialogContainerFragment.loadSkillFragment(
+                            skillAction.summonUnitId, skillAction.level,
+                            skillAction.atk
+                        )
+                            .show(fragmentManager, "summon_skill")
+                    }
+                }
 
                 action.text = spannable
             }
@@ -112,18 +188,18 @@ class SkillActionAdapter :
 
 }
 
-private class ActionDiffCallback : DiffUtil.ItemCallback<String>() {
+private class ActionDiffCallback : DiffUtil.ItemCallback<SkillActionText>() {
 
     override fun areItemsTheSame(
-        oldItem: String,
-        newItem: String
+        oldItem: SkillActionText,
+        newItem: SkillActionText
     ): Boolean {
         return oldItem == newItem
     }
 
     override fun areContentsTheSame(
-        oldItem: String,
-        newItem: String
+        oldItem: SkillActionText,
+        newItem: SkillActionText
     ): Boolean {
         return oldItem == newItem
     }

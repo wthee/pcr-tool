@@ -325,7 +325,7 @@ class CharacterAttrFragment : Fragment() {
     private fun updateRankBtn() {
         binding.rankEquip.rankBtn.apply {
             val selRank = selData[Constants.RANK]!!
-            text = getRankText(selRank)
+            text = getFormatText(selRank)
             setTextColor(getRankColor(selRank))
         }
     }

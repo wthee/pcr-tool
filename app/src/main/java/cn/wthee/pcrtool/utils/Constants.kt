@@ -73,6 +73,7 @@ object Constants {
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
     //本地储存
+    const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION = "database_version"
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
@@ -87,6 +88,9 @@ object Constants {
     const val NOTICE_TOAST_CHANGE = "数据切换中..."
     const val NOTICE_TOAST_CHECKING = "正在获取信息"
     const val NOTICE_TOAST_NETWORK_ERROR = "网络异常..."
+    const val RANK_UPPER = "RANK"
+    const val SECTION = "阶段"
+    const val UNKNOWN = "未知"
 
     //常量值
     const val UID = "unit_id"
@@ -99,25 +103,35 @@ object Constants {
     const val RARITY = "rarity"
     const val LEVEL = "level"
     const val UNIQUE_EQUIP_LEVEL = "ueLv"
+    const val CLAN_DATE = "clan_date"
+    const val CLAN_BOSS_NO = "clan_boss_no"
+    const val CLAN_DATA = "clan_data"
+    const val CLAN_MAX_SECTION = "clan_max_section"
+    const val CLAN_SELECT_SECTION = "clan_select_section"
+    const val CLAN_SKILL_LVS = "clan_skill_lvs"
+    const val CLAN_BOSS_ATK = "clan_boss_atk"
+    const val ATK = "atk"
+    const val SKILL_LEVEL = "skill_level"
+    const val TYPE_SKILL = "type_skill"
 
     val ATTR = arrayListOf(
-        "HP",
-        "HP吸收",
+        "HP ",
+        "HP 吸收",
         "物理攻击力",
         "魔法攻击力",
         "物理防御力",
         "魔法防御力",
         "物理暴击",
         "魔法暴击",
-        "物理贯穿",
-        "魔法贯穿",
+        "物理穿透",
+        "魔法穿透",
         "命中",
         "回避",
-        "HP自动回复",
+        "HP 自动回复",
         "回复量上升",
-        "TP自动回复",
-        "TP上升",
-        "TP消耗减轻",
+        "TP 自动回复",
+        "TP 上升",
+        "TP 消耗减少",
     )
 
     val errorIDs = arrayListOf(

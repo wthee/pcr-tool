@@ -1,17 +1,19 @@
 package cn.wthee.pcrtool.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.CharacterSkillInfo
-import cn.wthee.pcrtool.data.view.SkillActionLite
+import cn.wthee.pcrtool.data.model.SkillDetail
+import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -28,9 +30,10 @@ import kotlinx.coroutines.launch
  *
  * 列表项布局 [ItemSkillBinding]
  *
- * 列表项数据 [CharacterSkillInfo]
+ * 列表项数据 [SkillDetail]
  */
-class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
+class SkillAdapter(private val fragmentManager: FragmentManager, private val skillType: Int) :
+    ListAdapter<SkillDetail, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
 
     private var mSize = 0
 
@@ -54,34 +57,50 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
 
     inner class ViewHolder(private val binding: ItemSkillBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(skill: CharacterSkillInfo) {
+        @SuppressLint("SetTextI18n")
+        fun bind(skill: SkillDetail) {
             //设置数据
             binding.apply {
                 val ctx = MyApplication.context
                 //加载动画
                 root.animation =
                     AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
-                //技能名称
-                name.text = skill.name
-                //技能描述
-                desc.text = skill.desc
+                when (skillType) {
+                    1, 2 -> {
+                        //BOSS 技能
+                        //技能描述
+                        desc.text = "？？？"
+                    }
+                    else -> {
+                        //技能描述
+                        desc.text = skill.desc
+                    }
+
+                }
                 type.text = when (skill.skillId % 1000) {
-                    1 -> "连结爆发"
-                    11 -> "连结爆发+"
-                    2 -> "技能1"
-                    12 -> "技能1+"
-                    3 -> "技能2"
-                    13 -> "技能2+"
                     501 -> "EX技能"
                     511 -> "EX技能+"
                     100 -> "SP连结爆发"
-                    101 -> "SP技能1"
-                    102 -> "SP技能2"
-                    103 -> "SP技能3"
-                    else -> ""
+                    101 -> "SP技能 1"
+                    102 -> "SP技能 2"
+                    103 -> "SP技能 3"
+                    1, 21 -> "连结爆发"
+                    11 -> "连结爆发+"
+                    else -> {
+                        val skillIndex = skill.skillId % 1000 % 10 - 1
+                        if (skill.skillId % 1000 / 10 == 1) {
+                            "技能 ${skillIndex}+"
+                        } else {
+                            "技能 ${skillIndex}"
+                        }
+                    }
                 }
+                //技能名称
+                name.text = if (skill.name.isBlank()) type.text else skill.name
+                //等级 & 动作时间
+                level.text = "技能等级：${skill.level}"
                 //加载图片
-                val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
+                val picUrl = SKILL_ICON_URL + skill.iconType + WEBP
                 itemPic.load(picUrl) {
                     error(R.drawable.unknown_gray)
                     placeholder(R.drawable.unknown_gray)
@@ -104,10 +123,43 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
                 }
 
                 val actionData = skill.getActionInfo()
-                //技能属性
-                val adapter = SkillActionAdapter()
+                //是否显示参数判断
+                try {
+                    val showCoeIndex = skill.getActionIndexWithCoe()
+                    actionData.mapIndexed { index, skillActionText ->
+                        val s = showCoeIndex.filter {
+                            it.actionIndex == index
+                        }
+                        val show = s.isNotEmpty()
+                        val str = skillActionText.action
+                        if (show) {
+                            //系数表达式开始位置
+                            val startIndex = str.indexOfFirst { ch -> ch == '<' }
+                            if (startIndex != -1) {
+                                var coeExpr = str.substring(startIndex, str.length)
+                                Regex("\\{.*?\\}").findAll(skillActionText.action).forEach {
+                                    if (s[0].type == 0) {
+                                        coeExpr = coeExpr.replace(it.value, "")
+                                    } else if (s[0].coe != it.value) {
+                                        coeExpr = coeExpr.replace(it.value, "")
+                                    }
+                                }
+                                skillActionText.action =
+                                    str.substring(0, startIndex) + coeExpr
+                            }
+                        } else {
+                            skillActionText.action =
+                                str.replace(Regex("\\{.*?\\}"), "")
+                        }
+                    }
+                } catch (e: Exception) {
+                    skill
+                }
+
+                //技能动作属性
+                val adapter = SkillActionAdapter(fragmentManager)
                 actions.adapter = adapter
-                adapter.submitList(getActions(actionData))
+                adapter.submitList(actionData)
                 //异常状态属性
                 val ailmentAdapter = TagAdapter()
                 ailments.adapter = ailmentAdapter
@@ -122,26 +174,13 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
         }
 
         /**
-         * 获取动作
-         */
-        private fun getActions(data: ArrayList<SkillActionLite>): ArrayList<String> {
-            val list = arrayListOf<String>()
-            data.forEach {
-                if (it.action.isNotEmpty()) {
-                    list.add(it.action)
-                }
-            }
-            return list
-        }
-
-        /**
          * 获取异常状态
          */
-        private fun getAilments(data: ArrayList<SkillActionLite>): ArrayList<String> {
+        private fun getAilments(data: ArrayList<SkillActionText>): ArrayList<String> {
             val list = arrayListOf<String>()
             data.forEach {
-                if (it.ailmentName.isNotEmpty() && !list.contains(it.ailmentName)) {
-                    list.add(it.ailmentName)
+                if (it.tag.isNotEmpty() && !list.contains(it.tag)) {
+                    list.add(it.tag)
                 }
             }
             return list
@@ -150,18 +189,18 @@ class SkillAdapter : ListAdapter<CharacterSkillInfo, SkillAdapter.ViewHolder>(Sk
 
 }
 
-class SkillDiffCallback : DiffUtil.ItemCallback<CharacterSkillInfo>() {
+class SkillDiffCallback : DiffUtil.ItemCallback<SkillDetail>() {
 
     override fun areItemsTheSame(
-        oldItem: CharacterSkillInfo,
-        newItem: CharacterSkillInfo
+        oldItem: SkillDetail,
+        newItem: SkillDetail
     ): Boolean {
         return oldItem.name == newItem.name
     }
 
     override fun areContentsTheSame(
-        oldItem: CharacterSkillInfo,
-        newItem: CharacterSkillInfo
+        oldItem: SkillDetail,
+        newItem: SkillDetail
     ): Boolean {
         return oldItem == newItem
     }

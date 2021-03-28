@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.PaletteUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.viewmodel.CharacterSkillViewModel.Companion.iconTypes
+import cn.wthee.pcrtool.viewmodel.SkillViewModel.Companion.iconTypes
 import coil.load
 
 /**
@@ -52,12 +52,9 @@ class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoop
                     pic.load(EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP)
                 } else {
                     //技能图标
-                    name.text = when (atkId) {
-                        1001 -> "技能1"
-                        1002 -> "技能2"
-                        2001 -> "SP技能1"
-                        2002 -> "SP技能2"
-                        2003 -> "SP技能3"
+                    name.text = when (atkId / 1000) {
+                        1 -> "技能 ${atkId % 10}"
+                        2 -> "SP技能 ${atkId % 10}"
                         else -> ""
                     }
                     val iconType = when (atkId) {

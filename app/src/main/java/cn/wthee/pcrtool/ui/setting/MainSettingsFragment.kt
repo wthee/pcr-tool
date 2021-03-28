@@ -15,7 +15,6 @@ import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -42,6 +41,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
         //获取控件
         titleDatabase = findPreference("title_database")!!
         val titleApp = findPreference<Preference>("title_app")
@@ -49,11 +49,10 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val cleanDatabase = findPreference<Preference>("clean_database")
         val appUpdate = findPreference<Preference>("force_update_app")
         val shareApp = findPreference<Preference>("share_app")
-        changeDbType = findPreference("change_database")!!
         switchPvpRegion = findPreference("pvp_region")!!
-        setDbSummary(changeDbType.value)
         //切换竞技场查询
-        switchPvpRegion.isVisible = changeDbType.value != "1"
+        val type = DatabaseUpdater.getDatabaseType()
+        switchPvpRegion.isVisible = type != 1
         //历史数据大小
         FileUtil.getOldDatabaseSize().let {
             if (it > 0) {
@@ -63,12 +62,8 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         }
         //数据版本
         lifecycleScope.launch {
-            val sp = MyApplication.context.getSharedPreferences(
-                "main",
-                Context.MODE_PRIVATE
-            )
             val localVersion = sp.getString(
-                if (changeDbType.value == "1") Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+                if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
                 ""
             )
             titleDatabase.title = getString(R.string.data) + if (localVersion != null) {
@@ -99,17 +94,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
                     }
                 }).show()
             return@setOnPreferenceClickListener true
-        }
-        //切换数据库版本
-        changeDbType.setOnPreferenceChangeListener { _, newValue ->
-            if (changeDbType.value != newValue as String) {
-                setDbSummary(newValue)
-                lifecycleScope.launch {
-                    delay(800L)
-                    DatabaseUpdater.checkDBVersion(1)
-                }
-            }
-            return@setOnPreferenceChangeListener true
         }
         //历史数据库文件
         cleanDatabase?.setOnPreferenceClickListener {
@@ -146,23 +130,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         shareApp?.setOnPreferenceClickListener {
             ShareIntentUtil.text("PCR Tool 下载地址: ${getString(R.string.app_download_url)}")
             return@setOnPreferenceClickListener true
-        }
-    }
-
-    /**
-     * 设置切换版本摘要
-     */
-    private fun setDbSummary(newValue: String) {
-        changeDbType.summary = getString(R.string.now_db_type) + if (newValue == "1") {
-            switchPvpRegion.isVisible = false
-            getString(R.string.db_cn)
-        } else {
-            switchPvpRegion.isVisible = true
-            getString(R.string.db_jp)
-        } + if (MyApplication.backupMode) {
-            getString(R.string.backup_mode)
-        } else {
-            ""
         }
     }
 }

@@ -21,7 +21,7 @@ import coil.load
  *
  * 列表项数据 [Int] unit_id
  */
-class IconListAdapter : ListAdapter<Int, IconListAdapter.ViewHolder>(GachaListDiffCallback()) {
+class IconListAdapter : ListAdapter<Int, IconListAdapter.ViewHolder>(IconListDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -81,7 +81,7 @@ class IconListAdapter : ListAdapter<Int, IconListAdapter.ViewHolder>(GachaListDi
 
 }
 
-private class GachaListDiffCallback : DiffUtil.ItemCallback<Int>() {
+class IconListDiffCallback : DiffUtil.ItemCallback<Int>() {
 
     override fun areItemsTheSame(
         oldItem: Int,

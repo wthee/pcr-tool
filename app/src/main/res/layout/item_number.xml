@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/number"
+    style="@style/Widget.MaterialComponents.Button.TextButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/xxs_dp"
+    android:layout_marginEnd="@dimen/xxs_dp"
+    android:gravity="center"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+    tools:text="@string/app_name" />

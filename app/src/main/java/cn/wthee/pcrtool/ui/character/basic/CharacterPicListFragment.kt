@@ -43,12 +43,6 @@ class CharacterPicListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FabHelper.addBackFab(2)
-        //fixme 优化过渡效果
-//        sharedElementEnterTransition = MaterialContainerTransform().apply {
-//            scrimColor = Color.TRANSPARENT
-//            duration = 500L
-//            setAllContainerColors(Color.TRANSPARENT)
-//        }
         requireArguments().apply {
             uid = getInt(Constants.UID)
         }

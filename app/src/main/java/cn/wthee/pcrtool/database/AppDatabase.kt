@@ -6,10 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.data.db.dao.CharacterDao
-import cn.wthee.pcrtool.data.db.dao.EquipmentDao
-import cn.wthee.pcrtool.data.db.dao.EventDao
-import cn.wthee.pcrtool.data.db.dao.GachaDao
+import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.entity.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
@@ -17,15 +14,15 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
 
 @Database(
     entities = [
-        CharacterProfile::class,
-        Character6Star::class,
-        CharacterActualData::class,
-        CharacterData::class,
-        CharacterPromotion::class,
-        CharacterPromotionStatus::class,
-        CharacterExperience::class,
-        CharacterRarity::class,
-        CharacterSkillData::class,
+        UnitProfile::class,
+        Unit6Star::class,
+        ActualUnitBackground::class,
+        UnitData::class,
+        UnitPromotion::class,
+        UnitPromotionStatus::class,
+        ExperienceUnit::class,
+        UnitRarity::class,
+        UnitSkillData::class,
         EnemyRewardData::class,
         EquipmentCraft::class,
         EquipmentData::class,
@@ -40,11 +37,11 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
         WaveGroupData::class,
         AttackPattern::class,
         GuildData::class,
-        CharacterComments::class,
+        UnitComments::class,
         GachaData::class,
         GachaExchange::class,
         ItemData::class,
-        CharacterStoryStatus::class,
+        CharaStoryStatus::class,
         CharacterType::class,
         EventStoryData::class,
         EventStoryDetail::class,
@@ -52,8 +49,11 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
         OddsNameData::class,
         HatsuneSchedule::class,
         CampaignSchedule::class,
-        CharacterRoomComments::class,
+        RoomUnitComments::class,
         AilmentData::class,
+        ClanBattleBossData::class,
+        ClanBattleSchedule::class,
+        EnemyParameter::class
     ],
     version = BuildConfig.SQLITE_VERSION,
     exportSchema = false
@@ -63,10 +63,12 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
  */
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun getCharacterDao(): CharacterDao
+    abstract fun getUnitDao(): UnitDao
+    abstract fun getSkillDao(): SkillDao
     abstract fun getEquipmentDao(): EquipmentDao
     abstract fun getGachaDao(): GachaDao
     abstract fun getEventDao(): EventDao
+    abstract fun getClanDao(): ClanBattleDao
 
 
     companion object {

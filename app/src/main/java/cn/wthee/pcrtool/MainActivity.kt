@@ -3,6 +3,7 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.*
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.children
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.startup.AppInitializer
@@ -28,7 +31,6 @@ import cn.wthee.pcrtool.ui.home.*
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment
 import cn.wthee.pcrtool.utils.*
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import com.umeng.commonsdk.UMConfigure
@@ -61,10 +63,6 @@ class MainActivity : AppCompatActivity() {
         lateinit var layoutDownload: FrameLayout
         lateinit var progressDownload: CircleProgressView
         lateinit var textDownload: MaterialTextView
-
-        //消息通知
-        lateinit var fabNotice: ExtendedFloatingActionButton
-
     }
 
     private var menuItems = arrayListOf<ViewBinding>()
@@ -72,6 +70,7 @@ class MainActivity : AppCompatActivity() {
     private var menuItemDrawable = arrayListOf<Int>()
     private var menuItemTitles = arrayListOf<Int>()
     private lateinit var binding: ActivityMainBinding
+    private var appUpdate = MutableLiveData<Boolean>(false)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         setHandler()
         GlobalScope.launch {
             //应用版本校验
-            AppUpdateUtil.init()
+            appUpdate.postValue(AppUpdateUtil.init())
         }
         GlobalScope.launch {
             //数据库版本检查
@@ -105,10 +104,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        mFloatingWindowHeight = if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-            ScreenUtil.getHeight() - 48.dp
-        else
-            ScreenUtil.getWidth() - 48.dp
+        val width = ScreenUtil.getWidth()
+        val height = ScreenUtil.getHeight()
+        Log.e("DEBUG", "$width ? $height")
+        mFloatingWindowHeight = if (width > height) height - 48.dp else width - 48.dp
         super.onConfigurationChanged(newConfig)
     }
 
@@ -171,8 +170,6 @@ class MainActivity : AppCompatActivity() {
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
-        fabNotice = binding.fabNotice
-        fabNotice.hide()
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
@@ -184,6 +181,7 @@ class MainActivity : AppCompatActivity() {
             binding.toolCalendar,
             binding.toolGacha,
             binding.toolGuild,
+            binding.toolClan
         )
         //菜单跳转
         menuItemIds = arrayListOf(
@@ -199,6 +197,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.action_characterListFragment_to_calendarJPFragment,
             R.id.action_characterListFragment_to_toolGachaFragment,
             R.id.action_characterListFragment_to_guildFragment,
+            R.id.action_characterListFragment_to_clanFragment,
         )
         //菜单标题
         menuItemTitles = arrayListOf(
@@ -210,7 +209,8 @@ class MainActivity : AppCompatActivity() {
             R.string.tool_event,
             R.string.tool_calendar_title,
             R.string.tool_gacha,
-            R.string.title_guild,
+            R.string.tool_guild,
+            R.string.tool_clan,
         )
         //菜单图标
         menuItemDrawable = arrayListOf(
@@ -223,6 +223,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_calendar,
             R.drawable.ic_gacha,
             R.drawable.ic_guild,
+            R.drawable.ic_def,
         )
         fabMain = binding.fab
         //悬浮穿高度
@@ -304,7 +305,7 @@ class MainActivity : AppCompatActivity() {
             //点击事件
             viewBinding.root.setOnClickListener {
                 try {
-                    closeMenus()
+                    afterClickMenuItem()
                     //页面跳转
                     findNavController(R.id.nav_host_fragment).navigate(
                         menuItemIds[index],
@@ -319,43 +320,50 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        //打开通知
-        binding.fabNotice.apply {
-            setOnClickListener {
-                this@MainActivity.findNavController(R.id.nav_host_fragment)
-                    .navigate(R.id.action_global_noticeListFragment)
+        //切换数据版本
+        binding.fabChangeDb.setOnClickListener {
+            lifecycleScope.launch {
+                closeFab()
+                DatabaseUpdater.changeType()
             }
         }
-    }
-
-    // 关闭菜单
-    private fun closeFab() {
-        fabMain.setImageResource(R.drawable.ic_function)
-        binding.layoutMotion.apply {
-            transitionToStart()
-            isClickable = false
-            isFocusable = false
+        //更新跳转
+        binding.fabUpdate.setOnClickListener {
+            closeFab()
+            this@MainActivity.findNavController(R.id.nav_host_fragment)
+                .navigate(R.id.action_global_noticeListFragment)
         }
     }
 
-    private fun closeMenus() {
-        fabMain.setImageResource(R.drawable.ic_left)
-        menuItems.forEach {
-            it.root.isClickable = false
-            it.root.isFocusable = false
+
+    /**
+     * 菜单打开/关闭监听
+     */
+    val menuListener = object : MotionLayout.TransitionListener {
+        override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+            if (appUpdate.value != null && appUpdate.value == true) {
+                binding.fabUpdate.show()
+            } else {
+                binding.fabUpdate.hide()
+            }
         }
-        binding.layoutBg.apply {
-            isClickable = false
-            isFocusable = false
-        }
-        binding.layoutMotion.apply {
-            transitionToStart()
-            isClickable = false
-            isFocusable = false
+
+        override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
+
+        override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {}
+
+        override fun onTransitionTrigger(
+            p0: MotionLayout?,
+            p1: Int,
+            p2: Boolean,
+            p3: Float
+        ) {
         }
     }
 
-    // 打开菜单
+    /**
+     * 打开菜单
+     */
     private fun openFab() {
         fabMain.setImageResource(R.drawable.ic_left)
         menuItems.forEach {
@@ -370,9 +378,40 @@ class MainActivity : AppCompatActivity() {
             transitionToEnd()
             isClickable = true
             isFocusable = true
+            addTransitionListener(menuListener)
         }
         binding.layoutBg.setOnClickListener {
             closeFab()
+        }
+
+    }
+
+    /**
+     * 关闭菜单
+     */
+    private fun closeFab() {
+        fabMain.setImageResource(R.drawable.ic_function)
+        binding.layoutMotion.apply {
+            transitionToStart()
+            isClickable = false
+            isFocusable = false
+        }
+    }
+
+    private fun afterClickMenuItem() {
+        fabMain.setImageResource(R.drawable.ic_left)
+        menuItems.forEach {
+            it.root.isClickable = false
+            it.root.isFocusable = false
+        }
+        binding.layoutBg.apply {
+            isClickable = false
+            isFocusable = false
+        }
+        binding.layoutMotion.apply {
+            transitionToStart()
+            isClickable = false
+            isFocusable = false
         }
     }
 

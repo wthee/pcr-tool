@@ -9,4 +9,4 @@
     android:padding="@dimen/xs_dp"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     app:spanCount="3"
-    tools:listitem="@layout/item_rank" />
+    tools:listitem="@layout/item_number" />

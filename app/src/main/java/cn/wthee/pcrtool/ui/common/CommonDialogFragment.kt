@@ -22,7 +22,7 @@ open class CommonDialogFragment : DialogFragment() {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             setWindowAnimations(R.style.DialogAnimation)
             val params = attributes
-            params.y = 15.dp
+            params.y = 65.dp
             attributes = params
         }
     }
