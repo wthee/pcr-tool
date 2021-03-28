@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpIconFragment.Companion.selects
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -41,7 +40,6 @@ class PvpFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentToolPvpBinding
-    private lateinit var job: Job
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }

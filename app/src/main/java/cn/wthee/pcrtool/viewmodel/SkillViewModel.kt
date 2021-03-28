@@ -79,9 +79,18 @@ class SkillViewModel(
                         skill.name ?: "",
                         skill.description,
                         skill.icon_type,
-                        lv, atk
+                        skill.skill_cast_time,
+                        lv,
+                        atk
                     )
-                    info.actions = repository.getSkillActions(0, lv, atk, skill.getAllActionId())
+                    val actions = repository.getSkillActions(0, lv, atk, skill.getAllActionId())
+                    val dependIds = skill.getSkillDependData()
+                    actions.forEachIndexed { i, action ->
+                        if (i != 0) {
+                            action.dependId = dependIds[action.action_id] ?: 0
+                        }
+                    }
+                    info.actions = actions
                     infos.add(info)
                 }
             }

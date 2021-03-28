@@ -93,7 +93,6 @@ class ClanBossIconAdapter(
                             null
                         )
                     } else {
-                        //fixme 切换页面，选中效果
                         setSelectedIndex(layoutPosition)
                         notifyDataSetChanged()
                         parentBinding?.clanBossPager?.setCurrentItem(layoutPosition, true)

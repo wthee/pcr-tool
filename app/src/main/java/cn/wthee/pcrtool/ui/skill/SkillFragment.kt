@@ -100,9 +100,7 @@ class SkillFragment : Fragment() {
                     skillViewModel.getCharacterSkills(level, atk.int, uid)
                 }
             }
-
             1 -> {
-                //fixme enemy skill
                 skillViewModel.getEnemySkill(lvs, bossAtk, uid)
             }
             2 -> {

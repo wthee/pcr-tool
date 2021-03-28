@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def VERSION_NAME = "0.7.3"
-def VERSION_CODE = 73
+def VERSION_NAME = "0.8.0"
+def VERSION_CODE = 80
 
 android {
     compileSdkVersion 30
@@ -18,7 +18,7 @@ android {
         multiDexEnabled true
 
         flavorDimensions "default"
-        buildConfigField ("int", "SQLITE_VERSION", "73")
+        buildConfigField ("int", "SQLITE_VERSION", "80")
 
     }
 

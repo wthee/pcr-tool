@@ -12,15 +12,6 @@
             app:title="@string/redownload_db"
             app:summary="@string/redownload_db_summary" />
 
-        <ListPreference
-            app:defaultValue="@string/db_cn_value"
-            app:entries="@array/database_type"
-            app:entryValues="@array/database_type_value"
-            app:iconSpaceReserved="false"
-            app:key="change_database"
-            app:summary="@string/empty"
-            app:title="@string/game_version" />
-
         <SwitchPreference
             app:key="pvp_region"
             app:iconSpaceReserved="false"

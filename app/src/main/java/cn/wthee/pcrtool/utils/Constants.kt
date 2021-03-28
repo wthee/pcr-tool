@@ -73,6 +73,7 @@ object Constants {
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
     //本地储存
+    const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION = "database_version"
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"

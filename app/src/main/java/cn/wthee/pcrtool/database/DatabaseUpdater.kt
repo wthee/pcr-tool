@@ -33,6 +33,17 @@ object DatabaseUpdater {
     private val sp = MyApplication.context.getSharedPreferences("main", MODE_PRIVATE)
 
     /**
+     * 切换版本
+     */
+    suspend fun changeType() {
+        var type = getDatabaseType()
+        sp.edit {
+            putInt(Constants.SP_DATABASE_TYPE, if (type == 1) 2 else 1)
+        }
+        checkDBVersion(1)
+    }
+
+    /**
      * 检查是否需要更新
      *
      * [from] -1:正常调用  0：点击版本号  1：切换版本调用
@@ -76,10 +87,9 @@ object DatabaseUpdater {
         from: Int = -1,
         force: Boolean = false
     ) {
-        val type = getDatabaseType()
         val databaseType = getDatabaseType()
         val localVersion = sp.getString(
-            if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+            if (databaseType == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             ""
         )
         //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
@@ -94,7 +104,7 @@ object DatabaseUpdater {
             remoteBackupMode && File(FileUtil.getDatabaseBackupPath(databaseType)).length() < 1024 * 1024
         if (toDownload || toDownloadRemoteBackup) {
             //远程备份时
-            var fileName = if (type == 1) {
+            var fileName = if (databaseType == 1) {
                 if (remoteBackupMode) {
                     Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP
                 } else {
@@ -109,7 +119,7 @@ object DatabaseUpdater {
             }
             //强制更新时
             if (force) {
-                fileName = if (type == 1) {
+                fileName = if (databaseType == 1) {
                     Constants.DATABASE_DOWNLOAD_FILE_NAME
                 } else {
                     Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
@@ -138,7 +148,7 @@ object DatabaseUpdater {
                 }
             }
         } else {
-            //强制更新/切换成功，引导关闭应用
+            //强制更新/切换成功
             if (from != -1) {
                 handler.sendEmptyMessage(1)
             }
@@ -205,9 +215,7 @@ object DatabaseUpdater {
      * 获取数据库版本
      * 1: 国服 2：日服
      */
-    fun getDatabaseType() =
-        PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
-            .getString("change_database", "1")?.toInt() ?: 1
+    fun getDatabaseType() = sp.getInt(Constants.SP_DATABASE_TYPE, 1)
 
     /**
      * 获取已选择的游戏版本

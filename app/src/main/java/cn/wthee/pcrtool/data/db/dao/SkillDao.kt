@@ -32,7 +32,6 @@ interface SkillDao {
 
     /**
      * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillActionPro]
-     * fixme 测试用
      */
     @Query(
         """

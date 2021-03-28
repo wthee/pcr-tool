@@ -91,6 +91,7 @@ interface ClanBattleDao {
     suspend fun getAllClanBattleDataJP(): List<ClanBattleInfo>
 
 
+    @SkipQueryVerification
     @Query("""SELECT * FROM enemy_parameter WHERE enemy_id = :enemyId""")
     suspend fun getBossAttr(enemyId: Int): EnemyParameter
 

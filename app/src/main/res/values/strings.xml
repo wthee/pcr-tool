@@ -8,7 +8,6 @@
     <string name="quest_name">%s-%s</string>
     <string name="percent">%d%%</string>
     <string name="equip_count">x %d</string>
-    <string name="section">%d 阶段</string>
     <string name="empty"> </string>
     <!-- 角色 -->
     <string name="title_quest">？？？</string>
@@ -30,7 +29,6 @@
     <string name="title_comments">交流</string>
     <string name="title_room_comments">小屋交流</string>
     <string name="title_material">所需装备：%d</string>
-    <string name="title_looping_sp">特殊循环</string>
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">- 剧情属性 -</string>
     <!--    -->
@@ -38,7 +36,6 @@
     <string name="other">其它</string>
     <string name="setting">设置</string>
     <string name="search">搜索</string>
-    <string name="cancel">取消</string>
     <string name="function">功能</string>
     <string name="sorry_ue">优衣，对不起~ </string>
 
@@ -62,7 +59,7 @@
     <string name="db_jp_value">2</string>
     <string name="egg_text">我啊，很幸福哦</string>
     <string name="egg_summary">…还…还是被发现了</string>
-    <string name="game_version">切换版本</string>
+    <string name="change_db">数据切换</string>
     <string name="to_download">是否重新下载最新数据？</string>
     <string name="share_app">分享应用</string>
     <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>

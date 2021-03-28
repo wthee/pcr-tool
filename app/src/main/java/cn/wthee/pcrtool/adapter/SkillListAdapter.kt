@@ -97,10 +97,10 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
                 }
                 //技能名称
                 name.text = if (skill.name.isBlank()) type.text else skill.name
-                //等级
+                //等级 & 动作时间
                 level.text = "技能等级：${skill.level}"
                 //加载图片
-                val picUrl = SKILL_ICON_URL + skill.icon_type + WEBP
+                val picUrl = SKILL_ICON_URL + skill.iconType + WEBP
                 itemPic.load(picUrl) {
                     error(R.drawable.unknown_gray)
                     placeholder(R.drawable.unknown_gray)

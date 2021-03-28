@@ -7,6 +7,7 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
@@ -127,7 +128,7 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
                         //变色
                         spannable.setSpan(
                             ForegroundColorSpan(
-                                ResourcesUtil.getColor(R.color.textGray)
+                                ResourcesUtil.getColor(R.color.colorBlack)
                             ), starts1[index], ends1[index] + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                         //加粗
@@ -167,6 +168,7 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
 
                 //获取召唤物信息
                 if (skillAction.summonUnitId != 0) {
+                    target.visibility = View.VISIBLE
                     target.text = "查看召唤物技能 >"
                     target.setOnClickListener {
                         //打开详情页

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.NoticeListAdapter
 import cn.wthee.pcrtool.databinding.FragmentNoticeListBinding
@@ -31,7 +30,6 @@ class NoticeListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FabHelper.addBackFab()
-        MainActivity.fabNotice.hide()
     }
 
     override fun onCreateView(

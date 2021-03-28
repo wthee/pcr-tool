@@ -14,7 +14,8 @@ data class SkillDetail(
     val skillId: Int,
     val name: String,
     val desc: String,
-    val icon_type: Int,
+    val iconType: Int,
+    val castTime: Double,
     val level: Int,
     val atk: Int,
 ) {

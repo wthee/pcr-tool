@@ -44,8 +44,8 @@ data class SkillData(
         it != 0
     }
 
-    fun getSkillDependData(): ArrayList<SkillDependData> {
-        val list = arrayListOf<SkillDependData>()
+    fun getSkillDependData(): MutableMap<Int, Int> {
+        val map = mutableMapOf<Int, Int>()
         val actionList = arrayListOf(
             action_1,
             action_2,
@@ -65,10 +65,9 @@ data class SkillData(
             depend_action_7,
         )
         actionList.forEachIndexed { index, action ->
-            list.add(SkillDependData(action, dependActionList[index]))
+            map[action] = dependActionList[index]
         }
-        list.filter { it.action != 0 }
-        return list
+        return map
     }
 }
 
