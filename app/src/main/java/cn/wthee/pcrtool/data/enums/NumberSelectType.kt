@@ -5,5 +5,6 @@ package cn.wthee.pcrtool.data.enums
  */
 enum class NumberSelectType(val type: Int) {
     RANK(0),
-    SECTION(1)
+    SECTION(1),
+    LEVEL(2),
 }

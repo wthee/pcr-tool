@@ -65,6 +65,10 @@ class NumberSelectAdapter(private val dialog: DialogFragment, private val type: 
                         number.text = getZhNumberText(r) + "阶段"
                         number.setTextColor(getSectionTextColor(r))
                     }
+                    NumberSelectType.LEVEL -> {
+                        number.text = r.toString()
+                        number.setTextColor(getLevelTextColor(r))
+                    }
                 }
                 root.setOnClickListener {
                     selectNumber = r

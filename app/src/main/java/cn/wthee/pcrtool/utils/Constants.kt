@@ -95,6 +95,7 @@ object Constants {
     //常量值
     const val UID = "unit_id"
     const val REGION = "region"
+    const val SELECT_LEVEL = "select_level"
     const val SELECT_RANK = "select_rank"
     const val START_RANK = "start_rank"
     const val END_RANK = "end_rank"
@@ -102,6 +103,8 @@ object Constants {
     const val RANK = "rank"
     const val RARITY = "rarity"
     const val LEVEL = "level"
+    const val MAX_LEVEL = "max_level"
+    const val MAX_UE_LEVEL = "max_ue_level"
     const val UNIQUE_EQUIP_LEVEL = "ueLv"
     const val CLAN_DATE = "clan_date"
     const val CLAN_BOSS_NO = "clan_boss_no"

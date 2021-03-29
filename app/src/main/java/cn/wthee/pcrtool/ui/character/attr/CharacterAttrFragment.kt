@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
-import com.google.android.material.slider.Slider
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -56,10 +55,10 @@ class CharacterAttrFragment : Fragment() {
     }
 
     private val REQUEST_CODE = 0
+    private val REQUEST_CODE_LEVEL = 1
+    private val REQUEST_CODE_UE_LEVEL = 2
     private lateinit var binding: FragmentCharacterAttrInfoBinding
     private lateinit var attrAdapter: CharacterAttrAdapter
-    private var index = 0
-    private var iconUrls = arrayListOf<String>()
 
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
@@ -96,104 +95,57 @@ class CharacterAttrFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE) {
-            data?.extras?.let {
+        when (requestCode) {
+            REQUEST_CODE -> data?.extras?.let {
                 selData[Constants.RANK] = it.getInt(Constants.SELECT_RANK)
-                loadData()
+            }
+            REQUEST_CODE_LEVEL -> data?.extras?.let {
+                selData[Constants.LEVEL] = it.getInt(Constants.SELECT_LEVEL)
+            }
+            REQUEST_CODE_UE_LEVEL -> data?.extras?.let {
+                selData[Constants.UNIQUE_EQUIP_LEVEL] = it.getInt(Constants.SELECT_LEVEL)
+                sharedEquipViewModel.getUniqueEquipInfos(
+                    uid,
+                    selData[Constants.UNIQUE_EQUIP_LEVEL]!!
+                )
             }
         }
+        loadData()
     }
 
     private fun init() {
         lifecycleScope.launch {
-            iconUrls = CharacterIdUtil.getAllIconUrl(
+            val iconUrls = CharacterIdUtil.getAllIconUrl(
                 uid, sharedCharacterViewModel.getR6Ids().contains(
                     uid
                 )
             )
             iconUrl = iconUrls[0]
             //加载icon
-            loadIcon(iconUrls[index])
+            binding.icon.load(iconUrl) {
+                error(R.drawable.unknown_gray)
+                placeholder(R.drawable.unknown_gray)
+            }
         }
         characterAttrViewModel.getMaxRankAndRarity(uid)
         attrAdapter = CharacterAttrAdapter()
         binding.charcterAttrs.adapter = attrAdapter
     }
 
-    //加载图标
-    private fun loadIcon(url: String) {
-        binding.icon.load(url) {
-            error(R.drawable.unknown_gray)
-            placeholder(R.drawable.unknown_gray)
-        }
-    }
-
     //点击事件
     private fun setListener() {
         binding.apply {
-            //头像点击查看掉落
-            icon.setOnClickListener {
-                lifecycleScope.launch {
-                    if (sharedCharacterViewModel.getDrops(uid).isNotEmpty()) {
-                        CharacterDropDialogFragment.getInstance(uid).show(
-                            parentFragmentManager, "character_drop"
-                        )
-                    } else {
-                        ToastUtil.short("无掉落信息~")
-                    }
-                }
-            }
-            //长按更换
-            icon.setOnLongClickListener {
-                index = (++index) % iconUrls.size
-                loadIcon(iconUrls[index])
-                return@setOnLongClickListener true
-            }
             //查看装备统计
             rankEquip.rankCompare.setOnClickListener {
                 findNavController().navigate(R.id.action_characterPagerFragment_to_characterRankCompareFragment)
             }
-            //等级滑动条
-            levelSeekBar.addOnSliderTouchListener(object :
-                Slider.OnSliderTouchListener {
-                override fun onStartTrackingTouch(slider: Slider) {
-                }
-
-                override fun onStopTrackingTouch(slider: Slider) {
-                    loadData()
-                }
-
-            })
-            levelSeekBar.addOnChangeListener { slider, _, _ ->
-                val lv = slider.value.toInt()
-                selData[Constants.LEVEL] = lv
-                level.text = lv.toString()
-            }
-            //专武等级滑动
-            uniqueEquip.ueLvSeekBar.addOnSliderTouchListener(object :
-                Slider.OnSliderTouchListener {
-                override fun onStartTrackingTouch(slider: Slider) {
-                }
-
-                override fun onStopTrackingTouch(slider: Slider) {
-                    val ueLv = slider.value.toInt()
-                    sharedEquipViewModel.getUniqueEquipInfos(uid, ueLv)
-                    loadData()
-                }
-            })
-            uniqueEquip.ueLvSeekBar.addOnChangeListener { slider, _, _ ->
-                val ueLv = slider.value.toInt()
-                selData[Constants.UNIQUE_EQUIP_LEVEL] = ueLv
-                uniqueEquip.ueLv.text = getString(R.string.unique_equip_lv, ueLv)
-            }
-
             //专武分享
             uniqueShare.setOnClickListener {
                 //分享图片
                 ShareIntentUtil.image(
                     requireActivity(),
                     uniqueEquip.root,
-                    "ue_${uid}_lv_${uniqueEquip.ueLvSeekBar.value.toInt()}.png"
+                    "ue_${uid}_lv_${uniqueEquip.ueLv.text}.png"
                 )
             }
         }
@@ -202,7 +154,7 @@ class CharacterAttrFragment : Fragment() {
     private fun setObserve() {
         //获取属性，重新加载
         characterAttrViewModel.selData.observe(viewLifecycleOwner) {
-            updateRankBtn()
+            updateText()
             characterAttrViewModel.getCharacterInfo(uid, selData)
         }
         //获取角色最大Rank后，加载数据
@@ -213,16 +165,29 @@ class CharacterAttrFragment : Fragment() {
             maxRank = maxData[Constants.RANK] ?: 11
             maxRarity = maxData[Constants.RARITY] ?: 5
             selData = maxData
-            updateRankBtn()
+            updateText()
+            //等级选择
+            binding.icon.setOnClickListener { binding.level.callOnClick() }
+            binding.level.setOnClickListener {
+                LevelSelectDialogFragment(
+                    this@CharacterAttrFragment,
+                    REQUEST_CODE_LEVEL,
+                    it.y.toInt() + it.height
+                ).getInstance(selData[Constants.LEVEL] ?: maxLv, maxLv)
+                    .show(parentFragmentManager, "level_select")
+            }
+            //专武等级选择
+            binding.uniqueEquip.layoutEquip.setOnClickListener {
+                LevelSelectDialogFragment(
+                    this@CharacterAttrFragment,
+                    REQUEST_CODE_UE_LEVEL,
+                    binding.frameUe.y.toInt()
+                ).getInstance(selData[Constants.UNIQUE_EQUIP_LEVEL] ?: ueLv, ueLv)
+                    .show(parentFragmentManager, "ue_level_select")
+            }
             //显示数据
             binding.apply {
                 level.text = lv.toString()
-                levelSeekBar.valueFrom = 1.0f
-                levelSeekBar.valueTo = lv.toFloat()
-                levelSeekBar.value = lv.toFloat()
-                uniqueEquip.ueLvSeekBar.valueFrom = 1.0f
-                uniqueEquip.ueLvSeekBar.valueTo = ueLv.toFloat()
-                uniqueEquip.ueLvSeekBar.value = ueLv.toFloat()
                 loadData()
                 setRarity(maxRarity)
                 //rank 选择
@@ -239,8 +204,6 @@ class CharacterAttrFragment : Fragment() {
         sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner) {
             binding.uniqueEquip.apply {
                 if (it != null) {
-                    binding.uniqueEquip.ueLv.visibility = View.VISIBLE
-                    binding.uniqueEquip.ueLvSeekBar.visibility = View.VISIBLE
                     binding.uniqueEquip.root.visibility = View.VISIBLE
                     val picUrl = Constants.EQUIPMENT_URL + it.equipmentId + Constants.WEBP
                     itemPic.load(picUrl) {
@@ -321,13 +284,15 @@ class CharacterAttrFragment : Fragment() {
     }
 
 
-    //修改 Rank 按钮文本
-    private fun updateRankBtn() {
+    //TODO 修改文本
+    private fun updateText() {
         binding.rankEquip.rankBtn.apply {
             val selRank = selData[Constants.RANK]!!
             text = getFormatText(selRank)
             setTextColor(getRankColor(selRank))
         }
+        binding.level.text = selData[Constants.LEVEL]!!.toString()
+        binding.uniqueEquip.ueLv.text = selData[Constants.UNIQUE_EQUIP_LEVEL]!!.toString()
     }
 
     //设置星级
