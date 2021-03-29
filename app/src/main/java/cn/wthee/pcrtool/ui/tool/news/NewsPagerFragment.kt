@@ -44,6 +44,7 @@ class NewsPagerFragment : Fragment() {
         )
         //viewpager
         viewPager = binding.toolList
+        viewPager.offscreenPageLimit = 1
         if (viewPager.adapter == null) {
             adapter = NewsListPagerAdapter(requireActivity())
             viewPager.adapter = adapter

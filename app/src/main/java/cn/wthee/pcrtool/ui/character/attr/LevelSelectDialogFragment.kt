@@ -12,8 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import cn.wthee.pcrtool.databinding.LayoutSeekbarBinding
+import cn.wthee.pcrtool.databinding.LayoutSliderBinding
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.slider.Slider
 
 
@@ -38,7 +40,7 @@ class LevelSelectDialogFragment(
             }
         }
 
-    private lateinit var binding: LayoutSeekbarBinding
+    private lateinit var binding: LayoutSliderBinding
     private var selectLevel = 1
     private var maxLv = 999
 
@@ -55,12 +57,13 @@ class LevelSelectDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = LayoutSeekbarBinding.inflate(layoutInflater, container, false)
+        binding = LayoutSliderBinding.inflate(layoutInflater, container, false)
 
-        binding.seekBar.apply {
+        binding.slider.apply {
             value = selectLevel.toFloat()
             valueFrom = 1.0f
             valueTo = maxLv.toFloat()
+            binding.sliderText.text = maxLv.toString()
             addOnSliderTouchListener(object :
                 Slider.OnSliderTouchListener {
                 override fun onStartTrackingTouch(slider: Slider) {
@@ -70,6 +73,9 @@ class LevelSelectDialogFragment(
                     dialog?.dismiss()
                 }
             })
+            addOnChangeListener { slider, value, fromUser ->
+                binding.sliderText.text = value.toInt().toString()
+            }
         }
 
         setTargetFragment(preFragment, requestCode)
@@ -82,7 +88,7 @@ class LevelSelectDialogFragment(
         //获取已选择的数据，并返回
         val intent = Intent()
         val bundle = Bundle()
-        bundle.putInt(Constants.SELECT_LEVEL, binding.seekBar.value.toInt())
+        bundle.putInt(Constants.SELECT_LEVEL, binding.slider.value.toInt())
         intent.putExtras(bundle)
         targetFragment?.onActivityResult(requestCode, Activity.RESULT_OK, intent)
     }
@@ -91,6 +97,8 @@ class LevelSelectDialogFragment(
         super.onStart()
         dialog?.window?.apply {
             setGravity(Gravity.TOP)
+            val width = ScreenUtil.getWidth() - 42.dp
+            setLayout(width, 80.dp)
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val params = attributes
             params.y = position + 15

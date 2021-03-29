@@ -181,7 +181,7 @@ class CharacterAttrFragment : Fragment() {
                 LevelSelectDialogFragment(
                     this@CharacterAttrFragment,
                     REQUEST_CODE_UE_LEVEL,
-                    binding.frameUe.y.toInt()
+                    binding.frameUe.y.toInt() + 20
                 ).getInstance(selData[Constants.UNIQUE_EQUIP_LEVEL] ?: ueLv, ueLv)
                     .show(parentFragmentManager, "ue_level_select")
             }

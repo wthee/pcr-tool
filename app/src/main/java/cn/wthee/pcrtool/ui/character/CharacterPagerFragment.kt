@@ -93,6 +93,7 @@ class CharacterPagerFragment : Fragment() {
         lifecycleScope.launch {
             val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
+            viewPager.offscreenPageLimit = 1
             if (viewPager.adapter == null) {
                 adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid)
                 viewPager.adapter = adapter
