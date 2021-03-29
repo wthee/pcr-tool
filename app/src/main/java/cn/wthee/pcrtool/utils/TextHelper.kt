@@ -1,7 +1,15 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.R
+import kotlin.math.ceil
 
+/**
+ * [Double] 转 [Int]，向上取整
+ */
+val Double.int: Int
+    get() {
+        return ceil(this).toInt()
+    }
 
 //rank 颜色
 fun getRankColor(rank: Int): Int {

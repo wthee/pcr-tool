@@ -47,7 +47,6 @@ class NewsPagerFragment : Fragment() {
         if (viewPager.adapter == null) {
             adapter = NewsListPagerAdapter(requireActivity())
             viewPager.adapter = adapter
-            viewPager.offscreenPageLimit = 3
         }
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

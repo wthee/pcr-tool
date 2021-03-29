@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.data.enums.SkillActionType
 import cn.wthee.pcrtool.data.enums.getAilment
 import cn.wthee.pcrtool.data.enums.toSkillActionType
-import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.utils.getZhNumberText
+import cn.wthee.pcrtool.utils.int
 import kotlin.math.abs
 
 

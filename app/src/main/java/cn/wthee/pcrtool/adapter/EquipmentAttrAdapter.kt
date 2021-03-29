@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.ItemEquipmentAttrBinding
+import cn.wthee.pcrtool.utils.int
 
 /**
  * 装备面板属性列表适配器

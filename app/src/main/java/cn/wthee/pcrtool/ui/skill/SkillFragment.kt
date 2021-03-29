@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.adapter.SkillAdapter
-import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
@@ -83,11 +83,7 @@ class SkillFragment : Fragment() {
             skillList.adapter = adapter
         }
         when (type) {
-            0 -> { //延迟绘制页面
-                binding.skillList.visibility = View.GONE
-                binding.skillList.postDelayed({
-                    binding.skillList.visibility = View.VISIBLE
-                }, 600L)
+            0 -> {
                 //角色技能
                 var level = CharacterAttrFragment.maxLv
                 var atk = 0.0

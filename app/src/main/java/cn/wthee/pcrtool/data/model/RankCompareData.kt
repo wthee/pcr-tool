@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.model
 import cn.wthee.pcrtool.data.view.Attr
 import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.compare
-import kotlin.math.ceil
 
 /**
  * 角色 Rank 对比数据
@@ -14,14 +13,6 @@ data class RankCompareData(
     val attr1: Double,
     val attrCompare: Double
 )
-
-/**
- * [Double] 转 [Int]，向上取整
- */
-val Double.int: Int
-    get() {
-        return ceil(this).toInt()
-    }
 
 
 /**

@@ -116,7 +116,6 @@ class ClanPagerFragment : Fragment() {
     private fun updateSection() {
         //BOSS viewpager 页面
         val viewPagerAdapter = ClanBossPagerAdapter(parentFragmentManager, lifecycle, selSection)
-        binding.clanBossPager.offscreenPageLimit = 5
         binding.clanBossPager.adapter = viewPagerAdapter
         binding.clanBossPager.setCurrentItem(index, false)
         binding.fabSection.text = getZhNumberText(selSection) + "阶段"
