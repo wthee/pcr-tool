@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -61,10 +60,6 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
         fun bind(skill: SkillDetail) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.context
-                //加载动画
-                root.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 when (skillType) {
                     1, 2 -> {
                         //BOSS 技能
@@ -100,28 +95,29 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
                 //等级 & 动作时间
                 level.text = "技能等级：${skill.level}"
                 //加载图片
-                val picUrl = SKILL_ICON_URL + skill.iconType + WEBP
-                itemPic.load(picUrl) {
-                    error(R.drawable.unknown_gray)
-                    placeholder(R.drawable.unknown_gray)
-                    listener(
-                        onSuccess = { _, _ ->
-                            val coil = Coil.imageLoader(MyApplication.context)
-                            val request = ImageRequest.Builder(MyApplication.context)
-                                .data(picUrl)
-                                .build()
-                            MainScope().launch {
-                                val drawable = coil.execute(request).drawable
-                                //字体颜色
-                                name.setTextColor(
-                                    PaletteUtil.createPaletteSync((drawable as BitmapDrawable).bitmap)
-                                        .getDarkVibrantColor(Color.BLACK)
-                                )
+                MainScope().launch {
+                    val picUrl = SKILL_ICON_URL + skill.iconType + WEBP
+                    itemPic.load(picUrl) {
+                        error(R.drawable.unknown_gray)
+                        placeholder(R.drawable.unknown_gray)
+                        listener(
+                            onSuccess = { _, _ ->
+                                val coil = Coil.imageLoader(MyApplication.context)
+                                val request = ImageRequest.Builder(MyApplication.context)
+                                    .data(picUrl)
+                                    .build()
+                                MainScope().launch {
+                                    val drawable = coil.execute(request).drawable
+                                    //字体颜色
+                                    name.setTextColor(
+                                        PaletteUtil.createPaletteSync((drawable as BitmapDrawable).bitmap)
+                                            .getDarkVibrantColor(Color.BLACK)
+                                    )
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
-
                 val actionData = skill.getActionInfo()
                 //是否显示参数判断
                 try {
@@ -153,9 +149,8 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
                         }
                     }
                 } catch (e: Exception) {
-                    skill
-                }
 
+                }
                 //技能动作属性
                 val adapter = SkillActionAdapter(fragmentManager)
                 actions.adapter = adapter

@@ -115,21 +115,21 @@ class CharacterAttrFragment : Fragment() {
 
     private fun init() {
         lifecycleScope.launch {
-            val iconUrls = CharacterIdUtil.getAllIconUrl(
+            iconUrl = CharacterIdUtil.getMaxIconUrl(
                 uid, sharedCharacterViewModel.getR6Ids().contains(
                     uid
                 )
             )
-            iconUrl = iconUrls[0]
             //加载icon
             binding.icon.load(iconUrl) {
                 error(R.drawable.unknown_gray)
                 placeholder(R.drawable.unknown_gray)
             }
         }
-        characterAttrViewModel.getMaxRankAndRarity(uid)
         attrAdapter = CharacterAttrAdapter()
         binding.charcterAttrs.adapter = attrAdapter
+
+        characterAttrViewModel.getMaxRankAndRarity(uid)
     }
 
     //点击事件
@@ -237,10 +237,13 @@ class CharacterAttrFragment : Fragment() {
                 equipPics[index].apply {
                     //加载装备图片
                     try {
-                        val picUrl = Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
-                        this.load(picUrl) {
-                            error(R.drawable.unknown_gray)
-                            placeholder(R.drawable.unknown_gray)
+                        lifecycleScope.launch {
+                            val picUrl =
+                                Constants.EQUIPMENT_URL + equip.equipmentId + Constants.WEBP
+                            this@apply.load(picUrl) {
+                                error(R.drawable.unknown_gray)
+                                placeholder(R.drawable.unknown_gray)
+                            }
                         }
                     } catch (e: Exception) {
                         MainScope().launch {
@@ -272,9 +275,7 @@ class CharacterAttrFragment : Fragment() {
         val storyAttrAdapter = CharacterAttrAdapter()
         binding.charcterStoryAttrs.adapter = storyAttrAdapter
         characterAttrViewModel.storyAttrs.observe(viewLifecycleOwner) {
-            storyAttrAdapter.submitList(it.allNotZero()) {
-                attrAdapter.notifyDataSetChanged()
-            }
+            storyAttrAdapter.submitList(it.allNotZero())
         }
     }
 
@@ -284,7 +285,7 @@ class CharacterAttrFragment : Fragment() {
     }
 
 
-    //TODO 修改文本
+    //修改文本
     private fun updateText() {
         binding.rankEquip.rankBtn.apply {
             val selRank = selData[Constants.RANK]!!

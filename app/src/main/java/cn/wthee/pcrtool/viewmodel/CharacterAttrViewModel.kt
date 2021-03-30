@@ -47,6 +47,7 @@ class CharacterAttrViewModel(
      * 获取角色属性信息 [Attr]
      */
     suspend fun getAttrs(unitId: Int, data: MutableMap<String, Int>): Attr {
+        val info = Attr()
         try {
             val rank = data[Constants.RANK]!!
             val rarity = data[Constants.RARITY]!!
@@ -57,7 +58,7 @@ class CharacterAttrViewModel(
             val rarityData = unitRepository.getRarity(unitId, rarity)
             val ids = unitRepository.getEquipmentIds(unitId, rank).getAllIds()
             //计算指定rank星级下的角色属性
-            val info = rankData.attr
+            info.add(rankData.attr)
                 .add(rarityData.attr)
                 .add(Attr.setGrowthValue(rarityData).multiply(lv + rank))
             val eqs = arrayListOf<EquipmentMaxData>()
@@ -83,7 +84,7 @@ class CharacterAttrViewModel(
             val storyAttr = getStoryAttrs(unitId)
             storyAttrs.postValue(storyAttr)
             info.add(storyAttr)
-            return info
+
         } catch (e: Exception) {
             MainScope().launch {
                 UMCrash.generateCustomLog(
@@ -97,7 +98,7 @@ class CharacterAttrViewModel(
                 )
             }
         }
-        return Attr()
+        return info
     }
 
     /**

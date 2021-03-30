@@ -2,12 +2,9 @@ package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.databinding.ItemCharacterAttrBinding
 import cn.wthee.pcrtool.utils.int
@@ -39,8 +36,6 @@ class CharacterAttrAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: AttrValue) {
             binding.apply {
-                value.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
                 titleAttr.text = data.title
                 value.text = data.value.int.toString()
             }

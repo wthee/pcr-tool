@@ -146,6 +146,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/l_dp"
                 android:gravity="center"
                 android:text="@string/sorry_ue"
                 android:textColor="@color/colorAlpha"
