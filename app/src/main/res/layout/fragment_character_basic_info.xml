@@ -8,22 +8,6 @@
     android:animateLayoutChanges="true">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/catah"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_dp"
-        android:layout_marginTop="@dimen/s_dp"
-        android:layout_marginEnd="@dimen/s_dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        android:textColor="@color/colorPrimary"
-        android:textIsSelectable="true"
-        android:textStyle="bold"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/test" />
-
-    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/unit_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,13 +22,32 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/xs_dp"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/catah">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/basic_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/news_card_height">
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/catah"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/s_dp"
+                android:layout_marginTop="@dimen/s_dp"
+                android:layout_marginEnd="@dimen/s_dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary"
+                android:textIsSelectable="true"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/test" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/intro"
@@ -56,7 +59,7 @@
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/catah"
                 tools:text="@string/test" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
@@ -467,6 +470,6 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/tab_love"
         android:src="@drawable/ic_loved"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

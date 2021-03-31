@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
+import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
@@ -56,6 +57,8 @@ class CharacterPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentCharacterPagerBinding
     private lateinit var adapter: CharacterPagerAdapter
+    private var name = ""
+    private var nameEx = ""
 
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
@@ -68,6 +71,8 @@ class CharacterPagerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requireArguments().let {
             uid = it.getInt(UID)
+            name = it.getString(UNIT_NAME) ?: ""
+            nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
@@ -116,16 +121,22 @@ class CharacterPagerFragment : Fragment() {
     private fun init() {
         //加载列表
         lifecycleScope.launch {
+            binding.name.text = name
+            binding.nameEx.text = nameEx
             //toolbar 背景
             val picUrl =
                 Constants.CHARACTER_FULL_URL + (uid + if (sharedCharacterViewModel.getR6Ids()
                         .contains(uid)
                 ) 60 else 30) + Constants.WEBP
             binding.characterPic.transitionName = picUrl
+            binding.root.transitionName = "item_$uid"
             //加载图片
             binding.characterPic.load(picUrl) {
                 error(R.drawable.error)
                 placeholder(R.drawable.load)
+                listener(onStart = {
+                    startPostponedEnterTransition()
+                })
             }
             val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager

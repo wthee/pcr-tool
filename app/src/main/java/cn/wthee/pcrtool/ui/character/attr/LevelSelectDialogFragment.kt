@@ -101,7 +101,7 @@ class LevelSelectDialogFragment(
             setLayout(width, 80.dp)
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val params = attributes
-            params.y = position + 15
+            params.y = position
             attributes = params
         }
     }

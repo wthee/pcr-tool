@@ -19,7 +19,6 @@
             android:id="@+id/level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/s_dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="@color/colorPrimary"
@@ -31,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/tab_height_2"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/s_dp"
             android:gravity="center"
             android:orientation="horizontal">
 

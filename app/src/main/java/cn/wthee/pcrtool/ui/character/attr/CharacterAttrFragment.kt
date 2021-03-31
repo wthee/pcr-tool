@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.character.attr
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -145,6 +147,7 @@ class CharacterAttrFragment : Fragment() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setObserve() {
         //获取属性，重新加载
         characterAttrViewModel.selData.observe(viewLifecycleOwner) {
@@ -161,22 +164,28 @@ class CharacterAttrFragment : Fragment() {
             selData = maxData
             updateText()
             //等级选择
-            binding.level.setOnClickListener {
-                LevelSelectDialogFragment(
-                    this@CharacterAttrFragment,
-                    REQUEST_CODE_LEVEL,
-                    it.y.toInt() + it.height
-                ).getInstance(selData[Constants.LEVEL] ?: maxLv, maxLv)
-                    .show(parentFragmentManager, "level_select")
+            binding.level.setOnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    LevelSelectDialogFragment(
+                        this@CharacterAttrFragment,
+                        REQUEST_CODE_LEVEL,
+                        event.rawY.toInt()
+                    ).getInstance(selData[Constants.LEVEL] ?: maxLv, maxLv)
+                        .show(parentFragmentManager, "level_select")
+                }
+                return@setOnTouchListener true
             }
             //专武等级选择
-            binding.uniqueEquip.layoutEquip.setOnClickListener {
-                LevelSelectDialogFragment(
-                    this@CharacterAttrFragment,
-                    REQUEST_CODE_UE_LEVEL,
-                    binding.frameUe.y.toInt() + 20
-                ).getInstance(selData[Constants.UNIQUE_EQUIP_LEVEL] ?: ueLv, ueLv)
-                    .show(parentFragmentManager, "ue_level_select")
+            binding.uniqueEquip.layoutEquip.setOnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    LevelSelectDialogFragment(
+                        this@CharacterAttrFragment,
+                        REQUEST_CODE_UE_LEVEL,
+                        event.rawY.toInt()
+                    ).getInstance(selData[Constants.UNIQUE_EQUIP_LEVEL] ?: ueLv, ueLv)
+                        .show(parentFragmentManager, "ue_level_select")
+                }
+                return@setOnTouchListener true
             }
             //显示数据
             binding.apply {

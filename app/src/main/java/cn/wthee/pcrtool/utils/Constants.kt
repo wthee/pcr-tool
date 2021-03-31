@@ -97,6 +97,8 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
+    const val UNIT_NAME = "unit_name"
+    const val UNIT_NAME_EX = "unit_name_ex"
     const val REGION = "region"
     const val SELECT_LEVEL = "select_level"
     const val SELECT_RANK = "select_rank"

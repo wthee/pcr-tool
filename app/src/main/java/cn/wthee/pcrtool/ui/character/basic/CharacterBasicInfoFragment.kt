@@ -65,8 +65,6 @@ class CharacterBasicInfoFragment : Fragment() {
         }
         //初始收藏
         setLove(isLoved)
-        //开始过渡动画
-        parentFragment?.startPostponedEnterTransition()
         return binding.root
     }
 
@@ -76,9 +74,6 @@ class CharacterBasicInfoFragment : Fragment() {
         FabHelper.addBackFab(MainActivity.pageLevel, true)
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
-        //打开页面共享元素
-        binding.root.transitionName = "item_${uid}"
-
     }
 
     //点击事件
