@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/expanded">
+        <Constraint
+            android:id="@id/character_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/collapsed">
+        <Constraint
+            android:id="@id/character_pic"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </ConstraintSet>
+
+    <Transition
+        app:constraintSetEnd="@id/collapsed"
+        app:constraintSetStart="@+id/expanded">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="1.0"
+                app:framePosition="30"
+                app:motionTarget="@id/character_pic" />
+            <KeyAttribute
+                android:alpha="0.0"
+                app:framePosition="100"
+                app:motionTarget="@id/character_pic" />
+
+        </KeyFrameSet>
+        <OnSwipe
+            app:dragDirection="dragUp"
+            app:touchAnchorId="@id/character_pager"
+            app:touchAnchorSide="top" />
+    </Transition>
+</MotionScene>

@@ -10,8 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapter.CharacterAttrAdapter
-import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
+import cn.wthee.pcrtool.adapter.AttrAdapter
 import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
@@ -58,7 +57,7 @@ class CharacterAttrFragment : Fragment() {
     private val REQUEST_CODE_LEVEL = 1
     private val REQUEST_CODE_UE_LEVEL = 2
     private lateinit var binding: FragmentCharacterAttrInfoBinding
-    private lateinit var attrAdapter: CharacterAttrAdapter
+    private lateinit var attrAdapter: AttrAdapter
 
     private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
         InjectorUtil.provideEquipmentViewModelFactory()
@@ -120,13 +119,8 @@ class CharacterAttrFragment : Fragment() {
                     uid
                 )
             )
-            //加载icon
-            binding.icon.load(iconUrl) {
-                error(R.drawable.unknown_gray)
-                placeholder(R.drawable.unknown_gray)
-            }
         }
-        attrAdapter = CharacterAttrAdapter()
+        attrAdapter = AttrAdapter()
         binding.charcterAttrs.adapter = attrAdapter
 
         characterAttrViewModel.getMaxRankAndRarity(uid)
@@ -167,7 +161,6 @@ class CharacterAttrFragment : Fragment() {
             selData = maxData
             updateText()
             //等级选择
-            binding.icon.setOnClickListener { binding.level.callOnClick() }
             binding.level.setOnClickListener {
                 LevelSelectDialogFragment(
                     this@CharacterAttrFragment,
@@ -201,6 +194,9 @@ class CharacterAttrFragment : Fragment() {
             sharedEquipViewModel.getUniqueEquipInfos(uid, ueLv)
         }
         //专武
+        //属性词条
+        val adapter = AttrAdapter(2f, 3f)
+        binding.uniqueEquip.equipAttrs.adapter = adapter
         sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner) {
             binding.uniqueEquip.apply {
                 if (it != null) {
@@ -213,9 +209,6 @@ class CharacterAttrFragment : Fragment() {
                     //描述
                     equipName.text = it.equipmentName
                     desc.text = it.getDesc()
-                    //属性词条
-                    val adapter = EquipmentAttrAdapter()
-                    equipAttrs.adapter = adapter
                     adapter.submitList(it.attr.allNotZero())
                 } else {
                     binding.uniqueEquip.root.visibility = View.GONE
@@ -272,7 +265,7 @@ class CharacterAttrFragment : Fragment() {
             }
         }
         //角色剧情属性
-        val storyAttrAdapter = CharacterAttrAdapter()
+        val storyAttrAdapter = AttrAdapter()
         binding.charcterStoryAttrs.adapter = storyAttrAdapter
         characterAttrViewModel.storyAttrs.observe(viewLifecycleOwner) {
             storyAttrAdapter.submitList(it.allNotZero())
@@ -300,7 +293,7 @@ class CharacterAttrFragment : Fragment() {
     private fun setRarity(num: Int) {
         StarViewUtil.show(
             binding.root.context,
-            binding.starts,
+            binding.stars,
             num,
             maxRarity,
             50,

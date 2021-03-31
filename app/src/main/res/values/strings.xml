@@ -4,11 +4,13 @@
     <string name="character_heigth">%sCM</string>
     <string name="character_weigth">%sKG</string>
     <string name="blood">%s 型</string>
-    <string name="unique_equip_lv">等级 %d</string>
+    <string name="lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
     <string name="percent">%d%%</string>
     <string name="equip_count">x %d</string>
     <string name="empty"> </string>
+    <string name="section">%s阶段</string>
+
     <!-- 角色 -->
     <string name="title_quest">？？？</string>
     <string name="age">年龄</string>

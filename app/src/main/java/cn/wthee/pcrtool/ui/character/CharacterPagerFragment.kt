@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
@@ -18,15 +21,16 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
-import cn.wthee.pcrtool.ui.character.basic.CharacterBasicInfoFragment
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import coil.load
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.launch
 
@@ -45,6 +49,8 @@ class CharacterPagerFragment : Fragment() {
         lateinit var viewPager: ViewPager2
         var uid = -1
         var currentPage = 0
+        lateinit var characterPic: AppCompatImageView
+
     }
 
 
@@ -77,8 +83,27 @@ class CharacterPagerFragment : Fragment() {
     ): View {
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         init()
+        //角色图片列表
+        setListener()
         postponeEnterTransition()
         return binding.root
+    }
+
+    private fun setListener() {
+        binding.characterPic.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt(UID, uid)
+            val extras =
+                FragmentNavigatorExtras(
+                    binding.characterPic to binding.characterPic.transitionName
+                )
+            findNavController().navigate(
+                R.id.action_characterPagerFragment_to_characterPicListFragment,
+                bundle,
+                null,
+                extras
+            )
+        }
     }
 
     override fun onDestroy() {
@@ -91,6 +116,17 @@ class CharacterPagerFragment : Fragment() {
     private fun init() {
         //加载列表
         lifecycleScope.launch {
+            //toolbar 背景
+            val picUrl =
+                Constants.CHARACTER_FULL_URL + (uid + if (sharedCharacterViewModel.getR6Ids()
+                        .contains(uid)
+                ) 60 else 30) + Constants.WEBP
+            binding.characterPic.transitionName = picUrl
+            //加载图片
+            binding.characterPic.load(picUrl) {
+                error(R.drawable.error)
+                placeholder(R.drawable.load)
+            }
             val noData = characterAttrViewModel.isUnknown(uid)
             viewPager = binding.characterPager
             viewPager.offscreenPageLimit = 1
@@ -118,7 +154,7 @@ class CharacterPagerFragment : Fragment() {
                     text = getString(R.string.view_pic)
                     icon = ResourcesUtil.getDrawable(R.drawable.ic_pic)
                     setOnClickListener {
-                        CharacterBasicInfoFragment.characterPic.callOnClick()
+                        binding.characterPic.callOnClick()
                     }
                 }
                 binding.fabShare.hide()

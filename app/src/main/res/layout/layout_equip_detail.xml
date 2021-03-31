@@ -76,6 +76,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/layout_equip"
         tools:itemCount="2"
-        tools:listitem="@layout/item_equipment_attr" />
+        tools:listitem="@layout/item_attr" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

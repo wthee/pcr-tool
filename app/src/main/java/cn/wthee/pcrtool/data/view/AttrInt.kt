@@ -80,11 +80,12 @@ fun AttrInt.all(): ArrayList<AttrValue> {
     return attrs
 }
 
-/**
- * 非零属性
- */
-fun AttrInt.allNotZero(): List<AttrValue> {
+fun AttrInt.Enemy(): List<AttrValue> {
     val attrs = all()
-    attrs.removeAll { it.value == 0.0 }
-    return attrs
+    val newList = arrayListOf<AttrValue>()
+    val toShowIndex = arrayListOf(0, 10, 2, 3, 4, 5)
+    toShowIndex.forEach { showIndex ->
+        newList.add(attrs[showIndex])
+    }
+    return newList
 }

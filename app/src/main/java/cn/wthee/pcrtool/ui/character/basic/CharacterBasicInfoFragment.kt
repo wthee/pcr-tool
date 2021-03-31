@@ -5,12 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
@@ -20,8 +16,6 @@ import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import coil.load
-import kotlinx.coroutines.launch
 
 /**
  * 角色基本信息页面
@@ -37,7 +31,6 @@ class CharacterBasicInfoFragment : Fragment() {
     companion object {
         var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
-        lateinit var characterPic: AppCompatImageView
         fun getInstance(uid: Int) = CharacterBasicInfoFragment().apply {
             arguments = Bundle().apply {
                 putInt(UID, uid)
@@ -81,44 +74,16 @@ class CharacterBasicInfoFragment : Fragment() {
     private fun init() {
         //添加返回fab
         FabHelper.addBackFab(MainActivity.pageLevel, true)
-        characterPic = binding.characterPic
         //初始化数据
         sharedCharacterViewModel.getCharacter(uid)
         //打开页面共享元素
         binding.root.transitionName = "item_${uid}"
-        //toolbar 背景
-        lifecycleScope.launch {
-            val picUrl =
-                Constants.CHARACTER_FULL_URL + (uid + if (sharedCharacterViewModel.getR6Ids()
-                        .contains(uid)
-                ) 60 else 30) + Constants.WEBP
-            binding.characterPic.transitionName = picUrl
-            //加载图片
-            binding.characterPic.load(picUrl) {
-                error(R.drawable.error)
-                placeholder(R.drawable.load)
-            }
-        }
+
     }
 
     //点击事件
     private fun setListener() {
         binding.apply {
-            //角色图片列表
-            characterPic.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putInt(UID, uid)
-                val extras =
-                    FragmentNavigatorExtras(
-                        binding.characterPic to binding.characterPic.transitionName
-                    )
-                root.findNavController().navigate(
-                    R.id.action_characterPagerFragment_to_characterPicListFragment,
-                    bundle,
-                    null,
-                    extras
-                )
-            }
             //fab点击监听
             fabLoveCbi.setOnClickListener {
                 isLoved = !isLoved

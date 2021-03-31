@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
-import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.adapter.AttrAdapter
+import cn.wthee.pcrtool.data.view.Enemy
 import cn.wthee.pcrtool.databinding.FragmentToolClanBossInfoBinding
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.ui.tool.clan.ClanPagerFragment.Companion.clan
@@ -56,17 +56,17 @@ class ClanBossInfoFragment : Fragment() {
         binding = FragmentToolClanBossInfoBinding.inflate(inflater, container, false)
         uid = clan.getUnitIdList(selectSection)[index]
         enemyId = clan.getEnemyList(selectSection)[index]
-        val attrAdapter = EquipmentAttrAdapter()
-        binding.listAttr.adapter = attrAdapter
-        //隐藏布局
-        binding.listAttr.visibility = View.GONE
+        //基本信息
         //属性
+        val attrAdapter = AttrAdapter()
+        binding.listAttr.adapter = attrAdapter
         viewModel = InjectorUtil.provideClanViewModelFactory().create(ClanViewModel::class.java)
         viewModel.getBossAttr(enemyId)
         viewModel.clanBossAttr.observe(viewLifecycleOwner) {
             if (it != null) {
-                attrAdapter.submitList(it.attr.allNotZero()) {
-                    binding.listAttr.visibility = View.VISIBLE
+                binding.name.text = it.name
+                binding.level.text = getString(R.string.lv, it.level)
+                attrAdapter.submitList(it.attr.Enemy()) {
                     //技能
                     childFragmentManager.beginTransaction()
                         .replace(

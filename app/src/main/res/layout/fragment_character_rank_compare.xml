@@ -20,43 +20,13 @@
         tools:src="@drawable/unknown_gray" />
 
     <LinearLayout
-        android:id="@+id/starts"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/tab_height_2"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/icon">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
-            android:src="@drawable/ic_star"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </LinearLayout>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/m_dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/starts"
-        tools:text="999" />
-
-    <LinearLayout
         android:id="@+id/rank_compare_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_marginTop="@dimen/m_dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/level">
+        app:layout_constraintTop_toBottomOf="@id/icon">
 
         <View
             android:layout_width="0dp"
@@ -83,9 +53,9 @@
             android:layout_marginEnd="@dimen/s_dp"
             android:layout_weight="2"
             android:gravity="center"
+            android:text="@string/cur_rank"
             android:textSize="@dimen/table_title_text_size"
-            android:textStyle="bold"
-            android:text="@string/cur_rank" />
+            android:textStyle="bold" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title_1"
@@ -94,9 +64,9 @@
             android:layout_marginEnd="@dimen/s_dp"
             android:layout_weight="2"
             android:gravity="center"
+            android:text="@string/target_rank"
             android:textSize="@dimen/table_title_text_size"
-            android:textStyle="bold"
-            android:text="@string/target_rank" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -104,8 +74,8 @@
         android:id="@+id/rank_compare"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
         android:padding="@dimen/xs_dp"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/rank_btns"

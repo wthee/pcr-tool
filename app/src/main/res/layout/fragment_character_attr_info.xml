@@ -1,161 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_motion"
+    android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:padding="@dimen/xs_dp">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/icon"
-        android:layout_width="@dimen/normal_icon"
-        android:layout_height="@dimen/normal_icon"
-        android:layout_marginTop="@dimen/m_dp"
-        android:layout_marginEnd="@dimen/s_dp"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@id/starts"
-        app:layout_constraintEnd_toStartOf="@id/gl_center"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/unknown_gray" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/level"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_dp"
-        android:gravity="start"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textColor="@color/colorPrimary"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toTopOf="@id/starts"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/gl_center"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="999" />
-
+    android:padding="@dimen/xs_dp"
+    android:scrollbars="none">
 
     <LinearLayout
-        android:id="@+id/starts"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/tab_height_2"
-        android:layout_marginStart="@dimen/s_dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/nestedScrollView"
-        app:layout_constraintStart_toEndOf="@id/gl_center"
-        app:layout_constraintTop_toBottomOf="@id/level">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/l_icon"
-            android:layout_height="@dimen/l_icon"
-            android:src="@drawable/ic_star"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </LinearLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@+id/icon">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/desc_height">
 
-        <LinearLayout
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/desc_height">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/charcter_attrs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/m_dp"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="2"
-                tools:itemCount="5"
-                tools:listitem="@layout/item_character_attr" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title_story_attr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/xm_dp"
-                android:gravity="center"
-                android:text="@string/title_story_attr"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:textColor="@color/colorPrimary"
-                app:layout_constraintTop_toBottomOf="@id/charcter_attrs" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/charcter_story_attrs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintTop_toBottomOf="@id/title_story_attr"
-                app:spanCount="2"
-                tools:itemCount="5"
-                tools:listitem="@layout/item_character_attr" />
+            android:layout_marginStart="@dimen/s_dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/colorPrimary"
+            tools:text="999" />
 
 
-            <include
-                android:id="@+id/rank_equip"
-                layout="@layout/layout_rank_equip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/l_dp"
-                app:layout_constraintTop_toBottomOf="@id/charcter_story_attrs" />
+        <LinearLayout
+            android:id="@+id/stars"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tab_height_2"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/s_dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <FrameLayout
-                android:id="@+id/frame_ue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/xs_dp"
-                android:layout_marginTop="@dimen/l_dp">
-
-                <include
-                    android:id="@+id/unique_equip"
-                    layout="@layout/layout_equip_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/rank_equip" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/unique_share"
-                    android:layout_width="@dimen/menu_icon"
-                    android:layout_height="@dimen/menu_icon"
-                    android:layout_gravity="end"
-                    android:layout_margin="@dimen/s_dp"
-                    android:foreground="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_share"
-                    android:visibility="gone" />
-            </FrameLayout>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/l_dp"
-                android:gravity="center"
-                android:text="@string/sorry_ue"
-                android:textColor="@color/colorAlpha"
-                android:textIsSelectable="true"
-                app:layout_constraintTop_toBottomOf="@id/unique_equip" />
-
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/l_icon"
+                android:layout_height="@dimen/l_icon"
+                android:src="@drawable/ic_star"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/charcter_attrs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/m_dp"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_attr" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title_story_attr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/xm_dp"
+            android:gravity="center"
+            android:text="@string/title_story_attr"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/charcter_attrs" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/charcter_story_attrs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/title_story_attr"
+            app:spanCount="2"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_attr" />
+
+
+        <include
+            android:id="@+id/rank_equip"
+            layout="@layout/layout_rank_equip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/l_dp"
+            app:layout_constraintTop_toBottomOf="@id/charcter_story_attrs" />
+
+        <FrameLayout
+            android:id="@+id/frame_ue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/xs_dp"
+            android:layout_marginTop="@dimen/l_dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/unique_share"
+                android:layout_width="@dimen/menu_icon"
+                android:layout_height="@dimen/menu_icon"
+                android:layout_gravity="end"
+                android:layout_margin="@dimen/s_dp"
+                android:foreground="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_share"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/l_dp"
+            android:gravity="center"
+            android:text="@string/sorry_ue"
+            android:textColor="@color/colorAlpha"
+            android:textIsSelectable="true"
+            app:layout_constraintTop_toBottomOf="@id/unique_equip" />
+
+        <include
+            android:id="@+id/unique_equip"
+            layout="@layout/layout_equip_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/rank_equip" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
 
 

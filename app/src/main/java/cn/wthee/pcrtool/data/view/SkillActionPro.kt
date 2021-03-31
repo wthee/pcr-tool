@@ -974,7 +974,6 @@ data class SkillActionPro(
                 "对${getTarget()}赋予「受到致死伤害时，回复 $value HP 」的效果$time"
             }
             SkillActionType.LOG_GUARD -> {
-                val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(action_value_3, action_value_4)
                 "为${getTarget()}展开护盾，在一次行动中受到的伤害超过 [${action_value_5.toInt()}] 时，伤害值将会被衰减$time"
             }
@@ -1012,10 +1011,10 @@ data class SkillActionPro(
         }
 
 
-        val action = when {
-            description.contains("0") -> description.replace("{0}", desc)
-            else -> description.plus(desc)
-        }
+//        val action = when {
+//            description.contains("0") -> description.replace("{0}", desc)
+//            else -> description.plus(desc)
+//        }
 
         //是否显示系数判断
         val showCoe = when (toSkillActionType(action_type)) {

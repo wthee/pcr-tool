@@ -116,7 +116,7 @@ class PvpFragment : Fragment() {
                 } else {
                     lifecycleScope.launch {
                         val list = sharedCharacterViewModel.getAllPvp()
-                        if (list != null && list.isNotEmpty()) {
+                        if (list.isNotEmpty()) {
                             val allCharacter = arrayListOf<PvpPositionData>()
                             val character1 = list.filter {
                                 it.position in 0..299

@@ -63,7 +63,7 @@ class LevelSelectDialogFragment(
             value = selectLevel.toFloat()
             valueFrom = 1.0f
             valueTo = maxLv.toFloat()
-            binding.sliderText.text = maxLv.toString()
+            binding.sliderText.text = selectLevel.toString()
             addOnSliderTouchListener(object :
                 Slider.OnSliderTouchListener {
                 override fun onStartTrackingTouch(slider: Slider) {
@@ -73,7 +73,7 @@ class LevelSelectDialogFragment(
                     dialog?.dismiss()
                 }
             })
-            addOnChangeListener { slider, value, fromUser ->
+            addOnChangeListener { _, value, _ ->
                 binding.sliderText.text = value.toInt().toString()
             }
         }

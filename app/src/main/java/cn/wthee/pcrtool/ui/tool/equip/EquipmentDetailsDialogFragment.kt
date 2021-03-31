@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.adapter.EquipmentAttrAdapter
+import cn.wthee.pcrtool.adapter.AttrAdapter
 import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.allNotZero
@@ -95,7 +95,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
                 //描述
                 desc.text = equip.getDesc()
                 //属性词条
-                val adapter = EquipmentAttrAdapter()
+                val adapter = AttrAdapter(2f, 3f)
                 equipAttrs.adapter = adapter
                 adapter.submitList(equip.attr.allNotZero())
             }

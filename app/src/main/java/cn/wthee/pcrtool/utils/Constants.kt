@@ -72,6 +72,9 @@ object Constants {
     //技能图标接口
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
+    //卡面
+    const val UNIT_PLATE_URL = RESOURCE_URL + "icon/plate/"
+
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION = "database_version"

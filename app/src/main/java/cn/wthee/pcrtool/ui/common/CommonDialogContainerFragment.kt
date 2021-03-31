@@ -73,7 +73,6 @@ class CommonDialogContainerFragment : CommonBottomSheetDialogFragment() {
                 //技能
                 if (uid / 1000000 == 0) {
                     //角色
-                    val selData = mutableMapOf<String, Int>()
                     MainScope().launch {
                         attrViewModel.getCharacterInfo(uid, CharacterAttrFragment.selData)
                     }

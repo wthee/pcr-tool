@@ -11,6 +11,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            tools:text="@string/app_name" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            tools:text="@string/app_name" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_attr"
             android:layout_width="match_parent"
@@ -20,8 +37,8 @@
             android:padding="@dimen/m_dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintTop_toTopOf="parent"
-            app:spanCount="1"
-            tools:listitem="@layout/item_equipment_attr" />
+            app:spanCount="2"
+            tools:listitem="@layout/item_attr" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/layout_skill"
