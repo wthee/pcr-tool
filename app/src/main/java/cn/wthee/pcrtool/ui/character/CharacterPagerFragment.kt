@@ -1,12 +1,12 @@
 package cn.wthee.pcrtool.ui.character
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
+import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.Constants
@@ -50,8 +51,7 @@ class CharacterPagerFragment : Fragment() {
         lateinit var viewPager: ViewPager2
         var uid = -1
         var currentPage = 0
-        lateinit var characterPic: AppCompatImageView
-
+        var isLoved = false
     }
 
 
@@ -74,6 +74,8 @@ class CharacterPagerFragment : Fragment() {
             name = it.getString(UNIT_NAME) ?: ""
             nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
         }
+        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
+
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
@@ -90,7 +92,11 @@ class CharacterPagerFragment : Fragment() {
         init()
         //角色图片列表
         setListener()
-        postponeEnterTransition()
+        //初始收藏
+        setLove(isLoved)
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+        }
         return binding.root
     }
 
@@ -108,6 +114,18 @@ class CharacterPagerFragment : Fragment() {
                 null,
                 extras
             )
+        }
+
+        //收藏点击监听
+        binding.fabLove.setOnClickListener {
+            isLoved = !isLoved
+            CharacterListFragment.characterFilterParams.addOrRemove(uid)
+            setLove(isLoved)
+        }
+        binding.btnLove.setOnClickListener {
+            isLoved = !isLoved
+            CharacterListFragment.characterFilterParams.addOrRemove(uid)
+            setLove(isLoved)
         }
     }
 
@@ -246,5 +264,15 @@ class CharacterPagerFragment : Fragment() {
         this.addItemDecoration(itemDecoration)
     }
 
+    //设置收藏
+    private fun setLove(isLoved: Boolean) {
+        val icFabColor =
+            ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)
 
+        val drawable =
+            ResourcesUtil.getDrawable(if (isLoved) R.drawable.ic_loved else R.drawable.ic_loved_line)
+
+        binding.fabLove.imageTintList = ColorStateList.valueOf(icFabColor)
+        binding.btnLove.setImageDrawable(drawable)
+    }
 }

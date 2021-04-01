@@ -21,6 +21,7 @@
     <dimen name="fab_size">40dp</dimen>
     <dimen name="normal_icon">48dp</dimen>
     <dimen name="big_icon">64dp</dimen>
+    <dimen name="icon_size">48dp</dimen>
     <dimen name="indicator_border">2dp</dimen>
 
     <!-- margin & padding-->
@@ -45,7 +46,6 @@
     <dimen name="fab_text_size">10sp</dimen>
     <dimen name="fab_text_2">90dp</dimen>
     <dimen name="fab_text_3">100dp</dimen>
-    <dimen name="icon_size">48dp</dimen>
     <dimen name="bottom_toolbar_height">64dp</dimen>
     <dimen name="dialog_button_height">42dp</dimen>
     <dimen name="button_layout_height">48dp</dimen>

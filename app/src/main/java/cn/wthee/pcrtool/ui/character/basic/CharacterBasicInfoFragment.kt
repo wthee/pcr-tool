@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character.basic
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
-import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -29,7 +27,6 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
-        var isLoved = false
         lateinit var binding: FragmentCharacterBasicInfoBinding
         fun getInstance(uid: Int) = CharacterBasicInfoFragment().apply {
             arguments = Bundle().apply {
@@ -48,7 +45,6 @@ class CharacterBasicInfoFragment : Fragment() {
         requireArguments().apply {
             uid = getInt(UID)
         }
-        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
     }
 
     override fun onCreateView(
@@ -63,8 +59,6 @@ class CharacterBasicInfoFragment : Fragment() {
         sharedCharacterViewModel.character.observe(viewLifecycleOwner) {
             setData(it)
         }
-        //初始收藏
-        setLove(isLoved)
         return binding.root
     }
 
@@ -79,28 +73,13 @@ class CharacterBasicInfoFragment : Fragment() {
     //点击事件
     private fun setListener() {
         binding.apply {
-            //fab点击监听
-            fabLoveCbi.setOnClickListener {
-                isLoved = !isLoved
-                CharacterListFragment.characterFilterParams.addOrRemove(uid)
-                setLove(isLoved)
-            }
-            //角色编号
+
+        //角色编号
             unitId.setOnLongClickListener {
                 ToastUtil.short(unitId.text.toString())
                 return@setOnLongClickListener true
             }
         }
-    }
-
-    //设置收藏
-    private fun setLove(isLoved: Boolean) {
-        val icFabColor =
-            ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)
-
-        val color = ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text)
-        binding.name.setTextColor(color)
-        binding.fabLoveCbi.imageTintList = ColorStateList.valueOf(icFabColor)
     }
 
     //初始化角色基本数据
