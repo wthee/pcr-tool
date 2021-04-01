@@ -1,5 +1,6 @@
-package cn.wthee.pcrtool.ui.character.basic
+package cn.wthee.pcrtool.ui.character
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CharacterPicAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicListBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.launch
 
 /**
@@ -46,6 +49,11 @@ class CharacterPicListFragment : Fragment() {
         requireArguments().apply {
             uid = getInt(Constants.UID)
         }
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            scrimColor = Color.TRANSPARENT
+            duration = 500L
+            setAllContainerColors(ResourcesUtil.getColor(R.color.colorWhite))
+        }
     }
 
     override fun onCreateView(
@@ -54,6 +62,10 @@ class CharacterPicListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterPicListBinding.inflate(inflater, container, false)
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+        }
+
         binding.apply {
             //初始化列表
             lifecycleScope.launch {
@@ -65,10 +77,6 @@ class CharacterPicListFragment : Fragment() {
                 )
                 adapter.submitList(picData)
             }
-        }
-
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
         }
 
         binding.downloadTip.postDelayed({

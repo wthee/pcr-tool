@@ -10,9 +10,6 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/tool_head"
-        layout="@layout/view_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tool_list"
@@ -24,7 +21,7 @@
         android:paddingTop="@dimen/s_dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toBottomOf="@id/tool_head"
+        app:layout_constraintTop_toTopOf="parent"
         app:spanCount="5"
         tools:itemCount="5"
         tools:listitem="@layout/item_common" />

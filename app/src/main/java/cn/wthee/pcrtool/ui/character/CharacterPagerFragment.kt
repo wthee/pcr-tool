@@ -75,7 +75,6 @@ class CharacterPagerFragment : Fragment() {
             nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
         }
         isLoved = CharacterListFragment.characterFilterParams.starIds.contains(uid)
-
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
@@ -89,15 +88,22 @@ class CharacterPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+        }
         init()
         //角色图片列表
         setListener()
         //初始收藏
         setLove(isLoved)
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
-        }
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::binding.isInitialized) {
+            binding.characterPager.adapter = null
+        }
     }
 
     private fun setListener() {
@@ -129,18 +135,11 @@ class CharacterPagerFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (this::binding.isInitialized) {
-            binding.characterPager.adapter = null
-        }
-    }
-
     private fun init() {
+        binding.name.text = name
+        binding.nameEx.text = nameEx
         //加载列表
         lifecycleScope.launch {
-            binding.name.text = name
-            binding.nameEx.text = nameEx
             //toolbar 背景
             val picUrl =
                 Constants.CHARACTER_FULL_URL + (uid + if (sharedCharacterViewModel.getR6Ids()
@@ -157,6 +156,7 @@ class CharacterPagerFragment : Fragment() {
                 })
             }
             val noData = characterAttrViewModel.isUnknown(uid)
+            //加载 viewpager
             viewPager = binding.characterPager
             viewPager.offscreenPageLimit = 1
             if (viewPager.adapter == null) {
@@ -176,7 +176,10 @@ class CharacterPagerFragment : Fragment() {
     }
 
 
-    fun fabChange(position: Int) {
+    /**
+     * 底部 fab 动态切换
+     */
+    private fun fabChange(position: Int) {
         when (position) {
             0 -> {
                 binding.fabCharacter.apply {
@@ -244,6 +247,9 @@ class CharacterPagerFragment : Fragment() {
         }
     }
 
+    /**
+     * viewPager 切换动画
+     */
     private fun ViewPager2.adjustViewPager(context: Context) {
         val nextItemVisiblePx = context.resources.getDimension(R.dimen.viewpager_next_item_visible)
         val currentItemHorizontalMarginPx =
@@ -264,7 +270,9 @@ class CharacterPagerFragment : Fragment() {
         this.addItemDecoration(itemDecoration)
     }
 
-    //设置收藏
+    /**
+     * 更新收藏按钮颜色
+     */
     private fun setLove(isLoved: Boolean) {
         val icFabColor =
             ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary)

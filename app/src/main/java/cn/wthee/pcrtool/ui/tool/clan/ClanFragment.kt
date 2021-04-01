@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import com.google.android.material.transition.Hold
 
 /**
  * 团队战
@@ -28,6 +29,12 @@ class ClanFragment : Fragment() {
     }
     private lateinit var binding: FragmentToolClanBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        returnTransition = Hold()
+        exitTransition = Hold()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,7 +47,9 @@ class ClanFragment : Fragment() {
 
         viewModel.getAllClanBattleData()
         viewModel.clanInfo.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            adapter.submitList(it) {
+                startPostponedEnterTransition()
+            }
         }
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(

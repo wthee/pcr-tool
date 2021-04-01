@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.view.get
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +54,12 @@ class ClanAdapter :
                 val startYear = clan.start_time.substring(0, 4)
                 val list = clan.getUnitIdList(1)
                 val date = "$startYear 年 ${clan.release_month.toString().fillZero()} 月"
-                val adapter = ClanBossIconAdapter(date, clan)
+
+                root.transitionName = clan.clan_battle_id.toString()
+                val extra = FragmentNavigatorExtras(
+                    root to root.transitionName
+                )
+                val adapter = ClanBossIconAdapter(date, clan, extra = extra)
                 icons.adapter = adapter
                 adapter.submitList(list)
                 root.setOnClickListener {

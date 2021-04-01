@@ -227,7 +227,7 @@
         app:popExitAnim="@anim/fragment_popexit" />
     <fragment
         android:id="@+id/characterPicListFragment"
-        android:name="cn.wthee.pcrtool.ui.character.basic.CharacterPicListFragment"
+        android:name="cn.wthee.pcrtool.ui.character.CharacterPicListFragment"
         android:label="CharacterPicListFragment" />
     <fragment
         android:id="@+id/characterRankCompareFragment"
@@ -247,8 +247,8 @@
             android:label="ClanPagerFragment"
             app:destination="@id/ClanPagerFragment"
             app:enterAnim="@anim/fragment_enter"
-            app:exitAnim="@anim/fragment_exit_no_scale"
-            app:popEnterAnim="@anim/fragment_popenter_no_scale"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_popenter"
             app:popExitAnim="@anim/fragment_popexit" />
     </fragment>
 

@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.tool.clan
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,14 +16,14 @@ import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import com.google.android.material.transition.MaterialContainerTransform
 
 /**
  * 团队战
  *
  * 页面布局 [FragmentToolClanPagerBinding]
  *
- * ViewModels [ClanViewModel]
+ * ViewModels []
  */
 class ClanPagerFragment : Fragment() {
 
@@ -45,6 +46,11 @@ class ClanPagerFragment : Fragment() {
             clan = it.getSerializable(Constants.CLAN_DATA) as ClanBattleInfo
             selSection = clan.section
         }
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            scrimColor = Color.TRANSPARENT
+            duration = 500L
+            setAllContainerColors(ResourcesUtil.getColor(R.color.colorWhite))
+        }
     }
 
     override fun onCreateView(
@@ -53,12 +59,9 @@ class ClanPagerFragment : Fragment() {
     ): View {
         FabHelper.addBackFab(2)
         binding = FragmentToolClanPagerBinding.inflate(inflater, container, false)
+        binding.root.transitionName = clan.clan_battle_id.toString()
         init()
         setListener()
-        //设置头部
-        ToolbarHelper(binding.toolHead).setMainToolbar(
-            R.drawable.ic_def, date
-        )
         return binding.root
     }
 
@@ -73,6 +76,13 @@ class ClanPagerFragment : Fragment() {
                     updateSection()
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (this::binding.isInitialized) {
+            binding.clanBossPager.adapter = null
         }
     }
 
@@ -115,10 +125,13 @@ class ClanPagerFragment : Fragment() {
 
     private fun updateSection() {
         //BOSS viewpager 页面
-        val viewPagerAdapter = ClanBossPagerAdapter(parentFragmentManager, lifecycle, selSection)
-        binding.clanBossPager.adapter = viewPagerAdapter
-        binding.clanBossPager.offscreenPageLimit = 1
-        binding.clanBossPager.setCurrentItem(index, false)
+        if (binding.clanBossPager.adapter == null) {
+            val viewPagerAdapter = ClanBossPagerAdapter(childFragmentManager, lifecycle, selSection)
+            binding.clanBossPager.adapter = viewPagerAdapter
+            binding.clanBossPager.offscreenPageLimit = 1
+            binding.clanBossPager.setCurrentItem(index, false)
+
+        }
         binding.fabSection.text = getString(R.string.section, getZhNumberText(selSection))
         val fabColor = getSectionTextColor(selSection)
         binding.fabSection.setTextColor(fabColor)
