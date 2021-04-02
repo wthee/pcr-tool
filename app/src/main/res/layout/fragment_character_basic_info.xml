@@ -30,6 +30,14 @@
             android:layout_height="match_parent"
             android:paddingBottom="@dimen/news_card_height">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/start"
+                android:layout_width="@dimen/l_icon"
+                android:layout_height="@dimen/l_icon"
+                android:foreground="?selectableItemBackgroundBorderless"
+                app:layout_constraintStart_toStartOf="parent"
+                android:visibility="invisible"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/catah"
@@ -44,10 +52,18 @@
                 android:textIsSelectable="true"
                 android:textStyle="bold"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/btn_love"
+                app:layout_constraintStart_toEndOf="@id/start"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_love"
+                android:layout_width="@dimen/l_icon"
+                android:layout_height="@dimen/l_icon"
+                android:foreground="?selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/intro"
@@ -89,7 +105,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_game_name"
                 app:layout_constraintTop_toTopOf="@id/title_game_name"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_name"
@@ -117,7 +133,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_name"
                 app:layout_constraintTop_toTopOf="@id/title_name"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_height"
@@ -147,7 +163,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_height"
                 app:layout_constraintTop_toTopOf="@id/title_height"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_weight"
@@ -172,7 +188,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_weight"
                 app:layout_constraintTop_toTopOf="@id/title_height"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_birth"
@@ -202,7 +218,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_birth"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_age"
@@ -227,7 +243,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_age"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_bloold"
@@ -257,7 +273,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_bloold"
                 app:layout_constraintTop_toTopOf="@id/title_bloold"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_position"
@@ -291,7 +307,7 @@
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title_bloold"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_race"
@@ -318,7 +334,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_race"
                 app:layout_constraintTop_toTopOf="@id/title_race"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_cv"
@@ -343,7 +359,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_cv"
                 app:layout_constraintTop_toTopOf="@id/title_race"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_guild"

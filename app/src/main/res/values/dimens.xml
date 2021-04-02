@@ -35,6 +35,7 @@
     <dimen name="efab_margin">13dp</dimen>
 
     <dimen name="toolbar_height">38dp</dimen>
+    <dimen name="toolbar_height_1">60dp</dimen>
     <dimen name="tab_height_1">36dp</dimen>
     <dimen name="tab_height_2">22dp</dimen>
 

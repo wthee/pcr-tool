@@ -11,6 +11,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
+import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -39,12 +41,16 @@ class CharacterBasicInfoFragment : Fragment() {
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
+    private var isLoved = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
             uid = getInt(UID)
         }
+        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(
+            CharacterPagerFragment.uid
+        )
     }
 
     override fun onCreateView(
@@ -56,6 +62,8 @@ class CharacterBasicInfoFragment : Fragment() {
         init()
         //点击事件
         setListener()
+        //初始收藏
+        setLove(isLoved)
         sharedCharacterViewModel.character.observe(viewLifecycleOwner) {
             setData(it)
         }
@@ -72,13 +80,19 @@ class CharacterBasicInfoFragment : Fragment() {
 
     //点击事件
     private fun setListener() {
-        binding.apply {
 
         //角色编号
-            unitId.setOnLongClickListener {
-                ToastUtil.short(unitId.text.toString())
-                return@setOnLongClickListener true
-            }
+        binding.unitId.setOnLongClickListener {
+            ToastUtil.short(binding.unitId.text.toString())
+            return@setOnLongClickListener true
+        }
+
+
+        //收藏点击监听
+        binding.btnLove.setOnClickListener {
+            isLoved = !isLoved
+            CharacterListFragment.characterFilterParams.addOrRemove(CharacterPagerFragment.uid)
+            setLove(isLoved)
         }
     }
 
@@ -118,5 +132,15 @@ class CharacterBasicInfoFragment : Fragment() {
             comments.text = characterPro.getCommentsText()
             roomComments.text = characterPro.getRoomCommentsText()
         }
+    }
+
+    /**
+     * 更新收藏按钮颜色
+     */
+    private fun setLove(isLoved: Boolean) {
+        val drawable =
+            ResourcesUtil.getDrawable(if (isLoved) R.drawable.ic_loved else R.drawable.ic_loved_line)
+
+        binding.btnLove.setImageDrawable(drawable)
     }
 }

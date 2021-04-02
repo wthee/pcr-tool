@@ -20,6 +20,17 @@
         app:shapeAppearanceOverlay="@style/CardImageStyle"
         tools:src="@drawable/unknown_gray" />
 
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/character_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constrainedHeight="true"
+        android:background="@drawable/bg_bottom_dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_love"
+        app:layout_constraintVertical_weight="1"
+        tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
@@ -36,31 +47,16 @@
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_love"
-        style="@style/FabStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/tab_love"
-        android:src="@drawable/ic_loved"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_love"
         android:layout_width="@dimen/l_icon"
         android:layout_height="@dimen/l_icon"
-        android:foreground="?selectableItemBackgroundBorderless" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/character_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
+        android:focusable="false"
+        android:clickable="false"
         app:layout_constraintTop_toBottomOf="@id/character_pic"
-        app:layout_constraintVertical_weight="1"
-        tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
+        app:layout_constraintBottom_toBottomOf="@id/character_pic"
+        android:foreground="?selectableItemBackgroundBorderless" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_share"

@@ -123,8 +123,8 @@ object Constants {
     const val TYPE_SKILL = "type_skill"
 
     val ATTR = arrayListOf(
-        "HP ",
-        "HP 吸收",
+        "HP",
+        "HP吸收",
         "物理攻击力",
         "魔法攻击力",
         "物理防御力",
@@ -135,11 +135,11 @@ object Constants {
         "魔法穿透",
         "命中",
         "回避",
-        "HP 自动回复",
+        "HP回复",
         "回复量上升",
-        "TP 自动回复",
-        "TP 上升",
-        "TP 消耗减少",
+        "TP回复",
+        "TP上升",
+        "TP消耗减少",
     )
 
     val errorIDs = arrayListOf(
