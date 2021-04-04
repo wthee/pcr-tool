@@ -164,7 +164,7 @@
     <string name="rank_equip_statistics">装备统计</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
-    <string name="tip_download_pic">长按图片，保存至本地~</string>
     <string name="title_section">阶段</string>
     <string name="no_drop_data">无掉落信息</string>
+    <string name="download_pic">下载图片</string>
 </resources>

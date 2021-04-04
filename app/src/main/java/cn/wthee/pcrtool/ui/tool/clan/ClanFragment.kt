@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.ClanAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolClanBinding
@@ -13,7 +12,6 @@ import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
-import com.google.android.material.transition.Hold
 
 /**
  * 团队战
@@ -24,16 +22,13 @@ import com.google.android.material.transition.Hold
  */
 class ClanFragment : Fragment() {
 
-    private val viewModel by activityViewModels<ClanViewModel> {
-        InjectorUtil.provideClanViewModelFactory()
+    companion object {
+        var clickIndex = 0
     }
-    private lateinit var binding: FragmentToolClanBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        returnTransition = Hold()
-        exitTransition = Hold()
-    }
+    private lateinit var viewModel: ClanViewModel
+    private lateinit var binding: FragmentToolClanBinding
+    private lateinit var adapter: ClanAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +36,14 @@ class ClanFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolClanBinding.inflate(inflater, container, false)
-
-        val adapter = ClanAdapter()
+        viewModel = InjectorUtil.provideClanViewModelFactory().create(ClanViewModel::class.java)
+        adapter = ClanAdapter()
         binding.toolList.adapter = adapter
-
+        binding.toolList.setItemViewCacheSize(Int.MAX_VALUE)
         viewModel.getAllClanBattleData()
         viewModel.clanInfo.observe(viewLifecycleOwner) {
             adapter.submitList(it) {
+                binding.toolList.scrollToPosition(clickIndex)
                 startPostponedEnterTransition()
             }
         }
@@ -56,6 +52,7 @@ class ClanFragment : Fragment() {
             R.drawable.ic_def,
             getString(R.string.tool_clan)
         )
+        postponeEnterTransition()
         return binding.root
     }
 

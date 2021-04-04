@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.ItemClanBinding
+import cn.wthee.pcrtool.ui.tool.clan.ClanFragment
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getSectionTextColor
 
@@ -59,11 +60,13 @@ class ClanAdapter :
                 val extra = FragmentNavigatorExtras(
                     root to root.transitionName
                 )
-                val adapter = ClanBossIconAdapter(date, clan, extra = extra)
+                val adapter =
+                    ClanBossIconAdapter(date, clan, extra = extra, parentIndex = layoutPosition)
                 icons.adapter = adapter
                 adapter.submitList(list)
                 root.setOnClickListener {
                     try {
+                        ClanFragment.clickIndex = layoutPosition
                         icons[0].callOnClick()
                     } catch (e: Exception) {
                     }

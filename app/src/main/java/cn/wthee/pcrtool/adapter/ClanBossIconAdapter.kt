@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
+import cn.wthee.pcrtool.ui.tool.clan.ClanFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
@@ -33,7 +34,8 @@ class ClanBossIconAdapter(
     private val date: String,
     private val clan: ClanBattleInfo,
     private val parentBinding: FragmentToolClanPagerBinding? = null,
-    private val extra: FragmentNavigator.Extras? = null
+    private val extra: FragmentNavigator.Extras? = null,
+    private val parentIndex: Int = 0
 ) : ListAdapter<Int, ClanBossIconAdapter.ViewHolder>(ClanIconListDiffCallback()) {
     private var selectedIndex = 0
 
@@ -82,6 +84,7 @@ class ClanBossIconAdapter(
                 }
                 //点击监听
                 root.setOnClickListener {
+                    ClanFragment.clickIndex = parentIndex
                     if (MainActivity.pageLevel == 1) {
                         //打开详情页
                         val bundle = Bundle()

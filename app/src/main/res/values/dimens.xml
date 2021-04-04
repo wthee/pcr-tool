@@ -40,8 +40,8 @@
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="menu_item_elevation_card">8dp</dimen>
 
-    <dimen name="viewpager_next_item_visible">0dp</dimen>
-    <dimen name="viewpager_current_item_horizontal_margin">0dp</dimen>
+    <dimen name="viewpager_next_item_visible">15dp</dimen>
+    <dimen name="viewpager_current_item_horizontal_margin">20dp</dimen>
     <dimen name="fab_text_size">10sp</dimen>
     <dimen name="fab_text_2">90dp</dimen>
     <dimen name="fab_text_3">100dp</dimen>

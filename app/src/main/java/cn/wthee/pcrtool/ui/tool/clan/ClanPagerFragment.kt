@@ -49,7 +49,7 @@ class ClanPagerFragment : Fragment() {
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
-            setAllContainerColors(ResourcesUtil.getColor(R.color.colorWhite))
+            setAllContainerColors(ResourcesUtil.getColor(R.color.colorAlpha))
         }
     }
 
@@ -59,7 +59,9 @@ class ClanPagerFragment : Fragment() {
     ): View {
         FabHelper.addBackFab(2)
         binding = FragmentToolClanPagerBinding.inflate(inflater, container, false)
-        binding.root.transitionName = clan.clan_battle_id.toString()
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+        }
         init()
         setListener()
         return binding.root
@@ -114,15 +116,21 @@ class ClanPagerFragment : Fragment() {
     }
 
     private fun init() {
+        binding.root.transitionName = clan.clan_battle_id.toString()
         //图片列表
         val list = clan.getUnitIdList(1)
         adapter = ClanBossIconAdapter(date, clan, binding)
         binding.toolList.adapter = adapter
         adapter.setSelectedIndex(index)
-        adapter.submitList(list)
+        adapter.submitList(list) {
+            startPostponedEnterTransition()
+        }
         updateSection()
     }
 
+    /**
+     * 阶段选择
+     */
     private fun updateSection() {
         //BOSS viewpager 页面
         if (binding.clanBossPager.adapter == null) {
@@ -137,5 +145,4 @@ class ClanPagerFragment : Fragment() {
         binding.fabSection.setTextColor(fabColor)
         binding.fabSection.iconTint = ColorStateList.valueOf(fabColor)
     }
-
 }

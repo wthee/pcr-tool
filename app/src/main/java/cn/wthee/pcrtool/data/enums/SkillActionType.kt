@@ -259,7 +259,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 50：特殊状态：铃声响起时
      */
-    CHANNEL(50, "铃铛"),
+    CHANNEL(50, "持续动作"),
 
     /**
      * fixme 51：分裂

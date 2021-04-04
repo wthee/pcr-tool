@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import cn.wthee.pcrtool.data.model.CharacterPicData
-
 /**
  * 角色 id 工具
  */
@@ -10,35 +8,15 @@ object CharacterIdUtil {
     /**
      * 获取角色卡面 urls
      */
-    fun getAllPicUrl(id: Int, r6Id: Boolean): ArrayList<CharacterPicData> {
-        val list = arrayListOf<CharacterPicData>()
+    fun getAllPicUrl(id: Int, r6Id: Boolean): ArrayList<String> {
+        val list = arrayListOf<String>()
         if (r6Id) {
-            list.add(
-                CharacterPicData(
-                    "6 星",
-                    Constants.CHARACTER_FULL_URL + getStarId(id, 6) + Constants.WEBP
-                )
-            )
+            list.add(Constants.CHARACTER_FULL_URL + getStarId(id, 6) + Constants.WEBP)
         }
-        list.add(
-            CharacterPicData(
-                "3 星",
-                Constants.CHARACTER_FULL_URL + getStarId(id, 3) + Constants.WEBP
-            )
-        )
-        list.add(
-            CharacterPicData(
-                "初始",
-                Constants.CHARACTER_URL + getStarId(id, 1) + Constants.WEBP
-            )
-        )
+        list.add(Constants.CHARACTER_FULL_URL + getStarId(id, 3) + Constants.WEBP)
+        list.add(Constants.CHARACTER_URL + getStarId(id, 1) + Constants.WEBP)
         if (!Constants.notExistsIDs.contains(getFixedId(id))) {
-            list.add(
-                CharacterPicData(
-                    "现实",
-                    Constants.Reality_CHARACTER_URL + getFixedId(id) + Constants.WEBP
-                )
-            )
+            list.add(Constants.Reality_CHARACTER_URL + getFixedId(id) + Constants.WEBP)
         }
         return list
     }

@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     app:layoutDescription="@xml/fragment_character_pager_scene">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/character_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/CardImageStyle"
         tools:src="@drawable/unknown_gray" />
 
     <androidx.viewpager2.widget.ViewPager2

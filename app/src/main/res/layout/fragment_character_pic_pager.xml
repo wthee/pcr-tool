@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/colorWhite">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pics"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintTop_toTopOf="parent"
-        app:spanCount="1"
-        tools:itemCount="2"
-        tools:listitem="@layout/item_pic" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/download_tip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/tip_download_pic"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@id/fab_top"
-        app:layout_constraintTop_toTopOf="@id/fab_top" />
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_download"
+        style="@style/EfabStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fab_size"
+        android:layout_marginEnd="@dimen/xl_dp"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:contentDescription="@string/download_pic"
+        android:text="@string/download_pic"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_download"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_top"
