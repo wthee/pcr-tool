@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,7 @@ import cn.wthee.pcrtool.utils.int
  *
  * 列表项数据 [AttrValue]
  */
-class AttrAdapter(private val titleWeight: Float = 1f, private val valueWeight: Float = 1f) :
+class AttrAdapter() :
     ListAdapter<AttrValue, AttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -37,13 +36,13 @@ class AttrAdapter(private val titleWeight: Float = 1f, private val valueWeight: 
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: AttrValue) {
             binding.apply {
-                val titleParams = titleAttr.layoutParams as LinearLayout.LayoutParams
-                titleParams.weight = titleWeight
-                titleAttr.layoutParams = titleParams
-
-                val valueParams = value.layoutParams as LinearLayout.LayoutParams
-                valueParams.weight = valueWeight
-                value.layoutParams = valueParams
+//                val titleParams = titleAttr.layoutParams as LinearLayout.LayoutParams
+//                titleParams.weight = titleWeight
+//                titleAttr.layoutParams = titleParams
+//
+//                val valueParams = value.layoutParams as LinearLayout.LayoutParams
+//                valueParams.weight = valueWeight
+//                value.layoutParams = valueParams
 
                 titleAttr.text = data.title
                 value.text = if (data.value > 1000000) {

@@ -6,7 +6,6 @@ import android.os.*
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -22,11 +21,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewbinding.ViewBinding
 import androidx.work.WorkManager
 import cn.wthee.circleprogressbar.CircleProgressView
-import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.adapter.viewpager.NewsListPagerAdapter
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.*
-import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.home.*
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.ui.tool.news.NewsPagerFragment
@@ -262,19 +259,6 @@ class MainActivity : AppCompatActivity() {
                                 (it.getChildAt(0) as RecyclerView).scrollToPosition(0)
                             }
                         }
-                    }
-                    //角色详情页面
-                    is CharacterPagerFragment -> {
-                        val itemView =
-                            (CharacterPagerFragment.viewPager.adapter as CharacterPagerAdapter)
-                                .mFragments[CharacterPagerFragment.currentPage]
-                                .view as ViewGroup
-                        itemView.children.iterator().forEach {
-                            if (it is RecyclerView) {
-                                it.scrollToPosition(0)
-                            }
-                        }
-                        view = itemView
                     }
                     //设置页面
                     is MainSettingsFragment -> {

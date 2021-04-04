@@ -108,6 +108,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/value_0"
             style="@style/Widget.MaterialComponents.Button.TextButton"
+            app:cornerRadius="@dimen/card_radius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/table_title_text_size"
@@ -125,6 +126,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:cornerRadius="@dimen/card_radius"
             android:textSize="@dimen/table_title_text_size"
             tools:text="RANK 11" />
 

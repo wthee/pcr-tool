@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,19 +14,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
-import cn.wthee.pcrtool.adapter.viewpager.HorizontalMarginItemDecoration
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
+import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
@@ -46,7 +42,6 @@ import kotlinx.coroutines.launch
 class CharacterPagerFragment : Fragment() {
 
     companion object {
-        lateinit var viewPager: ViewPager2
         var uid = -1
         var currentPage = 0
     }
@@ -56,6 +51,9 @@ class CharacterPagerFragment : Fragment() {
     private lateinit var adapter: CharacterPagerAdapter
     private var name = ""
     private var nameEx = ""
+    private var isLoved = false
+    private var pageIndex = 0
+    private lateinit var viewPager: ViewPager2
 
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
@@ -71,6 +69,9 @@ class CharacterPagerFragment : Fragment() {
             name = it.getString(UNIT_NAME) ?: ""
             nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
         }
+        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(
+            CharacterPagerFragment.uid
+        )
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
@@ -90,6 +91,8 @@ class CharacterPagerFragment : Fragment() {
         init()
         //角色图片列表
         setListener()
+        //初始收藏
+        setLove(isLoved)
         return binding.root
     }
 
@@ -118,8 +121,6 @@ class CharacterPagerFragment : Fragment() {
     }
 
     private fun init() {
-        binding.name.text = name
-        binding.nameEx.text = nameEx
         //加载列表
         lifecycleScope.launch {
             //toolbar 背景
@@ -144,12 +145,13 @@ class CharacterPagerFragment : Fragment() {
             if (viewPager.adapter == null) {
                 adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid)
                 viewPager.adapter = adapter
-                viewPager.adjustViewPager(requireContext())
+                viewPager.setPageTransformer(DepthPageTransformer())
             }
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    fabChange(position)
+                    pageIndex = position
+                    fabChange()
                     currentPage = position
                 }
             })
@@ -161,8 +163,8 @@ class CharacterPagerFragment : Fragment() {
     /**
      * 底部 fab 动态切换
      */
-    private fun fabChange(position: Int) {
-        when (position) {
+    private fun fabChange() {
+        when (pageIndex) {
             0 -> {
                 binding.fabCharacter.apply {
                     text = getString(R.string.view_pic)
@@ -171,7 +173,17 @@ class CharacterPagerFragment : Fragment() {
                         binding.characterPic.callOnClick()
                     }
                 }
-                binding.fabShare.hide()
+                binding.fabShare.apply {
+                    setImageResource(R.drawable.ic_loved)
+                    setLove(isLoved)
+                    setOnClickListener {
+                        isLoved = !isLoved
+                        CharacterListFragment.characterFilterParams.addOrRemove(
+                            CharacterPagerFragment.uid
+                        )
+                        setLove(isLoved)
+                    }
+                }
             }
             1 -> {
                 binding.fabCharacter.apply {
@@ -190,18 +202,11 @@ class CharacterPagerFragment : Fragment() {
                     }
                 }
                 binding.fabShare.apply {
-                    //有掉落信息时，显示
-                    lifecycleScope.launch {
-                        if (sharedCharacterViewModel.getDrops(uid).isNotEmpty()) {
-                            show()
-                            setImageResource(R.drawable.ic_drop)
-                            setOnClickListener {
-                                CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
-                                    .show(parentFragmentManager, "character_drop")
-                            }
-                        } else {
-                            hide()
-                        }
+                    //掉落信息时
+                    setImageResource(R.drawable.ic_drop)
+                    setOnClickListener {
+                        CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
+                            .show(parentFragmentManager, "character_drop")
                     }
                 }
             }
@@ -215,7 +220,6 @@ class CharacterPagerFragment : Fragment() {
                     }
                 }
                 binding.fabShare.apply {
-                    show()
                     setImageResource(R.drawable.ic_share)
                     setOnClickListener {
                         ShareIntentUtil.imageLong(
@@ -230,25 +234,9 @@ class CharacterPagerFragment : Fragment() {
     }
 
     /**
-     * viewPager 切换动画
+     * 更新收藏按钮颜色
      */
-    private fun ViewPager2.adjustViewPager(context: Context) {
-        val nextItemVisiblePx = context.resources.getDimension(R.dimen.viewpager_next_item_visible)
-        val currentItemHorizontalMarginPx =
-            context.resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
-        val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
-        val pageTransformer = ViewPager2.PageTransformer { page: View, position: Float ->
-            page.translationX = -pageTranslationX * position
-            // Next line scales the item's height. You can remove it if you don't want this effect
-            page.scaleY = 1 - (0.1f * kotlin.math.abs(position))
-            // If you want a fading effect uncomment the next line:
-            // page.alpha = 0.25f + (1 - abs(position))
-        }
-        this.setPageTransformer(pageTransformer)
-        val itemDecoration = HorizontalMarginItemDecoration(
-            context,
-            R.dimen.viewpager_current_item_horizontal_margin
-        )
-        this.addItemDecoration(itemDecoration)
+    private fun setLove(isLoved: Boolean) {
+        binding.fabShare.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_loved_line)
     }
 }

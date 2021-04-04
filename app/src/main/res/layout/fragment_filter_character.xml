@@ -327,6 +327,7 @@
             android:id="@+id/reset"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
+            app:cornerRadius="@dimen/card_radius"
             android:layout_height="@dimen/dialog_button_height"
             android:text="@string/reset"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -338,6 +339,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dialog_button_height"
             android:text="@string/ok"
+            app:cornerRadius="@dimen/card_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

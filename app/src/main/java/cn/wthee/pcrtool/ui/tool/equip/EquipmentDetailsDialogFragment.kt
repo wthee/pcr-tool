@@ -95,7 +95,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
                 //描述
                 desc.text = equip.getDesc()
                 //属性词条
-                val adapter = AttrAdapter(2f, 3f)
+                val adapter = AttrAdapter()
                 equipAttrs.adapter = adapter
                 adapter.submitList(equip.attr.allNotZero())
             }

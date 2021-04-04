@@ -11,8 +11,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
-import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
-import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -38,19 +36,15 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     private var uid = -1
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
+    private val characterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
-    private var isLoved = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireArguments().apply {
             uid = getInt(UID)
         }
-        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(
-            CharacterPagerFragment.uid
-        )
     }
 
     override fun onCreateView(
@@ -62,9 +56,7 @@ class CharacterBasicInfoFragment : Fragment() {
         init()
         //点击事件
         setListener()
-        //初始收藏
-        setLove(isLoved)
-        sharedCharacterViewModel.character.observe(viewLifecycleOwner) {
+        characterViewModel.character.observe(viewLifecycleOwner) {
             setData(it)
         }
         return binding.root
@@ -75,7 +67,7 @@ class CharacterBasicInfoFragment : Fragment() {
         //添加返回fab
         FabHelper.addBackFab(MainActivity.pageLevel, true)
         //初始化数据
-        sharedCharacterViewModel.getCharacter(uid)
+        characterViewModel.getCharacter(uid)
     }
 
     //点击事件
@@ -85,14 +77,6 @@ class CharacterBasicInfoFragment : Fragment() {
         binding.unitId.setOnLongClickListener {
             ToastUtil.short(binding.unitId.text.toString())
             return@setOnLongClickListener true
-        }
-
-
-        //收藏点击监听
-        binding.btnLove.setOnClickListener {
-            isLoved = !isLoved
-            CharacterListFragment.characterFilterParams.addOrRemove(CharacterPagerFragment.uid)
-            setLove(isLoved)
         }
     }
 
@@ -134,13 +118,4 @@ class CharacterBasicInfoFragment : Fragment() {
         }
     }
 
-    /**
-     * 更新收藏按钮颜色
-     */
-    private fun setLove(isLoved: Boolean) {
-        val drawable =
-            ResourcesUtil.getDrawable(if (isLoved) R.drawable.ic_loved else R.drawable.ic_loved_line)
-
-        binding.btnLove.setImageDrawable(drawable)
-    }
 }

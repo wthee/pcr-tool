@@ -6,13 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:padding="@dimen/xs_dp"
+    android:background="@drawable/bg_bottom_dialog"
     android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_margin="@dimen/xs_dp"
+        android:paddingTop="@dimen/m_dp"
         android:paddingBottom="@dimen/desc_height">
 
         <com.google.android.material.textview.MaterialTextView
@@ -45,7 +47,6 @@
             android:id="@+id/charcter_attrs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/m_dp"
             android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"

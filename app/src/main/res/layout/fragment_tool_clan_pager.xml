@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/colorBg"
+    android:background="@color/colorWhite"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -15,7 +15,6 @@
         android:id="@+id/tool_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_back_drop"
         android:focusable="false"
         android:orientation="vertical"
         android:paddingTop="@dimen/s_dp"

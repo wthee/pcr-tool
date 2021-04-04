@@ -204,7 +204,7 @@ class CharacterAttrFragment : Fragment() {
         }
         //专武
         //属性词条
-        val adapter = AttrAdapter(2f, 3f)
+        val adapter = AttrAdapter()
         binding.uniqueEquip.equipAttrs.adapter = adapter
         sharedEquipViewModel.uniqueEquip.observe(viewLifecycleOwner) {
             binding.uniqueEquip.apply {
@@ -301,11 +301,11 @@ class CharacterAttrFragment : Fragment() {
     //设置星级
     private fun setRarity(num: Int) {
         StarViewUtil.show(
-            binding.root.context,
+            requireContext(),
             binding.stars,
             num,
             maxRarity,
-            50,
+            46,
             object : StarViewUtil.OnSelect {
                 override fun select(index: Int) {
                     selData[Constants.RARITY] = index + 1

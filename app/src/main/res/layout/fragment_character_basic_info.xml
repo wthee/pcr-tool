@@ -5,7 +5,8 @@
     android:id="@+id/layout_motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:background="@drawable/bg_bottom_dialog">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/unit_id"
@@ -20,7 +21,6 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/xs_dp"
         android:scrollbars="none"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -28,6 +28,8 @@
             android:id="@+id/basic_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/xs_dp"
+            android:paddingTop="@dimen/m_dp"
             android:paddingBottom="@dimen/news_card_height">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -35,8 +37,8 @@
                 android:layout_width="@dimen/l_icon"
                 android:layout_height="@dimen/l_icon"
                 android:foreground="?selectableItemBackgroundBorderless"
-                app:layout_constraintStart_toStartOf="parent"
                 android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -52,7 +54,7 @@
                 android:textIsSelectable="true"
                 android:textStyle="bold"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintEnd_toEndOf="@id/btn_love"
+                app:layout_constraintEnd_toStartOf="@id/btn_love"
                 app:layout_constraintStart_toEndOf="@id/start"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/test_short" />
