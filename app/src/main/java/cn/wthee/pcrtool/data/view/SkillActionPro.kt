@@ -608,6 +608,8 @@ data class SkillActionPro(
                             ""
                     } else if (action_detail_1 in 0..99) {
                         "以 [$action_detail_1%] 的概率使用动作(${action_detail_2 % 10})"
+                    } else if (action_detail_1 in 500..512) {
+                        "${getTarget()}在${status}时，使用动作(${action_detail_2 % 10})"
                     } else if (action_detail_1 == 599) {
                         "${getTarget()}身上有持续伤害时，使用动作(${action_detail_2 % 10})"
                     } else if (action_detail_1 in 600..699) {
@@ -639,6 +641,8 @@ data class SkillActionPro(
                             ""
                     } else if (action_detail_1 in 0..99) {
                         "以 [100 - $action_detail_1%] 的概率使用动作(${action_detail_3 % 10})"
+                    } else if (action_detail_1 in 500..512) {
+                        "${getTarget()}不在${status}时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 == 599) {
                         "${getTarget()}身上没有持续伤害时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 in 600..699) {
