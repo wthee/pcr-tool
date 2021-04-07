@@ -70,7 +70,7 @@ class CharacterPicPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCharacterPicPagerBinding.inflate(inflater, container, false)
-
+        postponeEnterTransition()
         binding.apply {
             //初始化列表
             lifecycleScope.launch {
@@ -151,10 +151,6 @@ class CharacterPicPagerFragment : Fragment() {
                 }
             }
 
-        }
-
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
         }
 
         return binding.root

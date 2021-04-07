@@ -38,7 +38,7 @@ class ViewPagerHelper(
 }
 
 private const val MIN_SCALE = 0.98f
-private const val MIN_ALPHA = 0.9f
+private const val MIN_ALPHA = 0.75f
 
 class DepthPageTransformer : ViewPager2.PageTransformer {
 
@@ -60,7 +60,7 @@ class DepthPageTransformer : ViewPager2.PageTransformer {
                 }
                 position <= 1 -> { // (0,1]
                     // Fade the page out.
-                    alpha = MIN_ALPHA + 1 - position
+                    alpha = 1f
 
                     // Counteract the default slide transition
                     translationX = pageWidth * -position

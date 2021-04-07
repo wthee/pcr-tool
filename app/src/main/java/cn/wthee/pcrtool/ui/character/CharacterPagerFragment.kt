@@ -65,7 +65,6 @@ class CharacterPagerFragment : Fragment() {
             name = it.getString(UNIT_NAME) ?: ""
             nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
         }
-
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
@@ -78,10 +77,8 @@ class CharacterPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        postponeEnterTransition()
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
-        if (savedInstanceState == null) {
-            postponeEnterTransition()
-        }
         init()
         //角色图片列表
         setListener()

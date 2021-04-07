@@ -152,7 +152,7 @@ class CharacterAttrFragment : Fragment() {
             }
             fabCharacterDrop.apply {
                 setOnClickListener {
-                    CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
+                    CharacterDropDialogFragment.getInstance(uid)
                         .show(parentFragmentManager, "character_drop")
                 }
             }
