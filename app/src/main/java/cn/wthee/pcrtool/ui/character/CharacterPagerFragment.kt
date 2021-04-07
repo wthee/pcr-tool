@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -16,14 +16,12 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
-import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
-import cn.wthee.pcrtool.ui.character.attr.CharacterDropDialogFragment
-import cn.wthee.pcrtool.ui.home.CharacterListFragment
-import cn.wthee.pcrtool.ui.skill.SkillFragment
-import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
+import cn.wthee.pcrtool.utils.DepthPageTransformer
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
@@ -43,7 +41,7 @@ class CharacterPagerFragment : Fragment() {
 
     companion object {
         var uid = -1
-        var currentPage = 0
+        lateinit var characterPic: AppCompatImageView
     }
 
 
@@ -51,8 +49,6 @@ class CharacterPagerFragment : Fragment() {
     private lateinit var adapter: CharacterPagerAdapter
     private var name = ""
     private var nameEx = ""
-    private var isLoved = false
-    private var pageIndex = 0
     private lateinit var viewPager: ViewPager2
 
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
@@ -69,9 +65,7 @@ class CharacterPagerFragment : Fragment() {
             name = it.getString(UNIT_NAME) ?: ""
             nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
         }
-        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(
-            CharacterPagerFragment.uid
-        )
+
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
@@ -91,8 +85,6 @@ class CharacterPagerFragment : Fragment() {
         init()
         //角色图片列表
         setListener()
-        //初始收藏
-        setLove(isLoved)
         return binding.root
     }
 
@@ -121,6 +113,7 @@ class CharacterPagerFragment : Fragment() {
     }
 
     private fun init() {
+        characterPic = binding.characterPic
         //加载列表
         lifecycleScope.launch {
             //toolbar 背景
@@ -147,96 +140,8 @@ class CharacterPagerFragment : Fragment() {
                 viewPager.adapter = adapter
                 viewPager.setPageTransformer(DepthPageTransformer())
             }
-            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    pageIndex = position
-                    fabChange()
-                    currentPage = position
-                }
-            })
         }
 
     }
 
-
-    /**
-     * 底部 fab 动态切换
-     */
-    private fun fabChange() {
-        when (pageIndex) {
-            0 -> {
-                binding.fabCharacter.apply {
-                    text = getString(R.string.view_pic)
-                    icon = ResourcesUtil.getDrawable(R.drawable.ic_pic)
-                    setOnClickListener {
-                        binding.characterPic.callOnClick()
-                    }
-                }
-                binding.fabShare.apply {
-                    setImageResource(R.drawable.ic_loved)
-                    setLove(isLoved)
-                    setOnClickListener {
-                        isLoved = !isLoved
-                        CharacterListFragment.characterFilterParams.addOrRemove(
-                            CharacterPagerFragment.uid
-                        )
-                        setLove(isLoved)
-                    }
-                }
-            }
-            1 -> {
-                binding.fabCharacter.apply {
-                    text = getString(R.string.rank_equip_statistics)
-                    icon = ResourcesUtil.getDrawable(R.drawable.ic_compare)
-                    setOnClickListener {
-                        val args = Bundle().apply {
-                            putInt(UID, uid)
-                        }
-                        findNavController().navigate(
-                            R.id.action_characterPagerFragment_to_characterRankRangeEquipFragment,
-                            args,
-                            null,
-                            null
-                        )
-                    }
-                }
-                binding.fabShare.apply {
-                    //掉落信息时
-                    setImageResource(R.drawable.ic_drop)
-                    setOnClickListener {
-                        CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
-                            .show(parentFragmentManager, "character_drop")
-                    }
-                }
-            }
-            2 -> {
-                binding.fabCharacter.apply {
-                    text = getString(R.string.skill_loop)
-                    icon = ResourcesUtil.getDrawable(R.drawable.ic_loop)
-                    setOnClickListener {
-                        SkillLoopDialogFragment.getInstance(uid)
-                            .show(parentFragmentManager, "loop")
-                    }
-                }
-                binding.fabShare.apply {
-                    setImageResource(R.drawable.ic_share)
-                    setOnClickListener {
-                        ShareIntentUtil.imageLong(
-                            requireActivity(),
-                            SkillFragment.shareSkillList,
-                            "skill_${uid}.png"
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 更新收藏按钮颜色
-     */
-    private fun setLove(isLoved: Boolean) {
-        binding.fabShare.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_loved_line)
-    }
 }

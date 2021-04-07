@@ -94,9 +94,4 @@ class NewsPagerFragment : Fragment() {
 
         return binding.root
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewPager.adapter = null
-    }
 }

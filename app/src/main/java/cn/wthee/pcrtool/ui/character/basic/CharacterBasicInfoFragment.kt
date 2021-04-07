@@ -11,8 +11,14 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.characterPic
+import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants.UID
+import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
 /**
@@ -36,6 +42,7 @@ class CharacterBasicInfoFragment : Fragment() {
     }
 
     private var uid = -1
+    private var isLoved = false
     private val characterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -45,6 +52,9 @@ class CharacterBasicInfoFragment : Fragment() {
         requireArguments().apply {
             uid = getInt(UID)
         }
+        isLoved = CharacterListFragment.characterFilterParams.starIds.contains(
+            CharacterPagerFragment.uid
+        )
     }
 
     override fun onCreateView(
@@ -54,8 +64,26 @@ class CharacterBasicInfoFragment : Fragment() {
         binding = FragmentCharacterBasicInfoBinding.inflate(inflater, container, false)
         //初始化
         init()
-        //点击事件
-        setListener()
+        //初始收藏
+        setLove(isLoved)
+        binding.fabCharacter.apply {
+            text = getString(R.string.view_pic)
+            icon = ResourcesUtil.getDrawable(R.drawable.ic_pic)
+            setOnClickListener {
+                characterPic.callOnClick()
+            }
+        }
+        binding.fabShare.apply {
+            setImageResource(R.drawable.ic_loved)
+            setLove(isLoved)
+            setOnClickListener {
+                isLoved = !isLoved
+                CharacterListFragment.characterFilterParams.addOrRemove(
+                    CharacterPagerFragment.uid
+                )
+                setLove(isLoved)
+            }
+        }
         characterViewModel.character.observe(viewLifecycleOwner) {
             setData(it)
         }
@@ -70,21 +98,10 @@ class CharacterBasicInfoFragment : Fragment() {
         characterViewModel.getCharacter(uid)
     }
 
-    //点击事件
-    private fun setListener() {
-
-        //角色编号
-        binding.unitId.setOnLongClickListener {
-            ToastUtil.short(binding.unitId.text.toString())
-            return@setOnLongClickListener true
-        }
-    }
-
     //初始化角色基本数据
     private fun setData(characterPro: CharacterInfoPro) {
         //文本数据
         binding.apply {
-            unitId.text = uid.toString()
             catah.text = characterPro.catchCopy.deleteSpace()
             intro.text = characterPro.getIntroText()
             if (intro.text.isEmpty()) intro.visibility = View.GONE
@@ -118,4 +135,10 @@ class CharacterBasicInfoFragment : Fragment() {
         }
     }
 
+    /**
+     * 更新收藏按钮颜色
+     */
+    private fun setLove(isLoved: Boolean) {
+        binding.fabShare.setImageResource(if (isLoved) R.drawable.ic_loved else R.drawable.ic_loved_line)
+    }
 }

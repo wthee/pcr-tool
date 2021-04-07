@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/loading_dialog"
+    android:id="@+id/loading"
     android:layout_width="match_parent"
     android:layout_height="@dimen/loading_dialog_height"
     android:layout_marginStart="@dimen/s_dp"

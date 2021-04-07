@@ -7,7 +7,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.databinding.LayoutLoadingDialogBinding
+import cn.wthee.pcrtool.databinding.LayoutLoadingBinding
 import com.google.android.material.card.MaterialCardView
 
 /**
@@ -22,7 +22,7 @@ class LoaderStateAdapter(private val retry: () -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoaderViewHolder {
         return LoaderViewHolder(
-            LayoutLoadingDialogBinding.inflate(
+            LayoutLoadingBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -32,7 +32,7 @@ class LoaderStateAdapter(private val retry: () -> Unit) :
 
     class LoaderViewHolder(view: View, retry: () -> Unit) : RecyclerView.ViewHolder(view) {
 
-        private val loading: MaterialCardView = view.findViewById(R.id.loading_dialog)
+        private val loading: MaterialCardView = view.findViewById(R.id.loading)
 
         init {
             view.setOnClickListener {

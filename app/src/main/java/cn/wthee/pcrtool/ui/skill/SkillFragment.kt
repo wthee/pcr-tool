@@ -6,14 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
@@ -39,8 +38,6 @@ class SkillFragment : Fragment() {
                     putInt(Constants.CLAN_BOSS_ATK, atk)
                 }
             }
-
-        lateinit var shareSkillList: RecyclerView
     }
 
     private lateinit var binding: FragmentCharacterSkillBinding
@@ -70,14 +67,35 @@ class SkillFragment : Fragment() {
     ): View {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
         init()
+        setListener()
         return binding.root
+    }
+
+    private fun setListener() {
+        binding.fabSkillLoop.apply {
+            text = getString(R.string.skill_loop)
+            icon = ResourcesUtil.getDrawable(R.drawable.ic_loop)
+            setOnClickListener {
+                SkillLoopDialogFragment.getInstance(CharacterPagerFragment.uid)
+                    .show(parentFragmentManager, "loop")
+            }
+        }
+        binding.fabShare.apply {
+            setImageResource(R.drawable.ic_share)
+            setOnClickListener {
+                ShareIntentUtil.imageLong(
+                    requireActivity(),
+                    binding.skillList,
+                    "skill_${CharacterPagerFragment.uid}.png"
+                )
+            }
+        }
     }
 
     private fun init() {
         skillViewModel =
             InjectorUtil.provideSkillViewModelFactory().create(SkillViewModel::class.java)
         binding.apply {
-            shareSkillList = skillList
             //技能信息
             adapter = SkillAdapter(parentFragmentManager, type)
             skillList.adapter = adapter

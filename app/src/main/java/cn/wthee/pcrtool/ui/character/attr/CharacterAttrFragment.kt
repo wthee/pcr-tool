@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.AttrAdapter
 import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment.Companion.uid
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.utils.*
@@ -132,17 +134,27 @@ class CharacterAttrFragment : Fragment() {
     private fun setListener() {
         binding.apply {
             //查看装备统计
-            rankEquip.rankCompare.setOnClickListener {
+            rankCompare.setOnClickListener {
                 findNavController().navigate(R.id.action_characterPagerFragment_to_characterRankCompareFragment)
             }
-            //专武分享
-            uniqueShare.setOnClickListener {
-                //分享图片
-                ShareIntentUtil.image(
-                    requireActivity(),
-                    uniqueEquip.root,
-                    "ue_${uid}_lv_${uniqueEquip.ueLv.text}.png"
-                )
+            fabEquipCount.apply {
+                setOnClickListener {
+                    val args = Bundle().apply {
+                        putInt(UID, CharacterPagerFragment.uid)
+                    }
+                    findNavController().navigate(
+                        R.id.action_characterPagerFragment_to_characterRankRangeEquipFragment,
+                        args,
+                        null,
+                        null
+                    )
+                }
+            }
+            fabCharacterDrop.apply {
+                setOnClickListener {
+                    CharacterDropDialogFragment.getInstance(CharacterAttrFragment.uid)
+                        .show(parentFragmentManager, "character_drop")
+                }
             }
         }
     }
@@ -164,7 +176,7 @@ class CharacterAttrFragment : Fragment() {
             selData = maxData
             updateText()
             //等级选择
-            binding.level.setOnTouchListener { v, event ->
+            binding.level.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
                     LevelSelectDialogFragment(
                         this@CharacterAttrFragment,
@@ -176,7 +188,7 @@ class CharacterAttrFragment : Fragment() {
                 return@setOnTouchListener true
             }
             //专武等级选择
-            binding.uniqueEquip.layoutEquip.setOnTouchListener { v, event ->
+            binding.uniqueEquip.layoutEquip.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
                     LevelSelectDialogFragment(
                         this@CharacterAttrFragment,
@@ -193,7 +205,7 @@ class CharacterAttrFragment : Fragment() {
                 loadData()
                 setRarity(maxRarity)
                 //rank 选择
-                rankEquip.rankBtn.setOnClickListener {
+                rankBtn.setOnClickListener {
                     RankSelectDialogFragment(this@CharacterAttrFragment, REQUEST_CODE)
                         .getInstance(selData[Constants.RANK]!!, 2, maxRank)
                         .show(parentFragmentManager, "rank_select")
@@ -227,12 +239,12 @@ class CharacterAttrFragment : Fragment() {
         }
         //角色装备
         val equipPics = arrayListOf(
-            binding.rankEquip.pic6,
-            binding.rankEquip.pic5,
-            binding.rankEquip.pic4,
-            binding.rankEquip.pic3,
-            binding.rankEquip.pic2,
-            binding.rankEquip.pic1
+            binding.pic6,
+            binding.pic5,
+            binding.pic4,
+            binding.pic3,
+            binding.pic2,
+            binding.pic1
         )
         characterAttrViewModel.equipments.observe(viewLifecycleOwner) {
             it.forEachIndexed { index, equip ->
@@ -289,7 +301,7 @@ class CharacterAttrFragment : Fragment() {
 
     //修改文本
     private fun updateText() {
-        binding.rankEquip.rankBtn.apply {
+        binding.rankBtn.apply {
             val selRank = selData[Constants.RANK]!!
             text = getFormatText(selRank)
             setTextColor(getRankColor(selRank))

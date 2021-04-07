@@ -246,7 +246,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 val fragment =
                     supportFragmentManager.fragments[0].childFragmentManager.fragments[0]
-                var view = fragment.view
+                val view = fragment.view
                 when (fragment) {
                     // 公告页面
                     is NewsPagerFragment -> {
