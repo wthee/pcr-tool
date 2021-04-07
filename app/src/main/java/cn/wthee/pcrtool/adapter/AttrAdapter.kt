@@ -2,28 +2,25 @@ package cn.wthee.pcrtool.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.data.model.int
-import cn.wthee.pcrtool.databinding.ItemCharacterAttrBinding
+import cn.wthee.pcrtool.databinding.ItemAttrBinding
+import cn.wthee.pcrtool.utils.int
 
 /**
  * 角色面板属性列表适配器
  *
- * 列表项布局 [ItemCharacterAttrBinding]
+ * 列表项布局 [ItemAttrBinding]
  *
  * 列表项数据 [AttrValue]
  */
-class CharacterAttrAdapter :
-    ListAdapter<AttrValue, CharacterAttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
+class AttrAdapter() :
+    ListAdapter<AttrValue, AttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemCharacterAttrBinding.inflate(
+            ItemAttrBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -35,14 +32,24 @@ class CharacterAttrAdapter :
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val binding: ItemCharacterAttrBinding) :
+    inner class ViewHolder(private val binding: ItemAttrBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: AttrValue) {
             binding.apply {
-                value.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
+//                val titleParams = titleAttr.layoutParams as LinearLayout.LayoutParams
+//                titleParams.weight = titleWeight
+//                titleAttr.layoutParams = titleParams
+//
+//                val valueParams = value.layoutParams as LinearLayout.LayoutParams
+//                valueParams.weight = valueWeight
+//                value.layoutParams = valueParams
+
                 titleAttr.text = data.title
-                value.text = data.value.int.toString()
+                value.text = if (data.value > 1000000) {
+                    "${data.value.int / 10000}万"
+                } else {
+                    data.value.int.toString()
+                }
             }
         }
     }

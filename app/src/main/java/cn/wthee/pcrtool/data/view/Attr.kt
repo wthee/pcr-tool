@@ -141,8 +141,8 @@ fun Attr.all(): ArrayList<AttrValue> {
             5 -> this.magicDef
             6 -> this.physicalCritical
             7 -> this.magicCritical
-            8 -> this.physicalPenetrate
-            9 -> this.magicPenetrate
+//            8 -> this.physicalPenetrate
+//            9 -> this.magicPenetrate
             10 -> this.accuracy
             11 -> this.dodge
             12 -> this.waveHpRecovery

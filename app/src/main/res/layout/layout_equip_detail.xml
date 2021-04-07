@@ -7,42 +7,62 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/equip_name"
+        style="@style/NormalTitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/s_dp"
         android:text="@string/equip_details"
-        style="@style/NormalTitleStyle"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <LinearLayout
-        android:id="@+id/layout_equil_desc"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_equip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/s_dp"
         android:orientation="horizontal"
+        android:padding="@dimen/s_dp"
         app:layout_constraintTop_toBottomOf="@id/equip_name">
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_pic"
             android:layout_width="@dimen/normal_icon"
             android:layout_height="@dimen/normal_icon"
             android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/unknown_gray" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ue_lv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="@id/item_pic"
+            app:layout_constraintStart_toStartOf="@id/item_pic"
+            app:layout_constraintTop_toBottomOf="@id/item_pic"
+            tools:text="999" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/m_dp"
+            android:layout_marginStart="@dimen/s_dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textIsSelectable="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_pic"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/test" />
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/equip_attrs"
@@ -51,44 +71,10 @@
         android:layout_marginTop="@dimen/s_dp"
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/layout_equil_desc"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/layout_equip"
         tools:itemCount="2"
-        tools:listitem="@layout/item_equipment_attr" />
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/ue_lv_seek_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_dp"
-        android:layout_marginEnd="@dimen/xl_dp"
-        android:scrollbarSize="10dp"
-        android:stepSize="1"
-        android:visibility="gone"
-        app:labelBehavior="gone"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ue_lv"
-        app:layout_constraintTop_toBottomOf="@id/equip_attrs"
-        app:layout_constraintWidth_percent="0.5"
-        tools:visibility="visible" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/ue_lv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingStart="@dimen/xs_dp"
-        android:paddingEnd="@dimen/xs_dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="@id/ue_lv_seek_bar"
-        app:layout_constraintEnd_toStartOf="@id/ue_lv_seek_bar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ue_lv_seek_bar"
-        app:layout_constraintWidth_percent="0.25"
-        tools:text="等级 999" />
+        app:spanCount="2"
+        tools:listitem="@layout/item_attr" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

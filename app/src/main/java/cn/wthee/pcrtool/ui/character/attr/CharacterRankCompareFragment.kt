@@ -74,8 +74,6 @@ class CharacterRankCompareFragment : Fragment() {
 
     private fun setListener() {
         binding.apply {
-            //星级
-            setRarity(CharacterAttrFragment.selData[Constants.RARITY]!!)
             //选择按钮
             value0.setOnClickListener {
                 RankSelectDialogFragment(this@CharacterRankCompareFragment, REQUEST_CODE_0)
@@ -114,7 +112,6 @@ class CharacterRankCompareFragment : Fragment() {
         }
         adapter = RankCompareAdapter()
         binding.rankCompare.adapter = adapter
-        binding.level.text = CharacterAttrFragment.selData[Constants.LEVEL]!!.toString()
         update(CharacterAttrFragment.selData)
     }
 
@@ -131,21 +128,5 @@ class CharacterRankCompareFragment : Fragment() {
             title0.setTextColor(getRankColor(selRank0))
             title1.setTextColor(getRankColor(selRank1))
         }
-    }
-
-    //设置星级
-    private fun setRarity(num: Int) {
-        StarViewUtil.show(
-            binding.root.context,
-            binding.starts,
-            num,
-            CharacterAttrFragment.maxRarity,
-            50,
-            object : StarViewUtil.OnSelect {
-                override fun select(index: Int) {
-                    CharacterAttrFragment.selData[Constants.RARITY] = index
-                    postData()
-                }
-            })
     }
 }

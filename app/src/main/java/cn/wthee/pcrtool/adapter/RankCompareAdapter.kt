@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.RankCompareData
-import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.ItemRankCompareAttrBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
+import cn.wthee.pcrtool.utils.int
 
 /**
  * 角色 Rank 属性对比列表适配器

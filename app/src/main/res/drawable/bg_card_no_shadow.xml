@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 中心背景 -->
-    <item>
-        <shape android:shape="rectangle">
-            <!-- 实心 -->
-            <solid android:color="@color/colorWhite" />
-            <corners android:radius="@dimen/card_radius" />
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 实心 -->
+    <solid android:color="@color/colorWhite" />
+    <corners android:radius="@dimen/card_radius" />
 
-        </shape>
-    </item>
-</layer-list>
+</shape>

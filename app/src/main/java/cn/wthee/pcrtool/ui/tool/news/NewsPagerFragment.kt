@@ -44,10 +44,10 @@ class NewsPagerFragment : Fragment() {
         )
         //viewpager
         viewPager = binding.toolList
+        viewPager.offscreenPageLimit = 1
         if (viewPager.adapter == null) {
             adapter = NewsListPagerAdapter(requireActivity())
             viewPager.adapter = adapter
-            viewPager.offscreenPageLimit = 3
         }
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -93,10 +93,5 @@ class NewsPagerFragment : Fragment() {
         }.attach()
 
         return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewPager.adapter = null
     }
 }

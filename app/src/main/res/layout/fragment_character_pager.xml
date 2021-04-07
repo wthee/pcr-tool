@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    app:layoutDescription="@xml/fragment_character_pager_scene">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/character_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/unknown_gray" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/character_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_love"
+        app:layout_constraintVertical_weight="1"
         tools:context=".ui.character.basic.CharacterBasicInfoFragment" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_share"
-        style="@style/FabStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/m_dp"
-        android:layout_marginBottom="@dimen/m_dp"
-        android:contentDescription="@string/function"
-        android:src="@drawable/ic_function"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_love"
+        android:layout_width="@dimen/l_icon"
+        android:layout_height="@dimen/l_icon"
+        android:clickable="false"
+        android:focusable="false"
+        android:foreground="?selectableItemBackgroundBorderless"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_character"
-        tools:visibility="visible" />
+        app:layout_constraintBottom_toBottomOf="@id/character_pic"
+        app:layout_constraintTop_toBottomOf="@id/character_pic" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_character"
-        style="@style/EfabStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/fab_size"
-        android:layout_marginEnd="@dimen/xl_dp"
-        android:layout_marginBottom="@dimen/efab_margin"
-        android:contentDescription="@string/function"
-        android:text="@string/app_name"
-        android:textAllCaps="false"
-        app:icon="@drawable/ic_function"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

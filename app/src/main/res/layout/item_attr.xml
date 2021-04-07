@@ -16,7 +16,7 @@
         android:layout_weight="3"
         tools:text="@string/physical" />
 
-    <com.google.android.material.textview.MaterialTextView
+    <cn.wthee.pcrtool.utils.AutoScrollTextView
         android:id="@+id/value"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

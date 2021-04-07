@@ -58,7 +58,8 @@ class NewsListFragment : Fragment() {
         binding = FragmentToolNewsListBinding.inflate(inflater, container, false)
         adapter = NewsAdapter(parentFragmentManager, region, binding.fabCopy)
         val loaderStateAdapter = LoaderStateAdapter { adapter.retry() }
-        binding.newsList.adapter = adapter.withLoadStateFooter(loaderStateAdapter)
+        binding.newsList.adapter =
+            adapter.withLoadStateHeaderAndFooter(loaderStateAdapter, loaderStateAdapter)
         setListener()
         //新闻数据
         loadNews()
@@ -99,19 +100,16 @@ class NewsListFragment : Fragment() {
             when (region) {
                 2 -> {
                     newsViewModel.getNewsCN().collectLatest {
-                        binding.loading.visibility = View.GONE
                         adapter.submitData(it)
                     }
                 }
                 3 -> {
                     newsViewModel.getNewsTW().collectLatest {
-                        binding.loading.visibility = View.GONE
                         adapter.submitData(it)
                     }
                 }
                 4 -> {
                     newsViewModel.getNewsJP().collectLatest {
-                        binding.loading.visibility = View.GONE
                         adapter.submitData(it)
                     }
                 }

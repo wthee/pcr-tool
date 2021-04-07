@@ -1,77 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/s_dp"
-    android:background="@drawable/bg_card_no_shadow"
-    android:elevation="@dimen/card_elevation"
-    android:foreground="?selectableItemBackgroundBorderless">
+    app:cardCornerRadius="@dimen/card_radius">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/character_pic"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/CardImageStyle"
-        tools:src="@drawable/error" />
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_dp"
-        android:layout_marginTop="@dimen/xs_dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toTopOf="@id/three"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/character_pic"
-        app:layout_constraintEnd_toStartOf="@id/position_type"
-        tools:text="@string/test" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/character_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/error" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/position_type"
-        android:layout_width="@dimen/m_icon"
-        android:layout_height="@dimen/m_icon"
-        android:layout_marginEnd="@dimen/s_dp"
-        app:layout_constraintBottom_toBottomOf="@id/name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/name"
-        tools:background="@drawable/ic_position_0" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_dp"
+            android:layout_marginTop="@dimen/xs_dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/three"
+            app:layout_constraintEnd_toStartOf="@id/position_type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/character_pic"
+            tools:text="@string/test" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/name_extra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_dp"
-        android:layout_marginTop="@dimen/xs_dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/textGray"
-        android:textStyle="italic"
-        android:visibility="gone"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toTopOf="@id/three"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/name"
-        tools:text="@string/test" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/position_type"
+            android:layout_width="@dimen/m_icon"
+            android:layout_height="@dimen/m_icon"
+            android:layout_marginEnd="@dimen/s_dp"
+            app:layout_constraintBottom_toBottomOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name"
+            tools:background="@drawable/ic_position_0" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/three"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/s_dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        tools:text="10 / 110 / 56" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name_extra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_dp"
+            android:layout_marginTop="@dimen/xs_dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+            android:textColor="@color/textGray"
+            android:textStyle="italic"
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/three"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="@string/test" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/s_dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="10 / 110 / 56" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

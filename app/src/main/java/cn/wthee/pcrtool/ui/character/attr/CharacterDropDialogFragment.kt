@@ -67,7 +67,11 @@ class CharacterDropDialogFragment : CommonBottomSheetDialogFragment() {
             //初始化列表
             val adapter = CharacterDropAdapter()
             binding.characterDrops.adapter = adapter
-            adapter.submitList(sharedViewModel.getDrops(uid))
+            val list = sharedViewModel.getDrops(uid)
+            if (list.isNotEmpty()) {
+                binding.noData.visibility = View.GONE
+                adapter.submitList(list)
+            }
         }
         return binding.root
     }

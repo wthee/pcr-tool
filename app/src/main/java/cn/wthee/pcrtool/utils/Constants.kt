@@ -72,6 +72,9 @@ object Constants {
     //技能图标接口
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
+    //卡面
+    const val UNIT_PLATE_URL = RESOURCE_URL + "icon/plate/"
+
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION = "database_version"
@@ -94,7 +97,10 @@ object Constants {
 
     //常量值
     const val UID = "unit_id"
+    const val UNIT_NAME = "unit_name"
+    const val UNIT_NAME_EX = "unit_name_ex"
     const val REGION = "region"
+    const val SELECT_LEVEL = "select_level"
     const val SELECT_RANK = "select_rank"
     const val START_RANK = "start_rank"
     const val END_RANK = "end_rank"
@@ -102,6 +108,8 @@ object Constants {
     const val RANK = "rank"
     const val RARITY = "rarity"
     const val LEVEL = "level"
+    const val MAX_LEVEL = "max_level"
+    const val MAX_UE_LEVEL = "max_ue_level"
     const val UNIQUE_EQUIP_LEVEL = "ueLv"
     const val CLAN_DATE = "clan_date"
     const val CLAN_BOSS_NO = "clan_boss_no"
@@ -115,8 +123,8 @@ object Constants {
     const val TYPE_SKILL = "type_skill"
 
     val ATTR = arrayListOf(
-        "HP ",
-        "HP 吸收",
+        "HP",
+        "HP吸收",
         "物理攻击力",
         "魔法攻击力",
         "物理防御力",
@@ -127,11 +135,11 @@ object Constants {
         "魔法穿透",
         "命中",
         "回避",
-        "HP 自动回复",
+        "HP回复",
         "回复量上升",
-        "TP 自动回复",
-        "TP 上升",
-        "TP 消耗减少",
+        "TP回复",
+        "TP上升",
+        "TP消耗减少",
     )
 
     val errorIDs = arrayListOf(

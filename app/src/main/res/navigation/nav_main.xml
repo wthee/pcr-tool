@@ -227,7 +227,7 @@
         app:popExitAnim="@anim/fragment_popexit" />
     <fragment
         android:id="@+id/characterPicListFragment"
-        android:name="cn.wthee.pcrtool.ui.character.basic.CharacterPicListFragment"
+        android:name="cn.wthee.pcrtool.ui.character.pic.CharacterPicPagerFragment"
         android:label="CharacterPicListFragment" />
     <fragment
         android:id="@+id/characterRankCompareFragment"

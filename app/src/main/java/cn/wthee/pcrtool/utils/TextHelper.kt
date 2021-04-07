@@ -1,7 +1,15 @@
 package cn.wthee.pcrtool.utils
 
 import cn.wthee.pcrtool.R
+import kotlin.math.ceil
 
+/**
+ * [Double] 转 [Int]，向上取整
+ */
+val Double.int: Int
+    get() {
+        return ceil(this).toInt()
+    }
 
 //rank 颜色
 fun getRankColor(rank: Int): Int {
@@ -56,6 +64,18 @@ fun getSectionTextColor(section: Int): Int {
         2 -> R.color.color_rank_4_6
         3 -> R.color.color_rank_7_10
         4 -> R.color.color_rank_11_17
+        else -> R.color.color_rank_18
+    }
+    return ResourcesUtil.getColor(color)
+}
+
+/**
+ * 获取等级字体颜色
+ */
+fun getLevelTextColor(lv: Int): Int {
+    val color = when (lv) {
+        in 1 until 100 -> R.color.color_rank_2_3
+        in 100 until 200 -> R.color.color_rank_11_17
         else -> R.color.color_rank_18
     }
     return ResourcesUtil.getColor(color)

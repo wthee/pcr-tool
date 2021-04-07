@@ -9,13 +9,11 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
@@ -50,8 +48,6 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
         @SuppressLint("SetTextI18n")
         fun bind(skillAction: SkillActionText) {
             binding.apply {
-                action.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_scale)
                 //详细描述
                 val spannable = SpannableStringBuilder(skillAction.action)
                 val starts = arrayListOf<Int>()

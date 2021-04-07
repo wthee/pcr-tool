@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.adapter
 
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,7 +11,6 @@ import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.PaletteUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel.Companion.iconTypes
 import coil.load
@@ -66,21 +63,14 @@ class SkillLoopAdapter : ListAdapter<Int, SkillLoopAdapter.ViewHolder>(SkillLoop
                         2003 -> iconTypes[103]
                         else -> ""
                     }
+                    name.setTextColor(
+                        ResourcesUtil.getColor(R.color.color_rank_4_6)
+                    )
                     //图标地址
                     val picUrl = SKILL_ICON_URL + iconType + WEBP
-
                     pic.load(picUrl) {
                         placeholder(R.drawable.unknown_gray)
                         error(R.drawable.unknown_gray)
-                        target {
-                            val bitmap = (it as BitmapDrawable).bitmap
-                            //字体颜色
-                            name.setTextColor(
-                                PaletteUtil.createPaletteSync(bitmap)
-                                    .getDarkVibrantColor(Color.BLACK)
-                            )
-                            pic.background = it
-                        }
                     }
                 }
             }

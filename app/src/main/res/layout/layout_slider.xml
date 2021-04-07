@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_no_shadow"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/s_dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/slider_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/colorPrimary"
+        tools:text="@string/app_name" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stepSize="1"
+        android:valueFrom="1"
+        android:valueTo="2"
+        app:labelBehavior="gone" />
+
+</LinearLayout>

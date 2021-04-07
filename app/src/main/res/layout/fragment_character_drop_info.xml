@@ -27,4 +27,12 @@
         tools:itemCount="1"
         tools:listitem="@layout/item_character_drop" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/no_data"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/no_drop_data" />
 </LinearLayout>

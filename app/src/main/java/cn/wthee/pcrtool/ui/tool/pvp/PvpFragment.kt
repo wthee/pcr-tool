@@ -50,7 +50,6 @@ class PvpFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolPvpBinding.inflate(inflater, container, false)
-        binding.pvpLike.transitionName = "liked_add"
         //设置头部
         ToolbarHelper(binding.toolPvp).setMainToolbar(
             R.drawable.ic_pvp,
@@ -94,6 +93,7 @@ class PvpFragment : Fragment() {
                 }
             }
             //收藏页面
+            binding.pvpLike.transitionName = "liked_add"
             pvpLike.setOnClickListener {
                 val extras = FragmentNavigatorExtras(
                     pvpLike to pvpLike.transitionName
@@ -116,7 +116,7 @@ class PvpFragment : Fragment() {
                 } else {
                     lifecycleScope.launch {
                         val list = sharedCharacterViewModel.getAllPvp()
-                        if (list != null && list.isNotEmpty()) {
+                        if (list.isNotEmpty()) {
                             val allCharacter = arrayListOf<PvpPositionData>()
                             val character1 = list.filter {
                                 it.position in 0..299
@@ -152,8 +152,9 @@ class PvpFragment : Fragment() {
         }
     }
 
-
-    //请求悬浮窗权限
+    /**
+     * 请求悬浮窗权限
+     */
     @RequiresApi(Build.VERSION_CODES.M)
     private fun getOverlayPermission() {
         val intent = Intent(ACTION_MANAGE_OVERLAY_PERMISSION)

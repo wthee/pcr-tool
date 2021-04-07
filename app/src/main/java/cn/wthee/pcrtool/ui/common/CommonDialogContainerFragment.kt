@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.FragmentContainerBinding
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -73,7 +73,6 @@ class CommonDialogContainerFragment : CommonBottomSheetDialogFragment() {
                 //技能
                 if (uid / 1000000 == 0) {
                     //角色
-                    val selData = mutableMapOf<String, Int>()
                     MainScope().launch {
                         attrViewModel.getCharacterInfo(uid, CharacterAttrFragment.selData)
                     }

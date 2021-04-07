@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_motion"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    app:layoutDescription="@xml/fragment_character_basic_info_scene">
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/character_pic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/CardImageStyle"
-        tools:src="@drawable/unknown_gray" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/catah"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-        android:textColor="@color/colorPrimary"
-        android:textIsSelectable="true"
-        android:textStyle="bold"
-        app:layout_constrainedWidth="true"
-        tools:text="@string/test" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/unit_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/colorAlpha"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_no_shadow">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/xs_dp"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/catah">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/basic_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="@dimen/xs_dp"
+            android:paddingTop="@dimen/m_dp"
             android:paddingBottom="@dimen/news_card_height">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/start"
+                android:layout_width="@dimen/l_icon"
+                android:layout_height="@dimen/l_icon"
+                android:foreground="?selectableItemBackgroundBorderless"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/catah"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/s_dp"
+                android:layout_marginTop="@dimen/s_dp"
+                android:layout_marginEnd="@dimen/s_dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="@color/colorPrimary"
+                android:textIsSelectable="true"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/btn_love"
+                app:layout_constraintStart_toEndOf="@id/start"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/test_short" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_love"
+                android:layout_width="@dimen/l_icon"
+                android:layout_height="@dimen/l_icon"
+                android:foreground="?selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/intro"
@@ -66,7 +66,7 @@
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/catah"
                 tools:text="@string/test" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
@@ -96,7 +96,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_game_name"
                 app:layout_constraintTop_toTopOf="@id/title_game_name"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_name"
@@ -124,7 +124,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_name"
                 app:layout_constraintTop_toTopOf="@id/title_name"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_height"
@@ -154,7 +154,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_height"
                 app:layout_constraintTop_toTopOf="@id/title_height"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_weight"
@@ -179,7 +179,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_weight"
                 app:layout_constraintTop_toTopOf="@id/title_height"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_birth"
@@ -209,7 +209,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_birth"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_age"
@@ -234,7 +234,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_age"
                 app:layout_constraintTop_toTopOf="@id/title_birth"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_bloold"
@@ -264,7 +264,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_bloold"
                 app:layout_constraintTop_toTopOf="@id/title_bloold"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_position"
@@ -298,7 +298,7 @@
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title_bloold"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_race"
@@ -325,7 +325,7 @@
                 app:layout_constraintStart_toEndOf="@id/title_race"
                 app:layout_constraintTop_toTopOf="@id/title_race"
                 app:layout_constraintWidth_percent="0.35"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title_cv"
@@ -350,7 +350,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/title_cv"
                 app:layout_constraintTop_toTopOf="@id/title_race"
-                tools:text="@string/test" />
+                tools:text="@string/test_short" />
 
             <cn.wthee.pcrtool.utils.AutoScrollTextView
                 android:id="@+id/title_guild"
@@ -469,13 +469,32 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_love_cbi"
+        android:id="@+id/fab_share"
         style="@style/FabStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/tab_love"
-        android:src="@drawable/ic_loved"
-        app:layout_anchor="@id/character_pic" />
-</androidx.constraintlayout.motion.widget.MotionLayout>
+        android:layout_marginEnd="@dimen/m_dp"
+        android:layout_marginBottom="@dimen/m_dp"
+        android:contentDescription="@string/function"
+        android:src="@drawable/ic_function"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/fab_character"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_character"
+        style="@style/EfabStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fab_size"
+        android:layout_marginEnd="@dimen/xl_dp"
+        android:layout_marginBottom="@dimen/efab_margin"
+        android:contentDescription="@string/function"
+        android:text="@string/app_name"
+        android:textAllCaps="false"
+        app:icon="@drawable/ic_function"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

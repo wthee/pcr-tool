@@ -1,27 +1,21 @@
 package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
-import cn.wthee.pcrtool.utils.PaletteUtil
+import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.dp
-import coil.Coil
 import coil.load
-import coil.request.ImageRequest
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -61,10 +55,6 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
         fun bind(skill: SkillDetail) {
             //设置数据
             binding.apply {
-                val ctx = MyApplication.context
-                //加载动画
-                root.animation =
-                    AnimationUtils.loadAnimation(ctx, R.anim.anim_scale)
                 when (skillType) {
                     1, 2 -> {
                         //BOSS 技能
@@ -91,37 +81,31 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
                         if (skill.skillId % 1000 / 10 == 1) {
                             "技能 ${skillIndex}+"
                         } else {
-                            "技能 ${skillIndex}"
+                            "技能 $skillIndex"
                         }
                     }
                 }
+                name.setTextColor(
+                    ResourcesUtil.getColor(
+                        when {
+                            type.text.contains("连结") -> R.color.color_rank_7_10
+                            type.text.contains("EX") -> R.color.color_rank_2_3
+                            else -> R.color.color_rank_4_6
+                        }
+                    )
+                )
                 //技能名称
                 name.text = if (skill.name.isBlank()) type.text else skill.name
                 //等级 & 动作时间
                 level.text = "技能等级：${skill.level}"
                 //加载图片
-                val picUrl = SKILL_ICON_URL + skill.iconType + WEBP
-                itemPic.load(picUrl) {
-                    error(R.drawable.unknown_gray)
-                    placeholder(R.drawable.unknown_gray)
-                    listener(
-                        onSuccess = { _, _ ->
-                            val coil = Coil.imageLoader(MyApplication.context)
-                            val request = ImageRequest.Builder(MyApplication.context)
-                                .data(picUrl)
-                                .build()
-                            MainScope().launch {
-                                val drawable = coil.execute(request).drawable
-                                //字体颜色
-                                name.setTextColor(
-                                    PaletteUtil.createPaletteSync((drawable as BitmapDrawable).bitmap)
-                                        .getDarkVibrantColor(Color.BLACK)
-                                )
-                            }
-                        }
-                    )
+                MainScope().launch {
+                    val picUrl = SKILL_ICON_URL + skill.iconType + WEBP
+                    itemPic.load(picUrl) {
+                        error(R.drawable.unknown_gray)
+                        placeholder(R.drawable.unknown_gray)
+                    }
                 }
-
                 val actionData = skill.getActionInfo()
                 //是否显示参数判断
                 try {
@@ -153,9 +137,8 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
                         }
                     }
                 } catch (e: Exception) {
-                    skill
-                }
 
+                }
                 //技能动作属性
                 val adapter = SkillActionAdapter(fragmentManager)
                 actions.adapter = adapter

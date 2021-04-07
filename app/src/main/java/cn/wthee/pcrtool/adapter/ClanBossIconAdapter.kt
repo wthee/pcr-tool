@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
+import cn.wthee.pcrtool.ui.tool.clan.ClanFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
@@ -31,7 +33,9 @@ import coil.load
 class ClanBossIconAdapter(
     private val date: String,
     private val clan: ClanBattleInfo,
-    private val parentBinding: FragmentToolClanPagerBinding? = null
+    private val parentBinding: FragmentToolClanPagerBinding? = null,
+    private val extra: FragmentNavigator.Extras? = null,
+    private val parentIndex: Int = 0
 ) : ListAdapter<Int, ClanBossIconAdapter.ViewHolder>(ClanIconListDiffCallback()) {
     private var selectedIndex = 0
 
@@ -80,17 +84,19 @@ class ClanBossIconAdapter(
                 }
                 //点击监听
                 root.setOnClickListener {
+                    ClanFragment.clickIndex = parentIndex
                     if (MainActivity.pageLevel == 1) {
                         //打开详情页
                         val bundle = Bundle()
                         bundle.putString(Constants.CLAN_DATE, date)
                         bundle.putInt(Constants.CLAN_BOSS_NO, layoutPosition)
                         bundle.putSerializable(Constants.CLAN_DATA, clan)
+
                         root.findNavController().navigate(
                             R.id.action_clanFragment_to_clanPagerFragment,
                             bundle,
                             null,
-                            null
+                            extra
                         )
                     } else {
                         setSelectedIndex(layoutPosition)

@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.adapter.SkillAdapter
-import cn.wthee.pcrtool.data.model.int
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
@@ -39,8 +39,6 @@ class SkillFragment : Fragment() {
                     putInt(Constants.CLAN_BOSS_ATK, atk)
                 }
             }
-
-        lateinit var shareSkillList: RecyclerView
     }
 
     private lateinit var binding: FragmentCharacterSkillBinding
@@ -70,24 +68,38 @@ class SkillFragment : Fragment() {
     ): View {
         binding = FragmentCharacterSkillBinding.inflate(inflater, container, false)
         init()
+        setListener()
         return binding.root
+    }
+
+    private fun setListener() {
+        binding.fabSkillLoop.apply {
+            setOnClickListener {
+                SkillLoopDialogFragment.getInstance(CharacterPagerFragment.uid)
+                    .show(parentFragmentManager, "loop")
+            }
+        }
+//        binding.fabShare.apply {
+//            setOnClickListener {
+//                ShareIntentUtil.imageLong(
+//                    requireActivity(),
+//                    binding.skillList,
+//                    "skill_${CharacterPagerFragment.uid}.png"
+//                )
+//            }
+//        }
     }
 
     private fun init() {
         skillViewModel =
             InjectorUtil.provideSkillViewModelFactory().create(SkillViewModel::class.java)
         binding.apply {
-            shareSkillList = skillList
             //技能信息
             adapter = SkillAdapter(parentFragmentManager, type)
             skillList.adapter = adapter
         }
         when (type) {
-            0 -> { //延迟绘制页面
-                binding.skillList.visibility = View.GONE
-                binding.skillList.postDelayed({
-                    binding.skillList.visibility = View.VISIBLE
-                }, 600L)
+            0 -> {
                 //角色技能
                 var level = CharacterAttrFragment.maxLv
                 var atk = 0.0
@@ -101,9 +113,11 @@ class SkillFragment : Fragment() {
                 }
             }
             1 -> {
+                binding.fabSkillLoop.hide()
                 skillViewModel.getEnemySkill(lvs, bossAtk, uid)
             }
             2 -> {
+                binding.fabSkillLoop.hide()
                 skillViewModel.getCharacterSkills(lvs[0], bossAtk, uid)
             }
         }

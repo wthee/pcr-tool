@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def VERSION_NAME = "0.8.0"
-def VERSION_CODE = 80
+def VERSION_NAME = "0.8.1"
+def VERSION_CODE = 81
 
 android {
     compileSdkVersion 30
@@ -18,7 +18,7 @@ android {
         multiDexEnabled true
 
         flavorDimensions "default"
-        buildConfigField ("int", "SQLITE_VERSION", "80")
+        buildConfigField("int", "SQLITE_VERSION", "80")
 
     }
 
@@ -55,7 +55,7 @@ android {
 
         beta {
             applicationId "cn.wthee.pcrtoolbeta"
-            manifestPlaceholders = [icon: "@mipmap/ic_logo"]
+            manifestPlaceholders = [icon: "@drawable/ic_star"]
             resValue("string", "app_name", "PCR Tool βeta")
         }
     }
@@ -81,7 +81,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation "androidx.activity:activity-ktx:1.2.1"
+    implementation "androidx.activity:activity-ktx:1.2.2"
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     //CircleProgressBar
     implementation 'com.github.wthee:CircleProgressBar:1.0.3'
@@ -96,10 +97,9 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:$data_store_version"
 
     //Lifecycle
-    def lifecycle_version = "2.2.0"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
+    def lifecycle_version = "2.3.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     //Material
     def material_version = '1.3.0'
@@ -122,7 +122,7 @@ dependencies {
     implementation "com.permissionx.guolindev:permissionx:$permissionx_version"
 
     //Paging3
-    implementation "androidx.paging:paging-runtime-ktx:3.0.0-beta02"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-beta03"
 
     //Retrofit
     def retrofit_version = '2.9.0'
@@ -131,7 +131,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
 
     //Room
-    def room_version = "2.3.0-beta03"
+    def room_version = "2.3.0-rc01"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -149,7 +149,7 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:$viewpager2_version"
 
     //Work
-    def work_version = "2.5.0"
+    def work_version = "2.6.0-alpha01"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     //from libs

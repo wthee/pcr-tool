@@ -4,11 +4,13 @@
     <string name="character_heigth">%sCM</string>
     <string name="character_weigth">%sKG</string>
     <string name="blood">%s 型</string>
-    <string name="unique_equip_lv">等级 %d</string>
+    <string name="lv">等级 %d</string>
     <string name="quest_name">%s-%s</string>
     <string name="percent">%d%%</string>
     <string name="equip_count">x %d</string>
     <string name="empty"> </string>
+    <string name="section">%s阶段</string>
+
     <!-- 角色 -->
     <string name="title_quest">？？？</string>
     <string name="age">年龄</string>
@@ -108,7 +110,8 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">活动</string>
     <string name="drop_info">- 掉落信息 -</string>
-    <string name="test">testtesttestesttesttestesttesttestesttesttestesttesttestesttesttes</string>
+    <string name="test">testtesttestesttesttestesttestttesttesttestesttesttestesttesttestesttesttestesttesttestesttesttesestesttesttestesttesttestesttesttes</string>
+    <string name="test_short">test</string>
     <string name="tool_news">公告</string>
     <string name="loading">加载中…</string>
     <string name="loading_news">正在获取最新数据…</string>
@@ -161,6 +164,7 @@
     <string name="rank_equip_statistics">装备统计</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
-    <string name="tip_download_pic">长按图片，保存至本地~</string>
     <string name="title_section">阶段</string>
+    <string name="no_drop_data">无掉落信息</string>
+    <string name="download_pic">下载图片</string>
 </resources>
