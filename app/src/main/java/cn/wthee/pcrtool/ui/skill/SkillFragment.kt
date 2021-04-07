@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
+import cn.wthee.pcrtool.utils.InjectorUtil
+import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
@@ -73,23 +74,20 @@ class SkillFragment : Fragment() {
 
     private fun setListener() {
         binding.fabSkillLoop.apply {
-            text = getString(R.string.skill_loop)
-            icon = ResourcesUtil.getDrawable(R.drawable.ic_loop)
             setOnClickListener {
                 SkillLoopDialogFragment.getInstance(CharacterPagerFragment.uid)
                     .show(parentFragmentManager, "loop")
             }
         }
-        binding.fabShare.apply {
-            setImageResource(R.drawable.ic_share)
-            setOnClickListener {
-                ShareIntentUtil.imageLong(
-                    requireActivity(),
-                    binding.skillList,
-                    "skill_${CharacterPagerFragment.uid}.png"
-                )
-            }
-        }
+//        binding.fabShare.apply {
+//            setOnClickListener {
+//                ShareIntentUtil.imageLong(
+//                    requireActivity(),
+//                    binding.skillList,
+//                    "skill_${CharacterPagerFragment.uid}.png"
+//                )
+//            }
+//        }
     }
 
     private fun init() {
@@ -115,9 +113,11 @@ class SkillFragment : Fragment() {
                 }
             }
             1 -> {
+                binding.fabSkillLoop.hide()
                 skillViewModel.getEnemySkill(lvs, bossAtk, uid)
             }
             2 -> {
+                binding.fabSkillLoop.hide()
                 skillViewModel.getCharacterSkills(lvs[0], bossAtk, uid)
             }
         }

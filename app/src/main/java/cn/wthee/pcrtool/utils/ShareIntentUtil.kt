@@ -68,7 +68,7 @@ object ShareIntentUtil {
                         shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                         shareIntent.type = "image/*"
                         //分享
-                        activity.startActivity(Intent.createChooser(shareIntent, "角色专武"))
+                        activity.startActivity(Intent.createChooser(shareIntent, "图片已保存，可选择分享"))
                     }
                 } else {
                     ToastUtil.short("无法保存~请允许相关权限")

@@ -108,11 +108,16 @@ class MainActivity : AppCompatActivity() {
         super.onConfigurationChanged(newConfig)
     }
 
-    //动画执行完之前，禁止直接返回
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        super.dispatchKeyEvent(event)
-        binding.fab.setImageResource(R.drawable.ic_function)
-        return true
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (pageLevel > 0) {
+                goBack(this)
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+
     }
 
     private fun fixUriBug() {
@@ -227,7 +232,6 @@ class MainActivity : AppCompatActivity() {
         mFloatingWindowHeight = ScreenUtil.getWidth() - 48.dp
     }
 
-
     private fun setListener() {
         //点击展开
         fabMain.setOnClickListener {
@@ -318,7 +322,6 @@ class MainActivity : AppCompatActivity() {
                 .navigate(R.id.action_global_noticeListFragment)
         }
     }
-
 
     /**
      * 菜单打开/关闭监听
