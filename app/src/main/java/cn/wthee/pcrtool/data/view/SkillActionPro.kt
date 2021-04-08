@@ -120,14 +120,14 @@ data class SkillActionPro(
         0, 1, 3 -> ""
         2, 8 -> "随机的"
         4 -> "最远的"
-        5, 26 -> "HP 比例最低的"
-        6, 25 -> "HP 比例最高的"
+        5, 26 -> "HP比例最低的"
+        6, 25 -> "HP比例最高的"
         7 -> "自身"
         9 -> "最前方的"
         10 -> "最后方的"
         11 -> "范围内的"
-        12, 27, 37 -> "TP 最高的"
-        13, 19, 28 -> "TP 最低的"
+        12, 27, 37 -> "TP最高的"
+        13, 19, 28 -> "TP最低的"
         14, 29 -> "物理攻击力最高的"
         15, 30 -> "物理攻击力最低的"
         16, 31 -> "魔法攻击力最高的"
@@ -140,8 +140,8 @@ data class SkillActionPro(
         24 -> "领主"
         33 -> "暗影"
         34 -> "除自身以外"
-        35 -> "HP 最高的"
-        36 -> "HP 最低的"
+        35 -> "HP最高的"
+        36 -> "HP最低的"
         38 -> "物理或魔法攻击力最高的"
         39 -> "物理或魔法攻击力最低的"
         else -> ""
@@ -235,7 +235,7 @@ data class SkillActionPro(
             }
             SkillActionType.HEAL -> {
                 val value = getValueText(2, action_value_2, action_value_3, action_value_4)
-                "使${getTarget()} HP 回复 $value"
+                "使${getTarget()} HP回复 $value"
             }
             SkillActionType.CURE -> ""
             SkillActionType.BARRIER -> {
@@ -330,7 +330,7 @@ data class SkillActionPro(
             SkillActionType.CHANGE_MODE -> {
                 when (action_detail_1) {
                     1 -> "技能循环改变，持续 [${action_value_1}] 秒"
-                    2 -> "技能循环改变，每秒降低 TP [${action_value_1}]"
+                    2 -> "技能循环改变，每秒降低 TP[${action_value_1}]"
                     3 -> "效果结束后，切换回技能循环"
                     else -> "?"
                 }
@@ -355,15 +355,15 @@ data class SkillActionPro(
                 else
                     "[${(action_value_1).int}]"
                 tag = when (action_detail_1) {
-                    1 -> "TP 回复"
-                    else -> "TP 减少"
+                    1 -> "TP回复"
+                    else -> "TP减少"
                 }
                 "${getTarget()}${tag} $expr"
             }
             SkillActionType.TRIGGER -> {
                 val expr = when (action_detail_1) {
                     2 -> "受到伤害时 [${action_value_1.toInt()}%] 概率"
-                    3 -> "HP  [${action_value_3.toInt()}%] 以下"
+                    3 -> "HP [${action_value_3.toInt()}%] 以下"
                     4 -> "死亡时 [${action_value_1.toInt()}%] 概率"
                     5 -> "暴击时 [${action_value_1.toInt()}%] 概率"
                     7 -> "战斗剩余时间 [${action_value_3.toInt()}] 秒以下"
@@ -389,7 +389,7 @@ data class SkillActionPro(
                 }
             }
             SkillActionType.TAUNT -> {
-                "${toSkillActionType(action_type).desc}${getTarget()}${
+                "使${getTarget()}进入${toSkillActionType(action_type).desc}状态${
                     getTimeText(
                         action_value_1,
                         action_value_2
@@ -429,7 +429,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}是单独时，使用 [${action_detail_2 % 100}]"
                         } else if (action_detail_1 in 901..999) {
-                            "${getTarget()}的HP 在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_2 % 100})"
+                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_2 % 100})"
                         } else if (action_detail_1 == 1300) {
                             "${getTarget()}是使用魔法攻击对象时，使用动作(${action_detail_3 % 10})"
                         } else {
@@ -446,7 +446,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}不，使用 [${action_detail_3 % 100}]"
                         } else if (action_detail_1 in 901..999) {
-                            "${getTarget()}的HP 不在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_3 % 100})"
+                            "${getTarget()}的HP不在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_3 % 100})"
                         } else if (action_detail_1 == 1300) {
                             "${getTarget()}不是使用魔法攻击对象时，使用动作(${action_detail_2 % 10})"
                         } else {
@@ -505,7 +505,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 720) {
                             "排除潜伏状态的单位，${getTarget()}中存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 in 901..999) {
-                            "${getTarget()}的HP 在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_2 % 10})"
+                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 1000) {
                             "上一个动作击杀了单位时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 1001) {
@@ -536,7 +536,7 @@ data class SkillActionPro(
                     } else if (action_detail_1 == 720) {
                         "排除潜伏状态的单位，${getTarget()}中不存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 in 901..999) {
-                        "${getTarget()}的HP 不在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_3 % 10})"
+                        "${getTarget()}的HP不在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 == 1000) {
                         "上一个动作未击杀单位时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 == 1001) {
@@ -559,7 +559,7 @@ data class SkillActionPro(
                     ""
             }
             SkillActionType.REVIVAL -> {
-                "复活${getTarget()}，并回复其 [${(action_value_2 * 100).int}]HP "
+                "复活${getTarget()}，并回复其 [${(action_value_2 * 100).int}]HP"
             }
             SkillActionType.CONTINUOUS_ATTACK -> ""
             SkillActionType.ADDITIVE -> {
@@ -641,10 +641,10 @@ data class SkillActionPro(
                 when (action_detail_1) {
                     1 -> "${shieldText}，受到物理伤害时反射 [${action_value_3}] 倍伤害"
                     2 -> "${shieldText}，受到魔法伤害时反射 [${action_value_3}] 倍伤害"
-                    3 -> "${shieldText}，受到物理伤害时反射 [${action_value_3}] 倍伤害，并回复HP "
-                    4 -> "${shieldText}，受到魔法伤害时反射 [${action_value_3}] 倍伤害，并回复HP "
+                    3 -> "${shieldText}，受到物理伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
+                    4 -> "${shieldText}，受到魔法伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
                     5 -> "${shieldText}，受到伤害时反射 [${action_value_3}] 倍伤害"
-                    6 -> "${shieldText}，受到伤害时反射 [${action_value_3}] 倍伤害，并回复HP "
+                    6 -> "${shieldText}，受到伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
                     else -> "?"
                 }
             }
@@ -678,7 +678,7 @@ data class SkillActionPro(
             }
             SkillActionType.HEAL_FIELD -> {
                 val value =
-                    "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)} HP "
+                    "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)} HP"
                 "展开半径为 [${action_value_7.toInt()}] 的领域${value}${
                     getTimeText(
                         action_value_5,
@@ -722,9 +722,9 @@ data class SkillActionPro(
             SkillActionType.RATE_DAMAGE -> {
                 val value = getValueText(1, action_value_1, action_value_2, percent = "%")
                 when (action_detail_1) {
-                    1 -> "对${getTarget()}造成最大HP  $value 伤害"
-                    2 -> "对${getTarget()}造成剩余HP  $value 伤害"
-                    3 -> "对${getTarget()}造成原本的最大HP  $value 伤害"
+                    1 -> "对${getTarget()}造成最大HP $value 伤害"
+                    2 -> "对${getTarget()}造成剩余HP $value 伤害"
+                    3 -> "对${getTarget()}造成原本的最大HP $value 伤害"
                     else -> "?"
                 }
             }
@@ -733,8 +733,8 @@ data class SkillActionPro(
             }
             SkillActionType.HOT -> {
                 val type = when (action_detail_2) {
-                    1 -> "HP "
-                    2 -> "TP "
+                    1 -> "HP"
+                    2 -> "TP"
                     else -> "?"
                 }
                 val value = getValueText(1, action_value_1, action_value_2, action_value_3)
@@ -857,7 +857,7 @@ data class SkillActionPro(
             SkillActionType.KNIGHT_GUARD -> {
                 val value = getValueText(2, action_value_2, action_value_3, action_value_4)
                 val time = getTimeText(action_value_6, action_value_7)
-                "对${getTarget()}赋予「受到致死伤害时，回复 $value HP 」的效果$time"
+                "对${getTarget()}赋予「受到致死伤害时，回复 $value HP」的效果$time"
             }
             SkillActionType.LOG_GUARD -> {
                 val time = getTimeText(action_value_3, action_value_4)
@@ -877,7 +877,7 @@ data class SkillActionPro(
             }
             SkillActionType.EX -> {
                 val name = when (action_detail_1) {
-                    1 -> "HP "
+                    1 -> "HP"
                     2 -> "物理攻击力"
                     3 -> "物理防御力"
                     4 -> "魔法攻击力"
@@ -888,7 +888,7 @@ data class SkillActionPro(
                 "自身的${name}提升 ${getValueText(2, action_value_2, action_value_3)}"
             }
             SkillActionType.CHANGE_TP_RATIO -> {
-                "包括通过受伤获得的 TP 奖励值在内，使${getTarget()}获得的所有 TP 回复效果值变为 [原本的值 * ${action_value_1}]"
+                "包括通过受伤获得的 TP奖励值在内，使${getTarget()}获得的所有 TP回复效果值变为 [原本的值 * ${action_value_1}]"
             }
             SkillActionType.IGNOR_TAUNT -> {
                 "攻击${getTarget()}时，无视其他目标的挑衅效果"
@@ -962,7 +962,7 @@ data class SkillActionPro(
 
     private fun getAura(v: Int): String {
         val action = if (v == 1) {
-            "HP 最大值"
+            "HP最大值"
         } else {
             when (v / 10) {
                 1 -> "物理攻击力"
@@ -972,8 +972,8 @@ data class SkillActionPro(
                 5 -> "回避"
                 6 -> "物理暴击"
                 7 -> "魔法暴击"
-                8 -> "TP 上升"
-                9 -> "HP 吸收"
+                8 -> "TP上升"
+                9 -> "HP吸收"
                 10 -> "速度"
                 11 -> "物理暴击伤害"
                 12 -> "魔法暴击伤害"
@@ -1002,19 +1002,6 @@ data class SkillActionPro(
             6 -> "吸收所有伤害的护盾"
             else -> "?"
         }
-    }
-
-    /**
-     * 动作空值
-     */
-    private fun isEmptyAction(): Boolean {
-        val values = arrayListOf(
-            action_value_1, action_value_2, action_value_3, action_value_4,
-            action_value_5, action_value_6, action_value_7
-        ).filter {
-            it.toInt() != 0
-        }
-        return values.isEmpty()
     }
 }
 

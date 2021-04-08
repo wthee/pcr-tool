@@ -46,7 +46,6 @@ object Constants {
         BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME
     const val DATABASE_BACKUP_NAME = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME
     const val DATABASE_WAL_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL
-    const val DATABASE_SHM_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_SHM
 
 
     //其它数据库
@@ -92,8 +91,6 @@ object Constants {
     const val NOTICE_TOAST_CHECKING = "正在获取信息"
     const val NOTICE_TOAST_NETWORK_ERROR = "网络异常..."
     const val RANK_UPPER = "RANK"
-    const val SECTION = "阶段"
-    const val UNKNOWN = "未知"
 
     //常量值
     const val UID = "unit_id"
@@ -110,7 +107,6 @@ object Constants {
     const val RARITY = "rarity"
     const val LEVEL = "level"
     const val MAX_LEVEL = "max_level"
-    const val MAX_UE_LEVEL = "max_ue_level"
     const val UNIQUE_EQUIP_LEVEL = "ueLv"
     const val CLAN_DATE = "clan_date"
     const val CLAN_BOSS_NO = "clan_boss_no"
