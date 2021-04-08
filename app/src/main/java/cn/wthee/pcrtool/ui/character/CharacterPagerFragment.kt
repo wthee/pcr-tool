@@ -10,12 +10,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.uid
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.PIC_CACHE_KEY
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
 import cn.wthee.pcrtool.utils.DepthPageTransformer
@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
+import coil.memory.MemoryCache
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.launch
 
@@ -44,10 +45,9 @@ class CharacterPagerFragment : Fragment() {
 
 
     private lateinit var binding: FragmentCharacterPagerBinding
-    private lateinit var adapter: CharacterPagerAdapter
     private var name = ""
     private var nameEx = ""
-    private lateinit var viewPager: ViewPager2
+    private var cacheKey: MemoryCache.Key? = null
 
     private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
         InjectorUtil.provideCharacterAttrViewModelFactory()
@@ -62,6 +62,7 @@ class CharacterPagerFragment : Fragment() {
             uid = it.getInt(UID)
             name = it.getString(UNIT_NAME) ?: ""
             nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
+            cacheKey = it.getParcelable(PIC_CACHE_KEY)
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
@@ -78,22 +79,16 @@ class CharacterPagerFragment : Fragment() {
         postponeEnterTransition()
         binding = FragmentCharacterPagerBinding.inflate(inflater, container, false)
         init()
-        //角色图片列表
         setListener()
         return binding.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (this::binding.isInitialized) {
-            binding.characterPager.adapter = null
-        }
-    }
-
     private fun setListener() {
+        //打开角色图片列表
         binding.characterPic.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(UID, uid)
+            bundle.putParcelable(PIC_CACHE_KEY, cacheKey)
             val extras =
                 FragmentNavigatorExtras(
                     binding.characterPic to binding.characterPic.transitionName
@@ -120,20 +115,26 @@ class CharacterPagerFragment : Fragment() {
             //加载图片
             binding.characterPic.load(picUrl) {
                 error(R.drawable.error)
-                placeholder(R.drawable.load)
+                if (cacheKey == null) {
+                    placeholder(R.drawable.load)
+                } else {
+                    placeholderMemoryCacheKey(cacheKey)
+                }
                 listener(onStart = {
                     startPostponedEnterTransition()
                 })
             }
             val noData = characterAttrViewModel.isUnknown(uid)
             //加载 viewpager
-            viewPager = binding.characterPager
-            viewPager.offscreenPageLimit = 1
-            if (viewPager.adapter == null) {
-                adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid)
-                viewPager.adapter = adapter
-                viewPager.setPageTransformer(DepthPageTransformer())
+            binding.characterPager.apply {
+                offscreenPageLimit = 1
+                if (adapter == null) {
+                    adapter = CharacterPagerAdapter(childFragmentManager, lifecycle, noData, uid)
+                    adapter = adapter
+                    setPageTransformer(DepthPageTransformer())
+                }
             }
+
         }
 
     }

@@ -24,7 +24,6 @@ class MyApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         context = applicationContext
         backupMode = DatabaseUpdater.tryOpenDatabase() == 0
-
     }
 
     override fun newImageLoader(): ImageLoader {

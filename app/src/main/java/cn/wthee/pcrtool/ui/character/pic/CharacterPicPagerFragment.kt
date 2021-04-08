@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterPicPagerBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.imageLoader
+import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import com.google.android.material.transition.MaterialContainerTransform
 import com.permissionx.guolindev.PermissionX
@@ -47,6 +48,7 @@ class CharacterPicPagerFragment : Fragment() {
     private lateinit var binding: FragmentCharacterPicPagerBinding
     private lateinit var adapter: CharacterPicPagerAdapter
     private var uid = -1
+    private var cacheKey: MemoryCache.Key? = null
     private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
         InjectorUtil.provideCharacterViewModelFactory()
     }
@@ -56,6 +58,7 @@ class CharacterPicPagerFragment : Fragment() {
         FabHelper.addBackFab(2)
         requireArguments().apply {
             uid = getInt(Constants.UID)
+            cacheKey = getParcelable(Constants.PIC_CACHE_KEY)
         }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
@@ -78,7 +81,8 @@ class CharacterPicPagerFragment : Fragment() {
                     uid,
                     sharedCharacterViewModel.getR6Ids().contains(uid)
                 )
-                adapter = CharacterPicPagerAdapter(childFragmentManager, lifecycle, picData)
+                adapter =
+                    CharacterPicPagerAdapter(childFragmentManager, lifecycle, picData, cacheKey)
                 pics.adapter = adapter
                 pics.offscreenPageLimit = 4
                 ViewPagerHelper(pics, requireContext()).adjustViewPager()

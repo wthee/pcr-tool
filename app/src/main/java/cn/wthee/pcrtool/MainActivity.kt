@@ -3,7 +3,6 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.*
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
@@ -67,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     private var menuItemDrawable = arrayListOf<Int>()
     private var menuItemTitles = arrayListOf<Int>()
     private lateinit var binding: ActivityMainBinding
-    private var appUpdate = MutableLiveData<Boolean>(false)
+    private var appUpdate = MutableLiveData(false)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,12 +89,12 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //初始化 handler
         setHandler()
+        //应用版本校验
         GlobalScope.launch {
-            //应用版本校验
             appUpdate.postValue(AppUpdateUtil.init())
         }
+        //数据库版本检查
         GlobalScope.launch {
-            //数据库版本检查
             DatabaseUpdater.checkDBVersion()
         }
     }
@@ -103,12 +102,11 @@ class MainActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         val width = ScreenUtil.getWidth()
         val height = ScreenUtil.getHeight()
-        Log.e("DEBUG", "$width ? $height")
         mFloatingWindowHeight = if (width > height) height - 48.dp else width - 48.dp
         super.onConfigurationChanged(newConfig)
     }
 
-
+    //返回拦截
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (pageLevel > 0) {
@@ -117,7 +115,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onKeyDown(keyCode, event)
-
     }
 
     private fun fixUriBug() {
@@ -172,6 +169,7 @@ class MainActivity : AppCompatActivity() {
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
+        fabMain = binding.fab
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
@@ -227,9 +225,6 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_guild,
             R.drawable.ic_def,
         )
-        fabMain = binding.fab
-        //悬浮穿高度
-        mFloatingWindowHeight = ScreenUtil.getWidth() - 48.dp
     }
 
     private fun setListener() {

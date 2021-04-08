@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterPicPagerBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
+import coil.memory.MemoryCache
 
 /**
  * 角色图片展示页面弹窗
@@ -27,17 +28,20 @@ class CharacterPicFragment : Fragment() {
 
     companion object {
 
-        fun getInstance(index: Int, url: String) = CharacterPicFragment().apply {
-            arguments = Bundle().apply {
-                putInt(PIC_INDEX, index)
-                putString(PIC_URL, url)
+        fun getInstance(index: Int, url: String, cacheKey: MemoryCache.Key? = null) =
+            CharacterPicFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(PIC_INDEX, index)
+                    putString(PIC_URL, url)
+                    putParcelable(Constants.PIC_CACHE_KEY, cacheKey)
+                }
             }
-        }
     }
 
     private lateinit var binding: FragmentCharacterPicBinding
     private lateinit var url: String
     private var index = 0
+    private var cacheKey: MemoryCache.Key? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +49,7 @@ class CharacterPicFragment : Fragment() {
         requireArguments().apply {
             url = getString(PIC_URL) ?: ""
             index = getInt(PIC_INDEX)
+            cacheKey = getParcelable(Constants.PIC_CACHE_KEY)
         }
     }
 
@@ -58,7 +63,11 @@ class CharacterPicFragment : Fragment() {
             pic.transitionName = url
             pic.load(url) {
                 error(R.drawable.error)
-                placeholder(R.drawable.load)
+                if (cacheKey != null && index == 0) {
+                    placeholderMemoryCacheKey(cacheKey)
+                } else {
+                    placeholder(R.drawable.load)
+                }
                 listener(
                     onStart = {
                         parentFragment?.startPostponedEnterTransition()

@@ -16,11 +16,13 @@ import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.PIC_CACHE_KEY
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
 import cn.wthee.pcrtool.utils.Constants.UNIT_NAME_EX
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
+import coil.memory.MemoryCache
 
 /**
  * 角色列表适配器
@@ -61,6 +63,7 @@ class CharacterListAdapter(private val callback: CallBack) :
                 root.animation =
                     AnimationUtils.loadAnimation(root.context, R.anim.anim_list_item)
                 //加载网络图片
+                var cacheKey: MemoryCache.Key? = null
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
                 val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
@@ -70,6 +73,9 @@ class CharacterListAdapter(private val callback: CallBack) :
                     listener(
                         onStart = {
                             startEnter()
+                        },
+                        onSuccess = { _, metadata ->
+                            cacheKey = metadata.memoryCacheKey
                         }
                     )
                 }
@@ -98,6 +104,7 @@ class CharacterListAdapter(private val callback: CallBack) :
                         bundle.putInt(UID, character.id)
                         bundle.putString(UNIT_NAME, character.getNameF())
                         bundle.putString(UNIT_NAME_EX, character.getNameL())
+                        bundle.putParcelable(PIC_CACHE_KEY, cacheKey)
                         val extras =
                             FragmentNavigatorExtras(
                                 root to root.transitionName

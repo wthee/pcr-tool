@@ -15,7 +15,7 @@
             app:destination="@id/characterPicListFragment"
             app:enterAnim="@anim/fragment_enter"
             app:exitAnim="@anim/fragment_exit_no_scale"
-            app:popEnterAnim="@anim/fragment_popenter_no_scale"
+            app:popEnterAnim="@anim/fragment_popenter_y"
             app:popExitAnim="@anim/fragment_popexit" />
         <action
             android:id="@+id/action_characterPagerFragment_to_characterRankCompareFragment"
