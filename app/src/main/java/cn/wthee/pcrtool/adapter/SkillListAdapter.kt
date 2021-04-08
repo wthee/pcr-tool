@@ -27,7 +27,11 @@ import kotlinx.coroutines.launch
  *
  * 列表项数据 [SkillDetail]
  */
-class SkillAdapter(private val fragmentManager: FragmentManager, private val skillType: Int) :
+class SkillAdapter(
+    private val fragmentManager: FragmentManager,
+    private val skillType: Int,
+    private val callBack: CallBack
+) :
     ListAdapter<SkillDetail, SkillAdapter.ViewHolder>(SkillDiffCallback()) {
 
     private var mSize = 0
@@ -158,6 +162,10 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
                 val ailmentAdapter = TagAdapter()
                 ailments.adapter = ailmentAdapter
                 ailmentAdapter.submitList(getAilments(actionData))
+                //一键反馈
+                skillFeedback.setOnClickListener {
+                    callBack.todo(skill.skillId)
+                }
             }
             //修改底部边距
             if (layoutPosition == mSize - 1) {
