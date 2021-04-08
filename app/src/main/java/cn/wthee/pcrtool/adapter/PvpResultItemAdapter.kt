@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.databinding.ItemPvpResultIconBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpFragment.Companion.r6Ids
 import cn.wthee.pcrtool.utils.Constants.UNIT_ICON_URL
@@ -46,8 +45,8 @@ class PvpResultItemAdapter :
                 var id = uid
                 id += if (r6Ids.contains(id)) 60 else 30
                 val picUrl = UNIT_ICON_URL + id + WEBP
-                val coil = Coil.imageLoader(MyApplication.context)
-                val request = ImageRequest.Builder(MyApplication.context)
+                val coil = Coil.imageLoader(root.context)
+                val request = ImageRequest.Builder(root.context)
                     .data(picUrl)
                     .build()
                 MainScope().launch {

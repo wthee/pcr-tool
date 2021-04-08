@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
-import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.tool.clan.ClanFragment
 import cn.wthee.pcrtool.utils.Constants
@@ -33,9 +32,9 @@ import coil.load
 class ClanBossIconAdapter(
     private val date: String,
     private val clan: ClanBattleInfo,
-    private val parentBinding: FragmentToolClanPagerBinding? = null,
     private val extra: FragmentNavigator.Extras? = null,
-    private val parentIndex: Int = 0
+    private val parentIndex: Int = 0,
+    private val callBack: CallBack? = null
 ) : ListAdapter<Int, ClanBossIconAdapter.ViewHolder>(ClanIconListDiffCallback()) {
     private var selectedIndex = 0
 
@@ -99,9 +98,10 @@ class ClanBossIconAdapter(
                             extra
                         )
                     } else {
+                        //切换页面
                         setSelectedIndex(layoutPosition)
                         notifyDataSetChanged()
-                        parentBinding?.clanBossPager?.setCurrentItem(layoutPosition, true)
+                        callBack?.todo(layoutPosition)
                     }
                 }
             }

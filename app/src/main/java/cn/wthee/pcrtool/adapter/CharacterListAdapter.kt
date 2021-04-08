@@ -10,7 +10,6 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfo
 import cn.wthee.pcrtool.data.view.getPositionIcon
@@ -30,7 +29,7 @@ import coil.load
  *
  * 列表项数据 [CharacterInfo]
  */
-class CharacterListAdapter(private val fragment: CharacterListFragment) :
+class CharacterListAdapter(private val callback: CallBack) :
     PagingDataAdapter<CharacterInfo, CharacterListAdapter.ViewHolder>(CharacterDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -60,10 +59,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                 //加载动画
                 root.animation =
-                    AnimationUtils.loadAnimation(
-                        MyApplication.context,
-                        R.anim.anim_list_item
-                    )
+                    AnimationUtils.loadAnimation(root.context, R.anim.anim_list_item)
                 //加载网络图片
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
@@ -83,7 +79,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 //基本信息
                 name.text = character.getNameF()
                 nameExtra.text = character.getNameL()
-                three.text = MyApplication.context.resources.getString(
+                three.text = root.context.resources.getString(
                     R.string.character_detail,
                     character.getFixedAge(),
                     character.getFixedHeight(),
@@ -130,7 +126,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
 
         private fun startEnter() {
             if (absoluteAdapterPosition == MainActivity.currentCharaPosition) {
-                fragment.startPostponedEnterTransition()
+                callback.todo()
             }
         }
     }

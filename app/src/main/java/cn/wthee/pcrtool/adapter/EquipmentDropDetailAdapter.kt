@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.databinding.ItemEquipmentDropDetailBinding
@@ -46,7 +45,7 @@ class EquipmentDropDetailAdapter(private val eid: Int) :
             //设置数据
             binding.apply {
                 //装备名称
-                odd.text = MyApplication.context.getString(R.string.percent, equip.odd)
+                odd.text = root.context.getString(R.string.percent, equip.odd)
                 //加载装备图片
                 val picUrl = EQUIPMENT_URL + equip.eid + WEBP
                 itemPic.load(picUrl) {

@@ -16,7 +16,7 @@ import cn.wthee.pcrtool.utils.int
  *
  * 列表项数据 [AttrValue]
  */
-class AttrAdapter() :
+class AttrAdapter :
     ListAdapter<AttrValue, AttrAdapter.ViewHolder>(CharacterAttrDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -36,14 +36,6 @@ class AttrAdapter() :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: AttrValue) {
             binding.apply {
-//                val titleParams = titleAttr.layoutParams as LinearLayout.LayoutParams
-//                titleParams.weight = titleWeight
-//                titleAttr.layoutParams = titleParams
-//
-//                val valueParams = value.layoutParams as LinearLayout.LayoutParams
-//                valueParams.weight = valueWeight
-//                value.layoutParams = valueParams
-
                 titleAttr.text = data.title
                 value.text = if (data.value > 1000000) {
                     "${data.value.int / 10000}万"

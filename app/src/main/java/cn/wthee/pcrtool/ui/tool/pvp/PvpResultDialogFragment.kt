@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.PvpResultAdapter
 import cn.wthee.pcrtool.adapter.PvpResultItemAdapter
 import cn.wthee.pcrtool.data.network.MyAPIRepository
@@ -81,7 +82,13 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
                     if (result.data!!.isEmpty()) {
                         binding.pvpNoData.visibility = View.VISIBLE
                     }
-                    val adapter = PvpResultAdapter(false, viewModel)
+                    val adapter = PvpResultAdapter(false, object : CallBack {
+                        //刷新收藏
+                        override fun todo(data: Any?) {
+                            val region = data as Int
+                            viewModel.getLiked(region)
+                        }
+                    })
                     binding.pvpResultList.adapter = adapter
                     //展示查询结果
                     adapter.submitList(result.data!!.sortedByDescending {

@@ -9,7 +9,6 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
 import cn.wthee.pcrtool.databinding.ItemClanBinding
@@ -44,7 +43,7 @@ class ClanAdapter :
             //设置数据
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
+                    AnimationUtils.loadAnimation(root.context, R.anim.anim_list_item)
                 //时间
                 val ymd = clan.start_time.split("/")
                 title.text = ymd[1]

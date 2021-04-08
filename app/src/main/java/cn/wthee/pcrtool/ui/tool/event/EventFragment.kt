@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.EventHistoryAdapter
+import cn.wthee.pcrtool.data.view.EventData
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
+import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 
 /**
@@ -34,7 +37,18 @@ class EventFragment : Fragment() {
     ): View {
         FabHelper.addBackFab()
         binding = FragmentToolEventBinding.inflate(inflater, container, false)
-        val adapter = EventHistoryAdapter(parentFragmentManager)
+        val adapter = EventHistoryAdapter(object : CallBack {
+            //点击回调，查看活动剧情
+            override fun todo(data: Any?) {
+                data?.let {
+                    val event = data as EventData
+                    EventStoryDetailsDialogFragment.getInstance(
+                        event.storyId,
+                        event.title.deleteSpace()
+                    ).show(parentFragmentManager, "story_detail")
+                }
+            }
+        })
         binding.toolList.adapter = adapter
         viewModel.getEventHistory()
         viewModel.events.observe(viewLifecycleOwner) {

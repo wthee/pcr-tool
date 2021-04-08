@@ -40,7 +40,7 @@ class LeaderFragment : Fragment() {
                     text = it.data?.desc?.replace("\n", " ")
                     isSelected = true
                 }
-                val adapter = CharacterLeaderAdapter(requireContext())
+                val adapter = CharacterLeaderAdapter()
                 binding.toolList.adapter = adapter
                 adapter.submitList(it.data?.leader) {
                     binding.loading.visibility = View.GONE

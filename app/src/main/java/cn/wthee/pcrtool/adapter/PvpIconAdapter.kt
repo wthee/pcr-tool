@@ -7,7 +7,6 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
@@ -74,8 +73,8 @@ class PvpIconAdapter(
                     val drawable = ResourcesUtil.getDrawable(R.drawable.unknown_gray)
                     pic.setImageDrawable(drawable)
                 } else {
-                    val coil = Coil.imageLoader(MyApplication.context)
-                    val request = ImageRequest.Builder(MyApplication.context)
+                    val coil = Coil.imageLoader(root.context)
+                    val request = ImageRequest.Builder(root.context)
                         .data(picUrl)
                         .placeholder(R.drawable.unknown_gray)
                         .error(R.drawable.unknown_gray)

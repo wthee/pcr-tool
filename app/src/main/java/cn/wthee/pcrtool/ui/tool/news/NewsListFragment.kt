@@ -9,13 +9,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.NewsAdapter
 import cn.wthee.pcrtool.adapter.load.LoaderStateAdapter
+import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.databinding.FragmentToolNewsListBinding
 import cn.wthee.pcrtool.utils.Constants.REGION
 import cn.wthee.pcrtool.utils.ResourcesUtil
-import cn.wthee.pcrtool.utils.ShareIntentUtil
-import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -56,7 +56,17 @@ class NewsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolNewsListBinding.inflate(inflater, container, false)
-        adapter = NewsAdapter(parentFragmentManager, region, binding.fabCopy)
+        adapter = NewsAdapter(object : CallBack {
+            //点击回调
+            override fun todo(data: Any?) {
+                data?.let {
+                    val news = data as NewsTable
+                    NewsDetailDialogFragment.getInstance(
+                        region, news.getTrueId(), news.url
+                    ).show(parentFragmentManager, "detail${news.id}")
+                }
+            }
+        })
         val loaderStateAdapter = LoaderStateAdapter { adapter.retry() }
         binding.newsList.adapter =
             adapter.withLoadStateHeaderAndFooter(loaderStateAdapter, loaderStateAdapter)
@@ -75,21 +85,6 @@ class NewsListFragment : Fragment() {
             setOnRefreshListener {
                 loadNews()
                 isRefreshing = false
-            }
-        }
-        //复制
-        binding.fabCopy.hide()
-        binding.fabCopy.setOnClickListener {
-            val selecteds = adapter.getSelected()
-            if (selecteds.isNotEmpty()) {
-                var contents = ""
-                selecteds.forEach {
-                    contents += it.content
-                }
-                contents += getString(R.string.from, getString(R.string.app_name))
-                ShareIntentUtil.text(contents)
-            } else {
-                ToastUtil.short("未选择公告~")
             }
         }
     }

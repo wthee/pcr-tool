@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.ItemPvpResultBinding
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.dp
-import cn.wthee.pcrtool.viewmodel.PvpLikedViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -32,7 +31,7 @@ import kotlin.math.round
  */
 class PvpResultAdapter(
     private val isFloat: Boolean,
-    private val viewModel: PvpLikedViewModel? = null
+    private val callBack: CallBack? = null
 ) : ListAdapter<PvpResultData, PvpResultAdapter.ViewHolder>(PvpResultDiffCallback()) {
 
     val dao = AppPvpDatabase.getInstance().getPvpDao()
@@ -127,7 +126,7 @@ class PvpResultAdapter(
                         }
                         //收藏页面刷新
                         try {
-                            viewModel?.getLiked(region)
+                            callBack?.todo(region)
                         } catch (e: Exception) {
 
                         }

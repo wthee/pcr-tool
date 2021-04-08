@@ -5,15 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EventData
 import cn.wthee.pcrtool.databinding.ItemEventBinding
-import cn.wthee.pcrtool.ui.tool.event.EventStoryDetailsDialogFragment
 import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
 import cn.wthee.pcrtool.utils.days
 import cn.wthee.pcrtool.utils.deleteSpace
@@ -26,9 +23,7 @@ import cn.wthee.pcrtool.utils.intArrayList
  *
  * 列表项数据 [EventData]
  */
-class EventHistoryAdapter(
-    private val fragmentManager: FragmentManager
-) :
+class EventHistoryAdapter(private val callBack: CallBack) :
     ListAdapter<EventData, EventHistoryAdapter.ViewHolder>(EventDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -52,7 +47,7 @@ class EventHistoryAdapter(
             //设置数据
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
+                    AnimationUtils.loadAnimation(root.context, R.anim.anim_list_item)
                 //内容
                 subTitle.text = event.title.deleteSpace()
                 //角色碎片
@@ -93,11 +88,7 @@ class EventHistoryAdapter(
                 }
                 //点击查看剧情列表
                 root.setOnClickListener {
-                    EventStoryDetailsDialogFragment.getInstance(
-                        event.storyId,
-                        event.title.deleteSpace()
-                    )
-                        .show(fragmentManager, "story_detail")
+                    callBack.todo(event)
                 }
             }
         }

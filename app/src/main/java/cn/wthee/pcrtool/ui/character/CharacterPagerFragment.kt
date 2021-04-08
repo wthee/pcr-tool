@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -41,7 +40,6 @@ class CharacterPagerFragment : Fragment() {
 
     companion object {
         var uid = -1
-        lateinit var characterPic: AppCompatImageView
     }
 
 
@@ -110,7 +108,6 @@ class CharacterPagerFragment : Fragment() {
     }
 
     private fun init() {
-        characterPic = binding.characterPic
         //加载列表
         lifecycleScope.launch {
             //toolbar 背景

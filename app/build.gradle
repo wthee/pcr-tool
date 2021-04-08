@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-def VERSION_NAME = "0.8.1"
-def VERSION_CODE = 81
+def VERSION_NAME = "0.8.2"
+def VERSION_CODE = 82
 
 android {
     compileSdkVersion 30

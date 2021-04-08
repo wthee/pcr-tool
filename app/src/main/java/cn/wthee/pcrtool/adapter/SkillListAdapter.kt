@@ -11,6 +11,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillBinding
+import cn.wthee.pcrtool.ui.common.CommonDialogContainerFragment
 import cn.wthee.pcrtool.utils.Constants.SKILL_ICON_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
 import cn.wthee.pcrtool.utils.ResourcesUtil
@@ -140,7 +141,17 @@ class SkillAdapter(private val fragmentManager: FragmentManager, private val ski
 
                 }
                 //技能动作属性
-                val adapter = SkillActionAdapter(fragmentManager)
+                val adapter = SkillActionAdapter(object : CallBack {
+                    override fun todo(data: Any?) {
+                        data?.let {
+                            val skillAction = data as SkillActionText
+                            CommonDialogContainerFragment.loadSkillFragment(
+                                skillAction.summonUnitId, skillAction.level,
+                                skillAction.atk
+                            ).show(fragmentManager, "summon_skill")
+                        }
+                    }
+                })
                 actions.adapter = adapter
                 adapter.submitList(actionData)
                 //异常状态属性

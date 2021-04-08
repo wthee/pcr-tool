@@ -71,7 +71,7 @@ class CharacterRankRangeEquipFragment : Fragment() {
     }
 
     private fun init() {
-        val adapter = EquipmentMaterialAdapter(viewModel = sharedEquipViewModel)
+        val adapter = EquipmentMaterialAdapter()
         binding.listEquip.adapter = adapter
         binding.icon.load(CharacterAttrFragment.iconUrl) {
             error(R.drawable.unknown_gray)

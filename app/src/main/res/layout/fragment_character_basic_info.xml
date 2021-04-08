@@ -474,27 +474,13 @@
         style="@style/FabStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/m_dp"
-        android:layout_marginBottom="@dimen/m_dp"
-        android:contentDescription="@string/function"
-        android:src="@drawable/ic_function"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fab_character"
-        tools:visibility="visible" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_character"
-        style="@style/EfabStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/fab_size"
         android:layout_marginEnd="@dimen/xl_dp"
-        android:layout_marginBottom="@dimen/efab_margin"
-        android:contentDescription="@string/function"
-        android:text="@string/app_name"
-        android:textAllCaps="false"
-        app:icon="@drawable/ic_function"
+        android:layout_marginBottom="@dimen/m_dp"
+        android:contentDescription="@string/tab_love"
+        android:src="@drawable/ic_loved_line"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

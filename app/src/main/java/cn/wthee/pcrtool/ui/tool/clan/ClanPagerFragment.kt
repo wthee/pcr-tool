@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.ClanBossIconAdapter
 import cn.wthee.pcrtool.adapter.viewpager.ClanBossPagerAdapter
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
@@ -119,7 +120,12 @@ class ClanPagerFragment : Fragment() {
         binding.root.transitionName = clan.clan_battle_id.toString()
         //图片列表
         val list = clan.getUnitIdList(1)
-        adapter = ClanBossIconAdapter(date, clan, binding)
+        adapter = ClanBossIconAdapter(date, clan, callBack = object : CallBack {
+            override fun todo(data: Any?) {
+                //切换页面
+                binding.clanBossPager.setCurrentItem((data ?: 0) as Int, true)
+            }
+        })
         binding.toolList.adapter = adapter
         adapter.setSelectedIndex(index)
         adapter.submitList(list) {
