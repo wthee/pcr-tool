@@ -97,6 +97,8 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             DatabaseUpdater.checkDBVersion()
         }
+        //快捷方式
+        ShortcutHelper(this).create()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -207,7 +209,7 @@ class MainActivity : AppCompatActivity() {
             R.string.tool_news,
             R.string.tool_pvp,
             R.string.tool_event,
-            R.string.tool_calendar_title,
+            R.string.tool_calendar,
             R.string.tool_gacha,
             R.string.tool_guild,
             R.string.tool_clan,

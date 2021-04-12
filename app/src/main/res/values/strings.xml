@@ -97,7 +97,8 @@
     <!--  工具  -->
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历</string>
-    <string name="tool_calendar_title">日历</string>
+    <string name="tool_calendar_title">日历-国服</string>
+    <string name="tool_calendar_title_jp">日历-日服</string>
     <string name="tool_pvp">竞技场</string>
     <string name="tool_pvp_liked">收藏</string>
     <string name="tool_clan">团队战</string>

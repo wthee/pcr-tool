@@ -22,6 +22,11 @@ android {
 
     }
 
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     kotlinOptions {
         jvmTarget = "1.8"
         freeCompilerArgs = ["-Xjvm-default=all"]
@@ -140,9 +145,9 @@ dependencies {
     implementation "androidx.startup:startup-runtime:1.0.0"
 
     //umeng
-    implementation "com.umeng.umsdk:common:9.3.3"
-    implementation "com.umeng.umsdk:asms:1.1.4"
-    implementation "com.umeng.umsdk:apm:1.1.0"
+    implementation "com.umeng.umsdk:common:9.3.8"
+    implementation "com.umeng.umsdk:asms:1.2.2"
+    implementation "com.umeng.umsdk:apm:1.2.0"
 
     //Viewpager2
     def viewpager2_version = '1.0.0'

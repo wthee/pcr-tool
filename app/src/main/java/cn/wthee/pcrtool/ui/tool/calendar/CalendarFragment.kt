@@ -57,7 +57,7 @@ class CalendarFragment : Fragment() {
         //设置头部
         ToolbarHelper(binding.toolCalendar).setMainToolbar(
             R.drawable.ic_calendar,
-            getString(R.string.tool_calendar)
+            getString(R.string.tool_calendar_title)
         )
 
         return binding.root

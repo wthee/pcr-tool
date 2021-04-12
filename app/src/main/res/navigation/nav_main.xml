@@ -213,7 +213,9 @@
     <fragment
         android:id="@+id/calendarJPFragment"
         android:name="cn.wthee.pcrtool.ui.tool.calendar.CalendarJPFragment"
-        android:label="CalendarJPFragment" />
+        android:label="CalendarJPFragment">
+        <deepLink app:uri="tool://calendar_jp" />
+    </fragment>
     <fragment
         android:id="@+id/noticeListFragment"
         android:name="cn.wthee.pcrtool.ui.notice.NoticeListFragment"
