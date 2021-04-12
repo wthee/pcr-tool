@@ -154,7 +154,7 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:$viewpager2_version"
 
     //Work
-    def work_version = "2.6.0-alpha01"
+    def work_version = "2.7.0-alpha02"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     //from libs
