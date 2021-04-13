@@ -17,6 +17,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolNewsListBinding
 import cn.wthee.pcrtool.utils.Constants.REGION
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [NewsViewModel]
  */
+@AndroidEntryPoint
 class NewsListFragment : Fragment() {
 
     companion object {

@@ -10,12 +10,16 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CalendarDropEventAdapter
 import cn.wthee.pcrtool.data.view.DropEvent
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
+import cn.wthee.pcrtool.utils.daysInt
 import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 
@@ -26,6 +30,7 @@ import java.util.*
  *
  * ViewModels [CalendarViewModel]
  */
+@AndroidEntryPoint
 class CalendarJPFragment : Fragment() {
 
 
@@ -37,9 +42,7 @@ class CalendarJPFragment : Fragment() {
     private lateinit var minCal: Calendar
     private lateinit var maxCal: Calendar
     private lateinit var cal: Calendar
-    private val calendarViewModel by activityViewModels<CalendarViewModel> {
-        InjectorUtil.provideCalendarViewModelFactory()
-    }
+    private val calendarViewModel: CalendarViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

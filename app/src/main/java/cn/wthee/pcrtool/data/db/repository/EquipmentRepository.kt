@@ -2,13 +2,14 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.EquipmentDao
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import javax.inject.Inject
 
 /**
  * 装备Repository
  *
  * 数据来源 [EquipmentDao]
  */
-class EquipmentRepository(private val equipmentDao: EquipmentDao) {
+class EquipmentRepository @Inject constructor(private val equipmentDao: EquipmentDao) {
 
     suspend fun getEquipmentData(eid: Int) = equipmentDao.getEquipInfos(eid)
 

@@ -17,6 +17,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp
 import com.google.android.material.slider.Slider
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -26,6 +27,7 @@ import com.google.android.material.slider.Slider
  *
  * ViewModels []
  */
+@AndroidEntryPoint
 class LevelSelectDialogFragment(
     private val preFragment: Fragment,
     private val requestCode: Int,

@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.GachaHistoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 
@@ -23,9 +22,7 @@ import cn.wthee.pcrtool.viewmodel.GachaViewModel
  */
 class GachaFragment : Fragment() {
 
-    private val viewModel by activityViewModels<GachaViewModel> {
-        InjectorUtil.provideGachaViewModelFactory()
-    }
+    private val viewModel: GachaViewModel by activityViewModels()
     private lateinit var binding: FragmentToolGachaBinding
 
     override fun onCreateView(

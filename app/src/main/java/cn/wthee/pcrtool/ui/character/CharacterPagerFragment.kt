@@ -19,13 +19,13 @@ import cn.wthee.pcrtool.utils.Constants.PIC_CACHE_KEY
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
 import cn.wthee.pcrtool.utils.DepthPageTransformer
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
 import coil.memory.MemoryCache
 import com.google.android.material.transition.MaterialContainerTransform
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel] [CharacterAttrViewModel]
  */
+@AndroidEntryPoint
 class CharacterPagerFragment : Fragment() {
 
     companion object {
@@ -49,12 +50,8 @@ class CharacterPagerFragment : Fragment() {
     private var nameEx = ""
     private var cacheKey: MemoryCache.Key? = null
 
-    private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.provideCharacterAttrViewModelFactory()
-    }
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val characterAttrViewModel: CharacterAttrViewModel by activityViewModels()
+    private val sharedCharacterViewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

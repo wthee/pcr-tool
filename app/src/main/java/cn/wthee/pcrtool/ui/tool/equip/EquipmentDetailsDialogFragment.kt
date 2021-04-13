@@ -19,10 +19,10 @@ import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -38,6 +38,7 @@ private const val EQUIP = "equip"
  *
  * ViewModels [EquipmentViewModel]
  */
+@AndroidEntryPoint
 class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
@@ -56,9 +57,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var materialAdapter: EquipmentMaterialAdapter
 
-    private val viewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val viewModel: EquipmentViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

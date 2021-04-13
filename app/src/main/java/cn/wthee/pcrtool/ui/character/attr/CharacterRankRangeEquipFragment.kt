@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterRankEquipBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色提升 Rank 所需装备页面
@@ -21,14 +22,13 @@ import coil.load
  *
  * ViewModels [EquipmentViewModel]
  */
+@AndroidEntryPoint
 class CharacterRankRangeEquipFragment : Fragment() {
 
     private val REQUEST_CODE_0 = 20
     private val REQUEST_CODE_1 = 21
     private lateinit var binding: FragmentCharacterRankEquipBinding
-    private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val sharedEquipViewModel: EquipmentViewModel by activityViewModels()
     private var uid = -1
     private var startRank = 1
     private var endRank = CharacterAttrFragment.maxRank

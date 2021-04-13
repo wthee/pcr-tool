@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.SkillAdapter
@@ -19,6 +20,7 @@ import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
@@ -30,6 +32,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [SkillViewModel]
  */
+@AndroidEntryPoint
 class SkillFragment : Fragment() {
 
     companion object {
@@ -50,10 +53,8 @@ class SkillFragment : Fragment() {
     private var type = 0
     private var lvs = arrayListOf<Int>()
     private var bossAtk = 0
-    private lateinit var skillViewModel: SkillViewModel
-    private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.provideCharacterAttrViewModelFactory()
-    }
+    private val skillViewModel: SkillViewModel by viewModels()
+    private val characterAttrViewModel: CharacterAttrViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +95,6 @@ class SkillFragment : Fragment() {
     }
 
     private fun init() {
-        skillViewModel =
-            InjectorUtil.provideSkillViewModelFactory().create(SkillViewModel::class.java)
         binding.apply {
             //技能信息
             adapter = SkillAdapter(parentFragmentManager, type, object : CallBack {

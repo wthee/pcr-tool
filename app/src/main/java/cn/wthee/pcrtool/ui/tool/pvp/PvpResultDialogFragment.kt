@@ -14,11 +14,11 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.PvpLikedViewModel
 import com.google.gson.JsonArray
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -32,15 +32,14 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [PvpLikedViewModel]
  */
+@AndroidEntryPoint
 class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentToolPvpResultBinding
     private lateinit var job: Job
     private var idList = JsonArray()
     private var defIds = arrayListOf<Int>()
-    private val viewModel by activityViewModels<PvpLikedViewModel> {
-        InjectorUtil.providePvpViewModelFactory()
-    }
+    private val viewModel: PvpLikedViewModel by activityViewModels()
 
     companion object {
         fun getInstance(defIds: String) =

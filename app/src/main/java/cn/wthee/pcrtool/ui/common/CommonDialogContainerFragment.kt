@@ -4,23 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentContainerBinding
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
  * 底部弹窗基类
  */
+@AndroidEntryPoint
 class CommonDialogContainerFragment : CommonBottomSheetDialogFragment() {
 
     private val FRAGMENT_TYPE = "fragment_type"
@@ -59,10 +61,8 @@ class CommonDialogContainerFragment : CommonBottomSheetDialogFragment() {
         val binding = FragmentContainerBinding.inflate(inflater, container, false)
         when (type) {
             1 -> {
-                val attrViewModel = InjectorUtil.provideCharacterAttrViewModelFactory()
-                    .create(CharacterAttrViewModel::class.java)
-                val skillViewModel =
-                    InjectorUtil.provideSkillViewModelFactory().create(SkillViewModel::class.java)
+                val attrViewModel: CharacterAttrViewModel by viewModels()
+                val skillViewModel: SkillViewModel by viewModels()
                 skillViewModel.getCharacterSkills(0, 0, uid)
                 skillViewModel.skills.observe(viewLifecycleOwner) {
                     if (it.isEmpty()) {
@@ -92,8 +92,7 @@ class CommonDialogContainerFragment : CommonBottomSheetDialogFragment() {
 
                 } else {
                     //怪物
-                    val viewModel =
-                        InjectorUtil.provideClanViewModelFactory().create(ClanViewModel::class.java)
+                    val viewModel: ClanViewModel by viewModels()
                     viewModel.getBossAttr(uid)
                     viewModel.clanBossAttr.observe(viewLifecycleOwner) {
                         if (it != null) {

@@ -31,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -42,6 +43,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels []
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     companion object {

@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.transition.MaterialContainerTransform
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 团队战
@@ -26,6 +27,7 @@ import com.google.android.material.transition.MaterialContainerTransform
  *
  * ViewModels []
  */
+@AndroidEntryPoint
 class ClanPagerFragment : Fragment() {
 
     companion object {

@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolNewsBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 官网公告 ViewPager
@@ -21,6 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator
  *
  * ViewModels []
  */
+@AndroidEntryPoint
 class NewsPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentToolNewsBinding

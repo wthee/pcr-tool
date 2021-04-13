@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.data.enums.NumberSelectType
 import cn.wthee.pcrtool.databinding.FragmentRankSelectDialogBinding
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.dp
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -28,6 +29,7 @@ import cn.wthee.pcrtool.utils.dp
  *
  * ViewModels []
  */
+@AndroidEntryPoint
 class RankSelectDialogFragment(
     private val preFragment: Fragment,
     private val requestCode: Int

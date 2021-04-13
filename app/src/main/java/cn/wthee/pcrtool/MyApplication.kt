@@ -14,10 +14,12 @@ import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.CachePolicy
+import dagger.hilt.android.HiltAndroidApp
 
 /**
  * 应用初始
  */
+@HiltAndroidApp
 class MyApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {

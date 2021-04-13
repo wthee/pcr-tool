@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 装备筛选弹窗
@@ -21,12 +22,11 @@ import com.google.android.material.chip.ChipGroup
  *
  * ViewModels [EquipmentViewModel]
  */
+@AndroidEntryPoint
 class EquipmentFilterDialogFragment : CommonDialogFragment() {
 
     private lateinit var binding: FragmentFilterEquipmentBinding
-    private val viewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val viewModel: EquipmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

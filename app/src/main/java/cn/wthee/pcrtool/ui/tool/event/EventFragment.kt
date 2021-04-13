@@ -12,10 +12,10 @@ import cn.wthee.pcrtool.adapter.EventHistoryAdapter
 import cn.wthee.pcrtool.data.view.EventData
 import cn.wthee.pcrtool.databinding.FragmentToolEventBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.EventViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 活动
@@ -24,11 +24,10 @@ import cn.wthee.pcrtool.viewmodel.EventViewModel
  *
  * ViewModels [EventViewModel]
  */
+@AndroidEntryPoint
 class EventFragment : Fragment() {
 
-    private val viewModel: EventViewModel by activityViewModels {
-        InjectorUtil.provideEventViewModelFactory()
-    }
+    private val viewModel: EventViewModel by activityViewModels()
     private lateinit var binding: FragmentToolEventBinding
 
     override fun onCreateView(

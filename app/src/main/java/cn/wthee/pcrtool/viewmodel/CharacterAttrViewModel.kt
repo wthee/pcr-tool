@@ -9,8 +9,10 @@ import cn.wthee.pcrtool.data.view.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 角色面板属性 ViewModel
@@ -18,7 +20,8 @@ import kotlinx.coroutines.launch
  * 数据来源 [UnitRepository] [EquipmentRepository]
  *
  */
-class CharacterAttrViewModel(
+@HiltViewModel
+class CharacterAttrViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {

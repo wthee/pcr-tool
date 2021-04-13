@@ -17,6 +17,7 @@ import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [EquipmentViewModel]
  */
+@AndroidEntryPoint
 class EquipmentListFragment : Fragment() {
 
     companion object {
@@ -41,9 +43,7 @@ class EquipmentListFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentEquipmentListBinding
-    private val viewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val viewModel: EquipmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

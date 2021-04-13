@@ -21,12 +21,12 @@ import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.databinding.FragmentToolPvpLikedBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.PvpLikedViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.MaterialContainerTransform
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
@@ -36,15 +36,14 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [PvpLikedViewModel]
  */
+@AndroidEntryPoint
 class PvpLikedFragment : Fragment() {
 
     private lateinit var binding: FragmentToolPvpLikedBinding
     private var region = DatabaseUpdater.getRegion()
     private lateinit var likedAdapter: PvpLikedAdapter
     private lateinit var dao: PvpDao
-    private val viewModel by activityViewModels<PvpLikedViewModel> {
-        InjectorUtil.providePvpViewModelFactory()
-    }
+    private val viewModel: PvpLikedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

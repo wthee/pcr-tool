@@ -21,6 +21,7 @@ import coil.request.ImageRequest
 import com.google.android.material.transition.MaterialContainerTransform
 import com.permissionx.guolindev.PermissionX
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class CharacterPicPagerFragment : Fragment() {
 
     companion object {
@@ -49,9 +51,7 @@ class CharacterPicPagerFragment : Fragment() {
     private lateinit var adapter: CharacterPicPagerAdapter
     private var uid = -1
     private var cacheKey: MemoryCache.Key? = null
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val sharedCharacterViewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

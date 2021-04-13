@@ -9,9 +9,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicBinding
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicPagerBinding
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
 import coil.memory.MemoryCache
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色图片展示页面弹窗
@@ -20,8 +20,9 @@ import coil.memory.MemoryCache
  *
  * 页面布局 [FragmentCharacterPicPagerBinding]
  *
- * ViewModels [CharacterViewModel]
+ * ViewModels []
  */
+@AndroidEntryPoint
 class CharacterPicFragment : Fragment() {
     private val PIC_URL = "pic_url"
     private val PIC_INDEX = "pic_index"

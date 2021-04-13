@@ -1,18 +1,19 @@
 package cn.wthee.pcrtool.ui.common
 
 import android.os.Bundle
-import android.widget.FrameLayout
 import cn.wthee.pcrtool.R
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 底部弹窗基类
  *
  * 默认是否展开 [expend]
  */
-open class CommonBottomSheetDialogFragment(private val expend: Boolean = false) :
+@AndroidEntryPoint
+open class CommonBottomSheetDialogFragment :
     BottomSheetDialogFragment() {
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -22,14 +23,14 @@ open class CommonBottomSheetDialogFragment(private val expend: Boolean = false) 
 
     override fun onStart() {
         super.onStart()
-        if (expend) {
-            val bottomSheet =
-                dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.let {
-                val behavior = BottomSheetBehavior.from(it)
-                //默认展开
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
+//        if (expend) {
+//            val bottomSheet =
+//                dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+//            bottomSheet?.let {
+//                val behavior = BottomSheetBehavior.from(it)
+//                //默认展开
+//                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+//            }
+//        }
     }
 }

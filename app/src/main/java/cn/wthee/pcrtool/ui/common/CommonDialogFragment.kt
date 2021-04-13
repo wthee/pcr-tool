@@ -7,10 +7,12 @@ import androidx.fragment.app.DialogFragment
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 底部弹窗基类
  */
+@AndroidEntryPoint
 open class CommonDialogFragment : DialogFragment() {
 
     override fun onStart() {

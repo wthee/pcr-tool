@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterRankCompareBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
@@ -25,14 +26,13 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterAttrViewModel]
  */
+@AndroidEntryPoint
 class CharacterRankCompareFragment : Fragment() {
 
     private val REQUEST_CODE_0 = 10
     private val REQUEST_CODE_1 = 11
     private lateinit var binding: FragmentCharacterRankCompareBinding
-    private val sharedAttrViewModel: CharacterAttrViewModel by activityViewModels {
-        InjectorUtil.provideCharacterAttrViewModelFactory()
-    }
+    private val sharedAttrViewModel: CharacterAttrViewModel by activityViewModels()
     private var selRank0 = CharacterAttrFragment.maxRank
     private var selRank1 = CharacterAttrFragment.maxRank
     private var attr0 = Attr()

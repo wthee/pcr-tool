@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 def VERSION_NAME = "0.8.2"
 def VERSION_CODE = 82
@@ -78,6 +79,7 @@ android {
 }
 
 dependencies {
+    kapt "com.google.dagger:hilt-android-compiler:$rootProject.hilt_version"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
@@ -100,6 +102,9 @@ dependencies {
     //DataStore
     def data_store_version = '1.0.0-alpha08'
     implementation "androidx.datastore:datastore-preferences:$data_store_version"
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:$rootProject.hilt_version"
 
     //Lifecycle
     def lifecycle_version = "2.3.1"

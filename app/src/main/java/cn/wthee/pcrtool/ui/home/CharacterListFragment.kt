@@ -43,9 +43,7 @@ class CharacterListFragment : Fragment() {
 
     private lateinit var listAdapter: CharacterListAdapter
     private lateinit var binding: FragmentCharacterListBinding
-    private val viewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val viewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

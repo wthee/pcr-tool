@@ -1,13 +1,14 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.SkillDao
+import javax.inject.Inject
 
 /**
  * 角色技能 Repository
  *
  * 数据来源 [skillDao]
  */
-class SkillRepository(private val skillDao: SkillDao) {
+class SkillRepository @Inject constructor(private val skillDao: SkillDao) {
 
     suspend fun getUnitSkill(id: Int) = skillDao.getUnitSkill(id)
 

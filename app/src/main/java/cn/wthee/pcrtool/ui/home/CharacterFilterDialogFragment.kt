@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色筛选弹窗
@@ -22,12 +23,11 @@ import com.google.android.material.chip.ChipGroup
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class CharacterFilterDialogFragment : CommonDialogFragment() {
 
     private lateinit var binding: FragmentFilterCharacterBinding
-    private val viewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val viewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
