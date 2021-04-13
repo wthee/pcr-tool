@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPagerBinding
@@ -46,8 +47,7 @@ class CharacterPagerFragment : Fragment() {
 
 
     private lateinit var binding: FragmentCharacterPagerBinding
-    private var name = ""
-    private var nameEx = ""
+    private val args by navArgs<CharacterPagerFragmentArgs>()
     private var cacheKey: MemoryCache.Key? = null
 
     private val characterAttrViewModel: CharacterAttrViewModel by activityViewModels()
@@ -55,17 +55,12 @@ class CharacterPagerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().let {
-            uid = it.getInt(UID)
-            name = it.getString(UNIT_NAME) ?: ""
-            nameEx = it.getString(Constants.UNIT_NAME_EX) ?: ""
-            cacheKey = it.getParcelable(PIC_CACHE_KEY)
-        }
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
             setAllContainerColors(ResourcesUtil.getColor(R.color.colorWhite))
         }
+        uid = args.unitId
     }
 
 

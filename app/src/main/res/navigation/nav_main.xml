@@ -10,6 +10,10 @@
         android:name="cn.wthee.pcrtool.ui.character.CharacterPagerFragment"
         android:label="CharacterPagerFragment"
         tools:layout="@layout/fragment_character_basic_info">
+        <argument
+            android:name="unitId"
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_characterPagerFragment_to_characterPicListFragment"
             app:destination="@id/characterPicListFragment"
@@ -167,7 +171,7 @@
             app:enterAnim="@anim/fragment_enter"
             app:exitAnim="@anim/fragment_exit"
             app:popEnterAnim="@anim/fragment_popenter"
-            app:popExitAnim="@anim/fragment_popexit" />
+            app:popExitAnim="@anim/fragment_popexit"/>
         <action
             android:id="@+id/action_characterListFragment_to_guildFragment"
             app:destination="@id/guildFragment"

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.adapter
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -15,14 +14,10 @@ import cn.wthee.pcrtool.data.view.CharacterInfo
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
+import cn.wthee.pcrtool.ui.home.CharacterListFragmentDirections
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.PIC_CACHE_KEY
-import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
-import cn.wthee.pcrtool.utils.Constants.UNIT_NAME_EX
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
-import coil.memory.MemoryCache
 
 /**
  * 角色列表适配器
@@ -63,7 +58,6 @@ class CharacterListAdapter(private val callback: CallBack) :
                 root.animation =
                     AnimationUtils.loadAnimation(root.context, R.anim.anim_list_item)
                 //加载网络图片
-                var cacheKey: MemoryCache.Key? = null
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
                 val picUrl = Constants.CHARACTER_FULL_URL + id + Constants.WEBP
@@ -73,9 +67,6 @@ class CharacterListAdapter(private val callback: CallBack) :
                     listener(
                         onStart = {
                             startEnter()
-                        },
-                        onSuccess = { _, metadata ->
-                            cacheKey = metadata.memoryCacheKey
                         }
                     )
                 }
@@ -100,21 +91,16 @@ class CharacterListAdapter(private val callback: CallBack) :
                         MainActivity.canClick = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         MainActivity.pageLevel = 1
-                        val bundle = Bundle()
-                        bundle.putInt(UID, character.id)
-                        bundle.putString(UNIT_NAME, character.getNameF())
-                        bundle.putString(UNIT_NAME_EX, character.getNameL())
-                        bundle.putParcelable(PIC_CACHE_KEY, cacheKey)
+
+                        val action =
+                            CharacterListFragmentDirections.actionCharacterListFragmentToCharacterPagerFragment(
+                                character.id
+                            )
                         val extras =
                             FragmentNavigatorExtras(
                                 root to root.transitionName
                             )
-                        root.findNavController().navigate(
-                            R.id.action_characterListFragment_to_characterPagerFragment,
-                            bundle,
-                            null,
-                            extras
-                        )
+                        root.findNavController().navigate(action, extras)
                     }
                 }
                 //长按事件

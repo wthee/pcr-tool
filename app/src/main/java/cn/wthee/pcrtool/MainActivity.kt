@@ -294,12 +294,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     afterClickMenuItem()
                     //页面跳转
-                    findNavController(R.id.nav_host_fragment).navigate(
-                        menuItemIds[index],
-                        null,
-                        null,
-                        null
-                    )
+                    findNavController(R.id.nav_host_fragment).navigate(menuItemIds[index])
                 } catch (e: Exception) {
                     MainScope().launch {
                         UMCrash.generateCustomLog(e, Constants.EXCEPTION_MENU_NAV)
