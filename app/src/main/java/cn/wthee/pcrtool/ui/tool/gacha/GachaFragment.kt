@@ -12,6 +12,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolGachaBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 卡池
@@ -20,6 +21,7 @@ import cn.wthee.pcrtool.viewmodel.GachaViewModel
  *
  * ViewModels [GachaViewModel]
  */
+@AndroidEntryPoint
 class GachaFragment : Fragment() {
 
     private val viewModel: GachaViewModel by activityViewModels()

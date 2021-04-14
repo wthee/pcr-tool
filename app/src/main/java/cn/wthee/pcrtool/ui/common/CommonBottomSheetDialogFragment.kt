@@ -3,14 +3,12 @@ package cn.wthee.pcrtool.ui.common
 import android.os.Bundle
 import cn.wthee.pcrtool.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 底部弹窗基类
  *
  * 默认是否展开 [expend]
  */
-@AndroidEntryPoint
 open class CommonBottomSheetDialogFragment :
     BottomSheetDialogFragment() {
 

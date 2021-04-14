@@ -51,7 +51,7 @@ class PvpLikedFragment : Fragment() {
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             duration = 500L
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(Color.TRANSPARENT)
+            (Color.TRANSPARENT)
         }
     }
 

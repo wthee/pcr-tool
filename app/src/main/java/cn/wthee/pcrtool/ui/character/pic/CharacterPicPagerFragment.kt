@@ -10,15 +10,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.adapter.viewpager.CharacterPicPagerAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicPagerBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.imageLoader
-import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialSharedAxis
 import com.permissionx.guolindev.PermissionX
 import com.umeng.umcrash.UMCrash
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,31 +40,27 @@ class CharacterPicPagerFragment : Fragment() {
 
     companion object {
         val loaded = arrayListOf(false, false, false)
-
-        fun getInstance(uid: Int) = CharacterPicPagerFragment().apply {
-            arguments = Bundle().apply {
-                putInt(Constants.UID, uid)
-            }
-        }
     }
 
     private lateinit var binding: FragmentCharacterPicPagerBinding
     private lateinit var adapter: CharacterPicPagerAdapter
+    private val args: CharacterPicPagerFragmentArgs by navArgs()
     private var uid = -1
-    private var cacheKey: MemoryCache.Key? = null
     private val sharedCharacterViewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FabHelper.addBackFab(2)
-        requireArguments().apply {
-            uid = getInt(Constants.UID)
-            cacheKey = getParcelable(Constants.PIC_CACHE_KEY)
-        }
+        uid = args.unitId
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
-            setAllContainerColors(Color.TRANSPARENT)
+        }
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+            duration = 500L
+        }
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+            duration = 500L
         }
     }
 
@@ -82,7 +79,7 @@ class CharacterPicPagerFragment : Fragment() {
                     sharedCharacterViewModel.getR6Ids().contains(uid)
                 )
                 adapter =
-                    CharacterPicPagerAdapter(childFragmentManager, lifecycle, picData, cacheKey)
+                    CharacterPicPagerAdapter(childFragmentManager, lifecycle, picData)
                 pics.adapter = adapter
                 pics.offscreenPageLimit = 4
                 ViewPagerHelper(pics, requireContext()).adjustViewPager()

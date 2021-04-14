@@ -13,7 +13,6 @@ import cn.wthee.pcrtool.databinding.FragmentToolNewsDetailBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants.REGION
-import dagger.hilt.android.AndroidEntryPoint
 
 
 private const val NEWSID = "news_id"
@@ -28,7 +27,6 @@ private const val URL = "url"
  *
  * ViewModels []
  */
-@AndroidEntryPoint
 class NewsDetailDialogFragment : CommonBottomSheetDialogFragment() {
 
     private var region = 0

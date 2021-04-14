@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.utils.getSectionTextColor
  *
  * 列表项数据 [ClanBattleInfo]
  */
-class ClanAdapter :
+class ClanAdapter(private val callback: CallBack) :
     ListAdapter<ClanBattleInfo, ClanAdapter.ViewHolder>(ClanDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -71,9 +71,14 @@ class ClanAdapter :
                     }
                 }
             }
+            startEnter()
         }
 
-
+        private fun startEnter() {
+            if (absoluteAdapterPosition == ClanFragment.clickIndex) {
+                callback.todo()
+            }
+        }
     }
 
 }

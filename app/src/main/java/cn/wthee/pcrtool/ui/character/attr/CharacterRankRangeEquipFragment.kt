@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankEquipBinding
@@ -32,12 +33,11 @@ class CharacterRankRangeEquipFragment : Fragment() {
     private var uid = -1
     private var startRank = 1
     private var endRank = CharacterAttrFragment.maxRank
+    private val agrs: CharacterRankRangeEquipFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.apply {
-            uid = getInt(Constants.UID)
-        }
+        uid = agrs.unitId
     }
 
     override fun onCreateView(

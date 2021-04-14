@@ -91,7 +91,6 @@ class CharacterListAdapter(private val callback: CallBack) :
                         MainActivity.canClick = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         MainActivity.pageLevel = 1
-
                         val action =
                             CharacterListFragmentDirections.actionCharacterListFragmentToCharacterPagerFragment(
                                 character.id

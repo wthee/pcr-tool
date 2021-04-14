@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragmentDirections
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment.Companion.uid
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.utils.*
@@ -135,15 +136,11 @@ class CharacterAttrFragment : Fragment() {
             }
             fabEquipCount.apply {
                 setOnClickListener {
-                    val args = Bundle().apply {
-                        putInt(UID, CharacterPagerFragment.uid)
-                    }
-                    findNavController().navigate(
-                        R.id.action_characterPagerFragment_to_characterRankRangeEquipFragment,
-                        args,
-                        null,
-                        null
-                    )
+                    val action = CharacterPagerFragmentDirections
+                        .actionCharacterPagerFragmentToCharacterRankRangeEquipFragment(
+                            CharacterPagerFragment.uid
+                        )
+                    findNavController().navigate(action)
                 }
             }
             fabCharacterDrop.apply {

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.viewmodel
 
+import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,6 +24,7 @@ class ClanViewModel @Inject constructor(
 
     var clanInfo = MutableLiveData<List<ClanBattleInfo>>()
     var clanBossAttr = MutableLiveData<EnemyParameter>()
+    var state: Parcelable? = null
 
 
     /**

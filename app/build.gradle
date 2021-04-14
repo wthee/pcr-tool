@@ -96,7 +96,7 @@ dependencies {
     implementation 'com.github.wthee:CircleProgressBar:1.0.3'
 
     //coil
-    def coil_version = '1.1.1'
+    def coil_version = '1.2.0'
     implementation "io.coil-kt:coil:$coil_version"
     implementation "io.coil-kt:coil-gif:$coil_version"
 
@@ -106,6 +106,7 @@ dependencies {
 
     //Hilt
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
+    implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0-beta01'
 
     //Lifecycle
     def lifecycle_version = "2.3.1"

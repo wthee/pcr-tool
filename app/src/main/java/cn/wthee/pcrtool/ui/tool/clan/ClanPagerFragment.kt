@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.CallBack
@@ -18,7 +19,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.transition.MaterialContainerTransform
-import dagger.hilt.android.AndroidEntryPoint
+import com.google.android.material.transition.MaterialSharedAxis
 
 /**
  * 团队战
@@ -27,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
  *
  * ViewModels []
  */
-@AndroidEntryPoint
 class ClanPagerFragment : Fragment() {
 
     companion object {
@@ -40,19 +40,25 @@ class ClanPagerFragment : Fragment() {
     private lateinit var adapter: ClanBossIconAdapter
     private val REQUEST_CODE = 0
     private var selSection = 0
+    private val args: ClanPagerFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().let {
-            date = it.getString(Constants.CLAN_DATE) ?: ""
-            index = it.getInt(Constants.CLAN_BOSS_NO)
-            clan = it.getSerializable(Constants.CLAN_DATA) as ClanBattleInfo
-            selSection = clan.section
-        }
+        date = args.date
+        index = args.index
+        clan = args.clanInfo
+        selSection = clan.section
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
-            setAllContainerColors(ResourcesUtil.getColor(R.color.colorAlpha))
+            setAllContainerColors(ResourcesUtil.getColor(R.color.colorWhite))
+        }
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false).apply {
+            duration = 500L
+        }
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true).apply {
+            duration = 500L
         }
     }
 

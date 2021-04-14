@@ -15,8 +15,4 @@ class ClanRepository @Inject constructor(private val clanBattleDao: ClanBattleDa
 
     suspend fun getBossAttr(enemyId: Int) = clanBattleDao.getBossAttr(enemyId)
 
-    companion object {
-
-        fun getInstance(clanBattleDao: ClanBattleDao) = ClanRepository(clanBattleDao)
-    }
 }

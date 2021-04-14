@@ -16,6 +16,8 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import com.google.android.material.transition.MaterialSharedAxis
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -28,6 +30,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class CharacterListFragment : Fragment() {
 
     companion object {
@@ -44,6 +47,12 @@ class CharacterListFragment : Fragment() {
     private lateinit var listAdapter: CharacterListAdapter
     private lateinit var binding: FragmentCharacterListBinding
     private val viewModel: CharacterViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

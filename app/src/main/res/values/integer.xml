@@ -3,6 +3,6 @@
     <!--    integer-->
     <integer name="item_anim">600</integer>
     <integer name="fragment_anim">500</integer>
-    <integer name="dialog_anim">350</integer>
+    <integer name="dialog_anim">250</integer>
     <integer name="menu_item">250</integer>
 </resources>

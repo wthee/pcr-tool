@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色排行
@@ -22,6 +23,7 @@ import cn.wthee.pcrtool.viewmodel.LeaderViewModel
  *
  * ViewModels [LeaderViewModel]
  */
+@AndroidEntryPoint
 class LeaderFragment : Fragment() {
 
     private lateinit var binding: FragmentToolLeaderBinding
