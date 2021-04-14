@@ -1,2 +1,0 @@
-com/applandeo/materialcalendarview/BuildConfig.java
- com.applandeo.materialcalendarview.BuildConfig
