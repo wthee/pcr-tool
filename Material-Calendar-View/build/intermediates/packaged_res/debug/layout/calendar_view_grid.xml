@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.applandeo.materialcalendarview.extensions.CalendarGridView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendarGridView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:drawSelectorOnTop="true"
+    tools:listitem="@layout/calendar_view_day"
+    android:listSelector="@android:color/transparent"
+    android:numColumns="7" />
