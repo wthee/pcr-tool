@@ -82,7 +82,8 @@ dependencies {
     implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation("androidx.activity:activity-compose:1.3.0-alpha02")
+    implementation("androidx.activity:activity-compose:1.3.0-alpha06")
+    implementation("androidx.preference:preference-ktx:1.1.1")
 
     //CircleProgressBar
     implementation("com.github.wthee:CircleProgressBar:1.0.3")
@@ -110,9 +111,7 @@ dependencies {
 
 
     //Navigation
-    implementation("androidx.navigation:navigation-runtime-ktx:${rootProject.extra["navigation_version"]}")
-    implementation("androidx.navigation:navigation-fragment-ktx:${rootProject.extra["navigation_version"]}")
-    implementation("androidx.navigation:navigation-ui-ktx:${rootProject.extra["navigation_version"]}")
+    implementation("androidx.navigation:navigation-compose:1.0.0-alpha10")
 
     //Palette
     val palette_version = "1.0.0"
