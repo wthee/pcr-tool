@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -37,15 +36,13 @@ fun CharacterList(
 
 @Composable
 fun CharacterItem(character: CharacterInfo) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text = character.getNameF())
-            Row() {
-                Text(text = character.getFixedAge())
-                Text(text = character.getFixedHeight())
-                Text(text = character.getFixedWeight())
-                Text(text = character.position.toString())
-            }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(text = character.getNameF())
+        Row() {
+            Text(text = character.getFixedAge())
+            Text(text = character.getFixedHeight())
+            Text(text = character.getFixedWeight())
+            Text(text = character.position.toString())
         }
     }
 }
