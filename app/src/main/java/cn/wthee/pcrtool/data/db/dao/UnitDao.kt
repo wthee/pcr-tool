@@ -81,7 +81,7 @@ interface UnitDao {
         CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC
             """
     )
-    fun getInfoAndData(
+    suspend fun getInfoAndData(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
         atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>
     ): List<CharacterInfo>

@@ -12,7 +12,7 @@ import javax.inject.Inject
  */
 class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
-    fun getInfoAndData(
+    suspend fun getInfoAndData(
         sortType: SortType,
         asc: Boolean,
         name: String,

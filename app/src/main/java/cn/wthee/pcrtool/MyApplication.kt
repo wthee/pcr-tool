@@ -33,6 +33,8 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        val sp = getSharedPreferences("main", Context.MODE_PRIVATE)
+        DatabaseUpdater.setSp(sp)
         backupMode = DatabaseUpdater.tryOpenDatabase() == 0
     }
 

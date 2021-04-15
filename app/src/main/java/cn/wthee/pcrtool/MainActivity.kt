@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,9 +24,11 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     companion object {
@@ -46,8 +47,6 @@ class MainActivity : ComponentActivity() {
         setHandler()
         //数据库版本检查
         GlobalScope.launch {
-            val sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-            DatabaseUpdater.setSp(sp)
             DatabaseUpdater.checkDBVersion()
         }
     }

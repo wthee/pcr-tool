@@ -8,10 +8,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavController
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -19,11 +19,17 @@ import cn.wthee.pcrtool.data.view.CharacterInfo
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
 @Composable
-fun CharacterList(navController: NavController, viewModel: CharacterViewModel = viewModel()) {
-
+fun CharacterList(
+    navController: NavController,
+    viewModel: CharacterViewModel = hiltNavGraphViewModel()
+) {
     viewModel.getCharacters(FilterCharacter(), SortType.SORT_DATE, false, "")
+    var list by remember { mutableStateOf(listOf<CharacterInfo>()) }
+    viewModel.characterList.observeForever {
+        list = it
+    }
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(viewModel.characterList.value!!) {
+        items(list) {
             CharacterItem(it)
         }
     }

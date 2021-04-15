@@ -46,14 +46,13 @@ class CharacterViewModel @Inject constructor(
         reload: Boolean = true
     ) {
         viewModelScope.launch {
-            characterList.postValue(
-                repository.getInfoAndData(
-                    sortType,
-                    asc,
-                    name,
-                    params
-                )
+            val data = repository.getInfoAndData(
+                sortType,
+                asc,
+                name,
+                params
             )
+            characterList.postValue(data)
         }
     }
 
