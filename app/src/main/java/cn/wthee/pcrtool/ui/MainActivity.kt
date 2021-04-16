@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool
+package cn.wthee.pcrtool.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,20 +6,20 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cn.wthee.pcrtool.MainActivity.Companion.pageLevel
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.ui.Navigation
-import cn.wthee.pcrtool.ui.home.CharacterList
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.Constants
@@ -33,9 +33,9 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         lateinit var handler: Handler
-        var pageLevel = 0
     }
 
+    @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -81,32 +81,45 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun Home() {
     val navController = rememberNavController()
+    val viewModel: NavViewModel = hiltNavGraphViewModel()
 
-    NavHost(
-        navController,
-        startDestination = Navigation.CHARACTER_LIST,
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
     ) {
-        composable(Navigation.CHARACTER_LIST) { CharacterList(navController) }
+        NavGraph(navController, viewModel)
+        FabMain(navController, viewModel, Modifier.align(Alignment.BottomEnd))
     }
-//    Box(modifier = Modifier.fillMaxSize()) {
-//        Surface(modifier = Modifier.fillMaxSize()) {
-//
-//
-//        }
-//        FabMain(Modifier.align(Alignment.BottomEnd))
-//    }
 }
 
 @Composable
-fun FabMain(modifier: Modifier) {
-    var mainIcon by remember { mutableStateOf(true) }
+fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier: Modifier) {
+    val pageLevel = viewModel.pageLevel.observeAsState()
+
     FloatingActionButton(
         onClick = {
-            mainIcon = pageLevel <= 0
-
+            val currentPageLevel = pageLevel.value ?: 0
+            if (currentPageLevel > 0) {
+                viewModel.pageLevel.postValue(currentPageLevel - 1)
+                navController.navigateUp()
+            } else {
+                //TODO 打开或关闭菜单
+                val menuState = if (currentPageLevel == 0) {
+                    //打开菜单
+                    ToastUtil.short("打开")
+                    -1
+                } else {
+                    //关闭菜单
+                    ToastUtil.short("关闭")
+                    0
+                }
+                viewModel.pageLevel.postValue(menuState)
+            }
         },
         backgroundColor = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.primary,
@@ -115,15 +128,12 @@ fun FabMain(modifier: Modifier) {
             .size(Dimen.fabSize),
     ) {
         val icon =
-            painterResource(id = if (mainIcon) R.drawable.ic_function else R.drawable.ic_left)
+            painterResource(
+                id = if (pageLevel.value == null || pageLevel.value!! == 0)
+                    R.drawable.ic_function
+                else
+                    R.drawable.ic_left
+            )
         Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
-    }
-}
-
-@Preview
-@Composable
-fun PreviewMain() {
-    PcrtoolcomposeTheme() {
-        Home()
     }
 }

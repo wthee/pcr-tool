@@ -8,9 +8,9 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.ui.MainActivity
 
 class ShortcutHelper(private val context: Context) {
 

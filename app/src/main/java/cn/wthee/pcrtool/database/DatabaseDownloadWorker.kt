@@ -9,9 +9,9 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
-import cn.wthee.pcrtool.MainActivity.Companion.handler
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.service.DatabaseService
+import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.utils.*
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.*

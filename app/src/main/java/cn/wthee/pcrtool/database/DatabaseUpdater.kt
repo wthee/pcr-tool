@@ -8,11 +8,11 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import cn.wthee.pcrtool.MainActivity.Companion.handler
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
+import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL

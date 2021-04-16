@@ -11,7 +11,7 @@ val VERSION_CODE = 82
 android {
 
     compileSdk = 30
-    buildToolsVersion = "30.0.3"
+    buildToolsVersion = "31.0.0-rc2"
     flavorDimensions("version")
 
     defaultConfig {
@@ -69,29 +69,32 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = rootProject.extra["compose_version"] as String
-        kotlinCompilerVersion = "1.4.32"
     }
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
 
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("com.google.android.material:material:1.3.0")
+    implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
+    implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
+    implementation("androidx.compose.foundation:foundation:${rootProject.extra["compose_version"]}")
+    implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_version"]}")
+
+    implementation("com.google.android.material:material:1.3.0")
+
+    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.activity:activity-ktx:1.2.2")
+    implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.activity:activity-compose:1.3.0-alpha06")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
-    //CircleProgressBar
-    implementation("com.github.wthee:CircleProgressBar:1.0.3")
-
-    //coil
-    val coil_version = "1.2.0"
-    implementation("io.coil-kt:coil:$coil_version")
-    implementation("io.coil-kt:coil-gif:$coil_version")
+    //Accompanist-Coil
+    implementation("io.coil-kt:coil-gif:1.2.0")
+    implementation("com.google.accompanist:accompanist-coil:0.7.1")
 
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0-alpha08")
@@ -105,14 +108,13 @@ dependencies {
     val lifecycle_version = "2.3.1"
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-
-    //Material
-    val material_version = "1.3.0"
-    implementation("com.google.android.material:material:$material_version")
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:1.0.0-alpha10")
+
+    //okio
+    implementation("com.squareup.okio:okio:2.10.0")
 
     //Palette
     val palette_version = "1.0.0"
@@ -123,13 +125,12 @@ dependencies {
     implementation("com.permissionx.guolindev:permissionx:$permissionx_version")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime-ktx:3.0.0-beta03")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha08")
 
     //Retrofit
     val retrofit_version = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
     implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:$retrofit_version")
 
     //Room
     val room_version = "2.3.0-rc01"
@@ -144,10 +145,6 @@ dependencies {
     implementation("com.umeng.umsdk:common:9.3.8")
     implementation("com.umeng.umsdk:asms:1.2.2")
     implementation("com.umeng.umsdk:apm:1.2.0")
-
-    //Viewpager2
-    val viewpager2_version = "1.0.0"
-    implementation("androidx.viewpager2:viewpager2:$viewpager2_version")
 
     //Work
     val work_version = "2.7.0-alpha02"

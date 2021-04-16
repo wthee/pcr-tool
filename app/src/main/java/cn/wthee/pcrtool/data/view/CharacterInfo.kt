@@ -9,18 +9,18 @@ import java.io.Serializable
  * 角色信息视图
  */
 data class CharacterInfo(
-    @ColumnInfo(name = "unit_id") var id: Int = 0,
-    @ColumnInfo(name = "unit_name") var name: String = "test",
-    @ColumnInfo(name = "kana") var kana: String = "test",
-    @ColumnInfo(name = "age_int") var age: String = "8",
-    @ColumnInfo(name = "guild") var guild: String = "?",
-    @ColumnInfo(name = "race") var race: String = "?",
-    @ColumnInfo(name = "height_int") var height: String = "?",
-    @ColumnInfo(name = "weight_int") var weight: String = "?",
-    @ColumnInfo(name = "search_area_width") var position: Int = 0,
-    @ColumnInfo(name = "atk_type") var atkType: Int = 0,
-    @ColumnInfo(name = "start_time") var startTime: String = "2030-01-01 00:00:00",
-    @ColumnInfo(name = "rarity_6_quest_id") var r6Id: Int = 0,
+    @ColumnInfo(name = "unit_id") val id: Int,
+    @ColumnInfo(name = "unit_name") val name: String,
+    @ColumnInfo(name = "kana") val kana: String,
+    @ColumnInfo(name = "age_int") val age: String,
+    @ColumnInfo(name = "guild") val guild: String,
+    @ColumnInfo(name = "race") val race: String,
+    @ColumnInfo(name = "height_int") val height: String,
+    @ColumnInfo(name = "weight_int") val weight: String,
+    @ColumnInfo(name = "search_area_width") val position: Int,
+    @ColumnInfo(name = "atk_type") val atkType: Int,
+    @ColumnInfo(name = "start_time") val startTime: String,
+    @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
 ) : Serializable {
 
     /**
