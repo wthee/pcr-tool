@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.database
 
-import android.content.SharedPreferences
+import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SupportSQLiteOpenHelper
@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
+import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
@@ -24,22 +25,18 @@ import java.io.File
 /**
  * 数据库更新
  */
-object DatabaseUpdater {
-
-    private lateinit var sp: SharedPreferences
-
-    fun setSp(sp: SharedPreferences) {
-        this.sp = sp
-    }
+class DatabaseUpdater(private val viewModel: NavViewModel) {
+    val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     /**
      * 切换版本
      */
     suspend fun changeType() {
-        var type = getDatabaseType()
+        val type = getDatabaseType()
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, if (type == 1) 2 else 1)
         }
+        viewModel.downloadProgress.postValue(-1)
         checkDBVersion(1)
     }
 
@@ -51,8 +48,6 @@ object DatabaseUpdater {
      * [force] 是否强制更新
      */
     suspend fun checkDBVersion(from: Int = -1, force: Boolean = false) {
-        //TODO 提示开始
-
         //获取数据库最新版本
         try {
             //创建服务
@@ -153,74 +148,6 @@ object DatabaseUpdater {
         }
     }
 
-    /**
-     * 尝试打开本地数据库
-     *
-     * 1：正常打开  0：启用备用数据库
-     */
-    fun tryOpenDatabase(): Int {
-        if (getDatabaseType() == 1) {
-            try {
-                //尝试打开数据库
-                if (File(FileUtil.getDatabasePath(1)).exists()) {
-                    openDatabase(AppDatabase.buildDatabase(Constants.DATABASE_NAME).openHelper)
-                }
-            } catch (e: Exception) {
-                //启用远程备份数据库
-                MainScope().launch {
-                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-                    UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
-                }
-                return 0
-            }
-            //正常打开
-            return 1
-        } else {
-            try {
-                //尝试打开数据库
-                if (File(FileUtil.getDatabasePath(2)).exists()) {
-                    openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
-                }
-            } catch (e: Exception) {
-                //启用远程备份数据库
-                MainScope().launch {
-                    ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-                    UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
-                }
-                return 0
-            }
-            return 1
-        }
-    }
-
-    /**
-     * 打开数据库
-     */
-    private fun openDatabase(helper: SupportSQLiteOpenHelper) {
-        helper.readableDatabase
-        helper.close()
-    }
-
-    /**
-     * 获取数据库版本
-     * 1: 国服 2：日服
-     */
-    fun getDatabaseType() = sp.getInt(Constants.SP_DATABASE_TYPE, 1)
-
-    /**
-     * 获取已选择的游戏版本
-     */
-    fun getRegion() = if (getDatabaseType() == 1) 2 else {
-        //获取查询设置
-        val tw = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
-            .getBoolean("pvp_region", false)
-        if (tw) {
-            3
-        } else {
-            4
-        }
-    }
-
 
     /**
      * 获取数据库文件名
@@ -228,17 +155,92 @@ object DatabaseUpdater {
     private fun getVersionFileName() =
         if (getDatabaseType() == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP
 
-    /**
-     * 更新本地数据库版本、哈希值
-     */
-    fun updateLocalDataBaseVersion(ver: String) {
-        val type = getDatabaseType()
-        sp.edit {
-            putString(
-                if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-                ver
-            )
-        }
-    }
 
+}
+
+/**
+ * 获取数据库版本
+ * 1: 国服 2：日服
+ */
+fun getDatabaseType(): Int {
+    val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
+    return sp.getInt(Constants.SP_DATABASE_TYPE, 1)
+}
+
+
+/**
+ * 更新本地数据库版本、哈希值
+ */
+fun updateLocalDataBaseVersion(ver: String) {
+    val type = getDatabaseType()
+    val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
+
+    sp.edit {
+        putString(
+            if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+            ver
+        )
+    }
+}
+
+/**
+ * 尝试打开本地数据库
+ *
+ * 1：正常打开  0：启用备用数据库
+ */
+fun tryOpenDatabase(): Int {
+    if (getDatabaseType() == 1) {
+        try {
+            //尝试打开数据库
+            if (File(FileUtil.getDatabasePath(1)).exists()) {
+                openDatabase(AppDatabase.buildDatabase(Constants.DATABASE_NAME).openHelper)
+            }
+        } catch (e: Exception) {
+            //启用远程备份数据库
+            MainScope().launch {
+                ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
+            }
+            return 0
+        }
+        //正常打开
+        return 1
+    } else {
+        try {
+            //尝试打开数据库
+            if (File(FileUtil.getDatabasePath(2)).exists()) {
+                openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
+            }
+        } catch (e: Exception) {
+            //启用远程备份数据库
+            MainScope().launch {
+                ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+                UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
+            }
+            return 0
+        }
+        return 1
+    }
+}
+
+/**
+ * 打开数据库
+ */
+fun openDatabase(helper: SupportSQLiteOpenHelper) {
+    helper.readableDatabase
+    helper.close()
+}
+
+/**
+ * 获取已选择的游戏版本
+ */
+fun getRegion() = if (getDatabaseType() == 1) 2 else {
+    //获取查询设置
+    val tw = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
+        .getBoolean("pvp_region", false)
+    if (tw) {
+        3
+    } else {
+        4
+    }
 }

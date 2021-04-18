@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.*
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.service.DatabaseService
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.utils.*
 import com.umeng.umcrash.UMCrash
@@ -25,7 +26,7 @@ import java.io.File
  */
 class DatabaseDownloadWorker(
     @NonNull context: Context,
-    @NonNull parameters: WorkerParameters?
+    @NonNull parameters: WorkerParameters?,
 ) : CoroutineWorker(context, parameters!!) {
 
     //通知栏
@@ -35,6 +36,7 @@ class DatabaseDownloadWorker(
     private val noticeId = 0
     private lateinit var notification: NotificationCompat.Builder
 
+
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
 
@@ -43,6 +45,7 @@ class DatabaseDownloadWorker(
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
         const val KEY_FROM = "KEY_FROM"
+        const val KEY_VIEWMODEL = "KEY_VIEWMODEL"
 
         lateinit var service: Call<ResponseBody>
     }
@@ -55,7 +58,6 @@ class DatabaseDownloadWorker(
         val fileName = inputData.getString(KEY_FILE)
         val from = inputData.getInt(KEY_FROM, -1)
         setForegroundAsync(createForegroundInfo())
-        //TODO 显示加载进度
         val result = download(version, type, fileName ?: "")
         if (result == Result.success()) {
             //通知更新数据
@@ -75,18 +77,12 @@ class DatabaseDownloadWorker(
                     //TODO 下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         //更新下载进度
-                        notification.setProgress(100, progress, false)
-                            .setContentTitle(
-                                "${Constants.NOTICE_TITLE} $currSize  / $totalSize"
-                            )
-                        notificationManager.notify(noticeId, notification.build())
+                        MainActivity.navViewModel.downloadProgress.postValue(progress)
                     }
 
                     override fun onFinish() {
                         //下载完成
-                        notification.setProgress(100, 100, false)
-                            .setContentTitle("${Constants.NOTICE_TOAST_SUCCESS} ")
-                        notificationManager.cancelAll()
+                        MainActivity.navViewModel.downloadProgress.postValue(100)
                     }
                 })
             ).getDb(fileName)
@@ -125,7 +121,7 @@ class DatabaseDownloadWorker(
             //加压缩
             UnzippedUtil.deCompress(db, true)
             //更新数据库版本号
-            DatabaseUpdater.updateLocalDataBaseVersion(version)
+            updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
             MainScope().launch {

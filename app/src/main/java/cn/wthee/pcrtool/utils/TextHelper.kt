@@ -13,7 +13,7 @@ val Double.int: Int
 
 //rank 颜色
 fun getRankColor(rank: Int): Int {
-    val color = when (rank) {
+    val colorId = when (rank) {
         in 2..3 -> R.color.color_rank_2_3
         in 4..6 -> R.color.color_rank_4_6
         in 7..10 -> R.color.color_rank_7_10
@@ -23,7 +23,7 @@ fun getRankColor(rank: Int): Int {
             R.color.color_rank_2_3
         }
     }
-    return ResourcesUtil.getColor(color)
+    return colorId
 }
 
 /**

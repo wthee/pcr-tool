@@ -92,9 +92,13 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.3.0-alpha06")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
-    //Accompanist-Coil
+    //Accompanist
+    val accompanist_version = "0.7.1"
+    implementation("com.google.accompanist:accompanist-coil:$accompanist_version")
+    implementation("com.google.accompanist:accompanist-pager:$accompanist_version")
+    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanist_version")
+    //coil-gif
     implementation("io.coil-kt:coil-gif:1.2.0")
-    implementation("com.google.accompanist:accompanist-coil:0.7.1")
 
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0-alpha08")

@@ -4,7 +4,7 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
-import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.JsonArray
@@ -45,7 +45,7 @@ class MyAPIRepository(private val service: MyAPIService) {
      * 根据防守方 id [ids] 查询竞技场对战信息
      */
     suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpResultData>> {
-        val region = DatabaseUpdater.getRegion()
+        val region = getRegion()
         //接口参数
         val json = JsonObject()
         json.addProperty("region", region)

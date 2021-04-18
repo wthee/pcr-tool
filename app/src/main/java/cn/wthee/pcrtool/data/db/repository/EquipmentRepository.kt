@@ -15,8 +15,8 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
-    fun getPagingEquipments(name: String, filter: FilterEquipment) =
-        equipmentDao.getPagingEquipments(
+    suspend fun getEquipments(name: String, filter: FilterEquipment) =
+        equipmentDao.getEquipments(
             filter.type,
             name,
             if (filter.all) 1 else 0,

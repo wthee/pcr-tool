@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Module
 class DatabaseModule {
 
-    private fun getType() = DatabaseUpdater.getDatabaseType()
+    private fun getType() = getDatabaseType()
 
     @Singleton
     @Provides

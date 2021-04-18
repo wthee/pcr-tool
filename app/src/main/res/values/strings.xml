@@ -24,6 +24,7 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
+    <string name="skill_level">技能等级：</string>
     <string name="skill_loop">技能循环</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
@@ -168,4 +169,10 @@
     <string name="title_section">阶段</string>
     <string name="no_drop_data">无掉落信息</string>
     <string name="download_pic">下载图片</string>
+
+    <!-- 下载相关-->
+    <string name="db_checking">数据校验中</string>
+    <string name="db_downloading">下载中 </string>
+    <string name="db_downloaded">数据已更新</string>
+
 </resources>

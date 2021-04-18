@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.view
 
 import androidx.room.ColumnInfo
-import cn.wthee.pcrtool.R
 import java.io.Serializable
 
 
@@ -64,14 +63,4 @@ data class CharacterInfo(
         }
     }
 
-}
-
-/**
- * 根据位置 [position]
- */
-fun getPositionIcon(position: Int) = when (position) {
-    in 0..299 -> R.drawable.ic_position_0
-    in 300..599 -> R.drawable.ic_position_1
-    in 600..9999 -> R.drawable.ic_position_2
-    else -> R.drawable.ic_position_2
 }

@@ -14,13 +14,16 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.view.CharacterInfo
-import cn.wthee.pcrtool.ui.common.CharacterCard
+import cn.wthee.pcrtool.ui.compose.CharacterCard
+import cn.wthee.pcrtool.ui.compose.PositionIcon
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
@@ -53,13 +56,16 @@ fun CharacterItem(
     toDetail: (Int, Int) -> Unit,
 ) {
 
-    Card(shape = Shapes.large, modifier = Modifier
-        .padding(Dimen.mediuPadding)
-        .clip(Shapes.large)
-        .clickable {
-            //跳转至详情
-            toDetail(character.id, character.r6Id)
-        }) {
+    Card(
+        shape = Shapes.large,
+        elevation = Dimen.cardElevation,
+        modifier = Modifier
+            .padding(Dimen.mediuPadding)
+            .clip(Shapes.large)
+            .clickable {
+                //跳转至详情
+                toDetail(character.id, character.r6Id)
+            }) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -67,19 +73,40 @@ fun CharacterItem(
             var id = character.id
             id += if (character.r6Id != 0) 60 else 30
             CharacterCard(Constants.CHARACTER_FULL_URL + id + Constants.WEBP, true)
-            //名字
-            Text(
-                text = character.getNameF(),
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.padding(Dimen.smallPadding)
-            )
+            //名字、位置
+            Row(
+                modifier = Modifier.padding(Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = character.getNameF(),
+                    style = MaterialTheme.typography.subtitle2,
+                    modifier = Modifier.weight(1f)
+                )
+                PositionIcon(character.position, 18.dp)
+            }
             //其它属性
-            Row(modifier = Modifier.padding(Dimen.smallPadding)) {
-                Text(text = character.getFixedAge(), style = MaterialTheme.typography.body1)
-                Text(text = character.getFixedHeight(), style = MaterialTheme.typography.body1)
-                Text(text = character.getFixedWeight(), style = MaterialTheme.typography.body1)
-                Text(text = character.position.toString(), style = MaterialTheme.typography.body1)
+            Row(
+                modifier = Modifier.padding(
+                    start = Dimen.smallPadding,
+                    bottom = Dimen.smallPadding
+                )
+            ) {
+                CharacterNumberText(character.getFixedAge())
+                CharacterNumberText(character.getFixedHeight() + "CM")
+                CharacterNumberText(character.getFixedWeight() + "KG")
+                CharacterNumberText(character.position.toString())
             }
         }
     }
+}
+
+@Composable
+fun CharacterNumberText(text: String) {
+    Text(
+        text = text,
+        color = MaterialTheme.colors.primaryVariant,
+        style = MaterialTheme.typography.caption,
+        modifier = Modifier.padding(end = Dimen.smallPadding)
+    )
 }

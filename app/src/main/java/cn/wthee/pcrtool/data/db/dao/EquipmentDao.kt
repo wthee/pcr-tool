@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data.db.dao
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -78,12 +77,12 @@ interface EquipmentDao {
      */
     @Transaction
     @Query("""$viewEquipmentMaxData  $equipWhere""")
-    fun getPagingEquipments(
+    suspend fun getEquipments(
         type: String,
         name: String,
         showAll: Int,
         starIds: List<Int>
-    ): PagingSource<Int, EquipmentMaxData>
+    ): List<EquipmentMaxData>
 
     /**
      * 根据筛选条件获取所有装备数量

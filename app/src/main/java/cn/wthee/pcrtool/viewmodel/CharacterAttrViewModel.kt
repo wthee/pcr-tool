@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.model.CharacterSelectInfo
 import cn.wthee.pcrtool.data.view.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.int
 import com.umeng.umcrash.UMCrash
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.MainScope
@@ -29,17 +31,21 @@ class CharacterAttrViewModel @Inject constructor(
     var equipments = MutableLiveData<List<EquipmentMaxData>>()
     var storyAttrs = MutableLiveData<Attr>()
     var sumInfo = MutableLiveData<Attr>()
-    var maxData = MutableLiveData<MutableMap<String, Int>>()
-    var selData = MutableLiveData<MutableMap<String, Int>>()
+    var maxData = MutableLiveData<CharacterSelectInfo>()
+    var selData = MutableLiveData<CharacterSelectInfo>()
+    var level = MutableLiveData(0)
+    var atk = MutableLiveData(0)
 
     /**
      * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
      */
-    fun getCharacterInfo(unitId: Int, data: MutableMap<String, Int>) {
+    fun getCharacterInfo(unitId: Int, data: CharacterSelectInfo) {
         //计算属性
         viewModelScope.launch {
             val attr = getAttrs(unitId, data)
+            level.postValue(data.level)
+            atk.postValue(attr.atk.int)
             sumInfo.postValue(attr)
         }
 
@@ -49,13 +55,13 @@ class CharacterAttrViewModel @Inject constructor(
      * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
      */
-    suspend fun getAttrs(unitId: Int, data: MutableMap<String, Int>): Attr {
+    suspend fun getAttrs(unitId: Int, data: CharacterSelectInfo): Attr {
         val info = Attr()
         try {
-            val rank = data[Constants.RANK]!!
-            val rarity = data[Constants.RARITY]!!
-            val lv = data[Constants.LEVEL]!!
-            val ueLv = data[Constants.UNIQUE_EQUIP_LEVEL]!!
+            val rank = data.rank
+            val rarity = data.rarity
+            val lv = data.level
+            val ueLv = data.uniqueEquipLevel
 
             val rankData = unitRepository.getRankStatus(unitId, rank)
             val rarityData = unitRepository.getRarity(unitId, rarity)
@@ -94,10 +100,10 @@ class CharacterAttrViewModel @Inject constructor(
                     e,
                     Constants.EXCEPTION_LOAD_ATTR +
                             "uid:$unitId," +
-                            "rank:${data[Constants.RANK]}," +
-                            "ratity:${data[Constants.RARITY]}" +
-                            "lv:${data[Constants.LEVEL]}" +
-                            "ueLv:${data[Constants.UNIQUE_EQUIP_LEVEL]}"
+                            "rank:${data.rank}," +
+                            "ratity:${data.rarity}" +
+                            "lv:${data.level}" +
+                            "ueLv:${data.uniqueEquipLevel}"
                 )
             }
         }
@@ -130,12 +136,7 @@ class CharacterAttrViewModel @Inject constructor(
                 val rarity = unitRepository.getMaxRarity(unitId)
                 val level = unitRepository.getMaxLevel()
                 val ueLv = equipmentRepository.getUniqueEquipMaxLv()
-                val map = HashMap<String, Int>()
-                map["rank"] = rank
-                map["rarity"] = rarity
-                map["level"] = level
-                map["ueLv"] = ueLv
-                maxData.postValue(map)
+                maxData.postValue(CharacterSelectInfo(rank, rarity, level, ueLv))
             } catch (e: Exception) {
 
             }

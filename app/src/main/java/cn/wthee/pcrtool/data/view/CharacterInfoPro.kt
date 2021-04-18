@@ -53,7 +53,7 @@ data class CharacterInfoPro(
      * 角色自我介绍
      */
     fun getSelf() = if (this.selfText.contains("test") || this.selfText.isBlank()) {
-        "......"
+        null
     } else {
         this.selfText.replace("\\n", "")
     }
@@ -76,5 +76,11 @@ data class CharacterInfoPro(
      */
     fun getRoomCommentsText() =
         roomComments.replace("\\n", "").replace("-", "\n\n")
+
+    /**
+     * 生日
+     */
+    fun getBirth() = "$birthMonth 月 $birthDay 日"
+
 
 }

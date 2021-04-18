@@ -8,7 +8,7 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.utils.ApiUtil
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -33,9 +33,7 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        val sp = getSharedPreferences("main", Context.MODE_PRIVATE)
-        DatabaseUpdater.setSp(sp)
-        backupMode = DatabaseUpdater.tryOpenDatabase() == 0
+        backupMode = +tryOpenDatabase() == 0
     }
 
     override fun newImageLoader(): ImageLoader {

@@ -9,7 +9,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
 
 class ShortcutHelper(private val context: Context) {
@@ -32,7 +32,7 @@ class ShortcutHelper(private val context: Context) {
                 "tool://news"
             )
 
-            val calShortcut = if (DatabaseUpdater.getDatabaseType() == 1) {
+            val calShortcut = if (getDatabaseType() == 1) {
                 getShortcut(
                     "open_tool_calendar",
                     ResourcesUtil.getString(R.string.tool_calendar_title),

@@ -7,7 +7,7 @@ import androidx.preference.*
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -46,7 +46,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
         val shareApp = findPreference<Preference>("share_app")
         switchPvpRegion = findPreference("pvp_region")!!
         //切换竞技场查询
-        val type = DatabaseUpdater.getDatabaseType()
+        val type = getDatabaseType()
         switchPvpRegion.isVisible = type != 1
         //历史数据大小
         FileUtil.getOldDatabaseSize().let {

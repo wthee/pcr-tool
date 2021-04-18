@@ -20,12 +20,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.compose.MenuContent
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -33,8 +35,11 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         lateinit var handler: Handler
+        lateinit var navViewModel: NavViewModel
     }
 
+    @ExperimentalMaterialApi
+    @ExperimentalPagerApi
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +50,6 @@ class MainActivity : ComponentActivity() {
         }
         //设置 handler
         setHandler()
-        //数据库版本检查
-        GlobalScope.launch {
-            DatabaseUpdater.checkDBVersion()
-        }
     }
 
     //TODO 刷新页面
@@ -81,19 +82,38 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
 fun Home() {
     val navController = rememberNavController()
-    val viewModel: NavViewModel = hiltNavGraphViewModel()
+    val actions = remember(navController) { NavActions(navController) }
+    navViewModel = hiltNavGraphViewModel()
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
     ) {
-        NavGraph(navController, viewModel)
-        FabMain(navController, viewModel, Modifier.align(Alignment.BottomEnd))
+        //数据库版本检查
+        scope.launch {
+            DatabaseUpdater(navViewModel).checkDBVersion()
+        }
+
+        NavGraph(navController, navViewModel, actions)
+        //菜单
+        MenuContent(navViewModel, actions)
+        Column(modifier = Modifier.align(Alignment.BottomEnd)) {
+            DownloadCompose(navViewModel)
+            FabMain(
+                navController, navViewModel, modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(Dimen.fabMargin)
+                    .size(Dimen.fabSize)
+            )
+        }
     }
 }
 
@@ -108,24 +128,14 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
                 viewModel.pageLevel.postValue(currentPageLevel - 1)
                 navController.navigateUp()
             } else {
-                //TODO 打开或关闭菜单
-                val menuState = if (currentPageLevel == 0) {
-                    //打开菜单
-                    ToastUtil.short("打开")
-                    -1
-                } else {
-                    //关闭菜单
-                    ToastUtil.short("关闭")
-                    0
-                }
+                //打开或关闭菜单
+                val menuState = if (currentPageLevel == 0) -1 else 0
                 viewModel.pageLevel.postValue(menuState)
             }
         },
         backgroundColor = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.primary,
-        modifier = modifier
-            .padding(Dimen.fabMargin)
-            .size(Dimen.fabSize),
+        modifier = modifier,
     ) {
         val icon =
             painterResource(
