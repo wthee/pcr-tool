@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 import android.util.DisplayMetrics
+import cn.wthee.pcrtool.MyApplication
 
 
 /**
@@ -36,3 +37,12 @@ object ScreenUtil {
     fun getHeight() = getDm().heightPixels
 
 }
+
+/**
+ *  获取 像素 的dp
+ */
+val Float.px2dp: Int
+    get() {
+        val scale: Float = MyApplication.context.resources.displayMetrics.density
+        return (this / scale + 0.5f).toInt()
+    }

@@ -97,6 +97,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-coil:$accompanist_version")
     implementation("com.google.accompanist:accompanist-pager:$accompanist_version")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanist_version")
+    implementation("com.google.accompanist:accompanist-flowlayout:$accompanist_version")
     //coil-gif
     implementation("io.coil-kt:coil-gif:1.2.0")
 

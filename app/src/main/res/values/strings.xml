@@ -30,7 +30,7 @@
     <string name="looping">循环动作</string>
     <string name="equip_details">道具详情</string>
     <string name="title_comments">交流</string>
-    <string name="title_room_comments">小屋交流</string>
+    <string name="title_room_comments">小屋</string>
     <string name="title_material">所需装备：%d</string>
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">- 剧情属性 -</string>

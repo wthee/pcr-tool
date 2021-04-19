@@ -14,11 +14,11 @@ import cn.wthee.pcrtool.ui.theme.Shapes
  * 蓝底白字
  */
 @Composable
-fun MainTitleText(text: String, modifier: Modifier = Modifier) {
+fun MainTitleText(text: String, small: Boolean = false, modifier: Modifier = Modifier) {
     Text(
         text = text,
         color = MaterialTheme.colors.onPrimary,
-        style = MaterialTheme.typography.body2,
+        style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
             .background(color = MaterialTheme.colors.primary, shape = Shapes.small)
             .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)

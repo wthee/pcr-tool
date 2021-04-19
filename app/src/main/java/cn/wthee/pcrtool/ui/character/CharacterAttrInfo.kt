@@ -3,16 +3,14 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
@@ -21,6 +19,7 @@ import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.ui.compose.AttrList
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
+import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.getRankColor
@@ -55,34 +54,35 @@ fun CharacterAttrInfo(
         characterAttrViewModel.getCharacterInfo(unitId, it)
     }
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Dimen.smallPadding)
-    ) {
-        //等级
-        Text(
-            text = selectInfo?.level.toString() ?: "",
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.h6,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        //属性
-        attrData?.let { AttrList(attrs = it.all()) }
-        Text(
-            text = stringResource(id = R.string.title_story_attr),
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.subtitle2,
+    Card(shape = CardTopShape, elevation = 0.dp) {
+        Column(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
-        )
-        //剧情属性
-        storyAttr?.let { AttrList(attrs = storyAttr.allNotZero()) }
-        //RANK 装备
-        if (equips != null && equips.isNotEmpty()) {
-            CharacterEquip(rank = selectInfo?.rank ?: 2, equips = equips, toEquipDetail)
+                .fillMaxSize()
+                .padding(Dimen.smallPadding)
+        ) {
+            //等级
+            Text(
+                text = selectInfo?.level.toString() ?: "",
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            //属性
+            attrData?.let { AttrList(attrs = it.all()) }
+            Text(
+                text = stringResource(id = R.string.title_story_attr),
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+            )
+            //剧情属性
+            storyAttr?.let { AttrList(attrs = storyAttr.allNotZero()) }
+            //RANK 装备
+            if (equips != null && equips.isNotEmpty()) {
+                CharacterEquip(rank = selectInfo?.rank ?: 2, equips = equips, toEquipDetail)
+            }
         }
     }
 }

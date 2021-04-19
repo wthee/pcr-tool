@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.MenuContent
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
+import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
                 Home()
             }
         }
+        ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
     }

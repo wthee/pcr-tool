@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.utils
 
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import java.lang.ref.WeakReference
 
 /**
@@ -9,18 +9,18 @@ import java.lang.ref.WeakReference
  */
 class ActivityHelper private constructor() {
 
-    private var sCurrentActivityWeakRef: WeakReference<AppCompatActivity>? = null
+    private var sCurrentActivityWeakRef: WeakReference<ComponentActivity>? = null
 
-    var currentActivity: AppCompatActivity?
+    var currentActivity: ComponentActivity?
         get() {
-            var currentActivity: AppCompatActivity? = null
+            var currentActivity: ComponentActivity? = null
             if (sCurrentActivityWeakRef != null) {
                 currentActivity = sCurrentActivityWeakRef!!.get()
             }
             return currentActivity
         }
         set(activity) {
-            sCurrentActivityWeakRef = WeakReference<AppCompatActivity>(activity)
+            sCurrentActivityWeakRef = WeakReference<ComponentActivity>(activity)
         }
 
 

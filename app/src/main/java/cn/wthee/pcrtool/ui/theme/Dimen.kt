@@ -21,7 +21,8 @@ object Dimen {
     /**
      * 24dp
      */
-    val fabIconSize = 24.dp
+    val
+            fabIconSize = 24.dp
 
 
     /**

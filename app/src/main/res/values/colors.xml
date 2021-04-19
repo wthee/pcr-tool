@@ -7,6 +7,7 @@
     <color name="black">#FF000000</color>
     <color name="alpha_black">#80000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#7E7D7D</color>
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="colorWhite">#ffffff</color>
     <!-- Rank 颜色-->
@@ -15,4 +16,7 @@
     <color name="color_rank_7_10">#EFC005</color>
     <color name="color_rank_11_17">#B55CCF</color>
     <color name="color_rank_18">#DE0703</color>
+
+    <color name="cool_apk">#4caf50</color>
+
 </resources>

@@ -871,7 +871,7 @@ data class SkillActionPro(
                 }
                 val time = getTimeText(action_value_3, action_value_4)
                 when (action_detail_1) {
-                    3 -> "每造成伤害[$action_value_1] 时，使用动作(${action_detail_2 % 10}) $limit$time"
+                    3 -> "每造成[$action_value_1] 次伤害时，使用动作(${action_detail_2 % 10}) $limit$time"
                     else -> "?"
                 }
             }
