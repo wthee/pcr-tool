@@ -21,6 +21,8 @@ class EquipmentData(
     @ColumnInfo(name = "sale_price") val salePrice: Int,
     @ColumnInfo(name = "require_level") val requireLevel: Int,
     @ColumnInfo(name = "enable_donation") val enableDonation: Int,
+    @ColumnInfo(name = "display_item") var displayItem: Int = 0,
+    @ColumnInfo(name = "item_type") var itemType: Int = 0,
     @Embedded val attr: Attr,
 )
 

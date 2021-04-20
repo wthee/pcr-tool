@@ -32,7 +32,7 @@ data class EnemyParameter(
     @ColumnInfo(name = "ex_skill_lv_4") val ex_skill_lv_4: Int,
     @ColumnInfo(name = "ex_skill_lv_5") val ex_skill_lv_5: Int,
     @ColumnInfo(name = "resist_status_id") val resist_status_id: Int,
-//    @ColumnInfo(name = "unique_equipment_flag_1") val unique_equipment_flag_1: Int,
+    @ColumnInfo(name = "unique_equipment_flag_1") val unique_equipment_flag_1: Int,
 //    @ColumnInfo(name = "break_durability") val break_durability: Int,
 //    @ColumnInfo(name = "virtual_hp") val virtual_hp: Int,
     @Embedded var attr: AttrInt = AttrInt(),

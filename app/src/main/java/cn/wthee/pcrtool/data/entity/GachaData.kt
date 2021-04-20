@@ -13,6 +13,8 @@ data class GachaData(
     @ColumnInfo(name = "gacha_id") val gacha_id: Int,
     @ColumnInfo(name = "gacha_name") val gacha_name: String,
     @ColumnInfo(name = "description") val description: String,
+    @ColumnInfo(name = "description_2") var description_2: String = "",
+    @ColumnInfo(name = "description_sp") var description_sp: String = "",
     @ColumnInfo(name = "gacha_detail") val gacha_detail: Int,
     @ColumnInfo(name = "gacha_cost_type") val gacha_cost_type: Int,
     @ColumnInfo(name = "price") val price: Int,
@@ -34,4 +36,11 @@ data class GachaData(
     @ColumnInfo(name = "chara_odds_star1") val chara_odds_star1: String,
     @ColumnInfo(name = "chara_odds_star2") val chara_odds_star2: String,
     @ColumnInfo(name = "chara_odds_star3") val chara_odds_star3: String,
-)
+    @ColumnInfo(name = "gacha10_special_odds_star1") var gacha10_special_odds_star1: String = "",
+    @ColumnInfo(name = "gacha10_special_odds_star2") var gacha10_special_odds_star2: String = "",
+    @ColumnInfo(name = "gacha10_special_odds_star3") var gacha10_special_odds_star3: String = "",
+    @ColumnInfo(name = "prizegacha_id") var prizegacha_id: Int = 0,
+    @ColumnInfo(name = "gacha_bonus_id") var gacha_bonus_id: Int = 0,
+    @ColumnInfo(name = "gacha_times_limit10") var gacha_times_limit10: Int = 0,
+
+    )

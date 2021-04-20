@@ -59,7 +59,7 @@ class QuestDataJP(
     @ColumnInfo(name = "quest_detail_bg_position") var quest_detail_bg_position: Int = 0,
     @ColumnInfo(name = "start_time") var start_time: String = "",
     @ColumnInfo(name = "end_time") var end_time: String = "",
-    //jp
     @ColumnInfo(name = "lv_reward_flag") var lv_reward_flag: Int = 0,
+    //jp
     @ColumnInfo(name = "add_treasure_num") var add_treasure_num: Int = 0,
 ) : Serializable
