@@ -5,8 +5,8 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val VERSION_NAME = "0.8.2"
-val VERSION_CODE = 82
+val VERSION_NAME = "1.0.0"
+val VERSION_CODE = 100
 
 android {
 
@@ -22,7 +22,7 @@ android {
         versionName = VERSION_NAME
 
 
-        buildConfigField("int", "SQLITE_VERSION", "80")
+        buildConfigField("int", "SQLITE_VERSION", "82")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

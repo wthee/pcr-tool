@@ -2,12 +2,20 @@ package cn.wthee.pcrtool.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
  * 活动信息
  */
-@Entity(tableName = "hatsune_schedule")
+@Entity(
+    tableName = "hatsune_schedule",
+    indices = [Index(
+        value = arrayOf("series_event_id"),
+        unique = false,
+        name = "hatsune_schedule_0_series_event_id"
+    )]
+)
 data class HatsuneSchedule(
     @PrimaryKey
     @ColumnInfo(name = "event_id") val event_id: Int,
@@ -25,5 +33,5 @@ data class HatsuneSchedule(
     @ColumnInfo(name = "backgroud_pos_x") val backgroud_pos_x: Int,
     @ColumnInfo(name = "backgroud_pos_y") val backgroud_pos_y: Int,
     @ColumnInfo(name = "original_event_id") val original_event_id: Int,
-//    @ColumnInfo(name = "series_event_id") val series_event_id: Int,
+    @ColumnInfo(name = "series_event_id") val series_event_id: Int,
 )
