@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.AttrAdapter
 import cn.wthee.pcrtool.data.view.Enemy
@@ -12,8 +13,8 @@ import cn.wthee.pcrtool.databinding.FragmentToolClanBossInfoBinding
 import cn.wthee.pcrtool.ui.skill.SkillFragment
 import cn.wthee.pcrtool.ui.tool.clan.ClanPagerFragment.Companion.clan
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 团队战
@@ -22,6 +23,7 @@ import cn.wthee.pcrtool.viewmodel.ClanViewModel
  *
  * ViewModels [ClanViewModel]
  */
+@AndroidEntryPoint
 class ClanBossInfoFragment : Fragment() {
 
     companion object {
@@ -34,7 +36,7 @@ class ClanBossInfoFragment : Fragment() {
             }
     }
 
-    private lateinit var viewModel: ClanViewModel
+    private val viewModel: ClanViewModel by viewModels()
     private lateinit var binding: FragmentToolClanBossInfoBinding
     private var uid = -1
     private var enemyId = -1
@@ -60,7 +62,6 @@ class ClanBossInfoFragment : Fragment() {
         //属性
         val attrAdapter = AttrAdapter()
         binding.listAttr.adapter = attrAdapter
-        viewModel = InjectorUtil.provideClanViewModelFactory().create(ClanViewModel::class.java)
         viewModel.getBossAttr(enemyId)
         viewModel.clanBossAttr.observe(viewLifecycleOwner) {
             if (it != null) {

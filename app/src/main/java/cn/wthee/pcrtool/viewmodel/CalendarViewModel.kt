@@ -8,14 +8,17 @@ import cn.wthee.pcrtool.data.model.CalendarData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.view.DropEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 日历 ViewModel
  *
  * 数据来源 [MyAPIRepository] [EventRepository]
  */
-class CalendarViewModel(
+@HiltViewModel
+class CalendarViewModel @Inject constructor(
     private val eventRepository: EventRepository
 ) : ViewModel() {
 

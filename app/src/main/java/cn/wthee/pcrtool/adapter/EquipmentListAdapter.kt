@@ -3,15 +3,12 @@ package cn.wthee.pcrtool.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
-import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentListFragment
 import cn.wthee.pcrtool.utils.Constants.EQUIPMENT_URL
 import cn.wthee.pcrtool.utils.Constants.WEBP
@@ -25,9 +22,8 @@ import coil.load
  *
  * 列表项数据 [EquipmentMaxData]
  */
-class EquipmentListAdapter(
-    private val fragmentManager: FragmentManager
-) : PagingDataAdapter<EquipmentMaxData, EquipmentListAdapter.ViewHolder>(EquipDiffCallback()) {
+class EquipmentListAdapter(private val callBack: CallBack) :
+    PagingDataAdapter<EquipmentMaxData, EquipmentListAdapter.ViewHolder>(EquipDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCommonBinding.inflate(
@@ -48,7 +44,7 @@ class EquipmentListAdapter(
             if (equip != null) {
                 //设置数据
                 binding.apply {
-                    val ctx = MyApplication.context
+                    val ctx = root.context
                     root.animation = AnimationUtils.loadAnimation(ctx, R.anim.anim_list_item)
                     //是否收藏
                     val isLoved =
@@ -64,8 +60,7 @@ class EquipmentListAdapter(
                     }
                     //设置点击跳转
                     root.setOnClickListener {
-                        EquipmentDetailsDialogFragment.getInstance(equip)
-                            .show(fragmentManager, "equip_details")
+                        callBack.todo(equip)
                     }
                     //长按事件
                     binding.root.setOnLongClickListener {

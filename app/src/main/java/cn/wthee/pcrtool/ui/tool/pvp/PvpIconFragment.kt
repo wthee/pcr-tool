@@ -11,9 +11,9 @@ import cn.wthee.pcrtool.adapter.PvpPositionAdapter
 import cn.wthee.pcrtool.data.model.PvpPositionData
 import cn.wthee.pcrtool.data.view.getDefault
 import cn.wthee.pcrtool.databinding.LayoutPvpIconBinding
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.init
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class PvpIconFragment(private val customize: Int = -1) : Fragment() {
 
     companion object {
@@ -33,9 +34,7 @@ class PvpIconFragment(private val customize: Int = -1) : Fragment() {
         lateinit var selectedAdapter: PvpIconAdapter
     }
 
-    private val viewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val viewModel: CharacterViewModel by activityViewModels()
     private lateinit var binding: LayoutPvpIconBinding
     private lateinit var adapter: PvpPositionAdapter
 

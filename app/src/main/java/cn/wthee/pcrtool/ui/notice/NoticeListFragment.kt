@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.NoticeListAdapter
+import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.databinding.FragmentNoticeListBinding
 import cn.wthee.pcrtool.utils.FabHelper
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -37,7 +39,16 @@ class NoticeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNoticeListBinding.inflate(inflater, container, false)
-        adapter = NoticeListAdapter(requireContext(), parentFragmentManager)
+        adapter = NoticeListAdapter(object : CallBack {
+            //点击回调
+            override fun todo(data: Any?) {
+                data?.let {
+                    val notice = data as AppNotice
+                    NoticeDetailDialogFragment.getInstance(notice)
+                        .show(parentFragmentManager, "notice_detail")
+                }
+            }
+        })
         binding.toolList.adapter = adapter
         //设置头部
         ToolbarHelper(binding.toolHead).setMainToolbar(

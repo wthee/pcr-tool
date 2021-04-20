@@ -8,9 +8,9 @@ import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.adapter.EventStoryAdapter
 import cn.wthee.pcrtool.databinding.FragmentEventStoryDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.EventViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 private const val STORY_ID = "storyId"
@@ -25,6 +25,7 @@ private const val STORY_NAME = "storyName"
  *
  * ViewModels [EventViewModel]
  */
+@AndroidEntryPoint
 class EventStoryDetailsDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
@@ -41,10 +42,7 @@ class EventStoryDetailsDialogFragment : CommonBottomSheetDialogFragment() {
     private var storyName = ""
     private lateinit var binding: FragmentEventStoryDetailsBinding
     private lateinit var adapter: EventStoryAdapter
-
-    private val viewModel by activityViewModels<EventViewModel> {
-        InjectorUtil.provideEventViewModelFactory()
-    }
+    private val viewModel: EventViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

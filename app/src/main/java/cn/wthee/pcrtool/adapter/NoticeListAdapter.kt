@@ -1,21 +1,17 @@
 package cn.wthee.pcrtool.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.databinding.ItemNoticeBinding
-import cn.wthee.pcrtool.ui.notice.NoticeDetailDialogFragment
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
 
@@ -26,10 +22,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil.setTitleBackground
  *
  * 列表项数据 [AppNotice]
  */
-class NoticeListAdapter(
-    private val context: Context,
-    private val fragmentManager: FragmentManager
-) :
+class NoticeListAdapter(private val callBack: CallBack) :
     ListAdapter<AppNotice, NoticeListAdapter.ViewHolder>(NoticeDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,7 +44,7 @@ class NoticeListAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(data: AppNotice) {
             binding.root.animation =
-                AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
+                AnimationUtils.loadAnimation(binding.root.context, R.anim.anim_list_item)
             //设置数据
             binding.apply {
                 newsDate.text = data.date.substring(0, 10)
@@ -91,12 +84,11 @@ class NoticeListAdapter(
                     when (data.type) {
                         0 -> {
                             if (data.title != BuildConfig.VERSION_NAME) {
-                                BrowserUtil.open(context, data.url, "前往下载应用")
+                                BrowserUtil.open(root.context, data.url, "前往下载应用")
                             }
                         }
                         1, 2 -> {
-                            NoticeDetailDialogFragment.getInstance(data)
-                                .show(fragmentManager, "notice_detail")
+                            callBack.todo(data)
                         }
                     }
                 }

@@ -9,7 +9,6 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,6 @@ import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.databinding.ItemSkillActionBinding
-import cn.wthee.pcrtool.ui.common.CommonDialogContainerFragment
 import cn.wthee.pcrtool.utils.ResourcesUtil
 
 /**
@@ -27,7 +25,7 @@ import cn.wthee.pcrtool.utils.ResourcesUtil
  *
  * 列表项数据 [SkillActionText]
  */
-class SkillActionAdapter(private val fragmentManager: FragmentManager) :
+class SkillActionAdapter(private val callBack: CallBack) :
     ListAdapter<SkillActionText, SkillActionAdapter.ViewHolder>(ActionDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -169,11 +167,7 @@ class SkillActionAdapter(private val fragmentManager: FragmentManager) :
                     target.setOnClickListener {
                         //打开详情页
                         MainActivity.pageLevel = 2
-                        CommonDialogContainerFragment.loadSkillFragment(
-                            skillAction.summonUnitId, skillAction.level,
-                            skillAction.atk
-                        )
-                            .show(fragmentManager, "summon_skill")
+                        callBack.todo(skillAction)
                     }
                 }
 

@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterRankEquipBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色提升 Rank 所需装备页面
@@ -21,23 +23,21 @@ import coil.load
  *
  * ViewModels [EquipmentViewModel]
  */
+@AndroidEntryPoint
 class CharacterRankRangeEquipFragment : Fragment() {
 
     private val REQUEST_CODE_0 = 20
     private val REQUEST_CODE_1 = 21
     private lateinit var binding: FragmentCharacterRankEquipBinding
-    private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val sharedEquipViewModel: EquipmentViewModel by activityViewModels()
     private var uid = -1
     private var startRank = 1
     private var endRank = CharacterAttrFragment.maxRank
+    private val agrs: CharacterRankRangeEquipFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.apply {
-            uid = getInt(Constants.UID)
-        }
+        uid = agrs.unitId
     }
 
     override fun onCreateView(
@@ -71,7 +71,7 @@ class CharacterRankRangeEquipFragment : Fragment() {
     }
 
     private fun init() {
-        val adapter = EquipmentMaterialAdapter(viewModel = sharedEquipViewModel)
+        val adapter = EquipmentMaterialAdapter()
         binding.listEquip.adapter = adapter
         binding.icon.load(CharacterAttrFragment.iconUrl) {
             error(R.drawable.unknown_gray)

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
+import cn.wthee.pcrtool.ui.home.CharacterListFragmentDirections
 import cn.wthee.pcrtool.utils.Constants
 import coil.load
 
@@ -46,14 +47,14 @@ class IconListAdapter : ListAdapter<Int, IconListAdapter.ViewHolder>(IconListDif
                 root.layoutParams = itemParams
                 //角色图片
                 val picId: Int
-                val pagerId: Int
+                val unitId: Int
                 if (uid / 10000 == 3) {
                     //item 转 unit
                     picId = uid % 10000 * 100 + 11
-                    pagerId = uid % 10000 * 100 + 1
+                    unitId = uid % 10000 * 100 + 1
                 } else {
                     picId = uid + 30
-                    pagerId = uid
+                    unitId = uid
                 }
 
                 val picUrl = Constants.UNIT_ICON_URL + picId + Constants.WEBP
@@ -65,15 +66,12 @@ class IconListAdapter : ListAdapter<Int, IconListAdapter.ViewHolder>(IconListDif
                 name.visibility = View.GONE
                 pic.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putInt(Constants.UID, pagerId)
+                    bundle.putInt(Constants.UID, unitId)
                     //二级页面
                     MainActivity.pageLevel = 2
-                    root.findNavController().navigate(
-                        R.id.action_global_characterPagerFragment,
-                        bundle,
-                        null,
-                        null
-                    )
+                    val action =
+                        CharacterListFragmentDirections.actionGlobalCharacterPagerFragment(unitId)
+                    root.findNavController().navigate(action)
                 }
             }
         }

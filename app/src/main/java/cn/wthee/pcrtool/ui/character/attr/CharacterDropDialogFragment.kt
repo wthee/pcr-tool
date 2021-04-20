@@ -12,9 +12,9 @@ import cn.wthee.pcrtool.databinding.FragmentCharacterDropInfoBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class CharacterDropDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
@@ -40,9 +41,7 @@ class CharacterDropDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var binding: FragmentCharacterDropInfoBinding
     private var uid = 0
 
-    private val sharedViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val sharedViewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

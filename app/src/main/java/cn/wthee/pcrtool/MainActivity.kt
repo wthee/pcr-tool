@@ -3,7 +3,6 @@ package cn.wthee.pcrtool
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.*
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.FrameLayout
@@ -32,6 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textview.MaterialTextView
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels []
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     companion object {
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     private var menuItemDrawable = arrayListOf<Int>()
     private var menuItemTitles = arrayListOf<Int>()
     private lateinit var binding: ActivityMainBinding
-    private var appUpdate = MutableLiveData<Boolean>(false)
+    private var appUpdate = MutableLiveData(false)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,25 +91,26 @@ class MainActivity : AppCompatActivity() {
         setListener()
         //初始化 handler
         setHandler()
+        //应用版本校验
         GlobalScope.launch {
-            //应用版本校验
             appUpdate.postValue(AppUpdateUtil.init())
         }
+        //数据库版本检查
         GlobalScope.launch {
-            //数据库版本检查
             DatabaseUpdater.checkDBVersion()
         }
+        //快捷方式
+        ShortcutHelper(this).create()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         val width = ScreenUtil.getWidth()
         val height = ScreenUtil.getHeight()
-        Log.e("DEBUG", "$width ? $height")
         mFloatingWindowHeight = if (width > height) height - 48.dp else width - 48.dp
         super.onConfigurationChanged(newConfig)
     }
 
-
+    //返回拦截
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (pageLevel > 0) {
@@ -117,7 +119,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onKeyDown(keyCode, event)
-
     }
 
     private fun fixUriBug() {
@@ -172,6 +173,7 @@ class MainActivity : AppCompatActivity() {
         layoutDownload = binding.layoutDownload
         progressDownload = binding.progress
         textDownload = binding.downloadText
+        fabMain = binding.fab
         //菜单
         menuItems = arrayListOf(
             binding.toolEquip,
@@ -209,7 +211,7 @@ class MainActivity : AppCompatActivity() {
             R.string.tool_news,
             R.string.tool_pvp,
             R.string.tool_event,
-            R.string.tool_calendar_title,
+            R.string.tool_calendar,
             R.string.tool_gacha,
             R.string.tool_guild,
             R.string.tool_clan,
@@ -227,9 +229,6 @@ class MainActivity : AppCompatActivity() {
             R.drawable.ic_guild,
             R.drawable.ic_def,
         )
-        fabMain = binding.fab
-        //悬浮穿高度
-        mFloatingWindowHeight = ScreenUtil.getWidth() - 48.dp
     }
 
     private fun setListener() {
@@ -295,12 +294,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     afterClickMenuItem()
                     //页面跳转
-                    findNavController(R.id.nav_host_fragment).navigate(
-                        menuItemIds[index],
-                        null,
-                        null,
-                        null
-                    )
+                    findNavController(R.id.nav_host_fragment).navigate(menuItemIds[index])
                 } catch (e: Exception) {
                     MainScope().launch {
                         UMCrash.generateCustomLog(e, Constants.EXCEPTION_MENU_NAV)

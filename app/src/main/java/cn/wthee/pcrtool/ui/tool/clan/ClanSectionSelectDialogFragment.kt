@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.NumberSelectAdapter
 import cn.wthee.pcrtool.data.enums.NumberSelectType
 import cn.wthee.pcrtool.databinding.FragmentRankSelectDialogBinding
@@ -56,7 +57,11 @@ class ClanSectionSelectDialogFragment(
         for (i in 1..maxSection) {
             ranks.add(i)
         }
-        adapter = NumberSelectAdapter(this, NumberSelectType.SECTION)
+        adapter = NumberSelectAdapter(NumberSelectType.SECTION, object : CallBack {
+            override fun todo(data: Any?) {
+                this@ClanSectionSelectDialogFragment.dismiss()
+            }
+        })
         binding.listRank.adapter = adapter
         adapter.submitList(ranks)
         adapter.setSelect(selSection)

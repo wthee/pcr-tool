@@ -12,14 +12,13 @@ import cn.wthee.pcrtool.data.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.FragmentCharacterBasicInfoBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
-import cn.wthee.pcrtool.ui.character.CharacterPagerFragment.Companion.characterPic
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants.UID
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色基本信息页面
@@ -30,6 +29,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class CharacterBasicInfoFragment : Fragment() {
 
     companion object {
@@ -43,9 +43,7 @@ class CharacterBasicInfoFragment : Fragment() {
 
     private var uid = -1
     private var isLoved = false
-    private val characterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val characterViewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,16 +64,7 @@ class CharacterBasicInfoFragment : Fragment() {
         init()
         //初始收藏
         setLove(isLoved)
-        binding.fabCharacter.apply {
-            text = getString(R.string.view_pic)
-            icon = ResourcesUtil.getDrawable(R.drawable.ic_pic)
-            setOnClickListener {
-                characterPic.callOnClick()
-            }
-        }
         binding.fabShare.apply {
-            setImageResource(R.drawable.ic_loved)
-            setLove(isLoved)
             setOnClickListener {
                 isLoved = !isLoved
                 CharacterListFragment.characterFilterParams.addOrRemove(

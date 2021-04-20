@@ -10,15 +10,18 @@ import androidx.paging.cachedIn
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.view.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 装备 ViewModel
  *
  * 数据来源 [EquipmentRepository]
  */
-class EquipmentViewModel(
+@HiltViewModel
+class EquipmentViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 

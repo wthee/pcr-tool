@@ -4,18 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.SkillAdapter
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillBinding
+import cn.wthee.pcrtool.databinding.LayoutWarnDialogBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.InjectorUtil
-import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 /**
  * 角色技能页面
@@ -26,8 +32,8 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  *
  * ViewModels [SkillViewModel]
  */
+@AndroidEntryPoint
 class SkillFragment : Fragment() {
-
 
     companion object {
         fun getInstance(uid: Int, type: Int, lvs: ArrayList<Int> = arrayListOf(), atk: Int = 0) =
@@ -47,10 +53,8 @@ class SkillFragment : Fragment() {
     private var type = 0
     private var lvs = arrayListOf<Int>()
     private var bossAtk = 0
-    private lateinit var skillViewModel: SkillViewModel
-    private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.provideCharacterAttrViewModelFactory()
-    }
+    private val skillViewModel: SkillViewModel by viewModels()
+    private val characterAttrViewModel: CharacterAttrViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,11 +95,40 @@ class SkillFragment : Fragment() {
     }
 
     private fun init() {
-        skillViewModel =
-            InjectorUtil.provideSkillViewModelFactory().create(SkillViewModel::class.java)
         binding.apply {
             //技能信息
-            adapter = SkillAdapter(parentFragmentManager, type)
+            adapter = SkillAdapter(parentFragmentManager, type, object : CallBack {
+                //反馈信息
+                override fun todo(data: Any?) {
+                    data?.let {
+                        val skillId = data as Int
+                        DialogUtil.create(
+                            requireContext(),
+                            LayoutWarnDialogBinding.inflate(layoutInflater),
+                            "反馈",
+                            "技能描述不正确，技能编码：$skillId",
+                            "取消",
+                            "发送反馈",
+                            object : DialogListener {
+                                override fun onCancel(dialog: AlertDialog) {
+                                    dialog.dismiss()
+                                }
+
+                                override fun onConfirm(dialog: AlertDialog) {
+                                    lifecycleScope.launch {
+                                        dialog.dismiss()
+                                        UMCrash.generateCustomLog(
+                                            "SkillDescError",
+                                            "skillId:$skillId"
+                                        )
+                                        ToastUtil.short("反馈已发送~")
+                                    }
+                                }
+                            }).show()
+                    }
+
+                }
+            })
             skillList.adapter = adapter
         }
         when (type) {

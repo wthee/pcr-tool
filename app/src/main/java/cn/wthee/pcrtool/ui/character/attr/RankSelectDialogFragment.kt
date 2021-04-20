@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.NumberSelectAdapter
 import cn.wthee.pcrtool.data.enums.NumberSelectType
 import cn.wthee.pcrtool.databinding.FragmentRankSelectDialogBinding
@@ -57,7 +58,11 @@ class RankSelectDialogFragment(
         for (i in endRank downTo startRank) {
             ranks.add(i)
         }
-        adapter = NumberSelectAdapter(this, NumberSelectType.RANK)
+        adapter = NumberSelectAdapter(NumberSelectType.RANK, object : CallBack {
+            override fun todo(data: Any?) {
+                this@RankSelectDialogFragment.dismiss()
+            }
+        })
         binding.listRank.adapter = adapter
         adapter.submitList(ranks)
         adapter.setSelect(selectRank)

@@ -3,13 +3,14 @@ package cn.wthee.pcrtool.data.db.repository
 import cn.wthee.pcrtool.data.db.dao.UnitDao
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import javax.inject.Inject
 
 /**
  * 角色 Repository
  *
  * 数据来源 [UnitDao]
  */
-class UnitRepository(private val unitDao: UnitDao) {
+class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     fun getInfoAndData(
         sortType: SortType,

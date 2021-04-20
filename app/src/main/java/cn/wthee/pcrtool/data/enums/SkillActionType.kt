@@ -169,7 +169,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 32：吸血效果
      */
-    LIFE_STEAL(32, "HP 吸收"),
+    LIFE_STEAL(32, "HP吸收"),
 
     /**
      * 33：消失时造成伤害

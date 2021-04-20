@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,7 @@ import cn.wthee.pcrtool.utils.*
  *
  * 列表项数据 [Int]
  */
-class NumberSelectAdapter(private val dialog: DialogFragment, private val type: NumberSelectType) :
+class NumberSelectAdapter(private val type: NumberSelectType, private val callBack: CallBack) :
     ListAdapter<Int, NumberSelectAdapter.ViewHolder>(RankDiffCallback()) {
 
     private var selectNumber = 0
@@ -72,7 +71,7 @@ class NumberSelectAdapter(private val dialog: DialogFragment, private val type: 
                 }
                 root.setOnClickListener {
                     selectNumber = r
-                    dialog.dismiss()
+                    callBack.todo()
                 }
             }
         }
