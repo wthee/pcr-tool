@@ -8,7 +8,6 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.DropEvent
 import cn.wthee.pcrtool.databinding.ItemCalendarEventJpBinding
@@ -44,10 +43,7 @@ class CalendarDropEventAdapter :
         fun bind(item: DropEvent) {
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(
-                        MyApplication.context,
-                        R.anim.anim_scale
-                    )
+                    AnimationUtils.loadAnimation(root.context, R.anim.anim_scale)
                 val title = getType(item.type, item.getFixedValue())
                 calendarEventTitle.text = title
                 if (title.isNotEmpty()) {

@@ -10,11 +10,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.EquipmentListAdapter
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.databinding.FragmentEquipmentListBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -27,6 +30,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [EquipmentViewModel]
  */
+@AndroidEntryPoint
 class EquipmentListFragment : Fragment() {
 
     companion object {
@@ -34,14 +38,12 @@ class EquipmentListFragment : Fragment() {
         lateinit var motionLayout: MotionLayout
         var equipFilterParams = FilterEquipment(true, "全部")
         lateinit var equipTypes: ArrayList<String>
-        lateinit var pageAdapter: EquipmentListAdapter
+        lateinit var adapter: EquipmentListAdapter
         var equipName = ""
     }
 
     private lateinit var binding: FragmentEquipmentListBinding
-    private val viewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val viewModel: EquipmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,8 +79,16 @@ class EquipmentListFragment : Fragment() {
             getString(R.string.tool_equip)
         )
         binding.apply {
-            pageAdapter = EquipmentListAdapter(parentFragmentManager)
-            binding.toolList.adapter = pageAdapter
+            adapter = EquipmentListAdapter(object : CallBack {
+                override fun todo(data: Any?) {
+                    data?.let {
+                        //点击事件回调
+                        EquipmentDetailsDialogFragment.getInstance(it as EquipmentMaxData)
+                            .show(parentFragmentManager, "equip_details")
+                    }
+                }
+            })
+            binding.toolList.adapter = adapter
         }
         //获取装备类型
         equipTypes = arrayListOf()
@@ -123,7 +133,7 @@ class EquipmentListFragment : Fragment() {
                 lifecycleScope.launch {
                     @OptIn(ExperimentalCoroutinesApi::class)
                     viewModel.equipments.collectLatest { data ->
-                        pageAdapter.submitData(data)
+                        adapter.submitData(data)
                     }
                 }
             }

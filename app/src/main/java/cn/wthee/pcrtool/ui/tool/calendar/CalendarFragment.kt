@@ -11,7 +11,6 @@ import cn.wthee.pcrtool.adapter.CalendarEventAdapter
 import cn.wthee.pcrtool.data.model.CalendarDay
 import cn.wthee.pcrtool.databinding.FragmentToolCalendarBinding
 import cn.wthee.pcrtool.utils.FabHelper
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.CalendarViewModel
@@ -19,6 +18,7 @@ import com.applandeo.materialcalendarview.CalendarUtils.getDrawableText
 import com.applandeo.materialcalendarview.EventDay
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 
@@ -29,6 +29,7 @@ import java.util.*
  *
  * ViewModels [CalendarViewModel]
  */
+@AndroidEntryPoint
 class CalendarFragment : Fragment() {
 
 
@@ -39,9 +40,7 @@ class CalendarFragment : Fragment() {
     private lateinit var minCal: Calendar
     private lateinit var maxCal: Calendar
     private lateinit var cal: Calendar
-    private val calendarViewModel by activityViewModels<CalendarViewModel> {
-        InjectorUtil.provideCalendarViewModelFactory()
-    }
+    private val calendarViewModel: CalendarViewModel by activityViewModels()
     private var adapter = CalendarEventAdapter()
 
     override fun onCreateView(
@@ -57,7 +56,7 @@ class CalendarFragment : Fragment() {
         //设置头部
         ToolbarHelper(binding.toolCalendar).setMainToolbar(
             R.drawable.ic_calendar,
-            getString(R.string.tool_calendar)
+            getString(R.string.tool_calendar_title)
         )
 
         return binding.root

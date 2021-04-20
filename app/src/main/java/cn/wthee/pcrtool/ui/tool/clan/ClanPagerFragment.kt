@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.ClanBossIconAdapter
 import cn.wthee.pcrtool.adapter.viewpager.ClanBossPagerAdapter
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
@@ -17,6 +19,7 @@ import cn.wthee.pcrtool.databinding.FragmentToolClanPagerBinding
 import cn.wthee.pcrtool.ui.skill.SkillLoopDialogFragment
 import cn.wthee.pcrtool.utils.*
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialSharedAxis
 
 /**
  * 团队战
@@ -37,19 +40,25 @@ class ClanPagerFragment : Fragment() {
     private lateinit var adapter: ClanBossIconAdapter
     private val REQUEST_CODE = 0
     private var selSection = 0
+    private val args: ClanPagerFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireArguments().let {
-            date = it.getString(Constants.CLAN_DATE) ?: ""
-            index = it.getInt(Constants.CLAN_BOSS_NO)
-            clan = it.getSerializable(Constants.CLAN_DATA) as ClanBattleInfo
-            selSection = clan.section
-        }
+        date = args.date
+        index = args.index
+        clan = args.clanInfo
+        selSection = clan.section
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
-            setAllContainerColors(ResourcesUtil.getColor(R.color.colorAlpha))
+            setAllContainerColors(ResourcesUtil.getColor(R.color.colorWhite))
+        }
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false).apply {
+            duration = 500L
+        }
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true).apply {
+            duration = 500L
         }
     }
 
@@ -119,7 +128,12 @@ class ClanPagerFragment : Fragment() {
         binding.root.transitionName = clan.clan_battle_id.toString()
         //图片列表
         val list = clan.getUnitIdList(1)
-        adapter = ClanBossIconAdapter(date, clan, binding)
+        adapter = ClanBossIconAdapter(date, clan, callBack = object : CallBack {
+            override fun todo(data: Any?) {
+                //切换页面
+                binding.clanBossPager.setCurrentItem((data ?: 0) as Int, true)
+            }
+        })
         binding.toolList.adapter = adapter
         adapter.setSelectedIndex(index)
         adapter.submitList(list) {

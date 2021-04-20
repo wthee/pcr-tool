@@ -60,8 +60,17 @@
             android:textStyle="bold"
             app:layout_constrainedWidth="true"
             app:layout_constraintStart_toEndOf="@id/item_pic"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/item_pic"
             tools:text="999" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/skill_feedback"
+            android:layout_width="@dimen/m_icon"
+            android:layout_height="@dimen/m_icon"
+            android:src="@drawable/ic_feedback"
+            app:layout_constraintBottom_toBottomOf="@id/level"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/level" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/desc"
@@ -85,8 +94,8 @@
         android:id="@+id/ailments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="@dimen/xs_dp"
+        android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/actions"
         app:layout_constraintStart_toStartOf="parent"

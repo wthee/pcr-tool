@@ -3,19 +3,22 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
+import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.entity.NewsTable
 import cn.wthee.pcrtool.data.model.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
  * 公告 ViewModel
  *
  * 数据来源 [NewsRemoteMediator]
  */
-class NewsViewModel : ViewModel() {
+@HiltViewModel
+class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewModel() {
 
-    private val newsDao = AppNewsDatabase.getInstance().getNewsDao()
 
     private val pageSize = 10
     private val initSize = 20

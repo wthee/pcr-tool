@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.adapter
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
@@ -10,16 +9,13 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.CharacterInfo
 import cn.wthee.pcrtool.data.view.getPositionIcon
 import cn.wthee.pcrtool.databinding.ItemCharacterBinding
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
+import cn.wthee.pcrtool.ui.home.CharacterListFragmentDirections
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.Constants.UNIT_NAME
-import cn.wthee.pcrtool.utils.Constants.UNIT_NAME_EX
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import coil.load
 
@@ -30,7 +26,7 @@ import coil.load
  *
  * 列表项数据 [CharacterInfo]
  */
-class CharacterListAdapter(private val fragment: CharacterListFragment) :
+class CharacterListAdapter(private val callback: CallBack) :
     PagingDataAdapter<CharacterInfo, CharacterListAdapter.ViewHolder>(CharacterDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -60,10 +56,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 name.setTextColor(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.text))
                 //加载动画
                 root.animation =
-                    AnimationUtils.loadAnimation(
-                        MyApplication.context,
-                        R.anim.anim_list_item
-                    )
+                    AnimationUtils.loadAnimation(root.context, R.anim.anim_list_item)
                 //加载网络图片
                 var id = character.id
                 id += if (character.r6Id != 0) 60 else 30
@@ -83,7 +76,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                 //基本信息
                 name.text = character.getNameF()
                 nameExtra.text = character.getNameL()
-                three.text = MyApplication.context.resources.getString(
+                three.text = root.context.resources.getString(
                     R.string.character_detail,
                     character.getFixedAge(),
                     character.getFixedHeight(),
@@ -98,20 +91,15 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
                         MainActivity.canClick = false
                         MainActivity.currentCharaPosition = absoluteAdapterPosition
                         MainActivity.pageLevel = 1
-                        val bundle = Bundle()
-                        bundle.putInt(UID, character.id)
-                        bundle.putString(UNIT_NAME, character.getNameF())
-                        bundle.putString(UNIT_NAME_EX, character.getNameL())
+                        val action =
+                            CharacterListFragmentDirections.actionCharacterListFragmentToCharacterPagerFragment(
+                                character.id
+                            )
                         val extras =
                             FragmentNavigatorExtras(
                                 root to root.transitionName
                             )
-                        root.findNavController().navigate(
-                            R.id.action_characterListFragment_to_characterPagerFragment,
-                            bundle,
-                            null,
-                            extras
-                        )
+                        root.findNavController().navigate(action, extras)
                     }
                 }
                 //长按事件
@@ -130,7 +118,7 @@ class CharacterListAdapter(private val fragment: CharacterListFragment) :
 
         private fun startEnter() {
             if (absoluteAdapterPosition == MainActivity.currentCharaPosition) {
-                fragment.startPostponedEnterTransition()
+                callback.todo()
             }
         }
     }

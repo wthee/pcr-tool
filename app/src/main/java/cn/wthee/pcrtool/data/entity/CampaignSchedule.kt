@@ -17,7 +17,7 @@ data class CampaignSchedule(
     @ColumnInfo(name = "icon_image") val icon_image: Int,
     @ColumnInfo(name = "start_time") val startTime: String,
     @ColumnInfo(name = "end_time") val endTime: String,
-//    @ColumnInfo(name = "level_id") val level_id: Int,
+    @ColumnInfo(name = "level_id") val level_id: Int,
 //    @ColumnInfo(name = "shiori_group_id") val shiori_group_id: Int,
 //    @ColumnInfo(name = "duplication_order") val duplication_order: Int,
 )

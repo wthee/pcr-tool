@@ -9,8 +9,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicBinding
 import cn.wthee.pcrtool.databinding.FragmentCharacterPicPagerBinding
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色图片展示页面弹窗
@@ -19,20 +19,22 @@ import coil.load
  *
  * 页面布局 [FragmentCharacterPicPagerBinding]
  *
- * ViewModels [CharacterViewModel]
+ * ViewModels []
  */
+@AndroidEntryPoint
 class CharacterPicFragment : Fragment() {
     private val PIC_URL = "pic_url"
     private val PIC_INDEX = "pic_index"
 
     companion object {
 
-        fun getInstance(index: Int, url: String) = CharacterPicFragment().apply {
-            arguments = Bundle().apply {
-                putInt(PIC_INDEX, index)
-                putString(PIC_URL, url)
+        fun getInstance(index: Int, url: String) =
+            CharacterPicFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(PIC_INDEX, index)
+                    putString(PIC_URL, url)
+                }
             }
-        }
     }
 
     private lateinit var binding: FragmentCharacterPicBinding

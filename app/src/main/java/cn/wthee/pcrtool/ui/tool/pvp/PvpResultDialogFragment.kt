@@ -7,17 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.PvpResultAdapter
 import cn.wthee.pcrtool.adapter.PvpResultItemAdapter
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.databinding.FragmentToolPvpResultBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.viewmodel.PvpLikedViewModel
 import com.google.gson.JsonArray
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -31,15 +32,14 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [PvpLikedViewModel]
  */
+@AndroidEntryPoint
 class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentToolPvpResultBinding
     private lateinit var job: Job
     private var idList = JsonArray()
     private var defIds = arrayListOf<Int>()
-    private val viewModel by activityViewModels<PvpLikedViewModel> {
-        InjectorUtil.providePvpViewModelFactory()
-    }
+    private val viewModel: PvpLikedViewModel by activityViewModels()
 
     companion object {
         fun getInstance(defIds: String) =
@@ -81,7 +81,13 @@ class PvpResultDialogFragment : CommonBottomSheetDialogFragment() {
                     if (result.data!!.isEmpty()) {
                         binding.pvpNoData.visibility = View.VISIBLE
                     }
-                    val adapter = PvpResultAdapter(false, viewModel)
+                    val adapter = PvpResultAdapter(false, object : CallBack {
+                        //刷新收藏
+                        override fun todo(data: Any?) {
+                            val region = data as Int
+                            viewModel.getLiked(region)
+                        }
+                    })
                     binding.pvpResultList.adapter = adapter
                     //展示查询结果
                     adapter.submitList(result.data!!.sortedByDescending {

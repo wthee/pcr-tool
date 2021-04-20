@@ -8,15 +8,18 @@ import cn.wthee.pcrtool.data.entity.AttackPattern
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 角色技能 ViewModel
  *
  * 数据来源 [SkillRepository]
  */
-class SkillViewModel(
+@HiltViewModel
+class SkillViewModel @Inject constructor(
     private val repository: SkillRepository
 ) : ViewModel() {
 

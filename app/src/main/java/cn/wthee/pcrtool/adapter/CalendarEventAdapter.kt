@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CalendarContent
 import cn.wthee.pcrtool.data.model.CalendarDataItem
@@ -86,10 +85,7 @@ class CalendarEventAdapter :
                 is CalendarDataItem.Item -> {
                     (binding as ItemCalendarEventBinding).apply {
                         root.animation =
-                            AnimationUtils.loadAnimation(
-                                MyApplication.context,
-                                R.anim.anim_scale
-                            )
+                            AnimationUtils.loadAnimation(root.context, R.anim.anim_scale)
                         calendarEventTitle.text = item.data.title
                         if (item.data.endDate != "") {
                             date.text = item.data.startDate + " 至 " + item.data.endDate

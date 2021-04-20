@@ -10,16 +10,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.adapter.AttrAdapter
+import cn.wthee.pcrtool.adapter.CallBack
+import cn.wthee.pcrtool.adapter.EquipmentDropAdapter
 import cn.wthee.pcrtool.adapter.EquipmentMaterialAdapter
+import cn.wthee.pcrtool.data.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentEquipmentDetailsBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.utils.ResourcesUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 private const val EQUIP = "equip"
@@ -33,6 +38,7 @@ private const val EQUIP = "equip"
  *
  * ViewModels [EquipmentViewModel]
  */
+@AndroidEntryPoint
 class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
@@ -51,9 +57,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
     private lateinit var binding: FragmentEquipmentDetailsBinding
     private lateinit var materialAdapter: EquipmentMaterialAdapter
 
-    private val viewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val viewModel: EquipmentViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +123,33 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
             //合成素材
             if (it.isNotEmpty()) {
                 binding.materialCount.text = getString(R.string.title_material, it.size)
-                materialAdapter = EquipmentMaterialAdapter(binding, viewModel)
+                materialAdapter = EquipmentMaterialAdapter(object : CallBack {
+                    //点击回调，查看合成素材
+                    override fun todo(data: Any?) {
+                        if (data == null) return
+                        val info = data as EquipmentMaterial
+                        binding.progressBar.visibility = View.VISIBLE
+                        //掉落地区
+                        binding.apply {
+                            //显示当前查看掉落的装备名称
+                            materialName.visibility = View.VISIBLE
+                            materialTip.visibility = View.VISIBLE
+                            materialName.text = info.name
+                            //掉落列表
+                            MainScope().launch {
+                                val dropData = viewModel.getDropInfos(info.id)
+                                val adapter = EquipmentDropAdapter()
+                                equipDrops.adapter = adapter
+                                //动态限制只有一个列表可滚动
+                                equipDrops.isNestedScrollingEnabled = true
+                                material.isNestedScrollingEnabled = false
+                                adapter.submitList(dropData) {
+                                    progressBar.visibility = View.GONE
+                                }
+                            }
+                        }
+                    }
+                })
                 binding.material.adapter = materialAdapter
                 materialAdapter.submitList(it)
             } else {
@@ -134,7 +164,7 @@ class EquipmentDetailsDialogFragment : CommonBottomSheetDialogFragment() {
         binding.stared.imageTintList =
             ColorStateList.valueOf(ResourcesUtil.getColor(if (isLoved) R.color.colorPrimary else R.color.alphaPrimary))
         try {
-            EquipmentListFragment.pageAdapter.notifyDataSetChanged()
+            EquipmentListFragment.adapter.notifyDataSetChanged()
         } catch (e: Exception) {
         }
     }

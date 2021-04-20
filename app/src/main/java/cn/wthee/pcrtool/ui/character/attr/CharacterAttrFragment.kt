@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.databinding.FragmentCharacterAttrInfoBinding
 import cn.wthee.pcrtool.ui.character.CharacterPagerFragment
+import cn.wthee.pcrtool.ui.character.CharacterPagerFragmentDirections
 import cn.wthee.pcrtool.ui.character.attr.CharacterAttrFragment.Companion.uid
 import cn.wthee.pcrtool.ui.tool.equip.EquipmentDetailsDialogFragment
 import cn.wthee.pcrtool.utils.*
@@ -27,6 +28,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import coil.load
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -39,6 +41,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel] [EquipmentViewModel] [CharacterAttrViewModel]
  */
+@AndroidEntryPoint
 class CharacterAttrFragment : Fragment() {
 
     companion object {
@@ -63,17 +66,11 @@ class CharacterAttrFragment : Fragment() {
     private lateinit var binding: FragmentCharacterAttrInfoBinding
     private lateinit var attrAdapter: AttrAdapter
 
-    private val sharedEquipViewModel by activityViewModels<EquipmentViewModel> {
-        InjectorUtil.provideEquipmentViewModelFactory()
-    }
+    private val sharedEquipViewModel: EquipmentViewModel by activityViewModels()
 
-    private val characterAttrViewModel by activityViewModels<CharacterAttrViewModel> {
-        InjectorUtil.provideCharacterAttrViewModelFactory()
-    }
+    private val characterAttrViewModel: CharacterAttrViewModel by activityViewModels()
 
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val sharedCharacterViewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,15 +136,11 @@ class CharacterAttrFragment : Fragment() {
             }
             fabEquipCount.apply {
                 setOnClickListener {
-                    val args = Bundle().apply {
-                        putInt(UID, CharacterPagerFragment.uid)
-                    }
-                    findNavController().navigate(
-                        R.id.action_characterPagerFragment_to_characterRankRangeEquipFragment,
-                        args,
-                        null,
-                        null
-                    )
+                    val action = CharacterPagerFragmentDirections
+                        .actionCharacterPagerFragmentToCharacterRankRangeEquipFragment(
+                            CharacterPagerFragment.uid
+                        )
+                    findNavController().navigate(action)
                 }
             }
             fabCharacterDrop.apply {

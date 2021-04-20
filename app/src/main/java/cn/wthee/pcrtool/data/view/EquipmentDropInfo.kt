@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.view
 
 import androidx.room.ColumnInfo
+import java.io.Serializable
 
 
 /**
@@ -55,4 +56,4 @@ data class EquipmentMaterial(
     var id: Int,
     var name: String,
     var count: Int
-)
+) : Serializable

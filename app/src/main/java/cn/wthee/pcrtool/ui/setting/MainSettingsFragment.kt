@@ -31,7 +31,6 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
     }
 
     private lateinit var switchPvpRegion: SwitchPreference
-    private lateinit var changeDbType: ListPreference
 
     override fun onResume() {
         super.onResume()

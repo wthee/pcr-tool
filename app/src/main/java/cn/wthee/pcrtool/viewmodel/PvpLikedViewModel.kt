@@ -5,14 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.PvpRepository
 import cn.wthee.pcrtool.data.entity.PvpLikedData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 竞技场收藏 ViewModel
  *
  * 数据来源 [PvpRepository]
  */
-class PvpLikedViewModel(
+@HiltViewModel
+class PvpLikedViewModel @Inject constructor(
     private val repository: PvpRepository
 ) : ViewModel() {
 

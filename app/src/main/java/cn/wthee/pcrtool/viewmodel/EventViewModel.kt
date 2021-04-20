@@ -6,14 +6,17 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.entity.EventStoryDetail
 import cn.wthee.pcrtool.data.view.EventData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 活动 ViewModel
  *
  * 数据来源 [EventRepository]
  */
-class EventViewModel(
+@HiltViewModel
+class EventViewModel @Inject constructor(
     private val repository: EventRepository
 ) : ViewModel() {
 

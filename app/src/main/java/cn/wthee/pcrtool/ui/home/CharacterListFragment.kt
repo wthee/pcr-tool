@@ -9,12 +9,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import cn.wthee.pcrtool.MainActivity.Companion.canClick
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.adapter.CallBack
 import cn.wthee.pcrtool.adapter.CharacterListAdapter
 import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.databinding.FragmentCharacterListBinding
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import com.google.android.material.transition.MaterialSharedAxis
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -27,6 +30,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class CharacterListFragment : Fragment() {
 
     companion object {
@@ -40,10 +44,14 @@ class CharacterListFragment : Fragment() {
         var isPostponeEnterTransition = false
     }
 
-    private var listAdapter = CharacterListAdapter(this)
+    private lateinit var listAdapter: CharacterListAdapter
     private lateinit var binding: FragmentCharacterListBinding
-    private val viewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
+    private val viewModel: CharacterViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true)
     }
 
     override fun onCreateView(
@@ -82,8 +90,17 @@ class CharacterListFragment : Fragment() {
             R.mipmap.ic_logo,
             getString(R.string.app_name)
         )
+
+        listAdapter = CharacterListAdapter(object : CallBack {
+            override fun todo(data: Any?) {
+                //加载回调
+                startPostponedEnterTransition()
+            }
+        })
+        binding.toolList.adapter = listAdapter
+
+        //公会列表
         lifecycleScope.launch {
-            //公会列表
             guilds = arrayListOf()
             lifecycleScope.launch {
                 guilds.add("全部")
@@ -96,7 +113,6 @@ class CharacterListFragment : Fragment() {
         }
         //获取角色
         load(false)
-        binding.toolList.adapter = listAdapter
     }
 
     private fun load(reload: Boolean) {

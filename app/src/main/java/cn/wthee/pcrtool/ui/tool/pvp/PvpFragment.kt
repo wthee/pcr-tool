@@ -21,8 +21,12 @@ import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.data.view.getIdStr
 import cn.wthee.pcrtool.databinding.FragmentToolPvpBinding
 import cn.wthee.pcrtool.ui.tool.pvp.PvpIconFragment.Companion.selects
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.FabHelper
+import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.ToolbarHelper
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
@@ -33,6 +37,7 @@ import kotlinx.coroutines.launch
  *
  * ViewModels [CharacterViewModel]
  */
+@AndroidEntryPoint
 class PvpFragment : Fragment() {
 
     companion object {
@@ -40,9 +45,7 @@ class PvpFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentToolPvpBinding
-    private val sharedCharacterViewModel by activityViewModels<CharacterViewModel> {
-        InjectorUtil.provideCharacterViewModelFactory()
-    }
+    private val sharedCharacterViewModel: CharacterViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

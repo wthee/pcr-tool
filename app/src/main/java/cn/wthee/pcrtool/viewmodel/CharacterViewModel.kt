@@ -15,16 +15,19 @@ import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.ui.home.CharacterListFragment
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 角色 ViewModel
  *
  * 数据来源 [UnitRepository]
  */
-class CharacterViewModel(
+@HiltViewModel
+class CharacterViewModel @Inject constructor(
     private val repository: UnitRepository
 ) : ViewModel() {
 

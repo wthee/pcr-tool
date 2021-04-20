@@ -8,7 +8,6 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.entity.GuildData
 import cn.wthee.pcrtool.databinding.ItemGuildBinding
@@ -44,7 +43,7 @@ class GuildAdapter :
             //设置数据
             binding.apply {
                 root.animation =
-                    AnimationUtils.loadAnimation(MyApplication.context, R.anim.anim_list_item)
+                    AnimationUtils.loadAnimation(root.context, R.anim.anim_list_item)
                 //公会名
                 title.text = guild.guildName
                 //介绍

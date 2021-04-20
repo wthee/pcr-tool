@@ -11,8 +11,8 @@ import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.databinding.FragmentCharacterSkillLoopBinding
 import cn.wthee.pcrtool.ui.common.CommonBottomSheetDialogFragment
 import cn.wthee.pcrtool.utils.Constants.UID
-import cn.wthee.pcrtool.utils.InjectorUtil
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 角色技能循环页面
@@ -23,7 +23,8 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  *
  * ViewModels [SkillViewModel]
  */
-class SkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
+@AndroidEntryPoint
+class SkillLoopDialogFragment : CommonBottomSheetDialogFragment() {
 
     companion object {
         fun getInstance(uid: Int) =
@@ -36,9 +37,7 @@ class SkillLoopDialogFragment : CommonBottomSheetDialogFragment(true) {
 
     private lateinit var binding: FragmentCharacterSkillLoopBinding
     private var uid = 0
-    private val sharedSkillViewModel by activityViewModels<SkillViewModel> {
-        InjectorUtil.provideSkillViewModelFactory()
-    }
+    private val sharedSkillViewModel: SkillViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
