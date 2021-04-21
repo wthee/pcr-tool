@@ -19,4 +19,8 @@
 
     <color name="cool_apk">#4caf50</color>
 
+    <!--地区-->
+    <color name="color_map_n">@color/colorPrimary</color>
+    <color name="color_map_h">#C94C5D</color>
+    <color name="color_map_vh">#7A418A</color>
 </resources>

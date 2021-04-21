@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.utils.Constants
 import java.io.Serializable
 
 
@@ -39,21 +40,26 @@ data class EquipmentDropInfo(
             }
         }
         result.sortByDescending { it.odd }
+        if (result.size < 10) {
+            for (i in result.size..9) {
+                result.add(EquipmentIdWithOdd())
+            }
+        }
         return result
     }
 }
 
 
 data class EquipmentIdWithOdd(
-    val eid: Int,
-    val odd: Int
+    val eid: Int = Constants.UNKNOWN_EQUIP_ID,
+    val odd: Int = 0
 )
 
 /**
  * 装备合成信息
  */
 data class EquipmentMaterial(
-    var id: Int,
-    var name: String,
-    var count: Int
+    var id: Int = Constants.UNKNOWN_EQUIP_ID,
+    var name: String = "",
+    var count: Int = 0
 ) : Serializable

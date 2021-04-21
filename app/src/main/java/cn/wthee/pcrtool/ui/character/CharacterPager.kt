@@ -24,7 +24,7 @@ fun CharacterPager(
     r6Id: Int,
     toEquipDetail: (Int) -> Unit
 ) {
-    val top = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 18
+    val top = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 10
     val pagerState = rememberPagerState(pageCount = 3)
     var id = unitId
     id += if (r6Id != 0) 60 else 30
@@ -41,5 +41,4 @@ fun CharacterPager(
             }
         }
     }
-
 }

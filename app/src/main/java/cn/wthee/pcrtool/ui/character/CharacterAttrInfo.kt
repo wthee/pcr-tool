@@ -3,6 +3,8 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -21,6 +23,7 @@ import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.getRankColor
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
@@ -93,13 +96,14 @@ fun CharacterAttrInfo(
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun CharacterEquip(
+private fun CharacterEquip(
     rank: Int,
     equips: List<EquipmentMaxData>,
     toEquipDetail: (Int) -> Unit
 ) {
-
-    Column {
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
         //装备 6、 3
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -115,7 +119,9 @@ fun CharacterEquip(
                 modifier = Modifier
                     .size(Dimen.iconSize)
                     .clickable {
-                        toEquipDetail(id6)
+                        if (id6 != Constants.UNKNOWN_EQUIP_ID) {
+                            toEquipDetail(id6)
+                        }
                     }
             )
             IconCompose(

@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.data.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +32,8 @@ class EquipmentViewModel @Inject constructor(
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData?>()
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
     var rankEquipMaterials = MutableLiveData<List<EquipmentMaterial>>()
-    val openEquipDetailDialog = MutableLiveData(-1)
+    var dropInfo = MutableLiveData<List<EquipmentDropInfo>>()
+
 
     /**
      * 获取装备列表
@@ -177,15 +179,20 @@ class EquipmentViewModel @Inject constructor(
     /**
      * 根据 [equipmentId]，获取装备掉落关卡信息
      */
-    suspend fun getDropInfos(equipmentId: Int): List<EquipmentDropInfo> {
-        val equip = equipmentRepository.getEquipmentData(equipmentId)
-        val fixedId = if (equip.craftFlg == 1) {
-            equipmentRepository.getEquipmentCraft(equipmentId).cid1
-        } else
-            equipmentId
-        //获取装备掉落信息
-        val infos = equipmentRepository.getEquipDropAreas(fixedId)
-        return infos.sortedWith(getSort(equipmentId))
+    fun getDropInfos(equipmentId: Int) {
+        viewModelScope.launch {
+            if (equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                val equip = equipmentRepository.getEquipmentData(equipmentId)
+                val fixedId = if (equip.craftFlg == 1) {
+                    equipmentRepository.getEquipmentCraft(equipmentId).cid1
+                } else
+                    equipmentId
+                //获取装备掉落信息
+                val infos =
+                    equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipmentId))
+                dropInfo.postValue(infos)
+            }
+        }
     }
 
     /**
