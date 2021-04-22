@@ -34,6 +34,8 @@ class EquipmentViewModel @Inject constructor(
     var rankEquipMaterials = MutableLiveData<List<EquipmentMaterial>>()
     var dropInfo = MutableLiveData<List<EquipmentDropInfo>>()
 
+    //当前选中的装备素材
+    var equipMaterial = MutableLiveData<EquipmentMaterial>()
 
     /**
      * 获取装备列表

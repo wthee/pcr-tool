@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ object Navigation {
     const val EQUIP_DETAIL = "equipDetail"
 }
 
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
