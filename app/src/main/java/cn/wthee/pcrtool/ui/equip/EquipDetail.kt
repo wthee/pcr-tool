@@ -6,11 +6,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,11 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentIdWithOdd
-import cn.wthee.pcrtool.data.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.ui.compose.AttrList
@@ -43,9 +40,6 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()) {
     equipmentViewModel.getEquip(equipId)
     val equipMaxData = equipmentViewModel.equip.observeAsState().value
-    //点击查看的装备素材
-    val materialState = remember { mutableStateOf(EquipmentMaterial()) }
-    val loadedState = remember { mutableStateOf(false) }
 
     equipMaxData?.let {
         Column(modifier = Modifier.padding(Dimen.smallPadding)) {
@@ -73,9 +67,7 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
             //属性
             AttrList(attrs = it.attr.allNotZero())
             //合成素材，点击时更新 materialState
-            EquipMaterialList(materialState, loadedState, it, equipmentViewModel)
-            //素材掉落
-            EquipDropAreaList(materialState, loadedState)
+            EquipMaterialList(it)
         }
     }
 }
@@ -83,44 +75,55 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
 /**
  * 装备合成素材
  */
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 private fun EquipMaterialList(
-    materialState: MutableState<EquipmentMaterial>,
-    loadedState: MutableState<Boolean>,
     equip: EquipmentMaxData,
     equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
 ) {
     equipmentViewModel.getEquipInfos(equip)
     val data = equipmentViewModel.equipMaterialInfos.observeAsState().value ?: listOf()
-    LazyVerticalGrid(
-        cells = GridCells.Fixed(5),
-        modifier = Modifier.padding(top = Dimen.mediuPadding)
-    ) {
-        itemsIndexed(data) { index, material ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(Dimen.mediuPadding)
-            ) {
-                IconCompose(
-                    data = getEquipIconUrl(material.id),
-                    modifier = Modifier
-                        .size(Dimen.iconSize)
-                        .clickable {
-                            loadedState.value = false
-                            materialState.value = material
-                        }
-                )
-                Text(
-                    text = material.count.toString(),
-                    color = if (materialState.value.id == material.id) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                    style = MaterialTheme.typography.caption
-                )
-            }
-            //默认显示第一个装备素材掉落信息
-            if (materialState.value.id == Constants.UNKNOWN_EQUIP_ID) materialState.value = material
-        }
+    //点击查看的装备素材
+    val clickId = remember { mutableStateOf(Constants.UNKNOWN_EQUIP_ID) }
+    //默认显示第一个装备掉落信息
+    if (data.isNotEmpty()) {
+        clickId.value = data[0].id
+        equipmentViewModel.getDropInfos(data[0].id)
     }
+
+    Column {
+        //装备合成素材
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(5),
+            modifier = Modifier.padding(top = Dimen.mediuPadding)
+        ) {
+            itemsIndexed(data) { index, material ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(Dimen.mediuPadding)
+                ) {
+                    IconCompose(
+                        data = getEquipIconUrl(material.id),
+                        modifier = Modifier
+                            .size(Dimen.iconSize)
+                            .clickable {
+                                clickId.value = material.id
+                                equipmentViewModel.getDropInfos(material.id)
+                            }
+                    )
+                    Text(
+                        text = material.count.toString(),
+                        color = if (clickId.value == material.id) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                        style = MaterialTheme.typography.caption
+                    )
+                }
+            }
+        }
+        //装备素材掉落信息
+        EquipDropAreaList()
+    }
+
 }
 
 /**
@@ -130,21 +133,18 @@ private fun EquipMaterialList(
 @ExperimentalFoundationApi
 @Composable
 private fun EquipDropAreaList(
-    materialState: MutableState<EquipmentMaterial>,
-    loadedState: MutableState<Boolean>,
     equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
 ) {
-    equipmentViewModel.getDropInfos(materialState.value.id)
-    val dropInfo = equipmentViewModel.dropInfo.observeAsState().value ?: listOf()
+    val dropInfoList = equipmentViewModel.dropInfo.observeAsState().value ?: listOf()
+    val selectId =
+        equipmentViewModel.selectId.observeAsState().value ?: Constants.UNKNOWN_EQUIP_ID
+    val loading = equipmentViewModel.loading.observeAsState().value ?: false
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-        AnimatedVisibility(visible = !loadedState.value) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(Dimen.fabIconSize),
-                strokeWidth = 2.dp
-            )
+        AnimatedVisibility(visible = loading) {
+            LinearProgressIndicator(modifier = Modifier.width(Dimen.iconSize))
         }
         LazyColumn {
-            items(dropInfo) {
+            items(dropInfoList) {
                 val pre = when (it.questId / 1000000) {
                     11 -> "N"
                     12 -> "H"
@@ -167,9 +167,8 @@ private fun EquipDropAreaList(
                         style = MaterialTheme.typography.h6,
                         color = colorResource(id = color)
                     )
-                    AreaEquipList(loadedState, materialState.value.id, it.getAllOdd())
+                    AreaEquipList(selectId, it.getAllOdd())
                 }
-
             }
         }
     }
@@ -182,19 +181,17 @@ private fun EquipDropAreaList(
 @ExperimentalFoundationApi
 @Composable
 private fun AreaEquipList(
-    loadedState: MutableState<Boolean>,
     selectedId: Int,
     odds: ArrayList<EquipmentIdWithOdd>
 ) {
     Column {
-        AreaEquipItem(loadedState, selectedId, odds.subList(0, 5))
-        AreaEquipItem(loadedState, selectedId, odds.subList(5, 10))
+        AreaEquipItem(selectedId, odds.subList(0, 5))
+        AreaEquipItem(selectedId, odds.subList(5, 10))
     }
 }
 
 @Composable
 private fun AreaEquipItem(
-    loadedState: MutableState<Boolean>,
     selectedId: Int,
     odds: List<EquipmentIdWithOdd>
 ) {
@@ -221,10 +218,6 @@ private fun AreaEquipItem(
                     style = MaterialTheme.typography.caption,
                     modifier = Modifier.alpha(alpha)
                 )
-            }
-            //fixme 加载完成监听
-            if (index == 4) {
-                loadedState.value = true
             }
         }
     }

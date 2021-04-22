@@ -78,5 +78,9 @@ object Dimen {
      */
     val smallIconSize = 42.dp
 
+    /**
+     * 3dp
+     */
+    val lineHeight = 3.dp
 
 }
