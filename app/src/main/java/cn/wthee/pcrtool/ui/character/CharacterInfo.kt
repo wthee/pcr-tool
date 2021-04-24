@@ -1,10 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,31 +15,24 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
-import cn.wthee.pcrtool.ui.compose.AttrList
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.getRankColor
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
 
-/**
- * 角色属性
- */
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
+@ExperimentalPagerApi
 @Composable
-fun CharacterAttrInfo(
+fun CharacterInfo(
     unitId: Int,
     r6Id: Int,
-    characterViewModel: CharacterViewModel = hiltNavGraphViewModel(),
+    toEquipDetail: (Int) -> Unit,
+    toCharacterBasicInfo: (Int) -> Unit,
     characterAttrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
-    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel(),
-    toEquipDetail: (Int) -> Unit
 ) {
     characterAttrViewModel.getMaxRankAndRarity(unitId)
 
@@ -57,53 +47,88 @@ fun CharacterAttrInfo(
         characterAttrViewModel.getCharacterInfo(unitId, it)
     }
 
-    Card(shape = CardTopShape, elevation = 0.dp) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(Dimen.smallPadding)
+    val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 10
+    var id = unitId
+    id += if (r6Id != 0) 60 else 30
+    val scrollState = rememberScrollState()
+    val marginTop = if (scrollState.value < 0)
+        cardHeight
+    else if (cardHeight - scrollState.value < 0)
+        0
+    else
+        cardHeight - scrollState.value
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier.verticalScroll(scrollState)
         ) {
-            //等级
-            Text(
-                text = selectInfo?.level.toString() ?: "",
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h6,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+            //图片
+            CharacterCard(
+                Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
+                scrollState = scrollState
             )
-            //属性
-            attrData?.let { AttrList(attrs = it.all()) }
-            Text(
-                text = stringResource(id = R.string.title_story_attr),
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
-            )
-            //剧情属性
-            storyAttr?.let { AttrList(attrs = storyAttr.allNotZero()) }
-            //RANK 装备
-            if (equips != null && equips.isNotEmpty()) {
-                CharacterEquip(rank = selectInfo?.rank ?: 2, equips = equips, toEquipDetail)
+            //页面
+            Card(
+                shape = CardTopShape,
+                elevation = 0.dp,
+                modifier = Modifier.padding(top = marginTop.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(Dimen.mediuPadding)
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colors.onPrimary)
+                ) {
+                    //等级
+                    Text(
+                        text = selectInfo?.level.toString() ?: "",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h6,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                    //属性
+                    attrData?.let { AttrList(attrs = it.all()) }
+                    MainText(
+                        text = stringResource(id = R.string.title_story_attr),
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+                    )
+                    //剧情属性
+                    storyAttr?.let { AttrList(attrs = storyAttr.allNotZero()) }
+                    //RANK 装备
+                    if (equips != null && equips.isNotEmpty()) {
+                        CharacterEquip(rank = selectInfo?.rank ?: 2, equips = equips, toEquipDetail)
+                    }
+                    //显示专武
+                    UniqueEquip(unitId, selectInfo?.uniqueEquipLevel ?: 1)
+                    //技能
+                    CharacterSkill(id = unitId)
+                }
             }
         }
+        FabCompose(
+            R.drawable.ic_drop,
+            Modifier
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                .align(Alignment.BottomEnd)
+        ) {
+            toCharacterBasicInfo(unitId)
+        }
     }
+
 }
 
 /**
  * 角色 RANK 装备
  */
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
 @Composable
 private fun CharacterEquip(
     rank: Int,
     equips: List<EquipmentMaxData>,
     toEquipDetail: (Int) -> Unit
 ) {
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ) {
+    Column {
         //装备 6、 3
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -161,7 +186,7 @@ private fun CharacterEquip(
                 }
                 TextButton(onClick = { /*TODO*/ }) {
                     Text(
-                        text = stringResource(id = R.string.rank_compare),
+                        text = stringResource(id = cn.wthee.pcrtool.R.string.rank_compare),
                         modifier = Modifier.padding(top = Dimen.mediuPadding),
                         color = MaterialTheme.colors.primary,
                         style = MaterialTheme.typography.subtitle2
@@ -206,4 +231,48 @@ private fun CharacterEquip(
             )
         }
     }
+}
+
+/**
+ * v专武信息
+ */
+@Composable
+private fun UniqueEquip(
+    unitId: Int,
+    level: Int,
+    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
+) {
+    equipmentViewModel.getUniqueEquipInfos(unitId, level)
+    val data = equipmentViewModel.uniqueEquip.observeAsState().value
+
+    data?.let {
+        Column(
+            modifier = Modifier
+                .padding(top = Dimen.largePadding)
+        ) {
+            MainText(
+                text = it.equipmentName,
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                IconCompose(
+                    data = getEquipIconUrl(it.equipmentId),
+                    modifier = Modifier.size(Dimen.iconSize)
+                )
+                Text(
+                    text = it.getDesc(),
+                    style = MaterialTheme.typography.subtitle2,
+                    modifier = Modifier.padding(start = Dimen.mediuPadding)
+                )
+            }
+            //属性
+            AttrList(attrs = it.attr.allNotZero())
+        }
+    }
+
 }

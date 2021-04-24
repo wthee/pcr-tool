@@ -1,11 +1,15 @@
 package cn.wthee.pcrtool.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -39,6 +43,8 @@ class MainActivity : ComponentActivity() {
         lateinit var navViewModel: NavViewModel
     }
 
+
+    @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
     @ExperimentalFoundationApi
@@ -49,9 +55,34 @@ class MainActivity : ComponentActivity() {
                 Home()
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
+        }
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
+    }
+
+    //返回拦截
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            val pageLevel = navViewModel.pageLevel.value ?: 0
+            if (pageLevel == 0) {
+                return super.onKeyDown(keyCode, event)
+            } else if (pageLevel == -1) {
+                navViewModel.goback(null)
+                return true
+            } else {
+                navViewModel.goback(null)
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     //TODO 刷新页面
@@ -84,6 +115,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
@@ -113,7 +145,6 @@ fun Home() {
                 navController, navViewModel, modifier = Modifier
                     .align(Alignment.End)
                     .padding(Dimen.fabMargin)
-                    .size(Dimen.fabSize)
             )
         }
     }
@@ -125,19 +156,12 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
 
     FloatingActionButton(
         onClick = {
-            val currentPageLevel = pageLevel.value ?: 0
-            if (currentPageLevel > 0) {
-                viewModel.pageLevel.postValue(currentPageLevel - 1)
-                navController.navigateUp()
-            } else {
-                //打开或关闭菜单
-                val menuState = if (currentPageLevel == 0) -1 else 0
-                viewModel.pageLevel.postValue(menuState)
-            }
+            viewModel.goback(navController)
         },
         backgroundColor = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.primary,
-        modifier = modifier,
+        modifier = modifier
+            .size(Dimen.fabSize),
     ) {
         val icon =
             painterResource(
@@ -149,3 +173,4 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
         Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
     }
 }
+

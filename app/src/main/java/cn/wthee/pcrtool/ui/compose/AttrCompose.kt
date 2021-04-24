@@ -1,11 +1,9 @@
 package cn.wthee.pcrtool.ui.compose
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.data.model.AttrValue
@@ -15,12 +13,24 @@ import cn.wthee.pcrtool.utils.int
 /**
  * 属性列表
  */
-@ExperimentalFoundationApi
 @Composable
 fun AttrList(attrs: List<AttrValue>) {
-    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
-        items(attrs) { attr ->
-            AttrItem(attr.title, attr.value.int)
+    Column {
+        attrs.forEachIndexed { index, it ->
+            if (index % 2 == 0) {
+                Row {
+                    AttrItem(it.title, it.value.int, Modifier.weight(0.5f))
+                    if (index + 1 < attrs.size) {
+                        AttrItem(
+                            attrs[index + 1].title,
+                            attrs[index + 1].value.int,
+                            Modifier.weight(0.5f)
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.weight(0.5f))
+                    }
+                }
+            }
         }
     }
 }
@@ -29,8 +39,8 @@ fun AttrList(attrs: List<AttrValue>) {
  * 属性
  */
 @Composable
-fun AttrItem(text: String, value: Int) {
-    Row {
+fun AttrItem(text: String, value: Int, modifier: Modifier) {
+    Row(modifier = modifier) {
         MainTitleText(
             text = text, modifier = Modifier
                 .padding(Dimen.smallPadding)

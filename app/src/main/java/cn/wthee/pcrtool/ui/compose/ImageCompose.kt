@@ -1,15 +1,19 @@
 package cn.wthee.pcrtool.ui.compose
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.CharacterCardImageModifier
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
 import coil.Coil
 import com.google.accompanist.coil.CoilImage
 
@@ -18,11 +22,23 @@ import com.google.accompanist.coil.CoilImage
  * 通过设置 aspectRatio, 使图片加载前时，有默认高度
  */
 @Composable
-fun CharacterCard(url: String, clip: Boolean = false) {
-    val modifier = if (clip) {
-        CharacterCardImageModifier.clip(CardTopShape)
+fun CharacterCard(url: String, clip: Boolean = false, scrollState: ScrollState? = null) {
+    val modifier = if (scrollState == null) {
+        if (clip) {
+            CharacterCardImageModifier.clip(CardTopShape)
+        } else {
+            CharacterCardImageModifier
+        }
     } else {
-        CharacterCardImageModifier
+        //滑动时，向上平移
+        val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
+        if (clip) {
+            CharacterCardImageModifier
+                .clip(CardTopShape)
+                .offset(y = move)
+        } else {
+            CharacterCardImageModifier.offset(y = move)
+        }
     }
     CoilImage(
         data = url,
@@ -36,6 +52,7 @@ fun CharacterCard(url: String, clip: Boolean = false) {
             CoilImage(data = R.drawable.error, contentDescription = null)
         })
 }
+
 
 /**
  * 角色位置图标

@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -10,7 +8,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -38,8 +35,11 @@ fun SkillCompose(
     skillViewModel.getCharacterSkills(level, atk, id)
     val skillList = skillViewModel.skills.observeAsState().value ?: listOf()
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(skillList) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        skillList.forEach {
             SkillItem(level = level, skillDetail = it)
         }
     }
@@ -88,33 +88,37 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                start = Dimen.mediuPadding,
-                end = Dimen.mediuPadding,
-                top = Dimen.largePadding,
-                bottom = Dimen.largePadding
-            )
+            .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
     ) {
-        //名称
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            val type = getSkillType(skillDetail.skillId)
-            //技能名
-            Text(
-                text = skillDetail.name,
-                color = colorResource(
-                    id = when {
-                        type.contains("连结") -> R.color.color_rank_7_10
-                        type.contains("EX") -> R.color.color_rank_2_3
-                        else -> R.color.color_rank_4_6
-                    }
-                ),
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.weight(1f)
-            )
-            //技能类型
-            MainTitleText(text = type)
-        }
+        //技能名
+        val type = getSkillType(skillDetail.skillId)
+        Text(
+            text = skillDetail.name,
+            color = colorResource(
+                id = when {
+                    type.contains("连结") -> R.color.color_rank_7_10
+                    type.contains("EX") -> R.color.color_rank_2_3
+                    else -> R.color.color_rank_4_6
+                }
+            ),
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.subtitle1,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = Dimen.largePadding)
+        )
+        //技能类型
+//        MainTitleText(
+//            text = type,
+//            modifier = Modifier.align(Alignment.CenterHorizontally)
+//        )
+        //等级
+//        Text(
+//            text = "$level",
+//            color = MaterialTheme.colors.primary,
+//            fontWeight = FontWeight.Bold,
+//            style = MaterialTheme.typography.caption
+//        )
         //图标、等级、描述
         Row(
             modifier = Modifier
@@ -124,24 +128,14 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
             val url = Constants.SKILL_ICON_URL + skillDetail.iconType + Constants.WEBP
             //技能图标
             IconCompose(data = url, modifier = Modifier.size(Dimen.iconSize))
-            Column(
+            //描述
+            Text(
+                text = skillDetail.desc,
+                style = MaterialTheme.typography.subtitle2,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = Dimen.mediuPadding)
-            ) {
-                //等级
-                Text(
-                    text = stringResource(id = R.string.skill_level) + level,
-                    color = MaterialTheme.colors.primary,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.caption
-                )
-                //描述
-                Text(
-                    text = skillDetail.desc,
-                    style = MaterialTheme.typography.subtitle2
-                )
-            }
+            )
         }
         val tags = getTags(skillDetail.getActionInfo())
         //标签
@@ -216,11 +210,15 @@ fun SkillActionItem(skillAction: SkillActionText) {
     Text(
         style = TextStyle(
             fontWeight = FontWeight.Bold,
-            fontSize = 12.sp,
+            fontSize = 13.sp,
             letterSpacing = 0.5.sp
         ),
         color = colorResource(id = R.color.gray),
-        modifier = Modifier.padding(top = Dimen.mediuPadding, start = Dimen.smallPadding),
+        modifier = Modifier.padding(
+            top = Dimen.mediuPadding,
+            start = Dimen.mediuPadding,
+            end = Dimen.mediuPadding
+        ),
         text = buildAnnotatedString {
             skillAction.action.forEachIndexed { index, c ->
                 var added = false

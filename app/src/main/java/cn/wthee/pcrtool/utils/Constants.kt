@@ -10,6 +10,7 @@ object Constants {
     //图片格式
     const val WEBP = ".webp"
     const val RATIO = 1.78f
+    const val MOVE_SPEED_RATIO = 0.5
 
     //图片资源地址
     private const val RESOURCE_URL = "https://wthee.xyz/resource/"

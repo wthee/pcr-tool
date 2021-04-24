@@ -12,7 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
-import cn.wthee.pcrtool.ui.character.CharacterPager
+import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
+import cn.wthee.pcrtool.ui.character.CharacterInfo
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
@@ -23,6 +24,7 @@ import javax.inject.Inject
 object Navigation {
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
+    const val CHARACTER_BASIC_INFO = "characterBasicInfo"
     const val UNIT_ID = "unitId"
     const val UNIT_SIX_ID = "r6Id"
     const val EQUIP_LIST = "equipList"
@@ -41,7 +43,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //首页
         composable(Navigation.CHARACTER_LIST) { CharacterList(actions.toCharacterDetail) }
 
-        //角色详情
+        //角色属性详情
         composable(
             "${Navigation.CHARACTER_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.UNIT_SIX_ID}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
@@ -52,10 +54,25 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(1)
-            CharacterPager(
+            CharacterInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 r6Id = arguments.getInt(Navigation.UNIT_SIX_ID),
-                actions.toEquipDetail
+                actions.toEquipDetail,
+                actions.toCharacterBasicInfo
+            )
+        }
+
+        //角色资料
+        composable(
+            "${Navigation.CHARACTER_BASIC_INFO}/{${Navigation.UNIT_ID}}",
+            arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            viewModel.pageLevel.postValue(2)
+            CharacterBasicInfo(
+                unitId = arguments.getInt(Navigation.UNIT_ID)
             )
         }
 
@@ -94,6 +111,10 @@ class NavActions(navController: NavHostController) {
     val toEquipDetail: (Int) -> Unit = { equipId: Int ->
         navController.navigate("${Navigation.EQUIP_DETAIL}/${equipId}")
     }
+
+    val toCharacterBasicInfo: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${Navigation.CHARACTER_BASIC_INFO}/${unitId}")
+    }
 }
 
 @HiltViewModel
@@ -110,4 +131,16 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * >0: 进度
      */
     val downloadProgress = MutableLiveData(-2)
+
+    fun goback(navController: NavHostController?) {
+        val currentPageLevel = pageLevel.value ?: 0
+        if (currentPageLevel > 0) {
+            pageLevel.postValue(currentPageLevel - 1)
+            navController?.navigateUp()
+        } else {
+            //打开或关闭菜单
+            val menuState = if (currentPageLevel == 0) -1 else 0
+            pageLevel.postValue(menuState)
+        }
+    }
 }

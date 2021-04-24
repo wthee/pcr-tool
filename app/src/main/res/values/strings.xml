@@ -25,15 +25,16 @@
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
     <string name="skill_level">技能等级：</string>
+    <string name="title_skill">技能信息</string>
     <string name="skill_loop">技能循环</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
     <string name="equip_details">道具详情</string>
     <string name="title_comments">交流</string>
     <string name="title_room_comments">小屋</string>
-    <string name="title_material">所需装备：%d</string>
+    <string name="title_material">所需装备</string>
     <string name="title_all_attr">- 人物属性 -</string>
-    <string name="title_story_attr">- 剧情属性 -</string>
+    <string name="title_story_attr">剧情属性</string>
     <!--    -->
     <string name="back">返回</string>
     <string name="other">其它</string>
@@ -111,7 +112,7 @@
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">活动</string>
-    <string name="drop_info">- 掉落信息 -</string>
+    <string name="drop_info">掉落地区</string>
     <string name="test">testtesttestesttesttestesttestttesttesttestesttesttestesttesttestesttesttestesttesttestesttesttesestesttesttestesttesttestesttesttes</string>
     <string name="test_short">test</string>
     <string name="tool_news">公告</string>

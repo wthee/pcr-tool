@@ -30,7 +30,6 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 @Composable
 fun CharacterBasicInfo(
     unitId: Int,
-    r6Id: Int,
     viewModel: CharacterViewModel = hiltNavGraphViewModel()
 ) {
     viewModel.getCharacter(unitId)
@@ -39,9 +38,9 @@ fun CharacterBasicInfo(
     data?.let { info ->
         Card(shape = CardTopShape, elevation = 0.dp) {
             Column(
-                Modifier
-                    .verticalScroll(rememberScrollState())
+                modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .background(color = MaterialTheme.colors.onPrimary)
             ) {
                 //标题

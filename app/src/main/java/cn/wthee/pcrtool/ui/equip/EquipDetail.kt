@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.equip
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
@@ -25,6 +27,7 @@ import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.ui.compose.AttrList
 import cn.wthee.pcrtool.ui.compose.IconCompose
+import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
@@ -66,7 +69,7 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
             }
             //属性
             AttrList(attrs = it.attr.allNotZero())
-            //合成素材，点击时更新 materialState
+            //合成素材
             EquipMaterialList(it)
         }
     }
@@ -93,34 +96,61 @@ private fun EquipMaterialList(
     }
 
     Column {
+        MainTitleText(
+            text = stringResource(id = R.string.title_material),
+            modifier = Modifier.padding(
+                start = Dimen.smallPadding,
+                top = Dimen.largePadding,
+                bottom = Dimen.mediuPadding
+            )
+        )
         //装备合成素材
         LazyVerticalGrid(
-            cells = GridCells.Fixed(5),
+            cells = GridCells.Fixed(6),
             modifier = Modifier.padding(top = Dimen.mediuPadding)
         ) {
             itemsIndexed(data) { index, material ->
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(Dimen.mediuPadding)
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconCompose(
-                        data = getEquipIconUrl(material.id),
-                        modifier = Modifier
-                            .size(Dimen.iconSize)
-                            .clickable {
-                                clickId.value = material.id
-                                equipmentViewModel.getDropInfos(material.id)
-                            }
-                    )
+                    //选中判断
+                    val color =
+                        if (clickId.value == material.id) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
+                    Box {
+                        IconCompose(
+                            data = getEquipIconUrl(material.id),
+                            modifier = Modifier
+                                .size(Dimen.smallIconSize)
+                                .clickable {
+                                    clickId.value = material.id
+                                    equipmentViewModel.getDropInfos(material.id)
+                                }
+                        )
+                        androidx.compose.animation.AnimatedVisibility(visible = clickId.value == material.id) {
+                            Spacer(
+                                modifier = Modifier
+                                    .size(Dimen.smallIconSize)
+                                    .background(colorResource(id = R.color.alpha_primary))
+                            )
+                        }
+                    }
                     Text(
                         text = material.count.toString(),
-                        color = if (clickId.value == material.id) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                        color = color,
                         style = MaterialTheme.typography.caption
                     )
                 }
             }
         }
         //装备素材掉落信息
+        MainTitleText(
+            text = stringResource(id = R.string.drop_info),
+            modifier = Modifier.padding(
+                start = Dimen.smallPadding,
+                top = Dimen.largePadding,
+                bottom = Dimen.mediuPadding
+            )
+        )
         EquipDropAreaList()
     }
 
@@ -178,6 +208,7 @@ private fun EquipDropAreaList(
 /**
  *  地区的装备掉落列表
  */
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 private fun AreaEquipList(
@@ -185,11 +216,12 @@ private fun AreaEquipList(
     odds: ArrayList<EquipmentIdWithOdd>
 ) {
     Column {
-        AreaEquipItem(selectedId, odds.subList(0, 5))
-        AreaEquipItem(selectedId, odds.subList(5, 10))
+        AreaEquipItem(selectedId, odds.subList(0, 6))
+        AreaEquipItem(selectedId, odds.subList(6, 12))
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun AreaEquipItem(
     selectedId: Int,
@@ -205,12 +237,21 @@ private fun AreaEquipItem(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val alpha = if (equipmentIdWithOdd.odd > 0) 1f else 0f
                 val selected = selectedId == equipmentIdWithOdd.eid
-                IconCompose(
-                    data = getEquipIconUrl(equipmentIdWithOdd.eid),
-                    modifier = Modifier
-                        .size(Dimen.smallIconSize)
-                        .alpha(alpha)
-                )
+                Box {
+                    IconCompose(
+                        data = getEquipIconUrl(equipmentIdWithOdd.eid),
+                        modifier = Modifier
+                            .size(Dimen.smallIconSize)
+                            .alpha(alpha)
+                    )
+                    androidx.compose.animation.AnimatedVisibility(visible = selected) {
+                        Spacer(
+                            modifier = Modifier
+                                .size(Dimen.smallIconSize)
+                                .background(colorResource(id = R.color.alpha_primary))
+                        )
+                    }
+                }
                 Text(
                     text = "${equipmentIdWithOdd.odd}%",
                     color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
