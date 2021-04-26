@@ -41,7 +41,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
     NavHost(navController, startDestination = Navigation.CHARACTER_LIST) {
         //首页
-        composable(Navigation.CHARACTER_LIST) { CharacterList(actions.toCharacterDetail) }
+        composable(Navigation.CHARACTER_LIST) {
+            CharacterList(
+                actions.toCharacterDetail,
+                viewModel
+            )
+        }
 
         //角色属性详情
         composable(
@@ -123,6 +128,11 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 页面等级
      */
     val pageLevel = MutableLiveData(0)
+
+    /**
+     * fab 显示
+     */
+    val fabShow = MutableLiveData(true)
 
     /**
      * 下载状态
