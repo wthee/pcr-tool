@@ -524,7 +524,7 @@ data class SkillActionPro(
                         else
                             ""
                     } else if (action_detail_1 in 0..99) {
-                        "以 [100 - $action_detail_1%] 的概率使用动作(${action_detail_3 % 10})"
+                        "以 [${100 - action_detail_1}%] 的概率使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 == 599) {
                         "${getTarget()}身上没有持续伤害时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 in 600..699) {

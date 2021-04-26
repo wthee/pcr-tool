@@ -6,6 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
         lateinit var navViewModel: NavViewModel
     }
 
+    @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
     @ExperimentalFoundationApi
@@ -84,6 +87,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
@@ -119,33 +123,38 @@ fun Home() {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier: Modifier) {
     val pageLevel = viewModel.pageLevel.observeAsState()
+    val show = viewModel.fabShow.observeAsState().value ?: true
 
-    FloatingActionButton(
-        onClick = {
-            val currentPageLevel = pageLevel.value ?: 0
-            if (currentPageLevel > 0) {
-                viewModel.pageLevel.postValue(currentPageLevel - 1)
-                navController.navigateUp()
-            } else {
-                //打开或关闭菜单
-                val menuState = if (currentPageLevel == 0) -1 else 0
-                viewModel.pageLevel.postValue(menuState)
-            }
-        },
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.primary,
-        modifier = modifier,
-    ) {
-        val icon =
-            painterResource(
-                id = if (pageLevel.value == null || pageLevel.value!! == 0)
-                    R.drawable.ic_function
-                else
-                    R.drawable.ic_left
-            )
-        Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
+    AnimatedVisibility(visible = show) {
+        FloatingActionButton(
+            onClick = {
+                val currentPageLevel = pageLevel.value ?: 0
+                if (currentPageLevel > 0) {
+                    viewModel.pageLevel.postValue(currentPageLevel - 1)
+                    navController.navigateUp()
+                } else {
+                    //打开或关闭菜单
+                    val menuState = if (currentPageLevel == 0) -1 else 0
+                    viewModel.pageLevel.postValue(menuState)
+                }
+            },
+            backgroundColor = MaterialTheme.colors.background,
+            contentColor = MaterialTheme.colors.primary,
+            modifier = modifier,
+        ) {
+            val icon =
+                painterResource(
+                    id = if (pageLevel.value == null || pageLevel.value!! == 0)
+                        R.drawable.ic_function
+                    else
+                        R.drawable.ic_left
+                )
+            Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
+        }
     }
+
 }
