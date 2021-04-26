@@ -92,15 +92,14 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
     ) {
         //技能名
         val type = getSkillType(skillDetail.skillId)
+        val color = when {
+            type.contains("连结") -> R.color.color_rank_7_10
+            type.contains("EX") -> R.color.color_rank_2_3
+            else -> R.color.color_rank_4_6
+        }
         Text(
             text = skillDetail.name,
-            color = colorResource(
-                id = when {
-                    type.contains("连结") -> R.color.color_rank_7_10
-                    type.contains("EX") -> R.color.color_rank_2_3
-                    else -> R.color.color_rank_4_6
-                }
-            ),
+            color = colorResource(color),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.subtitle1,
             modifier = Modifier
@@ -108,10 +107,14 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
                 .padding(top = Dimen.largePadding)
         )
         //技能类型
-//        MainTitleText(
-//            text = type,
-//            modifier = Modifier.align(Alignment.CenterHorizontally)
-//        )
+        Text(
+            text = type,
+            color = colorResource(color),
+            style = MaterialTheme.typography.caption,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = Dimen.smallPadding)
+        )
         //等级
 //        Text(
 //            text = "$level",

@@ -14,6 +14,11 @@ object Dimen {
     val cardElevation = 4.dp
 
     /**
+     * 8dp
+     */
+    val fabElevation = 8.dp
+
+    /**
      * 40dp
      */
     val fabSize = 40.dp

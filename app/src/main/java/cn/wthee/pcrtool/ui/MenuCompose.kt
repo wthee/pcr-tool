@@ -10,7 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -74,6 +74,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 ExtendedFloatingActionButton(
                     backgroundColor = MaterialTheme.colors.onPrimary,
                     contentColor = MaterialTheme.colors.primary,
+                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
                     modifier = Modifier.height(Dimen.fabSize),
                     icon = {
                         Icon(
@@ -109,13 +110,11 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
 @Composable
 fun MenuItem(text: String, @DrawableRes iconId: Int, modifier: Modifier, action: () -> Unit) {
     Card(
-        shape = Shapes.large,
-        elevation = Dimen.cardElevation,
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)
-            .clip(Shapes.large)
+            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
             .clickable(onClick = action)
     ) {
         Box() {

@@ -16,7 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.data.enums.SortType
@@ -57,11 +57,9 @@ fun CharacterItem(
 ) {
 
     Card(
-        shape = Shapes.large,
-        elevation = Dimen.cardElevation,
         modifier = Modifier
             .padding(Dimen.mediuPadding)
-            .clip(Shapes.large)
+            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
             .clickable {
                 //跳转至详情
                 toDetail(character.id, character.r6Id)

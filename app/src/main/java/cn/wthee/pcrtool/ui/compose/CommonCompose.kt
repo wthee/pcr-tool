@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.ui.compose
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -83,6 +80,7 @@ fun FabCompose(@DrawableRes iconId: Int, modifier: Modifier = Modifier, onClick:
     FloatingActionButton(
         onClick = (onClick),
         backgroundColor = MaterialTheme.colors.background,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         contentColor = MaterialTheme.colors.primary,
         modifier = modifier.size(Dimen.fabSize),
     ) {

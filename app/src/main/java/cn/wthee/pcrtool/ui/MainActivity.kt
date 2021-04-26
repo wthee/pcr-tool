@@ -158,6 +158,7 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
         onClick = {
             viewModel.goback(navController)
         },
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         backgroundColor = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.primary,
         modifier = modifier
