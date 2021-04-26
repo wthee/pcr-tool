@@ -41,6 +41,7 @@ fun CharacterInfo(
     val attrData = characterAttrViewModel.sumInfo.observeAsState().value
     val storyAttr = characterAttrViewModel.storyAttrs.observeAsState().value
     val equips = characterAttrViewModel.equipments.observeAsState().value
+    val loading = characterAttrViewModel.loading.observeAsState().value ?: true
 
     maxData?.let {
         characterAttrViewModel.selData.postValue(it)
@@ -58,9 +59,14 @@ fun CharacterInfo(
     else
         cardHeight - scrollState.value
 
-    Box(modifier = Modifier.fillMaxSize()) {
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colors.onPrimary)) {
         Box(
-            modifier = Modifier.verticalScroll(scrollState)
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .fillMaxSize()
         ) {
             //图片
             CharacterCard(
@@ -70,40 +76,48 @@ fun CharacterInfo(
             //页面
             Card(
                 shape = CardTopShape,
-                elevation = 0.dp,
-                modifier = Modifier.padding(top = marginTop.dp)
+                elevation = 20.dp,
+                modifier = Modifier
+                    .padding(top = marginTop.dp)
             ) {
+
                 Column(
                     modifier = Modifier
                         .padding(Dimen.mediuPadding)
                         .fillMaxSize()
-                        .background(color = MaterialTheme.colors.onPrimary)
                 ) {
-                    //等级
-                    Text(
-                        text = selectInfo?.level.toString() ?: "",
-                        color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h6,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                    //属性
-                    attrData?.let { AttrList(attrs = it.all()) }
-                    MainText(
-                        text = stringResource(id = R.string.title_story_attr),
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
-                    )
-                    //剧情属性
-                    storyAttr?.let { AttrList(attrs = storyAttr.allNotZero()) }
-                    //RANK 装备
-                    if (equips != null && equips.isNotEmpty()) {
-                        CharacterEquip(rank = selectInfo?.rank ?: 2, equips = equips, toEquipDetail)
+
+                    if (!loading) {
+                        //等级
+                        Text(
+                            text = selectInfo?.level.toString() ?: "",
+                            color = MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.h6,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                        //属性
+                        attrData?.let { AttrList(attrs = it.all()) }
+                        MainText(
+                            text = stringResource(id = R.string.title_story_attr),
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+                        )
+                        //剧情属性
+                        storyAttr?.let { AttrList(attrs = storyAttr.allNotZero()) }
+                        //RANK 装备
+                        if (equips != null && equips.isNotEmpty()) {
+                            CharacterEquip(
+                                rank = selectInfo?.rank ?: 2,
+                                equips = equips,
+                                toEquipDetail
+                            )
+                        }
+                        //显示专武
+                        UniqueEquip(unitId, selectInfo?.uniqueEquipLevel ?: 1)
+                        //技能
+                        CharacterSkill(id = unitId)
                     }
-                    //显示专武
-                    UniqueEquip(unitId, selectInfo?.uniqueEquipLevel ?: 1)
-                    //技能
-                    CharacterSkill(id = unitId)
                 }
             }
         }
@@ -116,6 +130,7 @@ fun CharacterInfo(
             toCharacterBasicInfo(unitId)
         }
     }
+
 
 }
 

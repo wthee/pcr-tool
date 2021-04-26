@@ -28,13 +28,14 @@ class CharacterAttrViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    var equipments = MutableLiveData<List<EquipmentMaxData>>()
-    var storyAttrs = MutableLiveData<Attr>()
-    var sumInfo = MutableLiveData<Attr>()
-    var maxData = MutableLiveData<CharacterSelectInfo>()
-    var selData = MutableLiveData<CharacterSelectInfo>()
-    var level = MutableLiveData(0)
-    var atk = MutableLiveData(0)
+    val equipments = MutableLiveData<List<EquipmentMaxData>>()
+    val storyAttrs = MutableLiveData<Attr>()
+    val sumInfo = MutableLiveData<Attr>()
+    val maxData = MutableLiveData<CharacterSelectInfo>()
+    val selData = MutableLiveData<CharacterSelectInfo>()
+    val level = MutableLiveData(0)
+    val atk = MutableLiveData(0)
+    val loading = MutableLiveData(true)
 
     /**
      * 根据角色 id  星级 等级 专武等级
@@ -47,6 +48,7 @@ class CharacterAttrViewModel @Inject constructor(
             level.postValue(data.level)
             atk.postValue(attr.atk.int)
             sumInfo.postValue(attr)
+            loading.postValue(false)
         }
 
     }
