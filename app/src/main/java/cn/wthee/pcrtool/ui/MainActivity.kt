@@ -165,7 +165,7 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
             }
         },
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = MaterialTheme.colors.onPrimary,
         contentColor = MaterialTheme.colors.primary,
         modifier = modifier
             .size(Dimen.fabSize),

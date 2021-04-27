@@ -7,6 +7,7 @@ val Teal200 = Color(0xFF03DAC5)
 val colorPrimary = Color(0xFF5690EF)
 val colorAccent = Color(0xFF5690EF)
 val backgroud = Color(0xFFF5F5F5)
+val backgroudDrak = Color(0xFF000000)
 val surface = Color(0xFFFFFFFF)
 val white = Color(0xFFFFFFFF)
 
