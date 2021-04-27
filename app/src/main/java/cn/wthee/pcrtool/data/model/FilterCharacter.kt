@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
+import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.DataStoreUtil
 import com.google.gson.Gson
@@ -17,7 +18,10 @@ class FilterCharacter(
     var positon: Int = 0,
     var atk: Int = 0,
     var r6: Boolean = false,
-    var guild: String = "全部"
+    var guild: String = "全部",
+    var sortType: SortType = SortType.SORT_DATE,
+    var name: String = "",
+    var asc: Boolean = false
 ) : Serializable {
     var starIds = arrayListOf<Int>()
         set(value) {
@@ -45,15 +49,6 @@ class FilterCharacter(
 //                starIds = newStarIds ?: arrayListOf()
 //            }
         }
-    }
-
-
-    fun initData() {
-        this.all = true
-        this.positon = 0
-        this.atk = 0
-        this.r6 = false
-        this.guild = "全部"
     }
 
     fun position() = when (this.positon) {

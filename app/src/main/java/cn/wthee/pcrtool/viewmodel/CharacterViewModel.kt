@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.view.CharacterInfo
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
@@ -34,27 +33,18 @@ class CharacterViewModel @Inject constructor(
     var character = MutableLiveData<CharacterInfoPro>()
     var updateCharacter = MutableLiveData<Boolean>()
     var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
+    var filter = MutableLiveData<FilterCharacter>()
 
     /**
      * 角色基本资料 [CharacterInfo]
      */
-    fun getCharacters(
-        params: FilterCharacter,
-        sortType: SortType,
-        asc: Boolean,
-        name: String,
-        reload: Boolean = true
-    ) {
+    fun getCharacters(params: FilterCharacter) {
         viewModelScope.launch {
-            val data = repository.getInfoAndData(
-                sortType,
-                asc,
-                name,
-                params
-            )
+            val data = repository.getInfoAndData(params)
             characterList.postValue(data)
         }
     }
+
 
     /**
      * 角色基本资料 [CharacterInfoPro]

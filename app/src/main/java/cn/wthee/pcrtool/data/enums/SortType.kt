@@ -10,3 +10,12 @@ enum class SortType(val type: Int) {
     SORT_WEIGHT(3),
     SORT_POSITION(4)
 }
+
+fun getSortType(value: Int): SortType {
+    for (item in SortType.values()) {
+        if (item.type == value) return item
+    }
+    return SortType.SORT_DATE
+}
+
+

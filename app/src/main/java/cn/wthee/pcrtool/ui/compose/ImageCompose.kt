@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.compose
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -8,14 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.CharacterCardImageModifier
+import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
-import coil.Coil
-import com.google.accompanist.coil.CoilImage
+import com.google.accompanist.coil.rememberCoilPainter
+
+//fixme previewPlaceholder 无效
 
 /**
  * 角色卡面
@@ -40,17 +42,16 @@ fun CharacterCard(url: String, clip: Boolean = false, scrollState: ScrollState? 
             CharacterCardImageModifier.offset(y = move)
         }
     }
-    CoilImage(
-        data = url,
+    Image(
+        painter = rememberCoilPainter(
+            request = url,
+            previewPlaceholder = R.drawable.load,
+            fadeIn = true,
+            fadeInDurationMs = 600
+        ),
         contentDescription = null,
-        modifier = modifier,
-        imageLoader = Coil.imageLoader(MyApplication.context),
-        loading = {
-            CoilImage(data = R.drawable.load, contentDescription = null)
-        },
-        error = {
-            CoilImage(data = R.drawable.error, contentDescription = null)
-        })
+        modifier = modifier
+    )
 }
 
 
@@ -65,7 +66,14 @@ fun PositionIcon(position: Int, size: Dp) {
         in 600..9999 -> R.drawable.ic_position_2
         else -> R.drawable.ic_position_2
     }
-    CoilImage(data = positionIconId, contentDescription = null, modifier = Modifier.size(size))
+    Image(
+        painter = rememberCoilPainter(
+            request = positionIconId,
+            previewPlaceholder = R.drawable.unknown_gray,
+        ),
+        contentDescription = null,
+        modifier = Modifier.size(size)
+    )
 }
 
 /**
@@ -73,16 +81,13 @@ fun PositionIcon(position: Int, size: Dp) {
  */
 @Composable
 fun IconCompose(data: Any, modifier: Modifier = Modifier) {
-    CoilImage(
-        data = data,
+    Image(
+        painter = rememberCoilPainter(
+            request = data,
+            previewPlaceholder = R.drawable.unknown_gray,
+        ),
         contentDescription = null,
-        modifier = modifier,
-        loading = {
-            CoilImage(data = R.drawable.unknown_gray, contentDescription = null)
-        },
-        error = {
-            CoilImage(data = R.drawable.unknown_gray, contentDescription = null)
-        }
+        modifier = modifier.size(Dimen.iconSize)
     )
 }
 

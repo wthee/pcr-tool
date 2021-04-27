@@ -1,6 +1,9 @@
 package cn.wthee.pcrtool.ui.theme
 
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import cn.wthee.pcrtool.MyApplication
 
 object Dimen {
     /**
@@ -92,4 +95,34 @@ object Dimen {
      * 3dp
      */
     val lineHeight = 3.dp
+
+    /**
+     * 2dp
+     */
+    val border = 2.dp
+
+    /**
+     * 28dp
+     */
+    val inputHeight = 48.dp
+
+    /**
+     * 根据文字大小显示
+     */
+    fun getWordWidth(length: Int): Dp {
+        return (15 * length).sp2dp
+    }
 }
+
+
+/**
+ * sp to dp
+ */
+val Int.sp2dp: Dp
+    get() {
+        val scale: Float = MyApplication.context.resources.displayMetrics.density
+        val px = this.sp.value * scale
+        val dpInt = (px / scale + 0.5f).toInt()
+        return dpInt.dp
+    }
+

@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.UnitDao
-import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import javax.inject.Inject
 
@@ -12,15 +11,10 @@ import javax.inject.Inject
  */
 class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
-    suspend fun getInfoAndData(
-        sortType: SortType,
-        asc: Boolean,
-        name: String,
-        filter: FilterCharacter
-    ) = unitDao.getInfoAndData(
-        sortType.type,
-        if (asc) "asc" else "desc",
-        name,
+    suspend fun getInfoAndData(filter: FilterCharacter) = unitDao.getInfoAndData(
+        filter.sortType.type,
+        if (filter.asc) "asc" else "desc",
+        filter.name,
         filter.position()[0],
         filter.position()[1],
         filter.atk,
