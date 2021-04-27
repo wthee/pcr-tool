@@ -102,9 +102,9 @@ object Dimen {
     val border = 2.dp
 
     /**
-     * 28dp
+     * 40dp
      */
-    val inputHeight = 48.dp
+    val topBarHeight = 40.dp
 
     /**
      * 根据文字大小显示

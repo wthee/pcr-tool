@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.character.CharacterInfo
 import cn.wthee.pcrtool.ui.equip.EquipList
@@ -19,6 +20,7 @@ import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 object Navigation {
@@ -32,6 +34,7 @@ object Navigation {
     const val EQUIP_DETAIL = "equipDetail"
 }
 
+@InternalCoroutinesApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -130,9 +133,14 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val pageLevel = MutableLiveData(0)
 
     /**
-     * fab 显示
+     * fab 图标显示
      */
-    val fabShow = MutableLiveData(true)
+    val fabMainIcon = MutableLiveData(R.drawable.ic_function)
+
+    /**
+     * 确认
+     */
+    val fabOK = MutableLiveData(false)
 
     /**
      * 下载状态

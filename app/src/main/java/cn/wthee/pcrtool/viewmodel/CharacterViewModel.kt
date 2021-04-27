@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.entity.GuildData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.view.CharacterInfo
 import cn.wthee.pcrtool.data.view.CharacterInfoPro
@@ -33,6 +34,7 @@ class CharacterViewModel @Inject constructor(
     var character = MutableLiveData<CharacterInfoPro>()
     var updateCharacter = MutableLiveData<Boolean>()
     var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
+    var guilds = MutableLiveData<List<GuildData>>()
     var filter = MutableLiveData<FilterCharacter>()
 
     /**
@@ -85,7 +87,12 @@ class CharacterViewModel @Inject constructor(
     /**
      * 公会信息
      */
-    suspend fun getGuilds() = repository.getGuilds()
+    fun getGuilds() {
+        viewModelScope.launch {
+            val data = repository.getGuilds()
+            guilds.postValue(data)
+        }
+    }
 
     /**
      * 角色碎片掉落信息

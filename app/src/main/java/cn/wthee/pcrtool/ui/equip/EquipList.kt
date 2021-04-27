@@ -42,13 +42,13 @@ fun EquipList(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimen.smallPadding)
+                    .padding(Dimen.smallPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 IconCompose(
                     data = getEquipIconUrl(equip.equipmentId),
                     modifier = Modifier
                         .size(Dimen.iconSize)
-                        .align(Alignment.CenterHorizontally)
                         .clickable {
                             toEquipDetail(equip.equipmentId)
                         }

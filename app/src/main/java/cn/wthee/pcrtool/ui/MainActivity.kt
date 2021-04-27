@@ -33,6 +33,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
         lateinit var navViewModel: NavViewModel
     }
 
+    @InternalCoroutinesApi
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
@@ -114,6 +116,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@InternalCoroutinesApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -134,7 +137,6 @@ fun Home() {
         scope.launch {
             DatabaseUpdater(navViewModel).checkDBVersion()
         }
-
         NavGraph(navController, navViewModel, actions)
         //菜单
         MenuContent(navViewModel, actions)
@@ -152,28 +154,30 @@ fun Home() {
 @Composable
 fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier: Modifier) {
     val pageLevel = viewModel.pageLevel.observeAsState()
-    val show = viewModel.fabShow.observeAsState().value ?: true
+    val iconId = viewModel.fabMainIcon.observeAsState().value ?: R.drawable.ic_function
 
-    if (show) {
-        FloatingActionButton(
-            onClick = {
+    FloatingActionButton(
+        onClick = {
+            if (iconId == R.drawable.ic_ok) {
+                viewModel.fabOK.postValue(true)
+            } else {
                 viewModel.goback(navController)
-            },
-            elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-            backgroundColor = MaterialTheme.colors.background,
-            contentColor = MaterialTheme.colors.primary,
-            modifier = modifier
-                .size(Dimen.fabSize),
-        ) {
-            val icon =
-                painterResource(
-                    id = if (pageLevel.value == null || pageLevel.value!! == 0)
-                        R.drawable.ic_function
-                    else
-                        R.drawable.ic_left
-                )
-            Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
-        }
+            }
+        },
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
+        backgroundColor = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.primary,
+        modifier = modifier
+            .size(Dimen.fabSize),
+    ) {
+        val icon =
+            painterResource(
+                id = if (pageLevel.value == null || pageLevel.value!! == 0)
+                    iconId
+                else
+                    R.drawable.ic_left
+            )
+        Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
     }
 }
 

@@ -2,9 +2,10 @@ package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
@@ -16,6 +17,10 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
 import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.imageloading.isFinalState
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
 
 //fixme previewPlaceholder 无效
 
@@ -23,6 +28,7 @@ import com.google.accompanist.coil.rememberCoilPainter
  * 角色卡面
  * 通过设置 aspectRatio, 使图片加载前时，有默认高度
  */
+@InternalCoroutinesApi
 @Composable
 fun CharacterCard(url: String, clip: Boolean = false, scrollState: ScrollState? = null) {
     val modifier = if (scrollState == null) {
@@ -42,16 +48,37 @@ fun CharacterCard(url: String, clip: Boolean = false, scrollState: ScrollState? 
             CharacterCardImageModifier.offset(y = move)
         }
     }
-    Image(
-        painter = rememberCoilPainter(
+    Box {
+        val painter = rememberCoilPainter(
             request = url,
-            previewPlaceholder = R.drawable.load,
             fadeIn = true,
             fadeInDurationMs = 600
-        ),
-        contentDescription = null,
-        modifier = modifier
-    )
+        )
+        val loaded = remember {
+            mutableStateOf(false)
+        }
+        LaunchedEffect(painter) {
+            snapshotFlow { painter.loadState }
+                .filter { it.isFinalState() }
+                .collectLatest {
+                    loaded.value = true
+                }
+        }
+
+        if (loaded.value) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = modifier
+            )
+        } else {
+            Image(
+                painter = rememberCoilPainter(request = R.drawable.load),
+                contentDescription = null,
+                modifier = modifier
+            )
+        }
+    }
 }
 
 
@@ -69,7 +96,6 @@ fun PositionIcon(position: Int, size: Dp) {
     Image(
         painter = rememberCoilPainter(
             request = positionIconId,
-            previewPlaceholder = R.drawable.unknown_gray,
         ),
         contentDescription = null,
         modifier = Modifier.size(size)
@@ -81,14 +107,37 @@ fun PositionIcon(position: Int, size: Dp) {
  */
 @Composable
 fun IconCompose(data: Any, modifier: Modifier = Modifier) {
-    Image(
-        painter = rememberCoilPainter(
+    Box {
+        val painter = rememberCoilPainter(
             request = data,
-            previewPlaceholder = R.drawable.unknown_gray,
-        ),
-        contentDescription = null,
-        modifier = modifier.size(Dimen.iconSize)
-    )
+            fadeIn = true,
+            fadeInDurationMs = 600
+        )
+        val loaded = remember {
+            mutableStateOf(false)
+        }
+        LaunchedEffect(painter) {
+            snapshotFlow { painter.loadState }
+                .filter { it.isFinalState() }
+                .collectLatest {
+                    loaded.value = true
+                }
+        }
+
+        if (loaded.value) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = modifier.size(Dimen.iconSize)
+            )
+        } else {
+            Image(
+                painter = rememberCoilPainter(request = R.drawable.unknown_gray),
+                contentDescription = null,
+                modifier = modifier.size(Dimen.iconSize)
+            )
+        }
+    }
 }
 
 /**
