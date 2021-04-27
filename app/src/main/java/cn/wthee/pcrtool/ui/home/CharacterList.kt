@@ -196,7 +196,11 @@ private fun FilterCharacterSheet(
         mutableStateOf(0)
     }
     newFilter.positon = positionIndex.value
-
+    //攻击类型
+    val atkIndex = remember {
+        mutableStateOf(0)
+    }
+    newFilter.atk = atkIndex.value
 
     //选择状态
     Column(
@@ -216,10 +220,12 @@ private fun FilterCharacterSheet(
                 coroutineScope.launch {
                     sheetState.hide()
                 }
+                textState.value = TextFieldValue()
                 sortTypeIndex.value = 0
                 sortAscIndex.value = 1
                 r6Index.value = 0
                 positionIndex.value = 0
+                atkIndex.value = 0
                 filter.value = FilterCharacter()
             }
             //确认
@@ -306,6 +312,21 @@ private fun FilterCharacterSheet(
         ChipGroup(
             positionChipData,
             positionIndex,
+            modifier = Modifier.padding(Dimen.smallPadding),
+        )
+        //攻击类型
+        MainText(
+            text = stringResource(id = R.string.atk_type),
+            modifier = Modifier.padding(top = Dimen.largePadding)
+        )
+        val atkChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.all)),
+            ChipData(1, stringResource(id = R.string.physical)),
+            ChipData(2, stringResource(id = R.string.magic)),
+        )
+        ChipGroup(
+            atkChipData,
+            atkIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
     }
