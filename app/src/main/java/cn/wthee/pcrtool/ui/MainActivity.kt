@@ -85,20 +85,12 @@ class MainActivity : ComponentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    //TODO 刷新页面
+    //刷新页面
     @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
             viewModelStore.clear()
-//            val fm = supportFragmentManager
-//            for (i in 0..fm.backStackEntryCount) {
-//                fm.popBackStack()
-//            }
-//            val navHostController = findNavController(R.id.nav_host_fragment)
-//            for (i in 0..navHostController.backStack.size) {
-//                navHostController.popBackStack()
-//            }
             recreate()
             when (it.what) {
                 //正常更新

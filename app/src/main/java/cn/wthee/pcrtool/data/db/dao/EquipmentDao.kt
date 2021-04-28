@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.entity.EquipmentCraft
 import cn.wthee.pcrtool.data.entity.EquipmentEnhanceRate
+import cn.wthee.pcrtool.data.entity.UnitPromotion
 import cn.wthee.pcrtool.data.view.CharacterPromotionEquip
 import cn.wthee.pcrtool.data.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
@@ -230,4 +231,10 @@ interface EquipmentDao {
     """
     )
     suspend fun getEquipByRank(uid: Int, startRank: Int, endRank: Int): CharacterPromotionEquip
+
+    /**
+     * 获取角色各 RANK 装备信息
+     */
+    @Query("SELECT * FROM unit_promotion WHERE unit_id = :unitId ORDER BY promotion_level DESC")
+    suspend fun getAllRankEquip(unitId: Int): List<UnitPromotion>
 }

@@ -37,6 +37,11 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
     suspend fun getEquipByRank(uid: Int, startRank: Int, endRank: Int) =
         equipmentDao.getEquipByRank(uid, startRank, endRank)
 
+    /**
+     * 获取角色各 RANK 装备信息
+     */
+    suspend fun getAllRankEquip(unitId: Int) = equipmentDao.getAllRankEquip(unitId)
+
     companion object {
 
         fun getInstance(equipmentDao: EquipmentDao) = EquipmentRepository(equipmentDao)

@@ -38,30 +38,39 @@ fun CharacterInfo(
     r6Id: Int,
     toEquipDetail: (Int) -> Unit,
     toCharacterBasicInfo: (Int) -> Unit,
+    toRankEquip: (Int) -> Unit,
     navViewModel: NavViewModel,
     characterAttrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
 ) {
     characterAttrViewModel.getMaxRankAndRarity(unitId)
 
+    val selectRank = navViewModel.selectRank.observeAsState().value ?: 2
     val selectInfo = characterAttrViewModel.selData.observeAsState().value
+    selectInfo?.rank = selectRank
+    characterAttrViewModel.selData.postValue(selectInfo)
+
     val maxData = characterAttrViewModel.maxData.observeAsState().value ?: CharacterSelectInfo()
     val attrData = characterAttrViewModel.sumInfo.observeAsState().value ?: Attr()
     val storyAttr = characterAttrViewModel.storyAttrs.observeAsState().value ?: Attr()
     val equips = characterAttrViewModel.equipments.observeAsState().value
     val loading = characterAttrViewModel.loading.observeAsState().value ?: true
-    characterAttrViewModel.selData.postValue(maxData)
-    characterAttrViewModel.getCharacterInfo(unitId, maxData)
+    //fixme 重复加载数据的问题
+    if (selectInfo == null || selectInfo.rarity == 0) {
+        characterAttrViewModel.selData.postValue(maxData)
+        navViewModel.selectRank.postValue(maxData.rank)
+    }
+    characterAttrViewModel.getCharacterInfo(unitId, selectInfo ?: CharacterSelectInfo())
 
     val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 10
     var id = unitId
     id += if (r6Id != 0) 60 else 30
+
     val scrollState = rememberScrollState()
     val marginTop = when {
         scrollState.value < 0 -> cardHeight
         cardHeight - scrollState.value < 0 -> 0
         else -> cardHeight - scrollState.value
     }
-
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -142,9 +151,11 @@ fun CharacterInfo(
                             //RANK 装备
                             if (equips != null && equips.isNotEmpty()) {
                                 CharacterEquip(
-                                    rank = selectInfo?.rank ?: 2,
-                                    equips = equips,
-                                    toEquipDetail
+                                    unitId,
+                                    selectInfo?.rank ?: 2,
+                                    equips,
+                                    toEquipDetail,
+                                    toRankEquip
                                 )
                             }
                             //显示专武
@@ -195,9 +206,11 @@ fun CharacterInfo(
  */
 @Composable
 private fun CharacterEquip(
+    unitId: Int,
     rank: Int,
     equips: List<EquipmentMaxData>,
-    toEquipDetail: (Int) -> Unit
+    toEquipDetail: (Int) -> Unit,
+    toRankEquip: (Int) -> Unit
 ) {
     Column {
         //装备 6、 3
@@ -209,7 +222,7 @@ private fun CharacterEquip(
                 .padding(top = Dimen.largePadding)
         ) {
             val id6 = equips[0].equipmentId
-            val id3 = equips[3].equipmentId
+            val id3 = equips[1].equipmentId
             IconCompose(
                 data = getEquipIconUrl(id6),
                 modifier = Modifier
@@ -237,7 +250,7 @@ private fun CharacterEquip(
                 .fillMaxWidth()
                 .padding(top = Dimen.mediuPadding)
         ) {
-            val id5 = equips[1].equipmentId
+            val id5 = equips[2].equipmentId
             IconCompose(
                 data = getEquipIconUrl(id5),
                 modifier = Modifier
@@ -248,11 +261,13 @@ private fun CharacterEquip(
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 //TODO 跳转至所有 RANK 装备列表
-                TextButton(onClick = { /*TODO*/ }) {
+                TextButton(onClick = {
+                    toRankEquip(unitId)
+                }) {
                     Text(
                         text = getFormatText(rank),
                         color = colorResource(id = getRankColor(rank)),
-                        style = MaterialTheme.typography.subtitle1
+                        style = MaterialTheme.typography.subtitle1,
                     )
                 }
                 //TODO 跳转至 RANK 对比页面
@@ -265,7 +280,7 @@ private fun CharacterEquip(
                     )
                 }
             }
-            val id2 = equips[4].equipmentId
+            val id2 = equips[3].equipmentId
             IconCompose(
                 data = getEquipIconUrl(id2),
                 modifier = Modifier
@@ -283,7 +298,7 @@ private fun CharacterEquip(
                 .fillMaxWidth()
                 .padding(top = Dimen.mediuPadding)
         ) {
-            val id4 = equips[2].equipmentId
+            val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
             IconCompose(
                 data = getEquipIconUrl(id4),

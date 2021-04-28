@@ -26,13 +26,14 @@ data class UnitPromotion(
     @ColumnInfo(name = "equip_slot_5") val equipSlot5: Int,
     @ColumnInfo(name = "equip_slot_6") val equipSlot6: Int
 ) {
-    fun getAllIds(): ArrayList<Int> {
+
+    fun getAllOrderIds(): ArrayList<Int> {
         val ids = arrayListOf<Int>()
         ids.add(equipSlot1)
-        ids.add(equipSlot3)
-        ids.add(equipSlot5)
         ids.add(equipSlot2)
+        ids.add(equipSlot3)
         ids.add(equipSlot4)
+        ids.add(equipSlot5)
         ids.add(equipSlot6)
         return ids
     }

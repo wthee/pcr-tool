@@ -5,8 +5,8 @@ package cn.wthee.pcrtool.data.model
  * rank、等级、星级、专武等级
  */
 data class CharacterSelectInfo(
-    val rank: Int = 2,
-    val rarity: Int = 5,
-    val level: Int = 100,
-    val uniqueEquipLevel: Int = 100,
+    var rank: Int = 2,
+    var rarity: Int = 0,
+    var level: Int = 100,
+    var uniqueEquipLevel: Int = 100,
 )

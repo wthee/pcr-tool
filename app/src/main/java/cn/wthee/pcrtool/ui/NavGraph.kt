@@ -15,6 +15,7 @@ import androidx.navigation.compose.navigate
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.character.CharacterInfo
+import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
@@ -31,6 +32,8 @@ object Navigation {
     const val EQUIP_LIST = "equipList"
     const val EQUIP_ID = "equipId"
     const val EQUIP_DETAIL = "equipDetail"
+    const val RANK_EQUIP = "rankEquip"
+    const val SELECT_DATA = "selectData"
 }
 
 @ExperimentalAnimationApi
@@ -66,6 +69,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 r6Id = arguments.getInt(Navigation.UNIT_SIX_ID),
                 actions.toEquipDetail,
                 actions.toCharacterBasicInfo,
+                actions.toCharacteRankEquip,
                 viewModel
             )
         }
@@ -104,6 +108,23 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             viewModel.fabMainIcon.postValue(R.drawable.ic_left)
             EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
         }
+
+        //角色 RANK 装备
+        composable(
+            "${Navigation.RANK_EQUIP}/{${Navigation.UNIT_ID}}",
+            arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            viewModel.pageLevel.postValue(2)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            RankEquipList(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                toEquipDetail = actions.toEquipDetail,
+                navViewModel = viewModel
+            )
+        }
     }
 }
 
@@ -111,20 +132,39 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
  * 导航
  */
 class NavActions(navController: NavHostController) {
+    /**
+     * 角色详情
+     */
     val toCharacterDetail: (Int, Int) -> Unit = { unitId: Int, r6Id: Int ->
         navController.navigate("${Navigation.CHARACTER_DETAIL}/${unitId}/${r6Id}")
     }
 
+    /**
+     * 装备列表
+     */
     val toEquipList: () -> Unit = {
         navController.navigate(Navigation.EQUIP_LIST)
     }
 
+    /**
+     * 装备详情
+     */
     val toEquipDetail: (Int) -> Unit = { equipId: Int ->
         navController.navigate("${Navigation.EQUIP_DETAIL}/${equipId}")
     }
 
+    /**
+     * 角色资料
+     */
     val toCharacterBasicInfo: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${Navigation.CHARACTER_BASIC_INFO}/${unitId}")
+    }
+
+    /**
+     * 角色 RANK 装备
+     */
+    val toCharacteRankEquip: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${Navigation.RANK_EQUIP}/${unitId}")
     }
 }
 
@@ -149,6 +189,12 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 关闭
      */
     val fabClose = MutableLiveData(false)
+
+    /**
+     * 选择的 RANK
+     */
+    val selectRank = MutableLiveData(2)
+
 
     /**
      * 下载状态

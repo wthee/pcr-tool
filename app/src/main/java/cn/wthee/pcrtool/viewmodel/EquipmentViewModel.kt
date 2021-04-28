@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
+import cn.wthee.pcrtool.data.entity.UnitPromotion
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.view.EquipmentMaterial
@@ -35,6 +36,7 @@ class EquipmentViewModel @Inject constructor(
     var dropInfo = MutableLiveData<List<EquipmentDropInfo>>()
     var loading = MutableLiveData<Boolean>()
     var selectId = MutableLiveData<Int>()
+    var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
 
     //当前选中的装备素材
     var equipMaterial = MutableLiveData<EquipmentMaterial>()
@@ -115,6 +117,16 @@ class EquipmentViewModel @Inject constructor(
     fun getEquipInfos(equip: EquipmentMaxData) {
         viewModelScope.launch {
             equipMaterialInfos.postValue(getEquipCraft(equip))
+        }
+    }
+
+    /**
+     * 获取角色 [unitId] 所有 RANK 装备列表
+     */
+    fun getAllRankEquipList(unitId: Int) {
+        viewModelScope.launch {
+            val data = equipmentRepository.getAllRankEquip(unitId)
+            allRankEquipList.postValue(data)
         }
     }
 

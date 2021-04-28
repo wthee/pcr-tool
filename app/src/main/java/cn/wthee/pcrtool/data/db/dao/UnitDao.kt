@@ -165,7 +165,7 @@ interface UnitDao {
      * 根据 [unitId] 和 [rank]，获取角色 Rank 属性状态 [UnitPromotionStatus]
      */
     @Query("SELECT * FROM unit_promotion_status WHERE unit_promotion_status.unit_id = :unitId AND unit_promotion_status.promotion_level = :rank ")
-    suspend fun getRankStatus(unitId: Int, rank: Int): UnitPromotionStatus
+    suspend fun getRankStatus(unitId: Int, rank: Int): UnitPromotionStatus?
 
     /**
      * 根据 [unitId] 和 [rarity]，获取角色角色星级提供的属性 [UnitRarity]

@@ -19,8 +19,6 @@ import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 
-//fixme previewPlaceholder 无效
-
 /**
  * 角色卡面
  * 通过设置 aspectRatio, 使图片加载前时，有默认高度

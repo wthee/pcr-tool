@@ -67,10 +67,12 @@ class CharacterAttrViewModel @Inject constructor(
 
             val rankData = unitRepository.getRankStatus(unitId, rank)
             val rarityData = unitRepository.getRarity(unitId, rarity)
-            val ids = unitRepository.getEquipmentIds(unitId, rank).getAllIds()
+            val ids = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
             //计算指定rank星级下的角色属性
-            info.add(rankData.attr)
-                .add(rarityData.attr)
+            rankData?.let {
+                info.add(rankData.attr)
+            }
+            info.add(rarityData.attr)
                 .add(Attr.setGrowthValue(rarityData).multiply(lv + rank))
             val eqs = arrayListOf<EquipmentMaxData>()
             ids.forEach {
@@ -152,7 +154,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             unitRepository.getMaxRank(unitId)
             unitRepository.getMaxRarity(unitId)
-            if (unitRepository.getEquipmentIds(unitId, 2).getAllIds().isEmpty()) {
+            if (unitRepository.getEquipmentIds(unitId, 2).getAllOrderIds().isEmpty()) {
                 return true
             }
         } catch (e: Exception) {

@@ -30,8 +30,7 @@ class MainSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onResume() {
         super.onResume()
-        //添加返回fab
-        FabHelper.addBackFab()
+        //TODO 添加返回fab
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

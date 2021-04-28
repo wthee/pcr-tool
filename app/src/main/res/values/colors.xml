@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#5F92E6</color>
     <color name="colorAccentDark">#5F92E6</color>
     <color name="black">#FF000000</color>
+    <color name="alpha">#00000000</color>
     <color name="alpha_black">#80000000</color>
     <color name="alpha_primary">#595690EF</color>
     <color name="white">#FFFFFFFF</color>
