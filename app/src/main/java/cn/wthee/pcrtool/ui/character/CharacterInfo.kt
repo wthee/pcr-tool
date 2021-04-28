@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -12,16 +13,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.CharacterSelectInfo
+import cn.wthee.pcrtool.data.view.Attr
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -32,106 +38,156 @@ fun CharacterInfo(
     r6Id: Int,
     toEquipDetail: (Int) -> Unit,
     toCharacterBasicInfo: (Int) -> Unit,
+    navViewModel: NavViewModel,
     characterAttrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
 ) {
     characterAttrViewModel.getMaxRankAndRarity(unitId)
 
     val selectInfo = characterAttrViewModel.selData.observeAsState().value
-    val maxData = characterAttrViewModel.maxData.observeAsState().value
-    val attrData = characterAttrViewModel.sumInfo.observeAsState().value
-    val storyAttr = characterAttrViewModel.storyAttrs.observeAsState().value
+    val maxData = characterAttrViewModel.maxData.observeAsState().value ?: CharacterSelectInfo()
+    val attrData = characterAttrViewModel.sumInfo.observeAsState().value ?: Attr()
+    val storyAttr = characterAttrViewModel.storyAttrs.observeAsState().value ?: Attr()
     val equips = characterAttrViewModel.equipments.observeAsState().value
     val loading = characterAttrViewModel.loading.observeAsState().value ?: true
-
-    maxData?.let {
-        characterAttrViewModel.selData.postValue(it)
-        characterAttrViewModel.getCharacterInfo(unitId, it)
-    }
+    characterAttrViewModel.selData.postValue(maxData)
+    characterAttrViewModel.getCharacterInfo(unitId, maxData)
 
     val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 10
     var id = unitId
     id += if (r6Id != 0) 60 else 30
     val scrollState = rememberScrollState()
-    val marginTop = if (scrollState.value < 0)
-        cardHeight
-    else if (cardHeight - scrollState.value < 0)
-        0
-    else
-        cardHeight - scrollState.value
+    val marginTop = when {
+        scrollState.value < 0 -> cardHeight
+        cardHeight - scrollState.value < 0 -> 0
+        else -> cardHeight - scrollState.value
+    }
 
-
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colors.onPrimary)) {
-        Box(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .fillMaxSize()
-        ) {
-            //图片
-            CharacterCard(
-                Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
-                scrollState = scrollState
-            )
-            //页面
-            Card(
-                shape = CardTopShape,
-                elevation = 20.dp,
-                modifier = Modifier
-                    .padding(top = marginTop.dp)
-            ) {
-
-                Column(
-                    modifier = Modifier
-                        .padding(Dimen.mediuPadding)
-                        .fillMaxSize()
-                ) {
-
-                    if (!loading) {
-                        //等级
-                        Text(
-                            text = selectInfo?.level.toString() ?: "",
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.h6,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
-                        //属性
-                        attrData?.let { AttrList(attrs = it.all()) }
-                        MainText(
-                            text = stringResource(id = R.string.title_story_attr),
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
-                        )
-                        //剧情属性
-                        storyAttr?.let { AttrList(attrs = storyAttr.allNotZero()) }
-                        //RANK 装备
-                        if (equips != null && equips.isNotEmpty()) {
-                            CharacterEquip(
-                                rank = selectInfo?.rank ?: 2,
-                                equips = equips,
-                                toEquipDetail
-                            )
-                        }
-                        //显示专武
-                        UniqueEquip(unitId, selectInfo?.uniqueEquipLevel ?: 1)
-                        //技能
-                        CharacterSkill(id = unitId)
-                    }
-                }
-            }
-        }
-        FabCompose(
-            R.drawable.ic_drop,
-            Modifier
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                .align(Alignment.BottomEnd)
-        ) {
-            toCharacterBasicInfo(unitId)
-        }
+    // dialog 状态
+    val state = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden
+    )
+    val coroutineScope = rememberCoroutineScope()
+    if (!state.isVisible) {
+        navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+        navViewModel.fabClose.postValue(false)
     }
 
 
+    //页面
+    ModalBottomSheetLayout(
+        sheetState = state,
+        sheetContent = {
+            Surface(modifier = Modifier.padding(bottom = Dimen.sheetMarginBottom)) {
+                SkillLoopList(unitId = unitId)
+            }
+        }
+    ) {
+        //关闭监听
+        val close = navViewModel.fabClose.observeAsState().value ?: false
+        if (close) {
+            coroutineScope.launch {
+                state.hide()
+            }
+            navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            navViewModel.fabClose.postValue(false)
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.onPrimary)
+        ) {
+            Box(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .fillMaxSize()
+            ) {
+                //图片
+                CharacterCard(
+                    Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
+                    scrollState = scrollState
+                )
+                //页面
+                Card(
+                    shape = CardTopShape,
+                    elevation = 20.dp,
+                    modifier = Modifier
+                        .padding(top = marginTop.dp)
+                ) {
+
+                    Column(
+                        modifier = Modifier
+                            .padding(Dimen.mediuPadding)
+                            .fillMaxSize()
+                    ) {
+
+                        if (!loading) {
+                            //等级
+                            Text(
+                                text = selectInfo?.level.toString(),
+                                color = MaterialTheme.colors.primary,
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                            //属性
+                            AttrList(attrs = attrData.all())
+                            MainText(
+                                text = stringResource(id = R.string.title_story_attr),
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
+                            )
+                            //剧情属性
+                            AttrList(attrs = storyAttr.allNotZero())
+                            //RANK 装备
+                            if (equips != null && equips.isNotEmpty()) {
+                                CharacterEquip(
+                                    rank = selectInfo?.rank ?: 2,
+                                    equips = equips,
+                                    toEquipDetail
+                                )
+                            }
+                            //显示专武
+                            UniqueEquip(unitId, selectInfo?.uniqueEquipLevel ?: 1)
+                            //技能
+                            CharacterSkill(id = unitId)
+                        }
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
+                //技能循环
+                FabCompose(
+                    modifier = Modifier
+                        .padding(end = Dimen.fabMargin),
+                    iconId = R.drawable.ic_loop,
+                ) {
+                    coroutineScope.launch {
+                        if (state.isVisible) {
+                            navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+                            state.hide()
+                        } else {
+                            navViewModel.fabMainIcon.postValue(R.drawable.ic_cancel)
+                            state.show()
+                        }
+                    }
+                }
+                //跳转至角色资料
+                ExtendedFabCompose(
+                    iconId = R.drawable.ic_drop,
+                    text = stringResource(id = R.string.character_basic_Info),
+                    textWidth = Dimen.getWordWidth(4)
+                ) {
+                    toCharacterBasicInfo(unitId)
+                }
+            }
+
+        }
+    }
 }
 
 /**
@@ -191,7 +247,7 @@ private fun CharacterEquip(
                     }
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //TODO RANK 选择
+                //TODO 跳转至所有 RANK 装备列表
                 TextButton(onClick = { /*TODO*/ }) {
                     Text(
                         text = getFormatText(rank),
@@ -199,6 +255,7 @@ private fun CharacterEquip(
                         style = MaterialTheme.typography.subtitle1
                     )
                 }
+                //TODO 跳转至 RANK 对比页面
                 TextButton(onClick = { /*TODO*/ }) {
                     Text(
                         text = stringResource(id = cn.wthee.pcrtool.R.string.rank_compare),
@@ -249,7 +306,7 @@ private fun CharacterEquip(
 }
 
 /**
- * v专武信息
+ * 专武信息
  */
 @Composable
 private fun UniqueEquip(
@@ -265,12 +322,14 @@ private fun UniqueEquip(
             modifier = Modifier
                 .padding(top = Dimen.largePadding)
         ) {
+            //名称
             MainText(
                 text = it.equipmentName,
                 modifier = Modifier
                     .padding(Dimen.mediuPadding)
                     .align(Alignment.CenterHorizontally)
             )
+            //图标描述
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

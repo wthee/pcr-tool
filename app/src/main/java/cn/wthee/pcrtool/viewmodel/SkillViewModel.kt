@@ -28,7 +28,7 @@ class SkillViewModel @Inject constructor(
     }
 
     var skills = MutableLiveData<List<SkillDetail>>()
-    var atlPattern = MutableLiveData<List<AttackPattern>>()
+    var atkPattern = MutableLiveData<List<AttackPattern>>()
 
     /**
      * 根据 [unitId]， 获取角色技能信息
@@ -109,7 +109,7 @@ class SkillViewModel @Inject constructor(
         viewModelScope.launch {
             //技能循环
             val pattern = repository.getAttackPattern(unitId)
-            atlPattern.postValue(pattern)
+            atkPattern.postValue(pattern)
         }
     }
 

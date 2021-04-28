@@ -1,9 +1,7 @@
 package cn.wthee.pcrtool.ui.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -18,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
@@ -33,14 +32,12 @@ import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 /**
  * 角色列表
  * fixme item 动画
  */
-@InternalCoroutinesApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -77,13 +74,7 @@ fun CharacterList(
             FilterCharacterSheet(navViewModel, coroutineScope, filter, state)
         }
     ) {
-        var marginTop = Dimen.topBarHeight - 6.dp
-        if (scrollState.firstVisibleItemIndex == 0) {
-            marginTop = Dimen.topBarHeight - scrollState.firstVisibleItemScrollOffset.dp - 6.dp
-            if (marginTop < 0.dp) marginTop = 0.dp
-        } else {
-            marginTop = 0.dp
-        }
+        val marginTop: Dp = marginTopBar(scrollState)
 
         Box(modifier = Modifier.fillMaxSize()) {
             TopBarCompose(scrollState = scrollState)
@@ -124,7 +115,6 @@ fun CharacterList(
 /**
  * 角色列表项
  */
-@InternalCoroutinesApi
 @Composable
 private fun CharacterItem(
     character: CharacterInfo,
@@ -186,6 +176,9 @@ private fun CharacterNumberText(text: String) {
     )
 }
 
+/**
+ * 角色筛选
+ */
 @ExperimentalMaterialApi
 @Composable
 private fun FilterCharacterSheet(
@@ -245,6 +238,7 @@ private fun FilterCharacterSheet(
         modifier = Modifier
             .clip(CardTopShape)
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
         if (ok) {
             coroutineScope.launch {
@@ -287,7 +281,7 @@ private fun FilterCharacterSheet(
                 )
             },
             modifier = Modifier
-                .padding(Dimen.mediuPadding)
+                .padding(Dimen.largePadding)
                 .fillMaxWidth()
 
         )

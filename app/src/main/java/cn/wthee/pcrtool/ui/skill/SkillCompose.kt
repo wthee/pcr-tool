@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.compose
+package cn.wthee.pcrtool.ui.skill
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -7,17 +7,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.SkillDetail
+import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.data.view.SkillActionText
+import cn.wthee.pcrtool.ui.compose.IconCompose
+import cn.wthee.pcrtool.ui.compose.MainTitleText
+import cn.wthee.pcrtool.ui.compose.getGridData
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -92,11 +95,7 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
     ) {
         //技能名
         val type = getSkillType(skillDetail.skillId)
-        val color = when {
-            type.contains("连结") -> R.color.color_rank_7_10
-            type.contains("EX") -> R.color.color_rank_2_3
-            else -> R.color.color_rank_4_6
-        }
+        val color = getSkillColor(type)
         Text(
             text = skillDetail.name,
             color = colorResource(color),
@@ -246,6 +245,90 @@ fun SkillActionItem(skillAction: SkillActionText) {
 }
 
 /**
+ * 技能循环
+ */
+@Composable
+fun SkillLoopList(unitId: Int) {
+    val skillViewModel: SkillViewModel = hiltNavGraphViewModel()
+    skillViewModel.getCharacterSkillLoops(unitId)
+    val loopData = skillViewModel.atkPattern.observeAsState().value ?: arrayListOf()
+
+    val loops = arrayListOf<SkillLoop>()
+    loopData.forEach { ap ->
+        if (ap.getBefore().size > 0) {
+            loops.add(SkillLoop(stringResource(R.string.before_loop), ap.getBefore()))
+        }
+        if (ap.getLoop().size > 0) {
+            loops.add(SkillLoop(stringResource(R.string.looping), ap.getLoop()))
+        }
+    }
+    Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+        if (loops.isNotEmpty()) {
+            loops.forEach {
+                SkillLoopItem(loop = it)
+            }
+        } else {
+            Text(text = "")
+        }
+    }
+}
+
+/**
+ * 技能循环 item
+ */
+@Composable
+private fun SkillLoopItem(loop: SkillLoop) {
+    Column {
+        MainTitleText(text = loop.loopTitle)
+        SkillLoopIconList(loop.loopList)
+    }
+}
+
+/**
+ * 技能循环图标列表
+ */
+@Composable
+private fun SkillLoopIconList(iconList: List<Int>) {
+    val spanCount = 5
+    val newList = getGridData(spanCount = spanCount, list = iconList, placeholder = 0)
+    Column(Modifier.padding(top = Dimen.mediuPadding)) {
+        newList.forEachIndexed { index, i ->
+            if (index % spanCount == 0) {
+                SkillLoopIconListRow(newList.subList(index, index + spanCount))
+            }
+        }
+    }
+}
+
+/**
+ * 技能循环图标列表
+ */
+@Composable
+private fun SkillLoopIconListRow(iconList: List<Int>) {
+    Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
+        iconList.forEach {
+            val alpha = if (it == 0) 0f else 1f
+            Column(
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .alpha(alpha)
+            ) {
+                IconCompose(data = Constants.SKILL_ICON_URL + it + Constants.WEBP)
+                val type = getSkillType(it)
+                Text(
+                    text = type,
+                    color = colorResource(getSkillColor(type = type)),
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = Dimen.smallPadding)
+                )
+            }
+        }
+    }
+}
+
+/**
  * 获取标签状态
  */
 private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
@@ -278,6 +361,20 @@ private fun getSkillType(skillId: Int) = when (skillId % 1000) {
             "技能 $skillIndex"
         }
     }
+}
+
+
+/**
+ * 获取技能名称颜色
+ */
+@Composable
+private fun getSkillColor(type: String): Int {
+    val color = when {
+        type.contains("连结") -> R.color.color_rank_7_10
+        type.contains("EX") -> R.color.color_rank_2_3
+        else -> R.color.color_rank_4_6
+    }
+    return color
 }
 
 private data class SkillIndex(

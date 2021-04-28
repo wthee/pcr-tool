@@ -106,6 +106,7 @@
     <string name="tool_guild">角色公会</string>
     <string name="liked_count">已收藏： %d </string>
     <string name="character">角色</string>
+    <string name="character_basic_Info">角色资料</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_float">悬浮窗</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>

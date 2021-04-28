@@ -1,8 +1,9 @@
-package cn.wthee.pcrtool.ui
+package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.fillZero
 
@@ -40,7 +42,7 @@ fun DownloadCompose(viewModel: NavViewModel) {
             contentColor = MaterialTheme.colors.primary,
             modifier = Modifier
                 .height(Dimen.fabSize)
-                .padding(end = Dimen.fabPadding),
+                .padding(end = Dimen.fabMargin),
             icon = {
                 if (iconType.value == 0) {
                     CircularProgressIndicator(
@@ -59,7 +61,8 @@ fun DownloadCompose(viewModel: NavViewModel) {
                 Text(
                     text = text,
                     style = MaterialTheme.typography.subtitle2,
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier.width(Dimen.getWordWidth(5))
                 )
             },
             onClick = {}

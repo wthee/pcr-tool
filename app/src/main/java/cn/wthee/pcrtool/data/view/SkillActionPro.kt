@@ -235,7 +235,7 @@ data class SkillActionPro(
             }
             SkillActionType.HEAL -> {
                 val value = getValueText(2, action_value_2, action_value_3, action_value_4)
-                "使${getTarget()} HP回复 $value"
+                "使${getTarget()}HP回复 $value"
             }
             SkillActionType.CURE -> ""
             SkillActionType.BARRIER -> {
@@ -363,7 +363,7 @@ data class SkillActionPro(
             SkillActionType.TRIGGER -> {
                 val expr = when (action_detail_1) {
                     2 -> "受到伤害时 [${action_value_1.toInt()}%] 概率"
-                    3 -> "HP [${action_value_3.toInt()}%] 以下"
+                    3 -> "HP[${action_value_3.toInt()}%] 以下"
                     4 -> "死亡时 [${action_value_1.toInt()}%] 概率"
                     5 -> "暴击时 [${action_value_1.toInt()}%] 概率"
                     7 -> "战斗剩余时间 [${action_value_3.toInt()}] 秒以下"
@@ -586,7 +586,7 @@ data class SkillActionPro(
                         "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [HP]"
-                    1 -> "$commonDesc * [损失的 HP]"
+                    1 -> "$commonDesc * [损失的HP]"
                     4 -> "$commonDesc * [目标的数量]"
                     5 -> "$commonDesc * [受到伤害的目标数量]"
                     6 -> "$commonDesc * [造成的伤害]"
@@ -622,7 +622,7 @@ data class SkillActionPro(
                         "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [HP]"
-                    1 -> "$commonDesc * [损失的 HP]"
+                    1 -> "$commonDesc * [损失的HP]"
                     in 200 until 300 -> "$commonDesc * [标记的层数]"
                     else -> "?"
                 }
@@ -678,7 +678,7 @@ data class SkillActionPro(
             }
             SkillActionType.HEAL_FIELD -> {
                 val value =
-                    "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)} HP"
+                    "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)}HP"
                 "展开半径为 [${action_value_7.toInt()}] 的领域${value}${
                     getTimeText(
                         action_value_5,

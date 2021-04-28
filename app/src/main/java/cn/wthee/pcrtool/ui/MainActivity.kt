@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.compose.DownloadCompose
 import cn.wthee.pcrtool.ui.compose.MenuContent
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
@@ -33,7 +34,6 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -44,7 +44,6 @@ class MainActivity : ComponentActivity() {
         lateinit var navViewModel: NavViewModel
     }
 
-    @InternalCoroutinesApi
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
@@ -116,7 +115,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@InternalCoroutinesApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -158,10 +156,10 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
 
     FloatingActionButton(
         onClick = {
-            if (iconId == R.drawable.ic_ok) {
-                viewModel.fabOK.postValue(true)
-            } else {
-                viewModel.goback(navController)
+            when (iconId) {
+                R.drawable.ic_ok -> viewModel.fabOK.postValue(true)
+                R.drawable.ic_cancel -> viewModel.fabClose.postValue(true)
+                else -> viewModel.goback(navController)
             }
         },
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
@@ -172,10 +170,10 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
     ) {
         val icon =
             painterResource(
-                id = if (pageLevel.value == null || pageLevel.value!! == 0)
-                    iconId
-                else
+                id = if (pageLevel.value == null || pageLevel.value!! == -1)
                     R.drawable.ic_left
+                else
+                    iconId
             )
         Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
     }

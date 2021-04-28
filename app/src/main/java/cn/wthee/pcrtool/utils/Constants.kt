@@ -62,7 +62,9 @@ object Constants {
     const val Reality_CHARACTER_URL = RESOURCE_URL + "card/actual_profile/"
 
     //装备图标接口
+    const val UNKNOWN_EQUIP_ID = 999999
     const val EQUIPMENT_URL = RESOURCE_URL + "icon/equipment/"
+    const val UNKNOWN_EQUIPMENT_ICON = EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP
 
     //道具
     const val ITEM_URL = RESOURCE_URL + "icon/item/"
@@ -84,8 +86,6 @@ object Constants {
     const val SP_STAR_EQUIP = "star_equip"
 
     //默认值
-    const val SORT_ASC = false
-    const val UNKNOWN_EQUIP_ID = 999999
     const val NOTICE_TITLE = "正在下载数据"
     const val NOTICE_TOAST_SUCCESS = "数据更新完成！"
     const val NOTICE_TOAST_CHANGE_SUCCESS = "数据切换完成！"

@@ -5,7 +5,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
@@ -17,10 +17,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
 import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.isFinalState
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
+import com.google.accompanist.imageloading.ImageLoadState
 
 //fixme previewPlaceholder 无效
 
@@ -28,7 +25,6 @@ import kotlinx.coroutines.flow.filter
  * 角色卡面
  * 通过设置 aspectRatio, 使图片加载前时，有默认高度
  */
-@InternalCoroutinesApi
 @Composable
 fun CharacterCard(url: String, clip: Boolean = false, scrollState: ScrollState? = null) {
     val modifier = if (scrollState == null) {
@@ -49,35 +45,16 @@ fun CharacterCard(url: String, clip: Boolean = false, scrollState: ScrollState? 
         }
     }
     Box {
-        val painter = rememberCoilPainter(
-            request = url,
-            fadeIn = true,
-            fadeInDurationMs = 600
+        val painter = rememberCoilPainter(request = url)
+        Image(
+            painter = when (painter.loadState) {
+                is ImageLoadState.Success -> painter
+                is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
+                else -> rememberCoilPainter(request = R.drawable.load)
+            },
+            contentDescription = null,
+            modifier = modifier
         )
-        val loaded = remember {
-            mutableStateOf(false)
-        }
-        LaunchedEffect(painter) {
-            snapshotFlow { painter.loadState }
-                .filter { it.isFinalState() }
-                .collectLatest {
-                    loaded.value = true
-                }
-        }
-
-        if (loaded.value) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = modifier
-            )
-        } else {
-            Image(
-                painter = rememberCoilPainter(request = R.drawable.load),
-                contentDescription = null,
-                modifier = modifier
-            )
-        }
     }
 }
 
@@ -108,35 +85,16 @@ fun PositionIcon(position: Int, size: Dp) {
 @Composable
 fun IconCompose(data: Any, modifier: Modifier = Modifier) {
     Box {
-        val painter = rememberCoilPainter(
-            request = data,
-            fadeIn = true,
-            fadeInDurationMs = 600
+        val painter = rememberCoilPainter(request = data)
+        Image(
+            painter = when (painter.loadState) {
+                is ImageLoadState.Success -> painter
+                is ImageLoadState.Error -> rememberCoilPainter(request = Constants.UNKNOWN_EQUIPMENT_ICON)
+                else -> rememberCoilPainter(request = R.drawable.unknown_gray)
+            },
+            contentDescription = null,
+            modifier = modifier.size(Dimen.iconSize)
         )
-        val loaded = remember {
-            mutableStateOf(false)
-        }
-        LaunchedEffect(painter) {
-            snapshotFlow { painter.loadState }
-                .filter { it.isFinalState() }
-                .collectLatest {
-                    loaded.value = true
-                }
-        }
-
-        if (loaded.value) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = modifier.size(Dimen.iconSize)
-            )
-        } else {
-            Image(
-                painter = rememberCoilPainter(request = R.drawable.unknown_gray),
-                contentDescription = null,
-                modifier = modifier.size(Dimen.iconSize)
-            )
-        }
     }
 }
 

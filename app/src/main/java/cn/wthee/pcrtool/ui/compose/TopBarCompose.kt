@@ -13,18 +13,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 
 
+/**
+ * 顶部工具栏
+ */
 @Composable
 fun TopBarCompose(
     @DrawableRes iconId: Int = R.mipmap.ic_logo,
     @StringRes titleId: Int = R.string.app_name,
     scrollState: LazyListState
 ) {
-    var offset = 0.dp
+    var offset: Dp
     if (scrollState.firstVisibleItemIndex == 0) {
         offset = -scrollState.firstVisibleItemScrollOffset.dp
         if (offset > Dimen.topBarHeight) offset = Dimen.topBarHeight
@@ -44,4 +48,19 @@ fun TopBarCompose(
             color = MaterialTheme.colors.onPrimary
         )
     }
+}
+
+/**
+ * 距离屏幕顶部的距离
+ */
+@Composable
+fun marginTopBar(scrollState: LazyListState): Dp {
+    var marginTop: Dp
+    if (scrollState.firstVisibleItemIndex == 0) {
+        marginTop = Dimen.topBarHeight - scrollState.firstVisibleItemScrollOffset.dp - 8.dp
+        if (marginTop < 0.dp) marginTop = 0.dp
+    } else {
+        marginTop = 0.dp
+    }
+    return marginTop
 }

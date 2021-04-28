@@ -40,11 +40,6 @@ data class EquipmentDropInfo(
             }
         }
         result.sortByDescending { it.odd }
-        if (result.size < 12) {
-            for (i in 0 until 12 - result.size) {
-                result.add(EquipmentIdWithOdd())
-            }
-        }
         return result
     }
 }

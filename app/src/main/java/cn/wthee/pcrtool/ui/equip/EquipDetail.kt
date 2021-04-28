@@ -25,10 +25,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.allNotZero
-import cn.wthee.pcrtool.ui.compose.AttrList
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.MainTitleText
-import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -109,7 +106,7 @@ private fun EquipMaterialList(
             cells = GridCells.Fixed(6),
             modifier = Modifier.padding(top = Dimen.mediuPadding)
         ) {
-            itemsIndexed(data) { index, material ->
+            itemsIndexed(data) { _, material ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -215,9 +212,15 @@ private fun AreaEquipList(
     selectedId: Int,
     odds: ArrayList<EquipmentIdWithOdd>
 ) {
-    Column {
-        AreaEquipItem(selectedId, odds.subList(0, 6))
-        AreaEquipItem(selectedId, odds.subList(6, 12))
+    val spanCount = 6
+    val placeholder = EquipmentIdWithOdd()
+    val newList = getGridData(spanCount = spanCount, list = odds, placeholder = placeholder)
+    Column(Modifier.padding(top = Dimen.mediuPadding)) {
+        newList.forEachIndexed { index, _ ->
+            if (index % spanCount == 0) {
+                AreaEquipItem(selectedId, newList.subList(index, index + spanCount), placeholder)
+            }
+        }
     }
 }
 
@@ -225,7 +228,8 @@ private fun AreaEquipList(
 @Composable
 private fun AreaEquipItem(
     selectedId: Int,
-    odds: List<EquipmentIdWithOdd>
+    odds: List<EquipmentIdWithOdd>,
+    placeholder: EquipmentIdWithOdd
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -233,13 +237,13 @@ private fun AreaEquipItem(
             .fillMaxWidth()
             .padding(top = Dimen.smallPadding)
     ) {
-        odds.forEachIndexed { index, equipmentIdWithOdd ->
+        odds.forEach {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                val alpha = if (equipmentIdWithOdd.odd > 0) 1f else 0f
-                val selected = selectedId == equipmentIdWithOdd.eid
+                val alpha = if (it == placeholder) 0f else 1f
+                val selected = selectedId == it.eid
                 Box {
                     IconCompose(
-                        data = getEquipIconUrl(equipmentIdWithOdd.eid),
+                        data = getEquipIconUrl(it.eid),
                         modifier = Modifier
                             .size(Dimen.smallIconSize)
                             .alpha(alpha)
@@ -253,7 +257,7 @@ private fun AreaEquipItem(
                     }
                 }
                 Text(
-                    text = "${equipmentIdWithOdd.odd}%",
+                    text = "${it.odd}%",
                     color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
                     fontWeight = if (selected) FontWeight.Black else FontWeight.Light,
                     style = MaterialTheme.typography.caption,

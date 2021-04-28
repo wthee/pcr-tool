@@ -81,6 +81,13 @@ object Dimen {
      */
     val iconSize = 48.dp
 
+
+    /**
+     * 46dp
+     */
+    val sheetMarginBottom = 46.dp
+
+
     /**
      * 42dp
      */
@@ -104,7 +111,7 @@ object Dimen {
     /**
      * 40dp
      */
-    val topBarHeight = 40.dp
+    val topBarHeight = 48.dp
 
     /**
      * 根据文字大小显示

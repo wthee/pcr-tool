@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 object Navigation {
@@ -34,7 +33,6 @@ object Navigation {
     const val EQUIP_DETAIL = "equipDetail"
 }
 
-@InternalCoroutinesApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -62,11 +60,13 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(1)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
             CharacterInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 r6Id = arguments.getInt(Navigation.UNIT_SIX_ID),
                 actions.toEquipDetail,
-                actions.toCharacterBasicInfo
+                actions.toCharacterBasicInfo,
+                viewModel
             )
         }
 
@@ -79,6 +79,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(2)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
             CharacterBasicInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID)
             )
@@ -87,6 +88,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //装备列表
         composable(Navigation.EQUIP_LIST) {
             viewModel.pageLevel.postValue(1)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
             EquipList(toEquipDetail = actions.toEquipDetail)
         }
 
@@ -99,6 +101,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(2)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
             EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
         }
     }
@@ -141,6 +144,11 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 确认
      */
     val fabOK = MutableLiveData(false)
+
+    /**
+     * 关闭
+     */
+    val fabClose = MutableLiveData(false)
 
     /**
      * 下载状态
