@@ -81,7 +81,7 @@ fun PositionIcon(position: Int, size: Dp) {
  * 图标
  */
 @Composable
-fun IconCompose(data: Any, modifier: Modifier = Modifier) {
+fun IconCompose(data: Any, modifier: Modifier = Modifier, size: Dp = Dimen.iconSize) {
     Box {
         val painter = rememberCoilPainter(request = data)
         Image(
@@ -91,7 +91,7 @@ fun IconCompose(data: Any, modifier: Modifier = Modifier) {
                 else -> rememberCoilPainter(request = R.drawable.unknown_gray)
             },
             contentDescription = null,
-            modifier = modifier.size(Dimen.iconSize)
+            modifier = modifier.size(size)
         )
     }
 }

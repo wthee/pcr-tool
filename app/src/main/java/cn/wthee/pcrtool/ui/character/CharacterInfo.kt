@@ -120,10 +120,8 @@ fun CharacterInfo(
                 Card(
                     shape = CardTopShape,
                     elevation = 20.dp,
-                    modifier = Modifier
-                        .padding(top = marginTop.dp)
+                    modifier = Modifier.padding(top = marginTop.dp)
                 ) {
-
                     Column(
                         modifier = Modifier
                             .padding(Dimen.mediuPadding)
@@ -174,7 +172,7 @@ fun CharacterInfo(
                 //技能循环
                 FabCompose(
                     modifier = Modifier
-                        .padding(end = Dimen.fabMargin),
+                        .padding(end = Dimen.fabSmallMarginEnd),
                     iconId = R.drawable.ic_loop,
                 ) {
                     coroutineScope.launch {
@@ -191,7 +189,7 @@ fun CharacterInfo(
                 ExtendedFabCompose(
                     iconId = R.drawable.ic_drop,
                     text = stringResource(id = R.string.character_basic_Info),
-                    textWidth = Dimen.getWordWidth(4)
+                    textWidth = Dimen.getWordWidth(2)
                 ) {
                     toCharacterBasicInfo(unitId)
                 }

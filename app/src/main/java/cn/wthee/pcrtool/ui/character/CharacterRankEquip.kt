@@ -2,10 +2,7 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -95,22 +92,23 @@ fun RankEquipListItem(
             val allIds = unitPromotion.getAllOrderIds()
             allIds.forEachIndexed { index, _ ->
                 if (index % 2 == 0) {
-                    Row {
+                    Row(horizontalArrangement = Arrangement.SpaceAround) {
                         IconCompose(
                             data = getEquipIconUrl(allIds[index]),
                             modifier = Modifier
                                 .padding(Dimen.smallPadding)
                                 .clickable {
                                     toEquipDetail(allIds[index])
-                                })
+                                },
+                        )
                         IconCompose(
                             data = getEquipIconUrl(allIds[index + 1]),
                             modifier = Modifier
                                 .padding(Dimen.smallPadding)
-                                .padding(Dimen.smallPadding)
                                 .clickable {
                                     toEquipDetail(allIds[index + 1])
-                                })
+                                },
+                        )
                     }
                 }
             }
