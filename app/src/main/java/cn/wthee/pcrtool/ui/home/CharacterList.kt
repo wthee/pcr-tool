@@ -75,7 +75,6 @@ fun CharacterList(
         }
     ) {
         val marginTop: Dp = marginTopBar(scrollState)
-
         Box(modifier = Modifier.fillMaxSize()) {
             TopBarCompose(scrollState = scrollState)
             LazyVerticalGrid(
@@ -83,6 +82,7 @@ fun CharacterList(
                 state = scrollState,
                 modifier = Modifier
                     .padding(top = marginTop)
+                    .fillMaxSize()
                     .background(color = MaterialTheme.colors.background, shape = CardTopShape)
             ) {
                 items(list.value ?: arrayListOf()) {
@@ -109,6 +109,7 @@ fun CharacterList(
                 }
             }
         }
+
     }
 }
 

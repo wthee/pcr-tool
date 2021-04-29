@@ -11,10 +11,15 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.utils.getFormatText
+import cn.wthee.pcrtool.utils.getRankColor
 
 /**
  * 蓝底白字
@@ -58,6 +63,7 @@ fun MainText(text: String, modifier: Modifier = Modifier) {
         text = text,
         color = MaterialTheme.colors.primary,
         style = MaterialTheme.typography.subtitle1,
+        textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
         modifier = modifier.padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
     )
@@ -109,13 +115,18 @@ fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit)
  * 次操作按钮
  */
 @Composable
-fun SubButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun SubButton(
+    text: String,
+    color: Color = Color.Unspecified,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     OutlinedButton(
         onClick = onClick,
         shape = Shapes.large,
         modifier = modifier.padding(Dimen.smallPadding)
     ) {
-        Text(text = text, style = MaterialTheme.typography.button)
+        Text(text = text, color = color, style = MaterialTheme.typography.button)
     }
 }
 
@@ -135,4 +146,23 @@ fun <T> getGridData(spanCount: Int, list: List<T>, placeholder: T): ArrayList<T>
         }
     }
     return newList
+}
+
+/**
+ * RANK 文本
+ */
+@Composable
+fun RankText(
+    rank: Int,
+    style: TextStyle,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Center,
+) {
+    Text(
+        text = getFormatText(rank),
+        textAlign = textAlign,
+        color = colorResource(id = getRankColor(rank)),
+        style = style,
+        modifier = modifier
+    )
 }

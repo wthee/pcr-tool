@@ -14,10 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.CharacterSelectInfo
-import cn.wthee.pcrtool.data.view.Attr
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.view.all
-import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.data.view.*
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
@@ -27,6 +24,7 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -39,11 +37,13 @@ fun CharacterInfo(
     toEquipDetail: (Int) -> Unit,
     toCharacterBasicInfo: (Int) -> Unit,
     toRankEquip: (Int) -> Unit,
+    toRankCompare: (Int, Int, String) -> Unit,
     navViewModel: NavViewModel,
     characterAttrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
 ) {
     characterAttrViewModel.getMaxRankAndRarity(unitId)
-
+    characterAttrViewModel.isUnknown(unitId)
+    val unknown = characterAttrViewModel.isUnknown.observeAsState().value ?: false
     val selectRank = navViewModel.selectRank.observeAsState().value ?: 2
     val selectInfo = characterAttrViewModel.selData.observeAsState().value
     selectInfo?.rank = selectRank
@@ -52,10 +52,9 @@ fun CharacterInfo(
     val maxData = characterAttrViewModel.maxData.observeAsState().value ?: CharacterSelectInfo()
     val attrData = characterAttrViewModel.sumInfo.observeAsState().value ?: Attr()
     val storyAttr = characterAttrViewModel.storyAttrs.observeAsState().value ?: Attr()
-    val equips = characterAttrViewModel.equipments.observeAsState().value
-    val loading = characterAttrViewModel.loading.observeAsState().value ?: true
+    val equips = characterAttrViewModel.equipments.observeAsState().value ?: getEquipsPlaceholder()
     //fixme 重复加载数据的问题
-    if (selectInfo == null || selectInfo.rarity == 0) {
+    if ((selectInfo == null || selectInfo.rarity == 0) && maxData.rarity != 0) {
         characterAttrViewModel.selData.postValue(maxData)
         navViewModel.selectRank.postValue(maxData.rank)
     }
@@ -129,11 +128,11 @@ fun CharacterInfo(
                             .padding(Dimen.mediuPadding)
                             .fillMaxSize()
                     ) {
-
-                        if (!loading) {
+                        //数据加载完，更新页面
+                        if (selectInfo != null && storyAttr.allNotZero().isNotEmpty()) {
                             //等级
                             Text(
-                                text = selectInfo?.level.toString(),
+                                text = selectInfo.level.toString(),
                                 color = MaterialTheme.colors.primary,
                                 style = MaterialTheme.typography.h6,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -149,19 +148,30 @@ fun CharacterInfo(
                             //剧情属性
                             AttrList(attrs = storyAttr.allNotZero())
                             //RANK 装备
-                            if (equips != null && equips.isNotEmpty()) {
-                                CharacterEquip(
-                                    unitId,
-                                    selectInfo?.rank ?: 2,
-                                    equips,
-                                    toEquipDetail,
-                                    toRankEquip
-                                )
-                            }
+                            CharacterEquip(
+                                unitId,
+                                selectInfo,
+                                maxData.rank,
+                                equips,
+                                toEquipDetail,
+                                toRankEquip,
+                                toRankCompare
+                            )
                             //显示专武
-                            UniqueEquip(unitId, selectInfo?.uniqueEquipLevel ?: 1)
+                            UniqueEquip(unitId, selectInfo.uniqueEquipLevel)
                             //技能
                             CharacterSkill(id = unitId)
+                        } else {
+                            //未知角色占位页面
+                            if (unknown) {
+                                //等级
+                                Text(
+                                    text = "角色暂未登场",
+                                    color = MaterialTheme.colors.primary,
+                                    style = MaterialTheme.typography.h6,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                            }
                         }
                     }
                 }
@@ -207,11 +217,14 @@ fun CharacterInfo(
 @Composable
 private fun CharacterEquip(
     unitId: Int,
-    rank: Int,
+    selectInfo: CharacterSelectInfo,
+    maxRank: Int,
     equips: List<EquipmentMaxData>,
     toEquipDetail: (Int) -> Unit,
-    toRankEquip: (Int) -> Unit
+    toRankEquip: (Int) -> Unit,
+    toRankCompare: (Int, Int, String) -> Unit,
 ) {
+    val rank = selectInfo.rank
     Column {
         //装备 6、 3
         Row(
@@ -260,20 +273,19 @@ private fun CharacterEquip(
                     }
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //TODO 跳转至所有 RANK 装备列表
-                TextButton(onClick = {
+                //跳转至所有 RANK 装备列表
+                SubButton(
+                    text = getFormatText(rank),
+                    color = colorResource(id = getRankColor(rank)),
+                ) {
                     toRankEquip(unitId)
+                }
+                //跳转至 RANK 对比页面
+                TextButton(onClick = {
+                    toRankCompare(unitId, maxRank, Gson().toJson(selectInfo))
                 }) {
                     Text(
-                        text = getFormatText(rank),
-                        color = colorResource(id = getRankColor(rank)),
-                        style = MaterialTheme.typography.subtitle1,
-                    )
-                }
-                //TODO 跳转至 RANK 对比页面
-                TextButton(onClick = { /*TODO*/ }) {
-                    Text(
-                        text = stringResource(id = cn.wthee.pcrtool.R.string.rank_compare),
+                        text = stringResource(id = R.string.rank_compare),
                         modifier = Modifier.padding(top = Dimen.mediuPadding),
                         color = MaterialTheme.colors.primary,
                         style = MaterialTheme.typography.subtitle2

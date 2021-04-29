@@ -15,6 +15,7 @@ import androidx.navigation.compose.navigate
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
 import cn.wthee.pcrtool.ui.character.CharacterInfo
+import cn.wthee.pcrtool.ui.character.RankCompare
 import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
@@ -33,6 +34,8 @@ object Navigation {
     const val EQUIP_ID = "equipId"
     const val EQUIP_DETAIL = "equipDetail"
     const val RANK_EQUIP = "rankEquip"
+    const val RANK_COMPARE = "rankCompare"
+    const val MAX_RANK = "maxRank"
     const val SELECT_DATA = "selectData"
 }
 
@@ -70,6 +73,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 actions.toEquipDetail,
                 actions.toCharacterBasicInfo,
                 actions.toCharacteRankEquip,
+                actions.toCharacteRankCompare,
                 viewModel
             )
         }
@@ -125,6 +129,28 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 navViewModel = viewModel
             )
         }
+
+        //角色 RANK 对比
+        composable(
+            "${Navigation.RANK_COMPARE}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}/{${Navigation.SELECT_DATA}}",
+            arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                type = NavType.IntType
+            }, navArgument(Navigation.MAX_RANK) {
+                type = NavType.IntType
+            }, navArgument(Navigation.SELECT_DATA) {
+                type = NavType.StringType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            viewModel.pageLevel.postValue(2)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            RankCompare(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                maxRank = arguments.getInt(Navigation.MAX_RANK),
+                selectedInfo = arguments.getString(Navigation.SELECT_DATA) ?: "",
+                navViewModel = viewModel
+            )
+        }
     }
 }
 
@@ -166,6 +192,14 @@ class NavActions(navController: NavHostController) {
     val toCharacteRankEquip: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${Navigation.RANK_EQUIP}/${unitId}")
     }
+
+    /**
+     * 角色 RANK 对比
+     */
+    val toCharacteRankCompare: (Int, Int, String) -> Unit =
+        { unitId: Int, maxRank: Int, select: String ->
+            navController.navigate("${Navigation.RANK_COMPARE}/${unitId}/${maxRank}/${select}")
+        }
 }
 
 @HiltViewModel

@@ -121,6 +121,7 @@
     <string name="stared">已收藏</string>
     <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
     <string name="rank_compare">对比</string>
+    <string name="rank_select">选择</string>
     <string name="jjc">竞技场</string>
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
@@ -128,7 +129,7 @@
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
     <string name="leader_source">前往 AppMedia</string>
     <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
-    <string name="result">差值</string>
+    <string name="result">数值变化</string>
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
     <string name="team_atk">进攻方</string>

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.model.CharacterSelectInfo
+import cn.wthee.pcrtool.data.model.RankCompareData
+import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.data.view.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
@@ -33,9 +35,10 @@ class CharacterAttrViewModel @Inject constructor(
     val sumInfo = MutableLiveData<Attr>()
     val maxData = MutableLiveData<CharacterSelectInfo>()
     val selData = MutableLiveData<CharacterSelectInfo>()
+    val attrCompareData = MutableLiveData<List<RankCompareData>>()
+    val isUnknown = MutableLiveData<Boolean>()
     val level = MutableLiveData(0)
     val atk = MutableLiveData(0)
-    val loading = MutableLiveData(true)
 
     /**
      * 根据角色 id  星级 等级 专武等级
@@ -48,7 +51,6 @@ class CharacterAttrViewModel @Inject constructor(
             level.postValue(data.level)
             atk.postValue(attr.atk.int)
             sumInfo.postValue(attr)
-            loading.postValue(false)
         }
 
     }
@@ -150,16 +152,27 @@ class CharacterAttrViewModel @Inject constructor(
     /**
      * 根据 [unitId]，判断角色是否有技能等信息
      */
-    suspend fun isUnknown(unitId: Int): Boolean {
-        try {
-            unitRepository.getMaxRank(unitId)
-            unitRepository.getMaxRarity(unitId)
-            if (unitRepository.getEquipmentIds(unitId, 2).getAllOrderIds().isEmpty()) {
-                return true
+    fun isUnknown(unitId: Int) {
+        viewModelScope.launch {
+            val data = unitRepository.getRankStatus(unitId, 2)
+            if (data == null) {
+                isUnknown.postValue(true)
+            } else {
+                isUnknown.postValue(false)
             }
-        } catch (e: Exception) {
-            return true
         }
-        return false
+    }
+
+    /**
+     * 获取指定角色属性
+     */
+    fun getUnitAttrCompare(unitId: Int, data: CharacterSelectInfo, rank0: Int, rank1: Int) {
+        viewModelScope.launch {
+            data.rank = rank0
+            val attr0 = getAttrs(unitId, data)
+            data.rank = rank1
+            val attr1 = getAttrs(unitId, data)
+            attrCompareData.postValue(getRankCompareList(attr0, attr1))
+        }
     }
 }

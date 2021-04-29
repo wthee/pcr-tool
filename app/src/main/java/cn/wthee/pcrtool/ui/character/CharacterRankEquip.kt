@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,16 +19,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.colorResource
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.data.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.IconCompose
+import cn.wthee.pcrtool.ui.compose.RankText
 import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
-import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.getRankColor
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -86,9 +83,8 @@ fun RankEquipListItem(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK
-            Text(
-                text = getFormatText(unitPromotion.promotionLevel),
-                color = colorResource(id = getRankColor(unitPromotion.promotionLevel)),
+            RankText(
+                rank = unitPromotion.promotionLevel,
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.padding(Dimen.mediuPadding)
             )
