@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterSelectInfo
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.data.model.getRankCompareList
@@ -33,6 +34,7 @@ class CharacterAttrViewModel @Inject constructor(
     val equipments = MutableLiveData<List<EquipmentMaxData>>()
     val storyAttrs = MutableLiveData<Attr>()
     val sumInfo = MutableLiveData<Attr>()
+    val allAttr = MutableLiveData<AllAttrData>()
     val maxData = MutableLiveData<CharacterSelectInfo>()
     val selData = MutableLiveData<CharacterSelectInfo>()
     val attrCompareData = MutableLiveData<List<RankCompareData>>()
@@ -49,8 +51,8 @@ class CharacterAttrViewModel @Inject constructor(
         viewModelScope.launch {
             val attr = getAttrs(unitId, data)
             level.postValue(data.level)
-            atk.postValue(attr.atk.int)
-            sumInfo.postValue(attr)
+            atk.postValue(attr.sumAttr.atk.int)
+            allAttr.postValue(attr)
         }
 
     }
@@ -59,8 +61,9 @@ class CharacterAttrViewModel @Inject constructor(
      * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
      */
-    suspend fun getAttrs(unitId: Int, data: CharacterSelectInfo): Attr {
+    suspend fun getAttrs(unitId: Int, data: CharacterSelectInfo): AllAttrData {
         val info = Attr()
+        val allData = AllAttrData()
         try {
             val rank = data.rank
             val rarity = data.rarity
@@ -76,6 +79,7 @@ class CharacterAttrViewModel @Inject constructor(
             }
             info.add(rarityData.attr)
                 .add(Attr.setGrowthValue(rarityData).multiply(lv + rank))
+
             val eqs = arrayListOf<EquipmentMaxData>()
             ids.forEach {
                 if (it == UNKNOWN_EQUIP_ID || it == 0)
@@ -84,7 +88,8 @@ class CharacterAttrViewModel @Inject constructor(
                     eqs.add(equipmentRepository.getEquipmentData(it))
             }
             //rank装备信息
-            equipments.postValue(eqs)
+//            equipments.postValue(eqs)
+            allData.equips = eqs
             //计算穿戴装备后属性
             eqs.forEach { eq ->
                 if (eq.equipmentId == UNKNOWN_EQUIP_ID) return@forEach
@@ -94,12 +99,15 @@ class CharacterAttrViewModel @Inject constructor(
             val uniqueEquip = equipmentRepository.getUniqueEquipInfo(unitId, ueLv)
             if (uniqueEquip != null) {
                 info.add(uniqueEquip.attr)
+                allData.uniqueEquip = uniqueEquip
             }
             //故事剧情
             val storyAttr = getStoryAttrs(unitId)
-            storyAttrs.postValue(storyAttr)
+//            storyAttrs.postValue(storyAttr)
             info.add(storyAttr)
-
+            allData.stroyAttr = storyAttr
+            allData.sumAttr = info
+            allAttr.postValue(allData)
         } catch (e: Exception) {
             MainScope().launch {
                 UMCrash.generateCustomLog(
@@ -113,7 +121,7 @@ class CharacterAttrViewModel @Inject constructor(
                 )
             }
         }
-        return info
+        return allData
     }
 
     /**
@@ -172,7 +180,7 @@ class CharacterAttrViewModel @Inject constructor(
             val attr0 = getAttrs(unitId, data)
             data.rank = rank1
             val attr1 = getAttrs(unitId, data)
-            attrCompareData.postValue(getRankCompareList(attr0, attr1))
+            attrCompareData.postValue(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
         }
     }
 }

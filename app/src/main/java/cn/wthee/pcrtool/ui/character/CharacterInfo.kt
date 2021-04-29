@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,11 +12,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterSelectInfo
-import cn.wthee.pcrtool.data.view.*
+import cn.wthee.pcrtool.data.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.view.all
+import cn.wthee.pcrtool.data.view.allNotZero
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
@@ -24,12 +30,16 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.circleShape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
+/**
+ * 角色信息
+ *
+ * fixme 过度绘制问题
+ */
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
@@ -44,6 +54,7 @@ fun CharacterInfo(
     navViewModel: NavViewModel,
     characterAttrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
 ) {
+    //fixme 同时获取属性
     characterAttrViewModel.getMaxRankAndRarity(unitId)
     characterAttrViewModel.isUnknown(unitId)
     //是否已登场
@@ -52,35 +63,31 @@ fun CharacterInfo(
     val selectRank = navViewModel.selectRank.observeAsState().value ?: 2
     //选择的信息
     val selectInfo = characterAttrViewModel.selData.observeAsState().value
-    selectInfo?.rank = selectRank
-    characterAttrViewModel.selData.postValue(selectInfo)
+
 
     //最大值
     val maxData = characterAttrViewModel.maxData.observeAsState().value ?: CharacterSelectInfo()
-    //基本属性
-    val attrData = characterAttrViewModel.sumInfo.observeAsState().value ?: Attr()
-    //剧情属性
-    val storyAttr = characterAttrViewModel.storyAttrs.observeAsState().value ?: Attr()
-    //RANK 装备
-    val equips = characterAttrViewModel.equipments.observeAsState().value ?: getEquipsPlaceholder()
+    val allData = characterAttrViewModel.allAttr.observeAsState().value ?: AllAttrData()
     //滑动条
     val level = remember { mutableStateOf(maxData.level.toFloat()) }
-    selectInfo?.level = level.value.toInt()
     val uniqueEquipLevel = remember { mutableStateOf(maxData.uniqueEquipLevel.toFloat()) }
-    selectInfo?.uniqueEquipLevel = uniqueEquipLevel.value.toInt()
     //星级选择
     val starNum = remember {
         mutableStateOf(maxData.rank)
     }
-    selectInfo?.rarity = starNum.value
 
-    //fixme 重复加载数据的问题
+    //fixme 优化逻辑
     if ((selectInfo == null || selectInfo.rarity == 0) && maxData.rarity != 0) {
-        characterAttrViewModel.selData.postValue(maxData)
-        navViewModel.selectRank.postValue(maxData.rank)
-        level.value = maxData.level.toFloat()
-        uniqueEquipLevel.value = maxData.uniqueEquipLevel.toFloat()
-        starNum.value = maxData.rarity
+//        characterAttrViewModel.selData.postValue(maxData)
+//        navViewModel.selectRank.postValue(maxData.rank)
+//        level.value = maxData.level.toFloat()
+//        uniqueEquipLevel.value = maxData.uniqueEquipLevel.toFloat()
+//        starNum.value = maxData.rarity
+//        selectInfo?.level = level.value.toInt()
+//        selectInfo?.uniqueEquipLevel = uniqueEquipLevel.value.toInt()
+        selectInfo?.rarity = starNum.value
+        selectInfo?.rank = selectRank
+        characterAttrViewModel.selData.postValue(selectInfo)
     }
     characterAttrViewModel.getCharacterInfo(unitId, selectInfo ?: CharacterSelectInfo())
 
@@ -105,63 +112,64 @@ fun CharacterInfo(
     }
 
     //页面
-    ModalBottomSheetLayout(
-        sheetState = state,
-        sheetContent = {
-            Surface(modifier = Modifier.padding(bottom = Dimen.sheetMarginBottom)) {
-                SkillLoopList(unitId = unitId)
+    Log.e("DEBUG", "${allData.stroyAttr.allNotZero().isNotEmpty()}")
+    if (allData.stroyAttr.allNotZero().isNotEmpty()) {
+        ModalBottomSheetLayout(
+            sheetState = state,
+            sheetContent = {
+                Surface(modifier = Modifier.padding(bottom = Dimen.sheetMarginBottom)) {
+                    SkillLoopList(unitId = unitId)
+                }
             }
-        }
-    ) {
-        //关闭监听
-        val close = navViewModel.fabClose.observeAsState().value ?: false
-        if (close) {
-            coroutineScope.launch {
-                state.hide()
-            }
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
-            navViewModel.fabClose.postValue(false)
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.onPrimary)
         ) {
+            //关闭监听
+            val close = navViewModel.fabClose.observeAsState().value ?: false
+            if (close) {
+                coroutineScope.launch {
+                    state.hide()
+                }
+                navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                navViewModel.fabClose.postValue(false)
+            }
+
             Box(
                 modifier = Modifier
-                    .verticalScroll(scrollState)
                     .fillMaxSize()
+                    .background(MaterialTheme.colors.onPrimary)
             ) {
-                Box {
-                    //图片
-                    CharacterCard(
-                        Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
-                        scrollState = scrollState
-                    )
-                    //星级
-                    StarSelect(
-                        maxData.rarity,
-                        starNum,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = Dimen.largePadding)
-                    )
-                }
-
-                //页面
-                Card(
-                    shape = CardTopShape,
-                    elevation = 20.dp,
-                    modifier = Modifier.padding(top = marginTop.dp)
+                Box(
+                    modifier = Modifier
+                        .verticalScroll(scrollState)
+                        .fillMaxSize()
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(Dimen.mediuPadding)
-                            .fillMaxSize()
+                    Box {
+                        //图片
+                        CharacterCard(
+                            Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
+                            scrollState = scrollState
+                        )
+                        //星级
+                        StarSelect(
+                            maxData.rarity,
+                            starNum,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = Dimen.largePadding)
+                        )
+                    }
+
+                    //页面
+                    Card(
+                        shape = CardTopShape,
+                        elevation = 20.dp,
+                        modifier = Modifier.padding(top = marginTop.dp)
                     ) {
-                        //数据加载完，更新页面
-                        if (selectInfo != null && storyAttr.allNotZero().isNotEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .padding(Dimen.mediuPadding)
+                                .fillMaxSize()
+                        ) {
+
                             //等级
                             Text(
                                 text = level.value.toInt().toString(),
@@ -178,7 +186,7 @@ fun CharacterInfo(
                                     .align(Alignment.CenterHorizontally)
                             )
                             //属性
-                            AttrList(attrs = attrData.all())
+                            AttrList(attrs = allData.sumAttr.all())
                             MainText(
                                 text = stringResource(id = R.string.title_story_attr),
                                 modifier = Modifier
@@ -186,69 +194,76 @@ fun CharacterInfo(
                                     .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
                             )
                             //剧情属性
-                            AttrList(attrs = storyAttr.allNotZero())
+                            AttrList(attrs = allData.stroyAttr.allNotZero())
                             //RANK 装备
                             CharacterEquip(
                                 unitId,
-                                selectInfo,
+                                selectInfo ?: CharacterSelectInfo(),
                                 maxData.rank,
-                                equips,
+                                allData.equips,
                                 toEquipDetail,
                                 toRankEquip,
                                 toRankCompare
                             )
                             //显示专武
-                            UniqueEquip(unitId, uniqueEquipLevel, maxData.uniqueEquipLevel)
+                            UniqueEquip(
+                                uniqueEquipLevel,
+                                allData.uniqueEquip,
+                                maxData.uniqueEquipLevel
+                            )
                             //技能
                             CharacterSkill(id = unitId)
-                        } else {
-                            //未知角色占位页面
-                            if (unknown) {
-                                //等级
-                                Text(
-                                    text = "角色暂未登场",
-                                    color = MaterialTheme.colors.primary,
-                                    style = MaterialTheme.typography.h6,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                                )
+
+                        }
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
+                    //技能循环
+                    FabCompose(
+                        modifier = Modifier
+                            .padding(end = Dimen.fabSmallMarginEnd),
+                        iconId = R.drawable.ic_loop,
+                    ) {
+                        coroutineScope.launch {
+                            if (state.isVisible) {
+                                navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                                state.hide()
+                            } else {
+                                navViewModel.fabMainIcon.postValue(R.drawable.ic_cancel)
+                                state.show()
                             }
                         }
                     }
-                }
-            }
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                //技能循环
-                FabCompose(
-                    modifier = Modifier
-                        .padding(end = Dimen.fabSmallMarginEnd),
-                    iconId = R.drawable.ic_loop,
-                ) {
-                    coroutineScope.launch {
-                        if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
-                            state.hide()
-                        } else {
-                            navViewModel.fabMainIcon.postValue(R.drawable.ic_cancel)
-                            state.show()
-                        }
+                    //跳转至角色资料
+                    ExtendedFabCompose(
+                        iconId = R.drawable.ic_drop,
+                        text = stringResource(id = R.string.character_basic_Info),
+                        textWidth = Dimen.getWordWidth(2)
+                    ) {
+                        toCharacterBasicInfo(unitId)
                     }
                 }
-                //跳转至角色资料
-                ExtendedFabCompose(
-                    iconId = R.drawable.ic_drop,
-                    text = stringResource(id = R.string.character_basic_Info),
-                    textWidth = Dimen.getWordWidth(2)
-                ) {
-                    toCharacterBasicInfo(unitId)
-                }
-            }
 
+            }
+        }
+    } else {
+        //未知角色占位页面
+        if (unknown) {
+            //等级
+            Text(
+                text = "角色暂未登场",
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
+
 }
 
 /**
@@ -377,15 +392,11 @@ private fun CharacterEquip(
  */
 @Composable
 private fun UniqueEquip(
-    unitId: Int,
     level: MutableState<Float>,
-    maxLevel: Int,
-    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
+    uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
+    maxLevel: Int
 ) {
-    equipmentViewModel.getUniqueEquipInfos(unitId, level.value.toInt())
-    val data = equipmentViewModel.uniqueEquip.observeAsState().value
-
-    data?.let {
+    uniqueEquipmentMaxData?.let {
         Column(
             modifier = Modifier
                 .padding(top = Dimen.largePadding)
