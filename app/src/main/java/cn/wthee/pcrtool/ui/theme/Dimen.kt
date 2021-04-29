@@ -42,6 +42,11 @@ object Dimen {
     val fabMarginEnd = 70.dp
 
     /**
+     * 14dp
+     */
+    val fabSmallMarginEnd = 14.dp
+
+    /**
      * 6dp
      */
     val fabPadding = 6.dp
