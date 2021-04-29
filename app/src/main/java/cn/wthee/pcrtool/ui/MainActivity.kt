@@ -163,7 +163,7 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
         val icon =
             painterResource(
                 id = if (pageLevel.value == null || pageLevel.value!! == -1)
-                    R.drawable.ic_left
+                    R.drawable.ic_back
                 else
                     iconId
             )

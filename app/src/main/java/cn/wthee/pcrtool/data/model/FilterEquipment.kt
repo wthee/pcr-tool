@@ -9,7 +9,8 @@ import kotlinx.coroutines.launch
 @Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterEquipment(
     var all: Boolean = true,
-    var type: String = "全部"
+    var type: String = "全部",
+    var name: String = "",
 ) {
     var starIds = arrayListOf<Int>()
         set(value) {

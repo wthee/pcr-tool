@@ -23,18 +23,15 @@ class SkillViewModel @Inject constructor(
     private val repository: SkillRepository
 ) : ViewModel() {
 
-    companion object {
-        var iconTypes = hashMapOf<Int, Int>()
-    }
 
     var skills = MutableLiveData<List<SkillDetail>>()
     var atkPattern = MutableLiveData<List<AttackPattern>>()
+    var iconTypes = MutableLiveData(hashMapOf<Int, Int>())
 
     /**
      * 根据 [unitId]， 获取角色技能信息
      */
     fun getCharacterSkills(lv: Int, atk: Int, unitId: Int) {
-        iconTypes.clear()
         viewModelScope.launch {
             try {
                 val data = repository.getUnitSkill(unitId)
@@ -51,7 +48,6 @@ class SkillViewModel @Inject constructor(
      * 获取怪物技能信息
      */
     fun getEnemySkill(lvs: List<Int>, atk: Int, unitId: Int) {
-        iconTypes.clear()
         viewModelScope.launch {
             try {
                 val data = repository.getUnitSkill(unitId)
@@ -70,13 +66,14 @@ class SkillViewModel @Inject constructor(
     private fun getSkillInfo(skillIds: List<Int>, atk: Int, lvs: List<Int>) {
         viewModelScope.launch {
             val infos = mutableListOf<SkillDetail>()
+            val map = hashMapOf<Int, Int>()
             //技能信息
             skillIds.forEachIndexed { index, sid ->
                 val skill = repository.getSkillData(sid)
                 if (skill != null) {
                     val lv = if (lvs.size == 1) lvs[0] else lvs[index]
                     val aid = skill.skill_id % 1000
-                    iconTypes[aid] = skill.icon_type
+                    map[aid] = skill.icon_type
                     val info = SkillDetail(
                         skill.skill_id,
                         skill.name ?: "",
@@ -97,6 +94,7 @@ class SkillViewModel @Inject constructor(
                     infos.add(info)
                 }
             }
+            iconTypes.postValue(map)
             skills.postValue(infos)
         }
 

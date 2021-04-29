@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -41,7 +42,11 @@ fun TopBarCompose(
             .offset(y = offset)
             .height(Dimen.topBarHeight)
     ) {
-        Icon(painter = painterResource(id = iconId), contentDescription = null)
+        Icon(
+            painter = painterResource(id = iconId),
+            contentDescription = null,
+            modifier = Modifier.size(Dimen.topBarIconSize)
+        )
         Text(
             text = stringResource(id = titleId),
             style = MaterialTheme.typography.subtitle1,

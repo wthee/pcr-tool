@@ -62,7 +62,7 @@ fun RankCompare(
     )
     val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
         navViewModel.fabOK.postValue(false)
     }
 
@@ -80,13 +80,15 @@ fun RankCompare(
             coroutineScope.launch {
                 state.hide()
             }
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
             navViewModel.fabClose.postValue(false)
         }
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = Dimen.mediuPadding)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = Dimen.fabIconSize)
+        ) {
             Column {
                 Row {
                     Spacer(modifier = Modifier.weight(0.3f))
@@ -122,7 +124,7 @@ fun RankCompare(
             ) {
                 coroutineScope.launch {
                     if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+                        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
                         state.hide()
                     } else {
                         navViewModel.fabMainIcon.postValue(R.drawable.ic_ok)
@@ -221,7 +223,7 @@ fun RankSelect(
                     sheetState.hide()
                 }
                 navViewModel.fabOK.postValue(false)
-                navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+                navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
                 rank0.value = select0.value
                 rank1.value = select1.value
             }

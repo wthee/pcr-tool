@@ -76,7 +76,7 @@ fun CharacterInfo(
     )
     val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
         navViewModel.fabClose.postValue(false)
     }
 
@@ -96,7 +96,7 @@ fun CharacterInfo(
             coroutineScope.launch {
                 state.hide()
             }
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
             navViewModel.fabClose.postValue(false)
         }
 
@@ -187,7 +187,7 @@ fun CharacterInfo(
                 ) {
                     coroutineScope.launch {
                         if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(R.drawable.ic_left)
+                            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
                             state.hide()
                         } else {
                             navViewModel.fabMainIcon.postValue(R.drawable.ic_cancel)

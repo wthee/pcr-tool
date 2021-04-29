@@ -1,72 +1,221 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
+import cn.wthee.pcrtool.ui.NavViewModel
+import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * 装备列表
  */
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun EquipList(
+    navViewModel: NavViewModel,
     viewModel: EquipmentViewModel = hiltNavGraphViewModel(),
     toEquipDetail: (Int) -> Unit
 ) {
-    val filter = FilterEquipment()
-    viewModel.getEquips(filter, "")
     val equips = viewModel.equips.observeAsState().value ?: listOf()
+    //筛选状态
+    val filter = remember {
+        mutableStateOf(FilterEquipment())
+    }
+    // dialog 状态
+    val state = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden
+    )
+    val coroutineScope = rememberCoroutineScope()
+    //滚动监听
+    val scrollState = rememberLazyListState()
 
-    LazyVerticalGrid(cells = GridCells.Fixed(4)) {
-        items(equips) { equip ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimen.smallPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                IconCompose(
-                    data = getEquipIconUrl(equip.equipmentId),
-                    modifier = Modifier
-                        .size(Dimen.iconSize)
-                        .clickable {
-                            toEquipDetail(equip.equipmentId)
-                        }
-                )
-                //装备名称
-                Text(
-                    text = equip.equipmentName,
-                    style = MaterialTheme.typography.caption,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(Dimen.smallPadding)
-                )
-            }
+    viewModel.getEquips(filter.value)
 
+    //关闭时监听
+    if (!state.isVisible) {
+        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+        navViewModel.fabOK.postValue(false)
+    }
+
+    ModalBottomSheetLayout(
+        sheetState = state,
+        sheetContent = {
+            FilterEquipSheet(navViewModel, coroutineScope, filter, state)
         }
+    ) {
+        val marginTop: Dp = marginTopBar(scrollState)
+        Box(modifier = Modifier.fillMaxSize()) {
+            TopBarCompose(
+                titleId = R.string.tool_equip,
+                iconId = R.drawable.ic_equip,
+                scrollState = scrollState
+            )
+            LazyVerticalGrid(
+                cells = GridCells.Fixed(4),
+                state = scrollState,
+                modifier = Modifier
+                    .padding(top = marginTop)
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.background, shape = CardTopShape)
+            ) {
+                items(equips) { equip ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(Dimen.smallPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        IconCompose(
+                            data = getEquipIconUrl(equip.equipmentId),
+                            modifier = Modifier
+                                .size(Dimen.iconSize)
+                                .clickable {
+                                    toEquipDetail(equip.equipmentId)
+                                }
+                        )
+                        //装备名称
+                        Text(
+                            text = equip.equipmentName,
+                            style = MaterialTheme.typography.caption,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(Dimen.smallPadding)
+                        )
+                    }
+
+                }
+            }
+            val count = equips.size
+            // 数量显示&筛选按钮
+            ExtendedFabCompose(
+                modifier = Modifier
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                    .align(Alignment.BottomEnd),
+                iconId = R.drawable.ic_equip,
+                text = "$count"
+            ) {
+                coroutineScope.launch {
+                    if (state.isVisible) {
+                        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                        state.hide()
+                    } else {
+                        navViewModel.fabMainIcon.postValue(R.drawable.ic_ok)
+                        state.show()
+                    }
+                }
+            }
+        }
+
+    }
+
+
+}
+
+/**
+ * 装备筛选
+ */
+@ExperimentalMaterialApi
+@Composable
+private fun FilterEquipSheet(
+    navViewModel: NavViewModel,
+    coroutineScope: CoroutineScope,
+    filter: MutableState<FilterEquipment>,
+    sheetState: ModalBottomSheetState
+) {
+    val textState = remember { mutableStateOf(TextFieldValue()) }
+    val newFilter = FilterEquipment()
+    newFilter.name = textState.value.text
+    //公会
+    val equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
+    equipmentViewModel.getTypes()
+    val typeList = equipmentViewModel.equipTypes.observeAsState().value ?: arrayListOf()
+    val typeIndex = remember {
+        mutableStateOf(0)
+    }
+    if (typeList.isNotEmpty()) {
+        newFilter.type = if (typeIndex.value == 0) {
+            "全部"
+        } else {
+            typeList[typeIndex.value - 1]
+        }
+    }
+
+    //确认操作
+    val ok = navViewModel.fabOK.observeAsState().value ?: false
+
+    //选择状态
+    Column(
+        modifier = Modifier
+            .clip(CardTopShape)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        if (ok) {
+            coroutineScope.launch {
+                sheetState.hide()
+            }
+            navViewModel.fabOK.postValue(false)
+            navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+            filter.value = newFilter
+        }
+        //装备名搜索
+        OutlinedTextField(
+            value = textState.value,
+            onValueChange = { textState.value = it },
+            textStyle = MaterialTheme.typography.button,
+            singleLine = false,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.equip_name),
+                    style = MaterialTheme.typography.button
+                )
+            },
+            modifier = Modifier
+                .padding(Dimen.largePadding)
+                .fillMaxWidth()
+        )
+        //类型
+        MainText(
+            text = stringResource(id = R.string.title_guild),
+            modifier = Modifier.padding(top = Dimen.largePadding)
+        )
+        val typeChipData =
+            arrayListOf(ChipData(0, stringResource(id = R.string.all)))
+        typeList.forEachIndexed { index, type ->
+            typeChipData.add(ChipData(index + 1, type))
+        }
+        ChipGroup(
+            typeChipData,
+            typeIndex,
+            modifier = Modifier.padding(Dimen.smallPadding),
+        )
     }
 }
 

@@ -304,25 +304,54 @@ private fun SkillLoopIconList(iconList: List<Int>) {
  * 技能循环图标列表
  */
 @Composable
-private fun SkillLoopIconListRow(iconList: List<Int>) {
-    Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
-        iconList.forEach {
-            val alpha = if (it == 0) 0f else 1f
-            Column(
-                modifier = Modifier
-                    .padding(Dimen.mediuPadding)
-                    .alpha(alpha)
-            ) {
-                IconCompose(data = Constants.SKILL_ICON_URL + it + Constants.WEBP)
-                val type = getSkillType(it)
-                Text(
-                    text = type,
-                    color = colorResource(getSkillColor(type = type)),
-                    style = MaterialTheme.typography.caption,
+private fun SkillLoopIconListRow(
+    iconList: List<Int>,
+    skillViewModel: SkillViewModel = hiltNavGraphViewModel()
+) {
+    val iconTypes = skillViewModel.iconTypes.observeAsState().value ?: hashMapOf()
+    if (iconTypes.isNotEmpty()) {
+        Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
+            iconList.forEach {
+                var type = ""
+                var url = ""
+                if (it == 1) {
+                    type = "普攻"
+                    url = Constants.EQUIPMENT_URL + Constants.UNKNOWN_EQUIP_ID + Constants.WEBP
+                } else {
+                    type = when (it / 1000) {
+                        1 -> "技能 ${it % 10}"
+                        2 -> "SP技能 ${it % 10}"
+                        else -> ""
+                    }
+                    val iconType = when (it) {
+                        1001 -> iconTypes[2]
+                        1002 -> iconTypes[3]
+                        1003 -> iconTypes[1]
+                        2001 -> iconTypes[101]
+                        2002 -> iconTypes[102]
+                        2003 -> iconTypes[103]
+                        else -> 0
+                    }
+                    url = Constants.SKILL_ICON_URL + iconType + Constants.WEBP
+                }
+
+
+                val alpha = if (it == 0) 0f else 1f
+                Column(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = Dimen.smallPadding)
-                )
+                        .padding(Dimen.mediuPadding)
+                        .alpha(alpha)
+                ) {
+                    IconCompose(data = url)
+                    Text(
+                        text = type,
+                        color = colorResource(getSkillColor(type = type)),
+                        style = MaterialTheme.typography.caption,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(top = Dimen.smallPadding)
+                    )
+                }
             }
         }
     }

@@ -66,7 +66,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(1)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             CharacterInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 r6Id = arguments.getInt(Navigation.UNIT_SIX_ID),
@@ -87,7 +87,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             CharacterBasicInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID)
             )
@@ -96,8 +96,8 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //装备列表
         composable(Navigation.EQUIP_LIST) {
             viewModel.pageLevel.postValue(1)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
-            EquipList(toEquipDetail = actions.toEquipDetail)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
         }
 
         //装备详情
@@ -109,7 +109,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
         }
 
@@ -122,7 +122,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             RankEquipList(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 toEquipDetail = actions.toEquipDetail,
@@ -143,7 +143,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_left)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             RankCompare(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 maxRank = arguments.getInt(Navigation.MAX_RANK),

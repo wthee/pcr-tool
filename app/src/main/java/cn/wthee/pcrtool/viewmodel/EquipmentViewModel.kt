@@ -37,6 +37,7 @@ class EquipmentViewModel @Inject constructor(
     var loading = MutableLiveData<Boolean>()
     var selectId = MutableLiveData<Int>()
     var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
+    var equipTypes = MutableLiveData<List<String>>()
 
     //当前选中的装备素材
     var equipMaterial = MutableLiveData<EquipmentMaterial>()
@@ -44,12 +45,9 @@ class EquipmentViewModel @Inject constructor(
     /**
      * 获取装备列表
      */
-    fun getEquips(params: FilterEquipment, name: String, reload: Boolean = true) {
+    fun getEquips(params: FilterEquipment) {
         viewModelScope.launch {
-            val data = equipmentRepository.getEquipments(
-                name,
-                params
-            )
+            val data = equipmentRepository.getEquipments(params)
             equips.postValue(data)
         }
     }
@@ -76,7 +74,12 @@ class EquipmentViewModel @Inject constructor(
     /**
      * 获取装备类型
      */
-    suspend fun getTypes() = equipmentRepository.getEquipTypes()
+    fun getTypes() {
+        viewModelScope.launch {
+            val data = equipmentRepository.getEquipTypes()
+            equipTypes.postValue(data)
+        }
+    }
 
     /**
      * 根据角色id [uid] 获取对应 Rank 范围 所需的装备

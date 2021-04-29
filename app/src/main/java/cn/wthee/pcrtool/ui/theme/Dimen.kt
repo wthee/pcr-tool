@@ -119,6 +119,11 @@ object Dimen {
     val topBarHeight = 48.dp
 
     /**
+     * 40dp
+     */
+    val topBarIconSize = 38.dp
+
+    /**
      * 根据文字大小显示
      */
     fun getWordWidth(length: Int): Dp {

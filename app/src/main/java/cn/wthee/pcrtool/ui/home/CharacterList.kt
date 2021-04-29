@@ -206,7 +206,7 @@ private fun FilterCharacterSheet(
         mutableStateOf(0)
     }
     newFilter.r6 = r6Index.value == 1
-    //六星筛选
+    //位置筛选
     val positionIndex = remember {
         mutableStateOf(0)
     }
@@ -362,7 +362,7 @@ private fun FilterCharacterSheet(
             atkIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
-        //攻击类型
+        //公会名
         MainText(
             text = stringResource(id = R.string.title_guild),
             modifier = Modifier.padding(top = Dimen.largePadding)
