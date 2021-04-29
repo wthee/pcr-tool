@@ -20,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.CharacterSelectInfo
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -28,7 +27,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -42,19 +40,26 @@ import kotlinx.coroutines.launch
 fun RankCompare(
     unitId: Int,
     maxRank: Int,
-    selectedInfo: String,
+    level: Int,
+    rarity: Int,
+    uniqueEquipLevel: Int,
     navViewModel: NavViewModel,
     attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel()
 ) {
-    val selected = Gson().fromJson(selectedInfo, CharacterSelectInfo::class.java)
     val rank0 = remember {
-        mutableStateOf(selected.rank)
+        mutableStateOf(maxRank)
     }
     val rank1 = remember {
-        mutableStateOf(selected.rank)
+        mutableStateOf(maxRank)
     }
-    selected.rank = rank0.value
-    attrViewModel.getUnitAttrCompare(unitId, selected, rank0.value, rank1.value)
+    attrViewModel.getUnitAttrCompare(
+        unitId,
+        level,
+        rarity,
+        uniqueEquipLevel,
+        rank0.value,
+        rank1.value
+    )
     val attrCompareData = attrViewModel.attrCompareData.observeAsState().value ?: arrayListOf()
     // dialog 状态
     val state = rememberModalBottomSheetState(

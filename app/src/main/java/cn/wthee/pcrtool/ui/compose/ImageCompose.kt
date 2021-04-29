@@ -24,23 +24,19 @@ import com.google.accompanist.imageloading.ImageLoadState
  * 通过设置 aspectRatio, 使图片加载前时，有默认高度
  */
 @Composable
-fun CharacterCard(url: String, clip: Boolean = false, scrollState: ScrollState? = null) {
-    val modifier = if (scrollState == null) {
-        if (clip) {
-            CharacterCardImageModifier.clip(CardTopShape)
-        } else {
-            CharacterCardImageModifier
-        }
-    } else {
+fun CharacterCard(
+    url: String,
+    clip: Boolean = false,
+    scrollState: ScrollState? = null
+) {
+    val modifier = CharacterCardImageModifier
+    if (scrollState != null) {
         //滑动时，向上平移
         val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
-        if (clip) {
-            CharacterCardImageModifier
-                .clip(CardTopShape)
-                .offset(y = move)
-        } else {
-            CharacterCardImageModifier.offset(y = move)
-        }
+        modifier.offset(y = move)
+    }
+    if (clip) {
+        modifier.clip(CardTopShape)
     }
     Box {
         val painter = rememberCoilPainter(request = url)

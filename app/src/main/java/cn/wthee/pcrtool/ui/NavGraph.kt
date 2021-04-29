@@ -14,7 +14,7 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
-import cn.wthee.pcrtool.ui.character.CharacterInfo
+import cn.wthee.pcrtool.ui.character.CharacterMainInfo
 import cn.wthee.pcrtool.ui.character.RankCompare
 import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
@@ -39,6 +39,9 @@ object Navigation {
     const val MAX_RANK = "maxRank"
     const val SELECT_DATA = "selectData"
     const val TOOL_LEADER = "tool_leader"
+    const val LEVEL = "level"
+    const val RARITY = "rarity"
+    const val UNIQUE_EQUIP_LEVEL = "unique_equip_level"
 }
 
 @ExperimentalAnimationApi
@@ -69,7 +72,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             val arguments = requireNotNull(it.arguments)
             viewModel.pageLevel.postValue(1)
             viewModel.fabMainIcon.postValue(R.drawable.ic_back)
-            CharacterInfo(
+            CharacterMainInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 r6Id = arguments.getInt(Navigation.UNIT_SIX_ID),
                 actions.toEquipDetail,
@@ -134,13 +137,17 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //角色 RANK 对比
         composable(
-            "${Navigation.RANK_COMPARE}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}/{${Navigation.SELECT_DATA}}",
+            "${Navigation.RANK_COMPARE}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}/{${Navigation.LEVEL}}/{${Navigation.RARITY}}/{${Navigation.UNIQUE_EQUIP_LEVEL}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }, navArgument(Navigation.MAX_RANK) {
                 type = NavType.IntType
-            }, navArgument(Navigation.SELECT_DATA) {
-                type = NavType.StringType
+            }, navArgument(Navigation.LEVEL) {
+                type = NavType.IntType
+            }, navArgument(Navigation.RARITY) {
+                type = NavType.IntType
+            }, navArgument(Navigation.UNIQUE_EQUIP_LEVEL) {
+                type = NavType.IntType
             })
         ) {
             val arguments = requireNotNull(it.arguments)
@@ -149,7 +156,9 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             RankCompare(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 maxRank = arguments.getInt(Navigation.MAX_RANK),
-                selectedInfo = arguments.getString(Navigation.SELECT_DATA) ?: "",
+                level = arguments.getInt(Navigation.LEVEL),
+                rarity = arguments.getInt(Navigation.RARITY),
+                uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL),
                 navViewModel = viewModel
             )
         }
@@ -205,9 +214,9 @@ class NavActions(navController: NavHostController) {
     /**
      * 角色 RANK 对比
      */
-    val toCharacteRankCompare: (Int, Int, String) -> Unit =
-        { unitId: Int, maxRank: Int, select: String ->
-            navController.navigate("${Navigation.RANK_COMPARE}/${unitId}/${maxRank}/${select}")
+    val toCharacteRankCompare: (Int, Int, Int, Int, Int) -> Unit =
+        { unitId: Int, maxRank: Int, level: Int, rarity: Int, uniqueEquipLevel: Int ->
+            navController.navigate("${Navigation.RANK_COMPARE}/${unitId}/${maxRank}/${level}/${rarity}/${uniqueEquipLevel}")
         }
 
     /**
@@ -243,7 +252,7 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 选择的 RANK
      */
-    val selectRank = MutableLiveData(2)
+    val selectRank = MutableLiveData(0)
 
 
     /**

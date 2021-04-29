@@ -12,6 +12,7 @@
     <string name="section">%s阶段</string>
 
     <!-- 角色 -->
+    <string name="unknown_character">角色暂未登场</string>
     <string name="title_quest">？？？</string>
     <string name="age">年龄</string>
     <string name="title_height">身高</string>
