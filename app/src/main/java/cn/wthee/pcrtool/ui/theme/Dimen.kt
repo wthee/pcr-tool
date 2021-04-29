@@ -119,9 +119,19 @@ object Dimen {
     val topBarHeight = 48.dp
 
     /**
-     * 40dp
+     * 24dp
      */
-    val topBarIconSize = 38.dp
+    val topBarIconSize = 24.dp
+
+    /**
+     * 28dp
+     */
+    val slideHeight = 28.dp
+
+    /**
+     * 26dp
+     */
+    val starIconSize = 26.dp
 
     /**
      * 根据文字大小显示

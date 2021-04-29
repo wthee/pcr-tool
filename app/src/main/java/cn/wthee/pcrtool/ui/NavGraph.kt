@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.character.RankEquipList
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
+import cn.wthee.pcrtool.ui.tool.LeaderboardList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -37,6 +38,7 @@ object Navigation {
     const val RANK_COMPARE = "rankCompare"
     const val MAX_RANK = "maxRank"
     const val SELECT_DATA = "selectData"
+    const val TOOL_LEADER = "tool_leader"
 }
 
 @ExperimentalAnimationApi
@@ -151,6 +153,13 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 navViewModel = viewModel
             )
         }
+
+        //角色排行
+        composable(Navigation.TOOL_LEADER) {
+            viewModel.pageLevel.postValue(1)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            LeaderboardList()
+        }
     }
 }
 
@@ -200,6 +209,13 @@ class NavActions(navController: NavHostController) {
         { unitId: Int, maxRank: Int, select: String ->
             navController.navigate("${Navigation.RANK_COMPARE}/${unitId}/${maxRank}/${select}")
         }
+
+    /**
+     * 角色排行
+     */
+    val toLeaderboard = {
+        navController.navigate("${Navigation.TOOL_LEADER}")
+    }
 }
 
 @HiltViewModel

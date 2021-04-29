@@ -14,7 +14,7 @@ import androidx.compose.ui.res.colorResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.efabShape
+import cn.wthee.pcrtool.ui.theme.circleShape
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -53,8 +53,8 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
     Box(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
-            .clip(efabShape)
-            .background(backgroundColor, efabShape)
+            .clip(circleShape)
+            .background(backgroundColor, circleShape)
             .clickable {
                 selectIndex.value = index
             }

@@ -19,6 +19,6 @@ val CardTopShape = RoundedCornerShape(
 )
 
 /**
- * 左上、右上圆角
+ * 圆角
  */
-val efabShape = RoundedCornerShape(50)
+val circleShape = RoundedCornerShape(50)

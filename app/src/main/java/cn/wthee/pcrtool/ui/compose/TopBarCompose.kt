@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.Icon
@@ -50,7 +51,8 @@ fun TopBarCompose(
         Text(
             text = stringResource(id = titleId),
             style = MaterialTheme.typography.subtitle1,
-            color = MaterialTheme.colors.onPrimary
+            color = MaterialTheme.colors.onPrimary,
+            modifier = Modifier.padding(start = Dimen.mediuPadding)
         )
     }
 }

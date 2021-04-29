@@ -125,6 +125,7 @@
     <string name="jjc">竞技场</string>
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
+    <string name="visit_detail">在 AppMedia 中查看</string>
     <string name="pcrdfans_com">前往 pcrdfans.com</string>
     <string name="url_pcrdfans_com">https://pcrdfans.com</string>
     <string name="leader_source">前往 AppMedia</string>
@@ -163,6 +164,7 @@
 
     <!--  异常提示-->
     <string name="check_db_error">数据版本校验失败~</string>
+    <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="to_update"><![CDATA[去更新 > ]]></string>
     <string name="rank_equip_statistics">装备统计</string>

@@ -42,6 +42,18 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
         ) {
             Row {
                 MenuItem(
+                    text = stringResource(id = R.string.tool_leader),
+                    iconId = R.drawable.ic_leader,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .height(Dimen.smallMenuHeight)
+                ) {
+                    actions.toLeaderboard()
+                }
+            }
+
+            Row {
+                MenuItem(
                     text = stringResource(id = R.string.tool_equip),
                     iconId = R.drawable.ic_equip,
                     modifier = Modifier
