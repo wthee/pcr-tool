@@ -1,18 +1,16 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -20,13 +18,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.ui.theme.circleShape
+import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
+import com.google.accompanist.coil.rememberCoilPainter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -92,9 +93,14 @@ fun RankCompare(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = Dimen.fabIconSize)
+                .padding(top = Dimen.largePadding)
         ) {
-            Column {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                MainText(text = "$level")
+                StarCompose(rarity)
                 Row {
                     Spacer(modifier = Modifier.weight(0.3f))
                     RankText(
@@ -209,33 +215,21 @@ fun RankSelect(
     val select1 = remember {
         mutableStateOf(rank1.value)
     }
-    Column {
-        Row {
-            MainText(
-                text = stringResource(id = R.string.cur_rank),
-                modifier = Modifier.weight(0.45f)
-            )
-            Spacer(modifier = Modifier.weight(0.1f))
-            MainText(
-                text = stringResource(id = R.string.target_rank),
-                modifier = Modifier.weight(0.45f)
-            )
-        }
-        Row {
-            //RANK 选择
-            if (ok) {
-                coroutineScope.launch {
-                    sheetState.hide()
-                }
-                navViewModel.fabOK.postValue(false)
-                navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
-                rank0.value = select0.value
-                rank1.value = select1.value
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        //RANK 选择
+        if (ok) {
+            coroutineScope.launch {
+                sheetState.hide()
             }
-            RankSelectItem(select = select0, rankList = rankList, modifier = Modifier.weight(0.45f))
-            Spacer(modifier = Modifier.weight(0.1f))
-            RankSelectItem(select = select1, rankList = rankList, modifier = Modifier.weight(0.45f))
+            navViewModel.fabOK.postValue(false)
+            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            rank0.value = select0.value
+            rank1.value = select1.value
         }
+        MainText(text = stringResource(id = R.string.cur_rank))
+        RankSelectItem(select = select0, rankList = rankList)
+        MainText(text = stringResource(id = R.string.target_rank))
+        RankSelectItem(select = select1, rankList = rankList)
     }
 }
 
@@ -245,32 +239,42 @@ fun RankSelect(
  */
 @ExperimentalFoundationApi
 @Composable
-fun RankSelectItem(select: MutableState<Int>, rankList: List<Int>, modifier: Modifier) {
-    LazyVerticalGrid(
-        cells = GridCells.Fixed(2),
-        modifier = modifier
-    ) {
-        itemsIndexed(rankList) { index, it ->
-            Box(
-                modifier = Modifier
-                    .shadow(elevation = 0.dp, shape = Shapes.large, clip = true)
-                    .clickable {
-                        select.value = it
-                    }
-                    .background(
-                        if (it == select.value) {
-                            colorResource(id = R.color.alpha_primary)
-                        } else {
-                            MaterialTheme.colors.surface
-                        }
-                    )
-                    .padding(Dimen.mediuPadding)
-            ) {
-                RankText(
-                    rank = it,
-                    style = MaterialTheme.typography.button,
-                )
+fun RankSelectItem(select: MutableState<Int>, rankList: List<Int>) {
+    Box {
+        val chipData = arrayListOf<ChipData>()
+        rankList.forEachIndexed { index, i ->
+            chipData.add(ChipData(index, getFormatText(i, "")))
+        }
+        ChipGroup(
+            chipData,
+            select,
+            modifier = Modifier.padding(Dimen.smallPadding),
+        )
+    }
+}
+
+/**
+ * 星级显示
+ */
+@Composable
+private fun StarCompose(
+    rarity: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier) {
+        for (i in 1..rarity) {
+            val iconId = when (i) {
+                6 -> R.drawable.ic_star_pink
+                else -> R.drawable.ic_star
             }
+            Image(
+                painter = rememberCoilPainter(request = iconId),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(start = Dimen.smallPadding, bottom = Dimen.smallPadding)
+                    .clip(circleShape)
+                    .size(Dimen.starIconSize)
+            )
         }
     }
 }

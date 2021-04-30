@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -65,7 +66,6 @@ fun RankEquipListItem(
         MaterialTheme.colors.surface
 
     Card(
-        backgroundColor = color,
         modifier = Modifier
             .padding(Dimen.mediuPadding)
             .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
@@ -76,7 +76,9 @@ fun RankEquipListItem(
     ) {
         //图标列表
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color, Shapes.large),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK

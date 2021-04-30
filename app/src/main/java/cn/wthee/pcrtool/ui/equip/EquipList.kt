@@ -7,8 +7,11 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,9 +45,7 @@ fun EquipList(
 ) {
     val equips = viewModel.equips.observeAsState().value ?: listOf()
     //筛选状态
-    val filter = remember {
-        mutableStateOf(FilterEquipment())
-    }
+    val filter = viewModel.filter.observeAsState()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -53,7 +54,9 @@ fun EquipList(
     //滚动监听
     val scrollState = rememberLazyListState()
 
-    viewModel.getEquips(filter.value)
+    filter.value?.let {
+        viewModel.getEquips(it)
+    }
 
     //关闭时监听
     if (!state.isVisible) {
@@ -64,7 +67,7 @@ fun EquipList(
     ModalBottomSheetLayout(
         sheetState = state,
         sheetContent = {
-            FilterEquipSheet(navViewModel, coroutineScope, filter, state)
+            FilterEquipSheet(navViewModel, coroutineScope, state)
         }
     ) {
         val marginTop: Dp = marginTopBar(scrollState)
@@ -146,14 +149,13 @@ fun EquipList(
 private fun FilterEquipSheet(
     navViewModel: NavViewModel,
     coroutineScope: CoroutineScope,
-    filter: MutableState<FilterEquipment>,
-    sheetState: ModalBottomSheetState
+    sheetState: ModalBottomSheetState,
+    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
 ) {
     val textState = remember { mutableStateOf(TextFieldValue()) }
     val newFilter = FilterEquipment()
     newFilter.name = textState.value.text
     //公会
-    val equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
     equipmentViewModel.getTypes()
     val typeList = equipmentViewModel.equipTypes.observeAsState().value ?: arrayListOf()
     val typeIndex = remember {
@@ -175,6 +177,7 @@ private fun FilterEquipSheet(
         modifier = Modifier
             .clip(CardTopShape)
             .fillMaxWidth()
+            .padding(Dimen.mediuPadding)
             .verticalScroll(rememberScrollState())
     ) {
         if (ok) {
@@ -183,7 +186,7 @@ private fun FilterEquipSheet(
             }
             navViewModel.fabOK.postValue(false)
             navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
-            filter.value = newFilter
+            equipmentViewModel.filter.postValue(newFilter)
         }
         //装备名搜索
         OutlinedTextField(

@@ -21,6 +21,8 @@ object Constants {
     //接口正式地址
     const val API_URL = "https://wthee.xyz:8848/api/"
 
+    const val JETPACK_COMPOSE_LOGO = RESOURCE_URL + "jetpack_compose.png"
+
     //日服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_JP = "redive_jp.db.br"
     const val DATABASE_VERSION_URL_JP = "last_version_jp.json"
@@ -33,7 +35,6 @@ object Constants {
         BuildConfig.VERSION_CODE.toString() + DATABASE_DOWNLOAD_FILE_NAME_JP
     const val DATABASE_BACKUP_NAME_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_NAME_JP
     const val DATABASE_WAL_JP_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_JP
-    const val DATABASE_SHM_JP_BACKUP = BuildConfig.VERSION_CODE.toString() + DATABASE_SHM_JP
 
 
     //国服数据库
@@ -89,9 +90,6 @@ object Constants {
     const val NOTICE_TITLE = "正在下载数据"
     const val NOTICE_TOAST_SUCCESS = "数据更新完成！"
     const val NOTICE_TOAST_CHANGE_SUCCESS = "数据切换完成！"
-    const val NOTICE_TOAST_CHANGE = "数据切换中..."
-    const val NOTICE_TOAST_CHECKING = "正在获取信息"
-    const val NOTICE_TOAST_NETWORK_ERROR = "网络异常..."
     const val RANK_UPPER = "RANK"
 
     //常量值

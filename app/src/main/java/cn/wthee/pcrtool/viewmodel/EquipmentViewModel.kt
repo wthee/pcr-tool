@@ -27,9 +27,6 @@ class EquipmentViewModel @Inject constructor(
 
     var equip = MutableLiveData<EquipmentMaxData>()
     var equips = MutableLiveData<List<EquipmentMaxData>>()
-    var updateEquip = MutableLiveData<Boolean>()
-    var reset = MutableLiveData<Boolean>()
-    var equipmentCounts = MutableLiveData<Int>()
     var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData?>()
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
     var rankEquipMaterials = MutableLiveData<List<EquipmentMaterial>>()
@@ -38,6 +35,7 @@ class EquipmentViewModel @Inject constructor(
     var selectId = MutableLiveData<Int>()
     var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
     var equipTypes = MutableLiveData<List<String>>()
+    var filter = MutableLiveData<FilterEquipment>()
 
     //当前选中的装备素材
     var equipMaterial = MutableLiveData<EquipmentMaterial>()

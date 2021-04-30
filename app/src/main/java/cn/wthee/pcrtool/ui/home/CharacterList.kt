@@ -8,8 +8,11 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,9 +52,7 @@ fun CharacterList(
 ) {
     val list = viewModel.characterList.observeAsState()
     //筛选状态
-    val filter = remember {
-        mutableStateOf(FilterCharacter())
-    }
+    val filter = viewModel.filter.observeAsState()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -60,7 +61,9 @@ fun CharacterList(
     //滚动监听
     val scrollState = rememberLazyListState()
 
-    viewModel.getCharacters(filter.value)
+    filter.value?.let {
+        viewModel.getCharacters(it)
+    }
 
     //关闭时监听
     if (!state.isVisible) {
@@ -71,7 +74,7 @@ fun CharacterList(
     ModalBottomSheetLayout(
         sheetState = state,
         sheetContent = {
-            FilterCharacterSheet(navViewModel, coroutineScope, filter, state)
+            FilterCharacterSheet(navViewModel, coroutineScope, state)
         }
     ) {
         val marginTop: Dp = marginTopBar(scrollState)
@@ -185,8 +188,8 @@ private fun CharacterNumberText(text: String) {
 private fun FilterCharacterSheet(
     navViewModel: NavViewModel,
     coroutineScope: CoroutineScope,
-    filter: MutableState<FilterCharacter>,
-    sheetState: ModalBottomSheetState
+    sheetState: ModalBottomSheetState,
+    characterViewModel: CharacterViewModel = hiltNavGraphViewModel()
 ) {
     val textState = remember { mutableStateOf(TextFieldValue()) }
     val newFilter = FilterCharacter()
@@ -247,7 +250,7 @@ private fun FilterCharacterSheet(
             }
             navViewModel.fabOK.postValue(false)
             navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
-            filter.value = newFilter
+            characterViewModel.filter.postValue(newFilter)
         }
 //        Row(
 //            horizontalArrangement = Arrangement.SpaceBetween,

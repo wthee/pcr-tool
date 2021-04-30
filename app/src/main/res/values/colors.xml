@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#5690EF</color>
-    <color name="colorAccent">#5690EF</color>
+    <color name="colorAccent">#91BEF0</color>
     <color name="colorPrimaryDark">#5F92E6</color>
-    <color name="colorAccentDark">#5F92E6</color>
+    <color name="colorAccentDark">#6E92BB</color>
     <color name="black">#FF000000</color>
     <color name="alpha">#00000000</color>
     <color name="alpha_black">#80000000</color>

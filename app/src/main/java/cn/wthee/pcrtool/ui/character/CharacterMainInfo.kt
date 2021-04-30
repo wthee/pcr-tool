@@ -76,16 +76,9 @@ fun CharacterMainInfo(
     val sliderLevel = remember {
         mutableStateOf(0)
     }
-    if (sliderLevel.value != 0) {
-        attrViewModel.levelValue.postValue(sliderLevel.value)
-    }
     val sliderUniqueEquipLevel = remember {
         mutableStateOf(0)
     }
-    if (sliderUniqueEquipLevel.value != 0) {
-        attrViewModel.uniqueEquipLevelValue.postValue(sliderUniqueEquipLevel.value)
-    }
-
     if (selectRank != 0) {
         attrViewModel.rankValue.postValue(selectRank)
     }
@@ -136,6 +129,8 @@ fun CharacterMainInfo(
                 rankMax.value = maxData[1]
                 rarityMax.value = maxData[2]
                 uniqueEquipLevelMax.value = maxData[3]
+                sliderLevel.value = maxData[0]
+                sliderUniqueEquipLevel.value = maxData[3]
             }
             if (maxData.isNotEmpty() && valueNotInit) {
                 attrViewModel.levelValue.postValue(maxData[0])
@@ -199,15 +194,19 @@ fun CharacterMainInfo(
                         ) {
                             //等级
                             Text(
-                                text = level.value.toString(),
+                                text = sliderLevel.value.toString(),
                                 color = MaterialTheme.colors.primary,
                                 style = MaterialTheme.typography.h6,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
-                            //fixme 滑动闪动问题
                             Slider(
-                                value = level.value!!.toFloat(),
+                                value = sliderLevel.value.toFloat(),
                                 onValueChange = { sliderLevel.value = it.toInt() },
+                                onValueChangeFinished = {
+                                    if (sliderLevel.value != 0) {
+                                        attrViewModel.levelValue.postValue(sliderLevel.value)
+                                    }
+                                },
                                 valueRange = 1f..levelMax.value.toFloat(),
                                 modifier = Modifier
                                     .fillMaxWidth(0.618f)
@@ -437,6 +436,7 @@ private fun UniqueEquip(
     uniqueEquipLevel: Int,
     silderState: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
+    attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel()
 ) {
     uniqueEquipmentMaxData?.let {
         Column(
@@ -461,7 +461,7 @@ private fun UniqueEquip(
                         modifier = Modifier.size(Dimen.iconSize)
                     )
                     Text(
-                        text = uniqueEquipLevel.toString(),
+                        text = silderState.value.toString(),
                         color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.subtitle1,
@@ -476,8 +476,13 @@ private fun UniqueEquip(
             }
             //等级选择
             Slider(
-                value = uniqueEquipLevel.toFloat(),
+                value = silderState.value.toFloat(),
                 onValueChange = { silderState.value = it.toInt() },
+                onValueChangeFinished = {
+                    if (silderState.value != 0) {
+                        attrViewModel.uniqueEquipLevelValue.postValue(silderState.value)
+                    }
+                },
                 valueRange = 1f..uniqueEquipLevelMax.toFloat(),
                 modifier = Modifier
                     .fillMaxWidth(0.618f)
@@ -495,7 +500,7 @@ private fun UniqueEquip(
  * 星级选择
  */
 @Composable
-fun StarSelect(
+private fun StarSelect(
     max: Int,
     rarity: Int,
     modifier: Modifier = Modifier,

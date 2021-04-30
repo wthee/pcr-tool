@@ -16,7 +16,7 @@ private val DarkColorPalette = darkColors(
     onPrimary = Color.White,
     onSecondary = Color.Black,
     onBackground = Color.White,
-    onSurface = Color.Black,
+    onSurface = Color.White,
 )
 
 private val LightColorPalette = lightColors(
@@ -29,8 +29,7 @@ private val LightColorPalette = lightColors(
     onSecondary = Color.Black,
     onBackground = Color.Black,
     onSurface = Color.Black,
-
-    )
+)
 
 @Composable
 fun PcrtoolcomposeTheme(

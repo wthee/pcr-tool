@@ -35,7 +35,7 @@ class CharacterViewModel @Inject constructor(
     var updateCharacter = MutableLiveData<Boolean>()
     var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
     var guilds = MutableLiveData<List<GuildData>>()
-    var filter = MutableLiveData<FilterCharacter>()
+    var filter = MutableLiveData(FilterCharacter())
 
     /**
      * 角色基本资料 [CharacterInfo]
