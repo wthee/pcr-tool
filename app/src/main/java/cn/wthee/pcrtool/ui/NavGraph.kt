@@ -35,6 +35,7 @@ object Navigation {
     const val EQUIP_DETAIL = "equipDetail"
     const val RANK_EQUIP = "rankEquip"
     const val RANK_COMPARE = "rankCompare"
+    const val PICS = "pictures"
     const val MAX_RANK = "maxRank"
     const val LEVEL = "level"
     const val RARITY = "rarity"
@@ -65,7 +66,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //角色属性详情
         composable(
-            "${Navigation.CHARACTER_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.UNIT_SIX_ID}}",
+            "${Navigation.CHARACTER_DETAIL}/{${Navigation.UNIT_ID}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }, navArgument(Navigation.UNIT_SIX_ID) {
@@ -74,14 +75,14 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(R.drawable.ic_back)
-            CharacterMainInfo(
+            CharacterDetail(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                r6Id = arguments.getInt(Navigation.UNIT_SIX_ID),
                 actions.toEquipDetail,
                 actions.toCharacterBasicInfo,
                 actions.toCharacteRankEquip,
                 actions.toCharacteRankCompare,
                 actions.toCharacteEquipCount,
+                actions.toCharacterPic,
                 viewModel
             )
         }
@@ -95,6 +96,19 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             CharacterBasicInfo(
+                unitId = arguments.getInt(Navigation.UNIT_ID)
+            )
+        }
+
+        //角色图片
+        composable(
+            "${Navigation.PICS}/{${Navigation.UNIT_ID}}",
+            arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            CharacterAllPicture(
                 unitId = arguments.getInt(Navigation.UNIT_ID)
             )
         }
@@ -201,8 +215,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 角色详情
      */
-    val toCharacterDetail: (Int, Int) -> Unit = { unitId: Int, r6Id: Int ->
-        navController.navigate("${Navigation.CHARACTER_DETAIL}/${unitId}/${r6Id}")
+    val toCharacterDetail: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${Navigation.CHARACTER_DETAIL}/${unitId}")
     }
 
     /**
@@ -224,6 +238,13 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacterBasicInfo: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${Navigation.CHARACTER_BASIC_INFO}/${unitId}")
+    }
+
+    /**
+     * 角色图片
+     */
+    val toCharacterPic: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${Navigation.PICS}/${unitId}")
     }
 
     /**
@@ -310,5 +331,10 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 加载中
      */
     val loading = MutableLiveData(false)
+
+    /**
+     * 已六星的角色ID
+     */
+    val r6Ids = MutableLiveData(listOf<Int>())
 
 }

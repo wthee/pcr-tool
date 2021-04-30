@@ -126,10 +126,6 @@ dependencies {
     val palette_version = "1.0.0"
     implementation("androidx.palette:palette-ktx:$palette_version")
 
-    //PermissionX
-    val permissionx_version = "1.4.0"
-    implementation("com.permissionx.guolindev:permissionx:$permissionx_version")
-
     //Paging3
     implementation("androidx.paging:paging-compose:1.0.0-alpha08")
 

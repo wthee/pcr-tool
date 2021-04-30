@@ -28,7 +28,7 @@ import com.google.accompanist.imageloading.ImageLoadState
 fun CharacterCard(
     url: String,
     clip: Boolean = false,
-    scrollState: ScrollState? = null
+    scrollState: ScrollState? = null,
 ) {
     val modifier = CharacterCardImageModifier
     if (scrollState != null) {

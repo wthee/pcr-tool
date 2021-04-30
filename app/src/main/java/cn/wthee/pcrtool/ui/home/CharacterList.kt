@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.view.CharacterInfo
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
@@ -47,7 +48,7 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @Composable
 fun CharacterList(
-    toDetail: (Int, Int) -> Unit,
+    toDetail: (Int) -> Unit,
     navViewModel: NavViewModel,
     viewModel: CharacterViewModel = hiltNavGraphViewModel(),
 ) {
@@ -79,6 +80,10 @@ fun CharacterList(
         }
     ) {
         val marginTop: Dp = marginTopBar(scrollState)
+        coroutineScope.launch {
+            val r6Ids = viewModel.getR6Ids()
+            navViewModel.r6Ids.postValue(r6Ids)
+        }
         Box(modifier = Modifier.fillMaxSize()) {
             TopBarCompose(scrollState = scrollState)
             LazyVerticalGrid(
@@ -123,7 +128,7 @@ fun CharacterList(
 @Composable
 private fun CharacterItem(
     character: CharacterInfo,
-    toDetail: (Int, Int) -> Unit,
+    toDetail: (Int) -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -131,14 +136,14 @@ private fun CharacterItem(
             .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
             .clickable {
                 //跳转至详情
-                toDetail(character.id, character.r6Id)
+                toDetail(character.id)
             }) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
             //图片
             var id = character.id
-            id += if (character.r6Id != 0) 60 else 30
+            id += if (MainActivity.r6Ids.contains(character.id)) 60 else 30
             CharacterCard(Constants.CHARACTER_FULL_URL + id + Constants.WEBP, true)
             //名字、位置
             Row(

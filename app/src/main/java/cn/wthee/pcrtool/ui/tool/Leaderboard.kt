@@ -115,7 +115,7 @@ fun LeaderboardItem(info: LeaderboardData) {
                 clip = true
             )
             .clickable {
-                //fixme 打开浏览器
+                //打开浏览器
                 BrowserUtil.OpenWebView(context, info.url, title)
             }) {
             Column(modifier = Modifier.padding(Dimen.smallPadding)) {

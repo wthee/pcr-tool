@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.utils.Constants
  * 角色图标列表
  */
 @Composable
-fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int, Int) -> Unit) {
+fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
     Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
         icons.forEach {
             val unitId: Int
@@ -33,8 +33,7 @@ fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int, Int) -> Unit) {
                 modifier = Modifier
                     .padding(Dimen.smallPadding)
                     .clickable {
-                        //fixme r6Id
-                        toCharacterDetail(unitId, 0)
+                        toCharacterDetail(unitId)
                     })
         }
     }

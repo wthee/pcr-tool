@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun EventList(
-    toCharacterDetail: (Int, Int) -> Unit,
+    toCharacterDetail: (Int) -> Unit,
     eventViewModel: EventViewModel = hiltNavGraphViewModel()
 ) {
     eventViewModel.getEventHistory()
@@ -71,7 +71,7 @@ fun EventList(
  * 剧情活动
  */
 @Composable
-private fun EventItem(event: EventData, toCharacterDetail: (Int, Int) -> Unit) {
+private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     var title = ""
     var type = ""
     var typeColor = R.color.colorPrimary

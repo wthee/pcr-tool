@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.compose.DownloadCompose
 import cn.wthee.pcrtool.ui.compose.MenuContent
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var handler: Handler
         lateinit var navViewModel: NavViewModel
+        var r6Ids = listOf<Int>()
     }
 
     @ExperimentalAnimationApi
@@ -121,7 +123,10 @@ fun Home() {
     navViewModel = hiltNavGraphViewModel()
     val scope = rememberCoroutineScope()
     val loading = navViewModel.loading.observeAsState().value ?: false
-
+    val r6IdList = navViewModel.r6Ids.observeAsState()
+    if (r6IdList.value != null) {
+        r6Ids = r6IdList.value!!
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()

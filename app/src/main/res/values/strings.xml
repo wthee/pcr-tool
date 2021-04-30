@@ -180,6 +180,7 @@
     <string name="db_downloading">下载中 </string>
     <string name="db_downloaded">数据已更新</string>
     <string name="press_back_top">长按回到顶部</string>
+    <string name="wait_pic_load">请等待图片加载完成</string>
 
 
 </resources>

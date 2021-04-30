@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.data.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.view.all
 import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
@@ -39,14 +40,14 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
 @Composable
-fun CharacterMainInfo(
+fun CharacterDetail(
     unitId: Int,
-    r6Id: Int,
     toEquipDetail: (Int) -> Unit,
     toCharacterBasicInfo: (Int) -> Unit,
     toRankEquip: (Int) -> Unit,
     toRankCompare: (Int, Int, Int, Int, Int) -> Unit,
     toEquipCount: (Int, Int) -> Unit,
+    toPics: (Int) -> Unit,
     navViewModel: NavViewModel,
     attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
 ) {
@@ -92,7 +93,7 @@ fun CharacterMainInfo(
 
     val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 10
     var id = unitId
-    id += if (r6Id != 0) 60 else 30
+    id += if (MainActivity.r6Ids.contains(unitId)) 60 else 30
 
     val scrollState = rememberScrollState()
     val marginTop = when {
@@ -165,7 +166,8 @@ fun CharacterMainInfo(
             ) {
                 if (levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()) {
                     Box(modifier = Modifier.clickable {
-                        //TODO 跳转角色图片列表
+                        //跳转角色图片列表
+                        toPics(unitId)
                     }) {
                         //图片
                         CharacterCard(
@@ -240,7 +242,6 @@ fun CharacterMainInfo(
                             if (allData.value!!.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                                 UniqueEquip(
                                     uniqueEquipLevelMax.value,
-                                    uniqueEquipLevel.value!!,
                                     sliderUniqueEquipLevel,
                                     allData.value!!.uniqueEquip
                                 )
@@ -447,7 +448,6 @@ private fun CharacterEquip(
 @Composable
 private fun UniqueEquip(
     uniqueEquipLevelMax: Int,
-    uniqueEquipLevel: Int,
     silderState: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
     attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel()

@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun GachaList(
-    toCharacterDetail: (Int, Int) -> Unit,
+    toCharacterDetail: (Int) -> Unit,
     gachaViewModel: GachaViewModel = hiltNavGraphViewModel()
 ) {
     gachaViewModel.getGachaHistory()
@@ -69,7 +69,7 @@ fun GachaList(
  * 单个卡池
  */
 @Composable
-private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int, Int) -> Unit) {
+private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
