@@ -20,6 +20,8 @@
     <color name="color_rank_18">#DE0703</color>
 
     <color name="cool_apk">#4caf50</color>
+    <color name="news_system">#a067c5</color>
+    <color name="news_update">#f55291</color>
 
     <!--地区-->
     <color name="color_map_n">@color/colorPrimary</color>

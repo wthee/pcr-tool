@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,7 +27,6 @@ import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.circleShape
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import com.google.accompanist.coil.rememberCoilPainter
@@ -127,7 +128,7 @@ fun RankCompare(
                 AttrCompare(attrCompareData)
             }
             ExtendedFabCompose(
-                iconId = R.drawable.ic_select,
+                icon = painterResource(id = R.drawable.ic_select),
                 text = stringResource(id = R.string.rank_select),
                 textWidth = Dimen.getWordWidth(4.5f),
                 modifier = Modifier
@@ -210,7 +211,7 @@ private fun StarCompose(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding, bottom = Dimen.smallPadding)
-                    .clip(circleShape)
+                    .clip(CircleShape)
                     .size(Dimen.starIconSize)
             )
         }

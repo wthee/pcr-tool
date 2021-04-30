@@ -28,16 +28,16 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
-    val pageLevel = viewModel.pageLevel.observeAsState().value ?: 0
+    val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: 0
     val coroutineScope = rememberCoroutineScope()
-    if (pageLevel == -1) {
+    if (fabMainIcon == R.drawable.ic_down) {
         Column(
             verticalArrangement = Arrangement.Bottom,
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorResource(id = R.color.alpha_black))
                 .clickable {
-                    viewModel.pageLevel.postValue(0)
+                    viewModel.fabMainIcon.postValue(R.drawable.ic_function)
                 }
         ) {
             Row {
@@ -49,6 +49,24 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         .height(Dimen.smallMenuHeight)
                 ) {
                     actions.toLeaderboard()
+                }
+                MenuItem(
+                    text = stringResource(id = R.string.tool_gacha),
+                    iconId = R.drawable.ic_gacha,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .height(Dimen.smallMenuHeight)
+                ) {
+                    actions.toGacha()
+                }
+                MenuItem(
+                    text = stringResource(id = R.string.tool_event),
+                    iconId = R.drawable.ic_event,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .height(Dimen.smallMenuHeight)
+                ) {
+                    actions.toEventStory()
                 }
             }
 
@@ -105,7 +123,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     },
                     onClick = {
                         coroutineScope.launch {
-                            viewModel.pageLevel.postValue(0)
+                            viewModel.fabMainIcon.postValue(R.drawable.ic_function)
                             DatabaseUpdater(viewModel).changeType()
                         }
                     }

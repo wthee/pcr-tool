@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +15,6 @@ import androidx.compose.ui.res.colorResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.circleShape
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -53,8 +53,8 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
     Box(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
-            .clip(circleShape)
-            .background(backgroundColor, circleShape)
+            .clip(CircleShape)
+            .background(backgroundColor, CircleShape)
             .clickable {
                 selectIndex.value = index
             }

@@ -34,7 +34,7 @@ fun String.days(str2: String): String {
     return try {
         val d1 = df.parse(this)!!
         val d2 = df.parse(str2)!!
-        String.format("%02d", (d1.time - d2.time) / (60 * 60 * 1000 * 24))
+        String.format("%02d", (d1.time - d2.time) / (60 * 60 * 1000 * 24)) + " 天"
     } catch (e: Exception) {
         "00"
     }

@@ -17,6 +17,8 @@ import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
+import cn.wthee.pcrtool.ui.tool.EventList
+import cn.wthee.pcrtool.ui.tool.GachaList
 import cn.wthee.pcrtool.ui.tool.LeaderboardList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,12 +36,15 @@ object Navigation {
     const val RANK_EQUIP = "rankEquip"
     const val RANK_COMPARE = "rankCompare"
     const val MAX_RANK = "maxRank"
-    const val SELECT_DATA = "selectData"
-    const val TOOL_LEADER = "tool_leader"
     const val LEVEL = "level"
     const val RARITY = "rarity"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     const val EQUIP_COUNT = "equipCount"
+
+    //工具
+    const val TOOL_LEADER = "toolLeader"
+    const val TOOL_GACHA = "toolGacha"
+    const val TOOL_EVENT = "toolEvent"
 }
 
 @ExperimentalAnimationApi
@@ -68,7 +73,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            viewModel.pageLevel.postValue(1)
             viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             CharacterMainInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
@@ -90,8 +94,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             CharacterBasicInfo(
                 unitId = arguments.getInt(Navigation.UNIT_ID)
             )
@@ -99,8 +101,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //装备列表
         composable(Navigation.EQUIP_LIST) {
-            viewModel.pageLevel.postValue(1)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
         }
 
@@ -112,8 +112,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
         }
 
@@ -125,8 +123,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             RankEquipList(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 toEquipDetail = actions.toEquipDetail,
@@ -150,8 +146,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             RankCompare(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 maxRank = arguments.getInt(Navigation.MAX_RANK),
@@ -172,8 +166,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            viewModel.pageLevel.postValue(2)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             RankEquipCount(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 maxRank = arguments.getInt(Navigation.MAX_RANK),
@@ -184,9 +176,20 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //角色排行
         composable(Navigation.TOOL_LEADER) {
-            viewModel.pageLevel.postValue(1)
             viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             LeaderboardList()
+        }
+
+        //角色排行
+        composable(Navigation.TOOL_GACHA) {
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            GachaList(actions.toCharacterDetail)
+        }
+
+        //剧情活动
+        composable(Navigation.TOOL_EVENT) {
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            EventList(actions.toCharacterDetail)
         }
     }
 }
@@ -251,16 +254,28 @@ class NavActions(navController: NavHostController) {
      * 角色排行
      */
     val toLeaderboard = {
-        navController.navigate("${Navigation.TOOL_LEADER}")
+        navController.navigate(Navigation.TOOL_LEADER)
     }
+
+    /**
+     * 角色卡池
+     */
+    val toGacha = {
+        navController.navigate(Navigation.TOOL_GACHA)
+    }
+
+    /**
+     * 剧情活动
+     */
+    val toEventStory = {
+        navController.navigate(Navigation.TOOL_EVENT)
+    }
+
 }
 
 @HiltViewModel
 class NavViewModel @Inject constructor() : ViewModel() {
-    /**
-     * 页面等级
-     */
-    val pageLevel = MutableLiveData(0)
+
 
     /**
      * fab 图标显示
@@ -291,15 +306,9 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val downloadProgress = MutableLiveData(-2)
 
-    fun goback(navController: NavHostController?) {
-        val currentPageLevel = pageLevel.value ?: 0
-        if (currentPageLevel > 0) {
-            pageLevel.postValue(currentPageLevel - 1)
-            navController?.navigateUp()
-        } else {
-            //打开或关闭菜单
-            val menuState = if (currentPageLevel == 0) -1 else 0
-            pageLevel.postValue(menuState)
-        }
-    }
+    /**
+     * 加载中
+     */
+    val loading = MutableLiveData(false)
+
 }

@@ -72,14 +72,17 @@ class MainActivity : ComponentActivity() {
     //返回拦截
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            val pageLevel = navViewModel.pageLevel.value ?: 0
-            if (pageLevel == 0) {
-                return super.onKeyDown(keyCode, event)
-            } else if (pageLevel == -1) {
-                navViewModel.goback(null)
-                return true
-            } else {
-                navViewModel.goback(null)
+            when (navViewModel.fabMainIcon.value ?: 0) {
+                R.drawable.ic_function -> {
+                    return super.onKeyDown(keyCode, event)
+                }
+                R.drawable.ic_down -> {
+                    navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+                    return true
+                }
+                else -> {
+                    navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                }
             }
         }
         return super.onKeyDown(keyCode, event)
@@ -117,6 +120,7 @@ fun Home() {
     val actions = remember(navController) { NavActions(navController) }
     navViewModel = hiltNavGraphViewModel()
     val scope = rememberCoroutineScope()
+    val loading = navViewModel.loading.observeAsState().value ?: false
 
     Box(
         modifier = Modifier
@@ -138,12 +142,18 @@ fun Home() {
                     .padding(Dimen.fabMargin)
             )
         }
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(Dimen.topBarIconSize)
+                    .align(Alignment.Center)
+            )
+        }
     }
 }
 
 @Composable
 fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier: Modifier) {
-    val pageLevel = viewModel.pageLevel.observeAsState()
     val iconId = viewModel.fabMainIcon.observeAsState().value ?: R.drawable.ic_function
 
     FloatingActionButton(
@@ -151,7 +161,11 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
             when (iconId) {
                 R.drawable.ic_ok -> viewModel.fabOK.postValue(true)
                 R.drawable.ic_cancel -> viewModel.fabClose.postValue(true)
-                else -> viewModel.goback(navController)
+                R.drawable.ic_function -> {
+                    viewModel.fabMainIcon.postValue(R.drawable.ic_down)
+                }
+                R.drawable.ic_down -> viewModel.fabMainIcon.postValue(R.drawable.ic_function)
+                else -> navController.navigateUp()
             }
         },
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
@@ -160,13 +174,7 @@ fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier:
         modifier = modifier
             .size(Dimen.fabSize),
     ) {
-        val icon =
-            painterResource(
-                id = if (pageLevel.value == null || pageLevel.value!! == -1)
-                    R.drawable.ic_back
-                else
-                    iconId
-            )
+        val icon = painterResource(iconId)
         Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
     }
 }

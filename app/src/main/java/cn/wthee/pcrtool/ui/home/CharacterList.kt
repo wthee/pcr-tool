@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
@@ -98,7 +99,7 @@ fun CharacterList(
                 modifier = Modifier
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                     .align(Alignment.BottomEnd),
-                iconId = R.drawable.ic_character,
+                icon = painterResource(id = R.drawable.ic_character),
                 text = "$count"
             ) {
                 coroutineScope.launch {

@@ -25,13 +25,18 @@ import cn.wthee.pcrtool.utils.getRankColor
  * 蓝底白字
  */
 @Composable
-fun MainTitleText(text: String, small: Boolean = false, modifier: Modifier = Modifier) {
+fun MainTitleText(
+    text: String,
+    small: Boolean = false,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colors.primary
+) {
     Text(
         text = text,
         color = MaterialTheme.colors.onPrimary,
         style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
-            .background(color = MaterialTheme.colors.primary, shape = Shapes.small)
+            .background(color = backgroundColor, shape = Shapes.small)
             .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
     )
 }
@@ -49,7 +54,7 @@ fun MainContentText(
         text = text,
         color = MaterialTheme.colors.onBackground,
         textAlign = textAlign,
-        style = MaterialTheme.typography.body2,
+        style = MaterialTheme.typography.body1,
         modifier = modifier
     )
 }

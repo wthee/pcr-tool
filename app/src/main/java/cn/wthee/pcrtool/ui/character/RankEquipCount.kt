@@ -15,8 +15,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.EquipmentMaterial
@@ -79,10 +79,12 @@ fun RankEquipCount(
                 .fillMaxSize()
                 .padding(top = Dimen.largePadding)
         ) {
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(top = Dimen.largePadding)
             ) {
+                //标题
                 Row(
                     horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier
@@ -106,12 +108,8 @@ fun RankEquipCount(
                 for (i in 0 until spanCount) {
                     placeholder.add(EquipmentMaterial())
                 }
-                if (rankEquipMaterials.value == null) {
-                    CircularProgressIndicator(
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(Dimen.fabIconSize)
-                    )
-                } else {
+                if (rankEquipMaterials.value != null) {
+                    navViewModel.loading.postValue(false)
                     LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
                         //额外添加一行占位，防止遮挡
                         val list = arrayListOf<EquipmentMaterial>()
@@ -137,9 +135,13 @@ fun RankEquipCount(
                     }
                 }
             }
+
+            if (rankEquipMaterials.value == null) {
+                navViewModel.loading.postValue(true)
+            }
             //选择
             ExtendedFabCompose(
-                iconId = R.drawable.ic_select,
+                icon = painterResource(id = R.drawable.ic_select),
                 text = stringResource(id = R.string.rank_select),
                 textWidth = Dimen.getWordWidth(4.5f),
                 modifier = Modifier

@@ -1,110 +1,100 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
 import cn.wthee.pcrtool.ui.compose.IconCompose
+import cn.wthee.pcrtool.ui.compose.MainText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
-import cn.wthee.pcrtool.ui.compose.TopBarCompose
-import cn.wthee.pcrtool.ui.compose.marginTopBar
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) {
     leaderViewModel.getLeader()
     val list = leaderViewModel.leaderData.observeAsState()
-    //滚动监听
-    val scrollState = rememberLazyListState()
+    val state = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
-    Surface {
-        val marginTop: Dp = marginTopBar(scrollState)
-        Box(modifier = Modifier.fillMaxSize()) {
-            TopBarCompose(
-                titleId = R.string.tool_leader,
-                iconId = R.drawable.ic_leader,
-                scrollState = scrollState
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
+            navViewModel.loading.postValue(true)
+        } else if (list.value!!.message != "success") {
+            navViewModel.loading.postValue(false)
+            MainText(
+                text = stringResource(id = R.string.data_get_error),
+                modifier = Modifier.align(Alignment.Center)
             )
-            LazyColumn(
-                state = scrollState,
-                modifier = Modifier
-                    .padding(top = marginTop)
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colors.background, shape = CardTopShape)
-            ) {
-                if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(Dimen.mediuPadding)
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .size(Dimen.topBarIconSize)
-                                    .align(Alignment.Center)
-                            )
-                        }
-
-                    }
-                } else if (list.value!!.message != "success") {
-                    item {
-                        MainTitleText(text = stringResource(id = R.string.data_get_error))
-                    }
-                } else {
-                    val info = list.value!!.data!!.leader
-                    item {
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            modifier = Modifier.padding(Dimen.mediuPadding)
-                        ) {
-                            Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediuPadding))
-                            Spacer(modifier = Modifier.weight(0.25f))
-                            Text(
-                                text = stringResource(id = R.string.jjc),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.weight(0.25f)
-                            )
-                            Text(
-                                text = stringResource(id = R.string.clan),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.weight(0.25f)
-                            )
-                            Text(
-                                text = stringResource(id = R.string.tower),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.weight(0.25f)
-                            )
-                        }
-                    }
-                    items(info) { it ->
-                        LeaderboardItem(it)
+        } else {
+            navViewModel.loading.postValue(false)
+            val info = list.value!!.data!!.leader
+            LazyColumn(state = state) {
+                item {
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.padding(Dimen.mediuPadding)
+                    ) {
+                        Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediuPadding))
+                        Spacer(modifier = Modifier.weight(0.25f))
+                        Text(
+                            text = stringResource(id = R.string.jjc),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.weight(0.25f)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.clan),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.weight(0.25f)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.tower),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.weight(0.25f)
+                        )
                     }
                 }
+                items(info) { it ->
+                    LeaderboardItem(it)
+                }
+            }
+
+        }
+        //回到顶部
+        ExtendedFabCompose(
+            icon = painterResource(id = R.drawable.ic_leader),
+            text = stringResource(id = R.string.tool_leader),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            coroutineScope.launch {
+                state.scrollToItem(0)
             }
         }
     }
-
 }
 
 /**

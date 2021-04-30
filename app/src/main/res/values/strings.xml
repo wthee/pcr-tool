@@ -112,7 +112,7 @@
     <string name="pvp_float">悬浮窗</string>
     <string name="pvp_no_data">未查询到进攻队伍信息~</string>
     <string name="tool_gacha">卡池</string>
-    <string name="tool_event">活动</string>
+    <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
     <string name="test">testtesttestesttesttestesttestttesttesttestesttesttestesttesttestesttesttestesttesttestesttesttesestesttesttestesttesttestesttesttes</string>
     <string name="test_short">test</string>
@@ -179,5 +179,7 @@
     <string name="db_checking">数据校验中</string>
     <string name="db_downloading">下载中 </string>
     <string name="db_downloaded">数据已更新</string>
+    <string name="press_back_top">长按回到顶部</string>
+
 
 </resources>

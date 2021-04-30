@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -9,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,7 +26,6 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.circleShape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import com.google.accompanist.coil.rememberCoilPainter
@@ -291,7 +292,7 @@ fun CharacterMainInfo(
                 }
                 //跳转至角色资料
                 ExtendedFabCompose(
-                    iconId = R.drawable.ic_drop,
+                    icon = painterResource(id = R.drawable.ic_drop),
                     text = stringResource(id = R.string.character_basic_Info)
                 ) {
                     toCharacterBasicInfo(unitId)
@@ -531,7 +532,7 @@ private fun StarSelect(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(start = Dimen.smallPadding, bottom = Dimen.smallPadding)
-                    .clip(circleShape)
+                    .clip(CircleShape)
                     .size(Dimen.starIconSize)
                     .clickable {
                         attrViewModel.rarityValue.postValue(i)

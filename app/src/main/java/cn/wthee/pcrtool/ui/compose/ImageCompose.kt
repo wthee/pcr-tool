@@ -14,6 +14,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.CharacterCardImageModifier
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
 import com.google.accompanist.coil.rememberCoilPainter
@@ -87,7 +88,10 @@ fun IconCompose(data: Any, modifier: Modifier = Modifier, size: Dp = Dimen.iconS
                 else -> rememberCoilPainter(request = R.drawable.unknown_gray)
             },
             contentDescription = null,
-            modifier = modifier.size(size)
+            modifier = modifier
+                .size(size)
+                .clip(Shapes.small)
+
         )
     }
 }
