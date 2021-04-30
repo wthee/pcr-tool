@@ -78,7 +78,7 @@ fun EquipList(
                 scrollState = scrollState
             )
             LazyVerticalGrid(
-                cells = GridCells.Fixed(4),
+                cells = GridCells.Fixed(5),
                 state = scrollState,
                 modifier = Modifier
                     .padding(top = marginTop)

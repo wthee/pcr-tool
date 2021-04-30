@@ -88,9 +88,9 @@ object Dimen {
 
 
     /**
-     * 46dp
+     * 52dp
      */
-    val sheetMarginBottom = 46.dp
+    val sheetMarginBottom = 52.dp
 
 
     /**
@@ -136,7 +136,7 @@ object Dimen {
     /**
      * 根据文字大小显示
      */
-    fun getWordWidth(length: Int): Dp {
+    fun getWordWidth(length: Float): Dp {
         return (15 * length).sp2dp
     }
 }
@@ -145,7 +145,7 @@ object Dimen {
 /**
  * sp to dp
  */
-val Int.sp2dp: Dp
+val Float.sp2dp: Dp
     get() {
         val scale: Float = MyApplication.context.resources.displayMetrics.density
         val px = this.sp.value * scale

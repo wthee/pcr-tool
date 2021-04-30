@@ -35,10 +35,7 @@ class EquipmentViewModel @Inject constructor(
     var selectId = MutableLiveData<Int>()
     var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
     var equipTypes = MutableLiveData<List<String>>()
-    var filter = MutableLiveData<FilterEquipment>()
-
-    //当前选中的装备素材
-    var equipMaterial = MutableLiveData<EquipmentMaterial>()
+    var filter = MutableLiveData(FilterEquipment())
 
     /**
      * 获取装备列表

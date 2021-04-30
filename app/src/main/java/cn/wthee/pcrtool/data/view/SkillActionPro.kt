@@ -302,7 +302,7 @@ data class SkillActionPro(
                     "BREAK 期间，"
                 } else {
                     ""
-                } + "${getTarget()}${aura} $value ${time}"
+                } + "${getTarget()}${aura} $value $time"
 
             }
             SkillActionType.CHARM -> {
@@ -576,16 +576,20 @@ data class SkillActionPro(
 
                 val additive = when (action_value_1.toInt()) {
                     2 -> {
-                        val expr = if (action_detail_3 == 0) {
-                            "[${action_value_2}]"
-                        } else if (action_detail_2 == 0) {
-                            "[${action_value_3}]"
-                        } else {
-                            "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                        val expr = when {
+                            action_detail_3 == 0 -> {
+                                "[${action_value_2}]"
+                            }
+                            action_detail_2 == 0 -> {
+                                "[${action_value_3}]"
+                            }
+                            else -> {
+                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                            }
                         }
                         "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
                     }
-                    0 -> "$commonDesc * [HP]"
+                    0 -> "$commonDesc * [剩余的HP]"
                     1 -> "$commonDesc * [损失的HP]"
                     4 -> "$commonDesc * [目标的数量]"
                     5 -> "$commonDesc * [受到伤害的目标数量]"
@@ -612,12 +616,16 @@ data class SkillActionPro(
 
                 when (action_value_1.toInt()) {
                     2 -> {
-                        val expr = if (action_detail_3 == 0) {
-                            "[${action_value_2}]"
-                        } else if (action_detail_2 == 0) {
-                            "[${action_value_3}]"
-                        } else {
-                            "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                        val expr = when {
+                            action_detail_3 == 0 -> {
+                                "[${action_value_2}]"
+                            }
+                            action_detail_2 == 0 -> {
+                                "[${action_value_3}]"
+                            }
+                            else -> {
+                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                            }
                         }
                         "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
                     }
@@ -753,7 +761,7 @@ data class SkillActionPro(
                     else -> "?"
                 }
                 if (type != "") {
-                    "${value} 的概率使${getTarget()}的${type}全部解除"
+                    "$value 的概率使${getTarget()}的${type}全部解除"
                 } else {
                     ""
                 }
@@ -763,7 +771,7 @@ data class SkillActionPro(
                 val percent = if (action_value_1.toInt() == 1) "" else "%"
                 val value = getValueText(2, action_value_2, action_value_3, 0.0, percent)
                 val aura = getAura(action_detail_1)
-                "${getTarget()}${aura} ${value} ${time}，受到 [${action_detail_3}] 次伤害时被中断"
+                "${getTarget()}${aura} $value ${time}，受到 [${action_detail_3}] 次伤害时被中断"
             }
             SkillActionType.CHANGE_WIDTH -> {
                 "将模型的宽度变为[${action_value_1}]"

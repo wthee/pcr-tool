@@ -43,10 +43,8 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
 
     equipMaxData?.let {
         Column(modifier = Modifier.padding(Dimen.smallPadding)) {
-            Text(
+            MainText(
                 text = it.equipmentName,
-                style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme.colors.primary,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Row(

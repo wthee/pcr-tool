@@ -122,7 +122,8 @@
     <string name="stared">已收藏</string>
     <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
     <string name="rank_compare">对比</string>
-    <string name="rank_select">选择</string>
+    <string name="rank_select">RANK 选择</string>
+    <string name="rank_equip_statistics">统计</string>
     <string name="jjc">竞技场</string>
     <string name="clan">公会战</string>
     <string name="tower">露娜塔</string>
@@ -168,9 +169,8 @@
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="to_update"><![CDATA[去更新 > ]]></string>
-    <string name="rank_equip_statistics">装备统计</string>
-    <string name="cur_rank">当前 Rank</string>
-    <string name="target_rank">目标 Rank</string>
+    <string name="cur_rank">当前</string>
+    <string name="target_rank">目标</string>
     <string name="title_section">阶段</string>
     <string name="no_drop_data">无掉落信息</string>
     <string name="download_pic">下载图片</string>

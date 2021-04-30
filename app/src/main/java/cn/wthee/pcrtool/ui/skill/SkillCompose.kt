@@ -262,7 +262,7 @@ fun SkillLoopList(unitId: Int) {
             loops.add(SkillLoop(stringResource(R.string.looping), ap.getLoop()))
         }
     }
-    Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+    Column(modifier = Modifier.padding(bottom = Dimen.sheetMarginBottom)) {
         if (loops.isNotEmpty()) {
             loops.forEach {
                 SkillLoopItem(loop = it)

@@ -13,10 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.ui.character.CharacterBasicInfo
-import cn.wthee.pcrtool.ui.character.CharacterMainInfo
-import cn.wthee.pcrtool.ui.character.RankCompare
-import cn.wthee.pcrtool.ui.character.RankEquipList
+import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
@@ -41,7 +38,8 @@ object Navigation {
     const val TOOL_LEADER = "tool_leader"
     const val LEVEL = "level"
     const val RARITY = "rarity"
-    const val UNIQUE_EQUIP_LEVEL = "unique_equip_level"
+    const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
+    const val EQUIP_COUNT = "equipCount"
 }
 
 @ExperimentalAnimationApi
@@ -79,6 +77,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 actions.toCharacterBasicInfo,
                 actions.toCharacteRankEquip,
                 actions.toCharacteRankCompare,
+                actions.toCharacteEquipCount,
                 viewModel
             )
         }
@@ -163,6 +162,26 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             )
         }
 
+        //角色装备统计
+        composable(
+            "${Navigation.EQUIP_COUNT}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}",
+            arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                type = NavType.IntType
+            }, navArgument(Navigation.MAX_RANK) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            viewModel.pageLevel.postValue(2)
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            RankEquipCount(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                maxRank = arguments.getInt(Navigation.MAX_RANK),
+                actions.toEquipDetail,
+                navViewModel = viewModel
+            )
+        }
+
         //角色排行
         composable(Navigation.TOOL_LEADER) {
             viewModel.pageLevel.postValue(1)
@@ -218,6 +237,15 @@ class NavActions(navController: NavHostController) {
         { unitId: Int, maxRank: Int, level: Int, rarity: Int, uniqueEquipLevel: Int ->
             navController.navigate("${Navigation.RANK_COMPARE}/${unitId}/${maxRank}/${level}/${rarity}/${uniqueEquipLevel}")
         }
+
+    /**
+     * 角装备统计
+     */
+    val toCharacteEquipCount: (Int, Int) -> Unit =
+        { unitId: Int, maxRank: Int ->
+            navController.navigate("${Navigation.EQUIP_COUNT}/${unitId}/${maxRank}")
+        }
+
 
     /**
      * 角色排行

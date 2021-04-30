@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,17 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.circleShape
-import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import com.google.accompanist.coil.rememberCoilPainter
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -77,7 +77,7 @@ fun RankCompare(
         sheetState = state,
         sheetContent = {
             //RANK 选择
-            RankSelect(rank0, rank1, maxRank, coroutineScope, state, navViewModel)
+            RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel)
         }
     ) {
         //关闭监听
@@ -101,7 +101,7 @@ fun RankCompare(
             ) {
                 MainText(text = "$level")
                 StarCompose(rarity)
-                Row {
+                Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
                     Spacer(modifier = Modifier.weight(0.3f))
                     RankText(
                         rank = rank0.value,
@@ -129,6 +129,7 @@ fun RankCompare(
             ExtendedFabCompose(
                 iconId = R.drawable.ic_select,
                 text = stringResource(id = R.string.rank_select),
+                textWidth = Dimen.getWordWidth(4.5f),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
@@ -189,69 +190,6 @@ fun AttrCompare(compareData: List<RankCompareData>) {
     }
 }
 
-
-/**
- * RANK 选择页面
- */
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@Composable
-fun RankSelect(
-    rank0: MutableState<Int>,
-    rank1: MutableState<Int>,
-    maxRank: Int,
-    coroutineScope: CoroutineScope,
-    sheetState: ModalBottomSheetState,
-    navViewModel: NavViewModel
-) {
-    val rankList = arrayListOf<Int>()
-    for (i in maxRank downTo 1) {
-        rankList.add(i)
-    }
-    val ok = navViewModel.fabOK.observeAsState().value ?: false
-    val select0 = remember {
-        mutableStateOf(rank0.value)
-    }
-    val select1 = remember {
-        mutableStateOf(rank1.value)
-    }
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        //RANK 选择
-        if (ok) {
-            coroutineScope.launch {
-                sheetState.hide()
-            }
-            navViewModel.fabOK.postValue(false)
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
-            rank0.value = select0.value
-            rank1.value = select1.value
-        }
-        MainText(text = stringResource(id = R.string.cur_rank))
-        RankSelectItem(select = select0, rankList = rankList)
-        MainText(text = stringResource(id = R.string.target_rank))
-        RankSelectItem(select = select1, rankList = rankList)
-    }
-}
-
-
-/**
- * RANK 选择器
- */
-@ExperimentalFoundationApi
-@Composable
-fun RankSelectItem(select: MutableState<Int>, rankList: List<Int>) {
-    Box {
-        val chipData = arrayListOf<ChipData>()
-        rankList.forEachIndexed { index, i ->
-            chipData.add(ChipData(index, getFormatText(i, "")))
-        }
-        ChipGroup(
-            chipData,
-            select,
-            modifier = Modifier.padding(Dimen.smallPadding),
-        )
-    }
-}
 
 /**
  * 星级显示

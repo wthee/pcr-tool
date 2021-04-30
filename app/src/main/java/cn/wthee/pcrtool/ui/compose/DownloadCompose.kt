@@ -62,7 +62,7 @@ fun DownloadCompose(viewModel: NavViewModel) {
                     text = text,
                     style = MaterialTheme.typography.subtitle2,
                     color = MaterialTheme.colors.primary,
-                    modifier = Modifier.width(Dimen.getWordWidth(5))
+                    modifier = Modifier.width(Dimen.getWordWidth(5f))
                 )
             },
             onClick = {}

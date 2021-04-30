@@ -45,6 +45,7 @@ fun CharacterMainInfo(
     toCharacterBasicInfo: (Int) -> Unit,
     toRankEquip: (Int) -> Unit,
     toRankCompare: (Int, Int, Int, Int, Int) -> Unit,
+    toEquipCount: (Int, Int) -> Unit,
     navViewModel: NavViewModel,
     attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
 ) {
@@ -112,9 +113,7 @@ fun CharacterMainInfo(
     ModalBottomSheetLayout(
         sheetState = state,
         sheetContent = {
-            Surface(modifier = Modifier.padding(bottom = Dimen.sheetMarginBottom)) {
-                SkillLoopList(unitId = unitId)
-            }
+            SkillLoopList(unitId = unitId)
         }
     ) {
         //获取最大数据,初始化加载
@@ -233,7 +232,8 @@ fun CharacterMainInfo(
                                 allData.value!!.equips,
                                 toEquipDetail,
                                 toRankEquip,
-                                toRankCompare
+                                toRankCompare,
+                                toEquipCount,
                             )
                             //显示专武
                             if (allData.value!!.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
@@ -292,8 +292,7 @@ fun CharacterMainInfo(
                 //跳转至角色资料
                 ExtendedFabCompose(
                     iconId = R.drawable.ic_drop,
-                    text = stringResource(id = R.string.character_basic_Info),
-                    textWidth = Dimen.getWordWidth(2)
+                    text = stringResource(id = R.string.character_basic_Info)
                 ) {
                     toCharacterBasicInfo(unitId)
                 }
@@ -319,6 +318,7 @@ private fun CharacterEquip(
     toEquipDetail: (Int) -> Unit,
     toRankEquip: (Int) -> Unit,
     toRankCompare: (Int, Int, Int, Int, Int) -> Unit,
+    toEquipCount: (Int, Int) -> Unit,
 ) {
     Column {
         //装备 6、 3
@@ -375,16 +375,29 @@ private fun CharacterEquip(
                 ) {
                     toRankEquip(unitId)
                 }
-                //跳转至 RANK 对比页面
-                TextButton(onClick = {
-                    toRankCompare(unitId, maxRank, level, rarity, uniqueEquipLevel)
-                }) {
-                    Text(
-                        text = stringResource(id = R.string.rank_compare),
-                        modifier = Modifier.padding(top = Dimen.mediuPadding),
-                        color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.subtitle2
-                    )
+                Row(
+                    modifier = Modifier.padding(top = Dimen.smallPadding),
+                ) {
+                    //跳转至 RANK 对比页面
+                    TextButton(onClick = {
+                        toRankCompare(unitId, maxRank, level, rarity, uniqueEquipLevel)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.rank_compare),
+                            color = MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.subtitle2
+                        )
+                    }
+                    //跳转至装备统计页面
+                    TextButton(onClick = {
+                        toEquipCount(unitId, maxRank)
+                    }) {
+                        Text(
+                            text = stringResource(id = R.string.rank_equip_statistics),
+                            color = MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.subtitle2
+                        )
+                    }
                 }
             }
             val id2 = equips[3].equipmentId

@@ -40,7 +40,7 @@ fun ExtendedFabCompose(
     modifier: Modifier = Modifier,
     @DrawableRes iconId: Int,
     text: String,
-    textWidth: Dp = Dimen.getWordWidth(2),
+    textWidth: Dp = Dimen.getWordWidth(2f),
     onClick: () -> Unit
 ) {
     ExtendedFloatingActionButton(
