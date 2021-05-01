@@ -42,6 +42,26 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
         ) {
             Row {
                 MenuItem(
+                    text = stringResource(id = R.string.tool_event),
+                    iconId = R.drawable.ic_event,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .height(Dimen.smallMenuHeight)
+                ) {
+                    actions.toEventStory()
+                }
+                MenuItem(
+                    text = stringResource(id = R.string.tool_guild),
+                    iconId = R.drawable.ic_guild,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .height(Dimen.smallMenuHeight)
+                ) {
+                    actions.toGuildList()
+                }
+            }
+            Row {
+                MenuItem(
                     text = stringResource(id = R.string.tool_leader),
                     iconId = R.drawable.ic_leader,
                     modifier = Modifier
@@ -58,15 +78,6 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         .height(Dimen.smallMenuHeight)
                 ) {
                     actions.toGacha()
-                }
-                MenuItem(
-                    text = stringResource(id = R.string.tool_event),
-                    iconId = R.drawable.ic_event,
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
-                ) {
-                    actions.toEventStory()
                 }
             }
 

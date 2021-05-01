@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.*
-import cn.wthee.pcrtool.data.entity.PvpLikedData
+import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 
 /**
  * 竞技场收藏 DAO

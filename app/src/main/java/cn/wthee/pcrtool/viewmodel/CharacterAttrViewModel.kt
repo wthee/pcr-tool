@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
+import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.data.model.getRankCompareList
-import cn.wthee.pcrtool.data.view.*
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import com.umeng.umcrash.UMCrash

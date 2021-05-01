@@ -1,8 +1,8 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.data.view.Attr
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.Attr
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 
 /**
  * 角色相关属性

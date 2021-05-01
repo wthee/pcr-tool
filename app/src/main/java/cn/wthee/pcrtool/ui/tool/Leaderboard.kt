@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
@@ -51,36 +52,46 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
         } else {
             navViewModel.loading.postValue(false)
             val info = list.value!!.data!!.leader
-            LazyColumn(state = state) {
-                item {
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                        modifier = Modifier.padding(Dimen.mediuPadding)
-                    ) {
-                        Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediuPadding))
-                        Spacer(modifier = Modifier.weight(0.25f))
-                        Text(
-                            text = stringResource(id = R.string.jjc),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.weight(0.25f)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.clan),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.weight(0.25f)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.tower),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.weight(0.25f)
-                        )
+            Column {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding
+                    )
+                ) {
+                    Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediuPadding))
+                    Text(
+                        text = stringResource(id = R.string.grade),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(0.25f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.jjc),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(0.25f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.clan),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(0.25f)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.tower),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(0.25f)
+                    )
+                }
+                LazyColumn(state = state) {
+                    items(info) { it ->
+                        LeaderboardItem(it)
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
                     }
                 }
-                items(info) { it ->
-                    LeaderboardItem(it)
-                }
             }
-
         }
         //回到顶部
         ExtendedFabCompose(
@@ -102,33 +113,37 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
  */
 @Composable
 fun LeaderboardItem(info: LeaderboardData) {
-    Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
+    Column(
+        modifier = Modifier
+            .padding(Dimen.mediuPadding)
+            .fillMaxWidth()
+    ) {
+        //标题
+        MainTitleText(
+            text = info.name,
+            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+        )
         val context = LocalContext.current
         val title = stringResource(id = R.string.visit_detail)
 
-        IconCompose(data = info.icon)
         Card(modifier = Modifier
-            .padding(start = Dimen.mediuPadding)
-            .shadow(
-                elevation = Dimen.cardElevation,
-                shape = Shapes.large,
-                clip = true
-            )
+            .fillMaxWidth()
+            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
             .clickable {
                 //打开浏览器
                 BrowserUtil.OpenWebView(context, info.url, title)
             }) {
-            Column(modifier = Modifier.padding(Dimen.smallPadding)) {
-                MainTitleText(text = info.name)
-                Row {
-                    GradeText(info.all, TextAlign.Start, modifier = Modifier.weight(0.25f))
-                    GradeText(info.pvp, modifier = Modifier.weight(0.25f))
-                    GradeText(info.clan, modifier = Modifier.weight(0.25f))
-                    GradeText(info.tower, modifier = Modifier.weight(0.25f))
-                }
+            Row(
+                modifier = Modifier.padding(Dimen.mediuPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconCompose(data = info.icon)
+                GradeText(info.all, modifier = Modifier.weight(0.25f))
+                GradeText(info.pvp, modifier = Modifier.weight(0.25f))
+                GradeText(info.clan, modifier = Modifier.weight(0.25f))
+                GradeText(info.tower, modifier = Modifier.weight(0.25f))
             }
         }
-
     }
 }
 
@@ -151,6 +166,7 @@ fun GradeText(grade: String, textAlign: TextAlign = TextAlign.Center, modifier: 
             }
         ),
         textAlign = textAlign,
+        fontWeight = FontWeight.Bold,
         modifier = modifier
     )
 }

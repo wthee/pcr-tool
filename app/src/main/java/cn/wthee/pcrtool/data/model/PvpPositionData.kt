@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.data.view.PvpCharacterData
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import java.io.Serializable
 
 data class PvpPositionData(

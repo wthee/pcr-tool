@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.PvpDao
-import cn.wthee.pcrtool.data.entity.PvpLikedData
+import cn.wthee.pcrtool.data.db.entity.PvpLikedData
 import cn.wthee.pcrtool.utils.Constants
 import java.util.concurrent.TimeUnit
 

@@ -4,7 +4,7 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.GachaInfo
 
 /**
  * 卡池记录 DAO
@@ -21,7 +21,7 @@ interface GachaDao {
         SELECT
             a.gacha_id,
             a.gacha_name,
-            COALESCE( GROUP_CONCAT( b.unit_id, '-' ), "0" ) AS unit_ids,
+            COALESCE( GROUP_CONCAT( b.unit_id, '-' ), "" ) AS unit_ids,
             a.description,
             a.start_time,
             a.end_time 

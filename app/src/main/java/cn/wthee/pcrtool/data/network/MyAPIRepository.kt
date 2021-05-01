@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.BuildConfig
-import cn.wthee.pcrtool.data.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.getRegion

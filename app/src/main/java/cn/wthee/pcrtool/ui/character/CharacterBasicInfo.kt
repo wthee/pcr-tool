@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,12 +11,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.compose.MainContentText
+import cn.wthee.pcrtool.ui.compose.MainText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.compose.PositionIcon
 import cn.wthee.pcrtool.ui.theme.CardTopShape
@@ -41,14 +40,10 @@ fun CharacterBasicInfo(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .background(color = MaterialTheme.colors.onPrimary)
             ) {
                 //标题
-                Text(
+                MainText(
                     info.catchCopy,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.subtitle1,
-                    color = MaterialTheme.colors.primary,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = Dimen.mediuPadding, bottom = Dimen.smallPadding)

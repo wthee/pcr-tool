@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.data.network.service
 
-import cn.wthee.pcrtool.data.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.model.*
 import okhttp3.RequestBody
 import retrofit2.http.Body

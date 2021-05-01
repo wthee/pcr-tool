@@ -3,9 +3,9 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.entity.EventStoryDetail
-import cn.wthee.pcrtool.data.view.DropEvent
-import cn.wthee.pcrtool.data.view.EventData
+import cn.wthee.pcrtool.data.db.entity.EventStoryDetail
+import cn.wthee.pcrtool.data.db.view.DropEvent
+import cn.wthee.pcrtool.data.db.view.EventData
 
 /**
  * 活动记录 DAO

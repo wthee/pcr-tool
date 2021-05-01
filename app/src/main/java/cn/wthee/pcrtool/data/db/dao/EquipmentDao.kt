@@ -3,13 +3,13 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.entity.EquipmentCraft
-import cn.wthee.pcrtool.data.entity.EquipmentEnhanceRate
-import cn.wthee.pcrtool.data.entity.UnitPromotion
-import cn.wthee.pcrtool.data.view.CharacterPromotionEquip
-import cn.wthee.pcrtool.data.view.EquipmentDropInfo
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.entity.EquipmentCraft
+import cn.wthee.pcrtool.data.db.entity.EquipmentEnhanceRate
+import cn.wthee.pcrtool.data.db.entity.UnitPromotion
+import cn.wthee.pcrtool.data.db.view.CharacterPromotionEquip
+import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 
 //装备满属性视图
 const val viewEquipmentMaxData = """

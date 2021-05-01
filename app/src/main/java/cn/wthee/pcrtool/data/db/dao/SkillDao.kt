@@ -3,10 +3,10 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
-import cn.wthee.pcrtool.data.entity.AttackPattern
-import cn.wthee.pcrtool.data.entity.SkillData
-import cn.wthee.pcrtool.data.entity.UnitSkillData
-import cn.wthee.pcrtool.data.view.SkillActionPro
+import cn.wthee.pcrtool.data.db.entity.AttackPattern
+import cn.wthee.pcrtool.data.db.entity.SkillData
+import cn.wthee.pcrtool.data.db.entity.UnitSkillData
+import cn.wthee.pcrtool.data.db.view.SkillActionPro
 
 /**
  * 技能数据 DAO

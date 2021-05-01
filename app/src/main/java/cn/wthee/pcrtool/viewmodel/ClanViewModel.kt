@@ -4,9 +4,9 @@ import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.repository.ClanRepository
-import cn.wthee.pcrtool.data.entity.EnemyParameter
-import cn.wthee.pcrtool.data.view.ClanBattleInfo
+import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.database.getDatabaseType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

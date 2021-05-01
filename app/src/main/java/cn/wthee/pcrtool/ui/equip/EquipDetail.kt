@@ -22,9 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.view.EquipmentIdWithOdd
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
@@ -222,7 +222,6 @@ private fun AreaEquipList(
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 private fun AreaEquipItem(
     selectedId: Int,
@@ -246,7 +245,7 @@ private fun AreaEquipItem(
                             .size(Dimen.smallIconSize)
                             .alpha(alpha)
                     )
-                    androidx.compose.animation.AnimatedVisibility(visible = selected) {
+                    if (selected) {
                         Spacer(
                             modifier = Modifier
                                 .size(Dimen.smallIconSize)

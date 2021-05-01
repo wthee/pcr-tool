@@ -3,8 +3,8 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
-import cn.wthee.pcrtool.data.entity.AttackPattern
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash

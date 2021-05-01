@@ -11,14 +11,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +25,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.compose.DownloadCompose
+import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.MenuContent
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
@@ -127,11 +126,9 @@ fun Home() {
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-    ) {
+
+
+    Box(modifier = Modifier.fillMaxSize()) {
         //数据库版本检查
         scope.launch {
             DatabaseUpdater(navViewModel).checkDBVersion()
@@ -142,7 +139,8 @@ fun Home() {
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             DownloadCompose(navViewModel)
             FabMain(
-                navController, navViewModel, modifier = Modifier
+                navController,
+                modifier = Modifier
                     .align(Alignment.End)
                     .padding(Dimen.fabMargin)
             )
@@ -158,29 +156,23 @@ fun Home() {
 }
 
 @Composable
-fun FabMain(navController: NavHostController, viewModel: NavViewModel, modifier: Modifier) {
-    val iconId = viewModel.fabMainIcon.observeAsState().value ?: R.drawable.ic_function
+fun FabMain(navController: NavHostController, modifier: Modifier) {
+    val iconId =
+        navViewModel.fabMainIcon.observeAsState().value ?: R.drawable.ic_function
 
-    FloatingActionButton(
-        onClick = {
-            when (iconId) {
-                R.drawable.ic_ok -> viewModel.fabOK.postValue(true)
-                R.drawable.ic_cancel -> viewModel.fabClose.postValue(true)
-                R.drawable.ic_function -> {
-                    viewModel.fabMainIcon.postValue(R.drawable.ic_down)
-                }
-                R.drawable.ic_down -> viewModel.fabMainIcon.postValue(R.drawable.ic_function)
-                else -> navController.navigateUp()
+    FabCompose(iconId, modifier = modifier) {
+        when (iconId) {
+            R.drawable.ic_ok -> navViewModel.fabOK.postValue(true)
+            R.drawable.ic_cancel -> navViewModel.fabClose.postValue(true)
+            R.drawable.ic_function -> {
+                navViewModel.fabMainIcon.postValue(R.drawable.ic_down)
             }
-        },
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.onPrimary,
-        contentColor = MaterialTheme.colors.primary,
-        modifier = modifier
-            .size(Dimen.fabSize),
-    ) {
-        val icon = painterResource(iconId)
-        Icon(icon, "", modifier = Modifier.padding(Dimen.fabPadding))
+            R.drawable.ic_down -> navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+            else -> {
+                navController.navigateUp()
+                navViewModel.loading.postValue(false)
+            }
+        }
     }
 }
 

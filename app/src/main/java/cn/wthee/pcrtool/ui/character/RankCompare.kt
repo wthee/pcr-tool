@@ -130,7 +130,7 @@ fun RankCompare(
             ExtendedFabCompose(
                 icon = painterResource(id = R.drawable.ic_select),
                 text = stringResource(id = R.string.rank_select),
-                textWidth = Dimen.getWordWidth(4.5f),
+                textWidth = Dimen.getWordWidth(5f),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

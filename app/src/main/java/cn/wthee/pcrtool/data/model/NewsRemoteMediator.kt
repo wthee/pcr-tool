@@ -5,8 +5,8 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import cn.wthee.pcrtool.data.entity.NewsTable
-import cn.wthee.pcrtool.data.entity.RemoteKey
+import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import retrofit2.HttpException

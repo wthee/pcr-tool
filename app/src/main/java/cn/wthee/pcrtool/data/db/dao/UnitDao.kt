@@ -3,11 +3,11 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.entity.GuildData
-import cn.wthee.pcrtool.data.entity.UnitPromotion
-import cn.wthee.pcrtool.data.entity.UnitPromotionStatus
-import cn.wthee.pcrtool.data.entity.UnitRarity
-import cn.wthee.pcrtool.data.view.*
+import cn.wthee.pcrtool.data.db.entity.GuildData
+import cn.wthee.pcrtool.data.db.entity.UnitPromotion
+import cn.wthee.pcrtool.data.db.entity.UnitPromotionStatus
+import cn.wthee.pcrtool.data.db.entity.UnitRarity
+import cn.wthee.pcrtool.data.db.view.*
 
 //角色筛选条件
 const val characterWhere =

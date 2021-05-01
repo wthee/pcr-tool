@@ -52,7 +52,6 @@ fun MainContentText(
 ) {
     Text(
         text = text,
-        color = MaterialTheme.colors.onBackground,
         textAlign = textAlign,
         style = MaterialTheme.typography.body1,
         modifier = modifier

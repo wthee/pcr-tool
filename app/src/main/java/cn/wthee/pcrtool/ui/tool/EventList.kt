@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.view.EventData
+import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
 import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
@@ -41,11 +42,18 @@ fun EventList(
     val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.bg_gray))
+    ) {
         events.value?.let { data ->
             LazyColumn(state = state) {
                 items(data) {
                     EventItem(it, toCharacterDetail)
+                }
+                item {
+                    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
                 }
             }
         }
@@ -72,16 +80,16 @@ fun EventList(
  */
 @Composable
 private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
-    var title = ""
-    var type = ""
-    var typeColor = R.color.colorPrimary
+    var title: String
+    val type: String
+    val typeColor: Int
     var showDays = true
     val startDate = event.startTime.substring(0, 10)
     val endDate = event.endTime.substring(0, 10)
-    if (startDate == "2030/12/30") {
-        title = "活动预告"
+    title = if (startDate == "2030/12/30") {
+        "活动预告"
     } else {
-        title = "$startDate ~ $endDate"
+        "$startDate ~ $endDate"
     }
     val days = endDate.days(startDate)
     if (days == "00") {
@@ -107,38 +115,47 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
     }
 
-    Card(
+
+    Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
             .fillMaxWidth()
-            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
     ) {
-        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
-            //标题
-            Row {
-                MainTitleText(
-                    text = type,
-                    backgroundColor = colorResource(id = typeColor)
-                )
-                MainTitleText(
-                    text = title,
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                )
-                if (showDays) {
-                    MainTitleText(
-                        text = days,
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                }
-            }
-            //内容
-            MainContentText(
-                text = event.title,
-                modifier = Modifier.padding(top = Dimen.smallPadding, bottom = Dimen.mediuPadding),
-                textAlign = TextAlign.Start
+        //标题
+        Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+            MainTitleText(
+                text = type,
+                backgroundColor = colorResource(id = typeColor)
             )
-            //图标/描述
-            IconListCompose(event.unitIds.intArrayList(), toCharacterDetail)
+            MainTitleText(
+                text = title,
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+            )
+            if (showDays) {
+                MainTitleText(
+                    text = days,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+        }
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
+        ) {
+            Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+                //内容
+                MainContentText(
+                    text = event.title,
+                    modifier = Modifier.padding(
+                        top = Dimen.smallPadding,
+                        bottom = Dimen.smallPadding
+                    ),
+                    textAlign = TextAlign.Start
+                )
+                //图标/描述
+                IconListCompose(event.unitIds.intArrayList(), toCharacterDetail)
+            }
         }
     }
 }

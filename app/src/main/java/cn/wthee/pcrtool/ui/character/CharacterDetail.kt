@@ -17,10 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.view.UniqueEquipmentMaxData
-import cn.wthee.pcrtool.data.view.all
-import cn.wthee.pcrtool.data.view.allNotZero
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.all
+import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -154,11 +154,7 @@ fun CharacterDetail(
             navViewModel.fabClose.postValue(false)
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.onPrimary)
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
                     .verticalScroll(scrollState)
@@ -191,7 +187,7 @@ fun CharacterDetail(
                     ) {
                         Column(
                             modifier = Modifier
-                                .padding(Dimen.mediuPadding)
+                                .padding(Dimen.smallPadding)
                                 .fillMaxSize()
                         ) {
                             //等级
@@ -263,9 +259,7 @@ fun CharacterDetail(
                             color = MaterialTheme.colors.primary,
                             style = MaterialTheme.typography.h6,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .align(Alignment.Center)
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
                 }
@@ -455,7 +449,11 @@ private fun UniqueEquip(
     uniqueEquipmentMaxData?.let {
         Column(
             modifier = Modifier
-                .padding(top = Dimen.largePadding)
+                .padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.smallPadding,
+                    end = Dimen.smallPadding
+                )
         ) {
             //名称
             MainText(

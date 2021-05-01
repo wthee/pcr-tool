@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
-import cn.wthee.pcrtool.data.entity.*
+import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
 

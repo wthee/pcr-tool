@@ -15,9 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
-import cn.wthee.pcrtool.data.view.SkillActionText
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.compose.getGridData
@@ -41,6 +41,7 @@ fun SkillCompose(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(Dimen.smallPadding)
     ) {
         skillList.forEach {
             SkillItem(level = level, skillDetail = it)
@@ -262,7 +263,14 @@ fun SkillLoopList(unitId: Int) {
             loops.add(SkillLoop(stringResource(R.string.looping), ap.getLoop()))
         }
     }
-    Column(modifier = Modifier.padding(bottom = Dimen.sheetMarginBottom)) {
+    Column(
+        modifier = Modifier.padding(
+            top = Dimen.largePadding,
+            start = Dimen.mediuPadding,
+            end = Dimen.mediuPadding,
+            bottom = Dimen.sheetMarginBottom
+        )
+    ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
                 SkillLoopItem(loop = it)

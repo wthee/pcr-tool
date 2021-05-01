@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
 import cn.wthee.pcrtool.ui.tool.EventList
 import cn.wthee.pcrtool.ui.tool.GachaList
+import cn.wthee.pcrtool.ui.tool.GuildList
 import cn.wthee.pcrtool.ui.tool.LeaderboardList
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,6 +47,7 @@ object Navigation {
     const val TOOL_LEADER = "toolLeader"
     const val TOOL_GACHA = "toolGacha"
     const val TOOL_EVENT = "toolEvent"
+    const val TOOL_GUILD = "toolGuild"
 }
 
 @ExperimentalAnimationApi
@@ -205,6 +207,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             viewModel.fabMainIcon.postValue(R.drawable.ic_back)
             EventList(actions.toCharacterDetail)
         }
+
+        //角色公会
+        composable(Navigation.TOOL_GUILD) {
+            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            GuildList(actions.toCharacterDetail)
+        }
     }
 }
 
@@ -292,6 +300,12 @@ class NavActions(navController: NavHostController) {
         navController.navigate(Navigation.TOOL_EVENT)
     }
 
+    /**
+     * 角色公会
+     */
+    val toGuildList = {
+        navController.navigate(Navigation.TOOL_GUILD)
+    }
 }
 
 @HiltViewModel

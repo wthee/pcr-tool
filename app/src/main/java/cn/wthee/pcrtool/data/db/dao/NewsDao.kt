@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cn.wthee.pcrtool.data.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.NewsTable
 
 /**
  * 公告信息 DAO

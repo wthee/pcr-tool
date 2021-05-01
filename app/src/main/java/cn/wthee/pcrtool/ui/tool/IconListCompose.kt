@@ -1,14 +1,16 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.compose.IconCompose
+import cn.wthee.pcrtool.ui.compose.getGridData
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 
 /**
@@ -16,8 +18,26 @@ import cn.wthee.pcrtool.utils.Constants
  */
 @Composable
 fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
-    Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-        icons.forEach {
+    val spanCount = 6
+    val newList = getGridData(spanCount = spanCount, list = icons, 0)
+    Column {
+        newList.forEachIndexed { index, _ ->
+            if (index % spanCount == 0) {
+                IconListRow(newList.subList(index, index + spanCount), toCharacterDetail)
+            }
+        }
+    }
+}
+
+@Composable
+private fun IconListRow(list: List<Int>, toCharacterDetail: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = Dimen.mediuPadding)
+    ) {
+        list.forEach {
             val unitId: Int
             val iconId: Int
             if (it / 10000 == 3) {
@@ -28,13 +48,24 @@ fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
                 iconId = it + 30
                 unitId = it
             }
-            IconCompose(
-                data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP,
-                modifier = Modifier
-                    .padding(Dimen.smallPadding)
-                    .clickable {
-                        toCharacterDetail(unitId)
-                    })
+            if (it == 0) {
+                IconCompose(
+                    data = R.drawable.unknown_gray,
+                    modifier = Modifier
+                        .size(Dimen.iconSize)
+                        .alpha(0f)
+                )
+            } else {
+                IconCompose(
+                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP,
+                    modifier = Modifier
+                        .size(Dimen.iconSize)
+                        .clip(Shapes.small)
+                        .clickable {
+                            toCharacterDetail(unitId)
+                        }
+                )
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import cn.wthee.pcrtool.data.entity.RemoteKey
+import cn.wthee.pcrtool.data.db.entity.RemoteKey
 
 /**
  * 公告分页 DAO

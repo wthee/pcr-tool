@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
-import cn.wthee.pcrtool.data.entity.UnitPromotion
+import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.RankText
@@ -61,7 +61,7 @@ fun RankEquipListItem(
     navViewModel: NavViewModel,
 ) {
     val color = if (unitPromotion.promotionLevel == selectedRank.value)
-        MaterialTheme.colors.primaryVariant
+        MaterialTheme.colors.primary
     else
         MaterialTheme.colors.surface
 

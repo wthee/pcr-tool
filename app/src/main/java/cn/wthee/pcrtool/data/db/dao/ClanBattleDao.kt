@@ -3,8 +3,8 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.SkipQueryVerification
-import cn.wthee.pcrtool.data.entity.EnemyParameter
-import cn.wthee.pcrtool.data.view.ClanBattleInfo
+import cn.wthee.pcrtool.data.db.entity.EnemyParameter
+import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 
 const val join = """
  b.enemy_id LIKE '401%' 

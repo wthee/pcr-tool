@@ -88,9 +88,9 @@ object Dimen {
 
 
     /**
-     * 52dp
+     * 60dp
      */
-    val sheetMarginBottom = 52.dp
+    val sheetMarginBottom = 60.dp
 
 
     /**

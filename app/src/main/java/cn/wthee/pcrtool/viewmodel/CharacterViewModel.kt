@@ -4,12 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.entity.GuildData
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.model.FilterCharacter
-import cn.wthee.pcrtool.data.view.CharacterInfo
-import cn.wthee.pcrtool.data.view.CharacterInfoPro
-import cn.wthee.pcrtool.data.view.PvpCharacterData
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash
 import dagger.hilt.android.lifecycle.HiltViewModel

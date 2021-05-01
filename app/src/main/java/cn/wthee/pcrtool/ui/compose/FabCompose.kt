@@ -22,8 +22,8 @@ fun FabCompose(@DrawableRes iconId: Int, modifier: Modifier = Modifier, onClick:
 
     FloatingActionButton(
         onClick = onClick,
-        backgroundColor = MaterialTheme.colors.onPrimary,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
+        backgroundColor = MaterialTheme.colors.onPrimary,
         contentColor = MaterialTheme.colors.primary,
         modifier = modifier.size(Dimen.fabSize),
     ) {

@@ -3,9 +3,9 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.data.db.entity.EventStoryDetail
 import cn.wthee.pcrtool.data.db.repository.EventRepository
-import cn.wthee.pcrtool.data.entity.EventStoryDetail
-import cn.wthee.pcrtool.data.view.EventData
+import cn.wthee.pcrtool.data.db.view.EventData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

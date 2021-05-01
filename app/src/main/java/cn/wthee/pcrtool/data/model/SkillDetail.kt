@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.data.model
 
-import cn.wthee.pcrtool.data.view.SkillActionPro
-import cn.wthee.pcrtool.data.view.SkillActionText
+import cn.wthee.pcrtool.data.db.view.SkillActionPro
+import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.utils.Constants
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.MainScope
