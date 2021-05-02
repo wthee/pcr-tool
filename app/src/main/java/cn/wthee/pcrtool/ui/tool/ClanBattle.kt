@@ -12,45 +12,45 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.GachaInfo
+import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.MainContentText
+import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
-import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.intArrayList
-import cn.wthee.pcrtool.viewmodel.GachaViewModel
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.getZhNumberText
+import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import kotlinx.coroutines.launch
 
 /**
- * 角色卡池页面
+ * 每月 BOSS 信息列表
  */
 @Composable
-fun GachaList(
-    toCharacterDetail: (Int) -> Unit,
-    gachaViewModel: GachaViewModel = hiltNavGraphViewModel()
-) {
-    gachaViewModel.getGachaHistory()
-    val gachas = gachaViewModel.gachas.observeAsState()
+fun ClanBattleList(clanViewModel: ClanViewModel = hiltNavGraphViewModel()) {
+    clanViewModel.getAllClanBattleData()
+    val clanList = clanViewModel.clanInfo.observeAsState()
     val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    navViewModel.loading.postValue(true)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        gachas.value?.let { data ->
+        clanList.value?.let { data ->
+            navViewModel.loading.postValue(false)
             LazyColumn(state = state) {
                 items(data) {
-                    GachaItem(it, toCharacterDetail)
+                    ClanBattleItem(it)
                 }
                 item {
                     Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
@@ -59,8 +59,9 @@ fun GachaList(
         }
         //回到顶部
         ExtendedFabCompose(
-            iconType = MainIconType.GACHA,
-            text = stringResource(id = R.string.tool_gacha),
+            iconType = MainIconType.CLAN,
+            text = stringResource(id = R.string.tool_clan),
+            textWidth = Dimen.getWordWidth(3f),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
@@ -71,14 +72,10 @@ fun GachaList(
         }
     }
 
-
 }
 
-/**
- * 单个卡池
- */
 @Composable
-private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
+private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
     Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -86,40 +83,49 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     ) {
         //标题
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-            MainTitleText(text = gachaInfo.getDate())
+            MainTitleText(text = clanInfo.getDate())
             MainTitleText(
-                text = gachaInfo.endTime.days(gachaInfo.startTime),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
+                text = stringResource(id = R.string.section, getZhNumberText(clanInfo.section)),
+                backgroundColor = getSectionTextColor(clanInfo.section),
+                modifier = Modifier.padding(start = Dimen.smallPadding),
             )
         }
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
         ) {
-            Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                //内容
-                MainContentText(
-                    text = gachaInfo.getType(),
-                    modifier = Modifier.padding(
-                        top = Dimen.smallPadding,
-                        bottom = Dimen.smallPadding
-                    ),
-                    textAlign = TextAlign.Start
-                )
-                //图标/描述
-                val icons = gachaInfo.unitIds.intArrayList()
-                if (icons.isEmpty()) {
-                    MainContentText(
-                        text = gachaInfo.getDesc(),
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        textAlign = TextAlign.Start
-                    )
-                } else {
-                    IconListCompose(icons, toCharacterDetail)
+            //图标
+            Row(
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                clanInfo.getUnitIdList(clanInfo.section).forEach {
+                    IconCompose(data = Constants.UNIT_ICON_URL + it + Constants.WEBP) {
+
+                    }
                 }
             }
         }
     }
+}
+
+
+/**
+ * 获取团队战阶段字体颜色
+ */
+@Composable
+private fun getSectionTextColor(section: Int): Color {
+    val color = when (section) {
+        1 -> R.color.color_rank_2_3
+        2 -> R.color.color_rank_4_6
+        3 -> R.color.color_rank_7_10
+        4 -> R.color.color_rank_11_17
+        else -> R.color.color_rank_18
+    }
+    return colorResource(id = color)
 }
 

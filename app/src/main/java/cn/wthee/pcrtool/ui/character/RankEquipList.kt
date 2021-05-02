@@ -1,14 +1,16 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
@@ -43,9 +45,13 @@ fun RankEquipList(
     val selectedRank = remember {
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
-    LazyVerticalGrid(cells = GridCells.Fixed(3)) {
-        items(allRankEquip) {
-            RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
+
+    if (allRankEquip.isNotEmpty()) {
+        val spanCount = 3
+        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+            items(allRankEquip) {
+                RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
+            }
         }
     }
 }
@@ -60,11 +66,6 @@ fun RankEquipListItem(
     toEquipDetail: (Int) -> Unit,
     navViewModel: NavViewModel,
 ) {
-    val color = if (unitPromotion.promotionLevel == selectedRank.value)
-        MaterialTheme.colors.primary
-    else
-        MaterialTheme.colors.surface
-
     Card(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -77,8 +78,8 @@ fun RankEquipListItem(
         //图标列表
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color, Shapes.large),
+                .padding(Dimen.smallPadding)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK
@@ -93,22 +94,24 @@ fun RankEquipListItem(
                     Row(horizontalArrangement = Arrangement.SpaceAround) {
                         IconCompose(
                             data = getEquipIconUrl(allIds[index]),
-                            modifier = Modifier
-                                .padding(Dimen.smallPadding)
-                                .clickable {
-                                    toEquipDetail(allIds[index])
-                                },
-                        )
+                            modifier = Modifier.padding(Dimen.smallPadding)
+                        ) {
+                            toEquipDetail(allIds[index])
+                        }
                         IconCompose(
                             data = getEquipIconUrl(allIds[index + 1]),
-                            modifier = Modifier
-                                .padding(Dimen.smallPadding)
-                                .clickable {
-                                    toEquipDetail(allIds[index + 1])
-                                },
-                        )
+                            modifier = Modifier.padding(Dimen.smallPadding)
+                        ) {
+                            toEquipDetail(allIds[index + 1])
+                        }
                     }
                 }
+            }
+        }
+        //选中
+        if (unitPromotion.promotionLevel == selectedRank.value) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Icon(Icons.Outlined.Done, null, modifier = Modifier.align(Alignment.Center))
             }
         }
     }

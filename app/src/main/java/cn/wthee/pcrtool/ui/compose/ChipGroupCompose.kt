@@ -20,16 +20,20 @@ import com.google.accompanist.flowlayout.FlowRow
 
 /**
  * chip 选择组
+ *
+ * type: 0 默认
+ * 1: rank 选择模式
  */
 @Composable
 fun ChipGroup(
     items: List<ChipData>,
     selectIndex: MutableState<Int>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    type: Int = 0
 ) {
     FlowRow(modifier = modifier) {
         items.forEachIndexed { index, chipData ->
-            ChipItem(item = chipData, selectIndex, index)
+            ChipItem(item = chipData, selectIndex, items.size, index, type)
         }
     }
 }
@@ -38,17 +42,22 @@ fun ChipGroup(
  * chip 选择组
  */
 @Composable
-fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, index: Int) {
+fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: Int, type: Int) {
     //背景色
     val backgroundColor = if (selectIndex.value == index)
         colorResource(id = R.color.alpha_primary)
     else
         colorResource(id = R.color.bg_gray)
     //字体颜色
-    val textColor = if (selectIndex.value == index)
-        MaterialTheme.colors.primary
-    else
-        MaterialTheme.colors.onBackground
+    val textColor = when (type) {
+        1 -> getRankColor(size - index)
+        else -> {
+            if (selectIndex.value == index)
+                MaterialTheme.colors.primary
+            else
+                MaterialTheme.colors.onBackground
+        }
+    }
     Box(
         modifier = Modifier
             .padding(Dimen.mediuPadding)

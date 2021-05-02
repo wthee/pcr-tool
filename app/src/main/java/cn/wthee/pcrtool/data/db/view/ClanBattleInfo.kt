@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.utils.fillZero
 import java.io.Serializable
 
 data class ClanBattleInfo(
@@ -32,5 +33,9 @@ data class ClanBattleInfo(
             }
         }
         return intList
+    }
+
+    fun getDate(): String {
+        return start_time.substring(0, 4) + "年" + release_month.toString().fillZero() + "月"
     }
 }

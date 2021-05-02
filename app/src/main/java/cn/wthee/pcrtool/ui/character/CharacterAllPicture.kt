@@ -12,9 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -79,7 +79,7 @@ fun CharacterAllPicture(unitId: Int) {
         )
         val unLoadToast = stringResource(id = R.string.wait_pic_load)
         ExtendedFabCompose(
-            icon = painterResource(id = R.drawable.ic_download),
+            iconType = MainIconType.DWONLOAD,
             text = stringResource(id = R.string.download_pic),
             textWidth = Dimen.getWordWidth(4f),
             modifier = Modifier

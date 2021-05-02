@@ -1,11 +1,13 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -15,14 +17,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.NavViewModel
@@ -52,8 +53,6 @@ fun EquipList(
         ModalBottomSheetValue.Hidden
     )
     val coroutineScope = rememberCoroutineScope()
-    //滚动监听
-    val scrollState = rememberLazyListState()
 
     filter.value?.let {
         viewModel.getEquips(it)
@@ -61,7 +60,7 @@ fun EquipList(
 
     //关闭时监听
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOK.postValue(false)
     }
 
@@ -71,18 +70,12 @@ fun EquipList(
             FilterEquipSheet(navViewModel, coroutineScope, state)
         }
     ) {
-        val marginTop: Dp = marginTopBar(scrollState)
-        Box(modifier = Modifier.fillMaxSize()) {
-            TopBarCompose(
-                titleId = R.string.tool_equip,
-                iconId = R.drawable.ic_equip,
-                scrollState = scrollState
-            )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(Dimen.smallPadding)) {
             LazyVerticalGrid(
                 cells = GridCells.Fixed(5),
-                state = scrollState,
                 modifier = Modifier
-                    .padding(top = marginTop)
                     .fillMaxSize()
                     .background(color = MaterialTheme.colors.background, shape = CardTopShape)
             ) {
@@ -93,14 +86,9 @@ fun EquipList(
                             .padding(Dimen.smallPadding),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        IconCompose(
-                            data = getEquipIconUrl(equip.equipmentId),
-                            modifier = Modifier
-                                .size(Dimen.iconSize)
-                                .clickable {
-                                    toEquipDetail(equip.equipmentId)
-                                }
-                        )
+                        IconCompose(data = getEquipIconUrl(equip.equipmentId)) {
+                            toEquipDetail(equip.equipmentId)
+                        }
                         //装备名称
                         Text(
                             text = equip.equipmentName,
@@ -122,15 +110,15 @@ fun EquipList(
                 modifier = Modifier
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                     .align(Alignment.BottomEnd),
-                icon = painterResource(id = R.drawable.ic_equip),
+                iconType = MainIconType.EQUIP,
                 text = "$count"
             ) {
                 coroutineScope.launch {
                     if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                         state.hide()
                     } else {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_ok)
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
                         state.show()
                     }
                 }
@@ -186,7 +174,6 @@ private fun FilterEquipSheet(
                 sheetState.hide()
             }
             navViewModel.fabOK.postValue(false)
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
             equipmentViewModel.filter.postValue(newFilter)
         }
         //装备名搜索

@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.ChipGroup
@@ -71,7 +72,7 @@ fun RankSelectCompose(
                 sheetState.hide()
             }
             navViewModel.fabOK.postValue(false)
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
             rank0.value = maxRank - selectIndex0.value
             rank1.value = maxRank - selectIndex1.value
         }
@@ -103,10 +104,7 @@ fun RankSelectItem(selectIndex: MutableState<Int>, rankList: List<Int>) {
         rankList.forEachIndexed { index, i ->
             chipData.add(ChipData(index, rankFillBlank(i)))
         }
-        ChipGroup(
-            chipData,
-            selectIndex,
-        )
+        ChipGroup(chipData, selectIndex, type = 1)
     }
 }
 

@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -15,11 +14,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -52,10 +51,11 @@ fun RankEquipCount(
     )
     val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOK.postValue(false)
     }
-
+    //关闭监听
+    val ok = navViewModel.fabOK.observeAsState().value ?: false
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -64,14 +64,12 @@ fun RankEquipCount(
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel, 1)
         }
     ) {
-        //关闭监听
-        val close = navViewModel.fabClose.observeAsState().value ?: false
-        if (close) {
+
+        if (ok) {
             coroutineScope.launch {
                 state.hide()
             }
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
-            navViewModel.fabClose.postValue(false)
+            navViewModel.fabOK.postValue(false)
         }
 
         Box(
@@ -121,11 +119,9 @@ fun RankEquipCount(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier.alpha(alpha)
                             ) {
-                                IconCompose(
-                                    data = getEquipIconUrl(item.id),
-                                    modifier = Modifier.clickable {
-                                        toEquipDetail(item.id)
-                                    })
+                                IconCompose(data = getEquipIconUrl(item.id)) {
+                                    toEquipDetail(item.id)
+                                }
                                 MainContentText(
                                     text = item.count.toString(),
                                     modifier = Modifier.padding(bottom = Dimen.mediuPadding)
@@ -141,7 +137,7 @@ fun RankEquipCount(
             }
             //选择
             ExtendedFabCompose(
-                icon = painterResource(id = R.drawable.ic_select),
+                iconType = MainIconType.RANK_SELECT,
                 text = stringResource(id = R.string.rank_select),
                 textWidth = Dimen.getWordWidth(5f),
                 modifier = Modifier
@@ -150,10 +146,10 @@ fun RankEquipCount(
             ) {
                 coroutineScope.launch {
                     if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                         state.hide()
                     } else {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_ok)
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
                         state.show()
                     }
                 }

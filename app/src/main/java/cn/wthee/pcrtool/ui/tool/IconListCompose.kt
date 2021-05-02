@@ -1,16 +1,13 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.getGridData
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 
 /**
@@ -51,20 +48,14 @@ private fun IconListRow(list: List<Int>, toCharacterDetail: (Int) -> Unit) {
             if (it == 0) {
                 IconCompose(
                     data = R.drawable.unknown_gray,
-                    modifier = Modifier
-                        .size(Dimen.iconSize)
-                        .alpha(0f)
+                    modifier = Modifier.alpha(0f)
                 )
             } else {
                 IconCompose(
-                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP,
-                    modifier = Modifier
-                        .size(Dimen.iconSize)
-                        .clip(Shapes.small)
-                        .clickable {
-                            toCharacterDetail(unitId)
-                        }
-                )
+                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP
+                ) {
+                    toCharacterDetail(unitId)
+                }
             }
         }
     }

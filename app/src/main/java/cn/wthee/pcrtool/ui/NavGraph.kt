@@ -12,15 +12,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
-import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
-import cn.wthee.pcrtool.ui.tool.EventList
-import cn.wthee.pcrtool.ui.tool.GachaList
-import cn.wthee.pcrtool.ui.tool.GuildList
-import cn.wthee.pcrtool.ui.tool.LeaderboardList
+import cn.wthee.pcrtool.ui.tool.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -48,6 +45,7 @@ object Navigation {
     const val TOOL_GACHA = "toolGacha"
     const val TOOL_EVENT = "toolEvent"
     const val TOOL_GUILD = "toolGuild"
+    const val TOOL_CLAN = "toolClanBattle"
 }
 
 @ExperimentalAnimationApi
@@ -76,7 +74,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             CharacterDetail(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 actions.toEquipDetail,
@@ -192,26 +190,32 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //角色排行
         composable(Navigation.TOOL_LEADER) {
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             LeaderboardList()
         }
 
         //角色排行
         composable(Navigation.TOOL_GACHA) {
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             GachaList(actions.toCharacterDetail)
         }
 
         //剧情活动
         composable(Navigation.TOOL_EVENT) {
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             EventList(actions.toCharacterDetail)
         }
 
         //角色公会
         composable(Navigation.TOOL_GUILD) {
-            viewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             GuildList(actions.toCharacterDetail)
+        }
+
+        //团队战
+        composable(Navigation.TOOL_CLAN) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            ClanBattleList()
         }
     }
 }
@@ -306,6 +310,13 @@ class NavActions(navController: NavHostController) {
     val toGuildList = {
         navController.navigate(Navigation.TOOL_GUILD)
     }
+
+    /**
+     * 团队战
+     */
+    val toClanBattleList = {
+        navController.navigate(Navigation.TOOL_CLAN)
+    }
 }
 
 @HiltViewModel
@@ -315,7 +326,8 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * fab 图标显示
      */
-    val fabMainIcon = MutableLiveData(R.drawable.ic_function)
+    val fabMainIcon = MutableLiveData(MainIconType.MAIN)
+//    val fabMainIcon = MutableLiveData(R.drawable.ic_function)
 
     /**
      * 确认

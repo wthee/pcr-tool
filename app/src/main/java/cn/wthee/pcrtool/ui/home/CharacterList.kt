@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -69,7 +69,7 @@ fun CharacterList(
 
     //关闭时监听
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         navViewModel.fabOK.postValue(false)
     }
 
@@ -104,15 +104,15 @@ fun CharacterList(
                 modifier = Modifier
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                     .align(Alignment.BottomEnd),
-                icon = painterResource(id = R.drawable.ic_character),
+                iconType = MainIconType.CHARACTER,
                 text = "$count"
             ) {
                 coroutineScope.launch {
                     if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+                        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
                         state.hide()
                     } else {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_ok)
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
                         state.show()
                     }
                 }
@@ -255,7 +255,7 @@ private fun FilterCharacterSheet(
                 sheetState.hide()
             }
             navViewModel.fabOK.postValue(false)
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
             characterViewModel.filter.postValue(newFilter)
         }
 //        Row(

@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
@@ -73,16 +73,16 @@ class MainActivity : ComponentActivity() {
     //返回拦截
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            when (navViewModel.fabMainIcon.value ?: 0) {
-                R.drawable.ic_function -> {
+            when (navViewModel.fabMainIcon.value ?: MainIconType.MAIN) {
+                MainIconType.MAIN -> {
                     return super.onKeyDown(keyCode, event)
                 }
-                R.drawable.ic_down -> {
-                    navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+                MainIconType.DOWN -> {
+                    navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
                     return true
                 }
                 else -> {
-                    navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                    navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                 }
             }
         }
@@ -157,17 +157,14 @@ fun Home() {
 
 @Composable
 fun FabMain(navController: NavHostController, modifier: Modifier) {
-    val iconId =
-        navViewModel.fabMainIcon.observeAsState().value ?: R.drawable.ic_function
+    val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
 
-    FabCompose(iconId, modifier = modifier) {
-        when (iconId) {
-            R.drawable.ic_ok -> navViewModel.fabOK.postValue(true)
-            R.drawable.ic_cancel -> navViewModel.fabClose.postValue(true)
-            R.drawable.ic_function -> {
-                navViewModel.fabMainIcon.postValue(R.drawable.ic_down)
-            }
-            R.drawable.ic_down -> navViewModel.fabMainIcon.postValue(R.drawable.ic_function)
+    FabCompose(icon, modifier = modifier) {
+        when (icon) {
+            MainIconType.OK -> navViewModel.fabOK.postValue(true)
+            MainIconType.CLOSE -> navViewModel.fabClose.postValue(true)
+            MainIconType.MAIN -> navViewModel.fabMainIcon.postValue(MainIconType.DOWN)
+            MainIconType.DOWN -> navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
             else -> {
                 navController.navigateUp()
                 navViewModel.loading.postValue(false)

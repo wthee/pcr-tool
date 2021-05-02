@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
@@ -16,10 +17,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.getRankColor
 
 /**
  * 蓝底白字
@@ -31,14 +32,16 @@ fun MainTitleText(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.primary
 ) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.onPrimary,
-        style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
-        modifier = modifier
-            .background(color = backgroundColor, shape = Shapes.small)
-            .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
-    )
+    SelectionContainer(modifier = modifier) {
+        Text(
+            text = text,
+            color = MaterialTheme.colors.onPrimary,
+            style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
+            modifier = Modifier
+                .background(color = backgroundColor, shape = Shapes.small)
+                .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
+        )
+    }
 }
 
 /**
@@ -50,27 +53,39 @@ fun MainContentText(
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.End
 ) {
-    Text(
-        text = text,
-        textAlign = textAlign,
-        style = MaterialTheme.typography.body1,
-        modifier = modifier
-    )
+    SelectionContainer(modifier = modifier) {
+        Text(
+            text = text,
+            textAlign = textAlign,
+            style = MaterialTheme.typography.body1,
+        )
+    }
+
 }
 
 /**
  * 蓝色加粗标题
  */
 @Composable
-fun MainText(text: String, modifier: Modifier = Modifier) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.primary,
-        style = MaterialTheme.typography.subtitle1,
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        modifier = modifier.padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
-    )
+fun MainText(
+    text: String,
+    color: Color = MaterialTheme.colors.primary,
+    modifier: Modifier = Modifier
+) {
+    SelectionContainer(
+        modifier = modifier.padding(
+            start = Dimen.mediuPadding,
+            end = Dimen.mediuPadding
+        )
+    ) {
+        Text(
+            text = text,
+            color = color,
+            style = MaterialTheme.typography.subtitle1,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+        )
+    }
 }
 
 /**
@@ -78,13 +93,12 @@ fun MainText(text: String, modifier: Modifier = Modifier) {
  */
 @Composable
 fun MainSubText(text: String, modifier: Modifier = Modifier) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.primary,
-        style = MaterialTheme.typography.subtitle2,
-        fontWeight = FontWeight.Bold,
-        modifier = modifier.padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
-    )
+    SelectionContainer(modifier = modifier) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.subtitle2,
+        )
+    }
 }
 
 /**
@@ -165,8 +179,24 @@ fun RankText(
     Text(
         text = getFormatText(rank),
         textAlign = textAlign,
-        color = colorResource(id = getRankColor(rank)),
+        color = getRankColor(rank),
         style = style,
         modifier = modifier
     )
+}
+
+//rank 颜色
+@Composable
+fun getRankColor(rank: Int): Color {
+    val colorId = when (rank) {
+        in 2..3 -> R.color.color_rank_2_3
+        in 4..6 -> R.color.color_rank_4_6
+        in 7..10 -> R.color.color_rank_7_10
+        in 11..17 -> R.color.color_rank_11_17
+        in 18..99 -> R.color.color_rank_18
+        else -> {
+            R.color.color_rank_2_3
+        }
+    }
+    return colorResource(id = colorId)
 }

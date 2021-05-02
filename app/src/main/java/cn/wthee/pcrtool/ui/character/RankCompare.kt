@@ -17,12 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -69,10 +69,11 @@ fun RankCompare(
     )
     val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOK.postValue(false)
     }
-
+    //关闭监听
+    val ok = navViewModel.fabOK.observeAsState().value ?: false
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -81,14 +82,12 @@ fun RankCompare(
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel)
         }
     ) {
-        //关闭监听
-        val close = navViewModel.fabClose.observeAsState().value ?: false
-        if (close) {
+
+        if (ok) {
             coroutineScope.launch {
                 state.hide()
             }
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
-            navViewModel.fabClose.postValue(false)
+            navViewModel.fabOK.postValue(false)
         }
 
         Box(
@@ -128,7 +127,7 @@ fun RankCompare(
                 AttrCompare(attrCompareData)
             }
             ExtendedFabCompose(
-                icon = painterResource(id = R.drawable.ic_select),
+                iconType = MainIconType.RANK_SELECT,
                 text = stringResource(id = R.string.rank_select),
                 textWidth = Dimen.getWordWidth(5f),
                 modifier = Modifier
@@ -137,10 +136,10 @@ fun RankCompare(
             ) {
                 coroutineScope.launch {
                     if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                         state.hide()
                     } else {
-                        navViewModel.fabMainIcon.postValue(R.drawable.ic_ok)
+                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
                         state.show()
                     }
                 }

@@ -18,9 +18,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.MainTitleText
-import cn.wthee.pcrtool.ui.compose.getGridData
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -97,11 +95,9 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
         //技能名
         val type = getSkillType(skillDetail.skillId)
         val color = getSkillColor(type)
-        Text(
+        MainText(
             text = skillDetail.name,
             color = colorResource(color),
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.subtitle1,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = Dimen.largePadding)
@@ -130,11 +126,10 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
         ) {
             val url = Constants.SKILL_ICON_URL + skillDetail.iconType + Constants.WEBP
             //技能图标
-            IconCompose(data = url, modifier = Modifier.size(Dimen.iconSize))
+            IconCompose(data = url)
             //描述
-            Text(
+            MainSubText(
                 text = skillDetail.desc,
-                style = MaterialTheme.typography.subtitle2,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = Dimen.mediuPadding)

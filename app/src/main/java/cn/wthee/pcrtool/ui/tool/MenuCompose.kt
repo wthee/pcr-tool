@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.compose
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.NavViewModel
@@ -28,22 +28,33 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
-    val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: 0
+    val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
-    if (fabMainIcon == R.drawable.ic_down) {
+    if (fabMainIcon == MainIconType.DOWN) {
         Column(
             verticalArrangement = Arrangement.Bottom,
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorResource(id = R.color.alpha_black))
                 .clickable {
-                    viewModel.fabMainIcon.postValue(R.drawable.ic_function)
+                    viewModel.fabMainIcon.postValue(MainIconType.MAIN)
                 }
         ) {
             Row {
                 MenuItem(
+                    text = stringResource(id = R.string.tool_clan),
+                    iconType = MainIconType.CLAN,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .height(Dimen.smallMenuHeight)
+                ) {
+                    actions.toClanBattleList()
+                }
+            }
+            Row {
+                MenuItem(
                     text = stringResource(id = R.string.tool_event),
-                    iconId = R.drawable.ic_event,
+                    iconType = MainIconType.EVENT,
                     modifier = Modifier
                         .weight(0.5f)
                         .height(Dimen.smallMenuHeight)
@@ -52,7 +63,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 }
                 MenuItem(
                     text = stringResource(id = R.string.tool_guild),
-                    iconId = R.drawable.ic_guild,
+                    iconType = MainIconType.GUILD,
                     modifier = Modifier
                         .weight(0.5f)
                         .height(Dimen.smallMenuHeight)
@@ -63,7 +74,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
             Row {
                 MenuItem(
                     text = stringResource(id = R.string.tool_leader),
-                    iconId = R.drawable.ic_leader,
+                    iconType = MainIconType.LEADER,
                     modifier = Modifier
                         .weight(0.5f)
                         .height(Dimen.smallMenuHeight)
@@ -72,7 +83,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 }
                 MenuItem(
                     text = stringResource(id = R.string.tool_gacha),
-                    iconId = R.drawable.ic_gacha,
+                    iconType = MainIconType.GACHA,
                     modifier = Modifier
                         .weight(0.5f)
                         .height(Dimen.smallMenuHeight)
@@ -84,7 +95,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
             Row {
                 MenuItem(
                     text = stringResource(id = R.string.tool_equip),
-                    iconId = R.drawable.ic_equip,
+                    iconType = MainIconType.EQUIP,
                     modifier = Modifier
                         .weight(0.5f)
                         .height(Dimen.smallMenuHeight)
@@ -93,7 +104,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 }
                 MenuItem(
                     text = stringResource(id = R.string.setting),
-                    iconId = R.drawable.ic_settings,
+                    iconType = MainIconType.SETTING,
                     modifier = Modifier
                         .weight(0.5f)
                         .height(Dimen.smallMenuHeight)
@@ -134,7 +145,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     },
                     onClick = {
                         coroutineScope.launch {
-                            viewModel.fabMainIcon.postValue(R.drawable.ic_function)
+                            viewModel.fabMainIcon.postValue(MainIconType.MAIN)
                             DatabaseUpdater(viewModel).changeType()
                         }
                     }
@@ -149,7 +160,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
  * 菜单项
  */
 @Composable
-fun MenuItem(text: String, @DrawableRes iconId: Int, modifier: Modifier, action: () -> Unit) {
+fun MenuItem(text: String, iconType: MainIconType, modifier: Modifier, action: () -> Unit) {
     Card(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onSurface,
@@ -169,10 +180,11 @@ fun MenuItem(text: String, @DrawableRes iconId: Int, modifier: Modifier, action:
                     .align(Alignment.TopStart)
             )
             Icon(
-                painter = painterResource(id = iconId),
+                iconType.icon,
                 contentDescription = null,
                 tint = MaterialTheme.colors.onPrimary,
                 modifier = Modifier
+                    .size(Dimen.iconSize)
                     .padding(Dimen.mediuPadding)
                     .align(Alignment.BottomEnd)
             )

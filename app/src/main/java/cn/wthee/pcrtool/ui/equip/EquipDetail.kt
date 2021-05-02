@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.LinearProgressIndicator
@@ -52,13 +51,9 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
                     .fillMaxWidth()
                     .padding(Dimen.smallPadding)
             ) {
-                IconCompose(
-                    data = getEquipIconUrl(equipId),
-                    modifier = Modifier.size(Dimen.iconSize)
-                )
-                Text(
+                IconCompose(data = getEquipIconUrl(equipId))
+                MainSubText(
                     text = it.getDesc(),
-                    style = MaterialTheme.typography.subtitle2,
                     modifier = Modifier.padding(start = Dimen.mediuPadding)
                 )
             }
@@ -114,13 +109,11 @@ private fun EquipMaterialList(
                     Box {
                         IconCompose(
                             data = getEquipIconUrl(material.id),
-                            modifier = Modifier
-                                .size(Dimen.smallIconSize)
-                                .clickable {
-                                    clickId.value = material.id
-                                    equipmentViewModel.getDropInfos(material.id)
-                                }
-                        )
+                            size = Dimen.smallIconSize,
+                        ) {
+                            clickId.value = material.id
+                            equipmentViewModel.getDropInfos(material.id)
+                        }
                         androidx.compose.animation.AnimatedVisibility(visible = clickId.value == material.id) {
                             Spacer(
                                 modifier = Modifier
@@ -241,9 +234,8 @@ private fun AreaEquipItem(
                 Box {
                     IconCompose(
                         data = getEquipIconUrl(it.eid),
-                        modifier = Modifier
-                            .size(Dimen.smallIconSize)
-                            .alpha(alpha)
+                        size = Dimen.smallIconSize,
+                        modifier = Modifier.alpha(alpha)
                     )
                     if (selected) {
                         Spacer(

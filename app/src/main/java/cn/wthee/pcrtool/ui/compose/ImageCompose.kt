@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -78,8 +79,13 @@ fun PositionIcon(position: Int, size: Dp) {
  * 图标
  */
 @Composable
-fun IconCompose(data: Any, modifier: Modifier = Modifier, size: Dp = Dimen.iconSize) {
-    Box {
+fun IconCompose(
+    data: Any,
+    modifier: Modifier = Modifier,
+    size: Dp = Dimen.iconSize,
+    onClick: () -> Unit = {}
+) {
+    Box(modifier) {
         val painter = rememberCoilPainter(request = data)
         Image(
             painter = when (painter.loadState) {
@@ -88,10 +94,10 @@ fun IconCompose(data: Any, modifier: Modifier = Modifier, size: Dp = Dimen.iconS
                 else -> rememberCoilPainter(request = R.drawable.unknown_gray)
             },
             contentDescription = null,
-            modifier = modifier
+            modifier = Modifier
                 .size(size)
                 .clip(Shapes.small)
-
+                .clickable(onClick = onClick)
         )
     }
 }

@@ -9,8 +9,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,6 +19,7 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.allNotZero
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -107,9 +106,12 @@ fun CharacterDetail(
     )
     val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabClose.postValue(false)
     }
+    //关闭监听
+    val close = navViewModel.fabClose.observeAsState().value ?: false
+
 
     //页面
     ModalBottomSheetLayout(
@@ -144,13 +146,11 @@ fun CharacterDetail(
             }
         }
 
-        //关闭监听
-        val close = navViewModel.fabClose.observeAsState().value ?: false
         if (close) {
             coroutineScope.launch {
                 state.hide()
             }
-            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
             navViewModel.fabClose.postValue(false)
         }
 
@@ -222,18 +222,43 @@ fun CharacterDetail(
                             AttrList(attrs = allData.value!!.stroyAttr.allNotZero())
                             //RANK 装备
                             CharacterEquip(
-                                unitId,
-                                rankMax.value,
-                                level.value!!,
-                                rank.value!!,
-                                rarity.value!!,
-                                uniqueEquipLevel.value!!,
-                                allData.value!!.equips,
-                                toEquipDetail,
-                                toRankEquip,
-                                toRankCompare,
-                                toEquipCount,
+                                unitId, rank.value!!, allData.value!!.equips,
+                                toEquipDetail, toRankEquip,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
+                            //RANK 相关
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Row(
+                                    modifier = Modifier.padding(top = Dimen.smallPadding),
+                                ) {
+                                    //跳转至 RANK 对比页面
+                                    TextButton(onClick = {
+                                        toRankCompare(
+                                            unitId,
+                                            rankMax.value,
+                                            level.value!!,
+                                            rarity.value!!,
+                                            uniqueEquipLevel.value!!
+                                        )
+                                    }) {
+                                        Text(
+                                            text = stringResource(id = R.string.rank_compare),
+                                            color = MaterialTheme.colors.primary,
+                                            style = MaterialTheme.typography.subtitle2
+                                        )
+                                    }
+                                    //跳转至装备统计页面
+                                    TextButton(onClick = {
+                                        toEquipCount(unitId, rankMax.value)
+                                    }) {
+                                        Text(
+                                            text = stringResource(id = R.string.rank_equip_statistics),
+                                            color = MaterialTheme.colors.primary,
+                                            style = MaterialTheme.typography.subtitle2
+                                        )
+                                    }
+                                }
+                            }
                             //显示专武
                             if (allData.value!!.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                                 UniqueEquip(
@@ -271,23 +296,23 @@ fun CharacterDetail(
             ) {
                 //技能循环
                 FabCompose(
+                    iconType = MainIconType.SKILL_LOOP,
                     modifier = Modifier
                         .padding(end = Dimen.fabSmallMarginEnd),
-                    iconId = R.drawable.ic_loop,
                 ) {
                     coroutineScope.launch {
                         if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(R.drawable.ic_back)
+                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                             state.hide()
                         } else {
-                            navViewModel.fabMainIcon.postValue(R.drawable.ic_cancel)
+                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
                             state.show()
                         }
                     }
                 }
                 //跳转至角色资料
                 ExtendedFabCompose(
-                    icon = painterResource(id = R.drawable.ic_drop),
+                    iconType = MainIconType.CHARACTER_INTRO,
                     text = stringResource(id = R.string.character_basic_Info)
                 ) {
                     toCharacterBasicInfo(unitId)
@@ -305,18 +330,13 @@ fun CharacterDetail(
 @Composable
 private fun CharacterEquip(
     unitId: Int,
-    maxRank: Int,
-    level: Int,
     rank: Int,
-    rarity: Int,
-    uniqueEquipLevel: Int,
     equips: List<EquipmentMaxData>,
     toEquipDetail: (Int) -> Unit,
     toRankEquip: (Int) -> Unit,
-    toRankCompare: (Int, Int, Int, Int, Int) -> Unit,
-    toEquipCount: (Int, Int) -> Unit,
+    modifier: Modifier
 ) {
-    Column {
+    Column(modifier = modifier.fillMaxWidth(0.8f)) {
         //装备 6、 3
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -327,24 +347,14 @@ private fun CharacterEquip(
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
-            IconCompose(
-                data = getEquipIconUrl(id6),
-                modifier = Modifier
-                    .size(Dimen.iconSize)
-                    .clickable {
-                        if (id6 != Constants.UNKNOWN_EQUIP_ID) {
-                            toEquipDetail(id6)
-                        }
-                    }
-            )
-            IconCompose(
-                data = getEquipIconUrl(id3),
-                modifier = Modifier
-                    .size(Dimen.iconSize)
-                    .clickable {
-                        toEquipDetail(id3)
-                    }
-            )
+            IconCompose(data = getEquipIconUrl(id6)) {
+                if (id6 != Constants.UNKNOWN_EQUIP_ID) {
+                    toEquipDetail(id6)
+                }
+            }
+            IconCompose(data = getEquipIconUrl(id3)) {
+                toEquipDetail(id3)
+            }
         }
         //装备 5、 2
         Row(
@@ -355,56 +365,23 @@ private fun CharacterEquip(
                 .padding(top = Dimen.mediuPadding)
         ) {
             val id5 = equips[2].equipmentId
-            IconCompose(
-                data = getEquipIconUrl(id5),
-                modifier = Modifier
-                    .size(Dimen.iconSize)
-                    .clickable {
-                        toEquipDetail(id5)
-                    }
-            )
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //跳转至所有 RANK 装备列表
-                SubButton(
-                    text = getFormatText(rank),
-                    color = colorResource(id = getRankColor(rank)),
-                ) {
-                    toRankEquip(unitId)
-                }
-                Row(
-                    modifier = Modifier.padding(top = Dimen.smallPadding),
-                ) {
-                    //跳转至 RANK 对比页面
-                    TextButton(onClick = {
-                        toRankCompare(unitId, maxRank, level, rarity, uniqueEquipLevel)
-                    }) {
-                        Text(
-                            text = stringResource(id = R.string.rank_compare),
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.subtitle2
-                        )
-                    }
-                    //跳转至装备统计页面
-                    TextButton(onClick = {
-                        toEquipCount(unitId, maxRank)
-                    }) {
-                        Text(
-                            text = stringResource(id = R.string.rank_equip_statistics),
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.subtitle2
-                        )
-                    }
-                }
+            IconCompose(data = getEquipIconUrl(id5)) {
+                toEquipDetail(id5)
             }
+
+            //跳转至所有 RANK 装备列表
+            SubButton(
+                text = getFormatText(rank),
+                color = getRankColor(rank),
+                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+            ) {
+                toRankEquip(unitId)
+            }
+
             val id2 = equips[3].equipmentId
-            IconCompose(
-                data = getEquipIconUrl(id2),
-                modifier = Modifier
-                    .size(Dimen.iconSize)
-                    .clickable {
-                        toEquipDetail(id2)
-                    }
-            )
+            IconCompose(data = getEquipIconUrl(id2)) {
+                toEquipDetail(id2)
+            }
         }
         //装备 4、 1
         Row(
@@ -416,22 +393,12 @@ private fun CharacterEquip(
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
-            IconCompose(
-                data = getEquipIconUrl(id4),
-                modifier = Modifier
-                    .size(Dimen.iconSize)
-                    .clickable {
-                        toEquipDetail(id4)
-                    }
-            )
-            IconCompose(
-                data = getEquipIconUrl(id1),
-                modifier = Modifier
-                    .size(Dimen.iconSize)
-                    .clickable {
-                        toEquipDetail(id1)
-                    }
-            )
+            IconCompose(data = getEquipIconUrl(id4)) {
+                toEquipDetail(id4)
+            }
+            IconCompose(data = getEquipIconUrl(id1)) {
+                toEquipDetail(id1)
+            }
         }
     }
 }
@@ -468,10 +435,7 @@ private fun UniqueEquip(
                     .fillMaxWidth()
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    IconCompose(
-                        data = getEquipIconUrl(it.equipmentId),
-                        modifier = Modifier.size(Dimen.iconSize)
-                    )
+                    IconCompose(getEquipIconUrl(it.equipmentId))
                     Text(
                         text = silderState.value.toString(),
                         color = MaterialTheme.colors.primary,
