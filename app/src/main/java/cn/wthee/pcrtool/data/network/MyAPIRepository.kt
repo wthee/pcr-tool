@@ -129,29 +129,6 @@ class MyAPIRepository(private val service: MyAPIService) {
     }
 
     /**
-     * 获取日历信息
-     */
-    suspend fun getCalendar(): ResponseData<CalendarData> {
-        //请求
-        try {
-            val response = service.getCalendar()
-            if (response.message == "failure" || response.data == null) {
-                return error()
-            }
-            return response
-        } catch (e: Exception) {
-            if (e is CancellationException) {
-                return cancel()
-            } else {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_API)
-                }
-            }
-        }
-        return error()
-    }
-
-    /**
      * 获取通知信息
      */
     suspend fun getNotice(): ResponseData<List<AppNotice>> {

@@ -26,6 +26,7 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
@@ -107,18 +108,18 @@ private fun EquipMaterialList(
                     val color =
                         if (clickId.value == material.id) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface
                     Box {
-                        IconCompose(
-                            data = getEquipIconUrl(material.id),
-                            size = Dimen.smallIconSize,
-                        ) {
+                        IconCompose(data = getEquipIconUrl(material.id)) {
                             clickId.value = material.id
                             equipmentViewModel.getDropInfos(material.id)
                         }
-                        androidx.compose.animation.AnimatedVisibility(visible = clickId.value == material.id) {
+                        if (clickId.value == material.id) {
                             Spacer(
                                 modifier = Modifier
-                                    .size(Dimen.smallIconSize)
-                                    .background(colorResource(id = R.color.alpha_primary))
+                                    .size(Dimen.iconSize)
+                                    .background(
+                                        colorResource(id = R.color.alpha_primary),
+                                        Shapes.small
+                                    )
                             )
                         }
                     }
@@ -232,16 +233,12 @@ private fun AreaEquipItem(
                 val alpha = if (it == placeholder) 0f else 1f
                 val selected = selectedId == it.eid
                 Box {
-                    IconCompose(
-                        data = getEquipIconUrl(it.eid),
-                        size = Dimen.smallIconSize,
-                        modifier = Modifier.alpha(alpha)
-                    )
+                    IconCompose(data = getEquipIconUrl(it.eid), modifier = Modifier.alpha(alpha))
                     if (selected) {
                         Spacer(
                             modifier = Modifier
-                                .size(Dimen.smallIconSize)
-                                .background(colorResource(id = R.color.alpha_primary))
+                                .size(Dimen.iconSize)
+                                .background(colorResource(id = R.color.alpha_primary), Shapes.small)
                         )
                     }
                 }

@@ -10,10 +10,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.fillZero
@@ -51,7 +51,7 @@ fun DownloadCompose(viewModel: NavViewModel) {
                     )
                 } else {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_ok),
+                        MainIconType.OK.icon,
                         null,
                         modifier = Modifier.size(28.dp)
                     )

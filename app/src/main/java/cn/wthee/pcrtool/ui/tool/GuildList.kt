@@ -59,7 +59,6 @@ fun GuildList(
         ExtendedFabCompose(
             iconType = MainIconType.GUILD,
             text = stringResource(id = R.string.tool_guild),
-            textWidth = Dimen.getWordWidth(4f),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

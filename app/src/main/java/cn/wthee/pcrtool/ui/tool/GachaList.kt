@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.days
+import cn.wthee.pcrtool.utils.daysInt
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import kotlinx.coroutines.launch
@@ -79,6 +80,10 @@ fun GachaList(
  */
 @Composable
 private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
+    val today = getToday()
+    val sd = gachaInfo.startTime
+    val ed = gachaInfo.endTime
+    val inProgress = today.daysInt(sd) >= 0 && ed.daysInt(today) >= 0
     Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -87,10 +92,18 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
         //标题
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             MainTitleText(text = gachaInfo.getDate())
-            MainTitleText(
-                text = gachaInfo.endTime.days(gachaInfo.startTime),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
+            if (inProgress) {
+                MainTitleText(
+                    text = stringResource(R.string.in_progress, gachaInfo.endTime.days(today)),
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    backgroundColor = colorResource(id = R.color.news_update)
+                )
+            } else {
+                MainTitleText(
+                    text = gachaInfo.endTime.days(gachaInfo.startTime),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
         }
         Card(
             modifier = Modifier

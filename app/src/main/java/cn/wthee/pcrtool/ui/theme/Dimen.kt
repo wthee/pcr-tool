@@ -39,12 +39,12 @@ object Dimen {
     /**
      * 70dp
      */
-    val fabMarginEnd = 70.dp
+    val fabMarginEnd = 65.dp
 
     /**
      * 14dp
      */
-    val fabSmallMarginEnd = 14.dp
+    val fabSmallMarginEnd = 9.dp
 
     /**
      * 6dp
@@ -79,7 +79,7 @@ object Dimen {
     /**
      * 130dp
      */
-    val largeMenuHeight = 130.dp
+    val largeMenuHeight = 140.dp
 
     /**
      * 48dp
@@ -94,9 +94,9 @@ object Dimen {
 
 
     /**
-     * 42dp
+     * 40dp
      */
-    val smallIconSize = 42.dp
+    val iconMinSize = 40.dp
 
     /**
      * 45dp
@@ -114,7 +114,7 @@ object Dimen {
     val border = 2.dp
 
     /**
-     * 40dp
+     * 48dp
      */
     val topBarHeight = 48.dp
 

@@ -45,7 +45,6 @@ class DatabaseDownloadWorker(
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
         const val KEY_FROM = "KEY_FROM"
-        const val KEY_VIEWMODEL = "KEY_VIEWMODEL"
 
         lateinit var service: Call<ResponseBody>
     }
@@ -74,7 +73,7 @@ class DatabaseDownloadWorker(
             service = ApiUtil.createWithClient(
                 DatabaseService::class.java, Constants.DATABASE_URL,
                 ApiUtil.downloadClientBuild(object : DownloadListener {
-                    //TODO 下载进度
+                    //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         //更新下载进度
                         MainActivity.navViewModel.downloadProgress.postValue(progress)

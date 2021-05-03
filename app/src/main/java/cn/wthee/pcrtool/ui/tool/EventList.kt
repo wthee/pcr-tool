@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.days
+import cn.wthee.pcrtool.utils.daysInt
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
@@ -61,7 +62,6 @@ fun EventList(
         ExtendedFabCompose(
             iconType = MainIconType.EVENT,
             text = stringResource(id = R.string.tool_event),
-            textWidth = Dimen.getWordWidth(4f),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
@@ -114,7 +114,9 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             typeColor = R.color.news_update
         }
     }
-
+    val today = getToday()
+    val inProgress =
+        today.daysInt(startDate) >= 0 && endDate.daysInt(today) >= 0 && event.eventId / 10000 != 2
 
     Column(
         modifier = Modifier
@@ -131,7 +133,13 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 text = title,
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
-            if (showDays) {
+            if (inProgress) {
+                MainTitleText(
+                    text = stringResource(R.string.in_progress, endDate.days(today)),
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    backgroundColor = colorResource(id = R.color.news_update)
+                )
+            } else if (showDays) {
                 MainTitleText(
                     text = days,
                     modifier = Modifier.padding(start = Dimen.smallPadding)

@@ -40,58 +40,93 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     viewModel.fabMainIcon.postValue(MainIconType.MAIN)
                 }
         ) {
-            Row {
-                MenuItem(
-                    text = stringResource(id = R.string.tool_clan),
-                    iconType = MainIconType.CLAN,
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
-                ) {
-                    actions.toClanBattleList()
-                }
-            }
-            Row {
-                MenuItem(
-                    text = stringResource(id = R.string.tool_event),
-                    iconType = MainIconType.EVENT,
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
-                ) {
-                    actions.toEventStory()
-                }
-                MenuItem(
-                    text = stringResource(id = R.string.tool_guild),
-                    iconType = MainIconType.GUILD,
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
-                ) {
-                    actions.toGuildList()
-                }
-            }
-            Row {
-                MenuItem(
-                    text = stringResource(id = R.string.tool_leader),
-                    iconType = MainIconType.LEADER,
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
-                ) {
-                    actions.toLeaderboard()
+            Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {
+                Column(modifier = Modifier.weight(0.45f)) {
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_event),
+                        iconType = MainIconType.EVENT,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f)
+                    ) {
+                        actions.toEventStory()
+                    }
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_guild),
+                        iconType = MainIconType.GUILD,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.5f)
+                    ) {
+                        actions.toGuildList()
+                    }
                 }
                 MenuItem(
                     text = stringResource(id = R.string.tool_gacha),
                     iconType = MainIconType.GACHA,
                     modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
+                        .weight(0.2f)
+                        .fillMaxHeight()
                 ) {
                     actions.toGacha()
                 }
+                Column(
+                    modifier = Modifier
+                        .weight(0.35f)
+                        .height(Dimen.largeMenuHeight)
+                ) {
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_clan),
+                        iconType = MainIconType.CLAN,
+                        modifier = Modifier
+                            .weight(0.5f)
+                            .fillMaxWidth()
+                            .height(Dimen.smallMenuHeight)
+                    ) {
+                        actions.toClanBattleList()
+                    }
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_leader),
+                        iconType = MainIconType.LEADER,
+                        modifier = Modifier
+                            .weight(0.5f)
+                            .fillMaxWidth()
+                            .height(Dimen.smallMenuHeight)
+                    ) {
+                        actions.toLeaderboard()
+                    }
+                }
             }
 
+            Row {
+                MenuItem(
+                    text = stringResource(id = R.string.tool_calendar),
+                    iconType = MainIconType.CALENDAR,
+                    modifier = Modifier
+                        .weight(0.25f)
+                        .height(Dimen.largeMenuHeight)
+                ) {
+                    actions.toCalendar()
+                }
+                MenuItem(
+                    text = stringResource(id = R.string.tool_news),
+                    iconType = MainIconType.NEWS,
+                    modifier = Modifier
+                        .weight(0.3f)
+                        .height(Dimen.largeMenuHeight)
+                ) {
+                    //fixme 官网公告
+                }
+                MenuItem(
+                    text = stringResource(id = R.string.tool_pvp),
+                    iconType = MainIconType.PVP_SEARCH,
+                    modifier = Modifier
+                        .weight(0.45f)
+                        .height(Dimen.largeMenuHeight)
+                ) {
+                    //fixme 竞技场查询
+                }
+            }
             Row {
                 MenuItem(
                     text = stringResource(id = R.string.tool_equip),

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -19,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.enums.getMultipleIcon
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
 import cn.wthee.pcrtool.ui.compose.IconCompose
@@ -61,7 +63,6 @@ fun ClanBattleList(clanViewModel: ClanViewModel = hiltNavGraphViewModel()) {
         ExtendedFabCompose(
             iconType = MainIconType.CLAN,
             text = stringResource(id = R.string.tool_clan),
-            textWidth = Dimen.getWordWidth(3f),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
@@ -85,8 +86,11 @@ private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             MainTitleText(text = clanInfo.getDate())
             MainTitleText(
-                text = stringResource(id = R.string.section, getZhNumberText(clanInfo.section)),
-                backgroundColor = getSectionTextColor(clanInfo.section),
+                text = stringResource(
+                    id = R.string.section,
+                    getZhNumberText(clanInfo.getSection().size)
+                ),
+                backgroundColor = getSectionTextColor(clanInfo.getSection().size),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
         }
@@ -103,9 +107,19 @@ private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                clanInfo.getUnitIdList(clanInfo.section).forEach {
-                    IconCompose(data = Constants.UNIT_ICON_URL + it + Constants.WEBP) {
-
+                clanInfo.getUnitIdList(1).forEach {
+                    Box {
+                        IconCompose(data = Constants.UNIT_ICON_URL + it.key + Constants.WEBP) {
+                            //TODO 跳转至详情
+                        }
+                        if (it.value > 1) {
+                            Icon(
+                                getMultipleIcon(it.value - 1),
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.color_rank_18),
+                                modifier = Modifier.align(Alignment.BottomEnd)
+                            )
+                        }
                     }
                 }
             }

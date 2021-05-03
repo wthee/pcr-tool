@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.repository.ClanRepository
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
-import cn.wthee.pcrtool.database.getDatabaseType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +31,7 @@ class ClanViewModel @Inject constructor(
      */
     fun getAllClanBattleData() {
         viewModelScope.launch {
-            val data = repository.getAllClanBattleData(getDatabaseType())
+            val data = repository.getAllClanBattleData()
             clanInfo.postValue(data)
         }
     }

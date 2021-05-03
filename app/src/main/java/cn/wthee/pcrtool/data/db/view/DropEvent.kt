@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.utils.fillZero
 
 /**
@@ -36,3 +37,9 @@ data class DropEvent(
     }
 
 }
+
+data class CalendarEventData(
+    val title: String,
+    val info: String,
+    val colorId: Int = R.color.black,
+)

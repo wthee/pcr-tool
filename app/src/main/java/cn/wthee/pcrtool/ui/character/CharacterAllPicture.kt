@@ -81,7 +81,6 @@ fun CharacterAllPicture(unitId: Int) {
         ExtendedFabCompose(
             iconType = MainIconType.DWONLOAD,
             text = stringResource(id = R.string.download_pic),
-            textWidth = Dimen.getWordWidth(4f),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

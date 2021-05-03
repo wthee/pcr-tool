@@ -48,10 +48,4 @@ interface MyAPIService {
      */
     @POST("leaders")
     suspend fun getLeader(): ResponseData<LeaderData>
-
-    /**
-     * 国服日历
-     */
-    @POST("calendar")
-    suspend fun getCalendar(): ResponseData<CalendarData>
 }

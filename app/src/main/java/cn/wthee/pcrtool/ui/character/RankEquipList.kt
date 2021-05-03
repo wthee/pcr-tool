@@ -1,16 +1,14 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
@@ -66,6 +64,11 @@ fun RankEquipListItem(
     toEquipDetail: (Int) -> Unit,
     navViewModel: NavViewModel,
 ) {
+    val color = if (unitPromotion.promotionLevel == selectedRank.value)
+        MaterialTheme.colors.primary
+    else
+        MaterialTheme.colors.surface
+
     Card(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -78,8 +81,8 @@ fun RankEquipListItem(
         //图标列表
         Column(
             modifier = Modifier
-                .padding(Dimen.smallPadding)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(color, Shapes.large),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK
@@ -106,12 +109,6 @@ fun RankEquipListItem(
                         }
                     }
                 }
-            }
-        }
-        //选中
-        if (unitPromotion.promotionLevel == selectedRank.value) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Icon(Icons.Outlined.Done, null, modifier = Modifier.align(Alignment.Center))
             }
         }
     }

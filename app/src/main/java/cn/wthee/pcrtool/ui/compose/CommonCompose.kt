@@ -51,12 +51,14 @@ fun MainTitleText(
 fun MainContentText(
     text: String,
     modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
     textAlign: TextAlign = TextAlign.End
 ) {
     SelectionContainer(modifier = modifier) {
         Text(
             text = text,
             textAlign = textAlign,
+            color = color,
             style = MaterialTheme.typography.body1,
         )
     }
@@ -121,9 +123,9 @@ fun SpaceCompose(modifier: Modifier) {
 @Composable
 fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Button(
-        onClick = onClick,
         shape = Shapes.large,
-        modifier = modifier.padding(Dimen.smallPadding)
+        modifier = modifier.padding(Dimen.smallPadding),
+        onClick = onClick
     ) {
         Text(text = text, style = MaterialTheme.typography.button)
     }
@@ -140,9 +142,9 @@ fun SubButton(
     onClick: () -> Unit
 ) {
     OutlinedButton(
-        onClick = onClick,
         shape = Shapes.large,
-        modifier = modifier.padding(Dimen.smallPadding)
+        modifier = modifier.padding(Dimen.smallPadding),
+        onClick = onClick
     ) {
         Text(text = text, color = color, style = MaterialTheme.typography.button)
     }

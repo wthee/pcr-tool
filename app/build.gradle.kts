@@ -22,7 +22,7 @@ android {
         versionName = VERSION_NAME
 
 
-        buildConfigField("int", "SQLITE_VERSION", "82")
+        buildConfigField("int", "SQLITE_VERSION", VERSION_CODE.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

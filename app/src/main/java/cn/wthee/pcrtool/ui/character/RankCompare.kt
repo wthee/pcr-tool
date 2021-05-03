@@ -24,9 +24,11 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.RankCompareData
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import com.google.accompanist.coil.rememberCoilPainter
@@ -99,7 +101,19 @@ fun RankCompare(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                MainText(text = "$level")
+                //头像
+                IconCompose(
+                    data = CharacterIdUtil.getMaxIconUrl(
+                        unitId,
+                        MainActivity.r6Ids.contains(unitId)
+                    )
+                )
+                //等级
+                Text(
+                    text = "$level",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h6
+                )
                 StarCompose(rarity)
                 Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
                     Spacer(modifier = Modifier.weight(0.3f))
@@ -129,7 +143,6 @@ fun RankCompare(
             ExtendedFabCompose(
                 iconType = MainIconType.RANK_SELECT,
                 text = stringResource(id = R.string.rank_select),
-                textWidth = Dimen.getWordWidth(5f),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

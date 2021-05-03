@@ -58,41 +58,46 @@ const val basicSelect = """
 @Dao
 interface ClanBattleDao {
 
-    @SkipQueryVerification
-    @Query(
-        """
-        $basicSelect
-        FROM
-            clan_battle_schedule AS c
-            LEFT JOIN clan_battle_boss_data AS a ON c.clan_battle_id = a.clan_battle_id
-            LEFT JOIN enemy_parameter AS b ON $join
-        GROUP BY
-            c.start_time
-        ORDER BY
-            c.start_time DESC
-    """
-    )
-    suspend fun getAllClanBattleData(): List<ClanBattleInfo>
-
-    @SkipQueryVerification
-    @Query(
-        """
-        $basicSelect
-        FROM
-            clan_battle_schedule AS c
-            LEFT JOIN clan_battle_2_boss_data AS a ON c.clan_battle_id = a.clan_battle_id
-            LEFT JOIN enemy_parameter AS b ON $join
-        GROUP BY
-            c.start_time
-        ORDER BY
-            c.start_time DESC
-    """
-    )
-    suspend fun getAllClanBattleDataJP(): List<ClanBattleInfo>
+//    @Query(
+//        """
+//        $basicSelect
+//        FROM
+//            clan_battle_schedule AS c
+//            LEFT JOIN clan_battle_2_boss_data AS a ON c.clan_battle_id = a.clan_battle_id
+//            LEFT JOIN enemy_parameter AS b ON $join
+//        GROUP BY
+//            c.start_time
+//        ORDER BY
+//            c.start_time DESC
+//    """
+//    )
+//    suspend fun getAllClanBattleData(): List<ClanBattleInfo>
 
 
     @SkipQueryVerification
     @Query("""SELECT * FROM enemy_parameter WHERE enemy_id = :enemyId""")
     suspend fun getBossAttr(enemyId: Int): EnemyParameter
 
+    @Query(
+        """
+        SELECT
+            a.clan_battle_id,
+            a.release_month,
+            a.start_time,
+            COALESCE(GROUP_CONCAT( b.enemy_id, '-' ), '000000' ) AS enemyIds,
+            COALESCE(GROUP_CONCAT( b.unit_id, '-' ), '000000' ) AS unitIds
+        FROM
+            clan_battle_schedule AS a
+            LEFT JOIN enemy_parameter AS b ON b.level > 30 AND (
+                (b.enemy_id / 100000 >= 4013 AND a.clan_battle_id % 100 >= 26 AND a.clan_battle_id % 100 - ((b.enemy_id / 100000 % 100 - 12) * 12 + 10 ) = b.enemy_id / 1000 % 100 AND b.enemy_id % 1000 / 100 < 6) 
+                OR
+                (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 < 26 AND  a.clan_battle_id % 100 >= 12 AND a.clan_battle_id % 100 = b.enemy_id / 100 % 100 AND b.enemy_id % 100000 / 10000 > 1)
+                OR
+                (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 < 12 AND a.clan_battle_id % 100 = b.enemy_id / 100 % 100)
+            ) 
+         GROUP BY a.clan_battle_id
+         ORDER BY a.start_time DESC
+    """
+    )
+    suspend fun getAllClanBattleData(): List<ClanBattleInfo>
 }

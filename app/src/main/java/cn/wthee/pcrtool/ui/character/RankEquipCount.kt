@@ -19,9 +19,11 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
@@ -72,22 +74,24 @@ fun RankEquipCount(
             navViewModel.fabOK.postValue(false)
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = Dimen.largePadding)
-        ) {
-
+        Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(top = Dimen.largePadding)
             ) {
+                //头像
+                IconCompose(
+                    data = CharacterIdUtil.getMaxIconUrl(
+                        unitId,
+                        MainActivity.r6Ids.contains(unitId)
+                    )
+                )
                 //标题
                 Row(
                     horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = Dimen.largePadding)
+                        .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
                 ) {
                     MainTitleText(text = stringResource(id = R.string.cur_rank))
                     RankText(
@@ -139,7 +143,6 @@ fun RankEquipCount(
             ExtendedFabCompose(
                 iconType = MainIconType.RANK_SELECT,
                 text = stringResource(id = R.string.rank_select),
-                textWidth = Dimen.getWordWidth(5f),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

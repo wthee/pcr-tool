@@ -73,7 +73,6 @@ fun CharacterDetail(
     val rank = attrViewModel.rankValue.observeAsState()
     val rarity = attrViewModel.rarityValue.observeAsState()
     val uniqueEquipLevel = attrViewModel.uniqueEquipLevelValue.observeAsState()
-
     //滑动条
     val sliderLevel = remember {
         mutableStateOf(0)
@@ -89,11 +88,13 @@ fun CharacterDetail(
             unitId, level.value!!, rank.value!!, rarity.value!!, uniqueEquipLevel.value!!
         )
     }
-
+    //卡面高度
     val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 10
     var id = unitId
     id += if (MainActivity.r6Ids.contains(unitId)) 60 else 30
 
+    val coroutineScope = rememberCoroutineScope()
+    //保存滚动状态
     val scrollState = rememberScrollState()
     val marginTop = when {
         scrollState.value < 0 -> cardHeight
@@ -104,7 +105,6 @@ fun CharacterDetail(
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-    val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabClose.postValue(false)
@@ -145,7 +145,7 @@ fun CharacterDetail(
                 navViewModel.selectRank.postValue(maxData[1])
             }
         }
-
+        //关闭
         if (close) {
             coroutineScope.launch {
                 state.hide()
@@ -222,43 +222,11 @@ fun CharacterDetail(
                             AttrList(attrs = allData.value!!.stroyAttr.allNotZero())
                             //RANK 装备
                             CharacterEquip(
-                                unitId, rank.value!!, allData.value!!.equips,
+                                unitId, rank.value!!,
+                                allData.value!!.equips,
                                 toEquipDetail, toRankEquip,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
-                            //RANK 相关
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Row(
-                                    modifier = Modifier.padding(top = Dimen.smallPadding),
-                                ) {
-                                    //跳转至 RANK 对比页面
-                                    TextButton(onClick = {
-                                        toRankCompare(
-                                            unitId,
-                                            rankMax.value,
-                                            level.value!!,
-                                            rarity.value!!,
-                                            uniqueEquipLevel.value!!
-                                        )
-                                    }) {
-                                        Text(
-                                            text = stringResource(id = R.string.rank_compare),
-                                            color = MaterialTheme.colors.primary,
-                                            style = MaterialTheme.typography.subtitle2
-                                        )
-                                    }
-                                    //跳转至装备统计页面
-                                    TextButton(onClick = {
-                                        toEquipCount(unitId, rankMax.value)
-                                    }) {
-                                        Text(
-                                            text = stringResource(id = R.string.rank_equip_statistics),
-                                            color = MaterialTheme.colors.primary,
-                                            style = MaterialTheme.typography.subtitle2
-                                        )
-                                    }
-                                }
-                            }
                             //显示专武
                             if (allData.value!!.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                                 UniqueEquip(
@@ -289,16 +257,47 @@ fun CharacterDetail(
                     }
                 }
             }
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                //技能循环
+            Row(modifier = Modifier.align(Alignment.BottomEnd)) {
+                //跳转至角色资料
                 FabCompose(
+                    iconType = MainIconType.CHARACTER_INTRO,
+                    modifier = Modifier.padding(
+                        end = Dimen.fabSmallMarginEnd,
+                        bottom = Dimen.fabMargin
+                    ),
+                ) {
+                    toCharacterBasicInfo(unitId)
+                }//跳转至 RANK 对比页面
+                FabCompose(
+                    iconType = MainIconType.RANK_COMPARE,
+                    modifier = Modifier.padding(
+                        end = Dimen.fabSmallMarginEnd,
+                        bottom = Dimen.fabMargin
+                    )
+                ) {
+                    toRankCompare(
+                        unitId,
+                        rankMax.value,
+                        level.value!!,
+                        rarity.value!!,
+                        uniqueEquipLevel.value!!
+                    )
+                }
+                //跳转至装备统计页面
+                FabCompose(
+                    iconType = MainIconType.EQUIP_CALC,
+                    modifier = Modifier.padding(
+                        end = Dimen.fabSmallMarginEnd,
+                        bottom = Dimen.fabMargin
+                    ),
+                ) {
+                    toEquipCount(unitId, rankMax.value)
+                }
+                //技能循环
+                ExtendedFabCompose(
                     iconType = MainIconType.SKILL_LOOP,
-                    modifier = Modifier
-                        .padding(end = Dimen.fabSmallMarginEnd),
+                    text = stringResource(id = R.string.skill_loop),
+                    modifier = Modifier.padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
                     coroutineScope.launch {
                         if (state.isVisible) {
@@ -309,13 +308,6 @@ fun CharacterDetail(
                             state.show()
                         }
                     }
-                }
-                //跳转至角色资料
-                ExtendedFabCompose(
-                    iconType = MainIconType.CHARACTER_INTRO,
-                    text = stringResource(id = R.string.character_basic_Info)
-                ) {
-                    toCharacterBasicInfo(unitId)
                 }
             }
 
@@ -373,7 +365,10 @@ private fun CharacterEquip(
             SubButton(
                 text = getFormatText(rank),
                 color = getRankColor(rank),
-                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+                modifier = Modifier.padding(
+                    top = Dimen.largePadding * 2,
+                    bottom = Dimen.largePadding * 2,
+                )
             ) {
                 toRankEquip(unitId)
             }

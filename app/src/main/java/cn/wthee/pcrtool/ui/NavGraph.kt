@@ -46,6 +46,7 @@ object Navigation {
     const val TOOL_EVENT = "toolEvent"
     const val TOOL_GUILD = "toolGuild"
     const val TOOL_CLAN = "toolClanBattle"
+    const val TOOL_CALENDAR = "toolCalendar"
 }
 
 @ExperimentalAnimationApi
@@ -217,6 +218,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             ClanBattleList()
         }
+
+        //日历活动
+        composable(Navigation.TOOL_CALENDAR) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            CalendarCompose()
+        }
     }
 }
 
@@ -316,6 +323,13 @@ class NavActions(navController: NavHostController) {
      */
     val toClanBattleList = {
         navController.navigate(Navigation.TOOL_CLAN)
+    }
+
+    /**
+     * 日历活动
+     */
+    val toCalendar = {
+        navController.navigate(Navigation.TOOL_CALENDAR)
     }
 }
 

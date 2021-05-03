@@ -3,9 +3,7 @@ package cn.wthee.pcrtool.ui.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -13,7 +11,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.CardTopShape
-import cn.wthee.pcrtool.ui.theme.CharacterCardImageModifier
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
@@ -31,7 +28,10 @@ fun CharacterCard(
     clip: Boolean = false,
     scrollState: ScrollState? = null,
 ) {
-    val modifier = CharacterCardImageModifier
+
+    val modifier = Modifier
+        .aspectRatio(Constants.RATIO)
+        .fillMaxWidth()
     if (scrollState != null) {
         //滑动时，向上平移
         val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
@@ -82,7 +82,6 @@ fun PositionIcon(position: Int, size: Dp) {
 fun IconCompose(
     data: Any,
     modifier: Modifier = Modifier,
-    size: Dp = Dimen.iconSize,
     onClick: () -> Unit = {}
 ) {
     Box(modifier) {
@@ -95,9 +94,9 @@ fun IconCompose(
             },
             contentDescription = null,
             modifier = Modifier
-                .size(size)
                 .clip(Shapes.small)
                 .clickable(onClick = onClick)
+                .sizeIn(Dimen.iconMinSize, Dimen.iconSize)
         )
     }
 }
