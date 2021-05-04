@@ -439,9 +439,8 @@ private fun UniqueEquip(
                         modifier = Modifier.padding(top = Dimen.smallPadding)
                     )
                 }
-                Text(
+                MainSubText(
                     text = it.getDesc(),
-                    style = MaterialTheme.typography.subtitle2,
                     modifier = Modifier.padding(start = Dimen.mediuPadding)
                 )
             }

@@ -77,6 +77,7 @@ fun ClanBattleList(clanViewModel: ClanViewModel = hiltNavGraphViewModel()) {
 
 @Composable
 private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
+    val section = clanInfo.getAllBossInfo().size
     Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -88,9 +89,9 @@ private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
             MainTitleText(
                 text = stringResource(
                     id = R.string.section,
-                    getZhNumberText(clanInfo.getSection().size)
+                    getZhNumberText(section)
                 ),
-                backgroundColor = getSectionTextColor(clanInfo.getSection().size),
+                backgroundColor = getSectionTextColor(section),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
         }
@@ -102,22 +103,20 @@ private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
         ) {
             //图标
             Row(
-                modifier = Modifier
-                    .padding(Dimen.mediuPadding)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(Dimen.mediuPadding),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 clanInfo.getUnitIdList(1).forEach {
                     Box {
-                        IconCompose(data = Constants.UNIT_ICON_URL + it.key + Constants.WEBP) {
+                        IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
                             //TODO 跳转至详情
                         }
-                        if (it.value > 1) {
+                        if (it.targetCount > 1) {
                             Icon(
-                                getMultipleIcon(it.value - 1),
+                                getMultipleIcon(it.targetCount - 1),
                                 contentDescription = null,
                                 tint = colorResource(id = R.color.color_rank_18),
-                                modifier = Modifier.align(Alignment.BottomEnd)
+                                modifier = Modifier.align(Alignment.Center)
                             )
                         }
                     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
@@ -93,10 +94,14 @@ fun IconCompose(
                 else -> rememberCoilPainter(request = R.drawable.unknown_gray)
             },
             contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .clip(Shapes.small)
                 .clickable(onClick = onClick)
-                .sizeIn(Dimen.iconMinSize, Dimen.iconSize)
+                .sizeIn(
+                    minWidth = Dimen.iconMinSize, minHeight = Dimen.iconMinSize,
+                    maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize
+                )
         )
     }
 }
