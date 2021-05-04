@@ -47,7 +47,7 @@ class ClanAdapter(private val callback: CallBack) :
                 //时间
                 val ymd = clan.start_time.split("/")
                 title.text = ymd[1]
-                title.setTextColor(getSectionTextColor(clan.section))
+                title.setTextColor(getSectionTextColor(clan.getAllBossInfo().size))
                 //起止日期
                 date.text = ymd[0]
                 //图片

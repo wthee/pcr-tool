@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.wthee.pcrtool.MainActivity
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.view.ClanBattleInfo
+import cn.wthee.pcrtool.data.view.ClanBossTargetInfo
 import cn.wthee.pcrtool.databinding.ItemCommonBinding
 import cn.wthee.pcrtool.ui.tool.clan.ClanFragment
 import cn.wthee.pcrtool.ui.tool.clan.ClanFragmentDirections
@@ -35,7 +36,7 @@ class ClanBossIconAdapter(
     private val extra: Navigator.Extras? = null,
     private val parentIndex: Int = 0,
     private val callBack: CallBack? = null
-) : ListAdapter<Int, ClanBossIconAdapter.ViewHolder>(ClanIconListDiffCallback()) {
+) : ListAdapter<ClanBossTargetInfo, ClanBossIconAdapter.ViewHolder>(ClanIconListDiffCallback()) {
     private var selectedIndex = 0
 
     fun setSelectedIndex(index: Int) {
@@ -70,13 +71,13 @@ class ClanBossIconAdapter(
     inner class ViewHolder(private val binding: ItemCommonBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(uid: Int) {
+        fun bind(target: ClanBossTargetInfo) {
             //设置数据
             binding.apply {
                 //角色名
                 name.visibility = View.GONE
                 //图片
-                val picUrl = Constants.UNIT_ICON_URL + uid + Constants.WEBP
+                val picUrl = Constants.UNIT_ICON_URL + target.unitId + Constants.WEBP
                 pic.load(picUrl) {
                     placeholder(R.drawable.unknown_gray)
                     error(R.drawable.unknown_gray)
@@ -109,18 +110,18 @@ class ClanBossIconAdapter(
 
 }
 
-private class ClanIconListDiffCallback : DiffUtil.ItemCallback<Int>() {
+private class ClanIconListDiffCallback : DiffUtil.ItemCallback<ClanBossTargetInfo>() {
 
     override fun areItemsTheSame(
-        oldItem: Int,
-        newItem: Int
+        oldItem: ClanBossTargetInfo,
+        newItem: ClanBossTargetInfo
     ): Boolean {
         return oldItem == newItem
     }
 
     override fun areContentsTheSame(
-        oldItem: Int,
-        newItem: Int
+        oldItem: ClanBossTargetInfo,
+        newItem: ClanBossTargetInfo
     ): Boolean {
         return oldItem == newItem
     }
