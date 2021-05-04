@@ -4,8 +4,8 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
-def VERSION_NAME = "0.8.2"
-def VERSION_CODE = 82
+def VERSION_NAME = "0.8.3"
+def VERSION_CODE = 83
 
 android {
     compileSdkVersion 30
@@ -20,7 +20,7 @@ android {
         multiDexEnabled true
 
         flavorDimensions "default"
-        buildConfigField("int", "SQLITE_VERSION", "82")
+        buildConfigField("int", "SQLITE_VERSION", "83")
 
     }
 

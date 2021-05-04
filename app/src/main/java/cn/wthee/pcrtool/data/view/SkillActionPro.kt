@@ -235,7 +235,7 @@ data class SkillActionPro(
             }
             SkillActionType.HEAL -> {
                 val value = getValueText(2, action_value_2, action_value_3, action_value_4)
-                "使${getTarget()} HP回复 $value"
+                "使${getTarget()}HP回复 $value"
             }
             SkillActionType.CURE -> ""
             SkillActionType.BARRIER -> {
@@ -302,7 +302,7 @@ data class SkillActionPro(
                     "BREAK 期间，"
                 } else {
                     ""
-                } + "${getTarget()}${aura} $value ${time}"
+                } + "${getTarget()}${aura} $value $time"
 
             }
             SkillActionType.CHARM -> {
@@ -363,7 +363,7 @@ data class SkillActionPro(
             SkillActionType.TRIGGER -> {
                 val expr = when (action_detail_1) {
                     2 -> "受到伤害时 [${action_value_1.toInt()}%] 概率"
-                    3 -> "HP [${action_value_3.toInt()}%] 以下"
+                    3 -> "HP[${action_value_3.toInt()}%] 以下"
                     4 -> "死亡时 [${action_value_1.toInt()}%] 概率"
                     5 -> "暴击时 [${action_value_1.toInt()}%] 概率"
                     7 -> "战斗剩余时间 [${action_value_3.toInt()}] 秒以下"
@@ -444,9 +444,9 @@ data class SkillActionPro(
                         if ((action_detail_1 in 600..699) || action_detail_1 == 710) {
                             "${getTarget()}未持有标记时，使用动作(${action_detail_3 % 100})"
                         } else if (action_detail_1 == 700) {
-                            "${getTarget()}不，使用 [${action_detail_3 % 100}]"
+                            "${getTarget()}不是单独时，使用 [${action_detail_3 % 100}]"
                         } else if (action_detail_1 in 901..999) {
-                            "${getTarget()}的HP不在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_3 % 100})"
+                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以上时，使用动作(${action_detail_3 % 100})"
                         } else if (action_detail_1 == 1300) {
                             "${getTarget()}不是使用魔法攻击对象时，使用动作(${action_detail_2 % 10})"
                         } else {
@@ -524,7 +524,7 @@ data class SkillActionPro(
                         else
                             ""
                     } else if (action_detail_1 in 0..99) {
-                        "以 [100 - $action_detail_1%] 的概率使用动作(${action_detail_3 % 10})"
+                        "以 [${100 - action_detail_1}%] 的概率使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 == 599) {
                         "${getTarget()}身上没有持续伤害时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 in 600..699) {
@@ -536,7 +536,7 @@ data class SkillActionPro(
                     } else if (action_detail_1 == 720) {
                         "排除潜伏状态的单位，${getTarget()}中不存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 in 901..999) {
-                        "${getTarget()}的HP不在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_3 % 10})"
+                        "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以上时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 == 1000) {
                         "上一个动作未击杀单位时，使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_1 == 1001) {
@@ -576,17 +576,21 @@ data class SkillActionPro(
 
                 val additive = when (action_value_1.toInt()) {
                     2 -> {
-                        val expr = if (action_detail_3 == 0) {
-                            "[${action_value_2}]"
-                        } else if (action_detail_2 == 0) {
-                            "[${action_value_3}]"
-                        } else {
-                            "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                        val expr = when {
+                            action_detail_3 == 0 -> {
+                                "[${action_value_2}]"
+                            }
+                            action_detail_2 == 0 -> {
+                                "[${action_value_3}]"
+                            }
+                            else -> {
+                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                            }
                         }
                         "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
                     }
-                    0 -> "$commonDesc * [HP]"
-                    1 -> "$commonDesc * [损失的 HP]"
+                    0 -> "$commonDesc * [剩余的HP]"
+                    1 -> "$commonDesc * [损失的HP]"
                     4 -> "$commonDesc * [目标的数量]"
                     5 -> "$commonDesc * [受到伤害的目标数量]"
                     6 -> "$commonDesc * [造成的伤害]"
@@ -612,17 +616,21 @@ data class SkillActionPro(
 
                 when (action_value_1.toInt()) {
                     2 -> {
-                        val expr = if (action_detail_3 == 0) {
-                            "[${action_value_2}]"
-                        } else if (action_detail_2 == 0) {
-                            "[${action_value_3}]"
-                        } else {
-                            "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                        val expr = when {
+                            action_detail_3 == 0 -> {
+                                "[${action_value_2}]"
+                            }
+                            action_detail_2 == 0 -> {
+                                "[${action_value_3}]"
+                            }
+                            else -> {
+                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                            }
                         }
                         "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [HP]"
-                    1 -> "$commonDesc * [损失的 HP]"
+                    1 -> "$commonDesc * [损失的HP]"
                     in 200 until 300 -> "$commonDesc * [标记的层数]"
                     else -> "?"
                 }
@@ -678,7 +686,7 @@ data class SkillActionPro(
             }
             SkillActionType.HEAL_FIELD -> {
                 val value =
-                    "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)} HP"
+                    "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)}HP"
                 "展开半径为 [${action_value_7.toInt()}] 的领域${value}${
                     getTimeText(
                         action_value_5,
@@ -753,7 +761,7 @@ data class SkillActionPro(
                     else -> "?"
                 }
                 if (type != "") {
-                    "${value} 的概率使${getTarget()}的${type}全部解除"
+                    "$value 的概率使${getTarget()}的${type}全部解除"
                 } else {
                     ""
                 }
@@ -763,7 +771,7 @@ data class SkillActionPro(
                 val percent = if (action_value_1.toInt() == 1) "" else "%"
                 val value = getValueText(2, action_value_2, action_value_3, 0.0, percent)
                 val aura = getAura(action_detail_1)
-                "${getTarget()}${aura} ${value} ${time}，受到 [${action_detail_3}] 次伤害时被中断"
+                "${getTarget()}${aura} $value ${time}，受到 [${action_detail_3}] 次伤害时被中断"
             }
             SkillActionType.CHANGE_WIDTH -> {
                 "将模型的宽度变为[${action_value_1}]"
@@ -871,7 +879,7 @@ data class SkillActionPro(
                 }
                 val time = getTimeText(action_value_3, action_value_4)
                 when (action_detail_1) {
-                    3 -> "每造成伤害[$action_value_1] 时，使用动作(${action_detail_2 % 10}) $limit$time"
+                    3 -> "每造成[$action_value_1] 次伤害时，使用动作(${action_detail_2 % 10}) $limit$time"
                     else -> "?"
                 }
             }

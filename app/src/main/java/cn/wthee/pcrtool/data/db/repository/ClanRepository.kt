@@ -10,8 +10,7 @@ import javax.inject.Inject
  */
 class ClanRepository @Inject constructor(private val clanBattleDao: ClanBattleDao) {
 
-    suspend fun getAllClanBattleData(type: Int) =
-        if (type == 1) clanBattleDao.getAllClanBattleData() else clanBattleDao.getAllClanBattleDataJP()
+    suspend fun getAllClanBattleData(type: Int) = clanBattleDao.getAllClanBattleData()
 
     suspend fun getBossAttr(enemyId: Int) = clanBattleDao.getBossAttr(enemyId)
 

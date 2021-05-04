@@ -56,8 +56,8 @@ class ClanBossInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentToolClanBossInfoBinding.inflate(inflater, container, false)
-        uid = clan.getUnitIdList(selectSection)[index]
-        enemyId = clan.getEnemyList(selectSection)[index]
+        uid = clan.getUnitIdList(selectSection)[index].unitId
+        enemyId = clan.getUnitIdList(selectSection)[index].enemyId
         //基本信息
         //属性
         val attrAdapter = AttrAdapter()

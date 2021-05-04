@@ -47,7 +47,7 @@ class ClanPagerFragment : Fragment() {
         date = args.date
         index = args.index
         clan = args.clanInfo
-        selSection = clan.section
+        selSection = clan.getAllBossInfo().size
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             scrimColor = Color.TRANSPARENT
             duration = 500L
@@ -112,13 +112,13 @@ class ClanPagerFragment : Fragment() {
         })
         //技能循环
         binding.fabBossSkillLoop.setOnClickListener {
-            SkillLoopDialogFragment.getInstance(clan.getUnitIdList(selSection)[index])
+            SkillLoopDialogFragment.getInstance(clan.getUnitIdList(selSection)[index].unitId)
                 .show(parentFragmentManager, "loop")
         }
         //阶段选择
         binding.fabSection.setOnClickListener {
             ClanSectionSelectDialogFragment(this, REQUEST_CODE).getInstance(
-                clan.section,
+                clan.getAllBossInfo().size,
                 selSection
             ).show(parentFragmentManager, "section_select")
         }
@@ -147,13 +147,9 @@ class ClanPagerFragment : Fragment() {
      */
     private fun updateSection() {
         //BOSS viewpager 页面
-        if (binding.clanBossPager.adapter == null) {
-            val viewPagerAdapter = ClanBossPagerAdapter(childFragmentManager, lifecycle, selSection)
-            binding.clanBossPager.adapter = viewPagerAdapter
-            binding.clanBossPager.offscreenPageLimit = 1
-            binding.clanBossPager.setCurrentItem(index, false)
-
-        }
+        val viewPagerAdapter = ClanBossPagerAdapter(childFragmentManager, lifecycle, selSection)
+        binding.clanBossPager.adapter = viewPagerAdapter
+        binding.clanBossPager.setCurrentItem(index, false)
         binding.fabSection.text = getString(R.string.section, getZhNumberText(selSection))
         val fabColor = getSectionTextColor(selSection)
         binding.fabSection.setTextColor(fabColor)
