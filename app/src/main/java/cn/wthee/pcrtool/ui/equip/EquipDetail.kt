@@ -24,6 +24,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.allNotZero
+import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
@@ -40,28 +42,68 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()) {
     equipmentViewModel.getEquip(equipId)
     val equipMaxData = equipmentViewModel.equip.observeAsState().value
+    //收藏状态
+    val filter = navViewModel.filterEquip.observeAsState()
+    val loved = remember {
+        mutableStateOf(filter.value?.starIds?.contains(equipId) ?: false)
+    }
+
 
     equipMaxData?.let {
-        Column(modifier = Modifier.padding(Dimen.smallPadding)) {
-            MainText(
-                text = it.equipmentName,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimen.smallPadding)
-            ) {
-                IconCompose(data = getEquipIconUrl(equipId))
-                MainSubText(
-                    text = it.getDesc(),
-                    modifier = Modifier.padding(start = Dimen.mediuPadding)
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.padding(Dimen.smallPadding)) {
+                MainText(
+                    text = it.equipmentName,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimen.smallPadding)
+                ) {
+                    IconCompose(data = getEquipIconUrl(equipId))
+                    MainSubText(
+                        text = it.getDesc(),
+                        modifier = Modifier.padding(start = Dimen.mediuPadding)
+                    )
+                }
+                //属性
+                AttrList(attrs = it.attr.allNotZero())
+                //合成素材
+                EquipMaterialList(it)
             }
-            //属性
-            AttrList(attrs = it.attr.allNotZero())
-            //合成素材
-            EquipMaterialList(it)
+            Box(modifier = Modifier.align(Alignment.BottomEnd)) {
+                //装备收藏
+                AnimatedVisibility(visible = loved.value) {
+                    FabCompose(
+                        iconType = MainIconType.LOVE_FILL,
+                        modifier = Modifier.padding(
+                            end = Dimen.fabMarginEnd,
+                            start = Dimen.fabMargin,
+                            top = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin,
+                        )
+                    ) {
+                        filter.value?.addOrRemove(equipId)
+                        loved.value = !loved.value
+                    }
+                }
+                AnimatedVisibility(visible = !loved.value) {
+                    ExtendedFabCompose(
+                        text = stringResource(id = R.string.love_equip),
+                        iconType = MainIconType.LOVE_LINE,
+                        modifier = Modifier.padding(
+                            end = Dimen.fabMarginEnd,
+                            start = Dimen.fabMargin,
+                            bottom = Dimen.fabMargin
+                        )
+                    ) {
+                        filter.value?.addOrRemove(equipId)
+                        loved.value = !loved.value
+                    }
+                }
+            }
+
         }
     }
 }
@@ -233,7 +275,11 @@ private fun AreaEquipItem(
                 val alpha = if (it == placeholder) 0f else 1f
                 val selected = selectedId == it.eid
                 Box {
-                    IconCompose(data = getEquipIconUrl(it.eid), modifier = Modifier.alpha(alpha))
+                    IconCompose(
+                        data = getEquipIconUrl(it.eid),
+                        modifier = Modifier.alpha(alpha),
+                        clickable = false
+                    )
                     if (selected) {
                         Spacer(
                             modifier = Modifier

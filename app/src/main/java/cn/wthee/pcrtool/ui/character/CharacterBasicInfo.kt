@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.compose.MainContentText
@@ -125,7 +124,7 @@ fun CharacterBasicInfo(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.weight(0.35f)
                     ) {
-                        PositionIcon(position = info.position, size = 20.dp)
+                        PositionIcon(position = info.position)
                         MainContentText(
                             text = info.position.toString(),
                             modifier = Modifier.padding(start = Dimen.smallPadding)

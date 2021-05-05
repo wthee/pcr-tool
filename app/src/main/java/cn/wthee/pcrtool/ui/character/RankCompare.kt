@@ -97,10 +97,7 @@ fun RankCompare(
                 .fillMaxSize()
                 .padding(top = Dimen.largePadding)
         ) {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 //头像
                 IconCompose(
                     data = CharacterIdUtil.getMaxIconUrl(
@@ -171,6 +168,7 @@ fun AttrCompare(compareData: List<RankCompareData>) {
         modifier = Modifier
             .padding(Dimen.mediuPadding)
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
         compareData.forEach {
             Row(modifier = Modifier.padding(Dimen.smallPadding)) {

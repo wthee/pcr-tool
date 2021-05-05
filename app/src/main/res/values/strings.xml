@@ -86,7 +86,9 @@
     <string name="physical">物理攻击</string>
     <string name="magic">魔法攻击</string>
     <string name="all">全部</string>
-    <string name="tab_love">收藏</string>
+    <string name="title_love">收藏</string>
+    <string name="loved">已收藏</string>
+    <string name="love_equip">收藏装备</string>
     <string name="sort_asc_desc">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
@@ -119,7 +121,6 @@
     <string name="tool_news">公告</string>
     <string name="loading">加载中…</string>
     <string name="loading_news">正在获取最新数据…</string>
-    <string name="stared">已收藏</string>
     <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
     <string name="rank_compare">对比</string>
     <string name="rank_equip_statistics">统计</string>
@@ -187,8 +188,8 @@
     <string name="boss_target">多目标：%s</string>
 
     <!--日历-->
-    <string name="in_progress">剩余 %s</string>
-    <string name="coming_soon">倒计时 %s</string>
+    <string name="in_progress">剩余%s</string>
+    <string name="coming_soon">%s后开始</string>
 
 
 </resources>

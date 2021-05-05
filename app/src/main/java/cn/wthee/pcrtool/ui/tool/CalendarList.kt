@@ -7,7 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,10 +23,7 @@ import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.MainContentText
-import cn.wthee.pcrtool.ui.compose.MainTitleText
-import cn.wthee.pcrtool.ui.compose.StaggeredVerticalGrid
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.days
@@ -56,7 +52,6 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
                 MainActivity.navViewModel.loading.postValue(false)
                 StaggeredVerticalGrid(
                     maxColumnWidth = 220.dp,
-                    modifier = Modifier.padding(Dimen.mediuPadding)
                 ) {
                     data.forEach {
                         CalendarItem(it)
@@ -92,16 +87,26 @@ private fun CalendarItem(calendar: DropEvent) {
     val ed = calendar.getFixedEndTime()
     val inProgress = today.daysInt(sd) >= 0 && ed.daysInt(today) >= 0
     val comingSoon = today.daysInt(sd) < 0
+
+    val color = if (inProgress) {
+        MaterialTheme.colors.primary
+    } else if (comingSoon) {
+        colorResource(id = R.color.news_system)
+    } else {
+        colorResource(id = R.color.color_rank_4_6)
+    }
     Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
             .fillMaxWidth()
     ) {
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-            MainTitleText(text = calendar.getFixedStartTime())
+            //开始日期
+            MainTitleText(text = calendar.getFixedStartTime(), backgroundColor = color)
+            //天数
             MainTitleText(
                 text = calendar.getFixedEndTime().days(calendar.getFixedStartTime()),
-                modifier = Modifier.padding(start = Dimen.mediuPadding)
+                modifier = Modifier.padding(start = Dimen.mediuPadding), backgroundColor = color
             )
         }
 
@@ -115,19 +120,16 @@ private fun CalendarItem(calendar: DropEvent) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (inProgress) {
-                    MainTitleText(
+                    MainSubText(
                         text = stringResource(R.string.in_progress, ed.days(today)),
                         modifier = Modifier.padding(Dimen.smallPadding),
-                        backgroundColor = colorResource(id = R.color.news_update)
                     )
                 }
                 if (comingSoon) {
-                    MainTitleText(
+                    MainSubText(
                         text = stringResource(R.string.coming_soon, sd.days(today)),
                         modifier = Modifier.padding(Dimen.smallPadding),
-                        backgroundColor = colorResource(id = R.color.news_system)
                     )
-
                 }
                 //内容
                 getTypeData(calendar).forEach {
@@ -143,13 +145,6 @@ private fun CalendarItem(calendar: DropEvent) {
                             textAlign = TextAlign.Start
                         )
                     }
-                }
-                if (inProgress) {
-                    Text(
-                        text = stringResource(id = R.string.dead_line, calendar.getFixedEndTime()),
-                        style = MaterialTheme.typography.caption,
-                        modifier = Modifier.padding(top = Dimen.mediuPadding)
-                    )
                 }
             }
         }

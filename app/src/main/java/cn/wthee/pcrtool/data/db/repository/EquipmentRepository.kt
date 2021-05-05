@@ -15,16 +15,13 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
-    suspend fun getEquipments(filter: FilterEquipment) =
+    suspend fun getEquipments(filter: FilterEquipment, typeName: String) =
         equipmentDao.getEquipments(
-            filter.type,
+            typeName,
             filter.name,
             if (filter.all) 1 else 0,
             filter.starIds
         )
-
-    suspend fun getEquipmentCount(name: String, filter: FilterEquipment) =
-        equipmentDao.getEquipmentCount(filter.type, name, if (filter.all) 1 else 0, filter.starIds)
 
     suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)
 

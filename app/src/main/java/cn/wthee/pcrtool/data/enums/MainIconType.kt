@@ -154,10 +154,10 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
 
 fun getMultipleIcon(count: Int): ImageVector {
     return when (count) {
-        2 -> Icons.Rounded.Filter2
-        3 -> Icons.Rounded.Filter3
-        4 -> Icons.Rounded.Filter4
-        5 -> Icons.Rounded.Filter5
-        else -> Icons.Rounded.Filter
+        2 -> Icons.Rounded.LooksTwo
+        3 -> Icons.Rounded.Looks3
+        4 -> Icons.Rounded.Looks4
+        5 -> Icons.Rounded.Looks5
+        else -> Icons.Rounded.Looks
     }
 }

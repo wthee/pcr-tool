@@ -67,9 +67,9 @@ object Dimen {
     val largePadding = 12.dp
 
     /**
-     * 48dp
+     * 18dp
      */
-    val menuIconSize = 48.dp
+    val smallIconSize = 18.dp
 
     /**
      * 60dp

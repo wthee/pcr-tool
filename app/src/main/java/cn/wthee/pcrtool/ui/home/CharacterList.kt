@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
+import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -17,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
@@ -35,6 +38,7 @@ import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.DataStoreUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -52,9 +56,10 @@ fun CharacterList(
     navViewModel: NavViewModel,
     viewModel: CharacterViewModel = hiltNavGraphViewModel(),
 ) {
+    navViewModel.loading.postValue(true)
     val list = viewModel.characterList.observeAsState()
     //筛选状态
-    val filter = viewModel.filter.observeAsState()
+    val filter = navViewModel.filterCharacter.observeAsState()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -63,9 +68,8 @@ fun CharacterList(
     //滚动监听
     val scrollState = rememberLazyListState()
 
-    filter.value?.let {
-        viewModel.getCharacters(it)
-    }
+    val context = LocalContext.current
+    val sp = context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     //关闭时监听
     if (!state.isVisible) {
@@ -73,52 +77,61 @@ fun CharacterList(
         navViewModel.fabOK.postValue(false)
     }
 
-    ModalBottomSheetLayout(
-        sheetState = state,
-        sheetContent = {
-            FilterCharacterSheet(navViewModel, coroutineScope, state)
-        }
-    ) {
-        val marginTop: Dp = marginTopBar(scrollState)
-        coroutineScope.launch {
-            val r6Ids = viewModel.getR6Ids()
-            navViewModel.r6Ids.postValue(r6Ids)
-        }
-        Box(modifier = Modifier.fillMaxSize()) {
-            TopBarCompose(scrollState = scrollState)
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
-                state = scrollState,
-                modifier = Modifier
-                    .padding(top = marginTop)
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colors.background, shape = CardTopShape)
-            ) {
-                items(list.value ?: arrayListOf()) {
-                    CharacterItem(it, toDetail)
-                }
+    filter.value?.let { filterValue ->
+        filterValue.starIds =
+            DataStoreUtil.fromJson(sp.getString(Constants.SP_STAR_CHARACTER, "")) ?: arrayListOf()
+
+        viewModel.getCharacters(filterValue)
+        ModalBottomSheetLayout(
+            sheetState = state,
+            sheetContent = {
+                FilterCharacterSheet(navViewModel, coroutineScope, state)
             }
-            val count = list.value?.size ?: 0
-            // 数量显示&筛选按钮
-            ExtendedFabCompose(
-                modifier = Modifier
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                    .align(Alignment.BottomEnd),
-                iconType = MainIconType.CHARACTER,
-                text = "$count"
-            ) {
-                coroutineScope.launch {
-                    if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                        state.hide()
-                    } else {
-                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                        state.show()
+        ) {
+            val marginTop: Dp = marginTopBar(scrollState)
+            if (list.value != null) {
+                navViewModel.loading.postValue(false)
+            }
+            coroutineScope.launch {
+                val r6Ids = viewModel.getR6Ids()
+                navViewModel.r6Ids.postValue(r6Ids)
+            }
+            Box(modifier = Modifier.fillMaxSize()) {
+                TopBarCompose(scrollState = scrollState)
+                LazyVerticalGrid(
+                    cells = GridCells.Fixed(2),
+                    state = scrollState,
+                    modifier = Modifier
+                        .padding(top = marginTop)
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colors.background, shape = CardTopShape)
+                ) {
+                    items(list.value ?: arrayListOf()) {
+                        CharacterItem(it, filter.value!!, toDetail)
+                    }
+                }
+                val count = list.value?.size ?: 0
+                // 数量显示&筛选按钮
+                ExtendedFabCompose(
+                    modifier = Modifier
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                        .align(Alignment.BottomEnd),
+                    iconType = MainIconType.CHARACTER,
+                    text = "$count"
+                ) {
+                    coroutineScope.launch {
+                        if (state.isVisible) {
+                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                            state.hide()
+                        } else {
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            state.show()
+                        }
                     }
                 }
             }
-        }
 
+        }
     }
 }
 
@@ -128,8 +141,16 @@ fun CharacterList(
 @Composable
 private fun CharacterItem(
     character: CharacterInfo,
+    filter: FilterCharacter,
     toDetail: (Int) -> Unit,
 ) {
+    val loved = filter.starIds.contains(character.id)
+    val nameColor = if (loved) {
+        MaterialTheme.colors.primary
+    } else {
+        Color.Unspecified
+    }
+
     Card(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -153,21 +174,22 @@ private fun CharacterItem(
                 Text(
                     text = character.getNameF(),
                     style = MaterialTheme.typography.subtitle2,
-                    modifier = Modifier.weight(1f)
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f),
+                    color = nameColor
                 )
-                PositionIcon(character.position, 18.dp)
+                PositionIcon(character.position)
             }
             //其它属性
             Row(
-                modifier = Modifier.padding(
-                    start = Dimen.smallPadding,
-                    bottom = Dimen.smallPadding
-                )
+                modifier = Modifier
+                    .padding(Dimen.smallPadding)
+                    .fillMaxWidth()
             ) {
                 CharacterNumberText(character.getFixedAge())
                 CharacterNumberText(character.getFixedHeight() + "CM")
                 CharacterNumberText(character.getFixedWeight() + "KG")
-                CharacterNumberText(character.position.toString())
+                CharacterNumberText(character.position.toString(), modifier = Modifier.weight(1f))
             }
         }
     }
@@ -177,12 +199,12 @@ private fun CharacterItem(
  * 蓝色字体
  */
 @Composable
-private fun CharacterNumberText(text: String) {
+private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         color = MaterialTheme.colors.primaryVariant,
         style = MaterialTheme.typography.caption,
-        modifier = Modifier.padding(end = Dimen.smallPadding)
+        modifier = modifier.padding(end = Dimen.smallPadding)
     )
 }
 
@@ -197,48 +219,46 @@ private fun FilterCharacterSheet(
     sheetState: ModalBottomSheetState,
     characterViewModel: CharacterViewModel = hiltNavGraphViewModel()
 ) {
-    val textState = remember { mutableStateOf(TextFieldValue()) }
-    val newFilter = FilterCharacter()
-    newFilter.name = textState.value.text
+    val filter = navViewModel.filterCharacter.value ?: FilterCharacter()
+    val textState = remember { mutableStateOf(TextFieldValue(text = filter.name)) }
+    filter.name = textState.value.text
     //排序类型筛选
     val sortTypeIndex = remember {
-        mutableStateOf(0)
+        mutableStateOf(filter.sortType.type)
     }
-    newFilter.sortType = getSortType(sortTypeIndex.value)
+    filter.sortType = getSortType(sortTypeIndex.value)
     //排序方式筛选
     val sortAscIndex = remember {
-        mutableStateOf(1)
+        mutableStateOf(if (filter.asc) 0 else 1)
     }
-    newFilter.asc = sortAscIndex.value == 0
+    filter.asc = sortAscIndex.value == 0
+    //收藏筛选
+    val loveIndex = remember {
+        mutableStateOf(if (filter.all) 0 else 1)
+    }
+    filter.all = loveIndex.value == 0
     //六星筛选
     val r6Index = remember {
-        mutableStateOf(0)
+        mutableStateOf(if (filter.r6) 1 else 0)
     }
-    newFilter.r6 = r6Index.value == 1
+    filter.r6 = r6Index.value == 1
     //位置筛选
     val positionIndex = remember {
-        mutableStateOf(0)
+        mutableStateOf(filter.positon)
     }
-    newFilter.positon = positionIndex.value
+    filter.positon = positionIndex.value
     //攻击类型
     val atkIndex = remember {
-        mutableStateOf(0)
+        mutableStateOf(filter.atk)
     }
-    newFilter.atk = atkIndex.value
+    filter.atk = atkIndex.value
     //公会
-    val characterViewModel: CharacterViewModel = hiltNavGraphViewModel()
     characterViewModel.getGuilds()
     val guildList = characterViewModel.guilds.observeAsState().value ?: arrayListOf()
     val guildIndex = remember {
-        mutableStateOf(0)
+        mutableStateOf(filter.guild)
     }
-    if (guildList.isNotEmpty()) {
-        newFilter.guild = if (guildIndex.value == 0) {
-            "全部"
-        } else {
-            guildList[guildIndex.value - 1].guildName
-        }
-    }
+    filter.guild = guildIndex.value
 
     //确认操作
     val ok = navViewModel.fabOK.observeAsState().value ?: false
@@ -256,7 +276,6 @@ private fun FilterCharacterSheet(
             }
             navViewModel.fabOK.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-            characterViewModel.filter.postValue(newFilter)
         }
 //        Row(
 //            horizontalArrangement = Arrangement.SpaceBetween,
@@ -324,6 +343,20 @@ private fun FilterCharacterSheet(
         ChipGroup(
             sortAscChipData,
             sortAscIndex,
+            modifier = Modifier.padding(Dimen.smallPadding),
+        )
+        //收藏
+        MainText(
+            text = stringResource(id = R.string.title_love),
+            modifier = Modifier.padding(top = Dimen.largePadding)
+        )
+        val loveChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.all)),
+            ChipData(1, stringResource(id = R.string.loved)),
+        )
+        ChipGroup(
+            loveChipData,
+            loveIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //六星

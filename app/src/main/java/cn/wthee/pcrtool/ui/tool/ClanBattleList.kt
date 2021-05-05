@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -107,7 +108,7 @@ private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 clanInfo.getUnitIdList(1).forEach {
-                    Box {
+                    Column() {
                         IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
                             //TODO 跳转至详情
                         }
@@ -115,8 +116,7 @@ private fun ClanBattleItem(clanInfo: ClanBattleInfo) {
                             Icon(
                                 getMultipleIcon(it.targetCount - 1),
                                 contentDescription = null,
-                                tint = colorResource(id = R.color.color_rank_18),
-                                modifier = Modifier.align(Alignment.Center)
+                                tint = MaterialTheme.colors.primary,
                             )
                         }
                     }

@@ -35,14 +35,17 @@ class CharacterViewModel @Inject constructor(
     var updateCharacter = MutableLiveData<Boolean>()
     var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
     var guilds = MutableLiveData<List<GuildData>>()
-    var filter = MutableLiveData(FilterCharacter())
 
     /**
      * 角色基本资料 [CharacterInfo]
      */
     fun getCharacters(params: FilterCharacter) {
         viewModelScope.launch {
-            val data = repository.getInfoAndData(params)
+            val guildName = if (params.guild > 0)
+                repository.getGuilds()[params.guild - 1].guildName
+            else
+                "全部"
+            val data = repository.getInfoAndData(params, guildName)
             characterList.postValue(data)
         }
     }

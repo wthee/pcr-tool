@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.CardTopShape
@@ -60,7 +59,7 @@ fun CharacterCard(
  * 角色位置图标
  */
 @Composable
-fun PositionIcon(position: Int, size: Dp) {
+fun PositionIcon(position: Int) {
     val positionIconId = when (position) {
         in 0..299 -> R.drawable.ic_position_0
         in 300..599 -> R.drawable.ic_position_1
@@ -72,7 +71,7 @@ fun PositionIcon(position: Int, size: Dp) {
             request = positionIconId,
         ),
         contentDescription = null,
-        modifier = Modifier.size(size)
+        modifier = Modifier.size(Dimen.smallIconSize)
     )
 }
 
@@ -83,8 +82,25 @@ fun PositionIcon(position: Int, size: Dp) {
 fun IconCompose(
     data: Any,
     modifier: Modifier = Modifier,
+    clickable: Boolean = true,
     onClick: () -> Unit = {}
 ) {
+    val mModifier = if (clickable) {
+        Modifier
+            .clip(Shapes.small)
+            .clickable(onClick = onClick)
+            .sizeIn(
+                minWidth = Dimen.iconMinSize, minHeight = Dimen.iconMinSize,
+                maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize
+            )
+    } else {
+        Modifier
+            .clip(Shapes.small)
+            .sizeIn(
+                minWidth = Dimen.iconMinSize, minHeight = Dimen.iconMinSize,
+                maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize
+            )
+    }
     Box(modifier) {
         val painter = rememberCoilPainter(request = data)
         Image(
@@ -95,13 +111,7 @@ fun IconCompose(
             },
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(Shapes.small)
-                .clickable(onClick = onClick)
-                .sizeIn(
-                    minWidth = Dimen.iconMinSize, minHeight = Dimen.iconMinSize,
-                    maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize
-                )
+            modifier = mModifier
         )
     }
 }

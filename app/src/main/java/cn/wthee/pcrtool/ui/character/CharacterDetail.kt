@@ -111,8 +111,11 @@ fun CharacterDetail(
     }
     //关闭监听
     val close = navViewModel.fabClose.observeAsState().value ?: false
-
-
+    //收藏状态
+    val filter = navViewModel.filterCharacter.observeAsState()
+    val loved = remember {
+        mutableStateOf(filter.value?.starIds?.contains(unitId) ?: false)
+    }
     //页面
     ModalBottomSheetLayout(
         sheetState = state,
@@ -258,6 +261,17 @@ fun CharacterDetail(
                 }
             }
             Row(modifier = Modifier.align(Alignment.BottomEnd)) {
+                //收藏
+                FabCompose(
+                    iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                    modifier = Modifier.padding(
+                        end = Dimen.fabSmallMarginEnd,
+                        bottom = Dimen.fabMargin
+                    ),
+                ) {
+                    filter.value?.addOrRemove(unitId)
+                    loved.value = !loved.value
+                }
                 //跳转至角色资料
                 FabCompose(
                     iconType = MainIconType.CHARACTER_INTRO,
@@ -267,7 +281,8 @@ fun CharacterDetail(
                     ),
                 ) {
                     toCharacterBasicInfo(unitId)
-                }//跳转至 RANK 对比页面
+                }
+                //跳转至 RANK 对比页面
                 FabCompose(
                     iconType = MainIconType.RANK_COMPARE,
                     modifier = Modifier.padding(
@@ -294,9 +309,8 @@ fun CharacterDetail(
                     toEquipCount(unitId, rankMax.value)
                 }
                 //技能循环
-                ExtendedFabCompose(
+                FabCompose(
                     iconType = MainIconType.SKILL_LOOP,
-                    text = stringResource(id = R.string.skill_loop),
                     modifier = Modifier.padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
                     coroutineScope.launch {

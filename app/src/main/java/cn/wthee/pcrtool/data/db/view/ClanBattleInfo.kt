@@ -42,7 +42,7 @@ data class ClanBattleInfo(
     /**
      * 获取各阶段 Boss Id 信息
      */
-    fun getAllBossInfo(): List<ClanBossData> {
+    fun getAllBossInfo(): List<ClanBossIdData> {
         val enemyList = enemyIds.split("-")
         val firstIndexs = arrayListOf<Int>()
         enemyList.forEachIndexed { index, s ->
@@ -51,10 +51,10 @@ data class ClanBattleInfo(
             }
         }
         firstIndexs.add(enemyList.size)
-        val list = arrayListOf<ClanBossData>()
+        val list = arrayListOf<ClanBossIdData>()
         if (clan_battle_id == 1004) {
             list.add(
-                ClanBossData(
+                ClanBossIdData(
                     0,
                     listOf("302100", "302000", "300701", "304000", "302700"),
                     listOf("401010401", "401010402", "401010403", "401010404", "401011401")
@@ -62,7 +62,7 @@ data class ClanBattleInfo(
             )
             list.add(
 
-                ClanBossData(
+                ClanBossIdData(
                     1,
                     listOf("302100", "302000", "300701", "304000", "302700"),
                     listOf("401011402", "401011403", "401011404", "401011405", "401011406")
@@ -71,7 +71,7 @@ data class ClanBattleInfo(
         } else {
             for (i in 0..firstIndexs.size - 2) {
                 list.add(
-                    ClanBossData(
+                    ClanBossIdData(
                         i,
                         unitIds.split("-").subList(firstIndexs[i], firstIndexs[i + 1]),
                         enemyIds.split("-").subList(firstIndexs[i], firstIndexs[i + 1])
@@ -93,7 +93,7 @@ data class ClanBattleInfo(
 /**
  * 阶段 Boss 所有 id 信息
  */
-data class ClanBossData(
+data class ClanBossIdData(
     val section: Int,
     val unitIds: List<String>,
     val enemyIds: List<String>,

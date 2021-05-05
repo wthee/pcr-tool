@@ -156,6 +156,5 @@ dependencies {
 
     implementation(files("libs\\commons-compress-1.19.jar"))
     implementation(files("libs\\dec-0.1.2.jar"))
-    implementation(project(":Material-Calendar-View"))
 
 }

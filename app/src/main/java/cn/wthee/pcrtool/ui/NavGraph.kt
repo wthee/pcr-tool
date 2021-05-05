@@ -13,6 +13,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
@@ -376,5 +378,9 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 已六星的角色ID
      */
     val r6Ids = MutableLiveData(listOf<Int>())
+
+    var filterCharacter = MutableLiveData(FilterCharacter())
+
+    var filterEquip = MutableLiveData(FilterEquipment())
 
 }

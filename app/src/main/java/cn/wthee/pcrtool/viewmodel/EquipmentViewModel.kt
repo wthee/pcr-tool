@@ -35,14 +35,15 @@ class EquipmentViewModel @Inject constructor(
     var selectId = MutableLiveData<Int>()
     var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
     var equipTypes = MutableLiveData<List<String>>()
-    var filter = MutableLiveData(FilterEquipment())
 
     /**
      * 获取装备列表
      */
     fun getEquips(params: FilterEquipment) {
         viewModelScope.launch {
-            val data = equipmentRepository.getEquipments(params)
+            val typeName =
+                if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
+            val data = equipmentRepository.getEquipments(params, typeName)
             equips.postValue(data)
         }
     }

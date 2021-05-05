@@ -30,7 +30,7 @@ fun MainTitleText(
     text: String,
     small: Boolean = false,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.primary
+    backgroundColor: Color = MaterialTheme.colors.primary,
 ) {
     SelectionContainer(modifier = modifier) {
         Text(
