@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
@@ -49,6 +50,9 @@ object Navigation {
     const val TOOL_GUILD = "toolGuild"
     const val TOOL_CLAN = "toolClanBattle"
     const val TOOL_CALENDAR = "toolCalendar"
+    const val TOOL_PVP = "toolPvpSearch"
+    const val TOOL_PVP_RESULT = "toolPvpResult"
+    const val TOOL_PVP_IDS = "toolPvpSelectIds"
 }
 
 @ExperimentalAnimationApi
@@ -226,6 +230,23 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             CalendarCompose()
         }
+
+        //竞技场查询
+        composable(Navigation.TOOL_PVP) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            PvpCompose(actions.toPvpResult)
+        }
+
+        //竞技场查询结果
+        composable(
+            "${Navigation.TOOL_PVP_RESULT}/{${Navigation.TOOL_PVP_IDS}}",
+            arguments = listOf(navArgument(Navigation.TOOL_PVP_IDS) {
+                type = NavType.StringType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            PvpSearchResult(arguments.getString(Navigation.TOOL_PVP_IDS) ?: "")
+        }
     }
 }
 
@@ -333,6 +354,20 @@ class NavActions(navController: NavHostController) {
     val toCalendar = {
         navController.navigate(Navigation.TOOL_CALENDAR)
     }
+
+    /**
+     * 竞技场查询
+     */
+    val toPvpSearch = {
+        navController.navigate(Navigation.TOOL_PVP)
+    }
+
+    /**
+     * 竞技场查询结果
+     */
+    val toPvpResult = { ids: String ->
+        navController.navigate("${Navigation.TOOL_PVP_RESULT}/${ids}")
+    }
 }
 
 @HiltViewModel
@@ -382,5 +417,10 @@ class NavViewModel @Inject constructor() : ViewModel() {
     var filterCharacter = MutableLiveData(FilterCharacter())
 
     var filterEquip = MutableLiveData(FilterEquipment())
+
+    /**
+     * 竞技场查询角色
+     */
+    val selectedIds = MutableLiveData<List<PvpCharacterData>>()
 
 }

@@ -56,7 +56,6 @@ fun CharacterList(
     navViewModel: NavViewModel,
     viewModel: CharacterViewModel = hiltNavGraphViewModel(),
 ) {
-    navViewModel.loading.postValue(true)
     val list = viewModel.characterList.observeAsState()
     //筛选状态
     val filter = navViewModel.filterCharacter.observeAsState()
@@ -68,14 +67,14 @@ fun CharacterList(
     //滚动监听
     val scrollState = rememberLazyListState()
 
-    val context = LocalContext.current
-    val sp = context.getSharedPreferences("main", Context.MODE_PRIVATE)
-
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         navViewModel.fabOK.postValue(false)
     }
+
+    val context = LocalContext.current
+    val sp = context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -89,9 +88,6 @@ fun CharacterList(
             }
         ) {
             val marginTop: Dp = marginTopBar(scrollState)
-            if (list.value != null) {
-                navViewModel.loading.postValue(false)
-            }
             coroutineScope.launch {
                 val r6Ids = viewModel.getR6Ids()
                 navViewModel.r6Ids.postValue(r6Ids)
@@ -108,6 +104,9 @@ fun CharacterList(
                 ) {
                     items(list.value ?: arrayListOf()) {
                         CharacterItem(it, filter.value!!, toDetail)
+                    }
+                    items(2) {
+                        Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
                     }
                 }
                 val count = list.value?.size ?: 0

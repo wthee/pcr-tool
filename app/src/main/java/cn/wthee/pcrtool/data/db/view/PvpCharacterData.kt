@@ -8,26 +8,26 @@ import java.io.Serializable
  *  角色位置
  */
 data class PvpCharacterData(
-    @ColumnInfo(name = "unit_id") val unitId: Int,
-    @ColumnInfo(name = "position") val position: Int
+    @ColumnInfo(name = "unit_id") val unitId: Int = 0,
+    @ColumnInfo(name = "position") val position: Int = 999
 ) : Serializable
 
 
 /**
  * 默认数据
  */
-fun getDefault() = arrayListOf(
-    PvpCharacterData(0, 999),
-    PvpCharacterData(0, 999),
-    PvpCharacterData(0, 999),
-    PvpCharacterData(0, 999),
-    PvpCharacterData(0, 999),
+fun getDefaultPvpCharacterList() = arrayListOf(
+    PvpCharacterData(),
+    PvpCharacterData(),
+    PvpCharacterData(),
+    PvpCharacterData(),
+    PvpCharacterData(),
 )
 
 /**
  * 获取角色id [JsonArray] 数据
  */
-fun ArrayList<PvpCharacterData>.getIds(): JsonArray {
+fun List<PvpCharacterData>.getIds(): JsonArray {
     val ids = JsonArray()
     for (character in this) {
         ids.add(character.unitId)
@@ -38,7 +38,7 @@ fun ArrayList<PvpCharacterData>.getIds(): JsonArray {
 /**
  * 用 - 拼接角色id
  */
-fun ArrayList<PvpCharacterData>.getIdStr(): String {
+fun List<PvpCharacterData>.getIdStr(): String {
     var ids = ""
     for (character in this) {
         ids += "${character.unitId}-"

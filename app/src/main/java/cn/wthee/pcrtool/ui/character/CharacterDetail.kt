@@ -93,7 +93,6 @@ fun CharacterDetail(
     var id = unitId
     id += if (MainActivity.r6Ids.contains(unitId)) 60 else 30
 
-    val coroutineScope = rememberCoroutineScope()
     //保存滚动状态
     val scrollState = rememberScrollState()
     val marginTop = when {
@@ -101,6 +100,7 @@ fun CharacterDetail(
         cardHeight - scrollState.value < 0 -> 0
         else -> cardHeight - scrollState.value
     }
+    val coroutineScope = rememberCoroutineScope()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -260,14 +260,15 @@ fun CharacterDetail(
                     }
                 }
             }
-            Row(modifier = Modifier.align(Alignment.BottomEnd)) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
                 //收藏
                 FabCompose(
                     iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                    modifier = Modifier.padding(
-                        end = Dimen.fabSmallMarginEnd,
-                        bottom = Dimen.fabMargin
-                    ),
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
                 ) {
                     filter.value?.addOrRemove(unitId)
                     loved.value = !loved.value
@@ -275,20 +276,14 @@ fun CharacterDetail(
                 //跳转至角色资料
                 FabCompose(
                     iconType = MainIconType.CHARACTER_INTRO,
-                    modifier = Modifier.padding(
-                        end = Dimen.fabSmallMarginEnd,
-                        bottom = Dimen.fabMargin
-                    ),
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
                 ) {
                     toCharacterBasicInfo(unitId)
                 }
                 //跳转至 RANK 对比页面
                 FabCompose(
                     iconType = MainIconType.RANK_COMPARE,
-                    modifier = Modifier.padding(
-                        end = Dimen.fabSmallMarginEnd,
-                        bottom = Dimen.fabMargin
-                    )
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
                 ) {
                     toRankCompare(
                         unitId,
@@ -301,18 +296,12 @@ fun CharacterDetail(
                 //跳转至装备统计页面
                 FabCompose(
                     iconType = MainIconType.EQUIP_CALC,
-                    modifier = Modifier.padding(
-                        end = Dimen.fabSmallMarginEnd,
-                        bottom = Dimen.fabMargin
-                    ),
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
                 ) {
                     toEquipCount(unitId, rankMax.value)
                 }
                 //技能循环
-                FabCompose(
-                    iconType = MainIconType.SKILL_LOOP,
-                    modifier = Modifier.padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                ) {
+                FabCompose(iconType = MainIconType.SKILL_LOOP) {
                     coroutineScope.launch {
                         if (state.isVisible) {
                             navViewModel.fabMainIcon.postValue(MainIconType.BACK)

@@ -92,6 +92,10 @@ object Dimen {
      */
     val sheetMarginBottom = 60.dp
 
+    /**
+     * 260dp
+     */
+    val sheetHeight = 260.dp
 
     /**
      * 40dp

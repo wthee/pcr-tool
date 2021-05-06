@@ -150,6 +150,11 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
      */
     PVP_SEARCH(24, Icons.Rounded.ManageSearch),
 
+    /**
+     * 竞技场查询悬浮
+     */
+    PVP_SEARCH_WINDOW(25, Icons.Rounded.OpenInNew),
+
 }
 
 fun getMultipleIcon(count: Int): ImageVector {

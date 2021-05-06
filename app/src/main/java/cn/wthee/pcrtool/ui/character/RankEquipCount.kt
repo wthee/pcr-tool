@@ -58,6 +58,9 @@ fun RankEquipCount(
     }
     //关闭监听
     val ok = navViewModel.fabOK.observeAsState().value ?: false
+    if (rankEquipMaterials.value == null) {
+        navViewModel.loading.postValue(true)
+    }
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -106,38 +109,17 @@ fun RankEquipCount(
                 }
                 //装备素材列表
                 val spanCount = 5
-                val placeholder = arrayListOf<EquipmentMaterial>()
-                for (i in 0 until spanCount) {
-                    placeholder.add(EquipmentMaterial())
-                }
                 if (rankEquipMaterials.value != null) {
                     navViewModel.loading.postValue(false)
                     LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                        //额外添加一行占位，防止遮挡
-                        val list = arrayListOf<EquipmentMaterial>()
-                        list.addAll(rankEquipMaterials.value!!)
-                        list.addAll(placeholder)
-                        items(items = list) { item ->
-                            val alpha = if (item.id == Constants.UNKNOWN_EQUIP_ID) 0f else 1f
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.alpha(alpha)
-                            ) {
-                                IconCompose(data = getEquipIconUrl(item.id)) {
-                                    toEquipDetail(item.id)
-                                }
-                                MainContentText(
-                                    text = item.count.toString(),
-                                    modifier = Modifier.padding(bottom = Dimen.mediuPadding)
-                                )
-                            }
+                        items(items = rankEquipMaterials.value!!) { item ->
+                            EquipCountItem(item, toEquipDetail)
+                        }
+                        items(spanCount) {
+                            Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
                         }
                     }
                 }
-            }
-
-            if (rankEquipMaterials.value == null) {
-                navViewModel.loading.postValue(true)
             }
             //选择
             ExtendedFabCompose(
@@ -159,5 +141,25 @@ fun RankEquipCount(
             }
         }
 
+    }
+}
+
+@Composable
+private fun EquipCountItem(
+    item: EquipmentMaterial,
+    toEquipDetail: (Int) -> Unit
+) {
+    val alpha = if (item.id == Constants.UNKNOWN_EQUIP_ID) 0f else 1f
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.alpha(alpha)
+    ) {
+        IconCompose(data = getEquipIconUrl(item.id)) {
+            toEquipDetail(item.id)
+        }
+        MainContentText(
+            text = item.count.toString(),
+            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+        )
     }
 }

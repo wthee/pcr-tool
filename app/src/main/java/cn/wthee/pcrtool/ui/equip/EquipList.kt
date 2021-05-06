@@ -88,6 +88,9 @@ fun EquipList(
                     items(equips) { equip ->
                         EquipItem(filterValue, equip, toEquipDetail)
                     }
+                    items(4) {
+                        Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                    }
                 }
                 val count = equips.size
                 // 数量显示&筛选按钮

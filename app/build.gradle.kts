@@ -108,8 +108,8 @@ dependencies {
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha01")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hilt_version"]}")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha01")
 
     //Lifecycle
     val lifecycleVersion = "2.3.1"

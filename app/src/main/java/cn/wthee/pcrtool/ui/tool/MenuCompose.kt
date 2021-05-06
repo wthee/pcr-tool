@@ -124,7 +124,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         .weight(0.45f)
                         .height(Dimen.largeMenuHeight)
                 ) {
-                    //fixme 竞技场查询
+                    actions.toPvpSearch()
                 }
             }
             Row {

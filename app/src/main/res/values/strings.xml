@@ -137,6 +137,7 @@
     <string name="result">数值变化</string>
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
+    <string name="team_no">队伍 %s</string>
     <string name="team_atk">进攻方</string>
     <string name="team_def">防守方</string>
     <string name="no_liked_data">无收藏信息~</string>
@@ -156,6 +157,9 @@
     <string name="pvp_data">竞技场查询数据来源</string>
     <string name="leader_data">角色排行数据来源</string>
     <string name="zero">0</string>
+    <string name="unselect">未选择</string>
+    <string name="tip_select_limit">已选择 5 名角色~</string>
+    <string name="tip_select_5">请选择 5 名角色~</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
