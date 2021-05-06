@@ -112,7 +112,7 @@
     <string name="character_basic_Info">介绍</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_float">悬浮窗</string>
-    <string name="pvp_no_data">未查询到进攻队伍信息~</string>
+    <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>

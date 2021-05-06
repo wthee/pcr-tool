@@ -43,8 +43,10 @@ class PvpViewModel @Inject constructor(
      */
     fun getPVPData(ids: JsonArray) {
         viewModelScope.launch {
-            val data = MyAPIRepository.getInstance().getPVPData(ids)
-            pvpResult.postValue(data)
+            if (pvpResult.value == null) {
+                val data = MyAPIRepository.getInstance().getPVPData(ids)
+                pvpResult.postValue(data)
+            }
         }
     }
 }

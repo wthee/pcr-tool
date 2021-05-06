@@ -148,7 +148,7 @@ fun Home() {
         if (loading) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .size(Dimen.topBarIconSize)
+                    .size(Dimen.fabIconSize)
                     .align(Alignment.Center)
             )
         }

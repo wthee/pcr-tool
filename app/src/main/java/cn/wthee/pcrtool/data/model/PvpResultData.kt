@@ -14,13 +14,20 @@ data class PvpResultData(
 
     /**
      * 获取进攻方角色 id 列表
+     * 0: atk 1: def
      */
-    fun getAtkIdList(): List<Int> {
+    fun getIdList(type: Int): List<Int> {
         val ids = arrayListOf<Int>()
-        val atks = atk.split('-').filter {
-            it != ""
+        val idList = if (type == 0) {
+            atk.split('-').filter {
+                it != ""
+            }
+        } else {
+            def.split('-').filter {
+                it != ""
+            }
         }
-        atks.forEach {
+        idList.forEach {
             ids.add(it.toInt())
         }
         return ids
