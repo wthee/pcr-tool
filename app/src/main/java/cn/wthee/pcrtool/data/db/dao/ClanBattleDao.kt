@@ -6,20 +6,8 @@ import androidx.room.SkipQueryVerification
 import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 
-/**
- * 团队战 DAO
- */
-@Dao
-interface ClanBattleDao {
-
-
-    @SkipQueryVerification
-    @Query("""SELECT * FROM enemy_parameter WHERE enemy_id = :enemyId""")
-    suspend fun getBossAttr(enemyId: Int): EnemyParameter
-
-    @Query(
-        """
-        SELECT
+const val query = """
+    SELECT
             a.clan_battle_id,
             a.release_month,
             a.start_time,
@@ -40,9 +28,36 @@ interface ClanBattleDao {
                     OR
                     (b.enemy_id / 100000 = 4010 AND a.clan_battle_id % 100 = 1 AND b.enemy_id /100 % 1000 = 101 )
                 ) 
-         GROUP BY a.clan_battle_id
-         ORDER BY a.start_time DESC
+        
+"""
+
+/**
+ * 团队战 DAO
+ */
+@Dao
+interface ClanBattleDao {
+
+
+    @SkipQueryVerification
+    @Query("""SELECT * FROM enemy_parameter WHERE enemy_id = :enemyId""")
+    suspend fun getBossAttr(enemyId: Int): EnemyParameter
+
+    @Query(
+        """
+        $query
+        GROUP BY a.clan_battle_id
+        ORDER BY a.start_time DESC
     """
     )
     suspend fun getAllClanBattleData(): List<ClanBattleInfo>
+
+    @Query(
+        """
+        $query
+        WHERE a.clan_battle_id = :clanId
+        GROUP BY a.clan_battle_id
+        ORDER BY a.start_time DESC
+    """
+    )
+    suspend fun getClanInfo(clanId: Int): ClanBattleInfo
 }

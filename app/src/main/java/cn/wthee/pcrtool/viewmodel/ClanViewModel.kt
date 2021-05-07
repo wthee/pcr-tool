@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,9 +20,9 @@ class ClanViewModel @Inject constructor(
     private val repository: ClanRepository
 ) : ViewModel() {
 
-    var clanInfo = MutableLiveData<List<ClanBattleInfo>>()
-    var clanBossAttr = MutableLiveData<EnemyParameter>()
-    var state: Parcelable? = null
+    var clanInfoList = MutableLiveData<List<ClanBattleInfo>>()
+    var clanInfo = MutableLiveData<ClanBattleInfo>()
+    var allClanBossAttr = MutableLiveData<List<EnemyParameter>>()
 
 
     /**
@@ -32,6 +31,16 @@ class ClanViewModel @Inject constructor(
     fun getAllClanBattleData() {
         viewModelScope.launch {
             val data = repository.getAllClanBattleData()
+            clanInfoList.postValue(data)
+        }
+    }
+
+    /**
+     * 获取单个团队战信息
+     */
+    fun getClanInfo(clanId: Int) {
+        viewModelScope.launch {
+            val data = repository.getClanInfo(clanId)
             clanInfo.postValue(data)
         }
     }
@@ -39,10 +48,14 @@ class ClanViewModel @Inject constructor(
     /**
      * 获取 BOSS 属性
      */
-    fun getBossAttr(enemyId: Int) {
+    fun getAllBossAttr(enemyIds: List<Int>) {
         viewModelScope.launch {
-            val data = repository.getBossAttr(enemyId)
-            clanBossAttr.postValue(data)
+            val list = arrayListOf<EnemyParameter>()
+            enemyIds.forEach {
+                val data = repository.getBossAttr(it)
+                list.add(data)
+            }
+            allClanBossAttr.postValue(list)
         }
     }
 

@@ -550,7 +550,7 @@ data class SkillActionPro(
 
                 //条件
                 if (trueClause != "" && falseClause != "")
-                    "条件：${trueClause}${falseClause}"
+                    "条件：${trueClause}；${falseClause}"
                 else if (trueClause != "")
                     "条件：${trueClause}"
                 else if (falseClause != "")

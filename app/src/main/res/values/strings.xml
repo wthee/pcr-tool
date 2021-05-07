@@ -10,6 +10,7 @@
     <string name="equip_count">x %d</string>
     <string name="empty"> </string>
     <string name="section">%s阶段</string>
+    <string name="title_section">阶段</string>
 
     <!-- 角色 -->
     <string name="unknown_character">角色暂未登场</string>
@@ -180,7 +181,6 @@
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
-    <string name="title_section">阶段</string>
     <string name="no_drop_data">无掉落信息</string>
 
     <!-- 下载相关-->

@@ -14,7 +14,7 @@ data class ClanBattleInfo(
 ) : Serializable {
 
     fun getUnitIdList(selectedSection: Int): List<ClanBossTargetInfo> {
-        val clanBossData = getAllBossInfo()[selectedSection - 1]
+        val clanBossData = getAllBossInfo()[selectedSection]
         val unitIds = clanBossData.unitIds
         val list = arrayListOf<ClanBossTargetInfo>()
 

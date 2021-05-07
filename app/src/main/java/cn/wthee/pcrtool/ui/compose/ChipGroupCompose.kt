@@ -15,6 +15,7 @@ import androidx.compose.ui.res.colorResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.tool.getSectionTextColor
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -23,6 +24,7 @@ import com.google.accompanist.flowlayout.FlowRow
  *
  * type: 0 默认
  * 1: rank 选择模式
+ * 2: 阶段选择
  */
 @Composable
 fun ChipGroup(
@@ -51,6 +53,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
     //字体颜色
     val textColor = when (type) {
         1 -> getRankColor(size - index)
+        2 -> getSectionTextColor(index + 1)
         else -> {
             if (selectIndex.value == index)
                 MaterialTheme.colors.primary

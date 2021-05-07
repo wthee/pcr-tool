@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
@@ -28,7 +29,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  */
 @Composable
 fun SkillCompose(
-    level: Int,
+    level: Int = 0,
     atk: Int,
     id: Int,
     skillViewModel: SkillViewModel = hiltNavGraphViewModel()
@@ -90,13 +91,14 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+            .padding(top = Dimen.mediuPadding, bottom = Dimen.largePadding)
     ) {
         //技能名
         val type = getSkillType(skillDetail.skillId)
         val color = getSkillColor(type)
+        val name = if (skillDetail.name.isBlank()) type else skillDetail.name
         MainText(
-            text = skillDetail.name,
+            text = name,
             color = colorResource(color),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -112,12 +114,12 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
                 .padding(top = Dimen.smallPadding)
         )
         //等级
-//        Text(
-//            text = "$level",
-//            color = MaterialTheme.colors.primary,
-//            fontWeight = FontWeight.Bold,
-//            style = MaterialTheme.typography.caption
-//        )
+        Text(
+            text = "$level",
+            color = MaterialTheme.colors.primary,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.caption
+        )
         //图标、等级、描述
         Row(
             modifier = Modifier
@@ -244,11 +246,11 @@ fun SkillActionItem(skillAction: SkillActionText) {
  * 技能循环
  */
 @Composable
-fun SkillLoopList(unitId: Int) {
-    val skillViewModel: SkillViewModel = hiltNavGraphViewModel()
-    skillViewModel.getCharacterSkillLoops(unitId)
-    val loopData = skillViewModel.atkPattern.observeAsState().value ?: arrayListOf()
-
+fun SkillLoopList(
+    loopData: List<AttackPattern>,
+    iconTypes: HashMap<Int, Int>,
+    modifier: Modifier = Modifier
+) {
     val loops = arrayListOf<SkillLoop>()
     loopData.forEach { ap ->
         if (ap.getBefore().size > 0) {
@@ -259,16 +261,11 @@ fun SkillLoopList(unitId: Int) {
         }
     }
     Column(
-        modifier = Modifier.padding(
-            top = Dimen.largePadding,
-            start = Dimen.mediuPadding,
-            end = Dimen.mediuPadding,
-            bottom = Dimen.sheetMarginBottom
-        )
+        modifier = modifier
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
-                SkillLoopItem(loop = it)
+                SkillLoopItem(loop = it, iconTypes)
             }
         } else {
             Text(text = "")
@@ -280,10 +277,10 @@ fun SkillLoopList(unitId: Int) {
  * 技能循环 item
  */
 @Composable
-private fun SkillLoopItem(loop: SkillLoop) {
+private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
     Column {
         MainTitleText(text = loop.loopTitle)
-        SkillLoopIconList(loop.loopList)
+        SkillLoopIconList(loop.loopList, iconTypes)
     }
 }
 
@@ -291,13 +288,13 @@ private fun SkillLoopItem(loop: SkillLoop) {
  * 技能循环图标列表
  */
 @Composable
-private fun SkillLoopIconList(iconList: List<Int>) {
+private fun SkillLoopIconList(iconList: List<Int>, iconTypes: HashMap<Int, Int>) {
     val spanCount = 5
     val newList = getGridData(spanCount = spanCount, list = iconList, placeholder = 0)
     Column(Modifier.padding(top = Dimen.mediuPadding)) {
         newList.forEachIndexed { index, i ->
             if (index % spanCount == 0) {
-                SkillLoopIconListRow(newList.subList(index, index + spanCount))
+                SkillLoopIconListRow(newList.subList(index, index + spanCount), iconTypes)
             }
         }
     }
@@ -309,9 +306,8 @@ private fun SkillLoopIconList(iconList: List<Int>) {
 @Composable
 private fun SkillLoopIconListRow(
     iconList: List<Int>,
-    skillViewModel: SkillViewModel = hiltNavGraphViewModel()
+    iconTypes: HashMap<Int, Int>
 ) {
-    val iconTypes = skillViewModel.iconTypes.observeAsState().value ?: hashMapOf()
     if (iconTypes.isNotEmpty()) {
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
             iconList.forEach {

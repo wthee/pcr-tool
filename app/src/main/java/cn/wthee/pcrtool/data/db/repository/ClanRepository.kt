@@ -12,6 +12,8 @@ class ClanRepository @Inject constructor(private val clanBattleDao: ClanBattleDa
 
     suspend fun getAllClanBattleData() = clanBattleDao.getAllClanBattleData()
 
+    suspend fun getClanInfo(clanId: Int) = clanBattleDao.getClanInfo(clanId)
+
     suspend fun getBossAttr(enemyId: Int) = clanBattleDao.getBossAttr(enemyId)
 
 }

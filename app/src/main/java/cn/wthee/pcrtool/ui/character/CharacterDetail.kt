@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
+import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -49,6 +50,7 @@ fun CharacterDetail(
     toPics: (Int) -> Unit,
     navViewModel: NavViewModel,
     attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
+    skillViewModel: SkillViewModel = hiltNavGraphViewModel()
 ) {
     attrViewModel.isUnknown(unitId)
     //是否已登场
@@ -116,11 +118,23 @@ fun CharacterDetail(
     val loved = remember {
         mutableStateOf(filter.value?.starIds?.contains(unitId) ?: false)
     }
+    //技能循环
+    skillViewModel.getCharacterSkillLoops(unitId)
+    val loopData = skillViewModel.atkPattern.observeAsState().value ?: arrayListOf()
+    val iconTypes = skillViewModel.iconTypes.observeAsState().value ?: hashMapOf()
+
     //页面
     ModalBottomSheetLayout(
         sheetState = state,
         sheetContent = {
-            SkillLoopList(unitId = unitId)
+            SkillLoopList(
+                loopData, iconTypes, Modifier.padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding,
+                    bottom = Dimen.sheetMarginBottom
+                )
+            )
         }
     ) {
         //获取最大数据,初始化加载
@@ -185,7 +199,7 @@ fun CharacterDetail(
                     //页面
                     Card(
                         shape = CardTopShape,
-                        elevation = 20.dp,
+                        elevation = Dimen.cardElevation,
                         modifier = Modifier.padding(top = marginTop.dp)
                     ) {
                         Column(

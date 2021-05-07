@@ -50,6 +50,9 @@ object Navigation {
     const val TOOL_EVENT = "toolEvent"
     const val TOOL_GUILD = "toolGuild"
     const val TOOL_CLAN = "toolClanBattle"
+    const val TOOL_CLAN_BOSS_INFO = "toolClanBattleInfo"
+    const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
+    const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_CALENDAR = "toolCalendar"
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_PVP_RESULT = "toolPvpResult"
@@ -225,7 +228,23 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //团队战
         composable(Navigation.TOOL_CLAN) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            ClanBattleList()
+            ClanBattleList(actions.toClanBossInfo)
+        }
+
+        //团队战详情
+        composable(
+            "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_BOSS_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}",
+            arguments = listOf(navArgument(Navigation.TOOL_CLAN_BOSS_ID) {
+                type = NavType.IntType
+            }, navArgument(Navigation.TOOL_CLAN_BOSS_INDEX) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            ClanBossInfoPager(
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
+            )
         }
 
         //日历活动
@@ -362,6 +381,14 @@ class NavActions(navController: NavHostController) {
     val toClanBattleList = {
         navController.navigate(Navigation.TOOL_CLAN)
     }
+
+    /**
+     * 团队战 BOSS
+     */
+    val toClanBossInfo: (Int, Int) -> Unit = { clanId: Int, index: Int ->
+        navController.navigate("${Navigation.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}")
+    }
+
 
     /**
      * 日历活动
