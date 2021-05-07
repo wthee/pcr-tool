@@ -20,13 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.compose.DownloadCompose
 import cn.wthee.pcrtool.ui.compose.FabCompose
-import cn.wthee.pcrtool.ui.compose.MenuContent
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.ActivityHelper
@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
         var r6Ids = listOf<Int>()
     }
 
+    @ExperimentalPagingApi
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
@@ -112,6 +113,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalPagingApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi

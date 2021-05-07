@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.navigate
+import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -57,10 +58,13 @@ object Navigation {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_PVP_RESULT = "toolPvpResult"
     const val TOOL_PVP_IDS = "toolPvpSelectIds"
+    const val TOOL_NEWS = "toolNews"
+    const val TOOL_NEWS_REGION = "toolNewsRegion"
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
 }
 
+@ExperimentalPagingApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -281,6 +285,18 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             NoticeList()
         }
+
+        //公告
+        composable(
+            "${Navigation.TOOL_NEWS}/{${Navigation.TOOL_NEWS_REGION}}",
+            arguments = listOf(navArgument(Navigation.TOOL_NEWS_REGION) {
+                type = NavType.IntType
+            })
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val arguments = requireNotNull(it.arguments)
+            NewsList(arguments.getInt(Navigation.TOOL_NEWS_REGION))
+        }
     }
 }
 
@@ -415,14 +431,21 @@ class NavActions(navController: NavHostController) {
      * 设置
      */
     val toSettings = {
-        navController.navigate("${Navigation.MAIN_SETTINGS}")
+        navController.navigate(Navigation.MAIN_SETTINGS)
     }
 
     /**
      * 设置
      */
     val toNotice = {
-        navController.navigate("${Navigation.APP_NOTICE}")
+        navController.navigate(Navigation.APP_NOTICE)
+    }
+
+    /**
+     * 官方公告
+     */
+    val toNews: (Int) -> Unit = { region: Int ->
+        navController.navigate("${Navigation.TOOL_NEWS}/${region}")
     }
 }
 

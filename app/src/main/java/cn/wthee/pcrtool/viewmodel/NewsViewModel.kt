@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.model.NewsRemoteMediator
+import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

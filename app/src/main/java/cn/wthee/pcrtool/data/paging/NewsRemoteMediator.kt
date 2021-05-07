@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.model
+package cn.wthee.pcrtool.data.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -11,12 +11,11 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import retrofit2.HttpException
 import java.io.IOException
-import java.io.InvalidObjectException
 
 /**
  * 公告加载
  */
-@OptIn(ExperimentalPagingApi::class)
+@ExperimentalPagingApi
 class NewsRemoteMediator(
     private val region: Int,
     private val database: AppNewsDatabase,
@@ -86,8 +85,8 @@ class NewsRemoteMediator(
                 remoteKeys?.nextKey?.minus(1) ?: pageIndex
             }
             LoadType.APPEND -> {
-                val remoteKeys = getLastRemoteKey(state)
-                    ?: throw InvalidObjectException("Remote key should not be null for $loadType")
+                //fixme
+                val remoteKeys = getLastRemoteKey(state) ?: return 0
                 remoteKeys.nextKey
             }
             LoadType.PREPEND -> {

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.compose
+package cn.wthee.pcrtool.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,8 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.NavViewModel
+import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
+import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import kotlinx.coroutines.launch
@@ -109,15 +109,41 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 ) {
                     actions.toCalendar()
                 }
-                MenuItem(
-                    text = stringResource(id = R.string.tool_news),
-                    iconType = MainIconType.NEWS,
-                    modifier = Modifier
-                        .weight(0.3f)
-                        .height(Dimen.largeMenuHeight)
-                ) {
-                    //fixme 官网公告
+                Column(modifier = Modifier
+                    .weight(0.3f)
+                    .height(Dimen.largeMenuHeight)) {
+                    MenuItem(
+                        text = stringResource(id = R.string.db_cn),
+                        iconType = MainIconType.NEWS,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        //官网公告
+                        actions.toNews(2)
+                    }
+                    MenuItem(
+                        text = stringResource(id = R.string.db_tw),
+                        iconType = MainIconType.NEWS,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        //官网公告
+                        actions.toNews(3)
+                    }
+                    MenuItem(
+                        text = stringResource(id = R.string.db_jp),
+                        iconType = MainIconType.NEWS,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        //官网公告
+                        actions.toNews(4)
+                    }
                 }
+
                 MenuItem(
                     text = stringResource(id = R.string.tool_pvp),
                     iconType = MainIconType.PVP_SEARCH,
@@ -170,7 +196,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         },
                         modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
                     ) {
-                        actions.toNotice()
+                        actions.toNotice
                     }
                 } else {
                     val icon = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE
