@@ -72,14 +72,14 @@ object Dimen {
     val smallIconSize = 18.dp
 
     /**
-     * 70dp
+     * 60dp
      */
-    val smallMenuHeight = 70.dp
+    val smallMenuHeight = 60.dp
 
     /**
-     * 160dp
+     * 130dp
      */
-    val largeMenuHeight = 160.dp
+    val largeMenuHeight = 130.dp
 
     /**
      * 48dp

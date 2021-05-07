@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -41,6 +42,11 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
     val state = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     MainActivity.navViewModel.loading.postValue(true)
+    val title = when (getRegion()) {
+        2 -> stringResource(id = R.string.db_cn)
+        3 -> stringResource(id = R.string.db_tw)
+        else -> stringResource(id = R.string.db_jp)
+    }
 
     Box(
         modifier = Modifier
@@ -64,7 +70,7 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
         //回到顶部
         ExtendedFabCompose(
             iconType = MainIconType.CALENDAR,
-            text = stringResource(id = R.string.tool_calendar),
+            text = title + stringResource(id = R.string.tool_calendar),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
@@ -95,6 +101,7 @@ private fun CalendarItem(calendar: DropEvent) {
     } else {
         colorResource(id = R.color.color_rank_4_6)
     }
+
     Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)

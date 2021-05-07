@@ -114,10 +114,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                 //内容
                 MainContentText(
                     text = gachaInfo.getType(),
-                    modifier = Modifier.padding(
-                        top = Dimen.smallPadding,
-                        bottom = Dimen.smallPadding
-                    ),
+                    modifier = Modifier.padding(bottom = Dimen.smallPadding),
                     textAlign = TextAlign.Start
                 )
                 //图标/描述

@@ -135,7 +135,7 @@ private fun ClanBattleItem(
                 modifier = Modifier.padding(Dimen.mediuPadding),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                clanInfo.getUnitIdList(1).forEachIndexed { index, it ->
+                clanInfo.getUnitIdList(0).forEachIndexed { index, it ->
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
                             if (type == 0 && toClanBossInfo != null) {

@@ -155,10 +155,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 //内容
                 MainContentText(
                     text = event.title,
-                    modifier = Modifier.padding(
-                        top = Dimen.smallPadding,
-                        bottom = Dimen.smallPadding
-                    ),
+                    modifier = Modifier.padding(bottom = Dimen.smallPadding),
                     textAlign = TextAlign.Start
                 )
                 //图标/描述

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -10,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -25,6 +27,7 @@ import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -43,6 +46,11 @@ fun NewsList(region: Int, viewModel: NewsViewModel = hiltNavGraphViewModel()) {
         3 -> viewModel.getNewsTW()
         else -> viewModel.getNewsJP()
     }
+    val title = when (region) {
+        2 -> stringResource(id = R.string.db_cn)
+        3 -> stringResource(id = R.string.db_tw)
+        else -> stringResource(id = R.string.db_jp)
+    }
 
     Box(
         modifier = Modifier
@@ -60,7 +68,7 @@ fun NewsList(region: Int, viewModel: NewsViewModel = hiltNavGraphViewModel()) {
         //回到顶部
         ExtendedFabCompose(
             iconType = MainIconType.NEWS,
-            text = stringResource(id = R.string.tool_news),
+            text = title + stringResource(id = R.string.tool_news),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
@@ -80,6 +88,7 @@ fun NewsList(region: Int, viewModel: NewsViewModel = hiltNavGraphViewModel()) {
  */
 @Composable
 private fun NewsItem(news: NewsTable) {
+    val context = LocalContext.current
     val tags = news.getTagList()
     if (news.getTagList().size > 1) tags.remove("お知らせ")
     val colorId = when (tags[0]) {
@@ -116,6 +125,9 @@ private fun NewsItem(news: NewsTable) {
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
+                .clickable {
+                    BrowserUtil.OpenWebView(context, news.url)
+                }
         ) {
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //内容
