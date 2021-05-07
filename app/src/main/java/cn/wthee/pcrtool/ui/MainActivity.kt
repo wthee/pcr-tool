@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.ui.compose.MenuContent
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.AppUpdateUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -131,7 +132,8 @@ fun Home() {
     Box(modifier = Modifier.fillMaxSize()) {
         //数据库版本检查
         scope.launch {
-            DatabaseUpdater(navViewModel).checkDBVersion()
+            DatabaseUpdater.checkDBVersion()
+            navViewModel.updateApp.postValue(AppUpdateUtil.check())
         }
         NavGraph(navController, navViewModel, actions)
         //菜单

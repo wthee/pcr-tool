@@ -36,7 +36,8 @@
     <string name="title_material">所需装备</string>
     <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">剧情属性</string>
-    <!--    -->
+
+    <!--功能-->
     <string name="back">返回</string>
     <string name="other">其它</string>
     <string name="setting">设置</string>
@@ -47,16 +48,21 @@
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
     <string name="redownload_db_summary">重新下载最新数据</string>
-    <string name="data">数据版本：</string>
+    <string name="data_version">数据版本：%s</string>
     <string name="app_sourcce">项目地址</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
     <string name="data_from_hint">数据和图片来源</string>
+    <string name="data_from_url">https://redive.estertion.win/</string>
     <string name="shizuru_note">静流笔记</string>
-    <string name="dev_tip">感谢大佬的开源项目</string>
-    <string name="auto_update_app">自动更新应用</string>
-    <string name="off_auto_app">已取消自动更新</string>
-    <string name="on_auto_app">打开应用时，自动检查更新应用</string>
+    <string name="shizuru_note_tip">感谢大佬的开源项目</string>
+    <string name="shizuru_note_url">https://github.com/MalitsPlus/ShizuruNotes</string>
+    <string name="pcrdfans">公主连结Re: Dive Fan Club</string>
+    <string name="pcrdfans_tip">竞技场查询数据来源</string>
+    <string name="pcrdfans_url">https://pcrdfans.com</string>
+    <string name="leader_source">AppMedia</string>
+    <string name="leader_tip">角色排行数据来源</string>
+    <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
@@ -69,10 +75,10 @@
     <string name="share_app">分享应用</string>
     <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
     <string name="clean_database">删除历史数据文件</string>
+    <string name="clean_success">删除成功</string>
     <string name="now_db_type">当前版本：</string>
     <string name="backup_mode">（备份数据）</string>
-    <string name="notice">更新通知</string>
-    <string name="app_version">应用版本：</string>
+    <string name="app_version">应用版本：%s</string>
     <string name="app_version_summary">查看全部更新通知</string>
 
     <!--筛选  -->
@@ -99,6 +105,7 @@
     <string name="game_name">角色</string>
 
     <!--  工具  -->
+    <string name="download_pic">下载图片</string>
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历</string>
     <string name="tool_calendar_title">日历-国服</string>
@@ -116,8 +123,6 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
-    <string name="test">testtesttestesttesttestesttestttesttesttestesttesttestesttesttestesttesttestesttesttestesttesttesestesttesttestesttesttestesttesttes</string>
-    <string name="test_short">test</string>
     <string name="tool_news">公告</string>
     <string name="loading">加载中…</string>
     <string name="loading_news">正在获取最新数据…</string>
@@ -131,9 +136,6 @@
     <string name="tower">露娜塔</string>
     <string name="visit_detail">在 AppMedia 中查看</string>
     <string name="pcrdfans_com">前往 pcrdfans.com</string>
-    <string name="url_pcrdfans_com">https://pcrdfans.com</string>
-    <string name="leader_source">前往 AppMedia</string>
-    <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
     <string name="result">数值变化</string>
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
@@ -153,13 +155,13 @@
     <string name="equip_name">装备名</string>
     <string name="reset">重置</string>
     <string name="ok">确认</string>
-    <string name="pcrdfans">公主连结Re: Dive Fan Club</string>
-    <string name="pvp_data">竞技场查询数据来源</string>
-    <string name="leader_data">角色排行数据来源</string>
     <string name="zero">0</string>
     <string name="unselect">未选择</string>
     <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
+    <string name="update_log">更新日志</string>
+    <string name="visit_more_log">查看更多更新日志</string>
+    <string name="to_update">  获取更新</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
@@ -176,12 +178,10 @@
     <string name="check_db_error">数据版本校验失败~</string>
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
-    <string name="to_update"><![CDATA[去更新 > ]]></string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
     <string name="title_section">阶段</string>
     <string name="no_drop_data">无掉落信息</string>
-    <string name="download_pic">下载图片</string>
 
     <!-- 下载相关-->
     <string name="db_checking">数据校验中</string>
@@ -196,4 +196,6 @@
     <string name="coming_soon">%s后开始</string>
 
 
+    <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
+    <string name="project_url">https://github.com/wthee/pcr-tool</string>
 </resources>

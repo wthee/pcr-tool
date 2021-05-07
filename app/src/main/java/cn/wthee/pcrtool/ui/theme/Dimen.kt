@@ -113,6 +113,11 @@ object Dimen {
     val lineHeight = 3.dp
 
     /**
+     * 1dp
+     */
+    val divLineHeight = 1.dp
+
+    /**
      * 2dp
      */
     val border = 2.dp

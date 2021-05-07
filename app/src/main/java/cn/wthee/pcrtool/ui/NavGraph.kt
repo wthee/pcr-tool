@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
+import cn.wthee.pcrtool.ui.setting.MainSettings
 import cn.wthee.pcrtool.ui.tool.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,6 +54,8 @@ object Navigation {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_PVP_RESULT = "toolPvpResult"
     const val TOOL_PVP_IDS = "toolPvpSelectIds"
+    const val MAIN_SETTINGS = "mainSettings"
+    const val APP_NOTICE = "appNotice"
 }
 
 @ExperimentalAnimationApi
@@ -247,6 +250,18 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             val arguments = requireNotNull(it.arguments)
             PvpSearchResult(arguments.getString(Navigation.TOOL_PVP_IDS) ?: "")
         }
+
+        //设置页面
+        composable(Navigation.MAIN_SETTINGS) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            MainSettings()
+        }
+
+        //更新通知
+        composable(Navigation.APP_NOTICE) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            NoticeList()
+        }
     }
 }
 
@@ -368,17 +383,37 @@ class NavActions(navController: NavHostController) {
     val toPvpResult = { ids: String ->
         navController.navigate("${Navigation.TOOL_PVP_RESULT}/${ids}")
     }
+
+    /**
+     * 设置
+     */
+    val toSettings = {
+        navController.navigate("${Navigation.MAIN_SETTINGS}")
+    }
+
+    /**
+     * 设置
+     */
+    val toNotice = {
+        navController.navigate("${Navigation.APP_NOTICE}")
+    }
 }
 
 @HiltViewModel
 class NavViewModel @Inject constructor() : ViewModel() {
 
+    /**
+     * 应用更新
+     * -1：获取中
+     * 0：无更新
+     * 1：有更新
+     */
+    val updateApp = MutableLiveData(-1)
 
     /**
      * fab 图标显示
      */
     val fabMainIcon = MutableLiveData(MainIconType.MAIN)
-//    val fabMainIcon = MutableLiveData(R.drawable.ic_function)
 
     /**
      * 确认

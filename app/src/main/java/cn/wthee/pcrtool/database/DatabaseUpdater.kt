@@ -12,9 +12,8 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
-import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.setting.MainSettingsFragment
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import com.umeng.umcrash.UMCrash
@@ -25,7 +24,7 @@ import java.io.File
 /**
  * 数据库更新
  */
-class DatabaseUpdater(private val viewModel: NavViewModel) {
+object DatabaseUpdater {
     val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     /**
@@ -36,7 +35,7 @@ class DatabaseUpdater(private val viewModel: NavViewModel) {
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, if (type == 1) 2 else 1)
         }
-        viewModel.downloadProgress.postValue(-1)
+        MainActivity.navViewModel.downloadProgress.postValue(-1)
         checkDBVersion(1)
     }
 
@@ -49,6 +48,9 @@ class DatabaseUpdater(private val viewModel: NavViewModel) {
      */
     suspend fun checkDBVersion(from: Int = -1, force: Boolean = false) {
         //获取数据库最新版本
+        if (force) {
+            MainActivity.navViewModel.downloadProgress.postValue(-1)
+        }
         try {
             //创建服务
             val service = ApiUtil.create(
@@ -139,11 +141,8 @@ class DatabaseUpdater(private val viewModel: NavViewModel) {
             }
             //更新数据库版本号
             try {
-                MainSettingsFragment.titleDatabase.title =
-                    MyApplication.context.getString(R.string.data) + ver.TruthVersion
-            } catch (e: Exception) {
-            } finally {
                 updateLocalDataBaseVersion(ver.toString())
+            } catch (e: Exception) {
             }
         }
     }

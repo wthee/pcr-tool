@@ -11,18 +11,18 @@ object AppUpdateUtil {
     /**
      * 校验版本
      */
-    suspend fun init(): Boolean {
+    suspend fun check(): Int {
         try {
             val version = MyAPIRepository.getInstance().getAppUpdateNotice()
             if (version.status == 0) {
                 if (version.data != null && version.data == true) {
-                    return true
+                    return 1
                 }
             }
         } catch (e: Exception) {
             Log.e(Constants.LOG_TAG, e.message ?: "")
         }
-        return false
+        return 0
     }
 
 }

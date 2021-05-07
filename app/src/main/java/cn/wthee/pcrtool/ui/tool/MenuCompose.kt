@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import cn.wthee.pcrtool.R
@@ -30,6 +29,8 @@ import kotlinx.coroutines.launch
 fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
+    val updateApp = viewModel.updateApp.observeAsState().value ?: false
+
     if (fabMainIcon == MainIconType.DOWN) {
         Column(
             verticalArrangement = Arrangement.Bottom,
@@ -144,7 +145,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         .weight(0.5f)
                         .height(Dimen.smallMenuHeight)
                 ) {
-
+                    actions.toSettings()
                 }
             }
             Row(
@@ -157,34 +158,41 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                //数据版本切换
-                ExtendedFloatingActionButton(
-                    backgroundColor = MaterialTheme.colors.onPrimary,
-                    contentColor = MaterialTheme.colors.primary,
-                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-                    modifier = Modifier.height(Dimen.fabSize),
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_change),
-                            null,
-                            tint = MaterialTheme.colors.primary,
-                            modifier = Modifier.size(Dimen.fabIconSize)
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = stringResource(id = R.string.change_db),
-                            style = MaterialTheme.typography.subtitle2,
-                            color = MaterialTheme.colors.primary
-                        )
-                    },
-                    onClick = {
-                        coroutineScope.launch {
-                            viewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                            DatabaseUpdater(viewModel).changeType()
-                        }
+                //更新通知
+                if (updateApp == -1) {
+                    //加载中
+                    FabCompose(
+                        content = {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(Dimen.fabIconSize),
+                                strokeWidth = Dimen.lineHeight
+                            )
+                        },
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        actions.toNotice()
                     }
-                )
+                } else {
+                    val icon = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE
+                    FabCompose(
+                        iconType = icon,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        actions.toNotice()
+                    }
+                }
+
+
+                //数据版本切换
+                ExtendedFabCompose(
+                    iconType = MainIconType.CHANGE_DATA,
+                    text = stringResource(id = R.string.change_db)
+                ) {
+                    coroutineScope.launch {
+                        viewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                        DatabaseUpdater.changeType()
+                    }
+                }
             }
         }
     }

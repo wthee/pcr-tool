@@ -10,6 +10,7 @@
     <color name="alpha_primary">#5F5690EF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#7E7D7D</color>
+    <color name="div_line">#D6D6D6</color>
     <color name="bg_gray">#F5F5F5</color>
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="colorWhite">#ffffff</color>

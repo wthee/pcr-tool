@@ -155,6 +155,10 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
      */
     PVP_SEARCH_WINDOW(25, Icons.Rounded.OpenInNew),
 
+    /**
+     * 新版本更新
+     */
+    APP_UPDATE(26, Icons.Rounded.Upcoming)
 }
 
 fun getMultipleIcon(count: Int): ImageVector {

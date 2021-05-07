@@ -46,7 +46,7 @@ fun DownloadCompose(viewModel: NavViewModel) {
             icon = {
                 if (iconType.value == 0) {
                     CircularProgressIndicator(
-                        strokeWidth = 3.dp,
+                        strokeWidth = Dimen.lineHeight,
                         modifier = Modifier.size(Dimen.fabIconSize)
                     )
                 } else {
