@@ -15,6 +15,8 @@ import androidx.savedstate.ViewTreeSavedStateRegistryOwner
 import cn.wthee.pcrtool.ui.tool.PvpSearchWindow
 import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.NotificationUtil
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.dp2px
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,6 +54,7 @@ class PvpService : Service() {
             }
             gravity = Gravity.TOP or Gravity.START
             width = WindowManager.LayoutParams.WRAP_CONTENT
+            height = ScreenUtil.getWidth() - 40f.dp2px
         }
         //加载布局
         activity?.let {

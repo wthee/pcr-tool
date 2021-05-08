@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -16,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.compose.FabCompose
@@ -24,8 +22,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.px2dp
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 
@@ -66,11 +62,8 @@ fun PvpSearchWindow() {
             }
             if (!windowMin.value) {
                 Card(
-                    shape = Shapes.large,
-                    modifier = Modifier.heightIn(
-                        min = Dimen.sheetHeight,
-                        max = ScreenUtil.getWidth().px2dp.dp - Dimen.fabMargin
-                    )
+                    shape = Shapes.large, modifier = Modifier
+                        .padding(start = Dimen.mediuPadding)
                 ) {
                     PvpSearchCompose({}, viewModel)
                 }
