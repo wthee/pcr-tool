@@ -91,7 +91,7 @@ fun CharacterDetail(
         )
     }
     //卡面高度
-    val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).px2dp - 10
+    val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).toInt().px2dp - 10
     var id = unitId
     id += if (MainActivity.r6Ids.contains(unitId)) 60 else 30
 

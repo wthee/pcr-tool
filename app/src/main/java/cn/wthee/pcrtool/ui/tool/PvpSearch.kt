@@ -5,11 +5,10 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -20,7 +19,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -33,14 +34,13 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
+import cn.wthee.pcrtool.service.PvpService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
-import cn.wthee.pcrtool.utils.CharacterIdUtil
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.fillZero
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -56,7 +56,7 @@ import kotlin.math.round
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun PvpCompose(
+fun PvpSearchCompose(
     toResult: (String) -> Unit,
     viewModel: CharacterViewModel = hiltNavGraphViewModel()
 ) {
@@ -90,7 +90,9 @@ fun PvpCompose(
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val scrollState = rememberLazyListState()
+    val activity = ActivityHelper.instance.currentActivity
+    //fixme 滑动距离
+    val scrollState = rememberScrollState()
     val positionIndex = remember {
         mutableStateOf(0)
     }
@@ -108,11 +110,9 @@ fun PvpCompose(
                 .background(colorResource(id = R.color.bg_gray))
         ) {
             //已选择列表
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = Dimen.mediuPadding),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            StaggeredVerticalGrid(
+                spanCount = 5, modifier = Modifier
+                    .padding(top = Dimen.mediuPadding)
             ) {
                 selectedIds.forEach {
                     PvpIconItem(selectedIds = selectedIds, it = it)
@@ -131,15 +131,18 @@ fun PvpCompose(
                     }
                     val spanCount = 5
                     val showIcon = listOf(0, 0, 1, 0, 0)
+                    //fixme item 高度
+                    val itemHeightPx = (Dimen.iconSize + Dimen.mediuPadding).value.dp2px
                     //站位图标在列表中的位置
                     val positions = arrayListOf(0, 0, 0)
                     val filledCount1 = spanCount - character0.size % spanCount
-                    positions[1] = (spanCount + character0.size + filledCount1) / spanCount
+                    positions[1] =
+                        (spanCount + character0.size + filledCount1) / spanCount * itemHeightPx
                     val filledCount2 = spanCount - character1.size % spanCount
                     positions[2] =
-                        ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
+                        ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount * itemHeightPx
                     //滚动监听
-                    when (scrollState.firstVisibleItemIndex) {
+                    when (scrollState.value) {
                         positions[0] -> {
                             positionIndex.value = 0
                         }
@@ -150,13 +153,48 @@ fun PvpCompose(
                         positions[2] -> {
                             positionIndex.value = 2
                         }
-                        scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
+                        scrollState.maxValue -> {
                             positionIndex.value = 2
                         }
                     }
                     Box {
                         //供选择列表
-                        LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
+                        Column(modifier = Modifier.verticalScroll(scrollState)) {
+                            StaggeredVerticalGrid(spanCount = 5) {
+                                //前
+                                showIcon.forEach {
+                                    PlaceHolderItem(it, R.drawable.ic_position_0)
+                                }
+                                character0.forEach {
+                                    PvpIconItem(selectedIds, it)
+                                }
+                                for (i in 0 until filledCount1) {
+                                    PlaceHolderItem(0)
+                                }
+                                //中
+                                showIcon.forEach {
+                                    PlaceHolderItem(it, R.drawable.ic_position_1)
+                                }
+                                character1.forEach {
+                                    PvpIconItem(selectedIds, it)
+                                }
+                                for (i in 0 until filledCount2) {
+                                    PlaceHolderItem(0)
+                                }
+                                //后
+                                showIcon.forEach {
+                                    PlaceHolderItem(it, R.drawable.ic_position_2)
+                                }
+                                character2.forEach {
+                                    PvpIconItem(selectedIds, it)
+                                }
+                                for (i in 0 until spanCount) {
+                                    PlaceHolderItem(0)
+                                }
+                            }
+                        }
+
+                        /*LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
                             //前
                             itemsIndexed(showIcon) { index, _ ->
                                 if (index == 2) {
@@ -193,7 +231,7 @@ fun PvpCompose(
                             items(spanCount) {
                                 Spacer(modifier = Modifier.height(Dimen.iconSize))
                             }
-                        }
+                        }*/
                         //指示器
                         Row(
                             modifier = Modifier
@@ -229,7 +267,7 @@ fun PvpCompose(
                                 ) {
                                     positionIndex.value = index
                                     scope.launch {
-                                        scrollState.scrollToItem(positions[index])
+                                        scrollState.scrollTo(positions[index])
                                     }
                                 }
                             }
@@ -249,7 +287,9 @@ fun PvpCompose(
             //悬浮窗
             FabCompose(
                 iconType = MainIconType.PVP_SEARCH_WINDOW,
-                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                modifier = Modifier
+                    .padding(end = Dimen.fabSmallMarginEnd)
+                    .rotate(180f)
             ) {
                 //检查是否已经授予权限
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(
@@ -261,7 +301,14 @@ fun PvpCompose(
                     intent.data = Uri.parse("package:" + context.packageName)
                     context.startActivity(intent)
                 } else {
-                    //TODO 打开悬浮窗
+                    //打开悬浮窗
+                    val intent =
+                        Intent(activity?.applicationContext, PvpService::class.java)
+                    activity?.startService(intent)
+                    //退回桌面
+                    val home = Intent(Intent.ACTION_MAIN)
+                    home.addCategory(Intent.CATEGORY_HOME)
+                    context.startActivity(home)
                 }
             }
             //查询
@@ -284,34 +331,36 @@ fun PvpCompose(
 }
 
 @Composable
-private fun PvpPositionIcon(iconId: Int) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(Dimen.iconSize)
-    ) {
+private fun PlaceHolderItem(type: Int, iconId: Int = 0) {
+    val alpha = if (type == 0) 0f else 1f
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+        //图标
         IconCompose(
-            data = iconId,
+            data = if (type == 0) R.drawable.unknown_gray else iconId,
             modifier = Modifier
-                .align(
-                    Alignment.Center
-                )
-                .size(Dimen.positionIconSize),
+                .size(Dimen.iconSize)
+                .alpha(alpha),
             clickable = false
+        )
+        //位置
+        Text(
+            text = "",
+            style = MaterialTheme.typography.subtitle2,
+            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
         )
     }
 }
 
 
 @Composable
-private fun PvpIconItem(
+fun PvpIconItem(
     selectedIds: SnapshotStateList<PvpCharacterData>,
     it: PvpCharacterData
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {

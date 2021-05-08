@@ -16,7 +16,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
@@ -56,9 +55,7 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
         Column(modifier = Modifier.verticalScroll(state)) {
             calendarData.value?.let { data ->
                 MainActivity.navViewModel.loading.postValue(false)
-                StaggeredVerticalGrid(
-                    maxColumnWidth = 220.dp,
-                ) {
+                StaggeredVerticalGrid {
                     data.forEach {
                         CalendarItem(it)
                     }
@@ -179,7 +176,7 @@ fun getToday(): String {
 private fun getTypeData(data: DropEvent): ArrayList<CalendarEventData> {
     val events = arrayListOf<CalendarEventData>()
     val list = data.type.split("-")
-    list.forEachIndexed { index, s ->
+    list.forEach { s ->
         var colorId = R.color.black
         val title = when (s.toInt()) {
             31 -> {

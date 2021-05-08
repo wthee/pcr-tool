@@ -3,7 +3,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://dl.bintray.com/umsdk/release")
+        maven("https://repo1.maven.org/maven2/")
         maven("https://www.jitpack.io")
     }
 }

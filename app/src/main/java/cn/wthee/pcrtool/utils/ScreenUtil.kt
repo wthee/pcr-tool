@@ -41,8 +41,17 @@ object ScreenUtil {
 /**
  *  获取 像素 的dp
  */
-val Float.px2dp: Int
+val Int.px2dp: Int
     get() {
         val scale: Float = MyApplication.context.resources.displayMetrics.density
         return (this / scale + 0.5f).toInt()
+    }
+
+/**
+ *  获取 像素 的dp
+ */
+val Float.dp2px: Int
+    get() {
+        val scale: Float = MyApplication.context.resources.displayMetrics.density
+        return (this * scale + 0.5f).toInt()
     }

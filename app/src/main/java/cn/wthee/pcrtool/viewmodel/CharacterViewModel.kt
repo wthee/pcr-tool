@@ -30,9 +30,7 @@ class CharacterViewModel @Inject constructor(
 
     lateinit var characters: Flow<PagingData<CharacterInfo>>
     var characterList = MutableLiveData<List<CharacterInfo>>()
-    var characterCount = MutableLiveData<Int>()
     var character = MutableLiveData<CharacterInfoPro>()
-    var updateCharacter = MutableLiveData<Boolean>()
     var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
     var guilds = MutableLiveData<List<GuildData>>()
 

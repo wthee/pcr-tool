@@ -260,7 +260,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            PvpCompose(actions.toPvpResult)
+            PvpSearchCompose(actions.toPvpResult)
         }
 
         //竞技场查询结果

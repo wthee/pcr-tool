@@ -3,8 +3,6 @@ package cn.wthee.pcrtool.ui.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.unit.Dp
-import kotlin.math.ceil
 
 
 /**
@@ -13,7 +11,7 @@ import kotlin.math.ceil
 @Composable
 fun StaggeredVerticalGrid(
     modifier: Modifier = Modifier,
-    maxColumnWidth: Dp,
+    spanCount: Int = 2,
     children: @Composable () -> Unit
 ) {
     Layout(
@@ -23,7 +21,7 @@ fun StaggeredVerticalGrid(
         check(constraints.hasBoundedWidth) {
             "Unbounded width not supported"
         }
-        val columns = ceil(constraints.maxWidth / maxColumnWidth.toPx()).toInt()
+        val columns = spanCount
         val columnWidth = constraints.maxWidth / columns
         val itemConstraints = constraints.copy(maxWidth = columnWidth)
         val colHeights = IntArray(columns) { 0 } // track each column's height
