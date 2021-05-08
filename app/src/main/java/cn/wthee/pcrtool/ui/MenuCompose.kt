@@ -55,27 +55,80 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     text = stringResource(id = R.string.tool_clan),
                     iconType = MainIconType.CLAN,
                     modifier = Modifier
-                        .weight(0.3f)
+                        .weight(0.35f)
                         .height(Dimen.largeMenuHeight)
                 ) {
                     actions.toClanBattleList()
                 }
                 Column(modifier = Modifier.weight(0.45f)) {
+
                     MenuItem(
                         text = stringResource(id = R.string.tool_event),
                         iconType = MainIconType.EVENT,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.5f)
+                            .weight(0.4f)
                     ) {
                         actions.toEventStory()
+                    }
+                }
+            }
+
+            Row(modifier = Modifier.height(Dimen.smallMenuHeight + Dimen.largeMenuHeight)) {
+                //公告
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(0.45f)
+                ) {
+                    MenuItem(
+                        text = stringResource(id = R.string.db_cn),
+                        iconType = MainIconType.NEWS,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+
+                    ) {
+                        //官网公告
+                        actions.toNews(2)
+                    }
+                    MenuItem(
+                        text = stringResource(id = R.string.db_tw),
+                        iconType = MainIconType.NEWS,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        //官网公告
+                        actions.toNews(3)
+                    }
+                    MenuItem(
+                        text = stringResource(id = R.string.db_jp),
+                        iconType = MainIconType.NEWS,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        //官网公告
+                        actions.toNews(4)
+                    }
+                }
+                Column(modifier = Modifier.weight(0.55f)) {
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_pvp),
+                        iconType = MainIconType.PVP_SEARCH,
+                        modifier = Modifier
+                            .weight(0.6f)
+                            .fillMaxWidth()
+                    ) {
+                        actions.toPvpSearch()
                     }
                     MenuItem(
                         text = stringResource(id = R.string.tool_guild),
                         iconType = MainIconType.GUILD,
                         modifier = Modifier
+                            .weight(0.4f)
                             .fillMaxWidth()
-                            .weight(0.5f)
                     ) {
                         actions.toGuildList()
                     }
@@ -84,86 +137,46 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
 
             Row {
                 MenuItem(
-                    text = stringResource(id = R.string.tool_leader),
-                    iconType = MainIconType.LEADER,
+                    text = stringResource(id = R.string.tool_equip),
+                    iconType = MainIconType.EQUIP,
                     modifier = Modifier
-                        .weight(0.3f)
-                        .fillMaxWidth()
+                        .weight(0.4f)
                         .height(Dimen.largeMenuHeight)
                 ) {
-                    actions.toLeaderboard()
+                    actions.toEquipList()
                 }
                 MenuItem(
                     text = stringResource(id = R.string.tool_calendar),
                     iconType = MainIconType.CALENDAR,
                     modifier = Modifier
-                        .weight(0.3f)
+                        .weight(0.25f)
                         .height(Dimen.largeMenuHeight)
                 ) {
                     actions.toCalendar()
                 }
-
-                MenuItem(
-                    text = stringResource(id = R.string.tool_pvp),
-                    iconType = MainIconType.PVP_SEARCH,
+                Column(
                     modifier = Modifier
-                        .weight(0.4f)
+                        .weight(0.35f)
                         .height(Dimen.largeMenuHeight)
                 ) {
-                    actions.toPvpSearch()
-                }
-            }
-            Row {
-                MenuItem(
-                    text = stringResource(id = R.string.db_cn),
-                    iconType = MainIconType.NEWS,
-                    modifier = Modifier
-                        .height(Dimen.smallMenuHeight)
-                        .weight(1f)
-
-                ) {
-                    //官网公告
-                    actions.toNews(2)
-                }
-                MenuItem(
-                    text = stringResource(id = R.string.db_tw),
-                    iconType = MainIconType.NEWS,
-                    modifier = Modifier
-                        .height(Dimen.smallMenuHeight)
-                        .weight(1f)
-                ) {
-                    //官网公告
-                    actions.toNews(3)
-                }
-                MenuItem(
-                    text = stringResource(id = R.string.db_jp),
-                    iconType = MainIconType.NEWS,
-                    modifier = Modifier
-                        .height(Dimen.smallMenuHeight)
-                        .weight(1f)
-                ) {
-                    //官网公告
-                    actions.toNews(4)
-                }
-            }
-            Row {
-                MenuItem(
-                    text = stringResource(id = R.string.tool_equip),
-                    iconType = MainIconType.EQUIP,
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
-                ) {
-                    actions.toEquipList()
-                }
-                MenuItem(
-                    text = stringResource(id = R.string.setting),
-                    iconType = MainIconType.SETTING,
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .height(Dimen.smallMenuHeight)
-                ) {
-                    actions.toSettings()
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_leader),
+                        iconType = MainIconType.LEADER,
+                        modifier = Modifier
+                            .weight(0.5f)
+                            .fillMaxWidth()
+                    ) {
+                        actions.toLeaderboard()
+                    }
+                    MenuItem(
+                        text = stringResource(id = R.string.setting),
+                        iconType = MainIconType.SETTING,
+                        modifier = Modifier
+                            .weight(0.5f)
+                            .fillMaxWidth()
+                    ) {
+                        actions.toSettings()
+                    }
                 }
             }
             Row(
