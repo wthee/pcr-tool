@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.EnemyParameter
@@ -189,7 +190,7 @@ fun ClanBossInfoPager(
         clanViewModel.getAllBossAttr(enemyIds)
         val bossDataList = clanViewModel.allClanBossAttr.observeAsState()
 
-        Column {
+        Column(modifier = Modifier.background(colorResource(id = R.color.bg_gray))) {
             //图标列表
             ClanBattleItem(clanValue, pagerState = pagerState, type = 1)
             //指示器
@@ -197,9 +198,9 @@ fun ClanBossInfoPager(
                 pagerState = pagerState,
                 activeColor = MaterialTheme.colors.primary,
                 inactiveColor = colorResource(id = R.color.alpha_primary),
+                spacing = Dimen.iconSize + Dimen.mediuPadding * 2,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(Dimen.smallPadding)
             )
             //阶段选择
             val sectionChipData = arrayListOf<ChipData>()
@@ -210,8 +211,7 @@ fun ClanBossInfoPager(
             }
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimen.mediuPadding),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -229,7 +229,10 @@ fun ClanBossInfoPager(
                     val bossDataValue = bossDataList.value!![pagerIndex]
                     Card(
                         shape = CardTopShape,
-                        elevation = Dimen.cardElevation
+                        elevation = 0.dp,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(Dimen.mediuPadding)
                     ) {
                         Column(
                             modifier = Modifier

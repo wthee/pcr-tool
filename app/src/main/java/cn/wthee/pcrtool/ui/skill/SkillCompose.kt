@@ -53,7 +53,6 @@ fun SkillCompose(
  */
 @Composable
 fun SkillItem(level: Int, skillDetail: SkillDetail) {
-
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
     try {
@@ -113,13 +112,6 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
                 .align(Alignment.CenterHorizontally)
                 .padding(top = Dimen.smallPadding)
         )
-        //等级
-        Text(
-            text = "$level",
-            color = MaterialTheme.colors.primary,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.caption
-        )
         //图标、等级、描述
         Row(
             modifier = Modifier
@@ -129,13 +121,20 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
             val url = Constants.SKILL_ICON_URL + skillDetail.iconType + Constants.WEBP
             //技能图标
             IconCompose(data = url)
-            //描述
-            MainSubText(
-                text = skillDetail.desc,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = Dimen.mediuPadding)
-            )
+            Column(modifier = Modifier.padding(start = Dimen.mediuPadding)) {
+                //等级
+                if (skillDetail.skillId.toString()[0] != '1') {
+                    Text(
+                        text = "$level",
+                        color = MaterialTheme.colors.primary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.subtitle2
+                    )
+                }
+                //描述
+                MainSubText(text = skillDetail.desc)
+            }
+
         }
         val tags = getTags(skillDetail.getActionInfo())
         //标签
@@ -292,7 +291,7 @@ private fun SkillLoopIconList(iconList: List<Int>, iconTypes: HashMap<Int, Int>)
     val spanCount = 5
     val newList = getGridData(spanCount = spanCount, list = iconList, placeholder = 0)
     Column(Modifier.padding(top = Dimen.mediuPadding)) {
-        newList.forEachIndexed { index, i ->
+        newList.forEachIndexed { index, _ ->
             if (index % spanCount == 0) {
                 SkillLoopIconListRow(newList.subList(index, index + spanCount), iconTypes)
             }
@@ -311,8 +310,8 @@ private fun SkillLoopIconListRow(
     if (iconTypes.isNotEmpty()) {
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
             iconList.forEach {
-                var type = ""
-                var url = ""
+                val type: String
+                val url: String
                 if (it == 1) {
                     type = "普攻"
                     url = Constants.EQUIPMENT_URL + Constants.UNKNOWN_EQUIP_ID + Constants.WEBP
@@ -397,12 +396,13 @@ private fun getSkillType(skillId: Int) = when (skillId % 1000) {
  */
 @Composable
 private fun getSkillColor(type: String): Int {
-    val color = when {
+    return when {
         type.contains("连结") -> R.color.color_rank_7_10
         type.contains("EX") -> R.color.color_rank_2_3
-        else -> R.color.color_rank_4_6
+        type.contains("1") -> R.color.color_rank_11_17
+        type.contains("2") -> R.color.color_rank_18
+        else -> R.color.colorPrimary
     }
-    return color
 }
 
 private data class SkillIndex(
