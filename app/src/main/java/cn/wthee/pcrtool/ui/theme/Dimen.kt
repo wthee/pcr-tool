@@ -118,9 +118,9 @@ object Dimen {
     val divLineHeight = 1.dp
 
     /**
-     * 2dp
+     * 3dp
      */
-    val border = 2.dp
+    val border = 3.dp
 
     /**
      * 48dp
@@ -141,6 +141,13 @@ object Dimen {
      * 26dp
      */
     val starIconSize = 26.dp
+
+    /**
+     * PVP角色位置图标
+     * 30dp
+     */
+    val positionIconSize = 30.dp
+
 
     /**
      * 根据文字大小显示

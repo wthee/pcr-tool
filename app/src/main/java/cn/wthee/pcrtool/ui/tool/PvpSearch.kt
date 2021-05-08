@@ -7,19 +7,20 @@ import android.provider.Settings
 import android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -42,13 +43,16 @@ import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.gson.JsonArray
+import kotlinx.coroutines.launch
 import kotlin.math.round
 
 
 /**
  * 竞技场查询
  */
+@ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
@@ -80,9 +84,16 @@ fun PvpCompose(
     }
     navViewModel.selectedIds.postValue(selectedIds.subList(0, 5))
 
-    val context = LocalContext.current
+    //获取数据
     viewModel.getAllCharacter()
     val data = viewModel.allPvpCharacterData.observeAsState()
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val scrollState = rememberLazyListState()
+    val positionIndex = remember {
+        mutableStateOf(0)
+    }
 
 
     Box(
@@ -108,59 +119,118 @@ fun PvpCompose(
                 }
             }
             Card(modifier = Modifier.fillMaxWidth(), shape = Shapes.large) {
-                //供选择列表
                 data.value?.let { dataValue ->
-                    val character1 = dataValue.filter {
+                    val character0 = dataValue.filter {
                         it.position in 0..299
                     }
-                    val character2 = dataValue.filter {
+                    val character1 = dataValue.filter {
                         it.position in 300..599
                     }
-                    val character3 = dataValue.filter {
+                    val character2 = dataValue.filter {
                         it.position in 600..9999
                     }
-                    Column(Modifier.padding(top = Dimen.mediuPadding)) {
+                    val spanCount = 5
+                    val showIcon = listOf(0, 0, 1, 0, 0)
+                    //站位图标在列表中的位置
+                    val positions = arrayListOf(0, 0, 0)
+                    val filledCount1 = spanCount - character0.size % spanCount
+                    positions[1] = (spanCount + character0.size + filledCount1) / spanCount
+                    val filledCount2 = spanCount - character1.size % spanCount
+                    positions[2] =
+                        ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
+                    //滚动监听
+                    when (scrollState.firstVisibleItemIndex) {
+                        positions[0] -> {
+                            positionIndex.value = 0
+                        }
+                        positions[1] -> {
+                            positionIndex.value = 1
+
+                        }
+                        positions[2] -> {
+                            positionIndex.value = 2
+                        }
+                        scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
+                            positionIndex.value = 2
+                        }
+                    }
+                    Box {
+                        //供选择列表
+                        LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
+                            //前
+                            itemsIndexed(showIcon) { index, _ ->
+                                if (index == 2) {
+                                    PvpPositionIcon(R.drawable.ic_position_0)
+                                }
+                            }
+                            items(character0) {
+                                PvpIconItem(selectedIds, it)
+                            }
+                            //中
+                            items(filledCount1) {
+                                Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                            }
+                            itemsIndexed(showIcon) { index, _ ->
+                                if (index == 2) {
+                                    PvpPositionIcon(R.drawable.ic_position_1)
+                                }
+                            }
+                            items(character1) {
+                                PvpIconItem(selectedIds, it)
+                            }
+                            //后
+                            items(filledCount2) {
+                                Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                            }
+                            itemsIndexed(showIcon) { index, _ ->
+                                if (index == 2) {
+                                    PvpPositionIcon(R.drawable.ic_position_2)
+                                }
+                            }
+                            items(character2) {
+                                PvpIconItem(selectedIds, it)
+                            }
+                            items(spanCount) {
+                                Spacer(modifier = Modifier.height(Dimen.iconSize))
+                            }
+                        }
+                        //指示器
                         Row(
-                            horizontalArrangement = Arrangement.SpaceAround,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = Dimen.smallPadding)
+                                .align(Alignment.BottomEnd)
+                                .padding(
+                                    bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
+                                    start = Dimen.mediuPadding,
+                                    end = Dimen.fabMargin
+                                )
                         ) {
-                            val spanCount = 5
-                            val showIcon = listOf(0, 0, 1, 0, 0)
-                            LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                                //前
-                                itemsIndexed(showIcon) { index, _ ->
-                                    if (index == 2) {
-                                        PvpPositionIcon(R.drawable.ic_position_0)
+                            val icons = arrayListOf(
+                                R.drawable.ic_position_0,
+                                R.drawable.ic_position_1,
+                                R.drawable.ic_position_2,
+                            )
+                            icons.forEachIndexed { index, it ->
+                                val modifier = if (positionIndex.value == index) {
+                                    Modifier
+                                        .padding(Dimen.smallPadding)
+                                        .border(
+                                            Dimen.border,
+                                            MaterialTheme.colors.primary,
+                                            CircleShape
+                                        )
+                                } else {
+                                    Modifier.padding(Dimen.smallPadding)
+                                }
+                                IconCompose(
+                                    data = it,
+                                    modifier = modifier
+                                        .size(Dimen.fabIconSize)
+                                        .clip(CircleShape)
+                                ) {
+                                    positionIndex.value = index
+                                    scope.launch {
+                                        scrollState.scrollToItem(positions[index])
                                     }
-                                }
-                                items(character1) {
-                                    PvpIconItem(selectedIds, it)
-                                }
-                                //中
-                                items(spanCount - character1.size % spanCount) {
-                                    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
-                                }
-                                itemsIndexed(showIcon) { index, _ ->
-                                    if (index == 2) {
-                                        PvpPositionIcon(R.drawable.ic_position_1)
-                                    }
-                                }
-                                items(character2) {
-                                    PvpIconItem(selectedIds, it)
-                                }
-                                //后
-                                items(spanCount - character2.size % spanCount) {
-                                    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
-                                }
-                                itemsIndexed(showIcon) { index, _ ->
-                                    if (index == 2) {
-                                        PvpPositionIcon(R.drawable.ic_position_2)
-                                    }
-                                }
-                                items(character3) {
-                                    PvpIconItem(selectedIds, it)
                                 }
                             }
                         }
@@ -226,7 +296,7 @@ private fun PvpPositionIcon(iconId: Int) {
                 .align(
                     Alignment.Center
                 )
-                .size(Dimen.fabIconSize),
+                .size(Dimen.positionIconSize),
             clickable = false
         )
     }
