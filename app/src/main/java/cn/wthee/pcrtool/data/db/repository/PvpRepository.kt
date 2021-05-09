@@ -12,6 +12,9 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
 
     suspend fun getLiked(region: Int) = pvpDao.getAll(region)
 
+    suspend fun getLikedList(defs: String, region: Int, type: Int) =
+        pvpDao.getLikedList(defs, region, type)
+
     companion object {
 
         fun getInstance(pvpDao: PvpDao) = PvpRepository(pvpDao)

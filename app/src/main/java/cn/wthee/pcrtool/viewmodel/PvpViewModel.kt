@@ -24,6 +24,7 @@ class PvpViewModel @Inject constructor(
 ) : ViewModel() {
 
     var allData = MutableLiveData<List<PvpLikedData>>()
+    var liked = MutableLiveData<List<PvpLikedData>>()
 
     /**
      * 根据游戏版本 [region]，获取收藏信息
@@ -32,6 +33,13 @@ class PvpViewModel @Inject constructor(
         viewModelScope.launch {
             val data = repository.getLiked(region)
             allData.postValue(data)
+        }
+    }
+
+    fun getLikedList(defs: String, region: Int, type: Int) {
+        viewModelScope.launch {
+            val data = repository.getLikedList(defs, region, type)
+            liked.postValue(data)
         }
     }
 

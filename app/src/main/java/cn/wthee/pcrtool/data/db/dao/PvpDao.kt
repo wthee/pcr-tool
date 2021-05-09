@@ -21,6 +21,10 @@ interface PvpDao {
     @Query("SELECT * FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region AND type = :type")
     suspend fun getLiked(atks: String, defs: String, region: Int, type: Int): PvpLikedData?
 
+    @Query("SELECT * FROM pvp_like WHERE defs = :defs AND region = :region AND type = :type")
+    suspend fun getLikedList(defs: String, region: Int, type: Int): List<PvpLikedData>
+
+
     /**
      * 插入数据 [PvpLikedData]
      */
