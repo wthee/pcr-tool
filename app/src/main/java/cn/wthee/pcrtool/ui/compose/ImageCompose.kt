@@ -4,9 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
@@ -82,10 +85,9 @@ fun PositionIcon(position: Int) {
 fun IconCompose(
     data: Any,
     modifier: Modifier = Modifier,
-    clickable: Boolean = true,
-    onClick: () -> Unit = {}
+    onClick: (() -> Unit)? = null
 ) {
-    val mModifier = if (clickable) {
+    val mModifier = if (onClick != null) {
         Modifier
             .clip(Shapes.small)
             .clickable(onClick = onClick)
@@ -102,17 +104,26 @@ fun IconCompose(
             )
     }
     Box(modifier) {
-        val painter = rememberCoilPainter(request = data)
-        Image(
-            painter = when (painter.loadState) {
-                is ImageLoadState.Success -> painter
-                is ImageLoadState.Error -> rememberCoilPainter(request = Constants.UNKNOWN_EQUIPMENT_ICON)
-                else -> rememberCoilPainter(request = R.drawable.unknown_gray)
-            },
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = mModifier
-        )
+        if (data is ImageVector) {
+            Icon(
+                imageVector = data,
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary,
+                modifier = mModifier
+            )
+        } else {
+            val painter = rememberCoilPainter(request = data)
+            Image(
+                painter = when (painter.loadState) {
+                    is ImageLoadState.Success -> painter
+                    is ImageLoadState.Error -> rememberCoilPainter(request = Constants.UNKNOWN_EQUIPMENT_ICON)
+                    else -> rememberCoilPainter(request = R.drawable.unknown_gray)
+                },
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = mModifier
+            )
+        }
     }
 }
 

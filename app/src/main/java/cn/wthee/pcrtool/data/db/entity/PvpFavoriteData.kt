@@ -16,8 +16,8 @@ data class PvpFavoriteData(
     @ColumnInfo(name = "defs") val defs: String,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "region") val region: Int,
-    // 0:默认 1:用户添加
-    @ColumnInfo(name = "type") val type: Int = 0,
 ) {
-    fun getIds() = atks.intArrayList() + defs.intArrayList()
+    fun getAtkIds() = atks.intArrayList()
+
+    fun getDefIds() = defs.intArrayList()
 }

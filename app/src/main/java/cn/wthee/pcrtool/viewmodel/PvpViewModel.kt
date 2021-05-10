@@ -40,9 +40,9 @@ class PvpViewModel @Inject constructor(
     /**
      * 根据防守队伍 [defs] 获取收藏信息
      */
-    fun getFavoritesList(defs: String, region: Int, type: Int) {
+    fun getFavoritesList(defs: String, region: Int) {
         viewModelScope.launch {
-            val data = repository.getLikedList(defs, region, type)
+            val data = repository.getLikedList(defs, region)
             favorites.postValue(data)
         }
     }
@@ -53,6 +53,7 @@ class PvpViewModel @Inject constructor(
     fun insert(data: PvpFavoriteData) {
         viewModelScope.launch {
             repository.insert(data)
+            getFavoritesList(data.defs, data.region)
         }
     }
 
@@ -62,6 +63,8 @@ class PvpViewModel @Inject constructor(
     fun delete(atks: String, defs: String, region: Int) {
         viewModelScope.launch {
             repository.delete(atks, defs, region)
+            getAllFavorites(region)
+            getFavoritesList(defs, region)
         }
     }
 

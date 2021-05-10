@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -50,9 +53,8 @@ fun DownloadCompose(viewModel: NavViewModel) {
                         modifier = Modifier.size(Dimen.fabIconSize)
                     )
                 } else {
-                    Icon(
+                    IconCompose(
                         MainIconType.OK.icon,
-                        null,
                         modifier = Modifier.size(28.dp)
                     )
                 }

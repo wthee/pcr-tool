@@ -58,6 +58,7 @@ object Navigation {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_PVP_RESULT = "toolPvpResult"
     const val TOOL_PVP_IDS = "toolPvpSelectIds"
+    const val TOOL_PVP_FAVORITE = "toolPvpFavorite"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_REGION = "toolNewsRegion"
     const val MAIN_SETTINGS = "mainSettings"
@@ -260,7 +261,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            PvpSearchCompose(actions.toPvpResult)
+            PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
         }
 
         //竞技场查询结果
@@ -296,6 +297,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
             NewsList(arguments.getInt(Navigation.TOOL_NEWS_REGION))
+        }
+
+        //竞技场收藏
+        composable(Navigation.TOOL_PVP_FAVORITE) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            PvpFavorites()
         }
     }
 }
@@ -446,6 +453,13 @@ class NavActions(navController: NavHostController) {
      */
     val toNews: (Int) -> Unit = { region: Int ->
         navController.navigate("${Navigation.TOOL_NEWS}/${region}")
+    }
+
+    /**
+     * 竞技场收藏
+     */
+    val toPvpFavorite = {
+        navController.navigate(Navigation.TOOL_PVP_FAVORITE)
     }
 }
 

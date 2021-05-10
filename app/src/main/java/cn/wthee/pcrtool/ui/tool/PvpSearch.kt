@@ -8,11 +8,13 @@ import android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -63,6 +65,7 @@ import kotlin.math.round
 @Composable
 fun PvpSearchCompose(
     toResult: (String) -> Unit,
+    toFavorite: () -> Unit,
     viewModel: CharacterViewModel = hiltNavGraphViewModel()
 ) {
     //已选择的id
@@ -290,6 +293,13 @@ fun PvpSearchCompose(
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
+            //收藏
+            FabCompose(
+                iconType = MainIconType.LOVE_FILL,
+                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+            ) {
+                toFavorite()
+            }
             //悬浮窗
             FabCompose(
                 iconType = MainIconType.PVP_SEARCH_WINDOW,
@@ -350,8 +360,7 @@ private fun PvpPositionIcon(iconId: Int) {
                 .align(
                     Alignment.Center
                 )
-                .size(Dimen.fabIconSize),
-            clickable = false
+                .size(Dimen.fabIconSize)
         )
     }
 }
@@ -426,7 +435,7 @@ fun PvpSearchResult(
     }
     val region = getRegion()
     viewModel.getPVPData(ids)
-    viewModel.getFavoritesList(idString, region, 0)
+    viewModel.getFavoritesList(idString, region)
     navViewModel.loading.postValue(true)
     //结果
     val result = viewModel.pvpResult.observeAsState()
@@ -452,6 +461,7 @@ fun PvpSearchResult(
                             .background(colorResource(id = R.color.bg_gray))
                     ) {
                         //防守
+                        //fixme 点击跳转角色详情
                         Row(
                             modifier = Modifier
                                 .padding(top = Dimen.mediuPadding)
@@ -464,7 +474,7 @@ fun PvpSearchResult(
                                         it.asInt,
                                         MainActivity.r6Ids.contains(it.asInt)
                                     ),
-                                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                                    modifier = Modifier.padding(end = Dimen.smallPadding),
                                 )
                             }
                         }
@@ -570,39 +580,36 @@ private fun PvpAtkTeam(
                     }
                     //点击收藏
                     Box(modifier = Modifier.weight(0.2f)) {
-                        Icon(
-                            imageVector = if (favorites) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.primary,
+                        IconCompose(
+                            data = if (favorites) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
                             modifier = Modifier
                                 .align(Alignment.Center)
-                                .clickable {
-                                    scope.launch {
-                                        if (favorites) {
-                                            //已收藏，取消收藏
-                                            viewModel.delete(item.atk, item.def, region)
-                                        } else {
-                                            //未收藏，添加收藏
-                                            val simpleDateFormat =
-                                                SimpleDateFormat(
-                                                    "yyyy/MM/dd HH:mm:ss.SSS",
-                                                    Locale.SIMPLIFIED_CHINESE
-                                                )
-                                            val date = Date(System.currentTimeMillis())
-                                            viewModel.insert(
-                                                PvpFavoriteData(
-                                                    item.id,
-                                                    item.atk,
-                                                    item.def,
-                                                    simpleDateFormat.format(date),
-                                                    region
-                                                )
-                                            )
-                                        }
-                                        viewModel.getFavoritesList(item.def, region, 0)
-                                    }
+                                .size(Dimen.fabIconSize)
+                        ) {
+                            scope.launch {
+                                if (favorites) {
+                                    //已收藏，取消收藏
+                                    viewModel.delete(item.atk, item.def, region)
+                                } else {
+                                    //未收藏，添加收藏
+                                    val simpleDateFormat =
+                                        SimpleDateFormat(
+                                            "yyyy/MM/dd HH:mm:ss.SSS",
+                                            Locale.SIMPLIFIED_CHINESE
+                                        )
+                                    val date = Date(System.currentTimeMillis())
+                                    viewModel.insert(
+                                        PvpFavoriteData(
+                                            item.id,
+                                            item.atk,
+                                            item.def,
+                                            simpleDateFormat.format(date),
+                                            region
+                                        )
+                                    )
                                 }
-                        )
+                            }
+                        }
                     }
                 }
             }

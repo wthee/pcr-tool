@@ -277,8 +277,7 @@ private fun AreaEquipItem(
                 Box {
                     IconCompose(
                         data = getEquipIconUrl(it.eid),
-                        modifier = Modifier.alpha(alpha),
-                        clickable = false
+                        modifier = Modifier.alpha(alpha)
                     )
                     if (selected) {
                         Spacer(

@@ -18,11 +18,11 @@ interface PvpDao {
     /**
      * 根据游戏版本 [region] 进攻 [atks] 防守 [defs] 自定义[type]，获取收藏信息
      */
-    @Query("SELECT * FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region AND type = :type")
-    suspend fun getLiked(atks: String, defs: String, region: Int, type: Int): PvpFavoriteData?
+    @Query("SELECT * FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region")
+    suspend fun getLiked(atks: String, defs: String, region: Int): PvpFavoriteData?
 
-    @Query("SELECT * FROM pvp_like WHERE defs = :defs AND region = :region AND type = :type")
-    suspend fun getLikedList(defs: String, region: Int, type: Int): List<PvpFavoriteData>
+    @Query("SELECT * FROM pvp_like WHERE defs = :defs AND region = :region")
+    suspend fun getLikedList(defs: String, region: Int): List<PvpFavoriteData>
 
 
     /**

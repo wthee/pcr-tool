@@ -6,19 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.PvpDao
-import cn.wthee.pcrtool.data.db.entity.PvpLikedData
+import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.utils.Constants
 import java.util.concurrent.TimeUnit
 
 @Database(
     entities = [
-        PvpLikedData::class
+        PvpFavoriteData::class
     ],
-    version = 51,
+    version = 100,
     exportSchema = false
 )
 /**
  * 竞技场收藏信息数据库
+ * fixme 数据空版本更新
  */
 abstract class AppPvpDatabase : RoomDatabase() {
 

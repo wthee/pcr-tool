@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -149,11 +148,7 @@ private fun ClanBattleItem(
                         }
                         //多目标提示
                         if (it.targetCount > 1) {
-                            Icon(
-                                getMultipleIcon(it.targetCount - 1),
-                                contentDescription = null,
-                                tint = MaterialTheme.colors.primary,
-                            )
+                            IconCompose(getMultipleIcon(it.targetCount - 1))
                         }
                     }
 

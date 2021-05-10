@@ -340,7 +340,7 @@ private fun SkillLoopIconListRow(
                         .padding(Dimen.mediuPadding)
                         .alpha(alpha)
                 ) {
-                    IconCompose(data = url, clickable = false)
+                    IconCompose(data = url)
                     Text(
                         text = type,
                         color = colorResource(getSkillColor(type = type)),

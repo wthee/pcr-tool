@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -24,7 +23,7 @@ fun FabCompose(iconType: MainIconType, modifier: Modifier = Modifier, onClick: (
         contentColor = MaterialTheme.colors.primary,
         modifier = modifier.size(Dimen.fabSize),
     ) {
-        Icon(iconType.icon, "", modifier = Modifier.padding(Dimen.fabPadding))
+        IconCompose(iconType.icon, modifier = Modifier.padding(Dimen.fabPadding))
     }
 }
 
@@ -34,7 +33,6 @@ fun FabCompose(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-
     FloatingActionButton(
         onClick = onClick,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
@@ -60,13 +58,12 @@ fun ExtendedFabCompose(
         icon = {
             if (iconType.type == 14) {
                 //角色
-                Icon(
-                    painterResource(id = R.drawable.ic_character),
-                    null,
+                IconCompose(
+                    R.drawable.ic_character,
                     modifier = Modifier.size(Dimen.fabIconSize)
                 )
             } else {
-                Icon(iconType.icon, null, modifier = Modifier.size(Dimen.fabIconSize))
+                IconCompose(iconType.icon, modifier = Modifier.size(Dimen.fabIconSize))
             }
         },
         text = {

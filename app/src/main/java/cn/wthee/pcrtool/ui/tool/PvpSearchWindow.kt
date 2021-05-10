@@ -7,17 +7,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.ViewModelProvider
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.compose.FabCompose
+import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.ui.theme.Shapes
@@ -48,14 +46,10 @@ fun PvpSearchWindow() {
 
             Column {
                 FabCompose(content = {
-                    Icon(
-                        painter = painterResource(id = R.mipmap.ic_logo),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.primary
-                    )
+                    IconCompose(R.mipmap.ic_logo)
                 }) {
                     //fixme 最大/小化悬浮窗
-                    val min = if (windowMin.value) false else true
+                    val min = !windowMin.value
                     windowMin.value = min
                 }
 
@@ -65,7 +59,7 @@ fun PvpSearchWindow() {
                     shape = Shapes.large, modifier = Modifier
                         .padding(start = Dimen.mediuPadding)
                 ) {
-                    PvpSearchCompose({}, viewModel)
+                    PvpSearchCompose({}, {}, viewModel)
                 }
             }
         }
