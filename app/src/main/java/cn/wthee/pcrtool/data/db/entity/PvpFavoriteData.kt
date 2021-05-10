@@ -9,7 +9,7 @@ import cn.wthee.pcrtool.utils.intArrayList
  * 竞技场收藏
  */
 @Entity(tableName = "pvp_like")
-data class PvpLikedData(
+data class PvpFavoriteData(
     @PrimaryKey
     @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "atks") val atks: String,

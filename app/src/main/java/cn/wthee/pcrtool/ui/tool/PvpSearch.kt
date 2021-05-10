@@ -28,13 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.dao.PvpDao
-import cn.wthee.pcrtool.data.db.entity.PvpLikedData
+import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
-import cn.wthee.pcrtool.database.AppPvpDatabase
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.service.PvpService
 import cn.wthee.pcrtool.ui.MainActivity
@@ -138,8 +136,6 @@ fun PvpSearchCompose(
                     }
                     val spanCount = 5
                     val showIcon = listOf(0, 0, 1, 0, 0)
-                    //fixme item 高度
-                    val itemHeightPx = (Dimen.iconSize + Dimen.mediuPadding).value.toInt()
                     //站位图标在列表中的位置
                     val positions = arrayListOf(0, 0, 0)
                     val filledCount1 = spanCount - character0.size % spanCount
@@ -428,17 +424,18 @@ fun PvpSearchResult(
             ids.add(id.toInt())
         }
     }
-    val dao = AppPvpDatabase.getInstance().getPvpDao()
     val region = getRegion()
     viewModel.getPVPData(ids)
-    viewModel.getLikedList(idString, region, 0)
+    viewModel.getFavoritesList(idString, region, 0)
     navViewModel.loading.postValue(true)
+    //结果
     val result = viewModel.pvpResult.observeAsState()
-    val liked = viewModel.liked.observeAsState()
-    val likedList = arrayListOf<String>()
-    liked.value?.let {
+    //收藏信息
+    val favorites = viewModel.favorites.observeAsState()
+    val favoritesList = arrayListOf<String>()
+    favorites.value?.let {
         it.forEach { data ->
-            likedList.add(data.atks)
+            favoritesList.add(data.atks)
         }
     }
 
@@ -474,7 +471,7 @@ fun PvpSearchResult(
                         //展示查询结果
                         LazyColumn {
                             itemsIndexed(items = list) { index, item ->
-                                PvpAtkTeam(likedList, index + 1, item, region, dao, viewModel)
+                                PvpAtkTeam(favoritesList, index + 1, item, region, viewModel)
                             }
                             item {
                                 Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
@@ -502,15 +499,14 @@ fun PvpSearchResult(
  */
 @Composable
 private fun PvpAtkTeam(
-    likedList: List<String>,
+    favoritesList: List<String>,
     i: Int,
     item: PvpResultData,
     region: Int,
-    dao: PvpDao,
     viewModel: PvpViewModel
 ) {
     val scope = rememberCoroutineScope()
-    val liked = likedList.contains(item.atk)
+    val favorites = favoritesList.contains(item.atk)
 
     Column(
         modifier = Modifier
@@ -575,23 +571,26 @@ private fun PvpAtkTeam(
                     //点击收藏
                     Box(modifier = Modifier.weight(0.2f)) {
                         Icon(
-                            imageVector = if (liked) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
+                            imageVector = if (favorites) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
                             contentDescription = null,
                             tint = MaterialTheme.colors.primary,
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .clickable {
                                     scope.launch {
-                                        if (dao.getLiked(item.atk, item.def, region, 0) != null) {
+                                        if (favorites) {
                                             //已收藏，取消收藏
-                                            dao.delete(item.atk, item.def, region)
+                                            viewModel.delete(item.atk, item.def, region)
                                         } else {
                                             //未收藏，添加收藏
                                             val simpleDateFormat =
-                                                SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS") // HH:mm:ss
+                                                SimpleDateFormat(
+                                                    "yyyy/MM/dd HH:mm:ss.SSS",
+                                                    Locale.SIMPLIFIED_CHINESE
+                                                )
                                             val date = Date(System.currentTimeMillis())
-                                            dao.insert(
-                                                PvpLikedData(
+                                            viewModel.insert(
+                                                PvpFavoriteData(
                                                     item.id,
                                                     item.atk,
                                                     item.def,
@@ -600,7 +599,7 @@ private fun PvpAtkTeam(
                                                 )
                                             )
                                         }
-                                        viewModel.getLikedList(item.def, region, 0)
+                                        viewModel.getFavoritesList(item.def, region, 0)
                                     }
                                 }
                         )

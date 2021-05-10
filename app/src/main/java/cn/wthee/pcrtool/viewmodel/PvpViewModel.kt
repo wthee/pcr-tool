@@ -3,7 +3,7 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.entity.PvpLikedData
+import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.repository.PvpRepository
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -23,28 +23,47 @@ class PvpViewModel @Inject constructor(
     private val repository: PvpRepository
 ) : ViewModel() {
 
-    var allData = MutableLiveData<List<PvpLikedData>>()
-    var liked = MutableLiveData<List<PvpLikedData>>()
+    var allFavorites = MutableLiveData<List<PvpFavoriteData>>()
+    var favorites = MutableLiveData<List<PvpFavoriteData>>()
+    val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
 
     /**
      * 根据游戏版本 [region]，获取收藏信息
      */
-    fun getLiked(region: Int) {
+    fun getAllFavorites(region: Int) {
         viewModelScope.launch {
             val data = repository.getLiked(region)
-            allData.postValue(data)
+            allFavorites.postValue(data)
         }
     }
 
-    fun getLikedList(defs: String, region: Int, type: Int) {
+    /**
+     * 根据防守队伍 [defs] 获取收藏信息
+     */
+    fun getFavoritesList(defs: String, region: Int, type: Int) {
         viewModelScope.launch {
             val data = repository.getLikedList(defs, region, type)
-            liked.postValue(data)
+            favorites.postValue(data)
         }
     }
 
+    /**
+     * 新增收藏信息
+     */
+    fun insert(data: PvpFavoriteData) {
+        viewModelScope.launch {
+            repository.insert(data)
+        }
+    }
 
-    val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
+    /**
+     * 删除收藏信息
+     */
+    fun delete(atks: String, defs: String, region: Int) {
+        viewModelScope.launch {
+            repository.delete(atks, defs, region)
+        }
+    }
 
     /**
      * 查询
