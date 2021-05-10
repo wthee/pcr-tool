@@ -112,10 +112,10 @@ fun CharacterList(
                 val count = list.value?.size ?: 0
                 // 数量显示&筛选按钮
                 ExtendedFabCompose(
+                    iconType = MainIconType.CHARACTER,
                     modifier = Modifier
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                         .align(Alignment.BottomEnd),
-                    iconType = MainIconType.CHARACTER,
                     text = "$count"
                 ) {
                     coroutineScope.launch {

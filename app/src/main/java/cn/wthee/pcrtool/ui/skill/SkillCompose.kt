@@ -125,7 +125,7 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
                 //等级
                 if (skillDetail.skillId.toString()[0] != '1') {
                     Text(
-                        text = "$level",
+                        text = stringResource(id = R.string.skill_level, level),
                         color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.subtitle2

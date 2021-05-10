@@ -24,8 +24,9 @@ import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.utils.dates
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.daysInt
+import cn.wthee.pcrtool.utils.hourInt
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import kotlinx.coroutines.launch
@@ -83,7 +84,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val today = getToday()
     val sd = gachaInfo.startTime
     val ed = gachaInfo.endTime
-    val inProgress = today.daysInt(sd) >= 0 && ed.daysInt(today) >= 0
+    val inProgress = today.hourInt(sd) >= 0 && ed.hourInt(today) >= 0
     Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -94,7 +95,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             MainTitleText(text = gachaInfo.getDate())
             if (inProgress) {
                 MainTitleText(
-                    text = stringResource(R.string.in_progress, gachaInfo.endTime.days(today)),
+                    text = stringResource(R.string.in_progress, gachaInfo.endTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     backgroundColor = colorResource(id = R.color.news_update)
                 )

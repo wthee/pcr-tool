@@ -25,7 +25,7 @@ import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.daysInt
+import cn.wthee.pcrtool.utils.hourInt
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
@@ -84,10 +84,11 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val type: String
     val typeColor: Int
     var showDays = true
+    val today = getToday()
     val startDate = event.startTime.substring(0, 10)
     val endDate = event.endTime.substring(0, 10)
     title = if (startDate == "2030/12/30") {
-        "活动预告"
+        "预告"
     } else {
         "$startDate ~ $endDate"
     }
@@ -106,6 +107,10 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         //复刻
         event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
             type = "复刻"
+            typeColor = R.color.color_rank_7_10
+        }
+        event.startTime.hourInt(today) > 0 -> {
+            type = "预告"
             typeColor = R.color.news_system
         }
         //正常
@@ -114,9 +119,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             typeColor = R.color.news_update
         }
     }
-    val today = getToday()
     val inProgress =
-        today.daysInt(startDate) >= 0 && endDate.daysInt(today) >= 0 && event.eventId / 10000 != 2
+        today.hourInt(event.startTime) >= 0 && event.endTime.hourInt(today) >= 0 && event.eventId / 10000 != 2
 
     Column(
         modifier = Modifier

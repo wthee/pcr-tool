@@ -100,7 +100,7 @@ object Dimen {
     /**
      * 40dp
      */
-    val iconMinSize = 40.dp
+    val iconMinSize = 36.dp
 
     /**
      * 45dp

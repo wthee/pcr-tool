@@ -83,7 +83,7 @@ fun MainText(
             color = color,
             style = MaterialTheme.typography.subtitle1,
             textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Black,
         )
     }
 }
@@ -92,11 +92,12 @@ fun MainText(
  * 蓝色加粗副标题
  */
 @Composable
-fun MainSubText(text: String, modifier: Modifier = Modifier) {
+fun MainSubText(text: String, color: Color = Color.Unspecified, modifier: Modifier = Modifier) {
     SelectionContainer(modifier = modifier) {
         Text(
             text = text,
             style = MaterialTheme.typography.subtitle2,
+            color = color
         )
     }
 }

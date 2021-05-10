@@ -272,7 +272,10 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            PvpSearchResult(arguments.getString(Navigation.TOOL_PVP_IDS) ?: "")
+            PvpSearchResult(
+                arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
+                actions.toCharacterDetail
+            )
         }
 
         //设置页面
@@ -302,7 +305,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //竞技场收藏
         composable(Navigation.TOOL_PVP_FAVORITE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            PvpFavorites()
+            PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
         }
     }
 }
@@ -522,4 +525,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val selectedIds = MutableLiveData<List<PvpCharacterData>>()
 
+    var curRank = MutableLiveData(0)
+    var targetRank = MutableLiveData(0)
 }

@@ -99,10 +99,9 @@ fun PvpSearchCompose(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val activity = ActivityHelper.instance.currentActivity
-    //fixme 滑动距离
     val scrollState = rememberLazyListState()
     val positionIndex = remember {
-        mutableStateOf(0)
+        mutableStateOf(2)
     }
 
 
@@ -151,58 +150,31 @@ fun PvpSearchCompose(
                     when (scrollState.firstVisibleItemIndex) {
                         //后
                         positions[0] -> {
-                            positionIndex.value = 0
+                            if (positionIndex.value != 0) {
+                                positionIndex.value = 0
+                            }
                         }
                         scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
-                            positionIndex.value = 0
+                            if (scrollState.layoutInfo.totalItemsCount != 0) {
+                                positionIndex.value = 0
+                            }
                         }
                         //中
                         positions[1] -> {
-                            positionIndex.value = 1
+                            if (positionIndex.value != 1) {
+                                positionIndex.value = 1
+                            }
                         }
                         //前
                         positions[2] -> {
-                            positionIndex.value = 2
+                            if (positionIndex.value != 2) {
+                                positionIndex.value = 2
+                            }
                         }
 
                     }
                     Box {
                         //供选择列表
-                        /*    Column(modifier = Modifier.verticalScroll(scrollState)) {
-                                StaggeredVerticalGrid(spanCount = 5) {
-                                    //前
-                                    showIcon.forEach {
-                                        PlaceHolderItem(it, R.drawable.ic_position_0)
-                                    }
-                                    character0.forEach {
-                                        PvpIconItem(selectedIds, it)
-                                    }
-                                    for (i in 0 until filledCount1) {
-                                        PlaceHolderItem(0)
-                                    }
-                                    //中
-                                    showIcon.forEach {
-                                        PlaceHolderItem(it, R.drawable.ic_position_1)
-                                    }
-                                    character1.forEach {
-                                        PvpIconItem(selectedIds, it)
-                                    }
-                                    for (i in 0 until filledCount2) {
-                                        PlaceHolderItem(0)
-                                    }
-                                    //后
-                                    showIcon.forEach {
-                                        PlaceHolderItem(it, R.drawable.ic_position_2)
-                                    }
-                                    character2.forEach {
-                                        PvpIconItem(selectedIds, it)
-                                    }
-                                    for (i in 0 until spanCount) {
-                                        PlaceHolderItem(0)
-                                    }
-                                }
-                            }*/
-
                         LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
                             //前
                             itemsIndexed(showIcon) { index, _ ->
@@ -425,6 +397,7 @@ fun PvpIconItem(
 @Composable
 fun PvpSearchResult(
     idString: String,
+    toCharacter: (Int) -> Unit,
     viewModel: PvpViewModel = hiltNavGraphViewModel()
 ) {
     val ids = JsonArray()
@@ -461,7 +434,6 @@ fun PvpSearchResult(
                             .background(colorResource(id = R.color.bg_gray))
                     ) {
                         //防守
-                        //fixme 点击跳转角色详情
                         Row(
                             modifier = Modifier
                                 .padding(top = Dimen.mediuPadding)
@@ -475,13 +447,22 @@ fun PvpSearchResult(
                                         MainActivity.r6Ids.contains(it.asInt)
                                     ),
                                     modifier = Modifier.padding(end = Dimen.smallPadding),
-                                )
+                                ) {
+                                    toCharacter(it.asInt)
+                                }
                             }
                         }
                         //展示查询结果
                         LazyColumn {
                             itemsIndexed(items = list) { index, item ->
-                                PvpAtkTeam(favoritesList, index + 1, item, region, viewModel)
+                                PvpAtkTeam(
+                                    toCharacter,
+                                    favoritesList,
+                                    index + 1,
+                                    item,
+                                    region,
+                                    viewModel
+                                )
                             }
                             item {
                                 Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
@@ -509,6 +490,7 @@ fun PvpSearchResult(
  */
 @Composable
 private fun PvpAtkTeam(
+    toCharacter: (Int) -> Unit,
     favoritesList: List<String>,
     i: Int,
     item: PvpResultData,
@@ -537,54 +519,34 @@ private fun PvpAtkTeam(
             }
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //点赞信息
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = Dimen.smallPadding)
-                ) {
+                Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
                     MainContentText(
                         text = "${upRatio}%",
                         color = MaterialTheme.colors.primary,
                         textAlign = TextAlign.Start,
-                        modifier = Modifier.fillMaxWidth(0.2f)
+                        modifier = Modifier.weight(0.2f)
                     )
                     MainContentText(
                         text = item.up.toString(),
                         color = colorResource(id = R.color.cool_apk),
                         textAlign = TextAlign.Start,
-                        modifier = Modifier.fillMaxWidth(0.2f)
+                        modifier = Modifier.weight(0.2f)
                     )
                     MainContentText(
                         text = item.down.toString(),
                         color = colorResource(id = R.color.color_rank_18),
                         textAlign = TextAlign.Start,
-                        modifier = Modifier.fillMaxWidth(0.2f)
+                        modifier = Modifier.weight(0.4f)
                     )
-                }
-                //队伍角色图标
-                //进攻
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(modifier = Modifier.weight(0.8f)) {
-                        item.getIdList(0).forEach {
-                            IconCompose(
-                                data = CharacterIdUtil.getMaxIconUrl(
-                                    it,
-                                    MainActivity.r6Ids.contains(it)
-                                ),
-                                modifier = Modifier.padding(end = Dimen.largePadding)
-                            )
-                        }
-                    }
-                    //点击收藏
-                    Box(modifier = Modifier.weight(0.2f)) {
+                    //收藏
+                    Box(
+                        modifier = Modifier.weight(0.2f)
+                    ) {
                         IconCompose(
                             data = if (favorites) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
                             modifier = Modifier
-                                .align(Alignment.Center)
                                 .size(Dimen.fabIconSize)
+                                .align(Alignment.CenterEnd)
                         ) {
                             scope.launch {
                                 if (favorites) {
@@ -595,7 +557,7 @@ private fun PvpAtkTeam(
                                     val simpleDateFormat =
                                         SimpleDateFormat(
                                             "yyyy/MM/dd HH:mm:ss.SSS",
-                                            Locale.SIMPLIFIED_CHINESE
+                                            Locale.CHINESE
                                         )
                                     val date = Date(System.currentTimeMillis())
                                     viewModel.insert(
@@ -609,6 +571,21 @@ private fun PvpAtkTeam(
                                     )
                                 }
                             }
+                        }
+                    }
+                }
+                //队伍角色图标
+                //进攻
+                LazyRow {
+                    items(item.getIdList(0)) {
+                        IconCompose(
+                            data = CharacterIdUtil.getMaxIconUrl(
+                                it,
+                                MainActivity.r6Ids.contains(it)
+                            ),
+                            modifier = Modifier.padding(end = Dimen.largePadding)
+                        ) {
+                            toCharacter(it)
                         }
                     }
                 }

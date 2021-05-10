@@ -160,13 +160,3 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
      */
     APP_UPDATE(26, Icons.Rounded.Upcoming)
 }
-
-fun getMultipleIcon(count: Int): ImageVector {
-    return when (count) {
-        2 -> Icons.Rounded.LooksTwo
-        3 -> Icons.Rounded.Looks3
-        4 -> Icons.Rounded.Looks4
-        5 -> Icons.Rounded.Looks5
-        else -> Icons.Rounded.Looks
-    }
-}

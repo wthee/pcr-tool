@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.utils.daysInt
+import cn.wthee.pcrtool.ui.tool.getToday
+import cn.wthee.pcrtool.utils.hourInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -37,7 +38,7 @@ class CalendarViewModel @Inject constructor(
             val year = cal.get(Calendar.YEAR)
             val month = cal.get(Calendar.MONTH) + 1
             val dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
-            val today = "$year/$month/$dayOfMonth"
+            val today = getToday()
             dropEvents.postValue(data.sortedWith(compare(today)))
         }
     }
@@ -50,8 +51,8 @@ class CalendarViewModel @Inject constructor(
         val ed1 = o1.getFixedEndTime()
         val sd2 = o2.getFixedStartTime()
         val ed2 = o2.getFixedEndTime()
-        if (today.daysInt(sd1) >= 0 && ed1.daysInt(today) >= 0) {
-            if (today.daysInt(sd2) >= 0 && ed2.daysInt(today) >= 0) {
+        if (today.hourInt(sd1) >= 0 && ed1.hourInt(today) >= 0) {
+            if (today.hourInt(sd2) >= 0 && ed2.hourInt(today) >= 0) {
                 //都是进行中，比较结束时间
                 ed2.compareTo(ed1)
             } else {
@@ -59,20 +60,20 @@ class CalendarViewModel @Inject constructor(
                 -1
             }
         } else {
-            if (today.daysInt(sd2) >= 0 && ed2.daysInt(today) >= 0) {
+            if (today.hourInt(sd2) >= 0 && ed2.hourInt(today) >= 0) {
                 //o2进行中
                 1
             } else {
                 //不是进行中
-                if (sd1.daysInt(today) > 0) {
-                    if (sd2.daysInt(today) > 0) {
+                if (sd1.hourInt(today) > 0) {
+                    if (sd2.hourInt(today) > 0) {
                         //即将举行
                         sd1.compareTo(sd2)
                     } else {
                         -1
                     }
                 } else {
-                    if (sd2.daysInt(today) > 0) {
+                    if (sd2.hourInt(today) > 0) {
                         //即将举行
                         1
                     } else {

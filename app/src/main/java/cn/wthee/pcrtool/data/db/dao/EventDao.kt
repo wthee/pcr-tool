@@ -29,15 +29,15 @@ interface EventDao {
                 SELECT
                     a.event_id,
                 (( CASE WHEN a.original_event_id = 0 THEN a.event_id ELSE a.original_event_id END ) % 10000 + 5000 ) AS story_id,
-                substr( a.start_time, 0, 11 ) AS start_time,
-                substr( a.end_time, 0, 11 ) AS end_time 
+                a.start_time AS start_time,
+                a.end_time AS end_time 
             FROM
                 hatsune_schedule AS a UNION
             SELECT
                 b.event_id,
                 b.story_id / 1000 AS story_id,
-                substr( b.start_time, 0, 11 ) AS start_time,
-                substr( b.end_time, 0, 11 ) AS end_time 
+                b.start_time AS start_time,
+                b.end_time AS end_time 
             FROM
                 event_top_adv AS b 
             WHERE

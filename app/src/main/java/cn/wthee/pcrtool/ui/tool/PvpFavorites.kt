@@ -2,14 +2,18 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
@@ -20,6 +24,7 @@ import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
 import cn.wthee.pcrtool.ui.compose.IconCompose
+import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
@@ -31,7 +36,11 @@ import kotlinx.coroutines.launch
  * 已收藏数据
  */
 @Composable
-fun PvpFavorites(pvpViewModel: PvpViewModel = hiltNavGraphViewModel()) {
+fun PvpFavorites(
+    toCharacter: (Int) -> Unit,
+    toResult: (String) -> Unit,
+    pvpViewModel: PvpViewModel = hiltNavGraphViewModel()
+) {
     val region = getRegion()
     pvpViewModel.getAllFavorites(region)
     val list = pvpViewModel.allFavorites.observeAsState()
@@ -42,7 +51,7 @@ fun PvpFavorites(pvpViewModel: PvpViewModel = hiltNavGraphViewModel()) {
         if (list.value != null) {
             LazyColumn(state = state) {
                 items(list.value!!) { data ->
-                    PvpFavoriteItem(region, data, pvpViewModel)
+                    PvpFavoriteItem(toCharacter, toResult, region, data, pvpViewModel)
                 }
             }
             //已收藏
@@ -61,19 +70,24 @@ fun PvpFavorites(pvpViewModel: PvpViewModel = hiltNavGraphViewModel()) {
                         state.scrollToItem(0)
                     }
                 }
+            } else {
+                MainText(
+                    text = stringResource(id = R.string.tip_pvp_favorites),
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
-        } else {
-            MainText(
-                text = stringResource(id = R.string.tip_pvp_favorites),
-                modifier = Modifier.align(Alignment.Center)
-            )
         }
     }
-
 }
 
 @Composable
-private fun PvpFavoriteItem(region: Int, itemData: PvpFavoriteData, pvpViewModel: PvpViewModel) {
+private fun PvpFavoriteItem(
+    toCharacter: (Int) -> Unit,
+    toResult: (String) -> Unit,
+    region: Int,
+    itemData: PvpFavoriteData,
+    pvpViewModel: PvpViewModel
+) {
     val scope = rememberCoroutineScope()
 
     Column(
@@ -86,44 +100,35 @@ private fun PvpFavoriteItem(region: Int, itemData: PvpFavoriteData, pvpViewModel
                 .fillMaxWidth()
                 .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                //队伍角色图标
-                Column(
+            //队伍角色图标
+            Column(
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .fillMaxWidth()
+            ) {
+                Box(
                     modifier = Modifier
-                        .padding(Dimen.mediuPadding)
-                        .weight(0.8f)
+                        .fillMaxWidth()
+                        .padding(bottom = Dimen.mediuPadding)
                 ) {
-                    //进攻
-                    //fixme 点击跳转角色详情
-                    Row {
-                        itemData.getAtkIds().forEach {
-                            IconCompose(
-                                data = CharacterIdUtil.getMaxIconUrl(
-                                    it,
-                                    MainActivity.r6Ids.contains(it)
-                                ),
-                                modifier = Modifier.padding(end = Dimen.largePadding)
-                            )
-                        }
+                    //搜索
+                    TextButton(onClick = {
+                        toResult(itemData.defs)
+                    }) {
+                        IconCompose(
+                            data = MainIconType.PVP_SEARCH.icon,
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .size(Dimen.fabIconSize)
+                        )
+                        MainContentText(text = stringResource(id = R.string.pvp_research))
                     }
-                    //防守
-                    Row {
-                        itemData.getDefIds().forEach {
-                            IconCompose(
-                                data = CharacterIdUtil.getMaxIconUrl(
-                                    it,
-                                    MainActivity.r6Ids.contains(it)
-                                ),
-                                modifier = Modifier.padding(end = Dimen.largePadding)
-                            )
-                        }
-                    }
-                }
-                Column(modifier = Modifier.weight(0.2f)) {
+                    //取消收藏
                     IconCompose(
                         data = MainIconType.LOVE_FILL.icon,
                         modifier = Modifier
-                            .padding(bottom = Dimen.mediuPadding)
+                            .clip(CircleShape)
+                            .align(Alignment.CenterEnd)
                             .size(Dimen.fabIconSize)
                     ) {
                         //点击取消收藏，增加确认 dialog 操作
@@ -131,14 +136,36 @@ private fun PvpFavoriteItem(region: Int, itemData: PvpFavoriteData, pvpViewModel
                             pvpViewModel.delete(itemData.atks, itemData.defs, region)
                         }
                     }
-                    //fixme 搜索
-                    IconCompose(
-                        data = MainIconType.PVP_SEARCH.icon,
-                        modifier = Modifier
-                            .padding(top = Dimen.mediuPadding)
-                            .size(Dimen.fabIconSize)
-                    ) {
-
+                }
+                //进攻
+                LazyRow {
+                    items(itemData.getAtkIds()) {
+                        IconCompose(
+                            data = CharacterIdUtil.getMaxIconUrl(
+                                it,
+                                MainActivity.r6Ids.contains(it)
+                            ),
+                            modifier = Modifier.padding(end = Dimen.largePadding)
+                        ) {
+                            toCharacter(it)
+                        }
+                    }
+                }
+                //防守
+                LazyRow {
+                    items(itemData.getDefIds()) {
+                        IconCompose(
+                            data = CharacterIdUtil.getMaxIconUrl(
+                                it,
+                                MainActivity.r6Ids.contains(it)
+                            ),
+                            modifier = Modifier.padding(
+                                top = Dimen.mediuPadding,
+                                end = Dimen.largePadding
+                            )
+                        ) {
+                            toCharacter(it)
+                        }
                     }
                 }
             }

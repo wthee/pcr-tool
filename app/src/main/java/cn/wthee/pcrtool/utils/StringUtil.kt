@@ -26,6 +26,7 @@ fun String.deleteSpace() = this.replace("\\s".toRegex(), "")
 
 @SuppressLint("SimpleDateFormat")
 val df: DateFormat = SimpleDateFormat("yyyy/MM/dd")
+val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
 
 /**
  *  计算日期字符串间隔天数 yyyy/MM/dd  this - str2 相差天数
@@ -41,11 +42,32 @@ fun String.days(str2: String): String {
     }
 }
 
-fun String.daysInt(str2: String): Int {
+/**
+ *  计算日期字符串间隔天数 yyyy/MM/dd HH:mm:ss this - str2 相差天数、小时
+ */
+fun String.dates(str2: String): String {
     return try {
-        val d1 = df.parse(this)!!
-        val d2 = df.parse(str2)!!
-        ((d1.time - d2.time) / (60 * 60 * 1000 * 24)).toInt()
+        val d1 = df1.parse(this)!!
+        val d2 = df1.parse(str2)!!
+//        String.format("%02d", (d1.time - d2.time) / (60 * 60 * 1000 * 24)) + " 天"
+        val time = d1.time - d2.time
+        val day = time / (60 * 60 * 1000 * 24)
+        val hour = time / (60 * 60 * 1000) - day * 24
+        if (hour == 0L) {
+            "${day}天"
+        } else {
+            "${day}天${hour}时"
+        }
+    } catch (e: Exception) {
+        "0"
+    }
+}
+
+fun String.hourInt(str2: String): Int {
+    return try {
+        val d1 = df1.parse(this)!!
+        val d2 = df1.parse(str2)!!
+        ((d1.time - d2.time) / (60 * 60 * 1000)).toInt()
     } catch (e: Exception) {
         0
     }

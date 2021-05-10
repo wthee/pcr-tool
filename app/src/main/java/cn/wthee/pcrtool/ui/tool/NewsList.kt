@@ -47,9 +47,9 @@ fun NewsList(region: Int, viewModel: NewsViewModel = hiltNavGraphViewModel()) {
         else -> viewModel.getNewsJP()
     }
     val title = when (region) {
-        2 -> stringResource(id = R.string.db_cn)
-        3 -> stringResource(id = R.string.db_tw)
-        else -> stringResource(id = R.string.db_jp)
+        2 -> stringResource(id = R.string.tool_news_cn)
+        3 -> stringResource(id = R.string.tool_news_tw)
+        else -> stringResource(id = R.string.tool_news_jp)
     }
 
     Box(
@@ -68,7 +68,7 @@ fun NewsList(region: Int, viewModel: NewsViewModel = hiltNavGraphViewModel()) {
         //回到顶部
         ExtendedFabCompose(
             iconType = MainIconType.NEWS,
-            text = title + stringResource(id = R.string.tool_news),
+            text = title,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

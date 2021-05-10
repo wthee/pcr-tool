@@ -50,10 +50,10 @@ fun RankSelectCompose(
     val ok = navViewModel.fabOK.observeAsState().value ?: false
     //选择
     val selectIndex0 = remember {
-        mutableStateOf(if (type == 1) maxRank - 1 else maxRank - rank0.value)
+        mutableStateOf(maxRank - rank0.value)
     }
     val selectIndex1 = remember {
-        mutableStateOf(if (type == 1) 0 else maxRank - rank1.value)
+        mutableStateOf(maxRank - rank1.value)
     }
 
 
@@ -75,6 +75,8 @@ fun RankSelectCompose(
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
             rank0.value = maxRank - selectIndex0.value
             rank1.value = maxRank - selectIndex1.value
+            navViewModel.curRank.postValue(maxRank - selectIndex0.value)
+            navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
         }
         MainText(text = stringResource(id = R.string.cur_rank))
         RankSelectItem(selectIndex = selectIndex0, rankList = rankList)

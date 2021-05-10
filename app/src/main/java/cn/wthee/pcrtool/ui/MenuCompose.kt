@@ -79,10 +79,10 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(0.45f)
+                        .weight(0.5f)
                 ) {
                     MenuItem(
-                        text = stringResource(id = R.string.db_cn),
+                        text = stringResource(id = R.string.tool_news_cn),
                         iconType = MainIconType.NEWS,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -93,7 +93,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         actions.toNews(2)
                     }
                     MenuItem(
-                        text = stringResource(id = R.string.db_tw),
+                        text = stringResource(id = R.string.tool_news_tw),
                         iconType = MainIconType.NEWS,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -103,7 +103,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         actions.toNews(3)
                     }
                     MenuItem(
-                        text = stringResource(id = R.string.db_jp),
+                        text = stringResource(id = R.string.tool_news_jp),
                         iconType = MainIconType.NEWS,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -113,7 +113,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         actions.toNews(4)
                     }
                 }
-                Column(modifier = Modifier.weight(0.55f)) {
+                Column(modifier = Modifier.weight(0.5f)) {
                     MenuItem(
                         text = stringResource(id = R.string.tool_pvp),
                         iconType = MainIconType.PVP_SEARCH,

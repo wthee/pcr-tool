@@ -27,7 +27,6 @@ import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.Enemy
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.enums.getMultipleIcon
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -104,7 +103,7 @@ private fun ClanBattleItem(
 ) {
     val section = clanInfo.getAllBossInfo().size
     val scope = rememberCoroutineScope()
-
+    val list = clanInfo.getUnitIdList(0)
     Column(
         modifier = Modifier
             .padding(Dimen.mediuPadding)
@@ -135,8 +134,8 @@ private fun ClanBattleItem(
                 modifier = Modifier.padding(Dimen.mediuPadding),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                clanInfo.getUnitIdList(0).forEachIndexed { index, it ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                list.forEachIndexed { index, it ->
+                    Box {
                         IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
                             if (type == 0 && toClanBossInfo != null) {
                                 toClanBossInfo(clanInfo.clan_battle_id, index)
@@ -148,10 +147,12 @@ private fun ClanBattleItem(
                         }
                         //多目标提示
                         if (it.targetCount > 1) {
-                            IconCompose(getMultipleIcon(it.targetCount - 1))
+                            MainTitleText(
+                                text = "${it.targetCount - 1}",
+                                modifier = Modifier.align(Alignment.BottomEnd)
+                            )
                         }
                     }
-
                 }
             }
         }

@@ -26,7 +26,7 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-    <string name="skill_level">技能等级：</string>
+    <string name="skill_level">技能等级：%d</string>
     <string name="title_skill">技能信息</string>
     <string name="skill_loop">循环</string>
     <string name="before_loop">初始动作</string>
@@ -120,12 +120,16 @@
     <string name="character">角色</string>
     <string name="character_basic_Info">介绍</string>
     <string name="pvp_search">查询</string>
+    <string name="pvp_research">前往查询</string>
     <string name="pvp_float">悬浮窗</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
     <string name="tool_news">公告</string>
+    <string name="tool_news_cn">国服公告</string>
+    <string name="tool_news_tw">台服公告</string>
+    <string name="tool_news_jp">日服公告</string>
     <string name="loading">加载中…</string>
     <string name="loading_news">正在获取最新数据…</string>
     <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
@@ -141,7 +145,7 @@
     <string name="result">数值变化</string>
     <string name="view_pic">角色图片</string>
     <string name="back_today">回到今天</string>
-    <string name="team_no">队伍 %s</string>
+    <string name="team_no">进攻队伍 %s</string>
     <string name="team_atk">进攻方</string>
     <string name="team_def">防守方</string>
     <string name="no_liked_data">无收藏信息~</string>
@@ -173,8 +177,10 @@
     <string name="shrine">圣迹调查</string>
     <string name="temple">神殿调查</string>
     <string name="dungeon">地下城玛那</string>
-    <string name="drop_x"> x %s</string>
+    <string name="drop_x">%s倍</string>
     <string name="dead_line">%s截至</string>
+    <string name="in_progress">%s后结束</string>
+    <string name="coming_soon">%s后开始</string>
 
     <!--  异常提示-->
     <string name="check_db_error">数据版本校验失败~</string>
@@ -191,11 +197,6 @@
     <string name="press_back_top">长按回到顶部</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
     <string name="boss_target">多目标：%s</string>
-
-    <!--日历-->
-    <string name="in_progress">剩余%s</string>
-    <string name="coming_soon">%s后开始</string>
-
 
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>

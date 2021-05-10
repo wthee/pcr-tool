@@ -40,6 +40,11 @@ fun AttrList(attrs: List<AttrValue>) {
  */
 @Composable
 fun AttrItem(text: String, value: Int, modifier: Modifier) {
+    val valueText = when (value) {
+        in 100000000..Int.MAX_VALUE -> "${value / 100000000}亿"
+        in 100000 until 100000000 -> "${value / 10000}万"
+        else -> value.toString()
+    }
     Row(modifier = modifier) {
         MainTitleText(
             text = text, modifier = Modifier
@@ -47,7 +52,7 @@ fun AttrItem(text: String, value: Int, modifier: Modifier) {
                 .weight(0.3f)
         )
         MainContentText(
-            text = value.toString(),
+            text = valueText,
             modifier = Modifier
                 .padding(Dimen.smallPadding)
                 .weight(0.2f)

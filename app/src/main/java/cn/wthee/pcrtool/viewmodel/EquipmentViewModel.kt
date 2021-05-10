@@ -36,6 +36,7 @@ class EquipmentViewModel @Inject constructor(
     var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
     var equipTypes = MutableLiveData<List<String>>()
 
+
     /**
      * 获取装备列表
      */

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
 
@@ -56,15 +55,7 @@ fun ExtendedFabCompose(
 ) {
     ExtendedFloatingActionButton(
         icon = {
-            if (iconType.type == 14) {
-                //角色
-                IconCompose(
-                    R.drawable.ic_character,
-                    modifier = Modifier.size(Dimen.fabIconSize)
-                )
-            } else {
-                IconCompose(iconType.icon, modifier = Modifier.size(Dimen.fabIconSize))
-            }
+            IconCompose(iconType.icon, modifier = Modifier.size(Dimen.fabIconSize))
         },
         text = {
             Text(

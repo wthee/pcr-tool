@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
@@ -26,10 +25,11 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
-import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.daysInt
+import cn.wthee.pcrtool.utils.dates
+import cn.wthee.pcrtool.utils.hourInt
 import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 @ExperimentalFoundationApi
@@ -88,8 +88,8 @@ private fun CalendarItem(calendar: DropEvent) {
     val today = getToday()
     val sd = calendar.getFixedStartTime()
     val ed = calendar.getFixedEndTime()
-    val inProgress = today.daysInt(sd) >= 0 && ed.daysInt(today) >= 0
-    val comingSoon = today.daysInt(sd) < 0
+    val inProgress = today.hourInt(sd) >= 0 && ed.hourInt(today) >= 0
+    val comingSoon = today.hourInt(sd) < 0
 
     val color = if (inProgress) {
         MaterialTheme.colors.primary
@@ -106,10 +106,13 @@ private fun CalendarItem(calendar: DropEvent) {
     ) {
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //开始日期
-            MainTitleText(text = calendar.getFixedStartTime(), backgroundColor = color)
+            MainTitleText(
+                text = calendar.getFixedStartTime().substring(0, 10),
+                backgroundColor = color
+            )
             //天数
             MainTitleText(
-                text = calendar.getFixedEndTime().days(calendar.getFixedStartTime()),
+                text = calendar.getFixedEndTime().dates(calendar.getFixedStartTime()),
                 modifier = Modifier.padding(start = Dimen.mediuPadding), backgroundColor = color
             )
         }
@@ -125,28 +128,28 @@ private fun CalendarItem(calendar: DropEvent) {
             ) {
                 if (inProgress) {
                     MainSubText(
-                        text = stringResource(R.string.in_progress, ed.days(today)),
-                        modifier = Modifier.padding(Dimen.smallPadding),
+                        text = stringResource(R.string.in_progress, ed.dates(today)),
+                        modifier = Modifier.padding(bottom = Dimen.largePadding),
                     )
                 }
                 if (comingSoon) {
                     MainSubText(
-                        text = stringResource(R.string.coming_soon, sd.days(today)),
-                        modifier = Modifier.padding(Dimen.smallPadding),
+                        text = stringResource(R.string.coming_soon, sd.dates(today)),
+                        modifier = Modifier.padding(bottom = Dimen.largePadding),
                     )
                 }
                 //内容
                 getTypeData(calendar).forEach {
-                    Row() {
-                        MainContentText(
+                    Row(
+                        modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        MainText(
                             text = it.title,
                             color = colorResource(id = it.colorId),
-                            modifier = Modifier.padding(bottom = Dimen.smallPadding),
-                            textAlign = TextAlign.Start
                         )
-                        MainContentText(
-                            text = it.info,
-                            textAlign = TextAlign.Start
+                        MainSubText(
+                            text = it.info
                         )
                     }
                 }
@@ -160,13 +163,13 @@ private fun CalendarItem(calendar: DropEvent) {
  * 获取当天时间
  */
 fun getToday(): String {
-    val cal = Calendar.getInstance()
-    cal.time = Date(System.currentTimeMillis())
-    val year = cal.get(Calendar.YEAR)
-    val month = cal.get(Calendar.MONTH) + 1
-    val dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
-    val today = "$year/$month/$dayOfMonth"
-    return today
+    val simpleDateFormat =
+        SimpleDateFormat(
+            "yyyy/MM/dd HH:mm:ss.SSS",
+            Locale.CHINESE
+        )
+    val date = Date(System.currentTimeMillis())
+    return simpleDateFormat.format(date)
 }
 
 /**

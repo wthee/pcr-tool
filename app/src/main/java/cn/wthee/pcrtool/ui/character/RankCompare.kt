@@ -50,11 +50,19 @@ fun RankCompare(
     navViewModel: NavViewModel,
     attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel()
 ) {
+    val curRank = navViewModel.curRank.value
+    val targetRank = navViewModel.targetRank.value
     val rank0 = remember {
         mutableStateOf(maxRank)
     }
     val rank1 = remember {
         mutableStateOf(maxRank)
+    }
+    if (curRank != 0) {
+        rank0.value = curRank ?: 1
+    }
+    if (targetRank != 0) {
+        rank1.value = targetRank ?: maxRank
     }
     attrViewModel.getUnitAttrCompare(
         unitId,
