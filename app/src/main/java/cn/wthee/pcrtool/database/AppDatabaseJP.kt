@@ -33,7 +33,7 @@ import cn.wthee.pcrtool.utils.Constants
         UniqueEquipmentEnhanceRate::class,
         QuestDataJP::class,
         SkillAction::class,
-        SkillData::class,
+        SkillDataJP::class,
         WaveGroupDataJP::class,
         AttackPattern::class,
         GuildData::class,

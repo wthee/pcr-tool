@@ -6,6 +6,7 @@ import androidx.room.SkipQueryVerification
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.entity.SkillData
 import cn.wthee.pcrtool.data.db.entity.UnitSkillData
+import cn.wthee.pcrtool.data.db.entityjp.SkillDataJP
 import cn.wthee.pcrtool.data.db.view.SkillActionPro
 
 /**
@@ -27,8 +28,9 @@ interface SkillDao {
     /**
      * 根据 [sid]，获取技能数据 [SkillData]
      */
+    @SkipQueryVerification
     @Query("SELECT * FROM skill_data  WHERE skill_id = :sid")
-    suspend fun getSkillData(sid: Int): SkillData?
+    suspend fun getSkillData(sid: Int): SkillDataJP?
 
     /**
      * 根据技能效果id列表 [aid]，获取角色技能效果列表 [SkillActionPro]
