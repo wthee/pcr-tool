@@ -29,7 +29,7 @@ import cn.wthee.pcrtool.ui.compose.MainText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
-import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
 
@@ -131,7 +131,7 @@ fun LeaderboardItem(info: LeaderboardData) {
             .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
             .clickable {
                 //打开浏览器
-                BrowserUtil.OpenWebView(context, info.url, title)
+                openWebView(context, info.url, title)
             }) {
             Row(
                 modifier = Modifier.padding(Dimen.mediuPadding),

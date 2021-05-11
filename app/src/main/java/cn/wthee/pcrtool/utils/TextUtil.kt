@@ -36,6 +36,5 @@ fun getZhNumberText(section: Int): String {
         6 -> "六"
         7 -> "七"
         else -> section.toString()
-
     }
 }

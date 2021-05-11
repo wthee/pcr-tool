@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.ui.tool.getToday
+import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.hourInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -35,9 +35,6 @@ class CalendarViewModel @Inject constructor(
             //按进行中排序
             val cal = Calendar.getInstance()
             cal.time = Date(System.currentTimeMillis())
-            val year = cal.get(Calendar.YEAR)
-            val month = cal.get(Calendar.MONTH) + 1
-            val dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
             val today = getToday()
             dropEvents.postValue(data.sortedWith(compare(today)))
         }
@@ -51,8 +48,8 @@ class CalendarViewModel @Inject constructor(
         val ed1 = o1.getFixedEndTime()
         val sd2 = o2.getFixedStartTime()
         val ed2 = o2.getFixedEndTime()
-        if (today.hourInt(sd1) >= 0 && ed1.hourInt(today) >= 0) {
-            if (today.hourInt(sd2) >= 0 && ed2.hourInt(today) >= 0) {
+        if (today.hourInt(sd1) > 0 && ed1.hourInt(today) > 0) {
+            if (today.hourInt(sd2) > 0 && ed2.hourInt(today) > 0) {
                 //都是进行中，比较结束时间
                 ed2.compareTo(ed1)
             } else {
@@ -60,7 +57,7 @@ class CalendarViewModel @Inject constructor(
                 -1
             }
         } else {
-            if (today.hourInt(sd2) >= 0 && ed2.hourInt(today) >= 0) {
+            if (today.hourInt(sd2) > 0 && ed2.hourInt(today) > 0) {
                 //o2进行中
                 1
             } else {

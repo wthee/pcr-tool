@@ -27,7 +27,7 @@ import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
-import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -126,7 +126,7 @@ private fun NewsItem(news: NewsTable) {
                 .fillMaxWidth()
                 .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
                 .clickable {
-                    BrowserUtil.OpenWebView(context, news.url)
+                    openWebView(context, news.url)
                 }
         ) {
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {

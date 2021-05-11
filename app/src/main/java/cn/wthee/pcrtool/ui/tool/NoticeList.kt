@@ -28,7 +28,7 @@ import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
-import cn.wthee.pcrtool.utils.BrowserUtil
+import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import kotlinx.coroutines.launch
 
@@ -143,7 +143,7 @@ private fun NoticeItem(data: AppNotice) {
                 .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
                 .clickable {
                     if (data.type == 0 || data.type == -1) {
-                        BrowserUtil.OpenWebView(context, data.url)
+                        openWebView(context, data.url)
                     }
                 }
         ) {

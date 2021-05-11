@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.days
+import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.hourInt
 import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.EventViewModel
@@ -93,7 +94,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         "$startDate ~ $endDate"
     }
     val days = endDate.days(startDate)
-    if (days == "00") {
+    if (days == "0" || days == "0天") {
         showDays = false
     }
     when {
@@ -120,7 +121,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
     }
     val inProgress =
-        today.hourInt(event.startTime) >= 0 && event.endTime.hourInt(today) >= 0 && event.eventId / 10000 != 2
+        today.hourInt(event.startTime) > 0 && event.endTime.hourInt(today) > 0 && event.eventId / 10000 != 2
 
     Column(
         modifier = Modifier
@@ -158,11 +159,11 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //内容
                 MainContentText(
-                    text = event.title,
+                    text = event.getEventTitle(),
                     modifier = Modifier.padding(bottom = Dimen.smallPadding),
                     textAlign = TextAlign.Start
                 )
-                //图标/描述
+                //图标
                 IconListCompose(event.unitIds.intArrayList(), toCharacterDetail)
             }
         }

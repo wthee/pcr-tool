@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
+import cn.wthee.pcrtool.utils.deleteSpace
 import java.io.Serializable
 
 /**
@@ -20,4 +21,5 @@ data class EventData(
      */
     fun getDate() = startTime.substring(0, 10) + " ~ " + endTime.substring(0, 10)
 
+    fun getEventTitle() = title.deleteSpace()
 }

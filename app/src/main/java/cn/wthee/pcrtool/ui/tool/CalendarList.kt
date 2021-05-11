@@ -20,16 +20,19 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
+import cn.wthee.pcrtool.ui.compose.MainSubText
+import cn.wthee.pcrtool.ui.compose.MainTitleText
+import cn.wthee.pcrtool.ui.compose.StaggeredVerticalGrid
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.dates
+import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.hourInt
 import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.*
 
 @ExperimentalFoundationApi
@@ -41,9 +44,8 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
     val state = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     MainActivity.navViewModel.loading.postValue(true)
-    val title = when (getRegion()) {
-        2 -> stringResource(id = R.string.db_cn)
-        3 -> stringResource(id = R.string.db_tw)
+    val title = when (getDatabaseType()) {
+        1 -> stringResource(id = R.string.db_cn)
         else -> stringResource(id = R.string.db_jp)
     }
 
@@ -88,7 +90,7 @@ private fun CalendarItem(calendar: DropEvent) {
     val today = getToday()
     val sd = calendar.getFixedStartTime()
     val ed = calendar.getFixedEndTime()
-    val inProgress = today.hourInt(sd) >= 0 && ed.hourInt(today) >= 0
+    val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
     val comingSoon = today.hourInt(sd) < 0
 
     val color = if (inProgress) {
@@ -140,37 +142,16 @@ private fun CalendarItem(calendar: DropEvent) {
                 }
                 //内容
                 getTypeData(calendar).forEach {
-                    Row(
-                        modifier = Modifier.padding(bottom = Dimen.smallPadding),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        MainText(
-                            text = it.title,
-                            color = colorResource(id = it.colorId),
-                        )
-                        MainSubText(
-                            text = it.info
-                        )
-                    }
+                    MainSubText(
+                        text = it.title + it.info,
+                        color = colorResource(id = it.colorId),
+                    )
                 }
             }
         }
     }
 }
 
-
-/**
- * 获取当天时间
- */
-fun getToday(): String {
-    val simpleDateFormat =
-        SimpleDateFormat(
-            "yyyy/MM/dd HH:mm:ss.SSS",
-            Locale.CHINESE
-        )
-    val date = Date(System.currentTimeMillis())
-    return simpleDateFormat.format(date)
-}
 
 /**
  * 获取事项信息

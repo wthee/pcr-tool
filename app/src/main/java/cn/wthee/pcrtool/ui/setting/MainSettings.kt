@@ -25,11 +25,11 @@ import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.compose.MainText
 import cn.wthee.pcrtool.ui.compose.SpaceCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.BrowserUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
 import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.openWebView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -99,7 +99,7 @@ fun MainSettings() {
             stringResource(id = R.string.app_sourcce),
             projectUrl
         ) {
-            BrowserUtil.OpenWebView(context, projectUrl)
+            openWebView(context, projectUrl)
         }
         SpaceCompose()
         MainText(
@@ -112,7 +112,7 @@ fun MainSettings() {
             stringResource(id = R.string.data_from),
             stringResource(id = R.string.data_from_hint),
         ) {
-            BrowserUtil.OpenWebView(context, dataFromUrl)
+            openWebView(context, dataFromUrl)
         }
         //静流笔记
         val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
@@ -120,7 +120,7 @@ fun MainSettings() {
             stringResource(id = R.string.shizuru_note),
             stringResource(id = R.string.shizuru_note_tip),
         ) {
-            BrowserUtil.OpenWebView(context, shizuruUrl)
+            openWebView(context, shizuruUrl)
         }
         //竞技场
         val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
@@ -128,14 +128,14 @@ fun MainSettings() {
             stringResource(id = R.string.pcrdfans),
             stringResource(id = R.string.pcrdfans_tip),
         ) {
-            BrowserUtil.OpenWebView(context, pcrdfansUrl)
+            openWebView(context, pcrdfansUrl)
         }
         val appMediaUrl = stringResource(id = R.string.leader_source_url)
         SettingItem(
             stringResource(id = R.string.leader_source),
             stringResource(id = R.string.leader_tip),
         ) {
-            BrowserUtil.OpenWebView(context, appMediaUrl)
+            openWebView(context, appMediaUrl)
         }
     }
 }

@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 /**
- * 竞技场查询悬浮窗
+ * fixme 竞技场查询悬浮窗
  */
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -48,7 +48,7 @@ fun PvpSearchWindow() {
                 FabCompose(content = {
                     IconCompose(R.mipmap.ic_logo)
                 }) {
-                    //fixme 最大/小化悬浮窗
+                    //最大/小化悬浮窗
                     val min = !windowMin.value
                     windowMin.value = min
                 }

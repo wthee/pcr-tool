@@ -41,7 +41,7 @@ fun AttrList(attrs: List<AttrValue>) {
 @Composable
 fun AttrItem(text: String, value: Int, modifier: Modifier) {
     val valueText = when (value) {
-        in 100000000..Int.MAX_VALUE -> "${value / 100000000}亿"
+        in 100000000..Int.MAX_VALUE -> "${value / 100000000f}亿"
         in 100000 until 100000000 -> "${value / 10000}万"
         else -> value.toString()
     }
