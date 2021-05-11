@@ -18,6 +18,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
+import cn.wthee.pcrtool.ui.compose.EnterAnimation
+import cn.wthee.pcrtool.ui.compose.PopEnterAnimation
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
@@ -79,10 +81,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
     NavHost(navController, startDestination = Navigation.CHARACTER_LIST) {
         //首页
         composable(Navigation.CHARACTER_LIST) {
-            CharacterList(
-                actions.toCharacterDetail,
-                viewModel
-            )
+            PopEnterAnimation {
+                CharacterList(
+                    actions.toCharacterDetail,
+                    viewModel
+                )
+            }
         }
 
         //角色属性详情
@@ -96,16 +100,18 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            CharacterDetail(
-                unitId = arguments.getInt(Navigation.UNIT_ID),
-                actions.toEquipDetail,
-                actions.toCharacterBasicInfo,
-                actions.toCharacteRankEquip,
-                actions.toCharacteRankCompare,
-                actions.toCharacteEquipCount,
-                actions.toCharacterPic,
-                viewModel
-            )
+            EnterAnimation {
+                CharacterDetail(
+                    unitId = arguments.getInt(Navigation.UNIT_ID),
+                    actions.toEquipDetail,
+                    actions.toCharacterBasicInfo,
+                    actions.toCharacteRankEquip,
+                    actions.toCharacteRankCompare,
+                    actions.toCharacteEquipCount,
+                    actions.toCharacterPic,
+                    viewModel
+                )
+            }
         }
 
         //角色资料
