@@ -77,9 +77,9 @@ object Dimen {
     val smallMenuHeight = 60.dp
 
     /**
-     * 130dp
+     * 150dp
      */
-    val largeMenuHeight = 130.dp
+    val largeMenuHeight = 150.dp
 
     /**
      * 48dp
@@ -143,11 +143,9 @@ object Dimen {
     val starIconSize = 26.dp
 
     /**
-     * PVP角色位置图标
-     * 30dp
+     * 4dp
      */
-    val positionIconSize = 30.dp
-
+    val newsCardHeight = 64.dp
 
     /**
      * 根据文字大小显示

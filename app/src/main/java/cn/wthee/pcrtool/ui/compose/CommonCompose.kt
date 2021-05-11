@@ -19,6 +19,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.getFormatText
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.PagerState
 
 /**
  * 蓝底白字
@@ -203,4 +206,16 @@ fun getRankColor(rank: Int): Color {
         }
     }
     return colorResource(id = colorId)
+}
+
+@ExperimentalPagerApi
+@Composable
+fun PagerIndicator(pagerState: PagerState, modifier: Modifier) {
+    HorizontalPagerIndicator(
+        pagerState = pagerState,
+        activeColor = MaterialTheme.colors.primary,
+        inactiveColor = colorResource(id = R.color.alpha_primary),
+        modifier = modifier
+            .padding(bottom = Dimen.sheetMarginBottom + Dimen.largePadding)
+    )
 }

@@ -3,7 +3,10 @@ package cn.wthee.pcrtool.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,7 +20,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import kotlinx.coroutines.launch
@@ -42,15 +44,17 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 }
         ) {
             Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {
+                //卡池
                 MenuItem(
                     text = stringResource(id = R.string.tool_gacha),
                     iconType = MainIconType.GACHA,
                     modifier = Modifier
-                        .weight(0.25f)
+                        .weight(0.3f)
                         .height(Dimen.largeMenuHeight)
                 ) {
                     actions.toGacha()
                 }
+                //团队战
                 MenuItem(
                     text = stringResource(id = R.string.tool_clan),
                     iconType = MainIconType.CLAN,
@@ -60,114 +64,108 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 ) {
                     actions.toClanBattleList()
                 }
+                //剧情活动
                 Column(modifier = Modifier.weight(0.45f)) {
-
                     MenuItem(
                         text = stringResource(id = R.string.tool_event),
                         iconType = MainIconType.EVENT,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.4f)
+                            .weight(0.45f)
                     ) {
                         actions.toEventStory()
-                    }
-                }
-            }
-
-            Row(modifier = Modifier.height(Dimen.smallMenuHeight + Dimen.largeMenuHeight)) {
-                //公告
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(0.5f)
-                ) {
-                    MenuItem(
-                        text = stringResource(id = R.string.tool_news_cn),
-                        iconType = MainIconType.NEWS,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-
-                    ) {
-                        //官网公告
-                        actions.toNews(2)
-                    }
-                    MenuItem(
-                        text = stringResource(id = R.string.tool_news_tw),
-                        iconType = MainIconType.NEWS,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        //官网公告
-                        actions.toNews(3)
-                    }
-                    MenuItem(
-                        text = stringResource(id = R.string.tool_news_jp),
-                        iconType = MainIconType.NEWS,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        //官网公告
-                        actions.toNews(4)
-                    }
-                }
-                Column(modifier = Modifier.weight(0.5f)) {
-                    MenuItem(
-                        text = stringResource(id = R.string.tool_pvp),
-                        iconType = MainIconType.PVP_SEARCH,
-                        modifier = Modifier
-                            .weight(0.6f)
-                            .fillMaxWidth()
-                    ) {
-                        actions.toPvpSearch()
                     }
                     MenuItem(
                         text = stringResource(id = R.string.tool_guild),
                         iconType = MainIconType.GUILD,
                         modifier = Modifier
-                            .weight(0.4f)
                             .fillMaxWidth()
+                            .weight(0.5f)
                     ) {
                         actions.toGuildList()
                     }
                 }
             }
 
-            Row {
+            Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(0.5f)
+                ) {
+                    //日历
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_calendar),
+                        iconType = MainIconType.CALENDAR,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.3f)
+                    ) {
+                        actions.toCalendar()
+                    }
+                    //官网公告
+                    MenuItem(
+                        text = stringResource(id = R.string.tool_news),
+                        iconType = MainIconType.NEWS,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.3f)
+
+                    ) {
+                        actions.toNews()
+                    }
+                }
+
+                //竞技场
+                MenuItem(
+                    text = stringResource(id = R.string.tool_pvp),
+                    iconType = MainIconType.PVP_SEARCH,
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .fillMaxHeight()
+                ) {
+                    actions.toPvpSearch()
+                }
+            }
+
+            Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {
+                //排行
+                MenuItem(
+                    text = stringResource(id = R.string.tool_leader),
+                    iconType = MainIconType.LEADER,
+                    modifier = Modifier
+                        .weight(0.25f)
+                        .fillMaxHeight()
+                ) {
+                    actions.toLeaderboard()
+
+                }
+                //装备
                 MenuItem(
                     text = stringResource(id = R.string.tool_equip),
                     iconType = MainIconType.EQUIP,
                     modifier = Modifier
                         .weight(0.4f)
-                        .height(Dimen.largeMenuHeight)
+                        .fillMaxHeight()
                 ) {
                     actions.toEquipList()
                 }
-                MenuItem(
-                    text = stringResource(id = R.string.tool_calendar),
-                    iconType = MainIconType.CALENDAR,
-                    modifier = Modifier
-                        .weight(0.25f)
-                        .height(Dimen.largeMenuHeight)
-                ) {
-                    actions.toCalendar()
-                }
                 Column(
                     modifier = Modifier
+                        .fillMaxHeight()
                         .weight(0.35f)
-                        .height(Dimen.largeMenuHeight)
                 ) {
+                    //通知
                     MenuItem(
-                        text = stringResource(id = R.string.tool_leader),
-                        iconType = MainIconType.LEADER,
+                        text = stringResource(id = R.string.app_notice),
+                        iconType = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE,
                         modifier = Modifier
                             .weight(0.5f)
                             .fillMaxWidth()
                     ) {
-                        actions.toLeaderboard()
+                        actions.toNotice()
                     }
+                    //设置
                     MenuItem(
                         text = stringResource(id = R.string.setting),
                         iconType = MainIconType.SETTING,
@@ -178,6 +176,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         actions.toSettings()
                     }
                 }
+
             }
             Row(
                 modifier = Modifier
@@ -189,31 +188,6 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                //更新通知
-                if (updateApp == -1) {
-                    //加载中
-                    FabCompose(
-                        content = {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(Dimen.fabIconSize),
-                                strokeWidth = Dimen.lineHeight
-                            )
-                        },
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                    ) {
-                        actions.toNotice
-                    }
-                } else {
-                    val icon = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE
-                    FabCompose(
-                        iconType = icon,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                    ) {
-                        actions.toNotice()
-                    }
-                }
-
-
                 //数据版本切换
                 ExtendedFabCompose(
                     iconType = MainIconType.CHANGE_DATA,
@@ -243,7 +217,7 @@ fun MenuItem(text: String, iconType: MainIconType, modifier: Modifier, action: (
             .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
             .clickable(onClick = action)
     ) {
-        Box() {
+        Box {
             Text(
                 text = text,
                 color = MaterialTheme.colors.onPrimary,

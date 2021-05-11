@@ -17,9 +17,22 @@ data class NewsTable(
     val date: String
 ) : Serializable {
 
-    fun getTagList() = tags.split(",").filter {
-        it.isNotEmpty() && it != "すべて"
-    } as ArrayList<String>
+    fun getTag(): String {
+        val tags = tags.split(",").filter {
+            it.isNotEmpty() && it != "すべて"
+        } as ArrayList<String>
+        if (tags.size > 1) tags.remove("お知らせ")
+        return when (tags[0]) {
+            "アップデート" -> "更新"
+            "系統", "メンテナンス" -> "系统"
+            "活動", "イベント" -> "活动"
+            "グッズ" -> "周边"
+            else -> tags[0]
+        }
+    }
 
     fun getTrueId() = id.split("-")[1].toInt()
 }
+
+fun String.fix() = replace('/', '$')
+fun String.original() = replace('$', '/')

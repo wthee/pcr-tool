@@ -80,7 +80,7 @@
     <string name="now_db_type">当前版本：</string>
     <string name="backup_mode">（备份数据）</string>
     <string name="app_version">应用版本：%s</string>
-    <string name="app_version_summary">查看全部更新通知</string>
+    <string name="app_notice">通知</string>
 
     <!--筛选  -->
     <string name="filter">筛选</string>
@@ -126,7 +126,7 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
-    <string name="tool_news">公告</string>
+    <string name="tool_news">官网公告</string>
     <string name="tool_news_cn">国服公告</string>
     <string name="tool_news_tw">台服公告</string>
     <string name="tool_news_jp">日服公告</string>

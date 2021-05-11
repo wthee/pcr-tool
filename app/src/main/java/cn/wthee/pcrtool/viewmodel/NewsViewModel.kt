@@ -20,8 +20,8 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewModel() {
 
 
-    private val pageSize = 10
-    private val initSize = 20
+    private val pageSize = 15
+    private val initSize = 30
 
     /**
      * 国服数据
@@ -61,6 +61,5 @@ class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewMode
             newsDao.pagingSource("${4}-%")
         }.flow.cachedIn(viewModelScope)
     }
-
 
 }

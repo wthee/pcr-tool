@@ -81,7 +81,7 @@ fun NoticeList(noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()) {
         //回到顶部
         ExtendedFabCompose(
             iconType = icon,
-            text = stringResource(id = R.string.update_log),
+            text = stringResource(id = R.string.app_notice),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

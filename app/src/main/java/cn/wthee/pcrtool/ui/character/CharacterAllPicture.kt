@@ -7,19 +7,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat.requestPermissions
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
+import cn.wthee.pcrtool.ui.compose.PagerIndicator
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.ImageDownloadHelper
@@ -29,7 +28,6 @@ import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
@@ -78,14 +76,8 @@ fun CharacterAllPicture(unitId: Int) {
                 contentDescription = null,
             )
         }
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            activeColor = MaterialTheme.colors.primary,
-            inactiveColor = colorResource(id = R.color.alpha_primary),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = Dimen.sheetMarginBottom + Dimen.largePadding)
-        )
+        PagerIndicator(pagerState, modifier = Modifier.align(Alignment.BottomCenter))
+
         val unLoadToast = stringResource(id = R.string.wait_pic_load)
         ExtendedFabCompose(
             iconType = MainIconType.DWONLOAD,
