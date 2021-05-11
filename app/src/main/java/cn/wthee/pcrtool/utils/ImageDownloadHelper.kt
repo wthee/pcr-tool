@@ -20,7 +20,7 @@ class ImageDownloadHelper(private val context: Context) {
     /**
      * 保存文件，文件名 [name]
      */
-    suspend fun save(bitmap: Bitmap, name: String) {
+    fun save(bitmap: Bitmap, name: String) {
         saveBitmap(bitmap, name, true)
     }
 

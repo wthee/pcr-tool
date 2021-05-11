@@ -2,7 +2,8 @@ package cn.wthee.pcrtool.ui.character
 
 import android.Manifest
 import android.app.Activity
-import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,8 @@ import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.ImageDownloadHelper
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.hasPermissions
+import coil.Coil
+import coil.request.ImageRequest
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -43,11 +46,12 @@ fun CharacterAllPicture(unitId: Int) {
     //角色所有图片链接
     val picUrls = CharacterIdUtil.getAllPicUrl(unitId, MainActivity.r6Ids.contains(unitId))
     val loaded = arrayListOf<Boolean>()
-    val bitmaps = arrayListOf<Bitmap?>()
+    val drawables = arrayListOf<Drawable?>()
     picUrls.forEach { _ ->
         loaded.add(false)
-        bitmaps.add(null)
+        drawables.add(null)
     }
+
     val constraintsScope = rememberCoroutineScope()
     val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = picUrls.size)
@@ -63,6 +67,24 @@ fun CharacterAllPicture(unitId: Int) {
             state = pagerState,
             modifier = Modifier.align(Alignment.Center)
         ) { pagerIndex ->
+            val request = ImageRequest.Builder(context)
+                .data(picUrls[pagerIndex])
+                .target(
+                    onStart = { placeholder ->
+                        // Handle the placeholder drawable.
+                    },
+                    onSuccess = { result ->
+                        // Handle the successful result.
+                    },
+                    onError = { error ->
+                        // Handle the error drawable.
+                    }
+                )
+                .build()
+            constraintsScope.launch {
+                val image = Coil.imageLoader(context).execute(request).drawable
+                drawables[pagerIndex] = image
+            }
             val painter = rememberCoilPainter(request = picUrls[pagerIndex])
             Image(
                 painter = when (painter.loadState) {
@@ -76,6 +98,7 @@ fun CharacterAllPicture(unitId: Int) {
                 contentDescription = null,
             )
         }
+        //指示器
         PagerIndicator(pagerState, modifier = Modifier.align(Alignment.BottomCenter))
 
         val unLoadToast = stringResource(id = R.string.wait_pic_load)
@@ -94,14 +117,13 @@ fun CharacterAllPicture(unitId: Int) {
                         requestPermissions(context as Activity, permissions, 1)
                     } else {
                         //fixme 保存图片
-                        bitmaps[index]?.let {
+                        drawables[index]?.let {
                             ImageDownloadHelper(context).save(
-                                bitmaps[pagerState.currentPage]!!,
-                                "${unitId}_$index"
+                                (it as BitmapDrawable).bitmap,
+                                "${unitId}_${index}.jpg"
                             )
                         }
                     }
-
                 } else {
                     ToastUtil.short(unLoadToast)
                 }
