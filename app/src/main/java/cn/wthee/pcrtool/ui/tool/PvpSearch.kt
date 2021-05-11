@@ -21,7 +21,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -277,7 +276,6 @@ fun PvpSearchCompose(
                 iconType = MainIconType.PVP_SEARCH_WINDOW,
                 modifier = Modifier
                     .padding(end = Dimen.fabSmallMarginEnd)
-                    .rotate(180f)
             ) {
                 //检查是否已经授予权限
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(

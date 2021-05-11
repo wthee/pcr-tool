@@ -61,7 +61,7 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
                         end = Dimen.mediuPadding
                     )
                 ) {
-                    Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.mediuPadding))
+                    Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
                     Text(
                         text = stringResource(id = R.string.grade),
                         textAlign = TextAlign.Center,
@@ -134,10 +134,10 @@ fun LeaderboardItem(info: LeaderboardData) {
                 openWebView(context, info.url, title)
             }) {
             Row(
-                modifier = Modifier.padding(Dimen.mediuPadding),
+                modifier = Modifier.padding(Dimen.smallPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconCompose(data = info.icon)
+                IconCompose(data = info.icon, modifier = Modifier.size(Dimen.iconSize))
                 GradeText(info.all, modifier = Modifier.weight(0.25f))
                 GradeText(info.pvp, modifier = Modifier.weight(0.25f))
                 GradeText(info.clan, modifier = Modifier.weight(0.25f))

@@ -177,25 +177,26 @@ fun CharacterDetail(
                     .verticalScroll(scrollState)
                     .fillMaxSize()
             ) {
+                Box(modifier = Modifier.clickable {
+                    //跳转角色图片列表
+                    toPics(unitId)
+                }) {
+                    //图片
+                    CharacterCard(
+                        Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
+                        scrollState = scrollState,
+                        showLoading = false
+                    )
+                    //星级
+                    StarSelect(
+                        rarityMax.value,
+                        rarity.value ?: 5,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = Dimen.largePadding)
+                    )
+                }
                 if (levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()) {
-                    Box(modifier = Modifier.clickable {
-                        //跳转角色图片列表
-                        toPics(unitId)
-                    }) {
-                        //图片
-                        CharacterCard(
-                            Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
-                            scrollState = scrollState
-                        )
-                        //星级
-                        StarSelect(
-                            rarityMax.value,
-                            rarity.value!!,
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = Dimen.largePadding)
-                        )
-                    }
                     //页面
                     Card(
                         shape = CardTopShape,

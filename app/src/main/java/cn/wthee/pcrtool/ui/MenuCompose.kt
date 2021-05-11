@@ -134,7 +134,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     text = stringResource(id = R.string.tool_leader),
                     iconType = MainIconType.LEADER,
                     modifier = Modifier
-                        .weight(0.25f)
+                        .weight(0.3f)
                         .fillMaxHeight()
                 ) {
                     actions.toLeaderboard()
@@ -145,7 +145,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     text = stringResource(id = R.string.tool_equip),
                     iconType = MainIconType.EQUIP,
                     modifier = Modifier
-                        .weight(0.4f)
+                        .weight(0.34f)
                         .fillMaxHeight()
                 ) {
                     actions.toEquipList()
@@ -153,7 +153,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(0.35f)
+                        .weight(0.31f)
                 ) {
                     //通知
                     MenuItem(

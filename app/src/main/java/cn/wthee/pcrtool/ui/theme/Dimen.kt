@@ -27,9 +27,9 @@ object Dimen {
     val fabSize = 40.dp
 
     /**
-     * 24dp
+     * 28dp
      */
-    val fabIconSize = 24.dp
+    val fabIconSize = 28.dp
 
     /**
      * 16dp
@@ -100,7 +100,7 @@ object Dimen {
     /**
      * 40dp
      */
-    val iconMinSize = 36.dp
+    val iconMinSize = 40.dp
 
     /**
      * 45dp

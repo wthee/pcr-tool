@@ -83,7 +83,7 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 角色
      */
-    CHARACTER(14, Icons.Rounded.AcUnit),
+    CHARACTER(14, Icons.Rounded.Stars),
 
     /**
      * 剧情活动

@@ -59,7 +59,7 @@ fun NewsList(
     viewModel: NewsViewModel = hiltNavGraphViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val state = rememberLazyListState()
+    val states = listOf(rememberLazyListState(), rememberLazyListState(), rememberLazyListState())
     val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2)
     val newsPagerData = listOf(
         viewModel.getNewsCN().collectAsLazyPagingItems(),
@@ -80,7 +80,7 @@ fun NewsList(
     ) {
         //fixme 闪动问题
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
-            LazyColumn(state = state) {
+            LazyColumn(state = states[index]) {
                 itemsIndexed(newsPagerData[index]) { _, it ->
                     if (it != null) {
                         NewsItem(regions[index], news = it, toDetail)
@@ -99,7 +99,7 @@ fun NewsList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                state.scrollToItem(0)
+                states[pagerState.currentPage].scrollToItem(0)
             }
         }
     }

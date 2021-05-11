@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,6 +31,7 @@ fun CharacterCard(
     url: String,
     clip: Boolean = false,
     scrollState: ScrollState? = null,
+    showLoading: Boolean = true
 ) {
 
     val modifier = Modifier
@@ -49,7 +51,11 @@ fun CharacterCard(
             painter = when (painter.loadState) {
                 is ImageLoadState.Success -> painter
                 is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                else -> rememberCoilPainter(request = R.drawable.load)
+                else -> if (showLoading) {
+                    rememberCoilPainter(request = R.drawable.load)
+                } else {
+                    painter
+                }
             },
             contentDescription = null,
             modifier = modifier
@@ -103,7 +109,7 @@ fun IconCompose(
                 maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize
             )
     }
-    Box(modifier) {
+    Box(modifier, contentAlignment = Alignment.Center) {
         if (data is ImageVector) {
             Icon(
                 imageVector = data,
