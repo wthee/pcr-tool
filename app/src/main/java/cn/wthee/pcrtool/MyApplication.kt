@@ -45,8 +45,7 @@ class MyApplication : Application(), ImageLoaderFactory {
                     add(GifDecoder())
                 }
             }
-            .crossfade(true)
-            .allowHardware(false)
+            .allowHardware(true)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .networkCachePolicy(CachePolicy.ENABLED)

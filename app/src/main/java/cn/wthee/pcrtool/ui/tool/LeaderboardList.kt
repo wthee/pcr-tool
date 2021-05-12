@@ -23,10 +23,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.MainText
-import cn.wthee.pcrtool.ui.compose.MainTitleText
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.openWebView
@@ -88,7 +85,7 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
                         LeaderboardItem(it)
                     }
                     item {
-                        Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                        CommonSpacer()
                     }
                 }
             }

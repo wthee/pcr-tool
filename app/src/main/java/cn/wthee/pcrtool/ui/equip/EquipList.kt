@@ -89,7 +89,7 @@ fun EquipList(
                         EquipItem(filterValue, equip, toEquipDetail)
                     }
                     items(4) {
-                        Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                        CommonSpacer()
                     }
                 }
                 val count = equips.size

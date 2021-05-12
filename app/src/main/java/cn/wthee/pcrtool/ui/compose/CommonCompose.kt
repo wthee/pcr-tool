@@ -1,15 +1,14 @@
 package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
@@ -217,5 +216,33 @@ fun PagerIndicator(pagerState: PagerState, modifier: Modifier) {
         inactiveColor = colorResource(id = R.color.alpha_primary),
         modifier = modifier
             .padding(bottom = Dimen.sheetMarginBottom + Dimen.largePadding)
+    )
+}
+
+@Composable
+fun CommonSpacer() {
+    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+}
+
+/**
+ * 卡片布局
+ */
+@Composable
+fun MainCard(
+    onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    var mModifier = modifier
+        .fillMaxWidth()
+        .heightIn(min = Dimen.cardHeight)
+        .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
+    if (onClick != null) {
+        mModifier = mModifier.clickable(onClick = onClick)
+    }
+
+    Card(
+        modifier = mModifier,
+        content = content
     )
 }

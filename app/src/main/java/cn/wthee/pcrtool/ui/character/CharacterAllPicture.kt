@@ -38,7 +38,6 @@ import kotlinx.coroutines.launch
 /**
  * 角色图片
  *
- * fixme 保存图片
  */
 @ExperimentalPagerApi
 @Composable
@@ -116,7 +115,7 @@ fun CharacterAllPicture(unitId: Int) {
                     if (!hasPermissions(context, permissions)) {
                         requestPermissions(context as Activity, permissions, 1)
                     } else {
-                        //fixme 保存图片
+                        //fixme 保存时卡顿
                         drawables[index]?.let {
                             ImageDownloadHelper(context).save(
                                 (it as BitmapDrawable).bitmap,

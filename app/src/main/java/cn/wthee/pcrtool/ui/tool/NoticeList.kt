@@ -23,6 +23,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.compose.CommonSpacer
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
 import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
@@ -74,7 +75,7 @@ fun NoticeList(noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()) {
                     )
                 }
                 item {
-                    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                    CommonSpacer()
                 }
             }
         }

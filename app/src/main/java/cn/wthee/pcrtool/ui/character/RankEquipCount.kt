@@ -127,7 +127,7 @@ fun RankEquipCount(
                             EquipCountItem(item, toEquipDetail)
                         }
                         items(spanCount) {
-                            Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                            CommonSpacer()
                         }
                     }
                 }

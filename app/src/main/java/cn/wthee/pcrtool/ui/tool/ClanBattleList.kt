@@ -69,7 +69,7 @@ fun ClanBattleList(
                     ClanBattleItem(it, toClanBossInfo, type = 0)
                 }
                 item {
-                    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                    CommonSpacer()
                 }
             }
         }

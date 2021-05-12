@@ -186,7 +186,7 @@ fun PvpSearchCompose(
                             }
                             //中
                             items(filledCount1) {
-                                Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                                CommonSpacer()
                             }
                             itemsIndexed(showIcon) { index, _ ->
                                 if (index == 2) {
@@ -198,7 +198,7 @@ fun PvpSearchCompose(
                             }
                             //后
                             items(filledCount2) {
-                                Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                                CommonSpacer()
                             }
                             itemsIndexed(showIcon) { index, _ ->
                                 if (index == 2) {
@@ -463,7 +463,7 @@ fun PvpSearchResult(
                                 )
                             }
                             item {
-                                Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                                CommonSpacer()
                             }
                         }
                     }

@@ -45,7 +45,6 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色列表
- * fixme item 动画
  */
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -106,7 +105,7 @@ fun CharacterList(
                         CharacterItem(it, filter.value!!, toDetail)
                     }
                     items(2) {
-                        Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                        CommonSpacer()
                     }
                 }
                 val count = list.value?.size ?: 0

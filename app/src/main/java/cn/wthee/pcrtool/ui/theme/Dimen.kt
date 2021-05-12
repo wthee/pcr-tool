@@ -145,7 +145,7 @@ object Dimen {
     /**
      * 4dp
      */
-    val newsCardHeight = 64.dp
+    val cardHeight = 64.dp
 
     /**
      * 根据文字大小显示

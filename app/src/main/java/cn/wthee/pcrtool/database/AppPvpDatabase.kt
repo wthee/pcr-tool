@@ -8,7 +8,6 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.PvpDao
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.utils.Constants
-import java.util.concurrent.TimeUnit
 
 @Database(
     entities = [
@@ -19,7 +18,6 @@ import java.util.concurrent.TimeUnit
 )
 /**
  * 竞技场收藏信息数据库
- * fixme 数据空版本更新
  */
 abstract class AppPvpDatabase : RoomDatabase() {
 
@@ -46,7 +44,6 @@ abstract class AppPvpDatabase : RoomDatabase() {
                 AppPvpDatabase::class.java,
                 Constants.DATABASE_PVP
             ).fallbackToDestructiveMigration()
-                .setAutoCloseTimeout(1, TimeUnit.MINUTES)
                 .build()
         }
     }

@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.compose.CommonSpacer
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
 import cn.wthee.pcrtool.ui.compose.MainContentText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
@@ -51,7 +52,7 @@ fun GuildList(
                     GuildItem(it, toCharacterDetail)
                 }
                 item {
-                    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                    CommonSpacer()
                 }
             }
         }

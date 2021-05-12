@@ -22,10 +22,7 @@ import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.MainSubText
-import cn.wthee.pcrtool.ui.compose.MainTitleText
-import cn.wthee.pcrtool.ui.compose.StaggeredVerticalGrid
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.dates
@@ -61,7 +58,7 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
                     data.forEach {
                         CalendarItem(it)
                     }
-                    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+                    CommonSpacer()
                 }
             }
         }
