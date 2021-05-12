@@ -21,7 +21,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -39,8 +38,8 @@ import cn.wthee.pcrtool.service.PvpService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.ToastUtil
@@ -124,7 +123,7 @@ fun PvpSearchCompose(
                     PvpIconItem(selectedIds = selectedIds, it = it)
                 }
             }
-            Card(modifier = Modifier.fillMaxWidth(), shape = Shapes.large) {
+            Card(modifier = Modifier.fillMaxWidth(), shape = CardTopShape) {
                 data.value?.let { dataValue ->
                     val character0 = dataValue.filter {
                         it.position in 0..299
@@ -507,11 +506,7 @@ private fun PvpAtkTeam(
             text = stringResource(id = R.string.team_no, i.toString().fillZero()),
             modifier = Modifier.padding(bottom = Dimen.mediuPadding)
         )
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-        ) {
+        MainCard {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
             }

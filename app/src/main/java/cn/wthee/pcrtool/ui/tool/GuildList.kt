@@ -5,13 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -19,12 +17,8 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.compose.CommonSpacer
-import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.MainContentText
-import cn.wthee.pcrtool.ui.compose.MainTitleText
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
 
@@ -87,11 +81,7 @@ private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {
             text = guild.guildName,
             modifier = Modifier.padding(bottom = Dimen.mediuPadding)
         )
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-        ) {
+        MainCard {
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //内容
                 MainContentText(

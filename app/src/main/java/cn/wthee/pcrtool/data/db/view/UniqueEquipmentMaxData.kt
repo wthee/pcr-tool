@@ -13,7 +13,7 @@ data class UniqueEquipmentMaxData(
     @ColumnInfo(name = "equipment_id") val equipmentId: Int = Constants.UNKNOWN_EQUIP_ID,
     @ColumnInfo(name = "equipment_name") val equipmentName: String = "",
     @ColumnInfo(name = "description") val description: String = "",
-    @Embedded val attr: Attr = Attr(),
+    @Embedded var attr: Attr = Attr(),
 ) : Serializable {
 
     /**

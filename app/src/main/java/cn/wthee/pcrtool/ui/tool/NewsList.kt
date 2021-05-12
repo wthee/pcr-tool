@@ -5,11 +5,10 @@ import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -20,13 +19,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
@@ -35,12 +34,8 @@ import cn.wthee.pcrtool.data.db.entity.fix
 import cn.wthee.pcrtool.data.db.entity.original
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.MainText
-import cn.wthee.pcrtool.ui.compose.MainTitleText
-import cn.wthee.pcrtool.ui.compose.PagerIndicator
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -59,47 +54,62 @@ fun NewsList(
     viewModel: NewsViewModel = hiltNavGraphViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val states = listOf(rememberLazyListState(), rememberLazyListState(), rememberLazyListState())
-    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2)
-    val newsPagerData = listOf(
-        viewModel.getNewsCN().collectAsLazyPagingItems(),
-        viewModel.getNewsTW().collectAsLazyPagingItems(),
-        viewModel.getNewsJP().collectAsLazyPagingItems(),
-    )
+    //fixme 滚动状态记录
+    val states =
+        arrayListOf(rememberLazyListState(), rememberLazyListState(), rememberLazyListState())
+    val pagerState = rememberPagerState(pageCount = 1, initialOffscreenLimit = 3)
+    val newsCN = viewModel.getNewsCN().collectAsLazyPagingItems()
+    val newsTW = viewModel.getNewsTW().collectAsLazyPagingItems()
+    val newsJP = viewModel.getNewsJP().collectAsLazyPagingItems()
     val regions = listOf(2, 3, 4)
     val tabs = listOf(
         stringResource(id = R.string.tool_news_cn),
         stringResource(id = R.string.tool_news_tw),
         stringResource(id = R.string.tool_news_jp),
     )
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))
-    ) {
-        //fixme 闪动问题
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
-            LazyColumn(state = states[index]) {
-                itemsIndexed(newsPagerData[index]) { _, it ->
-                    if (it != null) {
-                        NewsItem(regions[index], news = it, toDetail)
+    if (states.isNotEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.bg_gray))
+        ) {
+            //fixme 闪动问题
+            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
+                LazyColumn(state = states[index], modifier = Modifier.fillMaxSize()) {
+                    val data = when (index) {
+                        0 -> newsCN
+                        1 -> newsTW
+                        else -> newsJP
+                    }
+                    itemsIndexed(data) { _, it ->
+                        if (it != null) {
+                            NewsItem(regions[index], news = it, toDetail)
+                        }
+                    }
+                    item {
+                        NewsPlaceholder(data)
+                    }
+                    item {
+                        CommonSpacer()
                     }
                 }
             }
-        }
-        PagerIndicator(pagerState = pagerState, modifier = Modifier.align(Alignment.BottomCenter))
-
-        //回到顶部
-        ExtendedFabCompose(
-            iconType = MainIconType.NEWS,
-            text = tabs[pagerState.currentPage],
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            coroutineScope.launch {
-                states[pagerState.currentPage].scrollToItem(0)
+            //指示器
+            PagerIndicator(
+                pagerState = pagerState,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+            //回到顶部
+            ExtendedFabCompose(
+                iconType = MainIconType.NEWS,
+                text = tabs[pagerState.currentPage],
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
+                coroutineScope.launch {
+                    states[pagerState.currentPage].scrollToItem(0)
+                }
             }
         }
     }
@@ -140,15 +150,9 @@ private fun NewsItem(
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
         }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = Dimen.newsCardHeight)
-                .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-                .clickable {
-                    toDetail(news.title.fix(), news.url.fix(), region)
-                }
-        ) {
+        MainCard(onClick = {
+            toDetail(news.title.fix(), news.url.fix(), region)
+        }) {
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //内容
                 Text(
@@ -267,6 +271,30 @@ fun NewsDetail(text: String, url: String, region: Int) {
                 loadUrl(originalUrl)
             }
         })
+    }
+}
+
+/**
+ * 底部加载占位
+ */
+@Composable
+private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
+    MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
+        state.retry()
+    }) {
+        Box(contentAlignment = Alignment.Center) {
+            if (state.loadState.append.endOfPaginationReached) {
+                MainSubText(
+                    text = stringResource(R.string.all_data_load),
+                    color = MaterialTheme.colors.primary
+                )
+            } else {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(Dimen.fabIconSize)
+                )
+            }
+        }
     }
 }
 

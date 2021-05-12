@@ -49,7 +49,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     text = stringResource(id = R.string.tool_gacha),
                     iconType = MainIconType.GACHA,
                     modifier = Modifier
-                        .weight(0.3f)
+                        .weight(0.382f)
                         .height(Dimen.largeMenuHeight)
                 ) {
                     actions.toGacha()
@@ -59,19 +59,19 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     text = stringResource(id = R.string.tool_clan),
                     iconType = MainIconType.CLAN,
                     modifier = Modifier
-                        .weight(0.35f)
+                        .weight(0.382f)
                         .height(Dimen.largeMenuHeight)
                 ) {
                     actions.toClanBattleList()
                 }
                 //剧情活动
-                Column(modifier = Modifier.weight(0.45f)) {
+                Column(modifier = Modifier.weight(0.618f)) {
                     MenuItem(
                         text = stringResource(id = R.string.tool_event),
                         iconType = MainIconType.EVENT,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(0.45f)
+                            .weight(0.5f)
                     ) {
                         actions.toEventStory()
                     }
@@ -134,7 +134,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     text = stringResource(id = R.string.tool_leader),
                     iconType = MainIconType.LEADER,
                     modifier = Modifier
-                        .weight(0.3f)
+                        .weight(0.382f)
                         .fillMaxHeight()
                 ) {
                     actions.toLeaderboard()
@@ -145,7 +145,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     text = stringResource(id = R.string.tool_equip),
                     iconType = MainIconType.EQUIP,
                     modifier = Modifier
-                        .weight(0.34f)
+                        .weight(0.618f)
                         .fillMaxHeight()
                 ) {
                     actions.toEquipList()
@@ -153,14 +153,14 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(0.31f)
+                        .weight(0.382f)
                 ) {
                     //通知
                     MenuItem(
                         text = stringResource(id = R.string.app_notice),
                         iconType = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE,
                         modifier = Modifier
-                            .weight(0.5f)
+                            .weight(0.618f)
                             .fillMaxWidth()
                     ) {
                         actions.toNotice()
@@ -170,7 +170,7 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                         text = stringResource(id = R.string.setting),
                         iconType = MainIconType.SETTING,
                         modifier = Modifier
-                            .weight(0.5f)
+                            .weight(0.382f)
                             .fillMaxWidth()
                     ) {
                         actions.toSettings()

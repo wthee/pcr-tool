@@ -443,10 +443,7 @@ private fun UniqueEquip(
                     .align(Alignment.CenterHorizontally)
             )
             //图标描述
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     IconCompose(getEquipIconUrl(it.equipmentId))
                     Text(
@@ -462,16 +459,15 @@ private fun UniqueEquip(
                     modifier = Modifier.padding(start = Dimen.mediuPadding)
                 )
             }
-            //等级选择
+            //专武等级选择
             Slider(
                 value = silderState.value.toFloat(),
                 onValueChange = { silderState.value = it.toInt() },
+                steps = 10,
                 onValueChangeFinished = {
-                    if (silderState.value != 0) {
-                        attrViewModel.uniqueEquipLevelValue.postValue(silderState.value)
-                    }
+                    attrViewModel.uniqueEquipLevelValue.postValue(silderState.value)
                 },
-                valueRange = 1f..uniqueEquipLevelMax.toFloat(),
+                valueRange = 0f..uniqueEquipLevelMax.toFloat(),
                 modifier = Modifier
                     .fillMaxWidth(0.618f)
                     .height(Dimen.slideHeight)

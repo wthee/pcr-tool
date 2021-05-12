@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -14,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
@@ -22,12 +20,8 @@ import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.MainContentText
-import cn.wthee.pcrtool.ui.compose.MainText
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import kotlinx.coroutines.launch
@@ -95,11 +89,7 @@ private fun PvpFavoriteItem(
             .fillMaxWidth()
             .padding(Dimen.mediuPadding)
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-        ) {
+        MainCard {
             //队伍角色图标
             Column(
                 modifier = Modifier

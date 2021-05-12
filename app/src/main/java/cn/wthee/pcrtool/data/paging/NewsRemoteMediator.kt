@@ -21,21 +21,50 @@ class NewsRemoteMediator(
     private val database: AppNewsDatabase,
 ) : RemoteMediator<Int, NewsTable>() {
 
-    private val pageIndex = 1
+    private val newsDao = database.getNewsDao()
+    private val remoteKeyDao = database.getRemoteKeyDao()
+    private val pageDefaultIndex = 1
+    private var currPage = 1
 
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, NewsTable>
     ): MediatorResult {
-        val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
-            is MediatorResult.Success -> {
-                return pageKeyData
-            }
-            else -> {
-                pageKeyData as Int
-            }
-        }
-
         try {
+            val page = when (loadType) {
+                LoadType.REFRESH -> {
+                    val remoteKey = state.anchorPosition?.let { position ->
+                        state.closestItemToPosition(position)?.id?.let { repoId ->
+                            database.getRemoteKeyDao().remoteKeys(repoId)
+                        }
+                    }
+                    remoteKey?.nextKey?.minus(pageDefaultIndex) ?: pageDefaultIndex
+                }
+                LoadType.PREPEND -> {
+                    val remoteKey = database.withTransaction {
+                        val key = state.firstItemOrNull()?.id
+                        if (key == null) null else remoteKeyDao.remoteKeys(key)
+                    }
+                    if (remoteKey?.prevKey == null) {
+                        return MediatorResult.Success(
+                            endOfPaginationReached = true
+                        )
+                    }
+                    remoteKey.prevKey
+                }
+                LoadType.APPEND -> {
+                    val key = state.lastItemOrNull()?.id
+                    val remoteKey = if (key == null) null else remoteKeyDao.remoteKeys(key)
+                    if (remoteKey?.nextKey == null) {
+                        currPage + 1
+//                        return MediatorResult.Success(
+//                            endOfPaginationReached = true
+//                        )
+                    } else {
+                        remoteKey.nextKey
+                    }
+                }
+            }
+            currPage = page
             val response = MyAPIRepository.getInstance().getNews(region, page).data
             val list = arrayListOf<NewsTable>()
             response?.forEach {
@@ -49,84 +78,28 @@ class NewsRemoteMediator(
                     )
                 )
             }
-            val isEndOfList = response?.isEmpty() ?: true
+            val isEndOfList = response?.isEmpty() ?: false
             database.withTransaction {
-                // clear all tables in the database
                 if (loadType == LoadType.REFRESH) {
-                    database.getRemoteKeyDao().clearRemoteKeys("${region}-%")
-                    database.getNewsDao().clearAll("${region}-%")
+                    remoteKeyDao.clearRemoteKeys("${region}-%")
+                    newsDao.clearAll("${region}-%")
                 }
-                val prevKey = if (page == pageIndex) null else page - 1
+                val prevKey = if (page == pageDefaultIndex) null else page - 1
                 val nextKey = if (isEndOfList) null else page + 1
                 val keys = list.map {
                     RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
-                database.getRemoteKeyDao().insertAll(keys)
-                database.getNewsDao().insertAll(list)
+                remoteKeyDao.insertAll(keys)
+                newsDao.insertAll(list)
             }
-            return MediatorResult.Success(endOfPaginationReached = isEndOfList)
-        } catch (exception: IOException) {
-            return MediatorResult.Error(exception)
-        } catch (exception: HttpException) {
-            return MediatorResult.Error(exception)
-        }
-    }
 
-    /**
-     * this returns the page key or the final end of list success result
-     */
-    private suspend fun getKeyPageData(
-        loadType: LoadType,
-        state: PagingState<Int, NewsTable>
-    ): Any? {
-        return when (loadType) {
-            LoadType.REFRESH -> {
-                val remoteKeys = getClosestRemoteKey(state)
-                remoteKeys?.nextKey?.minus(1) ?: pageIndex
-            }
-            LoadType.APPEND -> {
-                //fixme
-                val remoteKeys = getLastRemoteKey(state) ?: return 0
-                remoteKeys.nextKey
-            }
-            LoadType.PREPEND -> {
-                val remoteKeys = getFirstRemoteKey(state) ?: return 0
-                //end of list condition reached
-                remoteKeys.prevKey ?: return MediatorResult.Success(endOfPaginationReached = true)
-                remoteKeys.prevKey
-            }
-        }
-    }
-
-    /**
-     * get the last remote key inserted which had the data
-     */
-    private suspend fun getLastRemoteKey(state: PagingState<Int, NewsTable>): RemoteKey? {
-        val lastData = state.pages.lastOrNull { it.data.isNotEmpty() }?.data
-        return lastData?.lastOrNull()
-            ?.let { news ->
-                database.getRemoteKeyDao().remoteKeys(news.id)
-            }
-    }
-
-    /**
-     * get the first remote key inserted which had the data
-     */
-    private suspend fun getFirstRemoteKey(state: PagingState<Int, NewsTable>): RemoteKey? {
-        return state.pages
-            .firstOrNull { it.data.isNotEmpty() }
-            ?.data?.firstOrNull()
-            ?.let { news -> database.getRemoteKeyDao().remoteKeys(news.id) }
-    }
-
-    /**
-     * get the closest remote key inserted which had the data
-     */
-    private suspend fun getClosestRemoteKey(state: PagingState<Int, NewsTable>): RemoteKey? {
-        return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { repoId ->
-                database.getRemoteKeyDao().remoteKeys(repoId)
-            }
+            return MediatorResult.Success(
+                endOfPaginationReached = isEndOfList
+            )
+        } catch (e: IOException) {
+            return MediatorResult.Error(e)
+        } catch (e: HttpException) {
+            return MediatorResult.Error(e)
         }
     }
 }

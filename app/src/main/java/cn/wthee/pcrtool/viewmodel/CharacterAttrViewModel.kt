@@ -82,8 +82,6 @@ class CharacterAttrViewModel @Inject constructor(
                 else
                     eqs.add(equipmentRepository.getEquipmentData(it))
             }
-            //rank装备信息
-//            equipments.postValue(eqs)
             allData.equips = eqs
             //计算穿戴装备后属性
             eqs.forEach { eq ->
@@ -93,12 +91,14 @@ class CharacterAttrViewModel @Inject constructor(
             //专武
             val uniqueEquip = equipmentRepository.getUniqueEquipInfo(unitId, uniqueEquipLevel)
             if (uniqueEquip != null) {
+                if (uniqueEquipLevel == 0) {
+                    uniqueEquip.attr = Attr()
+                }
                 info.add(uniqueEquip.attr)
                 allData.uniqueEquip = uniqueEquip
             }
             //故事剧情
             val storyAttr = getStoryAttrs(unitId)
-//            storyAttrs.postValue(storyAttr)
             info.add(storyAttr)
             allData.stroyAttr = storyAttr
             allData.sumAttr = info
@@ -110,7 +110,7 @@ class CharacterAttrViewModel @Inject constructor(
                     Constants.EXCEPTION_LOAD_ATTR +
                             "uid:$unitId," +
                             "rank:${rank}," +
-                            "ratity:${rarity}" +
+                            "rarity:${rarity}" +
                             "lv:${level}" +
                             "ueLv:${uniqueEquipLevel}"
                 )

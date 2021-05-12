@@ -1,18 +1,15 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -25,7 +22,6 @@ import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
@@ -123,13 +119,10 @@ fun LeaderboardItem(info: LeaderboardData) {
         val context = LocalContext.current
         val title = stringResource(id = R.string.visit_detail)
 
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-            .clickable {
-                //打开浏览器
-                openWebView(context, info.url, title)
-            }) {
+        MainCard(onClick = {
+            //打开浏览器
+            openWebView(context, info.url, title)
+        }) {
             Row(
                 modifier = Modifier.padding(Dimen.smallPadding),
                 verticalAlignment = Alignment.CenterVertically

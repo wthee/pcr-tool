@@ -2,12 +2,10 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -16,11 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.IconCompose
+import cn.wthee.pcrtool.ui.compose.MainCard
 import cn.wthee.pcrtool.ui.compose.RankText
 import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -69,14 +67,12 @@ fun RankEquipListItem(
     else
         MaterialTheme.colors.surface
 
-    Card(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-            .clickable {
-                selectedRank.value = unitPromotion.promotionLevel
-                navViewModel.selectRank.postValue(unitPromotion.promotionLevel)
-            }
+    MainCard(
+        modifier = Modifier.padding(Dimen.mediuPadding),
+        onClick = {
+            selectedRank.value = unitPromotion.promotionLevel
+            navViewModel.selectRank.postValue(unitPromotion.promotionLevel)
+        }
     ) {
         //图标列表
         Column(

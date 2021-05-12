@@ -73,9 +73,10 @@ android {
 }
 
 dependencies {
+    //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0-RC-native-mt")
-
+    //compose
     implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
@@ -83,10 +84,10 @@ dependencies {
     implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.foundation:foundation:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_version"]}")
-
+    //material
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_version"]}")
-
+    //ktx
     implementation("androidx.appcompat:appcompat:1.3.0-rc01")
     implementation("androidx.activity:activity-ktx:1.2.2")
     implementation("androidx.core:core-ktx:1.3.2")

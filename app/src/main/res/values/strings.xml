@@ -200,4 +200,5 @@
 
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>
+    <string name="all_data_load">数据已全部加载</string>
 </resources>

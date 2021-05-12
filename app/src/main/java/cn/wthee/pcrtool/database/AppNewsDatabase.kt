@@ -10,7 +10,6 @@ import cn.wthee.pcrtool.data.db.dao.RemoteKeyDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.RemoteKey
 import cn.wthee.pcrtool.utils.Constants.DATABASE_NEWS
-import java.util.concurrent.TimeUnit
 
 
 @Database(
@@ -49,7 +48,6 @@ abstract class AppNewsDatabase : RoomDatabase() {
                 AppNewsDatabase::class.java,
                 DATABASE_NEWS
             ).fallbackToDestructiveMigration()
-                .setAutoCloseTimeout(1, TimeUnit.MINUTES)
                 .build()
         }
     }

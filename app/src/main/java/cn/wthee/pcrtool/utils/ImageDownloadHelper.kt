@@ -8,6 +8,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -17,19 +19,21 @@ import java.io.OutputStream
  */
 class ImageDownloadHelper(private val context: Context) {
 
+    val activity = ActivityHelper.instance.currentActivity
+
     /**
      * 保存文件，文件名 [name]
      */
     fun save(bitmap: Bitmap, name: String) {
-        saveBitmap(bitmap, name, true)
+        activity?.lifecycleScope?.launch {
+            saveBitmap(bitmap, name)
+        }
     }
 
     /**
      * 保存bitmap
      */
-    fun saveBitmap(
-        bitmap: Bitmap, displayName: String, toast: Boolean
-    ): Boolean {
+    private fun saveBitmap(bitmap: Bitmap, displayName: String): Boolean {
         var stream: OutputStream? = null
         val path = getImagePath()
         try {
@@ -44,12 +48,12 @@ class ImageDownloadHelper(private val context: Context) {
                 )
             }
             // 判断是否已存在
-            val floder = File(path)
-            if (!floder.exists()) {
-                floder.mkdir()
+            val folder = File(path)
+            if (!folder.exists()) {
+                folder.mkdir()
             }
             val file = File("$path/$displayName")
-            if (file.exists() && toast) {
+            if (file.exists()) {
                 ToastUtil.short("图片已存在~")
                 return true
             }
@@ -77,7 +81,7 @@ class ImageDownloadHelper(private val context: Context) {
                     contentValues
                 )
             }
-            if (toast) ToastUtil.short("图片保存成功~$displayName")
+            ToastUtil.short("图片保存成功~$displayName")
             return true
         } catch (e: Exception) {
             ToastUtil.short("图片保存失败")

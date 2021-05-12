@@ -2,12 +2,15 @@ package cn.wthee.pcrtool.ui.home
 
 import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -17,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,7 +38,6 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.DataStoreUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
@@ -149,14 +150,12 @@ private fun CharacterItem(
         Color.Unspecified
     }
 
-    Card(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-            .clickable {
-                //跳转至详情
-                toDetail(character.id)
-            }) {
+    MainCard(
+        modifier = Modifier.padding(Dimen.mediuPadding),
+        onClick = {
+            //跳转至详情
+            toDetail(character.id)
+        }) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -275,6 +274,7 @@ private fun FilterCharacterSheet(
             navViewModel.fabOK.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }
+        //fixme
 //        Row(
 //            horizontalArrangement = Arrangement.SpaceBetween,
 //            modifier = Modifier

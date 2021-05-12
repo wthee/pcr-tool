@@ -20,8 +20,9 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewModel() {
 
 
-    private val pageSize = 15
-    private val initSize = 30
+    private val pageSize = 10
+    private val initSize = 20
+
 
     /**
      * 国服数据
@@ -46,7 +47,7 @@ class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewMode
             remoteMediator = NewsRemoteMediator(3, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${3}-%")
-        }.flow.cachedIn(viewModelScope)
+        }.flow
     }
 
     /**
@@ -59,7 +60,7 @@ class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewMode
             remoteMediator = NewsRemoteMediator(4, AppNewsDatabase.getInstance())
         ) {
             newsDao.pagingSource("${4}-%")
-        }.flow.cachedIn(viewModelScope)
+        }.flow
     }
 
 }

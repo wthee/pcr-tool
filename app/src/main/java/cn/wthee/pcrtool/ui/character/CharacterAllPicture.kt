@@ -51,7 +51,7 @@ fun CharacterAllPicture(unitId: Int) {
         drawables.add(null)
     }
 
-    val constraintsScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = picUrls.size)
     //权限
@@ -68,19 +68,8 @@ fun CharacterAllPicture(unitId: Int) {
         ) { pagerIndex ->
             val request = ImageRequest.Builder(context)
                 .data(picUrls[pagerIndex])
-                .target(
-                    onStart = { placeholder ->
-                        // Handle the placeholder drawable.
-                    },
-                    onSuccess = { result ->
-                        // Handle the successful result.
-                    },
-                    onError = { error ->
-                        // Handle the error drawable.
-                    }
-                )
                 .build()
-            constraintsScope.launch {
+            coroutineScope.launch {
                 val image = Coil.imageLoader(context).execute(request).drawable
                 drawables[pagerIndex] = image
             }
@@ -108,24 +97,22 @@ fun CharacterAllPicture(unitId: Int) {
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
-            constraintsScope.launch {
-                val index = pagerState.currentPage
-                if (loaded[index]) {
-                    //权限校验
-                    if (!hasPermissions(context, permissions)) {
-                        requestPermissions(context as Activity, permissions, 1)
-                    } else {
-                        //fixme 保存时卡顿
-                        drawables[index]?.let {
-                            ImageDownloadHelper(context).save(
-                                (it as BitmapDrawable).bitmap,
-                                "${unitId}_${index}.jpg"
-                            )
-                        }
-                    }
+            val index = pagerState.currentPage
+            if (loaded[index]) {
+                //权限校验
+                if (!hasPermissions(context, permissions)) {
+                    requestPermissions(context as Activity, permissions, 1)
                 } else {
-                    ToastUtil.short(unLoadToast)
+                    //fixme 保存时卡顿
+                    drawables[index]?.let {
+                        ImageDownloadHelper(context).save(
+                            (it as BitmapDrawable).bitmap,
+                            "${unitId}_${index}.jpg"
+                        )
+                    }
                 }
+            } else {
+                ToastUtil.short(unLoadToast)
             }
         }
     }

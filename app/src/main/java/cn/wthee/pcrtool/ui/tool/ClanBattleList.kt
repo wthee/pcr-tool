@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -34,7 +33,6 @@ import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
@@ -124,11 +122,7 @@ private fun ClanBattleItem(
             }
         }
 
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-        ) {
+        MainCard {
             //图标
             Row(
                 modifier = Modifier.padding(Dimen.mediuPadding),

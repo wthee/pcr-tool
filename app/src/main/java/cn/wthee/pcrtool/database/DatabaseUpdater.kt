@@ -62,7 +62,7 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(version.data!!, from, force)
         } catch (e: Exception) {
-            //TODO 提示开始异常
+
         }
     }
 
