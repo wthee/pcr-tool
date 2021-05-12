@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
@@ -57,7 +58,7 @@ fun NewsList(
     //fixme 滚动状态记录
     val states =
         arrayListOf(rememberLazyListState(), rememberLazyListState(), rememberLazyListState())
-    val pagerState = rememberPagerState(pageCount = 1, initialOffscreenLimit = 3)
+    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 3)
     val newsCN = viewModel.getNewsCN().collectAsLazyPagingItems()
     val newsTW = viewModel.getNewsTW().collectAsLazyPagingItems()
     val newsJP = viewModel.getNewsJP().collectAsLazyPagingItems()
@@ -279,20 +280,37 @@ fun NewsDetail(text: String, url: String, region: Int) {
  */
 @Composable
 private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
+    val clickType = remember {
+        mutableStateOf(0)
+    }
     MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
-        state.retry()
+        when (clickType.value) {
+            0 -> state.retry()
+            -1 -> state.refresh()
+        }
     }) {
         Box(contentAlignment = Alignment.Center) {
-            if (state.loadState.append.endOfPaginationReached) {
-                MainSubText(
-                    text = stringResource(R.string.all_data_load),
-                    color = MaterialTheme.colors.primary
-                )
-            } else {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(Dimen.fabIconSize)
-                )
+            when (state.loadState.append) {
+                is LoadState.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(Dimen.fabIconSize)
+                    )
+                }
+                is LoadState.Error -> {
+                    MainSubText(
+                        text = stringResource(R.string.data_get_error),
+                        color = MaterialTheme.colors.primary
+                    )
+                    clickType.value = -1
+                }
+                else -> {
+                    if (state.loadState.append.endOfPaginationReached) {
+                        MainSubText(
+                            text = stringResource(R.string.all_data_load),
+                            color = MaterialTheme.colors.primary
+                        )
+                    }
+                }
             }
         }
     }

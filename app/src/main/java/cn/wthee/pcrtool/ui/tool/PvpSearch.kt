@@ -1,10 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,7 +16,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,13 +28,11 @@ import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.database.getRegion
-import cn.wthee.pcrtool.service.PvpService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.fillZero
@@ -93,10 +85,7 @@ fun PvpSearchCompose(
     //获取数据
     viewModel.getAllCharacter()
     val data = viewModel.allPvpCharacterData.observeAsState()
-
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val activity = ActivityHelper.instance.currentActivity
     val scrollState = rememberLazyListState()
     val positionIndex = remember {
         mutableStateOf(2)
@@ -269,32 +258,6 @@ fun PvpSearchCompose(
                 modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
             ) {
                 toFavorite()
-            }
-            //悬浮窗
-            FabCompose(
-                iconType = MainIconType.PVP_SEARCH_WINDOW,
-                modifier = Modifier
-                    .padding(end = Dimen.fabSmallMarginEnd)
-            ) {
-                //检查是否已经授予权限
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(
-                        context
-                    )
-                ) {
-                    //若未授权则请求权限
-                    val intent = Intent(ACTION_MANAGE_OVERLAY_PERMISSION)
-                    intent.data = Uri.parse("package:" + context.packageName)
-                    context.startActivity(intent)
-                } else {
-                    //打开悬浮窗
-                    val intent =
-                        Intent(activity?.applicationContext, PvpService::class.java)
-                    activity?.startService(intent)
-                    //退回桌面
-                    val home = Intent(Intent.ACTION_MAIN)
-                    home.addCategory(Intent.CATEGORY_HOME)
-                    context.startActivity(home)
-                }
             }
             //查询
             val tip = stringResource(id = R.string.tip_select_5)
