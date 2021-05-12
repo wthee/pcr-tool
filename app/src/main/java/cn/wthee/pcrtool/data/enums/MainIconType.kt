@@ -158,5 +158,10 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 新版本更新
      */
-    APP_UPDATE(26, Icons.Rounded.Upcoming)
+    APP_UPDATE(26, Icons.Rounded.Upcoming),
+
+    /**
+     * 群
+     */
+    GROUP(27, Icons.Rounded.GroupAdd),
 }

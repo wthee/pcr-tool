@@ -20,8 +20,10 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
+import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.utils.addToClip
 import kotlinx.coroutines.launch
 
 /**
@@ -188,6 +190,15 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
+                val qqGroup = stringResource(R.string.qq_group)
+                val tip = stringResource(R.string.copy_qq_tip)
+                //群
+                FabCompose(
+                    iconType = MainIconType.GROUP,
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                ) {
+                    addToClip(qqGroup, tip)
+                }
                 //数据版本切换
                 ExtendedFabCompose(
                     iconType = MainIconType.CHANGE_DATA,

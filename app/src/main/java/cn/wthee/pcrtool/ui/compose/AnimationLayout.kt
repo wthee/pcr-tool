@@ -29,7 +29,7 @@ fun PopEnterAnimation(content: @Composable () -> Unit) {
         visible = true,
         enter = slideInVertically(
             initialOffsetY = {
-                -100
+                -30
             }
         ),
         exit = shrinkOut(),

@@ -19,7 +19,7 @@ fun hasPermissions(context: Context, permissions: Array<String>) = permissions.a
 /**
  * 添加 [str] 到系统剪切板
  */
-fun add(str: String, tipText: String = "内容已复制~") {
+fun addToClip(str: String, tipText: String = "内容已复制~") {
     val clipboardManager =
         MyApplication.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val mClipData = ClipData.newPlainText("OcrText", str)
