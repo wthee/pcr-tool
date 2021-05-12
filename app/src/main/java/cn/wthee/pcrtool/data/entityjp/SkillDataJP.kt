@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.entity
+package cn.wthee.pcrtool.data.entityjp
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
  * 技能信息
  */
 @Entity(tableName = "skill_data")
-data class SkillData(
+data class SkillDataJP(
     @PrimaryKey
     @ColumnInfo(name = "skill_id") val skill_id: Int,
     @ColumnInfo(name = "name") val name: String?,
@@ -30,5 +30,45 @@ data class SkillData(
     @ColumnInfo(name = "depend_action_6") val depend_action_6: Int,
     @ColumnInfo(name = "depend_action_7") val depend_action_7: Int,
     @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "icon_type") val icon_type: Int
-)
+    @ColumnInfo(name = "icon_type") val icon_type: Int,
+    //jp
+    @ColumnInfo(name = "boss_ub_cool_time") val boss_ub_cool_time: Double,
+) {
+    fun getAllActionId() = arrayListOf(
+        action_1,
+        action_2,
+        action_3,
+        action_4,
+        action_5,
+        action_6,
+        action_7
+    ).filter {
+        it != 0
+    }
+
+    fun getSkillDependData(): MutableMap<Int, Int> {
+        val map = mutableMapOf<Int, Int>()
+        val actionList = arrayListOf(
+            action_1,
+            action_2,
+            action_3,
+            action_4,
+            action_5,
+            action_6,
+            action_7
+        )
+        val dependActionList = arrayListOf(
+            depend_action_1,
+            depend_action_2,
+            depend_action_3,
+            depend_action_4,
+            depend_action_5,
+            depend_action_6,
+            depend_action_7,
+        )
+        actionList.forEachIndexed { index, action ->
+            map[action] = dependActionList[index]
+        }
+        return map
+    }
+}
