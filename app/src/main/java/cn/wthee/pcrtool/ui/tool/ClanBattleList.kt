@@ -234,7 +234,9 @@ fun ClanBossInfoPager(
             //顺序
             Subtitle2(
                 text = "BOSS ${pagerState.currentPage + 1}",
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = Dimen.smallPadding)
             )
             //BOSS信息
             SlideAnimation {
@@ -246,7 +248,11 @@ fun ClanBossInfoPager(
                             elevation = Dimen.cardElevation,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(Dimen.mediuPadding)
+                                .padding(
+                                    top = Dimen.smallPadding,
+                                    start = Dimen.mediuPadding,
+                                    end = Dimen.mediuPadding
+                                )
                         ) {
                             Column(
                                 modifier = Modifier
