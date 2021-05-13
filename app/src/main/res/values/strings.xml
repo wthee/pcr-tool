@@ -124,7 +124,7 @@
     <string name="shrine">圣迹调查</string>
     <string name="temple">神殿调查</string>
     <string name="dungeon">地下城玛那</string>
-    <string name="drop_x">%s倍</string>
+    <string name="drop_x">掉落量 * %s </string>
     <string name="in_progress">%s后结束</string>
     <string name="coming_soon">%s后开始</string>
 

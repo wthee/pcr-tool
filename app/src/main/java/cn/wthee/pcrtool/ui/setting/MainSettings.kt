@@ -22,8 +22,8 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getDatabaseType
+import cn.wthee.pcrtool.ui.compose.LineCompose
 import cn.wthee.pcrtool.ui.compose.MainText
-import cn.wthee.pcrtool.ui.compose.SpaceCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
@@ -84,7 +84,7 @@ fun MainSettings() {
                 oldFileSize.value = 0
             }
         }
-        SpaceCompose()
+        LineCompose()
         MainText(
             text = appVersionGroup,
             modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
@@ -98,7 +98,7 @@ fun MainSettings() {
         ) {
             openWebView(context, projectUrl)
         }
-        SpaceCompose()
+        LineCompose()
         MainText(
             text = stringResource(id = R.string.thanks),
             modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)

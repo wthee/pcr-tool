@@ -91,10 +91,10 @@ fun MainText(
 }
 
 /**
- * 蓝色加粗副标题
+ * 副标题
  */
 @Composable
-fun MainSubText(
+fun Subtitle1(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified
@@ -102,17 +102,37 @@ fun MainSubText(
     SelectionContainer(modifier = modifier) {
         Text(
             text = text,
-            style = MaterialTheme.typography.subtitle2,
-            color = color
+            color = color,
+            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.subtitle1,
         )
     }
 }
 
 /**
- * 蓝色加粗标题
+ * 副标题
  */
 @Composable
-fun SpaceCompose(modifier: Modifier = Modifier) {
+fun Subtitle2(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Unspecified
+) {
+    SelectionContainer(modifier = modifier) {
+        Text(
+            text = text,
+            color = color,
+            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.subtitle2,
+        )
+    }
+}
+
+/**
+ * 分割线
+ */
+@Composable
+fun LineCompose(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxWidth()) {
         Spacer(
             modifier = modifier

@@ -62,7 +62,7 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
                         .padding(Dimen.smallPadding)
                 ) {
                     IconCompose(data = getEquipIconUrl(equipId))
-                    MainSubText(
+                    Subtitle2(
                         text = it.getDesc(),
                         modifier = Modifier.padding(start = Dimen.mediuPadding)
                     )

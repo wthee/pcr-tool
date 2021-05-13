@@ -235,7 +235,7 @@ fun ClanBossInfoPager(
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                             //等级
-                            MainSubText(
+                            Subtitle2(
                                 text = bossDataValue.level.toString(),
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )

@@ -34,7 +34,7 @@ fun SlideAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
         enter = slideInVertically(
             initialOffsetY = { 60 },
             animationSpec = defaultSpring()
-        ) + fadeIn(animationSpec = defaultTween()),
+        ),
         exit = slideOutVertically(targetOffsetY = {
             60
         }),

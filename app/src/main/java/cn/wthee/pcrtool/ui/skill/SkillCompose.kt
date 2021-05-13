@@ -132,7 +132,7 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
                     )
                 }
                 //描述
-                MainSubText(text = skillDetail.desc)
+                Subtitle2(text = skillDetail.desc)
             }
 
         }

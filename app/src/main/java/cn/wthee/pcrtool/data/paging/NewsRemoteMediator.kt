@@ -11,22 +11,16 @@ import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import retrofit2.HttpException
 import java.io.IOException
-import javax.inject.Inject
 
 /**
  * 公告加载
  */
 @ExperimentalPagingApi
-class NewsRemoteMediator @Inject constructor(
+class NewsRemoteMediator(
+    private val region: Int,
     private val database: AppNewsDatabase,
     private val repository: MyAPIRepository
 ) : RemoteMediator<Int, NewsTable>() {
-
-    private var region = 2
-
-    fun setRegion(region: Int) {
-        this.region = region
-    }
 
     private val newsDao = database.getNewsDao()
     private val remoteKeyDao = database.getRemoteKeyDao()

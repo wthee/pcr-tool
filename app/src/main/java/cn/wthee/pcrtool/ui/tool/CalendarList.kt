@@ -3,8 +3,9 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
@@ -35,7 +37,7 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
     calendarViewModel.getDropEvent()
     val calendarData = calendarViewModel.dropEvents.observeAsState()
 
-    val state = rememberScrollState()
+    val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     MainActivity.navViewModel.loading.postValue(true)
     val title = when (getDatabaseType()) {
@@ -48,13 +50,13 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        Column(modifier = Modifier.verticalScroll(state)) {
-            calendarData.value?.let { data ->
-                MainActivity.navViewModel.loading.postValue(false)
-                StaggeredVerticalGrid {
-                    data.forEach {
-                        CalendarItem(it)
-                    }
+        calendarData.value?.let { data ->
+            MainActivity.navViewModel.loading.postValue(false)
+            LazyColumn(state = state) {
+                items(data) {
+                    CalendarItem(it)
+                }
+                item {
                     CommonSpacer()
                 }
             }
@@ -69,7 +71,7 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                state.scrollTo(0)
+                state.scrollToItem(0)
             }
         }
     }
@@ -107,7 +109,8 @@ private fun CalendarItem(calendar: DropEvent) {
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //开始日期
             MainTitleText(
-                text = calendar.getFixedStartTime().substring(0, 10),
+                text = calendar.getFixedStartTime()
+                    .substring(0, 10) + " ~ " + calendar.getFixedEndTime().substring(0, 10),
                 backgroundColor = color
             )
             //天数
@@ -119,27 +122,31 @@ private fun CalendarItem(calendar: DropEvent) {
 
         MainCard {
             Column(
-                modifier = Modifier.padding(Dimen.mediuPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier.padding(Dimen.mediuPadding)
             ) {
                 if (inProgress) {
-                    MainSubText(
+                    MainContentText(
                         text = stringResource(R.string.in_progress, ed.dates(today)),
-                        modifier = Modifier.padding(bottom = Dimen.largePadding),
+                        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+                        textAlign = TextAlign.Start
                     )
                 }
                 if (comingSoon) {
-                    MainSubText(
+                    MainContentText(
                         text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(bottom = Dimen.largePadding),
+                        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+                        textAlign = TextAlign.Start
                     )
                 }
                 //内容
                 getTypeData(calendar).forEach {
-                    MainSubText(
+                    Subtitle1(
                         text = it.title + it.info,
                         color = colorResource(id = it.colorId),
+                        modifier = Modifier.padding(
+                            top = Dimen.smallPadding,
+                            bottom = Dimen.smallPadding
+                        ),
                     )
                 }
             }

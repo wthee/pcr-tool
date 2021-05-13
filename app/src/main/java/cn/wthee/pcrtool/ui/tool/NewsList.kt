@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.paging.ExperimentalPagingApi
@@ -130,7 +128,7 @@ private fun NewsItem(
 
     val tag = news.getTag()
     val colorId = when (tag) {
-        "公告" -> R.color.news_update
+        "公告", "更新" -> R.color.news_update
         "系統" -> R.color.news_system
         else -> R.color.colorPrimary
     }
@@ -156,14 +154,12 @@ private fun NewsItem(
         }) {
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //内容
-                Text(
+                Subtitle1(
                     text = news.title,
                     modifier = Modifier.padding(
                         top = Dimen.smallPadding,
                         bottom = Dimen.smallPadding
                     ),
-                    textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.subtitle1,
                 )
             }
         }
@@ -297,7 +293,7 @@ private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
                     )
                 }
                 is LoadState.Error -> {
-                    MainSubText(
+                    Subtitle2(
                         text = stringResource(R.string.data_get_error),
                         color = MaterialTheme.colors.primary
                     )
@@ -305,7 +301,7 @@ private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
                 }
                 else -> {
                     if (state.loadState.append.endOfPaginationReached) {
-                        MainSubText(
+                        Subtitle2(
                             text = stringResource(R.string.all_data_load),
                             color = MaterialTheme.colors.primary
                         )
