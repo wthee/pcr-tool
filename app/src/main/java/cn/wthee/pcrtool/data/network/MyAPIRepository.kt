@@ -5,7 +5,6 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.getRegion
-import cn.wthee.pcrtool.utils.ApiUtil
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -15,31 +14,14 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import javax.inject.Inject
 
 /**
  * 接口 Repository
  *
  * 数据来源 [MyAPIService]
  */
-class MyAPIRepository(private val service: MyAPIService) {
-
-    companion object {
-
-        @Volatile
-        private var instance: MyAPIRepository? = null
-
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: MyAPIRepository(
-                    ApiUtil.create(
-                        MyAPIService::class.java,
-                        Constants.API_URL,
-                        20
-                    )
-                ).also { instance = it }
-            }
-    }
-
+class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
     /**
      * 根据防守方 id [ids] 查询竞技场对战信息

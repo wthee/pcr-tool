@@ -26,23 +26,6 @@ fun FabCompose(iconType: MainIconType, modifier: Modifier = Modifier, onClick: (
     }
 }
 
-@Composable
-fun FabCompose(
-    content: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    FloatingActionButton(
-        onClick = onClick,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.onPrimary,
-        contentColor = MaterialTheme.colors.primary,
-        modifier = modifier.size(Dimen.fabSize),
-        content = content
-    )
-}
-
-
 /**
  * 通用展开悬浮按钮
  */

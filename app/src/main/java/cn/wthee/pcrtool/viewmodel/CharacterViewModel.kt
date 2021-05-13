@@ -55,6 +55,9 @@ class CharacterViewModel @Inject constructor(
     fun getCharacter(uid: Int) {
         viewModelScope.launch {
             val data = repository.getInfoPro(uid)
+            data?.let {
+                character.postValue(it)
+            }
             if (data == null) {
                 MainScope().launch {
                     UMCrash.generateCustomLog(
@@ -62,8 +65,6 @@ class CharacterViewModel @Inject constructor(
                         Constants.EXCEPTION_UNIT_NULL + "unit_id:$uid"
                     )
                 }
-            } else {
-                character.postValue(data!!)
             }
         }
     }

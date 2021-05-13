@@ -24,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
-import cn.wthee.pcrtool.data.db.view.Enemy
+import cn.wthee.pcrtool.data.db.view.enemy
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -240,7 +240,7 @@ fun ClanBossInfoPager(
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                             //属性
-                            AttrList(attrs = bossDataValue.attr.Enemy())
+                            AttrList(attrs = bossDataValue.attr.enemy())
                             //技能
                             BossSkillList(pagerIndex, bossDataList.value!!)
                         }

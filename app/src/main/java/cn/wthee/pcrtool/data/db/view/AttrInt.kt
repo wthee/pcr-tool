@@ -80,7 +80,7 @@ fun AttrInt.all(): ArrayList<AttrValue> {
     return attrs
 }
 
-fun AttrInt.Enemy(): List<AttrValue> {
+fun AttrInt.enemy(): List<AttrValue> {
     val attrs = all()
     val newList = arrayListOf<AttrValue>()
     val toShowIndex = arrayListOf(0, 10, 2, 3, 4, 5)

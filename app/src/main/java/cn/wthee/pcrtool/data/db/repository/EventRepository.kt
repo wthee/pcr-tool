@@ -15,9 +15,4 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
     suspend fun getStoryDetails(storyId: Int) = eventDao.getStoryDetails(storyId)
 
     suspend fun getDropEvent() = eventDao.getDropEvent()
-
-    companion object {
-
-        fun getInstance(eventDao: EventDao) = EventRepository(eventDao)
-    }
 }

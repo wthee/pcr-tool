@@ -30,9 +30,10 @@ import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.AppUpdateUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ToastUtil
+import cn.wthee.pcrtool.utils.UMengInitializer
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -70,6 +71,7 @@ class MainActivity : ComponentActivity() {
         ActivityHelper.instance.currentActivity = this
         //设置 handler
         setHandler()
+        UMengInitializer().create(this)
     }
 
     //返回拦截
@@ -123,6 +125,7 @@ fun Home() {
     val navController = rememberNavController()
     val actions = remember(navController) { NavActions(navController) }
     navViewModel = hiltNavGraphViewModel()
+    val noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()
     val scope = rememberCoroutineScope()
     val loading = navViewModel.loading.observeAsState().value ?: false
     val r6IdList = navViewModel.r6Ids.observeAsState()
@@ -135,7 +138,7 @@ fun Home() {
         //数据库版本检查
         scope.launch {
             DatabaseUpdater.checkDBVersion()
-            navViewModel.updateApp.postValue(AppUpdateUtil.check())
+            noticeViewModel.check()
         }
         NavGraph(navController, navViewModel, actions)
         //菜单

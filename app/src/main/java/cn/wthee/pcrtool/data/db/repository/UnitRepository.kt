@@ -50,8 +50,4 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getMaxLevel() = unitDao.getMaxLevel()
 
-    companion object {
-
-        fun getInstance(unitDao: UnitDao) = UnitRepository(unitDao)
-    }
 }

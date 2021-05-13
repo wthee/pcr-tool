@@ -8,7 +8,6 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,6 @@ class EquipmentViewModel @Inject constructor(
 
     var equip = MutableLiveData<EquipmentMaxData>()
     var equips = MutableLiveData<List<EquipmentMaxData>>()
-    var uniqueEquip = MutableLiveData<UniqueEquipmentMaxData?>()
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
     var rankEquipMaterials = MutableLiveData<List<EquipmentMaterial>>()
     var dropInfo = MutableLiveData<List<EquipmentDropInfo>>()
@@ -56,15 +54,6 @@ class EquipmentViewModel @Inject constructor(
         viewModelScope.launch {
             val data = equipmentRepository.getEquipmentData(equipId)
             equip.postValue(data)
-        }
-    }
-
-    /**
-     * 根据 [uid] 专武等级 [lv]，获取专武信息
-     */
-    fun getUniqueEquipInfos(uid: Int, lv: Int) {
-        viewModelScope.launch {
-            uniqueEquip.postValue(equipmentRepository.getUniqueEquipInfo(uid, lv))
         }
     }
 

@@ -6,7 +6,6 @@ import androidx.paging.*
 import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
-import cn.wthee.pcrtool.database.AppNewsDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -17,7 +16,11 @@ import javax.inject.Inject
  * 数据来源 [NewsRemoteMediator]
  */
 @HiltViewModel
-class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewModel() {
+@ExperimentalPagingApi
+class NewsViewModel @Inject constructor(
+    private val newsDao: NewsDao,
+    private val remoteMediator: NewsRemoteMediator
+) : ViewModel() {
 
 
     private val pageSize = 10
@@ -29,9 +32,10 @@ class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewMode
      */
     @ExperimentalPagingApi
     fun getNewsCN(): Flow<PagingData<NewsTable>> {
+        remoteMediator.setRegion(2)
         return Pager(
             config = PagingConfig(pageSize = pageSize, initialLoadSize = initSize),
-            remoteMediator = NewsRemoteMediator(2, AppNewsDatabase.getInstance())
+            remoteMediator = remoteMediator
         ) {
             newsDao.pagingSource("${2}-%")
         }.flow.cachedIn(viewModelScope)
@@ -42,9 +46,10 @@ class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewMode
      */
     @ExperimentalPagingApi
     fun getNewsTW(): Flow<PagingData<NewsTable>> {
+        remoteMediator.setRegion(3)
         return Pager(
             config = PagingConfig(pageSize = pageSize, initialLoadSize = initSize),
-            remoteMediator = NewsRemoteMediator(3, AppNewsDatabase.getInstance())
+            remoteMediator = remoteMediator
         ) {
             newsDao.pagingSource("${3}-%")
         }.flow
@@ -55,9 +60,10 @@ class NewsViewModel @Inject constructor(private val newsDao: NewsDao) : ViewMode
      */
     @ExperimentalPagingApi
     fun getNewsJP(): Flow<PagingData<NewsTable>> {
+        remoteMediator.setRegion(4)
         return Pager(
             config = PagingConfig(pageSize = pageSize, initialLoadSize = initSize),
-            remoteMediator = NewsRemoteMediator(4, AppNewsDatabase.getInstance())
+            remoteMediator = remoteMediator
         ) {
             newsDao.pagingSource("${4}-%")
         }.flow

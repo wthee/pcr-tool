@@ -24,11 +24,11 @@ object CharacterIdUtil {
     /**
      * 获取星级最高的角色图片
      */
-    fun getMaxPlateUrl(uid: Int, r6Id: Boolean): String {
+    fun getMaxCardUrl(uid: Int, r6Id: Boolean): String {
         if (r6Id) {
-            return Constants.UNIT_PLATE_URL + getStarId(uid, 6) + Constants.WEBP
+            return Constants.CHARACTER_FULL_URL + getStarId(uid, 6) + Constants.WEBP
         }
-        return Constants.UNIT_PLATE_URL + getStarId(uid, 3) + Constants.WEBP
+        return Constants.CHARACTER_FULL_URL + getStarId(uid, 3) + Constants.WEBP
     }
 
     fun getMaxIconUrl(uid: Int, r6Id: Boolean): String {

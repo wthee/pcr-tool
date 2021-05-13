@@ -51,9 +51,6 @@ fun MainSettings() {
     )
     //应用版本
     val appVersionGroup = stringResource(id = R.string.app_version, BuildConfig.VERSION_NAME)
-    //历史数据
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()

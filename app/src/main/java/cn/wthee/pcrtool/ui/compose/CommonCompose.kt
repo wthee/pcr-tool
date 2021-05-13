@@ -27,9 +27,9 @@ import com.google.accompanist.pager.PagerState
  */
 @Composable
 fun MainTitleText(
+    modifier: Modifier = Modifier,
     text: String,
     small: Boolean = false,
-    modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.primary,
 ) {
     SelectionContainer(modifier = modifier) {
@@ -70,9 +70,9 @@ fun MainContentText(
  */
 @Composable
 fun MainText(
+    modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.colors.primary,
-    modifier: Modifier = Modifier
+    color: Color = MaterialTheme.colors.primary
 ) {
     SelectionContainer(
         modifier = modifier.padding(
@@ -94,7 +94,11 @@ fun MainText(
  * 蓝色加粗副标题
  */
 @Composable
-fun MainSubText(text: String, color: Color = Color.Unspecified, modifier: Modifier = Modifier) {
+fun MainSubText(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Unspecified
+) {
     SelectionContainer(modifier = modifier) {
         Text(
             text = text,
@@ -140,9 +144,9 @@ fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit)
  */
 @Composable
 fun SubButton(
+    modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     OutlinedButton(
@@ -229,8 +233,8 @@ fun CommonSpacer() {
  */
 @Composable
 fun MainCard(
-    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     var mModifier = modifier

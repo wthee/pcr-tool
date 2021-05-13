@@ -92,9 +92,6 @@ fun CharacterDetail(
     }
     //卡面高度
     val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).toInt().px2dp - 10
-    var id = unitId
-    id += if (MainActivity.r6Ids.contains(unitId)) 60 else 30
-
     //保存滚动状态
     val scrollState = rememberScrollState()
     val marginTop = when {
@@ -183,7 +180,7 @@ fun CharacterDetail(
                 }) {
                     //图片
                     CharacterCard(
-                        Constants.CHARACTER_FULL_URL + id + Constants.WEBP,
+                        CharacterIdUtil.getMaxCardUrl(unitId, MainActivity.r6Ids.contains(unitId)),
                         scrollState = scrollState,
                         showLoading = false
                     )

@@ -5,8 +5,8 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val VERSION_NAME = "1.0.0"
-val VERSION_CODE = 100
+val name = "1.0.0"
+val code = 100
 
 android {
 
@@ -18,11 +18,11 @@ android {
         applicationId = "cn.wthee.pcrtool"
         minSdk = 21
         targetSdk = 30
-        versionCode = VERSION_CODE
-        versionName = VERSION_NAME
+        versionCode = code
+        versionName = name
 
 
-        buildConfigField("int", "SQLITE_VERSION", VERSION_CODE.toString())
+        buildConfigField("int", "SQLITE_VERSION", code.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

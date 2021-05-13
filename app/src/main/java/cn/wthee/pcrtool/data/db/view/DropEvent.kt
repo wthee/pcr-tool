@@ -20,13 +20,13 @@ data class DropEvent(
     fun getFixedStartTime(): String {
         val list = startTime.split(" ")[0].split("/")
         val hms = startTime.substring(startTime.length - 8, startTime.length)
-        return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()} ${hms}"
+        return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()} $hms"
     }
 
     fun getFixedEndTime(): String {
         val list = endTime.split(" ")[0].split("/")
         val hms = startTime.substring(startTime.length - 8, startTime.length)
-        return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()} ${hms}"
+        return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()} $hms"
     }
 
     /**

@@ -13,9 +13,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -24,16 +26,21 @@ import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.addToClip
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import kotlinx.coroutines.launch
 
 /**
  * 菜单
  */
 @Composable
-fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
+fun MenuContent(
+    viewModel: NavViewModel,
+    actions: NavActions,
+    noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()
+) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
-    val updateApp = viewModel.updateApp.observeAsState().value ?: false
+    val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
 
     if (fabMainIcon == MainIconType.DOWN) {
         Column(
@@ -159,7 +166,8 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
                 ) {
                     //通知
                     MenuItem(
-                        text = stringResource(id = R.string.app_notice),
+                        backgroundColor = if (updateApp == 1) colorResource(id = R.color.cool_apk) else MaterialTheme.colors.primary,
+                        text = stringResource(id = if (updateApp == 1) R.string.to_update else R.string.app_notice),
                         iconType = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE,
                         modifier = Modifier
                             .weight(0.618f)
@@ -219,9 +227,15 @@ fun MenuContent(viewModel: NavViewModel, actions: NavActions) {
  * 菜单项
  */
 @Composable
-fun MenuItem(text: String, iconType: MainIconType, modifier: Modifier, action: () -> Unit) {
+fun MenuItem(
+    backgroundColor: Color = MaterialTheme.colors.primary,
+    text: String,
+    iconType: MainIconType,
+    modifier: Modifier,
+    action: () -> Unit
+) {
     Card(
-        backgroundColor = MaterialTheme.colors.primary,
+        backgroundColor = backgroundColor,
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)

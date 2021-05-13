@@ -1,20 +1,10 @@
 <resources>
     <string name="date_m_d">%s 月 %s 日</string>
-    <string name="character_detail">%s   %sCM   %sKG   %d</string>
-    <string name="character_heigth">%sCM</string>
-    <string name="character_weigth">%sKG</string>
-    <string name="blood">%s 型</string>
-    <string name="lv">等级 %d</string>
-    <string name="quest_name">%s-%s</string>
-    <string name="percent">%d%%</string>
-    <string name="equip_count">x %d</string>
-    <string name="empty"> </string>
     <string name="section">%s阶段</string>
     <string name="title_section">阶段</string>
 
     <!-- 角色 -->
     <string name="unknown_character">角色暂未登场</string>
-    <string name="title_quest">？？？</string>
     <string name="age">年龄</string>
     <string name="title_height">身高</string>
     <string name="title_weight">体重</string>
@@ -27,24 +17,15 @@
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
     <string name="skill_level">技能等级：%d</string>
-    <string name="title_skill">技能信息</string>
-    <string name="skill_loop">循环</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
-    <string name="equip_details">道具详情</string>
     <string name="title_comments">交流</string>
     <string name="title_room_comments">小屋</string>
     <string name="title_material">所需装备</string>
-    <string name="title_all_attr">- 人物属性 -</string>
     <string name="title_story_attr">剧情属性</string>
 
     <!--功能-->
-    <string name="back">返回</string>
-    <string name="other">其它</string>
     <string name="setting">设置</string>
-    <string name="search">搜索</string>
-    <string name="function">功能</string>
-    <string name="sorry_ue">优衣，对不起~ </string>
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
@@ -65,25 +46,14 @@
     <string name="leader_tip">角色排行数据来源</string>
     <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
     <string name="db_cn">国服</string>
-    <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
-    <string name="db_cn_value">1</string>
-    <string name="db_jp_value">2</string>
-    <string name="egg_text">我啊，很幸福哦</string>
-    <string name="egg_summary">…还…还是被发现了</string>
     <string name="change_db">数据切换</string>
-    <string name="to_download">是否重新下载最新数据？</string>
-    <string name="share_app">分享应用</string>
-    <string name="share_app_sm">如果觉得不错，就让更多人知道吧~</string>
     <string name="clean_database">删除历史数据文件</string>
     <string name="clean_success">删除成功</string>
-    <string name="now_db_type">当前版本：</string>
-    <string name="backup_mode">（备份数据）</string>
     <string name="app_version">应用版本：%s</string>
     <string name="app_notice">通知</string>
 
     <!--筛选  -->
-    <string name="filter">筛选</string>
     <string name="title_sort">排序类型</string>
     <string name="sort_date">登场日期</string>
     <string name="position_3">后卫</string>
@@ -103,25 +73,19 @@
     <string name="title_rarity">角色星级</string>
     <string name="six_unlock">六星</string>
     <string name="name">名字</string>
-    <string name="game_name">角色</string>
 
     <!--  工具  -->
     <string name="download_pic">下载图片</string>
     <string name="tool_leader">排行</string>
     <string name="tool_calendar">日历</string>
-    <string name="tool_calendar_title">日历-国服</string>
-    <string name="tool_calendar_title_jp">日历-日服</string>
     <string name="tool_pvp">竞技场</string>
-    <string name="tool_pvp_favorites">收藏</string>
     <string name="tip_pvp_favorites">暂无收藏</string>
     <string name="tool_clan">团队战</string>
     <string name="tool_guild">角色公会</string>
     <string name="favorite_count">已收藏： %d </string>
     <string name="character">角色</string>
-    <string name="character_basic_Info">介绍</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_research">前往查询</string>
-    <string name="pvp_float">悬浮窗</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
@@ -130,11 +94,6 @@
     <string name="tool_news_cn">国服公告</string>
     <string name="tool_news_tw">台服公告</string>
     <string name="tool_news_jp">日服公告</string>
-    <string name="loading">加载中…</string>
-    <string name="loading_news">正在获取最新数据…</string>
-    <string name="app_download_url">https://www.coolapk.com/apk/273453</string>
-    <string name="rank_compare">对比</string>
-    <string name="rank_equip_statistics">统计</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
     <string name="jjc">竞技场</string>
@@ -143,31 +102,19 @@
     <string name="visit_detail">在 AppMedia 中查看</string>
     <string name="pcrdfans_com">前往 pcrdfans.com</string>
     <string name="result">数值变化</string>
-    <string name="view_pic">角色图片</string>
-    <string name="back_today">回到今天</string>
     <string name="team_no">进攻队伍 %s</string>
-    <string name="team_atk">进攻方</string>
-    <string name="team_def">防守方</string>
-    <string name="no_liked_data">无收藏信息~</string>
-    <string name="share">分享</string>
-    <string name="open_browser">浏览器中打开</string>
-    <string name="min">最小化</string>
-    <string name="from">From %s</string>
-    <string name="add">添加</string>
     <string name="pvp_search_jp">查询台服竞技场数据</string>
-    <string name="pvp_search_summary">竞技场查询返回台服竞技场信息</string>
     <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
     <string name="equip_name">装备名</string>
     <string name="reset">重置</string>
     <string name="ok">确认</string>
-    <string name="zero">0</string>
     <string name="unselect">未选择</string>
     <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="update_log">更新日志</string>
     <string name="visit_more_log">查看更多更新日志</string>
-    <string name="to_update">  获取更新</string>
+    <string name="to_update">更新</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
@@ -178,7 +125,6 @@
     <string name="temple">神殿调查</string>
     <string name="dungeon">地下城玛那</string>
     <string name="drop_x">%s倍</string>
-    <string name="dead_line">%s截至</string>
     <string name="in_progress">%s后结束</string>
     <string name="coming_soon">%s后开始</string>
 
@@ -188,15 +134,12 @@
     <string name="database_remote_backup">已启用远程备用数据~</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
-    <string name="no_drop_data">无掉落信息</string>
 
     <!-- 下载相关-->
     <string name="db_checking">数据校验中</string>
     <string name="db_downloading">下载中 </string>
     <string name="db_downloaded">数据已更新</string>
-    <string name="press_back_top">长按回到顶部</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
-    <string name="boss_target">多目标：%s</string>
 
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>

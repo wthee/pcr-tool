@@ -16,10 +16,6 @@ data class EventData(
     @ColumnInfo(name = "unit_ids") val unitIds: String,
     @ColumnInfo(name = "unit_names") val unitNames: String,
 ) : Serializable {
-    /**
-     * 获取开始结束时间
-     */
-    fun getDate() = startTime.substring(0, 10) + " ~ " + endTime.substring(0, 10)
 
     fun getEventTitle() = title.deleteSpace()
 }

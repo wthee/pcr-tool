@@ -1,29 +1,62 @@
 package cn.wthee.pcrtool.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 通知 ViewModel
  *
  * 数据来源 [MyAPIRepository]
  */
-class NoticeViewModel : ViewModel() {
+@HiltViewModel
+class NoticeViewModel @Inject constructor(private val repository: MyAPIRepository) : ViewModel() {
 
     val notice = MutableLiveData<ResponseData<List<AppNotice>>>()
+
+    /**
+     * 应用更新
+     * -1：获取中
+     * 0：无更新
+     * 1：有更新
+     */
+    val updateApp = MutableLiveData(-1)
+
 
     /**
      * 通知公告
      */
     fun getNotice() {
         viewModelScope.launch {
-            val data = MyAPIRepository.getInstance().getNotice()
+            val data = repository.getNotice()
             notice.postValue(data)
+        }
+    }
+
+    /**
+     * 更新校验
+     */
+    fun check() {
+        viewModelScope.launch {
+            try {
+                val version = repository.getAppUpdateNotice()
+                if (version.status == 0) {
+                    if (version.data != null && version.data == true) {
+                        updateApp.postValue(1)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(Constants.LOG_TAG, e.message ?: "")
+            }
+            updateApp.postValue(0)
         }
     }
 }

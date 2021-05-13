@@ -77,7 +77,7 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
                     )
                 }
                 LazyColumn(state = state) {
-                    items(info) { it ->
+                    items(info) {
                         LeaderboardItem(it)
                     }
                     item {

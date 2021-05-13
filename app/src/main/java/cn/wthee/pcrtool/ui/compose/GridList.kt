@@ -21,10 +21,9 @@ fun StaggeredVerticalGrid(
         check(constraints.hasBoundedWidth) {
             "Unbounded width not supported"
         }
-        val columns = spanCount
-        val columnWidth = constraints.maxWidth / columns
+        val columnWidth = constraints.maxWidth / spanCount
         val itemConstraints = constraints.copy(maxWidth = columnWidth)
-        val colHeights = IntArray(columns) { 0 } // track each column's height
+        val colHeights = IntArray(spanCount) { 0 } // track each column's height
         val placeables = measurables.map { measurable ->
             val column = shortestColumn(colHeights)
             val placeable = measurable.measure(itemConstraints)
@@ -38,7 +37,7 @@ fun StaggeredVerticalGrid(
             width = constraints.maxWidth,
             height = height
         ) {
-            val colY = IntArray(columns) { 0 }
+            val colY = IntArray(spanCount) { 0 }
             placeables.forEach { placeable ->
                 val column = shortestColumn(colY)
                 placeable.place(

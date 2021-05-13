@@ -16,7 +16,7 @@ interface PvpDao {
     suspend fun getAll(region: Int): List<PvpFavoriteData>
 
     /**
-     * 根据游戏版本 [region] 进攻 [atks] 防守 [defs] 自定义[type]，获取收藏信息
+     * 根据游戏版本 [region] 进攻 [atks] 防守 [defs]，获取收藏信息
      */
     @Query("SELECT * FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region")
     suspend fun getLiked(atks: String, defs: String, region: Int): PvpFavoriteData?

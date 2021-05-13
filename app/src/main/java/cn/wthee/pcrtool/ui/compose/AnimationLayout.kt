@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.ui.compose
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.shrinkOut
-import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.*
 import androidx.compose.runtime.Composable
 
 @ExperimentalAnimationApi
@@ -16,7 +13,9 @@ fun EnterAnimation(content: @Composable () -> Unit) {
                 100
             }
         ),
-        exit = shrinkOut(),
+        exit = slideOutVertically(targetOffsetY = {
+            100
+        }),
         content = content,
         initiallyVisible = false
     )
@@ -27,12 +26,8 @@ fun EnterAnimation(content: @Composable () -> Unit) {
 fun PopEnterAnimation(content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible = true,
-        enter = slideInVertically(
-            initialOffsetY = {
-                -30
-            }
-        ),
-        exit = shrinkOut(),
+        enter = fadeIn(0f),
+        exit = fadeOut(0f),
         content = content,
         initiallyVisible = false
     )

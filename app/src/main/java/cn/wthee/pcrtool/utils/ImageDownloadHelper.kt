@@ -19,7 +19,7 @@ import java.io.OutputStream
  */
 class ImageDownloadHelper(private val context: Context) {
 
-    val activity = ActivityHelper.instance.currentActivity
+    private val activity = ActivityHelper.instance.currentActivity
 
     /**
      * 保存文件，文件名 [name]

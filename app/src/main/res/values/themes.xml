@@ -13,13 +13,4 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowFullscreen">true</item>
     </style>
-
-    <style name="Theme.Pcrtoolcompose.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Pcrtoolcompose.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Pcrtoolcompose.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

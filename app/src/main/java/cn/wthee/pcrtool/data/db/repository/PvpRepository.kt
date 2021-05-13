@@ -20,9 +20,4 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
 
     suspend fun delete(atks: String, defs: String, region: Int) = pvpDao.delete(atks, defs, region)
 
-
-    companion object {
-
-        fun getInstance(pvpDao: PvpDao) = PvpRepository(pvpDao)
-    }
 }

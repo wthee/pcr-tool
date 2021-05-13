@@ -38,8 +38,9 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.DataStoreUtil
+import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -78,7 +79,7 @@ fun CharacterList(
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
-            DataStoreUtil.fromJson(sp.getString(Constants.SP_STAR_CHARACTER, "")) ?: arrayListOf()
+            GsonUtil.fromJson(sp.getString(Constants.SP_STAR_CHARACTER, "")) ?: arrayListOf()
 
         viewModel.getCharacters(filterValue)
         ModalBottomSheetLayout(
@@ -162,7 +163,13 @@ private fun CharacterItem(
             //图片
             var id = character.id
             id += if (MainActivity.r6Ids.contains(character.id)) 60 else 30
-            CharacterCard(Constants.CHARACTER_FULL_URL + id + Constants.WEBP, true)
+            CharacterCard(
+                CharacterIdUtil.getMaxCardUrl(
+                    character.id,
+                    MainActivity.r6Ids.contains(character.id)
+                ),
+                true
+            )
             //名字、位置
             Row(
                 modifier = Modifier.padding(Dimen.smallPadding),

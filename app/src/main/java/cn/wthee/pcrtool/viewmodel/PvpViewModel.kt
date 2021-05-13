@@ -20,7 +20,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PvpViewModel @Inject constructor(
-    private val repository: PvpRepository
+    private val repository: PvpRepository,
+    private val apiRepository: MyAPIRepository
 ) : ViewModel() {
 
     var allFavorites = MutableLiveData<List<PvpFavoriteData>>()
@@ -74,7 +75,7 @@ class PvpViewModel @Inject constructor(
     fun getPVPData(ids: JsonArray) {
         viewModelScope.launch {
             if (pvpResult.value == null) {
-                val data = MyAPIRepository.getInstance().getPVPData(ids)
+                val data = apiRepository.getPVPData(ids)
                 pvpResult.postValue(data)
             }
         }

@@ -54,7 +54,7 @@ class CharacterAttrViewModel @Inject constructor(
      * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
      */
-    suspend fun getAttrs(
+    private suspend fun getAttrs(
         unitId: Int,
         level: Int,
         rank: Int,

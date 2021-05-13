@@ -11,9 +11,4 @@ import javax.inject.Inject
 class GachaRepository @Inject constructor(private val gachaDao: GachaDao) {
 
     suspend fun getGachaHistory() = gachaDao.getGachaHistory()
-
-    companion object {
-
-        fun getInstance(gachaDao: GachaDao) = GachaRepository(gachaDao)
-    }
 }

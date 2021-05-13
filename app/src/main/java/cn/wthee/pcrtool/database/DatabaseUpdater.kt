@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.database
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SupportSQLiteOpenHelper
@@ -25,7 +26,8 @@ import java.io.File
  * 数据库更新
  */
 object DatabaseUpdater {
-    val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
+    val sp: SharedPreferences =
+        MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     /**
      * 切换版本
@@ -62,7 +64,7 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(version.data!!, from, force)
         } catch (e: Exception) {
-
+            ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
         }
     }
 

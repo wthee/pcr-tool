@@ -39,7 +39,7 @@ fun CharacterBasicInfo(
         ) {
             //标题
             MainText(
-                info.catchCopy,
+                text = info.catchCopy,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = Dimen.mediuPadding, bottom = Dimen.smallPadding)
@@ -91,7 +91,11 @@ fun CharacterBasicInfo(
                         modifier = Modifier.weight(0.15f)
                     )
                     MainContentText(
-                        text = info.getBirth(),
+                        text = stringResource(
+                            id = R.string.date_m_d,
+                            info.birthMonth,
+                            info.birthDay
+                        ),
                         modifier = Modifier
                             .weight(0.35f)
                             .padding(end = Dimen.mediuPadding)

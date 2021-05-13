@@ -77,10 +77,4 @@ data class CharacterInfoPro(
     fun getRoomCommentsText() =
         roomComments.replace("\\n", "").replace("-", "\n\n")
 
-    /**
-     * 生日
-     */
-    fun getBirth() = "$birthMonth 月 $birthDay 日"
-
-
 }

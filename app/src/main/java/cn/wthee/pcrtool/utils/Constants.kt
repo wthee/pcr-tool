@@ -67,17 +67,11 @@ object Constants {
     const val EQUIPMENT_URL = RESOURCE_URL + "icon/equipment/"
     const val UNKNOWN_EQUIPMENT_ICON = EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP
 
-    //道具
-    const val ITEM_URL = RESOURCE_URL + "icon/item/"
-
     //图标接口
     const val UNIT_ICON_URL = RESOURCE_URL + "icon/unit/"
 
     //技能图标接口
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
-
-    //卡面
-    const val UNIT_PLATE_URL = RESOURCE_URL + "icon/plate/"
 
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"
@@ -93,31 +87,8 @@ object Constants {
     const val RANK_UPPER = "RANK"
 
     //常量值
-    const val UID = "unit_id"
-    const val UNIT_NAME = "unit_name"
-    const val UNIT_NAME_EX = "unit_name_ex"
-    const val PIC_CACHE_KEY = "pic_cache_key"
-    const val REGION = "region"
-    const val SELECT_LEVEL = "select_level"
-    const val SELECT_RANK = "select_rank"
-    const val START_RANK = "start_rank"
-    const val END_RANK = "end_rank"
     const val LOG_TAG = "log_tag"
     const val RANK = "rank"
-    const val RARITY = "rarity"
-    const val LEVEL = "level"
-    const val MAX_LEVEL = "max_level"
-    const val UNIQUE_EQUIP_LEVEL = "ueLv"
-    const val CLAN_DATE = "clan_date"
-    const val CLAN_BOSS_NO = "clan_boss_no"
-    const val CLAN_DATA = "clan_data"
-    const val CLAN_MAX_SECTION = "clan_max_section"
-    const val CLAN_SELECT_SECTION = "clan_select_section"
-    const val CLAN_SKILL_LVS = "clan_skill_lvs"
-    const val CLAN_BOSS_ATK = "clan_boss_atk"
-    const val ATK = "atk"
-    const val SKILL_LEVEL = "skill_level"
-    const val TYPE_SKILL = "type_skill"
 
     val ATTR = arrayListOf(
         "HP",

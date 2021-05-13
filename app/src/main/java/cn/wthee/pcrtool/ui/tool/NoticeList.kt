@@ -37,7 +37,7 @@ fun NoticeList(noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     MainActivity.navViewModel.loading.postValue(true)
 
-    val updateApp = MainActivity.navViewModel.updateApp.observeAsState().value ?: false
+    val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
     val icon = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE
 
 
