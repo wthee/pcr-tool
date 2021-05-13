@@ -27,6 +27,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.compose.DownloadCompose
 import cn.wthee.pcrtool.ui.compose.FabCompose
+import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.ActivityHelper
@@ -56,7 +57,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PcrtoolcomposeTheme {
-                Home()
+                FadeAnimation {
+                    Home()
+                }
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

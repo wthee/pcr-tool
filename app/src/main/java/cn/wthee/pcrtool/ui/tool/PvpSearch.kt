@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,6 +50,7 @@ import kotlin.math.round
 /**
  * 竞技场查询
  */
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -112,130 +114,135 @@ fun PvpSearchCompose(
                     PvpIconItem(selectedIds = selectedIds, it = it)
                 }
             }
-            Card(modifier = Modifier.fillMaxWidth(), shape = CardTopShape) {
-                data.value?.let { dataValue ->
-                    val character0 = dataValue.filter {
-                        it.position in 0..299
-                    }
-                    val character1 = dataValue.filter {
-                        it.position in 300..599
-                    }
-                    val character2 = dataValue.filter {
-                        it.position in 600..9999
-                    }
-                    val spanCount = 5
-                    val showIcon = listOf(0, 0, 1, 0, 0)
-                    //站位图标在列表中的位置
-                    val positions = arrayListOf(0, 0, 0)
-                    val filledCount1 = spanCount - character0.size % spanCount
-                    positions[1] =
-                        (spanCount + character0.size + filledCount1) / spanCount
-                    val filledCount2 = spanCount - character1.size % spanCount
-                    positions[0] =
-                        ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
-                    //滚动监听
-                    when (scrollState.firstVisibleItemIndex) {
-                        //后
-                        positions[0] -> {
-                            if (positionIndex.value != 0) {
-                                positionIndex.value = 0
-                            }
+            SlideAnimation {
+                Card(modifier = Modifier.fillMaxWidth(), shape = CardTopShape) {
+                    data.value?.let { dataValue ->
+                        val character0 = dataValue.filter {
+                            it.position in 0..299
                         }
-                        scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
-                            if (scrollState.layoutInfo.totalItemsCount != 0) {
-                                positionIndex.value = 0
-                            }
+                        val character1 = dataValue.filter {
+                            it.position in 300..599
                         }
-                        //中
-                        positions[1] -> {
-                            if (positionIndex.value != 1) {
-                                positionIndex.value = 1
-                            }
+                        val character2 = dataValue.filter {
+                            it.position in 600..9999
                         }
-                        //前
-                        positions[2] -> {
-                            if (positionIndex.value != 2) {
-                                positionIndex.value = 2
-                            }
-                        }
-
-                    }
-                    Box {
-                        //供选择列表
-                        LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
-                            //前
-                            itemsIndexed(showIcon) { index, _ ->
-                                if (index == 2) {
-                                    PvpPositionIcon(R.drawable.ic_position_0)
+                        val spanCount = 5
+                        val showIcon = listOf(0, 0, 1, 0, 0)
+                        //站位图标在列表中的位置
+                        val positions = arrayListOf(0, 0, 0)
+                        val filledCount1 = spanCount - character0.size % spanCount
+                        positions[1] =
+                            (spanCount + character0.size + filledCount1) / spanCount
+                        val filledCount2 = spanCount - character1.size % spanCount
+                        positions[0] =
+                            ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
+                        //滚动监听
+                        when (scrollState.firstVisibleItemIndex) {
+                            //后
+                            positions[0] -> {
+                                if (positionIndex.value != 0) {
+                                    positionIndex.value = 0
                                 }
                             }
-                            items(character0) {
-                                PvpIconItem(selectedIds, it)
+                            scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
+                                if (scrollState.layoutInfo.totalItemsCount != 0) {
+                                    positionIndex.value = 0
+                                }
                             }
                             //中
-                            items(filledCount1) {
-                                CommonSpacer()
-                            }
-                            itemsIndexed(showIcon) { index, _ ->
-                                if (index == 2) {
-                                    PvpPositionIcon(R.drawable.ic_position_1)
+                            positions[1] -> {
+                                if (positionIndex.value != 1) {
+                                    positionIndex.value = 1
                                 }
                             }
-                            items(character1) {
-                                PvpIconItem(selectedIds, it)
-                            }
-                            //后
-                            items(filledCount2) {
-                                CommonSpacer()
-                            }
-                            itemsIndexed(showIcon) { index, _ ->
-                                if (index == 2) {
-                                    PvpPositionIcon(R.drawable.ic_position_2)
+                            //前
+                            positions[2] -> {
+                                if (positionIndex.value != 2) {
+                                    positionIndex.value = 2
                                 }
                             }
-                            items(character2) {
-                                PvpIconItem(selectedIds, it)
-                            }
-                            items(spanCount) {
-                                Spacer(modifier = Modifier.height(Dimen.iconSize))
-                            }
+
                         }
-                        //指示器
-                        Row(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(
-                                    bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
-                                    start = Dimen.mediuPadding,
-                                    end = Dimen.fabMargin
-                                )
-                        ) {
-                            val icons = arrayListOf(
-                                R.drawable.ic_position_2,
-                                R.drawable.ic_position_1,
-                                R.drawable.ic_position_0,
-                            )
-                            icons.forEachIndexed { index, it ->
-                                val modifier = if (positionIndex.value == index) {
-                                    Modifier
-                                        .padding(Dimen.smallPadding)
-                                        .border(
-                                            Dimen.border,
-                                            MaterialTheme.colors.primary,
-                                            CircleShape
-                                        )
-                                } else {
-                                    Modifier.padding(Dimen.smallPadding)
+                        Box {
+                            //供选择列表
+                            LazyVerticalGrid(
+                                cells = GridCells.Fixed(spanCount),
+                                state = scrollState
+                            ) {
+                                //前
+                                itemsIndexed(showIcon) { index, _ ->
+                                    if (index == 2) {
+                                        PvpPositionIcon(R.drawable.ic_position_0)
+                                    }
                                 }
-                                IconCompose(
-                                    data = it,
-                                    modifier = modifier
-                                        .size(Dimen.fabIconSize)
-                                        .clip(CircleShape)
-                                ) {
-                                    positionIndex.value = index
-                                    scope.launch {
-                                        scrollState.scrollToItem(positions[index])
+                                items(character0) {
+                                    PvpIconItem(selectedIds, it)
+                                }
+                                //中
+                                items(filledCount1) {
+                                    CommonSpacer()
+                                }
+                                itemsIndexed(showIcon) { index, _ ->
+                                    if (index == 2) {
+                                        PvpPositionIcon(R.drawable.ic_position_1)
+                                    }
+                                }
+                                items(character1) {
+                                    PvpIconItem(selectedIds, it)
+                                }
+                                //后
+                                items(filledCount2) {
+                                    CommonSpacer()
+                                }
+                                itemsIndexed(showIcon) { index, _ ->
+                                    if (index == 2) {
+                                        PvpPositionIcon(R.drawable.ic_position_2)
+                                    }
+                                }
+                                items(character2) {
+                                    PvpIconItem(selectedIds, it)
+                                }
+                                items(spanCount) {
+                                    Spacer(modifier = Modifier.height(Dimen.iconSize))
+                                }
+                            }
+                            //指示器
+                            Row(
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .padding(
+                                        bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
+                                        start = Dimen.mediuPadding,
+                                        end = Dimen.fabMargin
+                                    )
+                            ) {
+                                val icons = arrayListOf(
+                                    R.drawable.ic_position_2,
+                                    R.drawable.ic_position_1,
+                                    R.drawable.ic_position_0,
+                                )
+                                icons.forEachIndexed { index, it ->
+                                    val modifier = if (positionIndex.value == index) {
+                                        Modifier
+                                            .padding(Dimen.smallPadding)
+                                            .border(
+                                                Dimen.border,
+                                                MaterialTheme.colors.primary,
+                                                CircleShape
+                                            )
+                                    } else {
+                                        Modifier.padding(Dimen.smallPadding)
+                                    }
+                                    IconCompose(
+                                        data = it,
+                                        modifier = modifier
+                                            .size(Dimen.fabIconSize)
+                                            .clip(CircleShape)
+                                    ) {
+                                        positionIndex.value = index
+                                        scope.launch {
+                                            scrollState.scrollToItem(positions[index])
+                                        }
                                     }
                                 }
                             }

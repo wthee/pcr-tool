@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -36,6 +37,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色信息
  */
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
@@ -174,103 +176,113 @@ fun CharacterDetail(
                     .verticalScroll(scrollState)
                     .fillMaxSize()
             ) {
-                Box(modifier = Modifier.clickable {
-                    //跳转角色图片列表
-                    toPics(unitId)
-                }) {
-                    //图片
-                    CharacterCard(
-                        CharacterIdUtil.getMaxCardUrl(unitId, MainActivity.r6Ids.contains(unitId)),
-                        scrollState = scrollState,
-                        showLoading = false
-                    )
-                    //星级
-                    StarSelect(
-                        rarityMax.value,
-                        rarity.value ?: 5,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = Dimen.largePadding)
-                    )
-                }
-                if (levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()) {
-                    //页面
-                    Card(
-                        shape = CardTopShape,
-                        elevation = Dimen.cardElevation,
-                        modifier = Modifier.padding(top = marginTop.dp)
-                    ) {
-                        Column(
+                FadeAnimation {
+                    Box(modifier = Modifier.clickable {
+                        //跳转角色图片列表
+                        toPics(unitId)
+                    }) {
+                        //图片
+                        CharacterCard(
+                            CharacterIdUtil.getMaxCardUrl(
+                                unitId,
+                                MainActivity.r6Ids.contains(unitId)
+                            ),
+                            scrollState = scrollState
+                        )
+                        //星级
+                        StarSelect(
+                            rarityMax.value,
+                            rarity.value ?: 5,
                             modifier = Modifier
-                                .padding(Dimen.smallPadding)
-                                .fillMaxSize()
-                        ) {
-                            //等级
-                            Text(
-                                text = sliderLevel.value.toString(),
-                                color = MaterialTheme.colors.primary,
-                                style = MaterialTheme.typography.h6,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            )
-                            Slider(
-                                value = sliderLevel.value.toFloat(),
-                                onValueChange = { sliderLevel.value = it.toInt() },
-                                onValueChangeFinished = {
-                                    if (sliderLevel.value != 0) {
-                                        attrViewModel.levelValue.postValue(sliderLevel.value)
-                                    }
-                                },
-                                valueRange = 1f..levelMax.value.toFloat(),
-                                modifier = Modifier
-                                    .fillMaxWidth(0.618f)
-                                    .align(Alignment.CenterHorizontally)
-                            )
-                            //属性
-                            AttrList(attrs = allData.value!!.sumAttr.all())
-                            MainText(
-                                text = stringResource(id = R.string.title_story_attr),
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = Dimen.largePadding, bottom = Dimen.smallPadding)
-                            )
-                            //剧情属性
-                            AttrList(attrs = allData.value!!.stroyAttr.allNotZero())
-                            //RANK 装备
-                            CharacterEquip(
-                                unitId, rank.value!!,
-                                allData.value!!.equips,
-                                toEquipDetail, toRankEquip,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            )
-                            //显示专武
-                            if (allData.value!!.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-                                UniqueEquip(
-                                    uniqueEquipLevelMax.value,
-                                    sliderUniqueEquipLevel,
-                                    allData.value!!.uniqueEquip
-                                )
-                            }
-                            //技能
-                            CharacterSkill(
-                                id = unitId,
-                                level = level.value!!,
-                                atk = allData.value!!.sumAttr.atk.int
-                            )
-                        }
-                    }
-                } else {
-                    //未知角色占位页面
-                    if (unknown) {
-                        //等级
-                        Text(
-                            text = stringResource(R.string.unknown_character),
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.h6,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.align(Alignment.Center)
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = Dimen.largePadding)
                         )
                     }
                 }
+                SlideAnimation {
+                    if (levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()) {
+                        //页面
+                        Card(
+                            shape = CardTopShape,
+                            elevation = Dimen.cardElevation,
+                            modifier = Modifier.padding(top = marginTop.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(Dimen.smallPadding)
+                                    .fillMaxSize()
+                            ) {
+                                //等级
+                                Text(
+                                    text = sliderLevel.value.toString(),
+                                    color = MaterialTheme.colors.primary,
+                                    style = MaterialTheme.typography.h6,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                                Slider(
+                                    value = sliderLevel.value.toFloat(),
+                                    onValueChange = { sliderLevel.value = it.toInt() },
+                                    onValueChangeFinished = {
+                                        if (sliderLevel.value != 0) {
+                                            attrViewModel.levelValue.postValue(sliderLevel.value)
+                                        }
+                                    },
+                                    valueRange = 1f..levelMax.value.toFloat(),
+                                    modifier = Modifier
+                                        .fillMaxWidth(0.618f)
+                                        .align(Alignment.CenterHorizontally)
+                                )
+                                //属性
+                                AttrList(attrs = allData.value!!.sumAttr.all())
+                                MainText(
+                                    text = stringResource(id = R.string.title_story_attr),
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(
+                                            top = Dimen.largePadding,
+                                            bottom = Dimen.smallPadding
+                                        )
+                                )
+                                //剧情属性
+                                AttrList(attrs = allData.value!!.stroyAttr.allNotZero())
+                                //RANK 装备
+                                CharacterEquip(
+                                    unitId, rank.value!!,
+                                    allData.value!!.equips,
+                                    toEquipDetail, toRankEquip,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                                //显示专武
+                                if (allData.value!!.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                                    UniqueEquip(
+                                        uniqueEquipLevelMax.value,
+                                        sliderUniqueEquipLevel,
+                                        allData.value!!.uniqueEquip
+                                    )
+                                }
+                                //技能
+                                CharacterSkill(
+                                    id = unitId,
+                                    level = level.value!!,
+                                    atk = allData.value!!.sumAttr.atk.int
+                                )
+                            }
+                        }
+                    } else {
+                        //未知角色占位页面
+                        if (unknown) {
+                            //等级
+                            Text(
+                                text = stringResource(R.string.unknown_character),
+                                color = MaterialTheme.colors.primary,
+                                style = MaterialTheme.typography.h6,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
+                }
+
             }
             Row(
                 modifier = Modifier
@@ -451,7 +463,7 @@ private fun UniqueEquip(
                         modifier = Modifier.padding(top = Dimen.smallPadding)
                     )
                 }
-                MainSubText(
+                Subtitle2(
                     text = it.getDesc(),
                     modifier = Modifier.padding(start = Dimen.mediuPadding)
                 )

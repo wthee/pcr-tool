@@ -18,8 +18,8 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.compose.EnterAnimation
-import cn.wthee.pcrtool.ui.compose.PopEnterAnimation
+import cn.wthee.pcrtool.ui.compose.FadeAnimation
+import cn.wthee.pcrtool.ui.compose.SlideAnimation
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
@@ -81,12 +81,10 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
     NavHost(navController, startDestination = Navigation.CHARACTER_LIST) {
         //首页
         composable(Navigation.CHARACTER_LIST) {
-            PopEnterAnimation {
-                CharacterList(
-                    actions.toCharacterDetail,
-                    viewModel
-                )
-            }
+            CharacterList(
+                actions.toCharacterDetail,
+                viewModel
+            )
         }
 
         //角色属性详情
@@ -100,18 +98,18 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
-                CharacterDetail(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    actions.toEquipDetail,
-                    actions.toCharacterBasicInfo,
-                    actions.toCharacteRankEquip,
-                    actions.toCharacteRankCompare,
-                    actions.toCharacteEquipCount,
-                    actions.toCharacterPic,
-                    viewModel
-                )
-            }
+
+            CharacterDetail(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                actions.toEquipDetail,
+                actions.toCharacterBasicInfo,
+                actions.toCharacteRankEquip,
+                actions.toCharacteRankCompare,
+                actions.toCharacteEquipCount,
+                actions.toCharacterPic,
+                viewModel
+            )
+
         }
 
         //角色资料
@@ -122,7 +120,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            SlideAnimation {
                 CharacterBasicInfo(
                     unitId = arguments.getInt(Navigation.UNIT_ID)
                 )
@@ -137,16 +135,16 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-
-            CharacterAllPicture(
-                unitId = arguments.getInt(Navigation.UNIT_ID)
-            )
-
+            FadeAnimation {
+                CharacterAllPicture(
+                    unitId = arguments.getInt(Navigation.UNIT_ID)
+                )
+            }
         }
 
         //装备列表
         composable(Navigation.EQUIP_LIST) {
-            EnterAnimation {
+            SlideAnimation {
                 EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
             }
         }
@@ -159,7 +157,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            SlideAnimation {
                 EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
             }
         }
@@ -172,7 +170,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            SlideAnimation {
                 RankEquipList(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     toEquipDetail = actions.toEquipDetail,
@@ -197,7 +195,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            SlideAnimation {
                 RankCompare(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     maxRank = arguments.getInt(Navigation.MAX_RANK),
@@ -219,7 +217,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            SlideAnimation {
                 RankEquipCount(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     maxRank = arguments.getInt(Navigation.MAX_RANK),
@@ -232,7 +230,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //角色排行
         composable(Navigation.TOOL_LEADER) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 LeaderboardList()
             }
         }
@@ -240,7 +238,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //角色排行
         composable(Navigation.TOOL_GACHA) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 GachaList(actions.toCharacterDetail)
             }
         }
@@ -248,7 +246,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //剧情活动
         composable(Navigation.TOOL_EVENT) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 EventList(actions.toCharacterDetail)
             }
         }
@@ -256,7 +254,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //角色公会
         composable(Navigation.TOOL_GUILD) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 GuildList(actions.toCharacterDetail)
             }
         }
@@ -264,7 +262,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //团队战
         composable(Navigation.TOOL_CLAN) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 ClanBattleList(actions.toClanBossInfo)
             }
         }
@@ -279,7 +277,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            SlideAnimation {
                 ClanBossInfoPager(
                     arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
                     arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
@@ -290,7 +288,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //日历活动
         composable(Navigation.TOOL_CALENDAR) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 CalendarCompose()
             }
         }
@@ -298,7 +296,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            FadeAnimation {
                 PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
             }
         }
@@ -311,7 +309,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            FadeAnimation {
                 PvpSearchResult(
                     arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
                     actions.toCharacterDetail
@@ -319,10 +317,18 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             }
         }
 
+        //竞技场收藏
+        composable(Navigation.TOOL_PVP_FAVORITE) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            FadeAnimation {
+                PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
+            }
+        }
+
         //设置页面
         composable(Navigation.MAIN_SETTINGS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 MainSettings()
             }
         }
@@ -330,7 +336,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //更新通知
         composable(Navigation.APP_NOTICE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 NoticeList()
             }
         }
@@ -338,7 +344,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //公告
         composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
+            SlideAnimation {
                 NewsList(actions.toNewsDetail)
             }
         }
@@ -360,20 +366,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            EnterAnimation {
+            SlideAnimation {
                 NewsDetail(
                     arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
                     arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
                     arguments.getInt(Navigation.TOOL_NEWS_REGION)
                 )
-            }
-        }
-
-        //竞技场收藏
-        composable(Navigation.TOOL_PVP_FAVORITE) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            EnterAnimation {
-                PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
             }
         }
     }
