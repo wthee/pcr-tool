@@ -279,6 +279,7 @@ private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
     val clickType = remember {
         mutableStateOf(0)
     }
+
     MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
         when (clickType.value) {
             0 -> state.retry()

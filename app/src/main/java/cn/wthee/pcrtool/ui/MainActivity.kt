@@ -17,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -166,7 +165,6 @@ fun Home() {
 @Composable
 fun FabMain(navController: NavHostController, modifier: Modifier) {
     val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
-    val context = LocalContext.current
 
     FabCompose(icon, modifier = modifier) {
         when (icon) {

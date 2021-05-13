@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.CardTopShape
@@ -19,6 +20,8 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 
@@ -89,10 +92,14 @@ fun IconCompose(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
+    val context = LocalContext.current
+
     val mModifier = if (onClick != null) {
         Modifier
             .clip(Shapes.small)
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick.vibrate {
+                VibrateUtil(context).single()
+            })
             .sizeIn(
                 minWidth = Dimen.iconMinSize, minHeight = Dimen.iconMinSize,
                 maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize

@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.vibrate
 
 /**
  * 通用悬浮按钮
@@ -19,7 +21,9 @@ fun FabCompose(iconType: MainIconType, modifier: Modifier = Modifier, onClick: (
     val context = LocalContext.current
 
     FloatingActionButton(
-        onClick = onClick,
+        onClick = onClick.vibrate {
+            VibrateUtil(context).single()
+        },
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         backgroundColor = MaterialTheme.colors.onPrimary,
         contentColor = MaterialTheme.colors.primary,
@@ -39,6 +43,8 @@ fun ExtendedFabCompose(
     text: String,
     onClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     ExtendedFloatingActionButton(
         icon = {
             IconCompose(iconType.icon, modifier = Modifier.size(Dimen.fabIconSize))
@@ -49,7 +55,9 @@ fun ExtendedFabCompose(
                 style = MaterialTheme.typography.subtitle2,
             )
         },
-        onClick = onClick,
+        onClick = onClick.vibrate {
+            VibrateUtil(context).single()
+        },
         elevation = FloatingActionButtonDefaults.elevation(Dimen.fabElevation),
         backgroundColor = MaterialTheme.colors.onPrimary,
         contentColor = MaterialTheme.colors.primary,

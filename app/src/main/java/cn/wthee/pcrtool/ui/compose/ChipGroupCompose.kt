@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.getSectionTextColor
+import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.accompanist.flowlayout.FlowRow
 
 
@@ -45,6 +47,7 @@ fun ChipGroup(
  */
 @Composable
 fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: Int, type: Int) {
+    val context = LocalContext.current
     //背景色
     val backgroundColor = if (selectIndex.value == index)
         colorResource(id = R.color.alpha_primary)
@@ -67,6 +70,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
             .clip(CircleShape)
             .background(backgroundColor, CircleShape)
             .clickable {
+                VibrateUtil(context).single()
                 selectIndex.value = index
             }
     ) {

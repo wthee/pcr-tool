@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +31,9 @@ import cn.wthee.pcrtool.ui.compose.MenuAnimation
 import cn.wthee.pcrtool.ui.compose.defaultTween
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.addToClip
+import cn.wthee.pcrtool.utils.vibrate
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import kotlinx.coroutines.launch
 
@@ -244,13 +247,17 @@ fun MenuItem(
     modifier: Modifier,
     action: () -> Unit
 ) {
+    val context = LocalContext.current
+
     Card(
         backgroundColor = backgroundColor,
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)
             .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
-            .clickable(onClick = action)
+            .clickable(onClick = action.vibrate {
+                VibrateUtil(context).single()
+            })
     ) {
         Box {
             Text(

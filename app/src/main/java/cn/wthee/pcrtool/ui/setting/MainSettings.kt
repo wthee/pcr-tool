@@ -25,11 +25,8 @@ import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.compose.LineCompose
 import cn.wthee.pcrtool.ui.compose.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.openWebView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -139,9 +136,12 @@ fun MainSettings() {
 
 @Composable
 private fun SettingItem(title: String, summary: String, onClick: () -> Unit = {}) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick.vibrate {
+                VibrateUtil(context).single()
+            })
             .fillMaxWidth()
             .padding(Dimen.largePadding)
     ) {

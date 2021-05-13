@@ -67,6 +67,7 @@ fun RankEquipListItem(
     else
         MaterialTheme.colors.surface
 
+
     MainCard(
         modifier = Modifier.padding(Dimen.mediuPadding),
         onClick = {

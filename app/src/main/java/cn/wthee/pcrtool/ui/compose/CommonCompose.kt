@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -17,7 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
+import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
@@ -150,10 +153,13 @@ fun LineCompose(modifier: Modifier = Modifier) {
  */
 @Composable
 fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    val context = LocalContext.current
     Button(
         shape = Shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
-        onClick = onClick
+        onClick = onClick.vibrate {
+            VibrateUtil(context).single()
+        }
     ) {
         Text(text = text, style = MaterialTheme.typography.button)
     }
@@ -169,10 +175,14 @@ fun SubButton(
     color: Color = Color.Unspecified,
     onClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     OutlinedButton(
         shape = Shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
-        onClick = onClick
+        onClick = onClick.vibrate {
+            VibrateUtil(context).single()
+        }
     ) {
         Text(text = text, color = color, style = MaterialTheme.typography.button)
     }
@@ -257,12 +267,16 @@ fun MainCard(
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
+
     var mModifier = modifier
         .fillMaxWidth()
         .heightIn(min = Dimen.cardHeight)
         .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
     if (onClick != null) {
-        mModifier = mModifier.clickable(onClick = onClick)
+        mModifier = mModifier.clickable(onClick = onClick.vibrate {
+            VibrateUtil(context).single()
+        })
     }
 
     Card(
