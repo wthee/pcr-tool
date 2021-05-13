@@ -265,6 +265,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             SlideAnimation {
                 ClanBattleList(actions.toClanBossInfo)
             }
+
         }
 
         //团队战详情
@@ -296,7 +297,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            FadeAnimation {
+            SlideAnimation {
                 PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
             }
         }
@@ -366,7 +367,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
+            FadeAnimation {
                 NewsDetail(
                     arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
                     arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",

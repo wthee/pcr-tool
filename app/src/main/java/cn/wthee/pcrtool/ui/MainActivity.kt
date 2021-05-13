@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -30,10 +31,7 @@ import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.UMengInitializer
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
@@ -168,6 +166,7 @@ fun Home() {
 @Composable
 fun FabMain(navController: NavHostController, modifier: Modifier) {
     val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
+    val context = LocalContext.current
 
     FabCompose(icon, modifier = modifier) {
         when (icon) {

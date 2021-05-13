@@ -30,8 +30,7 @@ import com.google.accompanist.imageloading.ImageLoadState
 fun CharacterCard(
     url: String,
     clip: Boolean = false,
-    scrollState: ScrollState? = null,
-    showLoading: Boolean = true
+    scrollState: ScrollState? = null
 ) {
 
     val modifier = Modifier
@@ -51,11 +50,8 @@ fun CharacterCard(
             painter = when (painter.loadState) {
                 is ImageLoadState.Success -> painter
                 is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                else -> if (showLoading) {
-                    rememberCoilPainter(request = R.drawable.load)
-                } else {
-                    painter
-                }
+                else -> rememberCoilPainter(request = R.drawable.load)
+
             },
             contentDescription = null,
             modifier = modifier

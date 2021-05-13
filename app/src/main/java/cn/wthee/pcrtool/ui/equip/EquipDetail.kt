@@ -70,7 +70,9 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
                 //属性
                 AttrList(attrs = it.attr.allNotZero())
                 //合成素材
-                EquipMaterialList(it)
+                SlideAnimation {
+                    EquipMaterialList(it)
+                }
             }
             Box(modifier = Modifier.align(Alignment.BottomEnd)) {
                 //装备收藏

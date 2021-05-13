@@ -16,6 +16,7 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
+    <string name="level">等级：%d</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
@@ -42,6 +43,7 @@
     <string name="pcrdfans">公主连结Re: Dive Fan Club</string>
     <string name="pcrdfans_tip">竞技场查询数据来源</string>
     <string name="pcrdfans_url">https://pcrdfans.com</string>
+    <string name="pcrdfans_upload_url">https://pcrdfans.com/battle/upload</string>
     <string name="leader_source">AppMedia</string>
     <string name="leader_tip">角色排行数据来源</string>
     <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
@@ -86,6 +88,8 @@
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
     <string name="pvp_research">前往查询</string>
+    <string name="pvp_info_add">添加</string>
+    <string name="pvp_info_add_tip">添加对战记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>

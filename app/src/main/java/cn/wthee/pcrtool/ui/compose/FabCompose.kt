@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
 
@@ -14,6 +15,8 @@ import cn.wthee.pcrtool.ui.theme.Dimen
  */
 @Composable
 fun FabCompose(iconType: MainIconType, modifier: Modifier = Modifier, onClick: () -> Unit) {
+
+    val context = LocalContext.current
 
     FloatingActionButton(
         onClick = onClick,

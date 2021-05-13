@@ -164,4 +164,14 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
      * 群
      */
     GROUP(27, Icons.Rounded.GroupAdd),
+
+    /**
+     * 友链
+     */
+    FRIEND_LINK(28, Icons.Rounded.Link),
+
+    /**
+     * 添加对战信息
+     */
+    PVP_ADD(29, Icons.Rounded.Assistant)
 }

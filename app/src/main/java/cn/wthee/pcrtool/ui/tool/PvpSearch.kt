@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -17,6 +18,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +39,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.ToastUtil
 import cn.wthee.pcrtool.utils.fillZero
+import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -92,7 +95,11 @@ fun PvpSearchCompose(
     val positionIndex = remember {
         mutableStateOf(2)
     }
-
+    val context = LocalContext.current
+    val url = stringResource(id = R.string.pcrdfans_url)
+    val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
+    val addTip = stringResource(id = R.string.pvp_info_add_tip)
+    val urlTip = stringResource(id = R.string.pcrdfans_com)
 
     Box(
         modifier = Modifier
@@ -105,17 +112,33 @@ fun PvpSearchCompose(
                 .fillMaxSize()
                 .background(colorResource(id = R.color.bg_gray))
         ) {
+            //标题
+            MainTitleText(
+                text = stringResource(id = R.string.pcrdfans),
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .clickable {
+                        openWebView(context, url, urlTip)
+                    }
+            )
             //已选择列表
-            StaggeredVerticalGrid(
-                spanCount = 5, modifier = Modifier
+            Row(
+                modifier = Modifier
                     .padding(top = Dimen.mediuPadding)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
                 selectedIds.forEach {
                     PvpIconItem(selectedIds = selectedIds, it = it)
                 }
             }
+            //供选择列表
             SlideAnimation {
-                Card(modifier = Modifier.fillMaxWidth(), shape = CardTopShape) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = Dimen.cardElevation,
+                    shape = CardTopShape
+                ) {
                     data.value?.let { dataValue ->
                         val character0 = dataValue.filter {
                             it.position in 0..299
@@ -253,7 +276,6 @@ fun PvpSearchCompose(
 
         }
 
-        //fab
         Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -265,6 +287,14 @@ fun PvpSearchCompose(
                 modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
             ) {
                 toFavorite()
+            }
+            //添加信息
+            FabCompose(
+                iconType = MainIconType.PVP_ADD,
+                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+            ) {
+                //打开网页
+                openWebView(context, addUrl, addTip)
             }
             //查询
             val tip = stringResource(id = R.string.tip_select_5)
@@ -296,9 +326,7 @@ private fun PvpPositionIcon(iconId: Int) {
         IconCompose(
             data = iconId,
             modifier = Modifier
-                .align(
-                    Alignment.Center
-                )
+                .align(Alignment.Center)
                 .size(Dimen.fabIconSize)
         )
     }
@@ -312,8 +340,9 @@ fun PvpIconItem(
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
+    val context = LocalContext.current
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {

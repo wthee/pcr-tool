@@ -28,9 +28,14 @@ fun <T> defaultTween(): TweenSpec<T> {
  */
 @ExperimentalAnimationApi
 @Composable
-fun SlideAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
+fun SlideAnimation(
+    modifier: Modifier = Modifier,
+    visible: Boolean = true,
+    content: @Composable () -> Unit
+) {
     AnimatedVisibility(
         visible = visible,
+        modifier = modifier,
         enter = slideInVertically(
             initialOffsetY = { 60 },
             animationSpec = defaultSpring()

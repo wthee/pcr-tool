@@ -83,7 +83,7 @@ fun EquipList(
                     cells = GridCells.Fixed(4),
                     modifier = Modifier
                         .padding(Dimen.mediuPadding)
-                        .background(color = MaterialTheme.colors.background, shape = CardTopShape)
+                        .background(color = MaterialTheme.colors.background)
                 ) {
                     items(equips) { equip ->
                         EquipItem(filterValue, equip, toEquipDetail)

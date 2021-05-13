@@ -234,6 +234,7 @@ fun CharacterDetail(
                                 )
                                 //属性
                                 AttrList(attrs = allData.value!!.sumAttr.all())
+                                //剧情属性
                                 MainText(
                                     text = stringResource(id = R.string.title_story_attr),
                                     modifier = Modifier
@@ -243,7 +244,6 @@ fun CharacterDetail(
                                             bottom = Dimen.smallPadding
                                         )
                                 )
-                                //剧情属性
                                 AttrList(attrs = allData.value!!.stroyAttr.allNotZero())
                                 //RANK 装备
                                 CharacterEquip(

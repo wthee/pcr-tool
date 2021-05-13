@@ -32,6 +32,7 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
     val list = leaderViewModel.leaderData.observeAsState()
     val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
@@ -86,16 +87,29 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
                 }
             }
         }
-        //回到顶部
-        ExtendedFabCompose(
-            iconType = MainIconType.LEADER,
-            text = stringResource(id = R.string.tool_leader),
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
-            coroutineScope.launch {
-                state.scrollToItem(0)
+            //来源
+            val url = stringResource(id = R.string.leader_source_url)
+            val tip = stringResource(id = R.string.visit_detail)
+            FabCompose(
+                iconType = MainIconType.FRIEND_LINK,
+                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+            ) {
+                //打开网页
+                openWebView(context, url, tip)
+            }
+            //回到顶部
+            ExtendedFabCompose(
+                iconType = MainIconType.LEADER,
+                text = stringResource(id = R.string.tool_leader)
+            ) {
+                coroutineScope.launch {
+                    state.scrollToItem(0)
+                }
             }
         }
     }
