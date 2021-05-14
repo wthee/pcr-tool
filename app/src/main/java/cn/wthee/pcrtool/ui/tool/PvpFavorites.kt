@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 /**
  * 已收藏数据
  */
+@ExperimentalAnimationApi
 @Composable
 fun PvpFavorites(
     toCharacter: (Int) -> Unit,
@@ -52,7 +54,7 @@ fun PvpFavorites(
             }
             //已收藏
             if (list.value!!.isNotEmpty()) {
-                ExtendedFabCompose(
+                FabCompose(
                     iconType = MainIconType.LOVE_FILL,
                     text = stringResource(
                         id = R.string.favorite_count,

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -47,7 +46,7 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
     val loved = remember {
         mutableStateOf(filter.value?.starIds?.contains(equipId) ?: false)
     }
-
+    val text = if (loved.value) "" else stringResource(id = R.string.love_equip)
 
     equipMaxData?.let {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -76,33 +75,18 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
             }
             Box(modifier = Modifier.align(Alignment.BottomEnd)) {
                 //装备收藏
-                AnimatedVisibility(visible = loved.value) {
-                    FabCompose(
-                        iconType = MainIconType.LOVE_FILL,
-                        modifier = Modifier.padding(
-                            end = Dimen.fabMarginEnd,
-                            start = Dimen.fabMargin,
-                            top = Dimen.fabMargin,
-                            bottom = Dimen.fabMargin,
-                        )
-                    ) {
-                        filter.value?.addOrRemove(equipId)
-                        loved.value = !loved.value
-                    }
-                }
-                AnimatedVisibility(visible = !loved.value) {
-                    ExtendedFabCompose(
-                        text = stringResource(id = R.string.love_equip),
-                        iconType = MainIconType.LOVE_LINE,
-                        modifier = Modifier.padding(
-                            end = Dimen.fabMarginEnd,
-                            start = Dimen.fabMargin,
-                            bottom = Dimen.fabMargin
-                        )
-                    ) {
-                        filter.value?.addOrRemove(equipId)
-                        loved.value = !loved.value
-                    }
+                FabCompose(
+                    iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                    modifier = Modifier.padding(
+                        end = Dimen.fabMarginEnd,
+                        start = Dimen.fabMargin,
+                        top = Dimen.fabMargin,
+                        bottom = Dimen.fabMargin,
+                    ),
+                    text = text
+                ) {
+                    filter.value?.addOrRemove(equipId)
+                    loved.value = !loved.value
                 }
             }
 
@@ -202,10 +186,13 @@ private fun EquipDropAreaList(
     val selectId =
         equipmentViewModel.selectId.observeAsState().value ?: Constants.UNKNOWN_EQUIP_ID
     val loading = equipmentViewModel.loading.observeAsState().value ?: false
+    val alpha = if (loading) 1f else 0f
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-        AnimatedVisibility(visible = loading) {
-            LinearProgressIndicator(modifier = Modifier.width(Dimen.iconSize))
-        }
+        LinearProgressIndicator(
+            modifier = Modifier
+                .width(Dimen.iconSize)
+                .alpha(alpha)
+        )
         LazyColumn {
             items(dropInfoList) {
                 val pre = when (it.questId / 1000000) {

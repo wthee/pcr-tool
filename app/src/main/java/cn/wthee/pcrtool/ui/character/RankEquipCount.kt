@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -28,6 +29,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -133,7 +135,7 @@ fun RankEquipCount(
                 }
             }
             //选择
-            ExtendedFabCompose(
+            FabCompose(
                 iconType = MainIconType.RANK_SELECT,
                 text = stringResource(id = R.string.rank_select),
                 modifier = Modifier

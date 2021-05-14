@@ -13,7 +13,7 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 主菜单
      */
-    MAIN(0, Icons.Rounded.Widgets),
+    MAIN(0, Icons.Rounded.Add),
 
     /**
      * 返回
@@ -83,7 +83,7 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 角色
      */
-    CHARACTER(14, Icons.Rounded.Stars),
+    CHARACTER(14, Icons.Rounded.Grade),
 
     /**
      * 剧情活动
@@ -123,7 +123,7 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 更新通知
      */
-    NOTICE(19, Icons.Rounded.NotificationImportant),
+    NOTICE(19, Icons.Rounded.NotificationsNone),
 
     /**
      * 选中

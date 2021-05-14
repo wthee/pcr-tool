@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 /**
  * 剧情活动
  */
+@ExperimentalAnimationApi
 @Composable
 fun EventList(
     toCharacterDetail: (Int) -> Unit,
@@ -55,7 +57,7 @@ fun EventList(
             }
         }
         //回到顶部
-        ExtendedFabCompose(
+        FabCompose(
             iconType = MainIconType.EVENT,
             text = stringResource(id = R.string.tool_event),
             modifier = Modifier

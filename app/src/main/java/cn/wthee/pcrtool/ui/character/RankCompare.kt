@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -38,6 +39,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色 RANK 对比
  */
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -145,7 +147,7 @@ fun RankCompare(
                 }
                 AttrCompare(attrCompareData)
             }
-            ExtendedFabCompose(
+            FabCompose(
                 iconType = MainIconType.RANK_SELECT,
                 text = stringResource(id = R.string.rank_select),
                 modifier = Modifier

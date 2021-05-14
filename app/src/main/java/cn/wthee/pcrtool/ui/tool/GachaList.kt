@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色卡池页面
  */
+@ExperimentalAnimationApi
 @Composable
 fun GachaList(
     toCharacterDetail: (Int) -> Unit,
@@ -52,7 +54,7 @@ fun GachaList(
             }
         }
         //回到顶部
-        ExtendedFabCompose(
+        FabCompose(
             iconType = MainIconType.GACHA,
             text = stringResource(id = R.string.tool_gacha),
             modifier = Modifier

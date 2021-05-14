@@ -2,8 +2,8 @@ package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 /**
@@ -56,13 +56,31 @@ fun SlideAnimation(
 fun FadeAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = defaultTween()),
+        enter = fadeIn(),
         exit = fadeOut(animationSpec = defaultTween()),
         content = content,
         initiallyVisible = false
     )
 }
 
+/**
+ * 展开动画
+ */
+@ExperimentalAnimationApi
+@Composable
+fun ExtendedAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = expandIn(expandFrom = Alignment.Center, animationSpec = defaultSpring()),
+        exit = shrinkOut(shrinkTowards = Alignment.Center, animationSpec = defaultTween()),
+        content = content,
+        initiallyVisible = false
+    )
+}
+
+/**
+ * 菜单动画
+ */
 @ExperimentalAnimationApi
 @Composable
 fun MenuAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
@@ -72,12 +90,8 @@ fun MenuAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
             initialOffsetY = { it / 4 },
             animationSpec = defaultSpring()
         ),
-        exit = slideOutVertically(
-            targetOffsetY = { it },
-            animationSpec = defaultTween()
-        ),
+        exit = fadeOut(),
         content = content,
-        initiallyVisible = false,
-        modifier = Modifier.fillMaxSize()
+        initiallyVisible = false
     )
 }

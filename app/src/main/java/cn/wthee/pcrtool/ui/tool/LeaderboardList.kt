@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +27,7 @@ import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @Composable
 fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) {
     leaderViewModel.getLeader()
@@ -103,7 +105,7 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
                 openWebView(context, url, tip)
             }
             //回到顶部
-            ExtendedFabCompose(
+            FabCompose(
                 iconType = MainIconType.LEADER,
                 text = stringResource(id = R.string.tool_leader)
             ) {

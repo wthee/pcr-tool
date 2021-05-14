@@ -112,7 +112,7 @@ fun CharacterList(
                 }
                 val count = list.value?.size ?: 0
                 // 数量显示&筛选按钮
-                ExtendedFabCompose(
+                FabCompose(
                     iconType = MainIconType.CHARACTER,
                     modifier = Modifier
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

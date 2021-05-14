@@ -390,13 +390,6 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 装备列表
-     */
-    val toEquipList: () -> Unit = {
-        navController.navigate(Navigation.EQUIP_LIST)
-    }
-
-    /**
      * 装备详情
      */
     val toEquipDetail: (Int) -> Unit = { equipId: Int ->
@@ -442,41 +435,6 @@ class NavActions(navController: NavHostController) {
 
 
     /**
-     * 角色排行
-     */
-    val toLeaderboard = {
-        navController.navigate(Navigation.TOOL_LEADER)
-    }
-
-    /**
-     * 角色卡池
-     */
-    val toGacha = {
-        navController.navigate(Navigation.TOOL_GACHA)
-    }
-
-    /**
-     * 剧情活动
-     */
-    val toEventStory = {
-        navController.navigate(Navigation.TOOL_EVENT)
-    }
-
-    /**
-     * 角色公会
-     */
-    val toGuildList = {
-        navController.navigate(Navigation.TOOL_GUILD)
-    }
-
-    /**
-     * 团队战
-     */
-    val toClanBattleList = {
-        navController.navigate(Navigation.TOOL_CLAN)
-    }
-
-    /**
      * 团队战 BOSS
      */
     val toClanBossInfo: (Int, Int) -> Unit = { clanId: Int, index: Int ->
@@ -485,45 +443,10 @@ class NavActions(navController: NavHostController) {
 
 
     /**
-     * 日历活动
-     */
-    val toCalendar = {
-        navController.navigate(Navigation.TOOL_CALENDAR)
-    }
-
-    /**
-     * 竞技场查询
-     */
-    val toPvpSearch = {
-        navController.navigate(Navigation.TOOL_PVP)
-    }
-
-    /**
      * 竞技场查询结果
      */
     val toPvpResult = { ids: String ->
         navController.navigate("${Navigation.TOOL_PVP_RESULT}/${ids}")
-    }
-
-    /**
-     * 设置
-     */
-    val toSettings = {
-        navController.navigate(Navigation.MAIN_SETTINGS)
-    }
-
-    /**
-     * 设置
-     */
-    val toNotice = {
-        navController.navigate(Navigation.APP_NOTICE)
-    }
-
-    /**
-     * 官方公告
-     */
-    val toNews = {
-        navController.navigate(Navigation.TOOL_NEWS)
     }
 
     /**

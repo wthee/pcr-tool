@@ -45,6 +45,7 @@ import kotlinx.coroutines.launch
 /**
  * 每月 BOSS 信息列表
  */
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
 fun ClanBattleList(
@@ -74,7 +75,7 @@ fun ClanBattleList(
             }
         }
         //回到顶部
-        ExtendedFabCompose(
+        FabCompose(
             iconType = MainIconType.CLAN,
             text = stringResource(id = R.string.tool_clan),
             modifier = Modifier

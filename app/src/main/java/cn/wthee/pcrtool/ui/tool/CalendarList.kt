@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,6 +32,7 @@ import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel()) {
@@ -63,7 +65,7 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
         }
 
         //回到顶部
-        ExtendedFabCompose(
+        FabCompose(
             iconType = MainIconType.CALENDAR,
             text = title + stringResource(id = R.string.tool_calendar),
             modifier = Modifier

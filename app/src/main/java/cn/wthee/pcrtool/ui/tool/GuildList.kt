@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色公会
  */
+@ExperimentalAnimationApi
 @Composable
 fun GuildList(
     toCharacterDetail: (Int) -> Unit,
@@ -51,7 +53,7 @@ fun GuildList(
             }
         }
         //回到顶部
-        ExtendedFabCompose(
+        FabCompose(
             iconType = MainIconType.GUILD,
             text = stringResource(id = R.string.tool_guild),
             modifier = Modifier

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.equip
 
 import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -43,6 +44,7 @@ import kotlinx.coroutines.launch
 /**
  * 装备列表
  */
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
@@ -94,7 +96,7 @@ fun EquipList(
                 }
                 val count = equips.size
                 // 数量显示&筛选按钮
-                ExtendedFabCompose(
+                FabCompose(
                     modifier = Modifier
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                         .align(Alignment.BottomEnd),

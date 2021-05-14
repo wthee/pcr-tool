@@ -67,7 +67,7 @@
     <string name="all">全部</string>
     <string name="title_love">收藏</string>
     <string name="loved">已收藏</string>
-    <string name="love_equip">收藏装备</string>
+    <string name="love_equip">点击收藏</string>
     <string name="sort_asc_desc">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>

@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 /**
  * 通知列表
  */
+@ExperimentalAnimationApi
 @Composable
 fun NoticeList(noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()) {
     noticeViewModel.getNotice()
@@ -73,7 +75,7 @@ fun NoticeList(noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()) {
             }
         }
         //回到顶部
-        ExtendedFabCompose(
+        FabCompose(
             iconType = icon,
             text = stringResource(id = R.string.app_notice),
             modifier = Modifier

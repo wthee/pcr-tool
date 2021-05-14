@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,6 +45,7 @@ import kotlinx.coroutines.launch
 /**
  * 公告列表
  */
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagingApi
 @ExperimentalPagerApi
@@ -99,7 +101,7 @@ fun NewsList(
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
             //回到顶部
-            ExtendedFabCompose(
+            FabCompose(
                 iconType = MainIconType.NEWS,
                 text = tabs[pagerState.currentPage],
                 modifier = Modifier

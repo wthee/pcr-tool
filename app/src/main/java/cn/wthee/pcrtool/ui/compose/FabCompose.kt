@@ -1,12 +1,20 @@
 package cn.wthee.pcrtool.ui.compose
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.*
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -15,11 +23,23 @@ import cn.wthee.pcrtool.utils.vibrate
 /**
  * 通用悬浮按钮
  */
+@ExperimentalAnimationApi
 @Composable
-fun FabCompose(iconType: MainIconType, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun FabCompose(
+    iconType: MainIconType,
+    modifier: Modifier = Modifier,
+    text: String = "",
+    onClick: () -> Unit
+) {
 
     val context = LocalContext.current
+    val fabAnim = animateFloatAsState(targetValue = if (text == "") 0f else 1f)
 
+    val mModifier = if (text != "") {
+        modifier.height(Dimen.fabSize)
+    } else {
+        modifier.size(Dimen.fabSize)
+    }
     FloatingActionButton(
         onClick = onClick.vibrate {
             VibrateUtil(context).single()
@@ -27,40 +47,21 @@ fun FabCompose(iconType: MainIconType, modifier: Modifier = Modifier, onClick: (
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         backgroundColor = MaterialTheme.colors.onPrimary,
         contentColor = MaterialTheme.colors.primary,
-        modifier = modifier.size(Dimen.fabSize),
+        modifier = mModifier,
     ) {
-        IconCompose(iconType.icon, modifier = Modifier.padding(Dimen.fabPadding))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(Dimen.fabPadding)
+        ) {
+            IconCompose(iconType.icon)
+            ExtendedAnimation(visible = fabAnim.value == 1f) {
+                Text(
+                    text = text,
+                    style = MaterialTheme.typography.subtitle2,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(end = Dimen.fabPadding)
+                )
+            }
+        }
     }
-}
-
-/**
- * 通用展开悬浮按钮
- */
-@Composable
-fun ExtendedFabCompose(
-    modifier: Modifier = Modifier,
-    iconType: MainIconType,
-    text: String,
-    onClick: () -> Unit
-) {
-    val context = LocalContext.current
-
-    ExtendedFloatingActionButton(
-        icon = {
-            IconCompose(iconType.icon, modifier = Modifier.size(Dimen.fabIconSize))
-        },
-        text = {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.subtitle2,
-            )
-        },
-        onClick = onClick.vibrate {
-            VibrateUtil(context).single()
-        },
-        elevation = FloatingActionButtonDefaults.elevation(Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.onPrimary,
-        contentColor = MaterialTheme.colors.primary,
-        modifier = modifier.height(Dimen.fabSize)
-    )
 }

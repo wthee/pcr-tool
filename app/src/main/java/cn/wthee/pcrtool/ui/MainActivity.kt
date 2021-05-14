@@ -142,7 +142,7 @@ fun Home() {
         }
         NavGraph(navController, navViewModel, actions)
         //菜单
-        MenuContent(navViewModel, actions)
+        MenuContent(navViewModel, navController)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             DownloadCompose(navViewModel)
             FabMain(
@@ -162,6 +162,7 @@ fun Home() {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun FabMain(navController: NavHostController, modifier: Modifier) {
     val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN

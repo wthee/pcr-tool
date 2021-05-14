@@ -298,7 +298,7 @@ fun PvpSearchCompose(
             }
             //查询
             val tip = stringResource(id = R.string.tip_select_5)
-            ExtendedFabCompose(
+            FabCompose(
                 iconType = MainIconType.PVP_SEARCH,
                 text = stringResource(id = R.string.pvp_search)
             ) {
@@ -340,7 +340,6 @@ fun PvpIconItem(
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
-    val context = LocalContext.current
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         val icon = if (it.unitId == 0) {

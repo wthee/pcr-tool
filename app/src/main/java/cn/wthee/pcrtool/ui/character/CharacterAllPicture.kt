@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,7 @@ import androidx.core.app.ActivityCompat.requestPermissions
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.ui.compose.ExtendedFabCompose
+import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.PagerIndicator
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
  * 角色图片
  *
  */
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
 fun CharacterAllPicture(unitId: Int) {
@@ -90,7 +92,7 @@ fun CharacterAllPicture(unitId: Int) {
         PagerIndicator(pagerState, modifier = Modifier.align(Alignment.BottomCenter))
 
         val unLoadToast = stringResource(id = R.string.wait_pic_load)
-        ExtendedFabCompose(
+        FabCompose(
             iconType = MainIconType.DWONLOAD,
             text = stringResource(id = R.string.download_pic),
             modifier = Modifier
