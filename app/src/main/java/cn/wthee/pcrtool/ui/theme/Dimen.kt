@@ -15,7 +15,7 @@ object Dimen {
 
     val fabSize = 40.dp
 
-    val fabIconSize = 28.dp
+    val fabIconSize = 26.dp
 
     val fabMargin = 16.dp
 

@@ -284,59 +284,81 @@ fun CharacterDetail(
                 }
 
             }
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            Column(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                horizontalAlignment = Alignment.End
             ) {
-                //收藏
-                FabCompose(
-                    iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
-                ) {
-                    filter.value?.addOrRemove(unitId)
-                    loved.value = !loved.value
-                }
-                //跳转至角色资料
-                FabCompose(
-                    iconType = MainIconType.CHARACTER_INTRO,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
-                ) {
-                    toCharacterBasicInfo(unitId)
-                }
-                //跳转至 RANK 对比页面
-                FabCompose(
-                    iconType = MainIconType.RANK_COMPARE,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                ) {
-                    toRankCompare(
-                        unitId,
-                        rankMax.value,
-                        level.value!!,
-                        rarity.value!!,
-                        uniqueEquipLevel.value!!
+                Row(
+                    modifier = Modifier.padding(
+                        bottom = Dimen.fabSmallMarginEnd,
+                        end = Dimen.fabMargin
                     )
-                }
-                //跳转至装备统计页面
-                FabCompose(
-                    iconType = MainIconType.EQUIP_CALC,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
                 ) {
-                    toEquipCount(unitId, rankMax.value)
-                }
-                //技能循环
-                FabCompose(iconType = MainIconType.SKILL_LOOP) {
-                    coroutineScope.launch {
-                        if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                            state.hide()
-                        } else {
-                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            state.show()
+                    //收藏
+                    FabCompose(
+                        iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        filter.value?.addOrRemove(unitId)
+                        loved.value = !loved.value
+                    }
+                    //跳转至图片
+                    FabCompose(
+                        iconType = MainIconType.IMAGE,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        toPics(unitId)
+                    }
+                    //跳转至角色资料
+                    FabCompose(
+                        iconType = MainIconType.CHARACTER_INTRO,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        toCharacterBasicInfo(unitId)
+                    }
+                    //技能循环
+                    FabCompose(
+                        iconType = MainIconType.SKILL_LOOP,
+                    ) {
+                        coroutineScope.launch {
+                            if (state.isVisible) {
+                                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+                                state.hide()
+                            } else {
+                                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                                state.show()
+                            }
                         }
                     }
                 }
+                Row(
+                    modifier = Modifier
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
+                    //跳转至 RANK 对比页面
+                    FabCompose(
+                        iconType = MainIconType.RANK_COMPARE,
+                        text = stringResource(id = R.string.compare),
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        toRankCompare(
+                            unitId,
+                            rankMax.value,
+                            level.value!!,
+                            rarity.value!!,
+                            uniqueEquipLevel.value!!
+                        )
+                    }
+                    //跳转至装备统计页面
+                    FabCompose(
+                        iconType = MainIconType.EQUIP_CALC,
+                        text = stringResource(id = R.string.count),
+                    ) {
+                        toEquipCount(unitId, rankMax.value)
+                    }
+                }
             }
+
 
         }
     }

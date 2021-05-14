@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,10 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.MainCard
-import cn.wthee.pcrtool.ui.compose.RankText
-import cn.wthee.pcrtool.ui.compose.getEquipIconUrl
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
@@ -28,6 +27,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 /**
  * 角色各 RANK 装备列表
  */
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun RankEquipList(
@@ -41,15 +41,17 @@ fun RankEquipList(
     val selectedRank = remember {
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
-
+    val spanCount = 3
     if (allRankEquip.isNotEmpty()) {
-        val spanCount = 3
-        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-            items(allRankEquip) {
-                RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
+        SlideAnimation {
+            LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+                items(allRankEquip) {
+                    RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
+                }
             }
         }
     }
+
 }
 
 /**
@@ -62,10 +64,13 @@ fun RankEquipListItem(
     toEquipDetail: (Int) -> Unit,
     navViewModel: NavViewModel,
 ) {
-    val color = if (unitPromotion.promotionLevel == selectedRank.value)
-        MaterialTheme.colors.primary
-    else
-        MaterialTheme.colors.surface
+    val colorAnim = animateColorAsState(
+        targetValue = if (unitPromotion.promotionLevel == selectedRank.value)
+            MaterialTheme.colors.primary
+        else
+            MaterialTheme.colors.surface,
+        animationSpec = defaultSpring()
+    )
 
 
     MainCard(
@@ -79,7 +84,7 @@ fun RankEquipListItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color, Shapes.large),
+                .background(colorAnim.value, Shapes.large),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK

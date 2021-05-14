@@ -144,7 +144,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //装备列表
         composable(Navigation.EQUIP_LIST) {
-            SlideAnimation {
+            FadeAnimation {
                 EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
             }
         }
@@ -157,7 +157,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
+            FadeAnimation {
                 EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
             }
         }
@@ -170,7 +170,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
+            FadeAnimation {
                 RankEquipList(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     toEquipDetail = actions.toEquipDetail,
@@ -195,7 +195,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
+            FadeAnimation {
                 RankCompare(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     maxRank = arguments.getInt(Navigation.MAX_RANK),
@@ -217,7 +217,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
+            FadeAnimation {
                 RankEquipCount(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     maxRank = arguments.getInt(Navigation.MAX_RANK),
@@ -230,15 +230,15 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //角色排行
         composable(Navigation.TOOL_LEADER) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 LeaderboardList()
             }
         }
 
-        //角色排行
+        //角色卡池
         composable(Navigation.TOOL_GACHA) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 GachaList(actions.toCharacterDetail)
             }
         }
@@ -246,7 +246,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //剧情活动
         composable(Navigation.TOOL_EVENT) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 EventList(actions.toCharacterDetail)
             }
         }
@@ -254,7 +254,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //角色公会
         composable(Navigation.TOOL_GUILD) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 GuildList(actions.toCharacterDetail)
             }
         }
@@ -262,7 +262,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //团队战
         composable(Navigation.TOOL_CLAN) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 ClanBattleList(actions.toClanBossInfo)
             }
 
@@ -289,7 +289,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //日历活动
         composable(Navigation.TOOL_CALENDAR) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 CalendarCompose()
             }
         }
@@ -337,7 +337,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //更新通知
         composable(Navigation.APP_NOTICE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 NoticeList()
             }
         }
@@ -345,7 +345,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //公告
         composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
+            FadeAnimation {
                 NewsList(actions.toNewsDetail)
             }
         }

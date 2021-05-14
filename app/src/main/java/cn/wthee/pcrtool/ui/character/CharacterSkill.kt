@@ -17,5 +17,6 @@ fun CharacterSkill(
     Column {
         SkillCompose(level = level, atk = atk, id = id)
         CommonSpacer()
+        CommonSpacer()
     }
 }

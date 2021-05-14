@@ -46,7 +46,7 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
     val loved = remember {
         mutableStateOf(filter.value?.starIds?.contains(equipId) ?: false)
     }
-    val text = if (loved.value) "" else stringResource(id = R.string.love_equip)
+    val text = if (loved.value) "" else stringResource(id = R.string.title_love)
 
     equipMaxData?.let {
         Box(modifier = Modifier.fillMaxSize()) {

@@ -124,12 +124,14 @@ fun RankEquipCount(
                 val spanCount = 5
                 if (rankEquipMaterials.value != null) {
                     navViewModel.loading.postValue(false)
-                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                        items(items = rankEquipMaterials.value!!) { item ->
-                            EquipCountItem(item, toEquipDetail)
-                        }
-                        items(spanCount) {
-                            CommonSpacer()
+                    SlideAnimation {
+                        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+                            items(items = rankEquipMaterials.value!!) { item ->
+                                EquipCountItem(item, toEquipDetail)
+                            }
+                            items(spanCount) {
+                                CommonSpacer()
+                            }
                         }
                     }
                 }

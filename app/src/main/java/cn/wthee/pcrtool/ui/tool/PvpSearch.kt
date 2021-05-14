@@ -389,6 +389,7 @@ fun PvpIconItem(
 /**
  * 查询结果页面
  */
+@ExperimentalAnimationApi
 @Composable
 fun PvpSearchResult(
     idString: String,
@@ -416,67 +417,73 @@ fun PvpSearchResult(
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
-        if (result.value != null) {
-            navViewModel.loading.postValue(false)
-            if (result.value!!.message == "success") {
-                if (result.value!!.data!!.isNotEmpty()) {
-                    val list = result.value!!.data!!.sortedByDescending { it.up }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(colorResource(id = R.color.bg_gray))
-                    ) {
-                        //防守
-                        Row(
-                            modifier = Modifier
-                                .padding(top = Dimen.mediuPadding)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            ids.forEach {
-                                IconCompose(
-                                    data = CharacterIdUtil.getMaxIconUrl(
-                                        it.asInt,
-                                        MainActivity.r6Ids.contains(it.asInt)
-                                    ),
-                                    modifier = Modifier.padding(end = Dimen.smallPadding),
-                                ) {
-                                    toCharacter(it.asInt)
+    Column(modifier = Modifier.fillMaxSize()) {
+        //防守
+        Row(
+            modifier = Modifier
+                .padding(top = Dimen.mediuPadding)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            ids.forEach {
+                IconCompose(
+                    data = CharacterIdUtil.getMaxIconUrl(
+                        it.asInt,
+                        MainActivity.r6Ids.contains(it.asInt)
+                    ),
+                    modifier = Modifier.padding(end = Dimen.smallPadding),
+                ) {
+                    toCharacter(it.asInt)
+                }
+            }
+        }
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (result.value != null) {
+                navViewModel.loading.postValue(false)
+                if (result.value!!.message == "success") {
+                    if (result.value!!.data!!.isNotEmpty()) {
+                        //查询成功
+                        val list = result.value!!.data!!.sortedByDescending { it.up }
+                        SlideAnimation {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(colorResource(id = R.color.bg_gray))
+                            ) {
+                                //展示查询结果
+                                LazyColumn {
+                                    itemsIndexed(items = list) { index, item ->
+                                        PvpAtkTeam(
+                                            toCharacter,
+                                            favoritesList,
+                                            index + 1,
+                                            item,
+                                            region,
+                                            viewModel
+                                        )
+                                    }
+                                    item {
+                                        CommonSpacer()
+                                    }
                                 }
                             }
                         }
-                        //展示查询结果
-                        LazyColumn {
-                            itemsIndexed(items = list) { index, item ->
-                                PvpAtkTeam(
-                                    toCharacter,
-                                    favoritesList,
-                                    index + 1,
-                                    item,
-                                    region,
-                                    viewModel
-                                )
-                            }
-                            item {
-                                CommonSpacer()
-                            }
-                        }
+                    } else {
+                        MainText(
+                            text = stringResource(id = R.string.pvp_no_data),
+                            modifier = Modifier.align(Alignment.Center)
+                        )
                     }
                 } else {
                     MainText(
-                        text = stringResource(id = R.string.pvp_no_data),
+                        text = stringResource(id = R.string.data_get_error),
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-            } else {
-                MainText(
-                    text = stringResource(id = R.string.data_get_error),
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
         }
+
     }
 }
 
@@ -537,6 +544,7 @@ private fun PvpAtkTeam(
                             data = if (favorites) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
                             modifier = Modifier
                                 .size(Dimen.fabIconSize)
+                                .clip(CircleShape)
                                 .align(Alignment.CenterEnd)
                         ) {
                             scope.launch {

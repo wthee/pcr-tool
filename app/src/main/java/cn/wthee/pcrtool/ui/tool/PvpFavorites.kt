@@ -113,9 +113,7 @@ private fun PvpFavoriteItem(
                     }) {
                         IconCompose(
                             data = MainIconType.PVP_SEARCH.icon,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .size(Dimen.fabIconSize)
+                            modifier = Modifier.size(Dimen.fabIconSize)
                         )
                         MainContentText(text = stringResource(id = R.string.pvp_research))
                     }
@@ -123,9 +121,9 @@ private fun PvpFavoriteItem(
                     IconCompose(
                         data = MainIconType.LOVE_FILL.icon,
                         modifier = Modifier
-                            .clip(CircleShape)
                             .align(Alignment.CenterEnd)
                             .size(Dimen.fabIconSize)
+                            .clip(CircleShape)
                     ) {
                         //点击取消收藏，增加确认 dialog 操作
                         scope.launch {

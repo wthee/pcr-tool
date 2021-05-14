@@ -67,7 +67,6 @@
     <string name="all">全部</string>
     <string name="title_love">收藏</string>
     <string name="loved">已收藏</string>
-    <string name="love_equip">点击收藏</string>
     <string name="sort_asc_desc">排序方式</string>
     <string name="sort_desc">降序</string>
     <string name="sort_asc">升序</string>
@@ -119,6 +118,8 @@
     <string name="update_log">更新日志</string>
     <string name="visit_more_log">查看更多更新日志</string>
     <string name="to_update">更新</string>
+    <string name="compare">对比</string>
+    <string name="count">统计</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>

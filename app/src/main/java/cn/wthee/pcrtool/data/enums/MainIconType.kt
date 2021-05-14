@@ -185,4 +185,8 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
      */
     COUNTDOWN(31, Icons.Rounded.HourglassTop),
 
+    /**
+     * 图片
+     */
+    IMAGE(32, Icons.Rounded.Image),
 }

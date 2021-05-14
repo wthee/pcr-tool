@@ -145,7 +145,9 @@ fun RankCompare(
                         modifier = Modifier.weight(0.2f)
                     )
                 }
-                AttrCompare(attrCompareData)
+                SlideAnimation {
+                    AttrCompare(attrCompareData)
+                }
             }
             FabCompose(
                 iconType = MainIconType.RANK_SELECT,
