@@ -25,9 +25,7 @@ import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.dates
-import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.utils.hourInt
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -86,8 +84,8 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltNavGraphViewModel
 @Composable
 private fun CalendarItem(calendar: DropEvent) {
     val today = getToday()
-    val sd = calendar.getFixedStartTime()
-    val ed = calendar.getFixedEndTime()
+    val sd = calendar.startTime.formatTime()
+    val ed = calendar.endTime.formatTime()
     val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
     val comingSoon = today.hourInt(sd) < 0
 
@@ -111,46 +109,68 @@ private fun CalendarItem(calendar: DropEvent) {
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //开始日期
             MainTitleText(
-                text = calendar.getFixedStartTime()
-                    .substring(0, 10) + " ~ " + calendar.getFixedEndTime().substring(0, 10),
+                text = sd.substring(0, 10),
                 backgroundColor = color
             )
             //天数
             MainTitleText(
-                text = calendar.getFixedEndTime().dates(calendar.getFixedStartTime()),
-                modifier = Modifier.padding(start = Dimen.mediuPadding), backgroundColor = color
+                text = ed.days(sd),
+                modifier = Modifier.padding(start = Dimen.smallPadding), backgroundColor = color
             )
+            //计时
+            Row(
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (inProgress) {
+                    IconCompose(
+                        data = MainIconType.TIME_LEFT.icon,
+                        modifier = Modifier.size(Dimen.smallIconSize),
+                        tint = color
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.in_progress, ed.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = color
+                    )
+                }
+                if (comingSoon) {
+                    IconCompose(
+                        data = MainIconType.COUNTDOWN.icon,
+                        modifier = Modifier.size(Dimen.smallIconSize),
+                        tint = color
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.coming_soon, sd.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = color
+                    )
+                }
+            }
         }
 
         MainCard {
             Column(
                 modifier = Modifier.padding(Dimen.mediuPadding)
             ) {
-                if (inProgress) {
-                    MainContentText(
-                        text = stringResource(R.string.in_progress, ed.dates(today)),
-                        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-                        textAlign = TextAlign.Start
-                    )
-                }
-                if (comingSoon) {
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-                        textAlign = TextAlign.Start
-                    )
-                }
                 //内容
                 getTypeData(calendar).forEach {
                     Subtitle1(
                         text = it.title + it.info,
-                        color = colorResource(id = it.colorId),
+//                        color = colorResource(id = it.colorId),
                         modifier = Modifier.padding(
                             top = Dimen.smallPadding,
                             bottom = Dimen.smallPadding
                         ),
                     )
                 }
+                //结束日期
+                CaptionText(
+                    text = ed,
+                    modifier = Modifier.align(Alignment.End)
+                )
             }
         }
     }

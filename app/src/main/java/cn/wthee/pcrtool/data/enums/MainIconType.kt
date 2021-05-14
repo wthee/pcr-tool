@@ -173,5 +173,16 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 添加对战信息
      */
-    PVP_ADD(29, Icons.Rounded.Assistant)
+    PVP_ADD(29, Icons.Rounded.Assistant),
+
+    /**
+     * 剩余时间
+     */
+    TIME_LEFT(30, Icons.Rounded.Schedule),
+
+    /**
+     * 倒计时
+     */
+    COUNTDOWN(31, Icons.Rounded.HourglassTop),
+
 }

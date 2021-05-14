@@ -20,11 +20,6 @@ data class GachaInfo(
     fun getDesc() = description.replace("\\n", "\n")
 
     /**
-     * 获取开始结束时间
-     */
-    fun getDate() = startTime.substring(0, 10) + " ~ " + endTime.substring(0, 10)
-
-    /**
      * 获取卡池类型
      */
     fun getType() = when (gachaName) {

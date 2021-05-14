@@ -129,8 +129,8 @@
     <string name="temple">神殿调查</string>
     <string name="dungeon">地下城玛那</string>
     <string name="drop_x">掉落量 * %s </string>
-    <string name="in_progress">%s后结束</string>
-    <string name="coming_soon">%s后开始</string>
+    <string name="in_progress">%s</string>
+    <string name="coming_soon">%s</string>
 
     <!--  异常提示-->
     <string name="check_db_error">数据版本校验失败~</string>

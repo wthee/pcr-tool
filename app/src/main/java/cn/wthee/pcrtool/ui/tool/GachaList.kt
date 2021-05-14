@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -86,18 +87,28 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     ) {
         //标题
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-            MainTitleText(text = gachaInfo.getDate())
+            MainTitleText(text = gachaInfo.startTime.formatTime().substring(0, 10))
+            MainTitleText(
+                text = gachaInfo.endTime.days(gachaInfo.startTime),
+                modifier = Modifier.padding(start = Dimen.smallPadding)
+            )
+            //计时
             if (inProgress) {
-                MainTitleText(
-                    text = stringResource(R.string.in_progress, gachaInfo.endTime.dates(today)),
+                Row(
                     modifier = Modifier.padding(start = Dimen.smallPadding),
-                    backgroundColor = colorResource(id = R.color.news_update)
-                )
-            } else {
-                MainTitleText(
-                    text = gachaInfo.endTime.days(gachaInfo.startTime),
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconCompose(
+                        data = MainIconType.TIME_LEFT.icon,
+                        modifier = Modifier.size(Dimen.smallIconSize)
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.in_progress, gachaInfo.endTime.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = MaterialTheme.colors.primary
+                    )
+                }
             }
         }
         MainCard {
@@ -119,6 +130,11 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                 } else {
                     IconListCompose(icons, toCharacterDetail)
                 }
+                //结束日期
+                CaptionText(
+                    text = gachaInfo.endTime.formatTime(),
+                    modifier = Modifier.align(Alignment.End)
+                )
             }
         }
     }

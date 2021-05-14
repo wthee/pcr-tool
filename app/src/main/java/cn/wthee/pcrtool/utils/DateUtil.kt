@@ -10,6 +10,21 @@ val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
 val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
 
 /**
+ * 格式化时间
+ */
+fun String.formatTime(): String {
+    val list = this.split(" ")[0].split("/")
+    //2020/01/01 12:121
+    return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
+        var hms = this.substring(this.length - 8, this.length)
+        hms = hms.replace(' ', '0')
+        " $hms"
+    } else {
+        ""
+    }
+}
+
+/**
  * 获取当天时间
  */
 fun getToday(): String {
@@ -46,9 +61,11 @@ fun String.deleteSpace() = this.replace("\\s".toRegex(), "")
  */
 fun String.days(str2: String): String {
     return try {
-        val d1 = df.parse(this)!!
-        val d2 = df.parse(str2)!!
-        "${(d1.time - d2.time) / (60 * 60 * 1000 * 24)}天"
+        val d1 = df.parse(this.formatTime())!!
+        val d2 = df.parse(str2.formatTime())!!
+        // + 1s
+        val time = d1.time - d2.time + 1000
+        "${time / (60 * 60 * 1000 * 24)}天"
     } catch (e: Exception) {
         "0"
     }
@@ -59,15 +76,19 @@ fun String.days(str2: String): String {
  */
 fun String.dates(str2: String): String {
     return try {
-        val d1 = df1.parse(this)!!
-        val d2 = df1.parse(str2)!!
-        val time = d1.time - d2.time
+        val d1 = df1.parse(this.formatTime())!!
+        val d2 = df1.parse(str2.formatTime())!!
+        // + 1s
+        val time = d1.time - d2.time + 1000
         val day = time / (60 * 60 * 1000 * 24)
         val hour = time / (60 * 60 * 1000) - day * 24
-        if (hour == 0L) {
-            "${day}天"
+        val min = time % (60 * 60 * 1000) / (60 * 1000)
+        if (day == 0L) {
+            "${hour}时${min}分"
+        } else if (hour == 0L) {
+            "${min}分"
         } else {
-            "${day}天${hour}时"
+            "${day}天${hour}时${min}分"
         }
     } catch (e: Exception) {
         "0"
@@ -79,9 +100,11 @@ fun String.dates(str2: String): String {
  */
 fun String.hourInt(str2: String): Int {
     return try {
-        val d1 = df1.parse(this)!!
-        val d2 = df1.parse(str2)!!
-        ((d1.time - d2.time) / (60 * 60 * 1000.0)).int
+        val d1 = df1.parse(this.formatTime())!!
+        val d2 = df1.parse(str2.formatTime())!!
+        // + 1s
+        val time = d1.time - d2.time + 1000
+        (time / (60 * 60 * 1000.0)).int
     } catch (e: Exception) {
         0
     }

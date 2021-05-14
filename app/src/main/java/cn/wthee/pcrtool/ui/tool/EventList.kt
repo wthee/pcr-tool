@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -20,10 +22,7 @@ import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.days
-import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.utils.hourInt
-import cn.wthee.pcrtool.utils.intArrayList
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import kotlinx.coroutines.launch
 
@@ -78,47 +77,45 @@ fun EventList(
  */
 @Composable
 private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
-    var title: String
+
     val type: String
-    val typeColor: Int
+    val typeColor: Color
     var showDays = true
     val today = getToday()
-    val startDate = event.startTime.substring(0, 10)
-    val endDate = event.endTime.substring(0, 10)
-    title = if (startDate == "2030/12/30") {
-        "预告"
-    } else {
-        "$startDate ~ $endDate"
-    }
+    val startDate = event.startTime.formatTime().substring(0, 10)
+    val endDate = event.endTime.formatTime().substring(0, 10)
+    val preEvent = startDate == "2030/12/30"
     val days = endDate.days(startDate)
     if (days == "0" || days == "0天") {
         showDays = false
     }
+
     when {
         //支线
         event.eventId / 10000 == 2 -> {
             type = "支线"
-            typeColor = R.color.cool_apk
-            title = startDate
+            typeColor = colorResource(id = R.color.cool_apk)
             showDays = false
         }
         //复刻
         event.eventId / 10000 == 1 && event.storyId % 1000 != event.eventId % 1000 -> {
             type = "复刻"
-            typeColor = R.color.color_rank_7_10
+            typeColor = colorResource(id = R.color.color_rank_7_10)
         }
-        event.startTime.hourInt(today) > 0 -> {
+        //预告
+        event.startTime.hourInt(today) > 0 || preEvent -> {
             type = "预告"
-            typeColor = R.color.news_system
+            typeColor = colorResource(id = R.color.news_system)
         }
         //正常
         else -> {
             type = "活动"
-            typeColor = R.color.news_update
+            typeColor = colorResource(id = R.color.news_update)
         }
     }
     val inProgress =
         today.hourInt(event.startTime) > 0 && event.endTime.hourInt(today) > 0 && event.eventId / 10000 != 2
+    val comingSoon = today.hourInt(event.startTime) < 0 && (!preEvent)
 
     Column(
         modifier = Modifier
@@ -129,23 +126,48 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             MainTitleText(
                 text = type,
-                backgroundColor = colorResource(id = typeColor)
+                backgroundColor = typeColor
             )
             MainTitleText(
-                text = title,
+                text = if (preEvent) "预告" else startDate,
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
-            if (inProgress) {
-                MainTitleText(
-                    text = stringResource(R.string.in_progress, endDate.days(today)),
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    backgroundColor = colorResource(id = R.color.news_update)
-                )
-            } else if (showDays) {
+            if (showDays) {
                 MainTitleText(
                     text = days,
                     modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
+            }
+            //计时
+            Row(
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (inProgress) {
+                    IconCompose(
+                        data = MainIconType.TIME_LEFT.icon,
+                        modifier = Modifier.size(Dimen.smallIconSize)
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.in_progress, event.endTime.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = MaterialTheme.colors.primary
+                    )
+                }
+                if (comingSoon) {
+                    IconCompose(
+                        data = MainIconType.COUNTDOWN.icon,
+                        modifier = Modifier.size(Dimen.smallIconSize),
+                        tint = typeColor
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.coming_soon, event.startTime.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = typeColor
+                    )
+                }
             }
         }
         MainCard {
@@ -158,6 +180,14 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 )
                 //图标
                 IconListCompose(event.unitIds.intArrayList(), toCharacterDetail)
+                //结束日期
+                if (endDate != "2030/12/30") {
+                    CaptionText(
+                        text = event.endTime,
+                        modifier = Modifier.align(Alignment.End)
+                    )
+                }
+
             }
         }
     }

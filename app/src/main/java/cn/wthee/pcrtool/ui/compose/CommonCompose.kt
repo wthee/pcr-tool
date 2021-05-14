@@ -132,6 +132,25 @@ fun Subtitle2(
 }
 
 /**
+ * 灰色标注字体
+ */
+@Composable
+fun CaptionText(
+    text: String,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.End
+) {
+    SelectionContainer(modifier = modifier) {
+        Text(
+            text = text,
+            textAlign = textAlign,
+            style = MaterialTheme.typography.caption,
+        )
+    }
+
+}
+
+/**
  * 分割线
  */
 @Composable

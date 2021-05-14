@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -90,6 +91,7 @@ fun PositionIcon(position: Int) {
 fun IconCompose(
     data: Any,
     modifier: Modifier = Modifier,
+    tint: Color = MaterialTheme.colors.primary,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -117,7 +119,7 @@ fun IconCompose(
             Icon(
                 imageVector = data,
                 contentDescription = null,
-                tint = MaterialTheme.colors.primary,
+                tint = tint,
                 modifier = mModifier
             )
         } else {
