@@ -65,6 +65,7 @@ object Navigation {
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
     const val TOOL_NEWS_TITLE = "toolNewsTitle"
     const val TOOL_NEWS_REGION = "toolNewsRegion"
+    const val TOOL_NEWS_DATE = "toolNewsDate"
     const val TOOL_NEWS_URL = "toolNewsUrl"
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
@@ -352,7 +353,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //公告详情
         composable(
-            "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_TITLE}}/{${Navigation.TOOL_NEWS_REGION}}/{${Navigation.TOOL_NEWS_URL}}",
+            "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_TITLE}}/{${Navigation.TOOL_NEWS_REGION}}/{${Navigation.TOOL_NEWS_URL}}/{${Navigation.TOOL_NEWS_DATE}}",
             arguments = listOf(
                 navArgument(Navigation.TOOL_NEWS_TITLE) {
                     type = NavType.StringType
@@ -363,6 +364,9 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 navArgument(Navigation.TOOL_NEWS_REGION) {
                     type = NavType.IntType
                 },
+                navArgument(Navigation.TOOL_NEWS_DATE) {
+                    type = NavType.StringType
+                },
             )
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -371,7 +375,8 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 NewsDetail(
                     arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
                     arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
-                    arguments.getInt(Navigation.TOOL_NEWS_REGION)
+                    arguments.getInt(Navigation.TOOL_NEWS_REGION),
+                    arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
                 )
             }
         }
@@ -452,9 +457,10 @@ class NavActions(navController: NavHostController) {
     /**
      * 官方公告详情
      */
-    val toNewsDetail: (String, String, Int) -> Unit = { title: String, url: String, region: Int ->
-        navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${title}/${region}/${url}")
-    }
+    val toNewsDetail: (String, String, Int, String) -> Unit =
+        { title: String, url: String, region: Int, date: String ->
+            navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${title}/${region}/${url}/${date}")
+        }
 
     /**
      * 竞技场收藏

@@ -94,7 +94,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         //支线
         event.eventId / 10000 == 2 -> {
             type = "支线"
-            typeColor = colorResource(id = R.color.cool_apk)
+            typeColor = colorResource(id = R.color.color_rank_21)
             showDays = false
         }
         //复刻

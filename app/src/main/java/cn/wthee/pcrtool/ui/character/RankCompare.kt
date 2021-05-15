@@ -197,8 +197,8 @@ fun AttrCompare(compareData: List<RankCompareData>) {
                     modifier = Modifier.weight(0.2f)
                 )
                 val color = when {
-                    it.attrCompare.int > 0 -> colorResource(id = R.color.cool_apk)
-                    it.attrCompare.int < 0 -> colorResource(id = R.color.color_rank_18)
+                    it.attrCompare.int > 0 -> colorResource(id = R.color.color_rank_21)
+                    it.attrCompare.int < 0 -> colorResource(id = R.color.color_rank_18_20)
                     else -> Color.Unspecified
                 }
                 Text(

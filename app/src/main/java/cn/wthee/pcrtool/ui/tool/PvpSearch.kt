@@ -526,13 +526,13 @@ private fun PvpAtkTeam(
                     )
                     MainContentText(
                         text = item.up.toString(),
-                        color = colorResource(id = R.color.cool_apk),
+                        color = colorResource(id = R.color.color_rank_21),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.weight(0.2f)
                     )
                     MainContentText(
                         text = item.down.toString(),
-                        color = colorResource(id = R.color.color_rank_18),
+                        color = colorResource(id = R.color.color_rank_18_20),
                         textAlign = TextAlign.Start,
                         modifier = Modifier.weight(0.4f)
                     )

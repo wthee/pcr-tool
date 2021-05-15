@@ -328,7 +328,7 @@ fun getSectionTextColor(section: Int): Color {
         2 -> R.color.color_rank_4_6
         3 -> R.color.color_rank_7_10
         4 -> R.color.color_rank_11_17
-        else -> R.color.color_rank_18
+        else -> R.color.color_rank_18_20
     }
     return colorResource(id = color)
 }

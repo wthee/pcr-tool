@@ -10,6 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -177,17 +178,20 @@ fun CharacterDetail(
                     .fillMaxSize()
             ) {
                 FadeAnimation {
-                    Box(modifier = Modifier.clickable {
-                        //跳转角色图片列表
-                        toPics(unitId)
-                    }) {
+                    Box(modifier = Modifier
+                        .background(color = colorResource(id = R.color.bg_gray))
+                        .clickable {
+                            //跳转角色图片列表
+                            toPics(unitId)
+                        }) {
                         //图片
                         CharacterCard(
                             CharacterIdUtil.getMaxCardUrl(
                                 unitId,
                                 MainActivity.r6Ids.contains(unitId)
                             ),
-                            scrollState = scrollState
+                            scrollState = scrollState,
+                            showLoading = false
                         )
                         //星级
                         StarSelect(
@@ -494,7 +498,6 @@ private fun UniqueEquip(
             Slider(
                 value = silderState.value.toFloat(),
                 onValueChange = { silderState.value = it.toInt() },
-                steps = 10,
                 onValueChangeFinished = {
                     attrViewModel.uniqueEquipLevelValue.postValue(silderState.value)
                 },

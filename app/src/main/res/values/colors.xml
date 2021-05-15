@@ -17,9 +17,9 @@
     <color name="color_rank_4_6">#B9C4C8</color>
     <color name="color_rank_7_10">#EFC005</color>
     <color name="color_rank_11_17">#B55CCF</color>
-    <color name="color_rank_18">#DE0703</color>
+    <color name="color_rank_18_20">#DE0703</color>
+    <color name="color_rank_21">#4caf50</color>
 
-    <color name="cool_apk">#4caf50</color>
     <color name="news_system">#a067c5</color>
     <color name="news_update">#f55291</color>
 

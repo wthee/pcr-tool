@@ -63,7 +63,7 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 角色介绍
      */
-    CHARACTER_INTRO(10, Icons.Rounded.AutoAwesome),
+    CHARACTER_INTRO(10, Icons.Rounded.Description),
 
     /**
      * 技能循环
@@ -83,7 +83,7 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
     /**
      * 角色
      */
-    CHARACTER(14, Icons.Rounded.Grade),
+    CHARACTER(14, Icons.Rounded.AutoAwesome),
 
     /**
      * 剧情活动
@@ -189,4 +189,9 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
      * 图片
      */
     IMAGE(32, Icons.Rounded.Image),
+
+    /**
+     * 浏览器
+     */
+    BROWSER(33, Icons.Rounded.OpenInBrowser),
 }

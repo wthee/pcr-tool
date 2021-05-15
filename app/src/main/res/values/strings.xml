@@ -94,9 +94,9 @@
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
     <string name="tool_news">官网公告</string>
-    <string name="tool_news_cn">国服公告</string>
-    <string name="tool_news_tw">台服公告</string>
-    <string name="tool_news_jp">日服公告</string>
+    <string name="tool_news_cn">国服</string>
+    <string name="tool_news_tw">台服</string>
+    <string name="tool_news_jp">日服</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
     <string name="jjc">竞技场</string>
@@ -120,6 +120,7 @@
     <string name="to_update">更新</string>
     <string name="compare">对比</string>
     <string name="count">统计</string>
+    <string name="share">分享</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>

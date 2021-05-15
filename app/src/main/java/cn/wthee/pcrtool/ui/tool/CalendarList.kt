@@ -200,7 +200,7 @@ private fun getTypeData(data: DropEvent): ArrayList<CalendarEventData> {
                 stringResource(id = R.string.very_hard)
             }
             34 -> {
-                colorId = R.color.cool_apk
+                colorId = R.color.color_rank_21
                 stringResource(id = R.string.explore)
             }
             37 -> {

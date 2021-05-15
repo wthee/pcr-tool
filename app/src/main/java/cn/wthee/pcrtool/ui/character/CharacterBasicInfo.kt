@@ -18,6 +18,7 @@ import cn.wthee.pcrtool.ui.compose.MainText
 import cn.wthee.pcrtool.ui.compose.MainTitleText
 import cn.wthee.pcrtool.ui.compose.PositionIcon
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
 /**
@@ -39,7 +40,7 @@ fun CharacterBasicInfo(
         ) {
             //标题
             MainText(
-                text = info.catchCopy,
+                text = info.catchCopy.deleteSpace(),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = Dimen.mediuPadding, bottom = Dimen.smallPadding)

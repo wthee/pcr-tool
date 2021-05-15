@@ -192,7 +192,7 @@ fun MenuContent(
                         MenuItem(
                             route = Navigation.APP_NOTICE,
                             navController = navController,
-                            backgroundColor = if (updateApp == 1) colorResource(id = R.color.cool_apk) else MaterialTheme.colors.primary,
+                            backgroundColor = if (updateApp == 1) colorResource(id = R.color.color_rank_21) else MaterialTheme.colors.primary,
                             text = stringResource(id = if (updateApp == 1) R.string.to_update else R.string.app_notice),
                             iconType = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE,
                             modifier = Modifier

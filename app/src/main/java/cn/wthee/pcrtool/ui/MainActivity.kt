@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
     //返回拦截
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            navViewModel.loading.postValue(false)
             when (navViewModel.fabMainIcon.value ?: MainIconType.MAIN) {
                 MainIconType.MAIN -> {
                     return super.onKeyDown(keyCode, event)

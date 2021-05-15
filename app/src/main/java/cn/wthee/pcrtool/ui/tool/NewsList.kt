@@ -9,9 +9,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,6 +18,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
@@ -36,9 +38,12 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.ShareIntentUtil
+import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
@@ -51,14 +56,14 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun NewsList(
-    toDetail: (String, String, Int) -> Unit,
+    toDetail: (String, String, Int, String) -> Unit,
     viewModel: NewsViewModel = hiltNavGraphViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     //fixme 滚动状态记录
     val states =
         arrayListOf(rememberLazyListState(), rememberLazyListState(), rememberLazyListState())
-    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 3)
+    val pagerState = rememberPagerState(pageCount = 3)
     val newsCN = viewModel.getNewsCN().collectAsLazyPagingItems()
     val newsTW = viewModel.getNewsTW().collectAsLazyPagingItems()
     val newsJP = viewModel.getNewsJP().collectAsLazyPagingItems()
@@ -96,22 +101,46 @@ fun NewsList(
                 }
             }
             //指示器
-            PagerIndicator(
-                pagerState = pagerState,
-                modifier = Modifier.align(Alignment.BottomCenter)
-            )
-            //回到顶部
-            FabCompose(
-                iconType = MainIconType.NEWS,
-                text = tabs[pagerState.currentPage],
+            Box(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                    .align(Alignment.BottomCenter)
+                    .padding(
+                        start = Dimen.fabMarginEnd,
+                        end = Dimen.fabMarginEnd,
+                        bottom = Dimen.fabMargin
+                    )
+                    .height(Dimen.fabSize)
+                    .shadow(elevation = Dimen.fabElevation, shape = CircleShape, clip = true)
+                    .background(color = MaterialTheme.colors.surface, shape = CircleShape)
             ) {
-                coroutineScope.launch {
-                    states[pagerState.currentPage].scrollToItem(0)
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    backgroundColor = Color.Transparent,
+                    contentColor = MaterialTheme.colors.primary,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                        )
+                    },
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            text = { Text(title) },
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    if (pagerState.currentPage != index) {
+                                        pagerState.scrollToPage(index)
+                                    } else {
+                                        states[index].scrollToItem(0)
+                                    }
+                                }
+                            },
+                        )
+                    }
                 }
             }
+
         }
     }
 }
@@ -125,7 +154,7 @@ fun NewsList(
 private fun NewsItem(
     region: Int,
     news: NewsTable,
-    toDetail: (String, String, Int) -> Unit
+    toDetail: (String, String, Int, String) -> Unit,
 ) {
 
     val tag = news.getTag()
@@ -152,7 +181,7 @@ private fun NewsItem(
             )
         }
         MainCard(onClick = {
-            toDetail(news.title.fix(), news.url.fix(), region)
+            toDetail(news.title.fix(), news.url.fix(), region, news.date)
         }) {
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //内容
@@ -168,9 +197,10 @@ private fun NewsItem(
     }
 }
 
+@ExperimentalAnimationApi
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun NewsDetail(text: String, url: String, region: Int) {
+fun NewsDetail(text: String, url: String, region: Int, date: String) {
     val originalUrl = url.original()
     val originalTitle = text.original()
     val loading = remember {
@@ -178,63 +208,79 @@ fun NewsDetail(text: String, url: String, region: Int) {
     }
     val alpha = if (loading.value) 0f else 1f
     navViewModel.loading.postValue(loading.value)
+    val context = LocalContext.current
 
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        MainText(text = originalTitle, modifier = Modifier.padding(Dimen.mediuPadding))
-        AndroidView(modifier = Modifier.alpha(alpha), factory = {
-            WebView(it).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                )
-                settings.apply {
-                    domStorageEnabled = true
-                    javaScriptEnabled = true
-                    cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
-                    useWideViewPort = true //将图片调整到适合webView的大小
-                    loadWithOverviewMode = true // 缩放至屏幕的大小
-                    javaScriptCanOpenWindowsAutomatically = true
-                    loadsImagesAutomatically = false
-                    blockNetworkImage = true
-                }
-                webChromeClient = WebChromeClient()
-                webViewClient = object : WebViewClient() {
-
-                    override fun shouldOverrideUrlLoading(view: WebView, url: String?): Boolean {
-                        view.loadUrl(url!!)
-                        return true
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimen.mediuPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            MainText(text = originalTitle, modifier = Modifier.padding(Dimen.mediuPadding))
+            Subtitle2(text = date)
+            AndroidView(modifier = Modifier
+                .alpha(alpha)
+                .padding(Dimen.largePadding), factory = {
+                WebView(it).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                    )
+                    settings.apply {
+                        domStorageEnabled = true
+                        javaScriptEnabled = true
+                        cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                        useWideViewPort = true //将图片调整到适合webView的大小
+                        loadWithOverviewMode = true // 缩放至屏幕的大小
+                        javaScriptCanOpenWindowsAutomatically = true
+                        loadsImagesAutomatically = false
+                        blockNetworkImage = true
                     }
+                    webChromeClient = WebChromeClient()
+                    webViewClient = object : WebViewClient() {
 
-                    override fun onReceivedSslError(
-                        view: WebView?,
-                        handler: SslErrorHandler?,
-                        error: SslError?
-                    ) {
-                        handler?.proceed()
-                    }
-
-                    override fun onPageFinished(view: WebView?, url: String?) {
-                        super.onPageFinished(view, url)
-                        settings.apply {
-                            loadsImagesAutomatically = true
-                            blockNetworkImage = false
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView,
+                            url: String?
+                        ): Boolean {
+                            view.loadUrl(url!!)
+                            return true
                         }
-                        if (region == 2) {
-                            //取消内部滑动
-                            loadUrl(
-                                """
+
+                        override fun onReceivedSslError(
+                            view: WebView?,
+                            handler: SslErrorHandler?,
+                            error: SslError?
+                        ) {
+                            handler?.proceed()
+                        }
+
+                        override fun onPageFinished(view: WebView?, url: String?) {
+                            super.onPageFinished(view, url)
+                            settings.apply {
+                                loadsImagesAutomatically = true
+                                blockNetworkImage = false
+                            }
+                            if (region == 2) {
+                                //取消内部滑动
+                                loadUrl(
+                                    """
                                 javascript:
                                 $('#news-content').css('overflow','inherit');
-                                $('.news-detail').css('top','0.3rem');
+                                $('#news-content').css('margin-top','0');
+                                $('.news-detail').css('top','0');
+                                $('.news-detail').css('padding','0');
                                 $('.top').css('display','none');
-                                $('.title').css('visibility','hidden');
+                                $('.header').css('display','none');
+                                $('.header').css('visibility','hidden');
                                 $('#news-content').css('margin-bottom','1rem');
                             """.trimIndent()
-                            )
-                        }
-                        if (region == 3) {
-                            loadUrl(
-                                """
+                                )
+                            }
+                            if (region == 3) {
+                                loadUrl(
+                                    """
                                 javascript:
                                 $('.menu').css('display','none');
                                 $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
@@ -243,34 +289,70 @@ fun NewsDetail(text: String, url: String, region: Int) {
                                 $('footer').css('display','none');
                                 $('aside').css('display','none');
                                 $('#pageTop').css('display','none');
+                                $('h2').css('display','none');
                                 $('h3').css('display','none');
                                 $('.paging').css('display','none');
                                 $('.news_con').css('margin','0px');
+                                $('.news_con').css('padding','0px');
+                                $('section').css('padding','0px');
+                                $('body').css('background-image','none');
                             """.trimIndent()
-                            )
-                        }
-                        if (region == 4) {
-                            loadUrl(
-                                """
+                                )
+                            }
+                            if (region == 4) {
+                                loadUrl(
+                                    """
                                 javascript:
                                 $('#main_area').css('display','none');
                                 $('.bg-gray').css('display','none');
                                 $('.news_prev').css('display','none');
                                 $('.news_next').css('display','none');
+                                $('time').css('display','none');
+                                $('.post-categories').css('display','none');
                                 $('h3').css('display','none');
                                 $('header').css('display','none');
+                                $('.news_detail').css('box-shadow','none');
                                 $('footer').css('display','none');
+                                $('hr').css('display','none');
+                                $('#page').css('background-image','none');
+                                $('.news_detail_container').css('background-image','none');
+                                $('.news_detail').css('padding','0');
+                                $('.news_detail_container').css('width','100%');
+                                $('.meta-info').css('margin','0');
                             """.trimIndent()
-                            )
+                                )
+                            }
+                            loading.value = false
                         }
-                        loading.value = false
                     }
+                    //加载网页
+                    loadUrl(originalUrl)
                 }
-                //加载网页
-                loadUrl(originalUrl)
+            })
+        }
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+        ) {
+            //浏览器打开
+            FabCompose(
+                iconType = MainIconType.BROWSER,
+                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+            ) {
+                openWebView(context, originalUrl)
             }
-        })
+            //分享
+            FabCompose(
+                iconType = MainIconType.SHARE,
+                text = stringResource(id = R.string.share),
+            ) {
+                ShareIntentUtil.text(originalTitle + "\n" + originalUrl)
+            }
+        }
+
     }
+
 }
 
 /**

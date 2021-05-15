@@ -159,15 +159,6 @@ private fun EquipMaterialList(
                 }
             }
         }
-        //装备素材掉落信息
-        MainTitleText(
-            text = stringResource(id = R.string.drop_info),
-            modifier = Modifier.padding(
-                start = Dimen.smallPadding,
-                top = Dimen.largePadding,
-                bottom = Dimen.mediuPadding
-            )
-        )
         EquipDropAreaList()
     }
 

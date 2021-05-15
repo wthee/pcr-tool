@@ -147,7 +147,7 @@ private fun NoticeItem(data: AppNotice) {
                 if (data.type == 0 && newVersion) {
                     MainContentText(
                         text = stringResource(id = R.string.to_update),
-                        color = colorResource(id = R.color.cool_apk),
+                        color = colorResource(id = R.color.color_rank_21),
                         modifier = Modifier.padding(top = Dimen.mediuPadding)
                     )
                 }

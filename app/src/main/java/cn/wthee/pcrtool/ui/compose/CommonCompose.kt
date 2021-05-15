@@ -252,7 +252,8 @@ fun getRankColor(rank: Int): Color {
         in 4..6 -> R.color.color_rank_4_6
         in 7..10 -> R.color.color_rank_7_10
         in 11..17 -> R.color.color_rank_11_17
-        in 18..99 -> R.color.color_rank_18
+        in 18..20 -> R.color.color_rank_18_20
+        in 21..99 -> R.color.color_rank_21
         else -> {
             R.color.color_rank_2_3
         }

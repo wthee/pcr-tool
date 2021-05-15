@@ -173,7 +173,12 @@ fun SkillActionItem(skillAction: SkillActionText) {
     val mark2 = arrayListOf<SkillIndex>()
     val mark3 = arrayListOf<SkillIndex>()
     val colors =
-        arrayListOf(R.color.cool_apk, R.color.black, R.color.color_rank_11_17, R.color.colorPrimary)
+        arrayListOf(
+            R.color.color_rank_21,
+            R.color.black,
+            R.color.color_rank_11_17,
+            R.color.colorPrimary
+        )
     skillAction.action.forEachIndexed { index, c ->
         if (c == '[') {
             mark0.add(SkillIndex(start = index))
@@ -400,7 +405,7 @@ private fun getSkillColor(type: String): Int {
         type.contains("连结") -> R.color.color_rank_7_10
         type.contains("EX") -> R.color.color_rank_2_3
         type.contains("1") -> R.color.color_rank_11_17
-        type.contains("2") -> R.color.color_rank_18
+        type.contains("2") -> R.color.color_rank_18_20
         else -> R.color.colorPrimary
     }
 }

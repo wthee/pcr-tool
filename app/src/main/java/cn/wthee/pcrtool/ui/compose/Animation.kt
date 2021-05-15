@@ -37,7 +37,7 @@ fun SlideAnimation(
         visible = visible,
         modifier = modifier,
         enter = slideInVertically(
-            initialOffsetY = { 60 },
+            initialOffsetY = { 40 },
             animationSpec = defaultSpring()
         ),
         exit = slideOutVertically(targetOffsetY = {
@@ -57,7 +57,7 @@ fun FadeAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn(),
-        exit = fadeOut(animationSpec = defaultTween()),
+        exit = fadeOut(animationSpec = defaultSpring()),
         content = content,
         initiallyVisible = false
     )
@@ -71,7 +71,7 @@ fun FadeAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
 fun ExtendedAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible = visible,
-        enter = expandIn(expandFrom = Alignment.Center, animationSpec = defaultSpring()),
+        enter = expandIn(expandFrom = Alignment.Center, animationSpec = defaultTween()),
         exit = shrinkOut(shrinkTowards = Alignment.Center, animationSpec = defaultTween()),
         content = content,
         initiallyVisible = false
