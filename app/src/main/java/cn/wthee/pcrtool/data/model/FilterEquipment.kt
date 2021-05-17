@@ -40,3 +40,7 @@ class FilterEquipment(
 //        }
     }
 }
+
+fun FilterEquipment.isFilter(): Boolean {
+    return !(all && type == 0 && name == "")
+}

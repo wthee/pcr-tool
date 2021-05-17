@@ -178,8 +178,8 @@ fun FabMain(navController: NavHostController, modifier: Modifier) {
 
     FabCompose(icon, modifier = modifier) {
         when (icon) {
-            MainIconType.OK -> navViewModel.fabOK.postValue(true)
-            MainIconType.CLOSE -> navViewModel.fabClose.postValue(true)
+            MainIconType.OK -> navViewModel.fabOKCilck.postValue(true)
+            MainIconType.CLOSE -> navViewModel.fabCloseClick.postValue(true)
             MainIconType.MAIN -> navViewModel.fabMainIcon.postValue(MainIconType.DOWN)
             MainIconType.DOWN -> navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
             else -> {

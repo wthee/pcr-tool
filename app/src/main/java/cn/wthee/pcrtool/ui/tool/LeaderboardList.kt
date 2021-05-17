@@ -27,6 +27,9 @@ import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * 角色排行
+ */
 @ExperimentalAnimationApi
 @Composable
 fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) {

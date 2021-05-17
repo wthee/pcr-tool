@@ -8,7 +8,6 @@ import cn.wthee.pcrtool.ui.mainSP
 
 /**
  * 振动
- * fixme 开关
  */
 @Suppress("DEPRECATION")
 class VibrateUtil(context: Context) {

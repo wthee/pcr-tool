@@ -47,7 +47,7 @@ fun RankSelectCompose(
     for (i in maxRank downTo 1) {
         rankList.add(i)
     }
-    val ok = navViewModel.fabOK.observeAsState().value ?: false
+    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
     //选择
     val selectIndex0 = remember {
         mutableStateOf(maxRank - rank0.value)
@@ -71,7 +71,7 @@ fun RankSelectCompose(
             coroutineScope.launch {
                 sheetState.hide()
             }
-            navViewModel.fabOK.postValue(false)
+            navViewModel.fabOKCilck.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
             rank0.value = maxRank - selectIndex0.value
             rank1.value = maxRank - selectIndex1.value

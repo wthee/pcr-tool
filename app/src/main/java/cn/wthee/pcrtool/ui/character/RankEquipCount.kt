@@ -67,10 +67,10 @@ fun RankEquipCount(
     val coroutineScope = rememberCoroutineScope()
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOK.postValue(false)
+        navViewModel.fabOKCilck.postValue(false)
     }
     //关闭监听
-    val ok = navViewModel.fabOK.observeAsState().value ?: false
+    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
     if (rankEquipMaterials.value == null) {
         navViewModel.loading.postValue(true)
     }
@@ -87,7 +87,7 @@ fun RankEquipCount(
             coroutineScope.launch {
                 state.hide()
             }
-            navViewModel.fabOK.postValue(false)
+            navViewModel.fabOKCilck.postValue(false)
         }
 
         Box(modifier = Modifier.fillMaxSize()) {

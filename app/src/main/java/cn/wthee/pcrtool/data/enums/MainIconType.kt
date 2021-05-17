@@ -4,225 +4,219 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
-enum class MainIconType(val type: Int, val icon: ImageVector) {
+enum class MainIconType(val icon: ImageVector) {
     /**
-     * 关闭
+     * 向下折叠
      */
-    DOWN(-1, Icons.Rounded.ExpandMore),
+    DOWN(Icons.Rounded.ExpandMore),
 
     /**
      * 主菜单
      */
-    MAIN(0, Icons.Rounded.Add),
+    MAIN(Icons.Rounded.Add),
 
     /**
      * 返回
      */
-    BACK(1, Icons.Rounded.NavigateBefore),
+    BACK(Icons.Rounded.NavigateBefore),
 
     /**
      * 完成
      */
-    OK(2, Icons.Rounded.Done),
+    OK(Icons.Rounded.Done),
 
     /**
      * 关闭
      */
-    CLOSE(3, Icons.Rounded.ExpandMore),
+    CLOSE(Icons.Rounded.ExpandMore),
+
+    /**
+     * 重置
+     */
+    RESET(Icons.Rounded.Refresh),
 
     /**
      * 下载
      */
-    DWONLOAD(4, Icons.Rounded.Download),
+    DWONLOAD(Icons.Rounded.Download),
 
     /**
-     * 下载
+     * 设置
      */
-    SETTING(5, Icons.Rounded.MiscellaneousServices),
+    SETTING(Icons.Rounded.MiscellaneousServices),
 
     /**
-     * 下载
+     * 数据切换
      */
-    CHANGE_DATA(6, Icons.Rounded.SwapHoriz),
+    CHANGE_DATA(Icons.Rounded.SwapHoriz),
 
     /**
      * 未收藏
      */
-    LOVE_LINE(7, Icons.Rounded.FavoriteBorder),
+    LOVE_LINE(Icons.Rounded.FavoriteBorder),
 
     /**
      * 收藏
      */
-    LOVE_FILL(8, Icons.Rounded.Favorite),
+    LOVE_FILL(Icons.Rounded.Favorite),
 
     /**
-     * 收藏
+     * 分享
      */
-    SHARE(9, Icons.Rounded.Share),
+    SHARE(Icons.Rounded.Share),
 
     /**
      * 角色介绍
      */
-    CHARACTER_INTRO(10, Icons.Rounded.Description),
+    CHARACTER_INTRO(Icons.Rounded.Description),
 
     /**
      * 技能循环
      */
-    SKILL_LOOP(11, Icons.Rounded.AllInclusive),
+    SKILL_LOOP(Icons.Rounded.AllInclusive),
 
     /**
      * RANK 选择
      */
-    RANK_SELECT(12, Icons.Rounded.UnfoldMore),
+    RANK_SELECT(Icons.Rounded.UnfoldMore),
 
     /**
-     * 装嫩
+     * 装备
      */
-    EQUIP(13, Icons.Rounded.FitnessCenter),
+    EQUIP(Icons.Rounded.FitnessCenter),
 
     /**
      * 角色
      */
-    CHARACTER(14, Icons.Rounded.AutoAwesome),
+    CHARACTER(Icons.Rounded.AutoAwesome),
 
     /**
      * 剧情活动
      */
-    EVENT(15, Icons.Rounded.AutoStories),
+    EVENT(Icons.Rounded.AutoStories),
 
     /**
      * 卡池
      */
-    GACHA(16, Icons.Rounded.ReceiptLong),
+    GACHA(Icons.Rounded.ReceiptLong),
 
     /**
      * 公会
      */
-    GUILD(16, Icons.Rounded.LocalActivity),
+    GUILD(Icons.Rounded.LocalActivity),
 
     /**
-     * 公会
+     * 排行
      */
-    LEADER(16, Icons.Rounded.EmojiEvents),
+    LEADER(Icons.Rounded.EmojiEvents),
 
     /**
      * 团队战
      */
-    CLAN(16, Icons.Rounded.Security),
+    CLAN(Icons.Rounded.Security),
 
     /**
      * 团队战阶段
      */
-    CLAN_SECTION(17, Icons.Rounded.SignalCellularAlt),
+    CLAN_SECTION(Icons.Rounded.SignalCellularAlt),
 
     /**
      * 官网公告
      */
-    NEWS(18, Icons.Rounded.Campaign),
+    NEWS(Icons.Rounded.Campaign),
 
     /**
      * 更新通知
      */
-    NOTICE(19, Icons.Rounded.NotificationsNone),
-
-    /**
-     * 选中
-     */
-    PICK(20, Icons.Rounded.MyLocation),
+    NOTICE(Icons.Rounded.NotificationsNone),
 
     /**
      * 装备统计
      */
-    EQUIP_CALC(21, Icons.Rounded.Calculate),
+    EQUIP_CALC(Icons.Rounded.Calculate),
 
     /**
      * RANK 对比
      */
-    RANK_COMPARE(22, Icons.Rounded.CompareArrows),
+    RANK_COMPARE(Icons.Rounded.CompareArrows),
 
     /**
      * 日历
      */
-    CALENDAR(23, Icons.Rounded.EventNote),
+    CALENDAR(Icons.Rounded.EventNote),
 
     /**
      * 竞技场查询
      */
-    PVP_SEARCH(24, Icons.Rounded.ManageSearch),
-
-    /**
-     * 竞技场查询悬浮
-     */
-    PVP_SEARCH_WINDOW(25, Icons.Rounded.OpenInNew),
+    PVP_SEARCH(Icons.Rounded.ManageSearch),
 
     /**
      * 新版本更新
      */
-    APP_UPDATE(26, Icons.Rounded.Upcoming),
+    APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
      * 群
      */
-    GROUP(27, Icons.Rounded.GroupAdd),
+    GROUP(Icons.Rounded.GroupAdd),
 
     /**
      * 友链
      */
-    FRIEND_LINK(28, Icons.Rounded.Link),
+    FRIEND_LINK(Icons.Rounded.Link),
 
     /**
      * 添加对战信息
      */
-    PVP_ADD(29, Icons.Rounded.Assistant),
+    PVP_ADD(Icons.Rounded.Assistant),
 
     /**
      * 剩余时间
      */
-    TIME_LEFT(30, Icons.Rounded.Schedule),
+    TIME_LEFT(Icons.Rounded.Schedule),
 
     /**
      * 倒计时
      */
-    COUNTDOWN(31, Icons.Rounded.HourglassTop),
+    COUNTDOWN(Icons.Rounded.HourglassTop),
 
     /**
      * 图片
      */
-    IMAGE(32, Icons.Rounded.Image),
+    IMAGE(Icons.Rounded.Image),
 
     /**
      * 浏览器
      */
-    BROWSER(33, Icons.Rounded.OpenInBrowser),
+    BROWSER(Icons.Rounded.OpenInBrowser),
 
     /**
-     * Github
+     * 静流笔记
      */
-    NOTE(34, Icons.Rounded.Stream),
+    NOTE(Icons.Rounded.Stream),
 
     /**
      * 振动
      */
-    VIBRATE(35, Icons.Rounded.Vibration),
+    VIBRATE(Icons.Rounded.Vibration),
 
     /**
      * 删除
      */
-    DELETE(36, Icons.Rounded.DeleteForever),
+    DELETE(Icons.Rounded.DeleteForever),
 
     /**
      * 数据更新
      */
-    DB_DOWNLOAD(37, Icons.Rounded.CloudDownload),
+    DB_DOWNLOAD(Icons.Rounded.CloudDownload),
 
     /**
      * 项目
      */
-    MY_PROJECT(38, Icons.Rounded.Coffee),
-
+    MY_PROJECT(Icons.Rounded.Coffee),
 
     /**
      * 数据来源
      */
-    DATA_SOURCE(39, Icons.Rounded.DataUsage),
+    DATA_SOURCE(Icons.Rounded.DataUsage),
 }

@@ -66,7 +66,7 @@ fun CharacterAllPicture(unitId: Int) {
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier.fillMaxSize()
         ) { pagerIndex ->
             val request = ImageRequest.Builder(context)
                 .data(picUrls[pagerIndex])
@@ -76,17 +76,20 @@ fun CharacterAllPicture(unitId: Int) {
                 drawables[pagerIndex] = image
             }
             val painter = rememberCoilPainter(request = picUrls[pagerIndex])
-            Image(
-                painter = when (painter.loadState) {
-                    is ImageLoadState.Success -> {
-                        loaded[pagerIndex] = true
-                        painter
-                    }
-                    is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                    else -> rememberCoilPainter(request = R.drawable.load)
-                },
-                contentDescription = null,
-            )
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Image(
+                    painter = when (painter.loadState) {
+                        is ImageLoadState.Success -> {
+                            loaded[pagerIndex] = true
+                            painter
+                        }
+                        is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
+                        else -> rememberCoilPainter(request = R.drawable.load)
+                    },
+                    contentDescription = null,
+                )
+            }
+
         }
         //指示器
         PagerIndicator(pagerState, modifier = Modifier.align(Alignment.BottomCenter))

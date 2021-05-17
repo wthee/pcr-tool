@@ -10,7 +10,7 @@ import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
-import cn.wthee.pcrtool.data.network.service.MyAPIService
+import cn.wthee.pcrtool.data.network.MyAPIService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.mainSP

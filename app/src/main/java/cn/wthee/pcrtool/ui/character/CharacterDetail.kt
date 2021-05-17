@@ -109,10 +109,10 @@ fun CharacterDetail(
     )
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabClose.postValue(false)
+        navViewModel.fabCloseClick.postValue(false)
     }
     //关闭监听
-    val close = navViewModel.fabClose.observeAsState().value ?: false
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     //收藏状态
     val filter = navViewModel.filterCharacter.observeAsState()
     val loved = remember {
@@ -168,7 +168,7 @@ fun CharacterDetail(
                 state.hide()
             }
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-            navViewModel.fabClose.postValue(false)
+            navViewModel.fabCloseClick.postValue(false)
         }
 
         Box(modifier = Modifier.fillMaxSize()) {

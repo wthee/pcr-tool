@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.network
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.model.*
-import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.JsonArray

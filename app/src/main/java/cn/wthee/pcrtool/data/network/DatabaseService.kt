@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.network.service
+package cn.wthee.pcrtool.data.network
 
 
 import okhttp3.ResponseBody

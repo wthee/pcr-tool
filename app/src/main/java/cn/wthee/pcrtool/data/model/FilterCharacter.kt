@@ -63,3 +63,10 @@ class FilterCharacter(
     }
 
 }
+
+/**
+ * 是否有过滤
+ */
+fun FilterCharacter.isFilter(): Boolean {
+    return !(all && positon == 0 && atk == 0 && (!r6) && guild == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc))
+}

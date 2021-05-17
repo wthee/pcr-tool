@@ -66,8 +66,8 @@
     <string name="position_2">中卫</string>
     <string name="position_1">前卫</string>
     <string name="atk_type">攻击类型</string>
-    <string name="physical">物理攻击</string>
-    <string name="magic">魔法攻击</string>
+    <string name="physical">物理</string>
+    <string name="magic">魔法</string>
     <string name="all">全部</string>
     <string name="title_love">收藏</string>
     <string name="loved">已收藏</string>

@@ -60,7 +60,6 @@ fun NewsList(
     viewModel: NewsViewModel = hiltNavGraphViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    //fixme 滚动状态记录
     val states =
         arrayListOf(rememberLazyListState(), rememberLazyListState(), rememberLazyListState())
     val pagerState = rememberPagerState(pageCount = 3)
@@ -73,75 +72,80 @@ fun NewsList(
         stringResource(id = R.string.tool_news_tw),
         stringResource(id = R.string.tool_news_jp),
     )
-    if (states.isNotEmpty()) {
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.bg_gray))
+    ) {
+        //fixme 闪动问题
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
+            val data = when (index) {
+                0 -> newsCN
+                1 -> newsTW
+                else -> newsJP
+            }
+            LazyColumn(
+                state = states[index],
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxSize()
+            ) {
+                itemsIndexed(data) { _, it ->
+                    if (it != null) {
+                        NewsItem(regions[index], news = it, toDetail)
+                    }
+                }
+                item {
+                    NewsPlaceholder(data)
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        }
+        //fixme 快速滑动时，指示器异常
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.bg_gray))
+                .align(Alignment.BottomCenter)
+                .padding(
+                    start = Dimen.fabMarginEnd,
+                    end = Dimen.fabMarginEnd,
+                    bottom = Dimen.fabMargin
+                )
+                .height(Dimen.fabSize)
+                .shadow(elevation = Dimen.fabElevation, shape = CircleShape, clip = true)
+                .background(color = MaterialTheme.colors.surface, shape = CircleShape)
         ) {
-            //fixme 闪动问题
-            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
-                LazyColumn(state = states[index], modifier = Modifier.fillMaxSize()) {
-                    val data = when (index) {
-                        0 -> newsCN
-                        1 -> newsTW
-                        else -> newsJP
-                    }
-                    itemsIndexed(data) { _, it ->
-                        if (it != null) {
-                            NewsItem(regions[index], news = it, toDetail)
-                        }
-                    }
-                    item {
-                        NewsPlaceholder(data)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
-                }
-            }
-            //指示器
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(
-                        start = Dimen.fabMarginEnd,
-                        end = Dimen.fabMarginEnd,
-                        bottom = Dimen.fabMargin
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                backgroundColor = Color.Transparent,
+                contentColor = MaterialTheme.colors.primary,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                     )
-                    .height(Dimen.fabSize)
-                    .shadow(elevation = Dimen.fabElevation, shape = CircleShape, clip = true)
-                    .background(color = MaterialTheme.colors.surface, shape = CircleShape)
+                },
             ) {
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    backgroundColor = Color.Transparent,
-                    contentColor = MaterialTheme.colors.primary,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                        )
-                    },
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            text = { Text(title) },
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    if (pagerState.currentPage != index) {
-                                        pagerState.scrollToPage(index)
-                                    } else {
-                                        states[index].scrollToItem(0)
-                                    }
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        text = { Text(title) },
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                if (pagerState.currentPage != index) {
+                                    pagerState.scrollToPage(index)
+                                } else {
+                                    states[index].scrollToItem(0)
                                 }
-                            },
-                        )
-                    }
+                            }
+                        },
+                    )
                 }
             }
-
         }
+
     }
 }
 
@@ -371,28 +375,37 @@ private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
         }
     }) {
         Box(contentAlignment = Alignment.Center) {
-            when (state.loadState.append) {
-                is LoadState.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(Dimen.fabIconSize)
-                    )
-                }
-                is LoadState.Error -> {
-                    Subtitle2(
-                        text = stringResource(R.string.data_get_error),
-                        color = MaterialTheme.colors.primary
-                    )
-                    clickType.value = -1
-                }
-                else -> {
-                    if (state.loadState.append.endOfPaginationReached) {
+            if (state.loadState.refresh is LoadState.Loading) {
+                //初始加载
+                CircularProgressIndicator(
+                    modifier = Modifier.size(Dimen.fabIconSize)
+                )
+            } else {
+                //底部加载
+                when (state.loadState.append) {
+                    is LoadState.Loading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(Dimen.fabIconSize)
+                        )
+                    }
+                    is LoadState.Error -> {
                         Subtitle2(
-                            text = stringResource(R.string.all_data_load),
+                            text = stringResource(R.string.data_get_error),
                             color = MaterialTheme.colors.primary
                         )
+                        clickType.value = -1
+                    }
+                    else -> {
+                        if (state.loadState.append.endOfPaginationReached) {
+                            Subtitle2(
+                                text = stringResource(R.string.all_data_load),
+                                color = MaterialTheme.colors.primary
+                            )
+                        }
                     }
                 }
             }
+
         }
     }
 }
