@@ -20,7 +20,7 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 600, easing = FastOutSlowInEasing)
+    return tween(durationMillis = 400, easing = FastOutLinearInEasing)
 }
 
 /**
@@ -56,8 +56,8 @@ fun SlideAnimation(
 fun FadeAnimation(visible: Boolean = true, content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut(animationSpec = defaultSpring()),
+        enter = fadeIn(animationSpec = defaultTween()),
+        exit = fadeOut(animationSpec = defaultTween()),
         content = content,
         initiallyVisible = false
     )
