@@ -31,7 +31,7 @@ object DatabaseUpdater {
      */
     suspend fun changeType() {
         val type = getDatabaseType()
-        val sp = MyApplication.context.mainSP()
+        val sp = mainSP()
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, if (type == 1) 2 else 1)
         }
@@ -75,7 +75,7 @@ object DatabaseUpdater {
         force: Boolean = false
     ) {
         val databaseType = getDatabaseType()
-        val sp = MyApplication.context.mainSP()
+        val sp = mainSP()
         val localVersion = sp.getString(
             if (databaseType == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             ""
@@ -163,7 +163,7 @@ object DatabaseUpdater {
  * 1: 国服 2：日服
  */
 fun getDatabaseType(): Int {
-    val sp = MyApplication.context.mainSP()
+    val sp = mainSP()
     return sp.getInt(Constants.SP_DATABASE_TYPE, 1)
 }
 
@@ -173,7 +173,7 @@ fun getDatabaseType(): Int {
  */
 fun updateLocalDataBaseVersion(ver: String) {
     val type = getDatabaseType()
-    val sp = MyApplication.context.mainSP()
+    val sp = mainSP()
 
     sp.edit {
         putString(

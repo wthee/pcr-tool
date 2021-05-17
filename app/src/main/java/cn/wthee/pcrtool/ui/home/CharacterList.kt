@@ -78,7 +78,7 @@ fun CharacterList(
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
-            GsonUtil.fromJson(context.mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
+            GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
                 ?: arrayListOf()
 
         viewModel.getCharacters(filterValue)

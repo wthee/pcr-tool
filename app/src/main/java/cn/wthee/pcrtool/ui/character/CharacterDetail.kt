@@ -191,7 +191,6 @@ fun CharacterDetail(
                                 MainActivity.r6Ids.contains(unitId)
                             ),
                             scrollState = scrollState,
-                            showLoading = false
                         )
                         //星级
                         StarSelect(

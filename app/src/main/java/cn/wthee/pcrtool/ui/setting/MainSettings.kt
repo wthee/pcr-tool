@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.setting
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -24,17 +25,19 @@ import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.LineCompose
 import cn.wthee.pcrtool.ui.compose.MainText
+import cn.wthee.pcrtool.ui.compose.SlideAnimation
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
     val type = getDatabaseType()
-    val sp = context.mainSP()
+    val sp = mainSP()
     val scope = rememberCoroutineScope()
     //数据空版本
     val localVersion = sp.getString(
@@ -179,6 +182,7 @@ fun MainSettings() {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun SettingItem(
     iconType: MainIconType,
@@ -187,28 +191,29 @@ private fun SettingItem(
     onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.clickable(onClick = onClick.vibrate {
-            VibrateUtil(context).single()
-        })
-    ) {
-        IconCompose(
-            data = iconType.icon,
-            modifier = Modifier
-                .padding(Dimen.mediuPadding)
-                .size(Dimen.settingIconSize)
-        )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(Dimen.largePadding)
+    SlideAnimation {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable(onClick = onClick.vibrate {
+                VibrateUtil(context).single()
+            })
         ) {
-            TitleText(text = title)
-            SummaryText(text = summary)
+            IconCompose(
+                data = iconType.icon,
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .size(Dimen.settingIconSize)
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(Dimen.largePadding)
+            ) {
+                TitleText(text = title)
+                SummaryText(text = summary)
+            }
         }
     }
-
 }
 
 @Composable

@@ -18,7 +18,7 @@ class VibrateUtil(context: Context) {
     private val vibrateStrength = 32
 
     //是否开启振动
-    private val vibrateOn = context.mainSP().getBoolean(Constants.SP_VIBRATE_STATE, false)
+    private val vibrateOn = mainSP().getBoolean(Constants.SP_VIBRATE_STATE, false)
 
 
     fun single() {

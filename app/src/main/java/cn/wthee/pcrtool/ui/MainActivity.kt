@@ -38,7 +38,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-fun Context.mainSP() = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
+/**
+ * 本地存储
+ */
+fun mainSP() = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -58,6 +61,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PcrtoolcomposeTheme {
+                //fixme 从其它页面返回时，动画效果无效
                 FadeAnimation {
                     Home()
                 }

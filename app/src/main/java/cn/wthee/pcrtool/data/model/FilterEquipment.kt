@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
 import androidx.core.content.edit
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.Gson
@@ -23,7 +22,7 @@ class FilterEquipment(
 
 
     fun addOrRemove(vararg id: Int) {
-        val sp = MyApplication.context.mainSP()
+        val sp = mainSP()
         val list = starIds
         id.forEach {
             if (list.contains(it)) {

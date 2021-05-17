@@ -30,6 +30,10 @@ import cn.wthee.pcrtool.viewmodel.CalendarViewModel
 import kotlinx.coroutines.launch
 import java.util.*
 
+/**
+ * 日历活动
+ * fixme 进入时卡顿
+ */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
