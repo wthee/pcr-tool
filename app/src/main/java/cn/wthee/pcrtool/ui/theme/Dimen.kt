@@ -47,7 +47,7 @@ object Dimen {
 
     val border = 3.dp
 
-    val topBarHeight = 48.dp
+    val topBarHeight = 40.dp
 
     val topBarIconSize = 24.dp
 
@@ -58,6 +58,8 @@ object Dimen {
     val cardHeight = 52.dp
 
     val settingIconSize = 30.dp
+
+    val statusExHeight = 8.dp
 
     fun getWordWidth(length: Float): Dp {
         return (15 * length).sp2dp

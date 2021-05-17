@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.utils
 
+import android.os.Build
 import android.util.DisplayMetrics
+import android.view.View
 import cn.wthee.pcrtool.MyApplication
 
 
@@ -36,6 +38,33 @@ object ScreenUtil {
      */
     fun getHeight() = getDm().heightPixels
 
+    /**
+     * 全屏
+     */
+    fun setFullScreen() {
+        val window = ActivityHelper.instance.currentActivity?.window
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window?.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            window?.decorView?.systemUiVisibility =
+                (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        }
+    }
+
+    /**
+     * 初始化全屏
+     */
+    @Suppress("DEPRECATION")
+    fun initScreen() {
+        val window = ActivityHelper.instance.currentActivity?.window
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window?.setDecorFitsSystemWindows(true)
+        } else {
+            window?.clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+            window?.clearFlags(View.SYSTEM_UI_FLAG_FULLSCREEN)
+        }
+    }
 }
 
 /**

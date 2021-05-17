@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.vibrate
+import com.google.accompanist.insets.navigationBarsPadding
 
 /**
  * 通用悬浮按钮
@@ -36,9 +37,13 @@ fun FabCompose(
     val fabAnim = animateFloatAsState(targetValue = if (text == "") 0f else 1f)
 
     val mModifier = if (text != "") {
-        modifier.height(Dimen.fabSize)
+        modifier
+            .navigationBarsPadding()
+            .height(Dimen.fabSize)
     } else {
-        modifier.size(Dimen.fabSize)
+        modifier
+            .navigationBarsPadding()
+            .size(Dimen.fabSize)
     }
     FloatingActionButton(
         onClick = onClick.vibrate {

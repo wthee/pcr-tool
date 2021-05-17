@@ -101,6 +101,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     //coil-gif
     implementation("io.coil-kt:coil-gif:1.2.1")
 

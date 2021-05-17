@@ -94,7 +94,6 @@ fun CharacterList(
                 navViewModel.r6Ids.postValue(r6Ids)
             }
             Box(modifier = Modifier.fillMaxSize()) {
-                TopBarCompose(scrollState = scrollState)
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
@@ -110,6 +109,8 @@ fun CharacterList(
                         CommonSpacer()
                     }
                 }
+                //顶层
+                TopBarCompose(scrollState = scrollState)
                 Row(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)

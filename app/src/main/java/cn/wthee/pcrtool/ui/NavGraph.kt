@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.compose.SlideAnimation
+import cn.wthee.pcrtool.ui.compose.StatusBarBox
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.home.CharacterList
@@ -239,9 +240,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //角色卡池
         composable(Navigation.TOOL_GACHA) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                GachaList(actions.toCharacterDetail)
+            StatusBarBox {
+                SlideAnimation {
+                    GachaList(actions.toCharacterDetail)
+                }
             }
+
         }
 
         //剧情活动
