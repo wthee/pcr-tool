@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.home
 
-import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -36,6 +35,7 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
@@ -75,11 +75,11 @@ fun CharacterList(
     }
 
     val context = LocalContext.current
-    val sp = context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
-            GsonUtil.fromJson(sp.getString(Constants.SP_STAR_CHARACTER, "")) ?: arrayListOf()
+            GsonUtil.fromJson(context.mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
+                ?: arrayListOf()
 
         viewModel.getCharacters(filterValue)
         ModalBottomSheetLayout(

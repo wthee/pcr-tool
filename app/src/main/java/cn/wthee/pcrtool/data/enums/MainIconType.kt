@@ -194,4 +194,35 @@ enum class MainIconType(val type: Int, val icon: ImageVector) {
      * 浏览器
      */
     BROWSER(33, Icons.Rounded.OpenInBrowser),
+
+    /**
+     * Github
+     */
+    NOTE(34, Icons.Rounded.Stream),
+
+    /**
+     * 振动
+     */
+    VIBRATE(35, Icons.Rounded.Vibration),
+
+    /**
+     * 删除
+     */
+    DELETE(36, Icons.Rounded.DeleteForever),
+
+    /**
+     * 数据更新
+     */
+    DB_DOWNLOAD(37, Icons.Rounded.CloudDownload),
+
+    /**
+     * 项目
+     */
+    MY_PROJECT(38, Icons.Rounded.Coffee),
+
+
+    /**
+     * 数据来源
+     */
+    DATA_SOURCE(39, Icons.Rounded.DataUsage),
 }

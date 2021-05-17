@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -21,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -35,6 +37,8 @@ import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
+fun Context.mainSP() = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

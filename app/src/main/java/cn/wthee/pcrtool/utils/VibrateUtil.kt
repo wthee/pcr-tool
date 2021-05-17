@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import cn.wthee.pcrtool.ui.mainSP
 
 /**
  * 振动
@@ -16,17 +17,22 @@ class VibrateUtil(context: Context) {
     private val vibrateTime = 32L
     private val vibrateStrength = 32
 
+    //是否开启振动
+    private val vibrateOn = context.mainSP().getBoolean(Constants.SP_VIBRATE_STATE, false)
+
 
     fun single() {
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
-                service.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
-            }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                service.vibrate(VibrationEffect.createOneShot(vibrateTime, vibrateStrength))
-            }
-            else -> {
-                service.vibrate(vibrateTime)
+        if (vibrateOn) {
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                    service.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK))
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    service.vibrate(VibrationEffect.createOneShot(vibrateTime, vibrateStrength))
+                }
+                else -> {
+                    service.vibrate(vibrateTime)
+                }
             }
         }
     }

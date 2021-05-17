@@ -79,6 +79,7 @@ object Constants {
     const val SP_DATABASE_VERSION_JP = "database_version_jp"
     const val SP_STAR_CHARACTER = "star_character"
     const val SP_STAR_EQUIP = "star_equip"
+    const val SP_VIBRATE_STATE = "vibrate_state"
 
     //默认值
     const val NOTICE_TITLE = "正在下载数据"

@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.database
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SupportSQLiteOpenHelper
@@ -15,6 +13,7 @@ import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.service.MyAPIService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
+import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import com.umeng.umcrash.UMCrash
@@ -26,14 +25,13 @@ import java.io.File
  * 数据库更新
  */
 object DatabaseUpdater {
-    val sp: SharedPreferences =
-        MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
 
     /**
      * 切换版本
      */
     suspend fun changeType() {
         val type = getDatabaseType()
+        val sp = MyApplication.context.mainSP()
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, if (type == 1) 2 else 1)
         }
@@ -77,6 +75,7 @@ object DatabaseUpdater {
         force: Boolean = false
     ) {
         val databaseType = getDatabaseType()
+        val sp = MyApplication.context.mainSP()
         val localVersion = sp.getString(
             if (databaseType == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             ""
@@ -164,7 +163,7 @@ object DatabaseUpdater {
  * 1: 国服 2：日服
  */
 fun getDatabaseType(): Int {
-    val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
+    val sp = MyApplication.context.mainSP()
     return sp.getInt(Constants.SP_DATABASE_TYPE, 1)
 }
 
@@ -174,7 +173,7 @@ fun getDatabaseType(): Int {
  */
 fun updateLocalDataBaseVersion(ver: String) {
     val type = getDatabaseType()
-    val sp = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
+    val sp = MyApplication.context.mainSP()
 
     sp.edit {
         putString(

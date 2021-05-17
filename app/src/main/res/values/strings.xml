@@ -30,6 +30,10 @@
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
+    <string name="other_settings">其它</string>
+    <string name="vibrate">振动反馈</string>
+    <string name="vibrate_on">振动开启</string>
+    <string name="vibrate_off">振动关闭</string>
     <string name="redownload_db_summary">重新下载最新数据</string>
     <string name="data_version">数据版本：%s</string>
     <string name="app_sourcce">项目地址</string>

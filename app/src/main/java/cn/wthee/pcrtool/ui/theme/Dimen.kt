@@ -57,6 +57,7 @@ object Dimen {
 
     val cardHeight = 52.dp
 
+    val settingIconSize = 30.dp
 
     fun getWordWidth(length: Float): Dp {
         return (15 * length).sp2dp

@@ -10,12 +10,14 @@ private val DarkColorPalette = darkColors(
     primary = colorPrimaryDark,
     primaryVariant = colorAccentDark,
     secondary = colorPrimaryDark,
+    secondaryVariant = colorPrimaryDark
 )
 
 private val LightColorPalette = lightColors(
     primary = colorPrimary,
     primaryVariant = colorAccent,
     secondary = colorPrimary,
+    secondaryVariant = colorPrimary
 )
 
 @Composable

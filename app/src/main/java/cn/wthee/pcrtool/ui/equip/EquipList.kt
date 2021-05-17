@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.equip
 
-import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -33,6 +32,7 @@ import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
@@ -62,7 +62,7 @@ fun EquipList(
     )
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val sp = context.getSharedPreferences("main", Context.MODE_PRIVATE)
+    val sp = context.mainSP()
 
     //关闭时监听
     if (!state.isVisible) {
