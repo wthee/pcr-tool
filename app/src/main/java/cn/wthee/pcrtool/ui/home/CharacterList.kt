@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -32,6 +31,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -71,10 +71,10 @@ fun CharacterList(
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-        navViewModel.fabOK.postValue(false)
+        navViewModel.fabOKCilck.postValue(false)
+        navViewModel.resetClick.postValue(false)
     }
 
-    val context = LocalContext.current
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -110,25 +110,42 @@ fun CharacterList(
                         CommonSpacer()
                     }
                 }
-                val count = list.value?.size ?: 0
-                // 数量显示&筛选按钮
-                FabCompose(
-                    iconType = MainIconType.CHARACTER,
+                Row(
                     modifier = Modifier
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-                        .align(Alignment.BottomEnd),
-                    text = "$count"
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    coroutineScope.launch {
-                        if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                            state.hide()
-                        } else {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            state.show()
+                    //重置筛选
+                    if (filter.value != null && filter.value!!.isFilter()) {
+                        FabCompose(
+                            iconType = MainIconType.RESET,
+                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        ) {
+                            coroutineScope.launch {
+                                state.hide()
+                            }
+                            navViewModel.resetClick.postValue(true)
+                        }
+                    }
+                    val count = list.value?.size ?: 0
+                    // 数量显示&筛选按钮
+                    FabCompose(
+                        iconType = MainIconType.CHARACTER,
+                        text = "$count"
+                    ) {
+                        coroutineScope.launch {
+                            if (state.isVisible) {
+                                navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                                state.hide()
+                            } else {
+                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                                state.show()
+                            }
                         }
                     }
                 }
+
             }
 
         }
@@ -224,48 +241,59 @@ private fun FilterCharacterSheet(
     characterViewModel: CharacterViewModel = hiltNavGraphViewModel()
 ) {
     val filter = navViewModel.filterCharacter.value ?: FilterCharacter()
+
     val textState = remember { mutableStateOf(TextFieldValue(text = filter.name)) }
     filter.name = textState.value.text
-    //排序类型筛选
+    //排序类型筛选s
     val sortTypeIndex = remember {
         mutableStateOf(filter.sortType.type)
     }
     filter.sortType = getSortType(sortTypeIndex.value)
+
     //排序方式筛选
     val sortAscIndex = remember {
         mutableStateOf(if (filter.asc) 0 else 1)
     }
     filter.asc = sortAscIndex.value == 0
+
     //收藏筛选
     val loveIndex = remember {
         mutableStateOf(if (filter.all) 0 else 1)
     }
     filter.all = loveIndex.value == 0
+
     //六星筛选
     val r6Index = remember {
         mutableStateOf(if (filter.r6) 1 else 0)
     }
     filter.r6 = r6Index.value == 1
+
     //位置筛选
     val positionIndex = remember {
         mutableStateOf(filter.positon)
     }
     filter.positon = positionIndex.value
+
     //攻击类型
     val atkIndex = remember {
         mutableStateOf(filter.atk)
     }
     filter.atk = atkIndex.value
+
     //公会
     characterViewModel.getGuilds()
     val guildList = characterViewModel.guilds.observeAsState().value ?: arrayListOf()
     val guildIndex = remember {
         mutableStateOf(filter.guild)
     }
+    if (!filter.isFilter()) {
+        guildIndex.value = 0
+    }
     filter.guild = guildIndex.value
 
     //确认操作
-    val ok = navViewModel.fabOK.observeAsState().value ?: false
+    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+    val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //选择状态
     Column(
@@ -274,34 +302,28 @@ private fun FilterCharacterSheet(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
+        //点击重置
+        if (reset) {
+            textState.value = TextFieldValue(text = "")
+            sortTypeIndex.value = 0
+            sortAscIndex.value = 1
+            loveIndex.value = 0
+            r6Index.value = 0
+            positionIndex.value = 0
+            atkIndex.value = 0
+            guildIndex.value = 0
+            navViewModel.resetClick.postValue(false)
+            navViewModel.filterCharacter.postValue(FilterCharacter())
+        }
+        //点击确认
         if (ok) {
             coroutineScope.launch {
                 sheetState.hide()
             }
-            navViewModel.fabOK.postValue(false)
+            navViewModel.filterCharacter.postValue(filter)
+            navViewModel.fabOKCilck.postValue(false)
             navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }
-        //fixme
-//        Row(
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(Dimen.mediuPadding)
-//        ) {
-//            //重置
-//            SubButton(stringResource(id = R.string.reset)) {
-//                coroutineScope.launch {
-//                    sheetState.hide()
-//                }
-//                textState.value = TextFieldValue()
-//                sortTypeIndex.value = 0
-//                sortAscIndex.value = 1
-//                r6Index.value = 0
-//                positionIndex.value = 0
-//                atkIndex.value = 0
-//                filter.value = FilterCharacter()
-//            }
-//        }
         //角色名搜索
         OutlinedTextField(
             value = textState.value,

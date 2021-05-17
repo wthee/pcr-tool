@@ -481,12 +481,12 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 确认
      */
-    val fabOK = MutableLiveData(false)
+    val fabOKCilck = MutableLiveData(false)
 
     /**
      * 关闭
      */
-    val fabClose = MutableLiveData(false)
+    val fabCloseClick = MutableLiveData(false)
 
     /**
      * 选择的 RANK
@@ -512,8 +512,19 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val r6Ids = MutableLiveData(listOf<Int>())
 
+    /**
+     * 重置
+     */
+    val resetClick = MutableLiveData(false)
+
+    /**
+     * 角色筛选
+     */
     var filterCharacter = MutableLiveData(FilterCharacter())
 
+    /**
+     * 装备筛选
+     */
     var filterEquip = MutableLiveData(FilterEquipment())
 
     /**

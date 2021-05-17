@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
@@ -65,7 +66,7 @@ fun EquipList(
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        navViewModel.fabOK.postValue(false)
+        navViewModel.fabOKCilck.postValue(false)
     }
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -92,25 +93,42 @@ fun EquipList(
                         CommonSpacer()
                     }
                 }
-                val count = equips.size
-                // 数量显示&筛选按钮
-                FabCompose(
+                Row(
                     modifier = Modifier
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                         .align(Alignment.BottomEnd),
-                    iconType = MainIconType.EQUIP,
-                    text = "$count"
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    coroutineScope.launch {
-                        if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                            state.hide()
-                        } else {
-                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                            state.show()
+                    //重置筛选
+                    if (filter.value != null && filter.value!!.isFilter()) {
+                        FabCompose(
+                            iconType = MainIconType.RESET,
+                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        ) {
+                            coroutineScope.launch {
+                                state.hide()
+                            }
+                            navViewModel.resetClick.postValue(true)
+                        }
+                    }
+                    val count = equips.size
+                    // 数量显示&筛选按钮
+                    FabCompose(
+                        iconType = MainIconType.EQUIP,
+                        text = "$count"
+                    ) {
+                        coroutineScope.launch {
+                            if (state.isVisible) {
+                                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+                                state.hide()
+                            } else {
+                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                                state.show()
+                            }
                         }
                     }
                 }
+
             }
 
         }
@@ -187,7 +205,8 @@ private fun FilterEquipSheet(
     filter.type = typeIndex.value
 
     //确认操作
-    val ok = navViewModel.fabOK.observeAsState().value ?: false
+    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
+    val reset = navViewModel.resetClick.observeAsState().value ?: false
 
     //选择状态
     Column(
@@ -197,11 +216,21 @@ private fun FilterEquipSheet(
             .padding(Dimen.mediuPadding)
             .verticalScroll(rememberScrollState())
     ) {
+        if (reset) {
+            coroutineScope.launch {
+                sheetState.hide()
+            }
+            textState.value = TextFieldValue(text = "")
+            loveIndex.value = 0
+            typeIndex.value = 0
+            navViewModel.resetClick.postValue(false)
+            navViewModel.filterEquip.postValue(FilterEquipment())
+        }
         if (ok) {
             coroutineScope.launch {
                 sheetState.hide()
             }
-            navViewModel.fabOK.postValue(false)
+            navViewModel.fabOKCilck.postValue(false)
         }
         //装备名搜索
         OutlinedTextField(
