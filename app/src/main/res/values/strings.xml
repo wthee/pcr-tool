@@ -154,6 +154,7 @@
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>
     <string name="all_data_load">数据已全部加载</string>
+    <string name="feedback">反馈</string>
     <string name="qq_group">1033289878</string>
-    <string name="copy_qq_tip">已复制反馈 QQ 群号</string>
+    <string name="copy_qq_tip">已复制反馈 QQ 群号，请加群反馈~</string>
 </resources>

@@ -228,6 +228,7 @@ fun MenuContent(
                     //群
                     FabCompose(
                         iconType = MainIconType.GROUP,
+                        text = stringResource(R.string.feedback),
                         modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
                     ) {
                         addToClip(qqGroup, tip)
