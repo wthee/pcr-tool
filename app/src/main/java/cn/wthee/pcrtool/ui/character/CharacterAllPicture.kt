@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -105,7 +106,11 @@ fun CharacterAllPicture(unitId: Int) {
             val index = pagerState.currentPage
             if (loaded[index]) {
                 //权限校验
-                if (!hasPermissions(context, permissions)) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
+                        context,
+                        permissions
+                    )
+                ) {
                     requestPermissions(context as Activity, permissions, 1)
                 } else {
                     //fixme 保存时卡顿
