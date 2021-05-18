@@ -49,8 +49,10 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
     val text = if (loved.value) "" else stringResource(id = R.string.title_love)
 
     equipMaxData?.let {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.padding(Dimen.smallPadding)) {
+        Box(modifier = Modifier
+            .padding(top = Dimen.mediuPadding)
+            .fillMaxSize()) {
+            Column {
                 MainText(
                     text = it.equipmentName,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -58,7 +60,7 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(Dimen.smallPadding)
+                        .padding(Dimen.mediuPadding)
                 ) {
                     IconCompose(data = getEquipIconUrl(equipId))
                     Subtitle2(
@@ -89,7 +91,6 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
                     loved.value = !loved.value
                 }
             }
-
         }
     }
 }
@@ -118,15 +119,14 @@ private fun EquipMaterialList(
         MainTitleText(
             text = stringResource(id = R.string.title_material),
             modifier = Modifier.padding(
-                start = Dimen.smallPadding,
+                start = Dimen.mediuPadding,
                 top = Dimen.largePadding,
-                bottom = Dimen.mediuPadding
             )
         )
         //装备合成素材
         LazyVerticalGrid(
             cells = GridCells.Fixed(6),
-            modifier = Modifier.padding(top = Dimen.mediuPadding)
+            modifier = Modifier.padding(top = Dimen.largePadding)
         ) {
             itemsIndexed(data) { _, material ->
                 Column(

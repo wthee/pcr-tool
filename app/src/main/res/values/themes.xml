@@ -9,6 +9,7 @@
         <item name="colorSecondary">@color/colorPrimary</item>
         <item name="colorSecondaryVariant">@color/colorPrimary</item>
         <item name="colorOnSecondary">@color/black</item>
-<!--        <item name="android:windowFullscreen">true</item>-->
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+
     </style>
 </resources>

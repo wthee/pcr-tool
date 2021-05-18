@@ -47,9 +47,9 @@ object Dimen {
 
     val border = 3.dp
 
-    val topBarHeight = 40.dp
+    val topBarHeight = 36.dp
 
-    val topBarIconSize = 24.dp
+    val topBarIconSize = 20.dp
 
     val slideHeight = 28.dp
 

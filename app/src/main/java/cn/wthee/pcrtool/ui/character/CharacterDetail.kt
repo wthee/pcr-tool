@@ -212,7 +212,7 @@ fun CharacterDetail(
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .padding(Dimen.smallPadding)
+                                    .padding(top = Dimen.mediuPadding)
                                     .fillMaxSize()
                             ) {
                                 //等级
@@ -300,7 +300,8 @@ fun CharacterDetail(
                     //收藏
                     FabCompose(
                         iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
+                        defaultPadding = false
                     ) {
                         filter.value?.addOrRemove(unitId)
                         loved.value = !loved.value
@@ -308,20 +309,23 @@ fun CharacterDetail(
                     //跳转至图片
                     FabCompose(
                         iconType = MainIconType.IMAGE,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
+                        defaultPadding = false
                     ) {
                         toPics(unitId)
                     }
                     //跳转至角色资料
                     FabCompose(
                         iconType = MainIconType.CHARACTER_INTRO,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
+                        defaultPadding = false
                     ) {
                         toCharacterBasicInfo(unitId)
                     }
                     //技能循环
                     FabCompose(
                         iconType = MainIconType.SKILL_LOOP,
+                        defaultPadding = false
                     ) {
                         coroutineScope.launch {
                             if (state.isVisible) {
@@ -465,16 +469,14 @@ private fun UniqueEquip(
             modifier = Modifier
                 .padding(
                     top = Dimen.largePadding,
-                    start = Dimen.smallPadding,
-                    end = Dimen.smallPadding
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
                 )
         ) {
             //名称
             MainText(
                 text = it.equipmentName,
-                modifier = Modifier
-                    .padding(Dimen.mediuPadding)
-                    .align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //图标描述
             Row(modifier = Modifier.fillMaxWidth()) {

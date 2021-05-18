@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,12 +18,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
@@ -44,6 +50,7 @@ import kotlinx.coroutines.launch
 /**
  * 装备列表
  */
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -62,11 +69,13 @@ fun EquipList(
     )
     val coroutineScope = rememberCoroutineScope()
     val sp = mainSP()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
+        keyboardController?.hide()
     }
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -79,17 +88,17 @@ fun EquipList(
                 FilterEquipSheet(navViewModel, coroutineScope, state)
             }
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                LazyVerticalGrid(
-                    cells = GridCells.Fixed(4),
-                    modifier = Modifier
-                        .padding(Dimen.mediuPadding)
-                        .background(color = MaterialTheme.colors.background)
-                ) {
+            Box(
+                modifier = Modifier
+                    .background(color = MaterialTheme.colors.background)
+                    .fillMaxSize()
+            ) {
+                val spanCount = 5
+                LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
                     items(equips) { equip ->
                         EquipItem(filterValue, equip, toEquipDetail)
                     }
-                    items(4) {
+                    items(spanCount) {
                         CommonSpacer()
                     }
                 }
@@ -153,12 +162,13 @@ private fun EquipItem(
         Color.Unspecified
     }
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(Dimen.smallPadding),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconCompose(data = getEquipIconUrl(equip.equipmentId)) {
+        IconCompose(
+            data = getEquipIconUrl(equip.equipmentId),
+            modifier = Modifier.padding(top = Dimen.mediuPadding)
+        ) {
             toEquipDetail(equip.equipmentId)
         }
         //装备名称
@@ -166,6 +176,7 @@ private fun EquipItem(
             text = equip.equipmentName,
             style = MaterialTheme.typography.caption,
             maxLines = 1,
+            textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold,
             color = nameColor,
@@ -179,6 +190,7 @@ private fun EquipItem(
 /**
  * 装备筛选
  */
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 private fun FilterEquipSheet(
@@ -233,10 +245,33 @@ private fun FilterEquipSheet(
             navViewModel.fabOKCilck.postValue(false)
         }
         //装备名搜索
+        val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
             value = textState.value,
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.button,
+            leadingIcon = {
+                IconCompose(
+                    data = MainIconType.EQUIP.icon,
+                    modifier = Modifier.size(Dimen.fabIconSize)
+                )
+            },
+            trailingIcon = {
+                IconCompose(
+                    data = MainIconType.SEARCH.icon,
+                    modifier = Modifier.size(Dimen.fabIconSize)
+                ) {
+                    keyboardController?.hide()
+                    navViewModel.fabOKCilck.postValue(true)
+                }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                    navViewModel.fabOKCilck.postValue(true)
+                }
+            ),
             singleLine = false,
             label = {
                 Text(

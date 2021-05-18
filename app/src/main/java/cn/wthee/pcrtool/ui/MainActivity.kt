@@ -15,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
@@ -29,7 +30,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.compose.DownloadCompose
 import cn.wthee.pcrtool.ui.compose.FabCompose
-import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.*
@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
         var r6Ids = listOf<Int>()
     }
 
+    @ExperimentalComposeUiApi
     @ExperimentalPagingApi
     @ExperimentalAnimationApi
     @ExperimentalMaterialApi
@@ -65,13 +66,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             PcrtoolcomposeTheme {
                 ProvideWindowInsets {
+                    //状态栏、导航栏适配
                     val ui = rememberSystemUiController()
                     val isLight = MaterialTheme.colors.isLight
-                    ui.setStatusBarColor(Color.Transparent)
                     ui.setNavigationBarColor(Color.Transparent, darkIcons = isLight)
-                    FadeAnimation {
-                        Home()
-                    }
+                    Home()
                 }
             }
         }
@@ -123,6 +122,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalPagingApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -140,7 +140,6 @@ fun Home() {
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-
 
     Box(modifier = Modifier.fillMaxSize()) {
         //数据库版本检查

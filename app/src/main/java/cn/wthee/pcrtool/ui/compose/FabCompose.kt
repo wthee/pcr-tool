@@ -30,21 +30,22 @@ fun FabCompose(
     iconType: MainIconType,
     modifier: Modifier = Modifier,
     text: String = "",
+    defaultPadding: Boolean = true,
     onClick: () -> Unit
 ) {
 
     val context = LocalContext.current
     val fabAnim = animateFloatAsState(targetValue = if (text == "") 0f else 1f)
-
-    val mModifier = if (text != "") {
-        modifier
-            .navigationBarsPadding()
-            .height(Dimen.fabSize)
-    } else {
-        modifier
-            .navigationBarsPadding()
-            .size(Dimen.fabSize)
+    var mModifier = modifier
+    if (defaultPadding) {
+        mModifier = modifier.navigationBarsPadding()
     }
+    mModifier = if (text != "") {
+        mModifier.height(Dimen.fabSize)
+    } else {
+        mModifier.size(Dimen.fabSize)
+    }
+
     FloatingActionButton(
         onClick = onClick.vibrate {
             VibrateUtil(context).single()

@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
@@ -72,6 +73,7 @@ object Navigation {
     const val APP_NOTICE = "appNotice"
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalPagingApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -81,12 +83,15 @@ object Navigation {
 fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions: NavActions) {
 
     NavHost(navController, startDestination = Navigation.CHARACTER_LIST) {
+
         //首页
         composable(Navigation.CHARACTER_LIST) {
-            CharacterList(
-                actions.toCharacterDetail,
-                viewModel
-            )
+            StatusBarBox {
+                CharacterList(
+                    actions.toCharacterDetail,
+                    viewModel
+                )
+            }
         }
 
         //角色属性详情
@@ -101,16 +106,18 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
 
-            CharacterDetail(
-                unitId = arguments.getInt(Navigation.UNIT_ID),
-                actions.toEquipDetail,
-                actions.toCharacterBasicInfo,
-                actions.toCharacteRankEquip,
-                actions.toCharacteRankCompare,
-                actions.toCharacteEquipCount,
-                actions.toCharacterPic,
-                viewModel
-            )
+            StatusBarBox {
+                CharacterDetail(
+                    unitId = arguments.getInt(Navigation.UNIT_ID),
+                    actions.toEquipDetail,
+                    actions.toCharacterBasicInfo,
+                    actions.toCharacteRankEquip,
+                    actions.toCharacteRankCompare,
+                    actions.toCharacteEquipCount,
+                    actions.toCharacterPic,
+                    viewModel
+                )
+            }
 
         }
 
@@ -122,10 +129,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
-                CharacterBasicInfo(
-                    unitId = arguments.getInt(Navigation.UNIT_ID)
-                )
+            StatusBarBox {
+                SlideAnimation {
+                    CharacterBasicInfo(
+                        unitId = arguments.getInt(Navigation.UNIT_ID)
+                    )
+                }
             }
         }
 
@@ -137,17 +146,21 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            FadeAnimation {
-                CharacterAllPicture(
-                    unitId = arguments.getInt(Navigation.UNIT_ID)
-                )
+            StatusBarBox {
+                FadeAnimation {
+                    CharacterAllPicture(
+                        unitId = arguments.getInt(Navigation.UNIT_ID)
+                    )
+                }
             }
         }
 
         //装备列表
         composable(Navigation.EQUIP_LIST) {
-            FadeAnimation {
-                EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
+            StatusBarBox {
+                FadeAnimation {
+                    EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
+                }
             }
         }
 
@@ -159,8 +172,10 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
-                EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
+            StatusBarBox {
+                SlideAnimation {
+                    EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
+                }
             }
         }
 
@@ -172,12 +187,14 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
-                RankEquipList(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    toEquipDetail = actions.toEquipDetail,
-                    navViewModel = viewModel
-                )
+            StatusBarBox {
+                SlideAnimation {
+                    RankEquipList(
+                        unitId = arguments.getInt(Navigation.UNIT_ID),
+                        toEquipDetail = actions.toEquipDetail,
+                        navViewModel = viewModel
+                    )
+                }
             }
         }
 
@@ -197,15 +214,17 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
-                RankCompare(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    maxRank = arguments.getInt(Navigation.MAX_RANK),
-                    level = arguments.getInt(Navigation.LEVEL),
-                    rarity = arguments.getInt(Navigation.RARITY),
-                    uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL),
-                    navViewModel = viewModel
-                )
+            StatusBarBox {
+                SlideAnimation {
+                    RankCompare(
+                        unitId = arguments.getInt(Navigation.UNIT_ID),
+                        maxRank = arguments.getInt(Navigation.MAX_RANK),
+                        level = arguments.getInt(Navigation.LEVEL),
+                        rarity = arguments.getInt(Navigation.RARITY),
+                        uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL),
+                        navViewModel = viewModel
+                    )
+                }
             }
         }
 
@@ -219,21 +238,25 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
-                RankEquipCount(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    maxRank = arguments.getInt(Navigation.MAX_RANK),
-                    actions.toEquipDetail,
-                    navViewModel = viewModel
-                )
+            StatusBarBox {
+                SlideAnimation {
+                    RankEquipCount(
+                        unitId = arguments.getInt(Navigation.UNIT_ID),
+                        maxRank = arguments.getInt(Navigation.MAX_RANK),
+                        actions.toEquipDetail,
+                        navViewModel = viewModel
+                    )
+                }
             }
         }
 
         //角色排行
         composable(Navigation.TOOL_LEADER) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            FadeAnimation {
-                LeaderboardList()
+            StatusBarBox {
+                FadeAnimation {
+                    LeaderboardList()
+                }
             }
         }
 
@@ -251,24 +274,30 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //剧情活动
         composable(Navigation.TOOL_EVENT) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                EventList(actions.toCharacterDetail)
+            StatusBarBox {
+                SlideAnimation {
+                    EventList(actions.toCharacterDetail)
+                }
             }
         }
 
         //角色公会
         composable(Navigation.TOOL_GUILD) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                GuildList(actions.toCharacterDetail)
+            StatusBarBox {
+                SlideAnimation {
+                    GuildList(actions.toCharacterDetail)
+                }
             }
         }
 
         //团队战
         composable(Navigation.TOOL_CLAN) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                ClanBattleList(actions.toClanBossInfo)
+            StatusBarBox {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
+                SlideAnimation {
+                    ClanBattleList(actions.toClanBossInfo)
+                }
             }
 
         }
@@ -283,27 +312,33 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            SlideAnimation {
-                ClanBossInfoPager(
-                    arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
-                    arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
-                )
+            StatusBarBox {
+                SlideAnimation {
+                    ClanBossInfoPager(
+                        arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
+                        arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
+                    )
+                }
             }
         }
 
         //日历活动
         composable(Navigation.TOOL_CALENDAR) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                CalendarCompose()
+            StatusBarBox {
+                SlideAnimation {
+                    CalendarCompose()
+                }
             }
         }
 
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
+            StatusBarBox {
+                SlideAnimation {
+                    PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
+                }
             }
         }
 
@@ -315,43 +350,53 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            FadeAnimation {
-                PvpSearchResult(
-                    arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
-                    actions.toCharacterDetail
-                )
+            StatusBarBox {
+                FadeAnimation {
+                    PvpSearchResult(
+                        arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
+                        actions.toCharacterDetail
+                    )
+                }
             }
         }
 
         //竞技场收藏
         composable(Navigation.TOOL_PVP_FAVORITE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
+            StatusBarBox {
+                SlideAnimation {
+                    PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
+                }
             }
         }
 
         //设置页面
         composable(Navigation.MAIN_SETTINGS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            SlideAnimation {
-                MainSettings()
+            StatusBarBox {
+                SlideAnimation {
+                    MainSettings()
+                }
             }
         }
 
         //更新通知
         composable(Navigation.APP_NOTICE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            FadeAnimation {
-                NoticeList()
+            StatusBarBox {
+                FadeAnimation {
+                    NoticeList()
+                }
             }
         }
 
         //公告
         composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            FadeAnimation {
-                NewsList(actions.toNewsDetail)
+            StatusBarBox {
+                FadeAnimation {
+                    NewsList(actions.toNewsDetail)
+                }
             }
         }
 
@@ -375,13 +420,15 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            FadeAnimation {
-                NewsDetail(
-                    arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
-                    arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
-                    arguments.getInt(Navigation.TOOL_NEWS_REGION),
-                    arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
-                )
+            StatusBarBox {
+                FadeAnimation {
+                    NewsDetail(
+                        arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
+                        arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
+                        arguments.getInt(Navigation.TOOL_NEWS_REGION),
+                        arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
+                    )
+                }
             }
         }
     }
@@ -474,6 +521,9 @@ class NavActions(navController: NavHostController) {
     }
 }
 
+/**
+ * 导航 ViewModel
+ */
 @HiltViewModel
 class NavViewModel @Inject constructor() : ViewModel() {
 

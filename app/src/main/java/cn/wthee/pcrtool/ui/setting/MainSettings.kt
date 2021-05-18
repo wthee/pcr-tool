@@ -60,7 +60,7 @@ fun MainSettings() {
         //数据更新
         MainText(
             text = dbVersionGroup,
-            modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+            modifier = Modifier.padding(bottom = Dimen.largePadding)
         )
         //- 强制更新
         SettingItem(
@@ -114,9 +114,22 @@ fun MainSettings() {
         val vibrateState = remember {
             mutableStateOf(vibrateOn)
         }
+
         val vibrateSummary =
             stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    vibrateState.value = !vibrateState.value
+                    sp
+                        .edit()
+                        .putBoolean(Constants.SP_VIBRATE_STATE, vibrateState.value)
+                        .apply()
+                    VibrateUtil(context).single()
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             IconCompose(
                 data = MainIconType.VIBRATE.icon,
                 modifier = Modifier

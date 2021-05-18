@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import cn.wthee.pcrtool.R
@@ -25,7 +24,6 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -93,7 +91,7 @@ fun RankEquipCount(
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = Dimen.largePadding)
+                modifier = Modifier.padding(top = Dimen.mediuPadding)
             ) {
                 //头像
                 IconCompose(
@@ -164,10 +162,8 @@ private fun EquipCountItem(
     item: EquipmentMaterial,
     toEquipDetail: (Int) -> Unit
 ) {
-    val alpha = if (item.id == Constants.UNKNOWN_EQUIP_ID) 0f else 1f
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.alpha(alpha)
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(data = getEquipIconUrl(item.id)) {
             toEquipDetail(item.id)

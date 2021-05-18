@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -17,11 +19,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
@@ -48,6 +53,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色列表
  */
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -67,33 +73,37 @@ fun CharacterList(
     val coroutineScope = rememberCoroutineScope()
     //滚动监听
     val scrollState = rememberLazyListState()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         navViewModel.fabOKCilck.postValue(false)
         navViewModel.resetClick.postValue(false)
+        keyboardController?.hide()
     }
-
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
             GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
                 ?: arrayListOf()
-
         viewModel.getCharacters(filterValue)
-        ModalBottomSheetLayout(
-            sheetState = state,
-            sheetContent = {
-                FilterCharacterSheet(navViewModel, coroutineScope, state)
-            }
-        ) {
-            val marginTop: Dp = marginTopBar(scrollState)
-            coroutineScope.launch {
-                val r6Ids = viewModel.getR6Ids()
-                navViewModel.r6Ids.postValue(r6Ids)
-            }
-            Box(modifier = Modifier.fillMaxSize()) {
+    }
+
+    ModalBottomSheetLayout(
+        sheetState = state,
+        sheetContent = {
+            FilterCharacterSheet(navViewModel, coroutineScope, state)
+        }
+    ) {
+        val marginTop: Dp = marginTopBar(scrollState)
+        coroutineScope.launch {
+            val r6Ids = viewModel.getR6Ids()
+            navViewModel.r6Ids.postValue(r6Ids)
+        }
+        Box(modifier = Modifier.fillMaxSize()) {
+            TopBarCompose(scrollState = scrollState)
+            SlideAnimation {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
@@ -109,47 +119,46 @@ fun CharacterList(
                         CommonSpacer()
                     }
                 }
-                //顶层
-                TopBarCompose(scrollState = scrollState)
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    //重置筛选
-                    if (filter.value != null && filter.value!!.isFilter()) {
-                        FabCompose(
-                            iconType = MainIconType.RESET,
-                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                        ) {
-                            coroutineScope.launch {
-                                state.hide()
-                            }
-                            navViewModel.resetClick.postValue(true)
-                        }
-                    }
-                    val count = list.value?.size ?: 0
-                    // 数量显示&筛选按钮
+            }
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
+                horizontalArrangement = Arrangement.End
+            ) {
+                //重置筛选
+                if (filter.value != null && filter.value!!.isFilter()) {
                     FabCompose(
-                        iconType = MainIconType.CHARACTER,
-                        text = "$count"
+                        iconType = MainIconType.RESET,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
                     ) {
                         coroutineScope.launch {
-                            if (state.isVisible) {
-                                navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                                state.hide()
-                            } else {
-                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                                state.show()
-                            }
+                            state.hide()
+                        }
+                        navViewModel.resetClick.postValue(true)
+                    }
+                }
+                val count = list.value?.size ?: 0
+                // 数量显示&筛选按钮
+                FabCompose(
+                    iconType = MainIconType.CHARACTER,
+                    text = "$count"
+                ) {
+                    coroutineScope.launch {
+                        if (state.isVisible) {
+                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                            state.hide()
+                        } else {
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            state.show()
                         }
                     }
                 }
-
             }
 
         }
+
     }
 }
 
@@ -233,6 +242,7 @@ private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
 /**
  * 角色筛选
  */
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 private fun FilterCharacterSheet(
@@ -326,10 +336,33 @@ private fun FilterCharacterSheet(
             navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }
         //角色名搜索
+        val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
             value = textState.value,
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.button,
+            leadingIcon = {
+                IconCompose(
+                    data = MainIconType.CHARACTER.icon,
+                    modifier = Modifier.size(Dimen.fabIconSize)
+                )
+            },
+            trailingIcon = {
+                IconCompose(
+                    data = MainIconType.SEARCH.icon,
+                    modifier = Modifier.size(Dimen.fabIconSize)
+                ) {
+                    keyboardController?.hide()
+                    navViewModel.fabOKCilck.postValue(true)
+                }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                    navViewModel.fabOKCilck.postValue(true)
+                }
+            ),
             singleLine = false,
             label = {
                 Text(

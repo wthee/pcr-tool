@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.vibrate
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
@@ -275,7 +276,9 @@ fun PagerIndicator(pagerState: PagerState, modifier: Modifier) {
 
 @Composable
 fun CommonSpacer() {
-    Spacer(modifier = Modifier.height(Dimen.sheetMarginBottom))
+    Spacer(modifier = Modifier
+        .navigationBarsPadding()
+        .height(Dimen.fabSize + Dimen.fabMargin))
 }
 
 /**

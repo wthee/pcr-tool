@@ -46,6 +46,11 @@ enum class MainIconType(val icon: ImageVector) {
     SETTING(Icons.Rounded.MiscellaneousServices),
 
     /**
+     * 搜索
+     */
+    SEARCH(Icons.Rounded.Search),
+
+    /**
      * 数据切换
      */
     CHANGE_DATA(Icons.Rounded.SwapHoriz),
@@ -103,7 +108,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 公会
      */
-    GUILD(Icons.Rounded.LocalActivity),
+    GUILD(Icons.Rounded.TripOrigin),
 
     /**
      * 排行

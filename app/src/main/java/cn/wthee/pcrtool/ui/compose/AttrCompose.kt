@@ -45,16 +45,18 @@ fun AttrItem(text: String, value: Int, modifier: Modifier) {
         in 100000 until 100000000 -> "${value / 10000}万"
         else -> value.toString()
     }
-    Row(modifier = modifier) {
+    Row(
+        modifier = modifier.padding(top = Dimen.smallPadding)
+    ) {
         MainTitleText(
             text = text, modifier = Modifier
-                .padding(Dimen.smallPadding)
+                .padding(start = Dimen.mediuPadding)
                 .weight(0.3f)
         )
         MainContentText(
             text = valueText,
             modifier = Modifier
-                .padding(Dimen.smallPadding)
+                .padding(end = Dimen.mediuPadding)
                 .weight(0.2f)
         )
     }

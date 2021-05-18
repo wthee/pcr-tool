@@ -61,24 +61,20 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) 
                     )
                 ) {
                     Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
-                    Text(
+                    MainText(
                         text = stringResource(id = R.string.grade),
-                        textAlign = TextAlign.Center,
                         modifier = Modifier.weight(0.25f)
                     )
-                    Text(
+                    MainText(
                         text = stringResource(id = R.string.jjc),
-                        textAlign = TextAlign.Center,
                         modifier = Modifier.weight(0.25f)
                     )
-                    Text(
+                    MainText(
                         text = stringResource(id = R.string.clan),
-                        textAlign = TextAlign.Center,
                         modifier = Modifier.weight(0.25f)
                     )
-                    Text(
+                    MainText(
                         text = stringResource(id = R.string.tower),
-                        textAlign = TextAlign.Center,
                         modifier = Modifier.weight(0.25f)
                     )
                 }

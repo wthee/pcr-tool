@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
@@ -38,39 +39,27 @@ fun TopBarCompose(
     } else {
         offset = -Dimen.topBarHeight
     }
-    val statusBarHeight =
-        LocalWindowInsets.current.systemBars.toPaddingValues().calculateTopPadding()
 
-
-    Box {
-        //fixme 滚动距离
-        Row(
-            verticalAlignment = Alignment.Top,
+    Row(
+        verticalAlignment = Alignment.Top,
+        modifier = Modifier
+            .fillMaxWidth()
+            .offset(y = offset)
+            .height(Dimen.topBarHeight)
+            .background(MaterialTheme.colors.primary)
+    ) {
+        IconCompose(
+            iconId,
             modifier = Modifier
-                .padding(top = statusBarHeight)
-                .fillMaxWidth()
-                .offset(y = offset)
-                .height(Dimen.topBarHeight)
-                .background(MaterialTheme.colors.primary)
-        ) {
-            IconCompose(
-                iconId,
-                modifier = Modifier
-                    .size(Dimen.topBarIconSize)
-                    .padding(start = Dimen.mediuPadding)
-            )
-            Text(
-                text = stringResource(id = titleId),
-                style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme.colors.onPrimary,
-                modifier = Modifier.padding(start = Dimen.mediuPadding)
-            )
-        }
-        Spacer(
-            Modifier
-                .background(MaterialTheme.colors.primary)
-                .fillMaxWidth()
-                .statusBarsHeight()
+                .padding(start = Dimen.largePadding)
+                .size(Dimen.topBarIconSize)
+        )
+        Text(
+            text = stringResource(id = titleId),
+            style = MaterialTheme.typography.subtitle1,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.onPrimary,
+            modifier = Modifier.padding(start = Dimen.mediuPadding)
         )
     }
 }
@@ -100,12 +89,10 @@ fun StatusBarBox(content: @Composable () -> Unit) {
 @Composable
 fun marginTopBar(scrollState: LazyListState): Dp {
     var marginTop: Dp
-    val statusBarHeight =
-        LocalWindowInsets.current.systemBars.toPaddingValues().calculateTopPadding()
 
     if (scrollState.firstVisibleItemIndex == 0) {
         marginTop =
-            Dimen.topBarHeight + statusBarHeight - scrollState.firstVisibleItemScrollOffset.dp - 8.dp
+            Dimen.topBarHeight - scrollState.firstVisibleItemScrollOffset.dp - 8.dp
         if (marginTop < 0.dp) marginTop = 0.dp
     } else {
         marginTop = 0.dp
