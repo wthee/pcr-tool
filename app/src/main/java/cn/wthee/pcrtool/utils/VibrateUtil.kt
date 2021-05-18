@@ -35,6 +35,22 @@ class VibrateUtil(context: Context) {
             }
         }
     }
+
+    fun done() {
+        if (vibrateOn) {
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                    service.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK))
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    service.vibrate(VibrationEffect.createOneShot(vibrateTime, vibrateStrength))
+                }
+                else -> {
+                    service.vibrate(vibrateTime)
+                }
+            }
+        }
+    }
 }
 
 fun (() -> Unit).vibrate(arg: () -> Unit): () -> Unit = {

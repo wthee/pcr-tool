@@ -4,6 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -350,11 +352,15 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
+            val vibrated = remember {
+                mutableStateOf(false)
+            }
             StatusBarBox {
                 FadeAnimation {
                     PvpSearchResult(
                         arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
-                        actions.toCharacterDetail
+                        actions.toCharacterDetail,
+                        vibrated
                     )
                 }
             }

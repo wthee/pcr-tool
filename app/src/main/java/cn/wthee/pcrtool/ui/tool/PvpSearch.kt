@@ -36,10 +36,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.CharacterIdUtil
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.fillZero
-import cn.wthee.pcrtool.utils.openWebView
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -394,6 +391,7 @@ fun PvpIconItem(
 fun PvpSearchResult(
     idString: String,
     toCharacter: (Int) -> Unit,
+    vibrated: MutableState<Boolean>,
     viewModel: PvpViewModel = hiltNavGraphViewModel()
 ) {
     val ids = JsonArray()
@@ -416,6 +414,8 @@ fun PvpSearchResult(
             favoritesList.add(data.atks)
         }
     }
+    val context = LocalContext.current
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         //防守
@@ -441,6 +441,11 @@ fun PvpSearchResult(
             if (result.value != null) {
                 navViewModel.loading.postValue(false)
                 if (result.value!!.message == "success") {
+                    //振动提醒
+                    if (!vibrated.value) {
+                        vibrated.value = true
+                        VibrateUtil(context).done()
+                    }
                     if (result.value!!.data!!.isNotEmpty()) {
                         //查询成功
                         val list = result.value!!.data!!.sortedByDescending { it.up }
