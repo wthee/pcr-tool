@@ -36,26 +36,20 @@ fun SlideAnimation(
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
-
-    if (animOn) {
-        AnimatedVisibility(
-            visible = visible,
-            modifier = modifier,
-            enter = slideInVertically(
-                initialOffsetY = { 40 },
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier,
+        enter = if (animOn) {
+            slideInVertically(
+                initialOffsetY = { it / 4 },
                 animationSpec = defaultSpring()
-            ),
-            content = content,
-        )
-    } else {
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(1f),
-            exit = fadeOut(),
-            content = content,
-        )
-    }
-
+            )
+        } else {
+            fadeIn(1f)
+        },
+        exit = fadeOut(),
+        content = content,
+    )
 }
 
 /**
@@ -68,21 +62,16 @@ fun FadeAnimation(
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
-
-    if (animOn) {
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(animationSpec = defaultTween()),
-            content = content,
-        )
-    } else {
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(1f),
-            exit = fadeOut(),
-            content = content,
-        )
-    }
+    AnimatedVisibility(
+        visible = visible,
+        enter = if (animOn) {
+            fadeIn(animationSpec = defaultTween())
+        } else {
+            fadeIn(1f)
+        },
+        exit = fadeOut(),
+        content = content,
+    )
 }
 
 /**
@@ -95,22 +84,16 @@ fun ExtendedAnimation(
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
-
-    if (animOn) {
-        AnimatedVisibility(
-            visible = visible,
-            enter = expandIn(expandFrom = Alignment.Center, animationSpec = defaultTween()),
-            exit = shrinkOut(shrinkTowards = Alignment.Center, animationSpec = defaultTween()),
-            content = content,
-        )
-    } else {
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(1f),
-            exit = fadeOut(),
-            content = content,
-        )
-    }
+    AnimatedVisibility(
+        visible = visible,
+        enter = if (animOn) {
+            expandIn(expandFrom = Alignment.Center, animationSpec = defaultTween())
+        } else {
+            fadeIn(1f)
+        },
+        exit = shrinkOut(shrinkTowards = Alignment.Center, animationSpec = defaultTween()),
+        content = content,
+    )
 }
 
 /**
@@ -123,23 +106,18 @@ fun MenuAnimation(
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
-
-    if (animOn) {
-        AnimatedVisibility(
-            visible = visible,
-            enter = slideInVertically(
+    AnimatedVisibility(
+        visible = visible,
+        enter = if (animOn) {
+            slideInVertically(
                 initialOffsetY = { it / 4 },
                 animationSpec = defaultSpring()
-            ),
-            exit = fadeOut(),
-            content = content
-        )
-    } else {
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(1f),
-            exit = fadeOut(),
-            content = content,
-        )
-    }
+            )
+        } else {
+            fadeIn(1f)
+        },
+        exit = fadeOut(),
+        content = content
+    )
+
 }

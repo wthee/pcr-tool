@@ -98,17 +98,8 @@ fun PvpSearchCompose(
     val addTip = stringResource(id = R.string.pvp_info_add_tip)
     val urlTip = stringResource(id = R.string.pcrdfans_com)
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))
-    ) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.bg_gray))
-        ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
             //标题
             MainTitleText(
                 text = stringResource(id = R.string.pcrdfans),
@@ -183,7 +174,7 @@ fun PvpSearchCompose(
                             }
 
                         }
-                        Box {
+                        Box(modifier = Modifier.background(color = colorResource(id = R.color.bg_gray))) {
                             //供选择列表
                             LazyVerticalGrid(
                                 cells = GridCells.Fixed(spanCount),
@@ -272,7 +263,6 @@ fun PvpSearchCompose(
             }
 
         }
-
         Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -421,7 +411,7 @@ fun PvpSearchResult(
         //防守
         Row(
             modifier = Modifier
-                .padding(top = Dimen.mediuPadding)
+                .padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -437,58 +427,67 @@ fun PvpSearchResult(
                 }
             }
         }
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (result.value != null) {
-                navViewModel.loading.postValue(false)
-                if (result.value!!.message == "success") {
-                    //振动提醒
-                    if (!vibrated.value) {
-                        vibrated.value = true
-                        VibrateUtil(context).done()
-                    }
-                    if (result.value!!.data!!.isNotEmpty()) {
-                        //查询成功
-                        val list = result.value!!.data!!.sortedByDescending { it.up }
-                        SlideAnimation {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(colorResource(id = R.color.bg_gray))
-                            ) {
-                                //展示查询结果
-                                LazyColumn {
-                                    itemsIndexed(items = list) { index, item ->
-                                        PvpAtkTeam(
-                                            toCharacter,
-                                            favoritesList,
-                                            index + 1,
-                                            item,
-                                            region,
-                                            viewModel
-                                        )
-                                    }
-                                    item {
-                                        CommonSpacer()
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = Dimen.cardElevation,
+            shape = CardTopShape
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(colorResource(id = R.color.bg_gray))
+            ) {
+                if (result.value != null) {
+                    navViewModel.loading.postValue(false)
+                    if (result.value!!.message == "success") {
+                        //振动提醒
+                        if (!vibrated.value) {
+                            vibrated.value = true
+                            VibrateUtil(context).done()
+                        }
+                        if (result.value!!.data!!.isNotEmpty()) {
+                            //查询成功
+                            val list = result.value!!.data!!.sortedByDescending { it.up }
+                            SlideAnimation {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(colorResource(id = R.color.bg_gray))
+                                ) {
+                                    //展示查询结果
+                                    LazyColumn {
+                                        itemsIndexed(items = list) { index, item ->
+                                            PvpAtkTeam(
+                                                toCharacter,
+                                                favoritesList,
+                                                index + 1,
+                                                item,
+                                                region,
+                                                viewModel
+                                            )
+                                        }
+                                        item {
+                                            CommonSpacer()
+                                        }
                                     }
                                 }
                             }
+                        } else {
+                            MainText(
+                                text = stringResource(id = R.string.pvp_no_data),
+                                modifier = Modifier.align(Alignment.Center)
+                            )
                         }
                     } else {
                         MainText(
-                            text = stringResource(id = R.string.pvp_no_data),
+                            text = stringResource(id = R.string.data_get_error),
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
-                } else {
-                    MainText(
-                        text = stringResource(id = R.string.data_get_error),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
                 }
             }
         }
-
     }
 }
 
