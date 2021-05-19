@@ -23,7 +23,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -58,7 +58,7 @@ import kotlin.math.round
 fun PvpSearchCompose(
     toResult: (String) -> Unit,
     toFavorite: () -> Unit,
-    viewModel: CharacterViewModel = hiltNavGraphViewModel()
+    viewModel: CharacterViewModel = hiltViewModel()
 ) {
     //已选择的id
     val navIds = navViewModel.selectedIds.value
@@ -392,7 +392,7 @@ fun PvpSearchResult(
     idString: String,
     toCharacter: (Int) -> Unit,
     vibrated: MutableState<Boolean>,
-    viewModel: PvpViewModel = hiltNavGraphViewModel()
+    viewModel: PvpViewModel = hiltViewModel()
 ) {
     val ids = JsonArray()
     for (id in idString.split("-")) {

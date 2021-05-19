@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 fun PvpFavorites(
     toCharacter: (Int) -> Unit,
     toResult: (String) -> Unit,
-    pvpViewModel: PvpViewModel = hiltNavGraphViewModel()
+    pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
     val region = getRegion()
     pvpViewModel.getAllFavorites(region)

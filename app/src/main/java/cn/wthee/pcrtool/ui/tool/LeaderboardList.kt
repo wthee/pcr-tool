@@ -16,7 +16,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalAnimationApi
 @Composable
-fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltNavGraphViewModel()) {
+fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltViewModel()) {
     leaderViewModel.getLeader()
     val list = leaderViewModel.leaderData.observeAsState()
     val state = rememberLazyListState()

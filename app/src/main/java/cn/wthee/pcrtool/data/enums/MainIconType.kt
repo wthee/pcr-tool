@@ -206,6 +206,11 @@ enum class MainIconType(val icon: ImageVector) {
     VIBRATE(Icons.Rounded.Vibration),
 
     /**
+     * 动画
+     */
+    ANIMATION(Icons.Rounded.Animation),
+
+    /**
      * 删除
      */
     DELETE(Icons.Rounded.DeleteForever),

@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -57,7 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NewsList(
     toDetail: (String, String, Int, String) -> Unit,
-    viewModel: NewsViewModel = hiltNavGraphViewModel()
+    viewModel: NewsViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val states =

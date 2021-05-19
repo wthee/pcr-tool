@@ -15,7 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -36,7 +36,7 @@ fun RankEquipCount(
     maxRank: Int,
     toEquipDetail: (Int) -> Unit,
     navViewModel: NavViewModel,
-    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
+    equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val curRank = navViewModel.curRank.value
     val targetRank = navViewModel.targetRank.value

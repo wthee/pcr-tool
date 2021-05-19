@@ -110,7 +110,7 @@ fun MainSettings() {
             modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
         )
         //- 振动开关
-        val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, false)
+        val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         val vibrateState = remember {
             mutableStateOf(vibrateOn)
         }
@@ -147,6 +147,46 @@ fun MainSettings() {
             Switch(checked = vibrateState.value, onCheckedChange = {
                 vibrateState.value = it
                 sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
+                VibrateUtil(context).single()
+            })
+        }
+        //- 动画效果
+        val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
+        val animState = remember {
+            mutableStateOf(animOn)
+        }
+        val animSummary =
+            stringResource(id = if (animState.value) R.string.animation_on else R.string.animation_off)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    animState.value = !animState.value
+                    sp
+                        .edit()
+                        .putBoolean(Constants.SP_ANIM_STATE, animState.value)
+                        .apply()
+                    VibrateUtil(context).single()
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconCompose(
+                data = MainIconType.ANIMATION.icon,
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .size(Dimen.settingIconSize)
+            )
+            Column(
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+                    .weight(1f)
+            ) {
+                TitleText(text = stringResource(id = R.string.animation))
+                SummaryText(text = animSummary)
+            }
+            Switch(checked = animState.value, onCheckedChange = {
+                animState.value = it
+                sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
                 VibrateUtil(context).single()
             })
         }

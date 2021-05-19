@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ClanBattleList(
     toClanBossInfo: (Int, Int) -> Unit,
-    clanViewModel: ClanViewModel = hiltNavGraphViewModel()
+    clanViewModel: ClanViewModel = hiltViewModel()
 ) {
     clanViewModel.getAllClanBattleData()
     val clanList = clanViewModel.clanInfoList.observeAsState()
@@ -168,7 +168,7 @@ private fun ClanBattleItem(
 fun ClanBossInfoPager(
     clanId: Int,
     index: Int,
-    clanViewModel: ClanViewModel = hiltNavGraphViewModel()
+    clanViewModel: ClanViewModel = hiltViewModel()
 ) {
     clanViewModel.getClanInfo(clanId)
     val clanInfo = clanViewModel.clanInfo.observeAsState()
@@ -249,16 +249,10 @@ fun ClanBossInfoPager(
                             elevation = Dimen.cardElevation,
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(
-                                    top = Dimen.smallPadding,
-                                    start = Dimen.mediuPadding,
-                                    end = Dimen.mediuPadding
-                                )
+                                .padding(Dimen.mediuPadding)
                         ) {
                             Column(
-                                modifier = Modifier
-                                    .padding(Dimen.smallPadding)
-                                    .verticalScroll(rememberScrollState())
+                                modifier = Modifier.verticalScroll(rememberScrollState())
                             ) {
                                 //名称
                                 MainText(
@@ -289,7 +283,7 @@ fun ClanBossInfoPager(
 private fun BossSkillList(
     index: Int,
     bossList: List<EnemyParameter>,
-    skillViewModel: SkillViewModel = hiltNavGraphViewModel()
+    skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getAllEnemySkill(bossList)
     skillViewModel.getAllSkillLoops(bossList)
@@ -301,8 +295,8 @@ private fun BossSkillList(
     allSkillList.value?.let { list ->
         Column(
             modifier = Modifier
+                .padding(Dimen.mediuPadding)
                 .fillMaxSize()
-                .padding(Dimen.smallPadding)
         ) {
             if (allLoopData.value != null && allIcon.value != null) {
                 SkillLoopList(

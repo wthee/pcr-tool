@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillActionText
@@ -32,7 +32,7 @@ fun SkillCompose(
     level: Int = 0,
     atk: Int,
     id: Int,
-    skillViewModel: SkillViewModel = hiltNavGraphViewModel()
+    skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getCharacterSkills(level, atk, id)
     val skillList = skillViewModel.skills.observeAsState().value ?: listOf()

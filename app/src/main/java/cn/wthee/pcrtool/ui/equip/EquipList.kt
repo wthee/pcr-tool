@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -57,7 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun EquipList(
     navViewModel: NavViewModel,
-    viewModel: EquipmentViewModel = hiltNavGraphViewModel(),
+    viewModel: EquipmentViewModel = hiltViewModel(),
     toEquipDetail: (Int) -> Unit
 ) {
     val equips = viewModel.equips.observeAsState().value ?: listOf()
@@ -197,7 +197,7 @@ private fun FilterEquipSheet(
     navViewModel: NavViewModel,
     coroutineScope: CoroutineScope,
     sheetState: ModalBottomSheetState,
-    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
+    equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val filter = navViewModel.filterEquip.value ?: FilterEquipment()
 

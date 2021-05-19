@@ -19,7 +19,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
@@ -132,8 +132,8 @@ class MainActivity : ComponentActivity() {
 fun Home() {
     val navController = rememberNavController()
     val actions = remember(navController) { NavActions(navController) }
-    navViewModel = hiltNavGraphViewModel()
-    val noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()
+    navViewModel = hiltViewModel()
+    val noticeViewModel: NoticeViewModel = hiltViewModel()
     val scope = rememberCoroutineScope()
     val loading = navViewModel.loading.observeAsState().value ?: false
     val r6IdList = navViewModel.r6Ids.observeAsState()

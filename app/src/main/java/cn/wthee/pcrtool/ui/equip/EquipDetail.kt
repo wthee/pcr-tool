@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
@@ -38,7 +38,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
-fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()) {
+fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltViewModel()) {
     equipmentViewModel.getEquip(equipId)
     val equipMaxData = equipmentViewModel.equip.observeAsState().value
     //收藏状态
@@ -103,7 +103,7 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltNav
 @Composable
 private fun EquipMaterialList(
     equip: EquipmentMaxData,
-    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
+    equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     equipmentViewModel.getEquipInfos(equip)
     val data = equipmentViewModel.equipMaterialInfos.observeAsState().value ?: listOf()
@@ -171,7 +171,7 @@ private fun EquipMaterialList(
 @ExperimentalFoundationApi
 @Composable
 private fun EquipDropAreaList(
-    equipmentViewModel: EquipmentViewModel = hiltNavGraphViewModel()
+    equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val dropInfoList = equipmentViewModel.dropInfo.observeAsState().value ?: listOf()
     val selectId =

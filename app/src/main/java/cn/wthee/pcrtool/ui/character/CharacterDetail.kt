@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
@@ -52,8 +52,8 @@ fun CharacterDetail(
     toEquipCount: (Int, Int) -> Unit,
     toPics: (Int) -> Unit,
     navViewModel: NavViewModel,
-    attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel(),
-    skillViewModel: SkillViewModel = hiltNavGraphViewModel()
+    attrViewModel: CharacterAttrViewModel = hiltViewModel(),
+    skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     attrViewModel.isUnknown(unitId)
     //是否已登场
@@ -462,7 +462,7 @@ private fun UniqueEquip(
     uniqueEquipLevelMax: Int,
     silderState: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
-    attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel()
+    attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     uniqueEquipmentMaxData?.let {
         Column(
@@ -523,7 +523,7 @@ private fun StarSelect(
     max: Int,
     rarity: Int,
     modifier: Modifier = Modifier,
-    attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel()
+    attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     Row(modifier) {
         for (i in 1..max) {

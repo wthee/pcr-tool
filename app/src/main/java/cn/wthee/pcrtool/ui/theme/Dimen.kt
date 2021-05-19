@@ -25,9 +25,9 @@ object Dimen {
 
     val fabPadding = 6.dp
 
-    val smallPadding = 3.dp
+    val smallPadding = 4.dp
 
-    val mediuPadding = 6.dp
+    val mediuPadding = 8.dp
 
     val largePadding = 12.dp
 

@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -61,7 +61,7 @@ import kotlinx.coroutines.launch
 fun CharacterList(
     toDetail: (Int) -> Unit,
     navViewModel: NavViewModel,
-    viewModel: CharacterViewModel = hiltNavGraphViewModel(),
+    viewModel: CharacterViewModel = hiltViewModel(),
 ) {
     val list = viewModel.characterList.observeAsState()
     //筛选状态
@@ -249,7 +249,7 @@ private fun FilterCharacterSheet(
     navViewModel: NavViewModel,
     coroutineScope: CoroutineScope,
     sheetState: ModalBottomSheetState,
-    characterViewModel: CharacterViewModel = hiltNavGraphViewModel()
+    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
     val filter = navViewModel.filterCharacter.value ?: FilterCharacter()
 

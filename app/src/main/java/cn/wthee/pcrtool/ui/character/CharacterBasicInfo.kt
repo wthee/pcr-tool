@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 @Composable
 fun CharacterBasicInfo(
     unitId: Int,
-    viewModel: CharacterViewModel = hiltNavGraphViewModel()
+    viewModel: CharacterViewModel = hiltViewModel()
 ) {
     viewModel.getCharacter(unitId)
     val data = viewModel.character.observeAsState().value

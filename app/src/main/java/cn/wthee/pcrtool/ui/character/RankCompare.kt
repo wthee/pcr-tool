@@ -21,7 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.RankCompareData
@@ -50,7 +50,7 @@ fun RankCompare(
     rarity: Int,
     uniqueEquipLevel: Int,
     navViewModel: NavViewModel,
-    attrViewModel: CharacterAttrViewModel = hiltNavGraphViewModel()
+    attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     val curRank = navViewModel.curRank.value
     val targetRank = navViewModel.targetRank.value

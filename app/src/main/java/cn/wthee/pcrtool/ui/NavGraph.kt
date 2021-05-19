@@ -14,7 +14,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.navigate
 import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -100,8 +99,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(
             "${Navigation.CHARACTER_DETAIL}/{${Navigation.UNIT_ID}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
-                type = NavType.IntType
-            }, navArgument(Navigation.UNIT_SIX_ID) {
                 type = NavType.IntType
             })
         ) {

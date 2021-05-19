@@ -26,9 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.navigate
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -56,7 +55,7 @@ enum class MenuState {
 fun MenuContent(
     viewModel: NavViewModel,
     navController: NavHostController,
-    noticeViewModel: NoticeViewModel = hiltNavGraphViewModel()
+    noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
@@ -170,7 +169,7 @@ fun MenuContent(
                         text = stringResource(id = R.string.tool_leader),
                         iconType = MainIconType.LEADER,
                         modifier = Modifier
-                            .weight(0.382f)
+                            .weight(0.3f)
                             .fillMaxHeight()
                     )
                     //装备
@@ -180,13 +179,13 @@ fun MenuContent(
                         text = stringResource(id = R.string.tool_equip),
                         iconType = MainIconType.EQUIP,
                         modifier = Modifier
-                            .weight(0.618f)
+                            .weight(0.4f)
                             .fillMaxHeight()
                     )
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .weight(0.382f)
+                            .weight(0.3f)
                     ) {
                         //通知
                         MenuItem(
@@ -196,7 +195,7 @@ fun MenuContent(
                             text = stringResource(id = if (updateApp == 1) R.string.to_update else R.string.app_notice),
                             iconType = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE,
                             modifier = Modifier
-                                .weight(0.618f)
+                                .weight(0.6f)
                                 .fillMaxWidth()
                         )
                         //设置
@@ -206,7 +205,7 @@ fun MenuContent(
                             text = stringResource(id = R.string.setting),
                             iconType = MainIconType.SETTING,
                             modifier = Modifier
-                                .weight(0.382f)
+                                .weight(0.4f)
                                 .fillMaxWidth()
                         )
                     }

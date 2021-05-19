@@ -91,11 +91,11 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.0-rc01")
     implementation("androidx.activity:activity-ktx:1.2.2")
     implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.activity:activity-compose:1.3.0-alpha06")
+    implementation("androidx.activity:activity-compose:1.3.0-alpha08")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     //Accompanist
-    val accompanistVersion = "0.9.1"
+    val accompanistVersion = "0.10.0"
     implementation("com.google.accompanist:accompanist-coil:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
@@ -111,23 +111,23 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hilt_version"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha02")
 
     //Lifecycle
     val lifecycleVersion = "2.3.1"
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha05")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:1.0.0-alpha10")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha01")
 
     //okio
     implementation("com.squareup.okio:okio:2.10.0")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.0")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha08")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha09")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

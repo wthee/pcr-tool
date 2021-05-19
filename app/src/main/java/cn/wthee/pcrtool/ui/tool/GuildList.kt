@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun GuildList(
     toCharacterDetail: (Int) -> Unit,
-    guildViewModel: GuildViewModel = hiltNavGraphViewModel()
+    guildViewModel: GuildViewModel = hiltViewModel()
 ) {
     guildViewModel.getGuilds()
     val guilds = guildViewModel.guilds.observeAsState()

@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun EventList(
     toCharacterDetail: (Int) -> Unit,
-    eventViewModel: EventViewModel = hiltNavGraphViewModel()
+    eventViewModel: EventViewModel = hiltViewModel()
 ) {
     eventViewModel.getEventHistory()
     val events = eventViewModel.events.observeAsState()
