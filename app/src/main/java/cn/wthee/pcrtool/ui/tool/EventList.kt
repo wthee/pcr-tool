@@ -45,13 +45,15 @@ fun EventList(
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        events.value?.let { data ->
-            LazyColumn(state = state) {
-                items(data) {
-                    EventItem(it, toCharacterDetail)
-                }
-                item {
-                    CommonSpacer()
+        SlideAnimation(visible = events.value != null) {
+            events.value?.let { data ->
+                LazyColumn(state = state) {
+                    items(data) {
+                        EventItem(it, toCharacterDetail)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +24,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.PagerIndicator
+import cn.wthee.pcrtool.ui.compose.SlideDownAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.ImageDownloadHelper
@@ -62,7 +65,9 @@ fun CharacterAllPicture(unitId: Int) {
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
-
+    val delayState = remember {
+        mutableStateOf(true)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
@@ -77,21 +82,23 @@ fun CharacterAllPicture(unitId: Int) {
                 drawables[pagerIndex] = image
             }
             val painter = rememberCoilPainter(request = picUrls[pagerIndex])
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Image(
-                    painter = when (painter.loadState) {
-                        is ImageLoadState.Success -> {
-                            loaded[pagerIndex] = true
-                            painter
-                        }
-                        is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                        else -> rememberCoilPainter(request = R.drawable.load)
-                    },
-                    contentDescription = null,
-                )
+            SlideDownAnimation(visible = painter.loadState is ImageLoadState.Success) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Image(
+                        painter = when (painter.loadState) {
+                            is ImageLoadState.Success -> {
+                                loaded[pagerIndex] = true
+                                painter
+                            }
+                            is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
+                            else -> rememberCoilPainter(request = R.drawable.load)
+                        },
+                        contentDescription = null,
+                    )
+                }
             }
-
         }
+
         //指示器
         PagerIndicator(pagerState, modifier = Modifier.align(Alignment.BottomCenter))
 
@@ -126,5 +133,6 @@ fun CharacterAllPicture(unitId: Int) {
             }
         }
     }
+
 }
 

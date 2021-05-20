@@ -63,17 +63,20 @@ fun ClanBattleList(
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        clanList.value?.let { data ->
-            navViewModel.loading.postValue(false)
-            LazyColumn(state = state) {
-                items(data) {
-                    ClanBattleItem(it, toClanBossInfo, type = 0)
-                }
-                item {
-                    CommonSpacer()
+        SlideAnimation(visible = clanList.value != null) {
+            clanList.value?.let { data ->
+                navViewModel.loading.postValue(false)
+                LazyColumn(state = state) {
+                    items(data) {
+                        ClanBattleItem(it, toClanBossInfo, type = 0)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }
+
         //回到顶部
         FabCompose(
             iconType = MainIconType.CLAN,
@@ -240,16 +243,18 @@ fun ClanBossInfoPager(
                     .padding(top = Dimen.smallPadding)
             )
             //BOSS信息
-            SlideAnimation {
+            val visible = bossDataList.value != null && bossDataList.value!!.isNotEmpty()
+            SlideAnimation(visible = visible) {
                 HorizontalPager(state = pagerState) { pagerIndex ->
-                    if (bossDataList.value != null && bossDataList.value!!.isNotEmpty()) {
+                    if (visible) {
                         val bossDataValue = bossDataList.value!![pagerIndex]
                         Card(
                             shape = CardTopShape,
                             elevation = Dimen.cardElevation,
                             modifier = Modifier
+                                .padding(top = Dimen.mediuPadding)
                                 .fillMaxSize()
-                                .padding(Dimen.mediuPadding)
+                                .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
                         ) {
                             Column(
                                 modifier = Modifier.verticalScroll(rememberScrollState())

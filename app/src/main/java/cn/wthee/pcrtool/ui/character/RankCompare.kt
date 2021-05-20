@@ -102,67 +102,67 @@ fun RankCompare(
             navViewModel.fabOKCilck.postValue(false)
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = Dimen.mediuPadding)
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //头像
-                IconCompose(
-                    data = CharacterIdUtil.getMaxIconUrl(
-                        unitId,
-                        MainActivity.r6Ids.contains(unitId)
+        FadeAnimation(visible = attrCompareData.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = Dimen.mediuPadding)
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    //头像
+                    IconCompose(
+                        data = CharacterIdUtil.getMaxIconUrl(
+                            unitId,
+                            MainActivity.r6Ids.contains(unitId)
+                        )
                     )
-                )
-                //等级
-                Text(
-                    text = "$level",
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h6
-                )
-                StarCompose(rarity)
-                Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                    Spacer(modifier = Modifier.weight(0.3f))
-                    RankText(
-                        rank = rank0.value,
-                        style = MaterialTheme.typography.subtitle1,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .weight(0.2f)
-                            .padding(0.dp)
-                    )
-                    RankText(
-                        rank = rank1.value,
-                        style = MaterialTheme.typography.subtitle1,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.weight(0.2f)
-                    )
+                    //等级
                     Text(
-                        text = stringResource(id = R.string.result),
-                        textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.subtitle1,
-                        modifier = Modifier.weight(0.2f)
+                        text = "$level",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h6
                     )
-                }
-                SlideAnimation {
+                    StarCompose(rarity)
+                    Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
+                        Spacer(modifier = Modifier.weight(0.3f))
+                        RankText(
+                            rank = rank0.value,
+                            style = MaterialTheme.typography.subtitle1,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .weight(0.2f)
+                                .padding(0.dp)
+                        )
+                        RankText(
+                            rank = rank1.value,
+                            style = MaterialTheme.typography.subtitle1,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier.weight(0.2f)
+                        )
+                        Text(
+                            text = stringResource(id = R.string.result),
+                            textAlign = TextAlign.End,
+                            style = MaterialTheme.typography.subtitle1,
+                            modifier = Modifier.weight(0.2f)
+                        )
+                    }
                     AttrCompare(attrCompareData)
                 }
-            }
-            FabCompose(
-                iconType = MainIconType.RANK_SELECT,
-                text = stringResource(id = R.string.rank_select),
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-            ) {
-                coroutineScope.launch {
-                    if (state.isVisible) {
-                        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-                        state.hide()
-                    } else {
-                        navViewModel.fabMainIcon.postValue(MainIconType.OK)
-                        state.show()
+                FabCompose(
+                    iconType = MainIconType.RANK_SELECT,
+                    text = stringResource(id = R.string.rank_select),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
+                    coroutineScope.launch {
+                        if (state.isVisible) {
+                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+                            state.hide()
+                        } else {
+                            navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                            state.show()
+                        }
                     }
                 }
             }

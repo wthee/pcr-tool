@@ -65,6 +65,8 @@ object ScreenUtil {
             window?.clearFlags(View.SYSTEM_UI_FLAG_FULLSCREEN)
         }
     }
+
+    fun getCharacterCardHeight() = getWidth() / Constants.RATIO
 }
 
 /**

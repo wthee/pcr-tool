@@ -94,13 +94,16 @@ fun EquipList(
                     .fillMaxSize()
             ) {
                 val spanCount = 5
-                LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                    items(equips) { equip ->
-                        EquipItem(filterValue, equip, toEquipDetail)
+                SlideAnimation(visible = equips.isNotEmpty()) {
+                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+                        items(equips) { equip ->
+                            EquipItem(filterValue, equip, toEquipDetail)
+                        }
+                        items(spanCount) {
+                            CommonSpacer()
+                        }
                     }
-                    items(spanCount) {
-                        CommonSpacer()
-                    }
+
                 }
                 Row(
                     modifier = Modifier

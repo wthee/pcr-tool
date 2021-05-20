@@ -90,46 +90,56 @@ fun RankEquipCount(
 
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = Dimen.mediuPadding)
+                modifier = Modifier
+                    .padding(top = Dimen.mediuPadding)
+                    .fillMaxWidth()
             ) {
-                //头像
-                IconCompose(
-                    data = CharacterIdUtil.getMaxIconUrl(
-                        unitId,
-                        MainActivity.r6Ids.contains(unitId)
-                    )
-                )
-                //标题
-                Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
-                ) {
-                    MainTitleText(text = stringResource(id = R.string.cur_rank))
-                    RankText(
-                        rank = rank0.value,
-                        style = MaterialTheme.typography.subtitle1,
-                    )
-                    MainTitleText(text = stringResource(id = R.string.target_rank))
-                    RankText(
-                        rank = rank1.value,
-                        style = MaterialTheme.typography.subtitle1,
-                    )
+                FadeAnimation(visible = rankEquipMaterials.value != null) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        //头像
+                        IconCompose(
+                            data = CharacterIdUtil.getMaxIconUrl(
+                                unitId,
+                                MainActivity.r6Ids.contains(unitId)
+                            )
+                        )
+                        //标题
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier
+                                .padding(
+                                    top = Dimen.largePadding,
+                                    bottom = Dimen.largePadding
+                                )
+                                .fillMaxWidth()
+                        ) {
+                            MainTitleText(text = stringResource(id = R.string.cur_rank))
+                            RankText(
+                                rank = rank0.value,
+                                style = MaterialTheme.typography.subtitle1,
+                            )
+                            MainTitleText(text = stringResource(id = R.string.target_rank))
+                            RankText(
+                                rank = rank1.value,
+                                style = MaterialTheme.typography.subtitle1,
+                            )
+                        }
+                    }
                 }
                 //装备素材列表
                 val spanCount = 5
                 if (rankEquipMaterials.value != null) {
                     navViewModel.loading.postValue(false)
-                    SlideAnimation {
-                        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                            items(items = rankEquipMaterials.value!!) { item ->
-                                EquipCountItem(item, toEquipDetail)
-                            }
-                            items(spanCount) {
-                                CommonSpacer()
-                            }
+                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+                        items(items = rankEquipMaterials.value!!) { item ->
+                            EquipCountItem(item, toEquipDetail)
+                        }
+                        items(spanCount) {
+                            CommonSpacer()
                         }
                     }
                 }
@@ -153,8 +163,8 @@ fun RankEquipCount(
                 }
             }
         }
-
     }
+
 }
 
 @Composable

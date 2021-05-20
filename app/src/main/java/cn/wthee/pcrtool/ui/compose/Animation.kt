@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ScreenUtil
 
 /**
  * 动画弹性
@@ -22,7 +23,7 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 350, easing = FastOutLinearInEasing)
+    return tween(durationMillis = 400, easing = FastOutLinearInEasing, delayMillis = 50)
 }
 
 /**
@@ -32,7 +33,7 @@ fun <T> defaultTween(): TweenSpec<T> {
 @Composable
 fun SlideAnimation(
     modifier: Modifier = Modifier,
-    visible: Boolean = true,
+    visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
@@ -41,7 +42,7 @@ fun SlideAnimation(
         modifier = modifier,
         enter = if (animOn) {
             slideInVertically(
-                initialOffsetY = { it / 4 },
+                initialOffsetY = { 40 },
                 animationSpec = defaultSpring()
             )
         } else {
@@ -58,7 +59,7 @@ fun SlideAnimation(
 @ExperimentalAnimationApi
 @Composable
 fun FadeAnimation(
-    visible: Boolean = true,
+    visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
@@ -80,7 +81,7 @@ fun FadeAnimation(
 @ExperimentalAnimationApi
 @Composable
 fun ExtendedAnimation(
-    visible: Boolean = true,
+    visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
@@ -102,7 +103,7 @@ fun ExtendedAnimation(
 @ExperimentalAnimationApi
 @Composable
 fun MenuAnimation(
-    visible: Boolean = true,
+    visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
     val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
@@ -113,6 +114,33 @@ fun MenuAnimation(
                 initialOffsetY = { it / 4 },
                 animationSpec = defaultSpring()
             )
+        } else {
+            fadeIn(1f)
+        },
+        exit = fadeOut(),
+        content = content
+    )
+
+}
+
+
+/**
+ * 从上至下移动
+ */
+@ExperimentalAnimationApi
+@Composable
+fun SlideDownAnimation(
+    visible: Boolean,
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+    val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
+    val halfImageHeight = ScreenUtil.getCharacterCardHeight().toInt() / 2
+    AnimatedVisibility(
+        visible = visible,
+        enter = if (animOn) {
+            slideInVertically(initialOffsetY = {
+                -it / 2 + halfImageHeight
+            }, defaultTween()) + fadeIn(0.5f)
         } else {
             fadeIn(1f)
         },

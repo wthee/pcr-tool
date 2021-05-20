@@ -42,12 +42,10 @@ fun RankEquipList(
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
     val spanCount = 3
-    if (allRankEquip.isNotEmpty()) {
-        SlideAnimation {
-            LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                items(allRankEquip) {
-                    RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
-                }
+    SlideAnimation(visible = allRankEquip.isNotEmpty()) {
+        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+            items(allRankEquip) {
+                RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
             }
         }
     }

@@ -103,7 +103,7 @@ fun CharacterList(
         }
         Box(modifier = Modifier.fillMaxSize()) {
             TopBarCompose(scrollState = scrollState)
-            SlideAnimation {
+            SlideAnimation(visible = list.value != null && filter.value != null) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,

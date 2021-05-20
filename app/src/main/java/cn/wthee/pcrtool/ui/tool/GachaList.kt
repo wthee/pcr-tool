@@ -44,16 +44,19 @@ fun GachaList(
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        gachas.value?.let { data ->
-            LazyColumn(state = state) {
-                items(data) {
-                    GachaItem(it, toCharacterDetail)
-                }
-                item {
-                    CommonSpacer()
+        SlideAnimation(visible = gachas.value != null) {
+            gachas.value?.let { data ->
+                LazyColumn(state = state) {
+                    items(data) {
+                        GachaItem(it, toCharacterDetail)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }
+
         //回到顶部
         FabCompose(
             iconType = MainIconType.GACHA,

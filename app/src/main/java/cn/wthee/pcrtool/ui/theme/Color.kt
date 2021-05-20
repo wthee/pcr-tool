@@ -8,5 +8,5 @@ val colorAccent = Color(0xFF91BEF0)
 val backgroud = Color(0xFFF5F5F5)
 val white = Color(0xFFFFFFFF)
 
-val colorPrimaryDark = Color(0xFF4E76B8)
+val colorPrimaryDark = Color(0xFF678CCA)
 val colorAccentDark = Color(0xFF6E92BB)

@@ -48,11 +48,14 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltVie
     }
     val text = if (loved.value) "" else stringResource(id = R.string.title_love)
 
-    equipMaxData?.let {
-        Box(modifier = Modifier
+    Box(
+        modifier = Modifier
             .padding(top = Dimen.mediuPadding)
-            .fillMaxSize()) {
-            Column {
+            .fillMaxSize()
+    ) {
+
+        Column {
+            equipMaxData?.let {
                 MainText(
                     text = it.equipmentName,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -70,26 +73,28 @@ fun EquipMainInfo(equipId: Int, equipmentViewModel: EquipmentViewModel = hiltVie
                 }
                 //属性
                 AttrList(attrs = it.attr.allNotZero())
+            }
+            SlideAnimation(visible = equipMaxData != null) {
                 //合成素材
-                SlideAnimation {
-                    EquipMaterialList(it)
+                if (equipMaxData != null) {
+                    EquipMaterialList(equipMaxData)
                 }
             }
-            Box(modifier = Modifier.align(Alignment.BottomEnd)) {
-                //装备收藏
-                FabCompose(
-                    iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                    modifier = Modifier.padding(
-                        end = Dimen.fabMarginEnd,
-                        start = Dimen.fabMargin,
-                        top = Dimen.fabMargin,
-                        bottom = Dimen.fabMargin,
-                    ),
-                    text = text
-                ) {
-                    filter.value?.addOrRemove(equipId)
-                    loved.value = !loved.value
-                }
+        }
+        Box(modifier = Modifier.align(Alignment.BottomEnd)) {
+            //装备收藏
+            FabCompose(
+                iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
+                modifier = Modifier.padding(
+                    end = Dimen.fabMarginEnd,
+                    start = Dimen.fabMargin,
+                    top = Dimen.fabMargin,
+                    bottom = Dimen.fabMargin,
+                ),
+                text = text
+            ) {
+                filter.value?.addOrRemove(equipId)
+                loved.value = !loved.value
             }
         }
     }
@@ -159,6 +164,13 @@ private fun EquipMaterialList(
                 }
             }
         }
+        MainTitleText(
+            text = stringResource(id = R.string.drop_info),
+            modifier = Modifier.padding(
+                start = Dimen.mediuPadding,
+                top = Dimen.largePadding,
+            )
+        )
         EquipDropAreaList()
     }
 

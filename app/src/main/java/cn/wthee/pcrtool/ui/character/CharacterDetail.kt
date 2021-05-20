@@ -94,7 +94,7 @@ fun CharacterDetail(
         )
     }
     //卡面高度
-    val cardHeight = (ScreenUtil.getWidth() / Constants.RATIO).toInt().px2dp - 10
+    val cardHeight = ScreenUtil.getCharacterCardHeight().toInt().px2dp - 10
     //保存滚动状态
     val scrollState = rememberScrollState()
     val marginTop = when {
@@ -177,7 +177,7 @@ fun CharacterDetail(
                     .verticalScroll(scrollState)
                     .fillMaxSize()
             ) {
-                FadeAnimation {
+                FadeAnimation(visible = rarityMax.value != 0) {
                     Box(modifier = Modifier
                         .background(color = colorResource(id = R.color.bg_gray))
                         .clickable {
@@ -202,8 +202,10 @@ fun CharacterDetail(
                         )
                     }
                 }
-                SlideAnimation {
-                    if (levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()) {
+                val visible =
+                    levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()
+                SlideAnimation(visible = visible) {
+                    if (visible) {
                         //页面
                         Card(
                             shape = CardTopShape,

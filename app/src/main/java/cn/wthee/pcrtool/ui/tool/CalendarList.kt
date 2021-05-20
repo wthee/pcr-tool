@@ -54,14 +54,16 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltViewModel()) {
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        calendarData.value?.let { data ->
-            MainActivity.navViewModel.loading.postValue(false)
-            LazyColumn(state = state) {
-                items(data) {
-                    CalendarItem(it)
-                }
-                item {
-                    CommonSpacer()
+        SlideAnimation(visible = calendarData.value != null) {
+            calendarData.value?.let { data ->
+                MainActivity.navViewModel.loading.postValue(false)
+                LazyColumn(state = state) {
+                    items(data) {
+                        CalendarItem(it)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }

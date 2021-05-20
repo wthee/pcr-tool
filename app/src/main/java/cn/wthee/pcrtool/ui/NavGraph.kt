@@ -20,8 +20,6 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.compose.FadeAnimation
-import cn.wthee.pcrtool.ui.compose.SlideAnimation
 import cn.wthee.pcrtool.ui.compose.StatusBarBox
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
@@ -129,11 +127,9 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                SlideAnimation {
-                    CharacterBasicInfo(
-                        unitId = arguments.getInt(Navigation.UNIT_ID)
-                    )
-                }
+                CharacterBasicInfo(
+                    unitId = arguments.getInt(Navigation.UNIT_ID)
+                )
             }
         }
 
@@ -146,20 +142,16 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                FadeAnimation {
-                    CharacterAllPicture(
-                        unitId = arguments.getInt(Navigation.UNIT_ID)
-                    )
-                }
+                CharacterAllPicture(
+                    unitId = arguments.getInt(Navigation.UNIT_ID)
+                )
             }
         }
 
         //装备列表
         composable(Navigation.EQUIP_LIST) {
             StatusBarBox {
-                FadeAnimation {
-                    EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
-                }
+                EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
             }
         }
 
@@ -172,9 +164,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                SlideAnimation {
-                    EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
-                }
+                EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
             }
         }
 
@@ -187,13 +177,11 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                SlideAnimation {
-                    RankEquipList(
-                        unitId = arguments.getInt(Navigation.UNIT_ID),
-                        toEquipDetail = actions.toEquipDetail,
-                        navViewModel = viewModel
-                    )
-                }
+                RankEquipList(
+                    unitId = arguments.getInt(Navigation.UNIT_ID),
+                    toEquipDetail = actions.toEquipDetail,
+                    navViewModel = viewModel
+                )
             }
         }
 
@@ -214,16 +202,14 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                SlideAnimation {
-                    RankCompare(
-                        unitId = arguments.getInt(Navigation.UNIT_ID),
-                        maxRank = arguments.getInt(Navigation.MAX_RANK),
-                        level = arguments.getInt(Navigation.LEVEL),
-                        rarity = arguments.getInt(Navigation.RARITY),
-                        uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL),
-                        navViewModel = viewModel
-                    )
-                }
+                RankCompare(
+                    unitId = arguments.getInt(Navigation.UNIT_ID),
+                    maxRank = arguments.getInt(Navigation.MAX_RANK),
+                    level = arguments.getInt(Navigation.LEVEL),
+                    rarity = arguments.getInt(Navigation.RARITY),
+                    uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL),
+                    navViewModel = viewModel
+                )
             }
         }
 
@@ -238,14 +224,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                SlideAnimation {
-                    RankEquipCount(
-                        unitId = arguments.getInt(Navigation.UNIT_ID),
-                        maxRank = arguments.getInt(Navigation.MAX_RANK),
-                        actions.toEquipDetail,
-                        navViewModel = viewModel
-                    )
-                }
+                RankEquipCount(
+                    unitId = arguments.getInt(Navigation.UNIT_ID),
+                    maxRank = arguments.getInt(Navigation.MAX_RANK),
+                    actions.toEquipDetail,
+                    navViewModel = viewModel
+                )
             }
         }
 
@@ -253,9 +237,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_LEADER) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                FadeAnimation {
-                    LeaderboardList()
-                }
+                LeaderboardList()
             }
         }
 
@@ -263,9 +245,8 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_GACHA) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                SlideAnimation {
-                    GachaList(actions.toCharacterDetail)
-                }
+                GachaList(actions.toCharacterDetail)
+
             }
 
         }
@@ -274,9 +255,8 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_EVENT) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                SlideAnimation {
-                    EventList(actions.toCharacterDetail)
-                }
+                EventList(actions.toCharacterDetail)
+
             }
         }
 
@@ -284,9 +264,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_GUILD) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                SlideAnimation {
-                    GuildList(actions.toCharacterDetail)
-                }
+                GuildList(actions.toCharacterDetail)
             }
         }
 
@@ -294,9 +272,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_CLAN) {
             StatusBarBox {
                 viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                SlideAnimation {
-                    ClanBattleList(actions.toClanBossInfo)
-                }
+                ClanBattleList(actions.toClanBossInfo)
             }
 
         }
@@ -312,12 +288,10 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                SlideAnimation {
-                    ClanBossInfoPager(
-                        arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
-                        arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
-                    )
-                }
+                ClanBossInfoPager(
+                    arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
+                    arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
+                )
             }
         }
 
@@ -325,9 +299,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_CALENDAR) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                SlideAnimation {
-                    CalendarCompose()
-                }
+                CalendarCompose()
             }
         }
 
@@ -335,9 +307,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_PVP) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                SlideAnimation {
-                    PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
-                }
+                PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
             }
         }
 
@@ -353,13 +323,11 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 mutableStateOf(false)
             }
             StatusBarBox {
-                FadeAnimation {
-                    PvpSearchResult(
-                        arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
-                        actions.toCharacterDetail,
-                        vibrated
-                    )
-                }
+                PvpSearchResult(
+                    arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
+                    actions.toCharacterDetail,
+                    vibrated
+                )
             }
         }
 
@@ -367,9 +335,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_PVP_FAVORITE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                SlideAnimation {
-                    PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
-                }
+                PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
             }
         }
 
@@ -377,9 +343,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.MAIN_SETTINGS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                SlideAnimation {
-                    MainSettings()
-                }
+                MainSettings()
             }
         }
 
@@ -387,9 +351,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.APP_NOTICE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                FadeAnimation {
-                    NoticeList()
-                }
+                NoticeList()
             }
         }
 
@@ -397,9 +359,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                FadeAnimation {
-                    NewsList(actions.toNewsDetail)
-                }
+                NewsList(actions.toNewsDetail)
             }
         }
 
@@ -424,14 +384,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                FadeAnimation {
-                    NewsDetail(
-                        arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
-                        arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
-                        arguments.getInt(Navigation.TOOL_NEWS_REGION),
-                        arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
-                    )
-                }
+                NewsDetail(
+                    arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
+                    arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
+                    arguments.getInt(Navigation.TOOL_NEWS_REGION),
+                    arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
+                )
             }
         }
     }

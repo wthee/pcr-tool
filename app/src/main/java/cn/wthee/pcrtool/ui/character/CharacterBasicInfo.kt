@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +22,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 /**
  * 角色基本信息
  */
+@ExperimentalAnimationApi
 @Composable
 fun CharacterBasicInfo(
     unitId: Int,
@@ -29,172 +31,140 @@ fun CharacterBasicInfo(
     viewModel.getCharacter(unitId)
     val data = viewModel.character.observeAsState().value
 
-    data?.let { info ->
-        Column(
-            modifier = Modifier
-                .padding(Dimen.mediuPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            //标题
-            MainText(
-                text = info.catchCopy.deleteSpace(),
+    FadeAnimation(visible = data != null) {
+        data?.let { info ->
+            Column(
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = Dimen.mediuPadding)
-            )
-            //介绍
-            Text(
-                info.getIntroText(),
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.padding(top = Dimen.mediuPadding)
-            )
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.character),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(text = info.name, modifier = Modifier.weight(0.85f))
-            }
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.name),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(text = info.actualName, modifier = Modifier.weight(0.85f))
-            }
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_height),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(
-                    text = info.getFixedHeight() + " CM",
+                    .padding(Dimen.mediuPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                //标题
+                MainText(
+                    text = info.catchCopy.deleteSpace(),
                     modifier = Modifier
-                        .weight(0.35f)
-                        .padding(end = Dimen.mediuPadding)
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = Dimen.mediuPadding)
                 )
-                MainTitleText(
-                    text = stringResource(id = R.string.title_weight),
-                    modifier = Modifier.weight(0.15f)
+                //介绍
+                Text(
+                    info.getIntroText(),
+                    style = MaterialTheme.typography.subtitle2,
+                    modifier = Modifier.padding(top = Dimen.mediuPadding)
                 )
-                MainContentText(
-                    text = info.getFixedWeight() + " KG",
-                    modifier = Modifier.weight(0.35f)
-                )
-            }
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_birth),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(
-                    text = stringResource(
-                        id = R.string.date_m_d,
-                        info.birthMonth,
-                        info.birthDay
-                    ),
-                    modifier = Modifier
-                        .weight(0.35f)
-                        .padding(end = Dimen.mediuPadding)
-                )
-                MainTitleText(
-                    text = stringResource(id = R.string.age),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(
-                    text = info.getFixedAge(),
-                    modifier = Modifier.weight(0.35f)
-                )
-            }
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_blood),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(
-                    text = info.bloodType,
-                    modifier = Modifier
-                        .weight(0.35f)
-                        .padding(end = Dimen.mediuPadding)
-                )
-                MainTitleText(
-                    text = stringResource(id = R.string.title_position),
-                    modifier = Modifier.weight(0.15f)
-                )
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.weight(0.35f)
-                ) {
-                    PositionIcon(position = info.position)
-                    MainContentText(
-                        text = info.position.toString(),
-                        modifier = Modifier.padding(start = Dimen.smallPadding)
-                    )
-                }
-            }
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_race),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(
-                    text = info.race,
-                    modifier = Modifier
-                        .weight(0.35f)
-                        .padding(end = Dimen.mediuPadding)
-                )
-                MainTitleText(
-                    text = stringResource(id = R.string.cv),
-                    modifier = Modifier.weight(0.15f)
-                )
-                MainContentText(
-                    text = info.voice,
-                    modifier = Modifier.weight(0.35f)
-                )
-            }
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_guild),
-                    modifier = Modifier.weight(0.15f)
-                )
-                Spacer(modifier = Modifier.weight(0.85f))
-            }
-            MainContentText(
-                text = info.guild,
-                modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                ),
-                textAlign = TextAlign.Start
-            )
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_fav),
-                    modifier = Modifier.weight(0.15f)
-                )
-                Spacer(modifier = Modifier.weight(0.85f))
-            }
-            MainContentText(
-                text = info.favorite,
-                modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                ),
-                textAlign = TextAlign.Start
-            )
-            info.getSelf()?.let {
                 Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
                     MainTitleText(
-                        text = stringResource(id = R.string.title_self),
+                        text = stringResource(id = R.string.character),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(text = info.name, modifier = Modifier.weight(0.85f))
+                }
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.name),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(text = info.actualName, modifier = Modifier.weight(0.85f))
+                }
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_height),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(
+                        text = info.getFixedHeight() + " CM",
+                        modifier = Modifier
+                            .weight(0.35f)
+                            .padding(end = Dimen.mediuPadding)
+                    )
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_weight),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(
+                        text = info.getFixedWeight() + " KG",
+                        modifier = Modifier.weight(0.35f)
+                    )
+                }
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_birth),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(
+                        text = stringResource(
+                            id = R.string.date_m_d,
+                            info.birthMonth,
+                            info.birthDay
+                        ),
+                        modifier = Modifier
+                            .weight(0.35f)
+                            .padding(end = Dimen.mediuPadding)
+                    )
+                    MainTitleText(
+                        text = stringResource(id = R.string.age),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(
+                        text = info.getFixedAge(),
+                        modifier = Modifier.weight(0.35f)
+                    )
+                }
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_blood),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(
+                        text = info.bloodType,
+                        modifier = Modifier
+                            .weight(0.35f)
+                            .padding(end = Dimen.mediuPadding)
+                    )
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_position),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.weight(0.35f)
+                    ) {
+                        PositionIcon(position = info.position)
+                        MainContentText(
+                            text = info.position.toString(),
+                            modifier = Modifier.padding(start = Dimen.smallPadding)
+                        )
+                    }
+                }
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_race),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(
+                        text = info.race,
+                        modifier = Modifier
+                            .weight(0.35f)
+                            .padding(end = Dimen.mediuPadding)
+                    )
+                    MainTitleText(
+                        text = stringResource(id = R.string.cv),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    MainContentText(
+                        text = info.voice,
+                        modifier = Modifier.weight(0.35f)
+                    )
+                }
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_guild),
                         modifier = Modifier.weight(0.15f)
                     )
                     Spacer(modifier = Modifier.weight(0.85f))
                 }
                 MainContentText(
-                    text = it,
+                    text = info.guild,
                     modifier = Modifier.padding(
                         top = Dimen.mediuPadding,
                         start = Dimen.largePadding,
@@ -202,41 +172,76 @@ fun CharacterBasicInfo(
                     ),
                     textAlign = TextAlign.Start
                 )
-            }
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_comments),
-                    modifier = Modifier.weight(0.15f)
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_fav),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    Spacer(modifier = Modifier.weight(0.85f))
+                }
+                MainContentText(
+                    text = info.favorite,
+                    modifier = Modifier.padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    ),
+                    textAlign = TextAlign.Start
                 )
-                Spacer(modifier = Modifier.weight(0.85f))
-            }
-            MainContentText(
-                text = info.getCommentsText(),
-                modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                ),
-                textAlign = TextAlign.Start
-            )
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
-                MainTitleText(
-                    text = stringResource(id = R.string.title_room_comments),
-                    modifier = Modifier.weight(0.15f)
+                info.getSelf()?.let {
+                    Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                        MainTitleText(
+                            text = stringResource(id = R.string.title_self),
+                            modifier = Modifier.weight(0.15f)
+                        )
+                        Spacer(modifier = Modifier.weight(0.85f))
+                    }
+                    MainContentText(
+                        text = it,
+                        modifier = Modifier.padding(
+                            top = Dimen.mediuPadding,
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        ),
+                        textAlign = TextAlign.Start
+                    )
+                }
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_comments),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    Spacer(modifier = Modifier.weight(0.85f))
+                }
+                MainContentText(
+                    text = info.getCommentsText(),
+                    modifier = Modifier.padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    ),
+                    textAlign = TextAlign.Start
                 )
-                Spacer(modifier = Modifier.weight(0.85f))
+                Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+                    MainTitleText(
+                        text = stringResource(id = R.string.title_room_comments),
+                        modifier = Modifier.weight(0.15f)
+                    )
+                    Spacer(modifier = Modifier.weight(0.85f))
+                }
+                MainContentText(
+                    text = info.getRoomCommentsText(),
+                    modifier = Modifier.padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    ),
+                    textAlign = TextAlign.Start
+                )
+                CommonSpacer()
             }
-            MainContentText(
-                text = info.getRoomCommentsText(),
-                modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                ),
-                textAlign = TextAlign.Start
-            )
-            CommonSpacer()
         }
+
     }
 
 }

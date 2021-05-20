@@ -42,16 +42,19 @@ fun GuildList(
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        guilds.value?.let { data ->
-            LazyColumn(state = state) {
-                items(data) {
-                    GuildItem(it, toCharacterDetail)
-                }
-                item {
-                    CommonSpacer()
+        SlideAnimation(visible = guilds.value != null) {
+            guilds.value?.let { data ->
+                LazyColumn(state = state) {
+                    items(data) {
+                        GuildItem(it, toCharacterDetail)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }
+
         //回到顶部
         FabCompose(
             iconType = MainIconType.GUILD,

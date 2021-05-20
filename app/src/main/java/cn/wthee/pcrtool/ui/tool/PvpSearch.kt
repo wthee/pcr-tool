@@ -121,7 +121,7 @@ fun PvpSearchCompose(
                 }
             }
             //供选择列表
-            SlideAnimation {
+            SlideAnimation(visible = data.value != null) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = Dimen.cardElevation,
@@ -445,10 +445,11 @@ fun PvpSearchResult(
                             vibrated.value = true
                             VibrateUtil(context).done()
                         }
-                        if (result.value!!.data!!.isNotEmpty()) {
+                        val success = result.value!!.data!!.isNotEmpty()
+                        if (success) {
                             //查询成功
                             val list = result.value!!.data!!.sortedByDescending { it.up }
-                            SlideAnimation {
+                            SlideAnimation(visible = success) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     modifier = Modifier
