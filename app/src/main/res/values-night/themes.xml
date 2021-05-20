@@ -9,7 +9,7 @@
         <item name="colorSecondary">@color/colorPrimaryDark</item>
         <item name="colorSecondaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnSecondary">@color/black</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
 
     </style>
 </resources>
