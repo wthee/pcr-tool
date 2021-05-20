@@ -6,7 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -103,7 +103,7 @@ fun CharacterList(
         }
         Box(modifier = Modifier.fillMaxSize()) {
             TopBarCompose(scrollState = scrollState)
-            SlideAnimation(visible = list.value != null && filter.value != null) {
+            if (list.value != null) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
@@ -112,14 +112,15 @@ fun CharacterList(
                         .fillMaxSize()
                         .background(color = MaterialTheme.colors.background, shape = CardTopShape)
                 ) {
-                    items(list.value ?: arrayListOf()) {
-                        CharacterItem(it, filter.value!!, toDetail)
+                    itemsIndexed(list.value!!) { index, data ->
+                        CharacterItem(data, filter.value!!, toDetail)
                     }
                     items(2) {
                         CommonSpacer()
                     }
                 }
             }
+
 
             Row(
                 modifier = Modifier
@@ -184,9 +185,7 @@ private fun CharacterItem(
             //跳转至详情
             toDetail(character.id)
         }) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Column {
             //图片
             var id = character.id
             id += if (MainActivity.r6Ids.contains(character.id)) 60 else 30

@@ -28,7 +28,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 关闭
      */
-    CLOSE(Icons.Rounded.ExpandMore),
+    CLOSE(Icons.Rounded.Close),
 
     /**
      * 重置

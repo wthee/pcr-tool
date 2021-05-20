@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PvpFavorites(
     toCharacter: (Int) -> Unit,
-    toResult: (String) -> Unit,
+    toResearch: (String) -> Unit,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
     val region = getRegion()
@@ -49,7 +49,7 @@ fun PvpFavorites(
         if (list.value != null) {
             LazyColumn(state = state) {
                 items(list.value!!) { data ->
-                    PvpFavoriteItem(toCharacter, toResult, region, data, pvpViewModel)
+                    PvpFavoriteItem(toCharacter, toResearch, region, data, pvpViewModel)
                 }
             }
             //已收藏
@@ -81,7 +81,7 @@ fun PvpFavorites(
 @Composable
 private fun PvpFavoriteItem(
     toCharacter: (Int) -> Unit,
-    toResult: (String) -> Unit,
+    toResearch: (String) -> Unit,
     region: Int,
     itemData: PvpFavoriteData,
     pvpViewModel: PvpViewModel
@@ -109,7 +109,7 @@ private fun PvpFavoriteItem(
                     //搜索
                     TextButton(onClick = {
                         VibrateUtil(context).single()
-                        toResult(itemData.defs)
+                        toResearch(itemData.defs)
                     }) {
                         IconCompose(
                             data = MainIconType.PVP_SEARCH.icon,

@@ -93,6 +93,7 @@
     <string name="favorite_count">已收藏： %d </string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
+    <string name="pvp_select">选择</string>
     <string name="pvp_research">前往查询</string>
     <string name="pvp_info_add">添加</string>
     <string name="pvp_info_add_tip">添加对战记录</string>

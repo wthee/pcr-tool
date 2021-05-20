@@ -32,6 +32,7 @@ class CharacterViewModel @Inject constructor(
     var characterList = MutableLiveData<List<CharacterInfo>>()
     var character = MutableLiveData<CharacterInfoPro>()
     var allPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
+    var selectPvpCharacterData = MutableLiveData<List<PvpCharacterData>>()
     var guilds = MutableLiveData<List<GuildData>>()
 
     /**
@@ -97,4 +98,14 @@ class CharacterViewModel @Inject constructor(
      * 角色碎片掉落信息
      */
     suspend fun getDrops(uid: Int) = repository.getItemDropInfos(uid)
+
+    /**
+     * 角色站位
+     */
+    fun getPvpCharacterByIds(ids: ArrayList<Int>) {
+        viewModelScope.launch {
+            val data = repository.getCharacterByIds(ids)
+            selectPvpCharacterData.postValue(data)
+        }
+    }
 }

@@ -56,10 +56,31 @@ import kotlin.math.round
 @ExperimentalFoundationApi
 @Composable
 fun PvpSearchCompose(
-    toResult: (String) -> Unit,
+    ids: String = "",
     toFavorite: () -> Unit,
+    toCharacter: (Int) -> Unit,
     viewModel: CharacterViewModel = hiltViewModel()
 ) {
+    //获取数据
+    viewModel.getAllCharacter()
+    val data = viewModel.allPvpCharacterData.observeAsState()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val url = stringResource(id = R.string.pcrdfans_url)
+    val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
+    val addTip = stringResource(id = R.string.pvp_info_add_tip)
+    val urlTip = stringResource(id = R.string.pcrdfans_com)
+
+    //滚动状态
+    val scrollState = rememberLazyListState()
+    val positionIndex = remember {
+        mutableStateOf(2)
+    }
+    //显示类型
+    val showType = remember {
+        //0：选择，1：正常。2：收藏进入
+        mutableStateOf(0)
+    }
     //已选择的id
     val navIds = navViewModel.selectedIds.value
     val selectedIds = remember {
@@ -84,19 +105,44 @@ fun PvpSearchCompose(
     }
     navViewModel.selectedIds.postValue(selectedIds.subList(0, 5))
 
-    //获取数据
-    viewModel.getAllCharacter()
-    val data = viewModel.allPvpCharacterData.observeAsState()
-    val scope = rememberCoroutineScope()
-    val scrollState = rememberLazyListState()
-    val positionIndex = remember {
-        mutableStateOf(2)
+    //从收藏重新查询时，自动填充数据
+    val research = remember {
+        mutableStateOf(true)
     }
-    val context = LocalContext.current
-    val url = stringResource(id = R.string.pcrdfans_url)
-    val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
-    val addTip = stringResource(id = R.string.pvp_info_add_tip)
-    val urlTip = stringResource(id = R.string.pcrdfans_com)
+    if (ids != "" && research.value) {
+        val idList = arrayListOf<Int>()
+        for (id in ids.split("-")) {
+            if (id.isNotBlank()) {
+                idList.add(id.toInt())
+            }
+        }
+        //获取带角色站位的数据
+        viewModel.getPvpCharacterByIds(idList)
+        val selectedData = viewModel.selectPvpCharacterData.value
+        if (selectedData != null && selectedData.isNotEmpty()) {
+            for (i in 0..4) {
+                selectedIds[i] = selectedData[4 - i]
+            }
+            showType.value = 2
+        }
+    }
+
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    val vibrateState = remember {
+        mutableStateOf(false)
+    }
+
+    if (showType.value != 0) {
+        navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+    } else {
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+    }
+
+    if (close) {
+        showType.value = 0
+        research.value = false
+        navViewModel.fabCloseClick.postValue(false)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
@@ -127,177 +173,195 @@ fun PvpSearchCompose(
                     elevation = Dimen.cardElevation,
                     shape = CardTopShape
                 ) {
-                    data.value?.let { dataValue ->
-                        val character0 = dataValue.filter {
-                            it.position in 0..299
-                        }
-                        val character1 = dataValue.filter {
-                            it.position in 300..599
-                        }
-                        val character2 = dataValue.filter {
-                            it.position in 600..9999
-                        }
-                        val spanCount = 5
-                        val showIcon = listOf(0, 0, 1, 0, 0)
-                        //站位图标在列表中的位置
-                        val positions = arrayListOf(0, 0, 0)
-                        val filledCount1 = spanCount - character0.size % spanCount
-                        positions[1] =
-                            (spanCount + character0.size + filledCount1) / spanCount
-                        val filledCount2 = spanCount - character1.size % spanCount
-                        positions[0] =
-                            ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
-                        //滚动监听
-                        when (scrollState.firstVisibleItemIndex) {
-                            //后
-                            positions[0] -> {
-                                if (positionIndex.value != 0) {
-                                    positionIndex.value = 0
+                    Box {
+                        if (showType.value != 0) {
+                            //展示搜索结果
+                            PvpSearchResult(
+                                selectedIds.subList(0, 5),
+                                toCharacter,
+                                vibrateState
+                            )
+                        } else {
+                            //选择页面
+                            data.value?.let { dataValue ->
+                                val character0 = dataValue.filter {
+                                    it.position in 0..299
                                 }
-                            }
-                            scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
-                                if (scrollState.layoutInfo.totalItemsCount != 0) {
-                                    positionIndex.value = 0
+                                val character1 = dataValue.filter {
+                                    it.position in 300..599
                                 }
-                            }
-                            //中
-                            positions[1] -> {
-                                if (positionIndex.value != 1) {
-                                    positionIndex.value = 1
+                                val character2 = dataValue.filter {
+                                    it.position in 600..9999
                                 }
-                            }
-                            //前
-                            positions[2] -> {
-                                if (positionIndex.value != 2) {
-                                    positionIndex.value = 2
-                                }
-                            }
+                                val spanCount = 5
+                                val showIcon = listOf(0, 0, 1, 0, 0)
+                                //站位图标在列表中的位置
+                                val positions = arrayListOf(0, 0, 0)
+                                val filledCount1 = spanCount - character0.size % spanCount
+                                positions[1] =
+                                    (spanCount + character0.size + filledCount1) / spanCount
+                                val filledCount2 = spanCount - character1.size % spanCount
+                                positions[0] =
+                                    ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
+                                //滚动监听
+                                when (scrollState.firstVisibleItemIndex) {
+                                    //后
+                                    positions[0] -> {
+                                        if (positionIndex.value != 0) {
+                                            positionIndex.value = 0
+                                        }
+                                    }
+                                    scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
+                                        if (scrollState.layoutInfo.totalItemsCount != 0) {
+                                            positionIndex.value = 0
+                                        }
+                                    }
+                                    //中
+                                    positions[1] -> {
+                                        if (positionIndex.value != 1) {
+                                            positionIndex.value = 1
+                                        }
+                                    }
+                                    //前
+                                    positions[2] -> {
+                                        if (positionIndex.value != 2) {
+                                            positionIndex.value = 2
+                                        }
+                                    }
 
-                        }
-                        Box(modifier = Modifier.background(color = colorResource(id = R.color.bg_gray))) {
-                            //供选择列表
-                            LazyVerticalGrid(
-                                cells = GridCells.Fixed(spanCount),
-                                state = scrollState
-                            ) {
-                                //前
-                                itemsIndexed(showIcon) { index, _ ->
-                                    if (index == 2) {
-                                        PvpPositionIcon(R.drawable.ic_position_0)
-                                    }
                                 }
-                                items(character0) {
-                                    PvpIconItem(selectedIds, it)
-                                }
-                                //中
-                                items(filledCount1) {
-                                    CommonSpacer()
-                                }
-                                itemsIndexed(showIcon) { index, _ ->
-                                    if (index == 2) {
-                                        PvpPositionIcon(R.drawable.ic_position_1)
-                                    }
-                                }
-                                items(character1) {
-                                    PvpIconItem(selectedIds, it)
-                                }
-                                //后
-                                items(filledCount2) {
-                                    CommonSpacer()
-                                }
-                                itemsIndexed(showIcon) { index, _ ->
-                                    if (index == 2) {
-                                        PvpPositionIcon(R.drawable.ic_position_2)
-                                    }
-                                }
-                                items(character2) {
-                                    PvpIconItem(selectedIds, it)
-                                }
-                                items(spanCount) {
-                                    Spacer(modifier = Modifier.height(Dimen.iconSize))
-                                }
-                            }
-                            //指示器
-                            Row(
-                                modifier = Modifier
-                                    .align(Alignment.BottomEnd)
-                                    .padding(
-                                        bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
-                                        start = Dimen.mediuPadding,
-                                        end = Dimen.fabMargin
-                                    )
-                            ) {
-                                val icons = arrayListOf(
-                                    R.drawable.ic_position_2,
-                                    R.drawable.ic_position_1,
-                                    R.drawable.ic_position_0,
-                                )
-                                icons.forEachIndexed { index, it ->
-                                    val modifier = if (positionIndex.value == index) {
-                                        Modifier
-                                            .padding(Dimen.smallPadding)
-                                            .border(
-                                                Dimen.border,
-                                                MaterialTheme.colors.primary,
-                                                CircleShape
-                                            )
-                                    } else {
-                                        Modifier.padding(Dimen.smallPadding)
-                                    }
-                                    IconCompose(
-                                        data = it,
-                                        modifier = modifier
-                                            .size(Dimen.fabIconSize)
-                                            .clip(CircleShape)
+                                Box(modifier = Modifier.background(color = colorResource(id = R.color.bg_gray))) {
+                                    //供选择列表
+                                    LazyVerticalGrid(
+                                        cells = GridCells.Fixed(spanCount),
+                                        state = scrollState
                                     ) {
-                                        positionIndex.value = index
-                                        scope.launch {
-                                            scrollState.scrollToItem(positions[index])
+                                        //前
+                                        itemsIndexed(showIcon) { index, _ ->
+                                            if (index == 2) {
+                                                PvpPositionIcon(R.drawable.ic_position_0)
+                                            }
+                                        }
+                                        items(character0) {
+                                            PvpIconItem(selectedIds, it)
+                                        }
+                                        //中
+                                        items(filledCount1) {
+                                            CommonSpacer()
+                                        }
+                                        itemsIndexed(showIcon) { index, _ ->
+                                            if (index == 2) {
+                                                PvpPositionIcon(R.drawable.ic_position_1)
+                                            }
+                                        }
+                                        items(character1) {
+                                            PvpIconItem(selectedIds, it)
+                                        }
+                                        //后
+                                        items(filledCount2) {
+                                            CommonSpacer()
+                                        }
+                                        itemsIndexed(showIcon) { index, _ ->
+                                            if (index == 2) {
+                                                PvpPositionIcon(R.drawable.ic_position_2)
+                                            }
+                                        }
+                                        items(character2) {
+                                            PvpIconItem(selectedIds, it)
+                                        }
+                                        items(spanCount) {
+                                            Spacer(modifier = Modifier.height(Dimen.iconSize))
+                                        }
+                                    }
+                                    //指示器
+                                    Row(
+                                        modifier = Modifier
+                                            .align(Alignment.BottomEnd)
+                                            .padding(
+                                                bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
+                                                start = Dimen.mediuPadding,
+                                                end = Dimen.fabMargin
+                                            )
+                                    ) {
+                                        val icons = arrayListOf(
+                                            R.drawable.ic_position_2,
+                                            R.drawable.ic_position_1,
+                                            R.drawable.ic_position_0,
+                                        )
+                                        icons.forEachIndexed { index, it ->
+                                            val modifier = if (positionIndex.value == index) {
+                                                Modifier
+                                                    .padding(Dimen.smallPadding)
+                                                    .border(
+                                                        Dimen.border,
+                                                        MaterialTheme.colors.primary,
+                                                        CircleShape
+                                                    )
+                                            } else {
+                                                Modifier.padding(Dimen.smallPadding)
+                                            }
+                                            IconCompose(
+                                                data = it,
+                                                modifier = modifier
+                                                    .size(Dimen.fabIconSize)
+                                                    .clip(CircleShape)
+                                            ) {
+                                                positionIndex.value = index
+                                                scope.launch {
+                                                    scrollState.scrollToItem(positions[index])
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+
+                    }
+
+                }
+            }
+
+        }
+        if (showType.value == 0) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            ) {
+                //收藏
+                FabCompose(
+                    iconType = MainIconType.LOVE_FILL,
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                ) {
+                    toFavorite()
+                }
+                //添加信息
+                FabCompose(
+                    iconType = MainIconType.PVP_ADD,
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                ) {
+                    //打开网页
+                    openWebView(context, addUrl, addTip)
+                }
+                //查询
+                val tip = stringResource(id = R.string.tip_select_5)
+                FabCompose(
+                    iconType = MainIconType.PVP_SEARCH,
+                    text = stringResource(id = R.string.pvp_search)
+                ) {
+                    //查询
+                    scope.launch {
+                        if (selectedIds.contains(PvpCharacterData())) {
+                            ToastUtil.short(tip)
+                        } else {
+                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                            showType.value = 1
+                        }
                     }
                 }
             }
-
         }
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
-        ) {
-            //收藏
-            FabCompose(
-                iconType = MainIconType.LOVE_FILL,
-                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-            ) {
-                toFavorite()
-            }
-            //添加信息
-            FabCompose(
-                iconType = MainIconType.PVP_ADD,
-                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-            ) {
-                //打开网页
-                openWebView(context, addUrl, addTip)
-            }
-            //查询
-            val tip = stringResource(id = R.string.tip_select_5)
-            FabCompose(
-                iconType = MainIconType.PVP_SEARCH,
-                text = stringResource(id = R.string.pvp_search)
-            ) {
-                //查询
-                if (selectedIds.contains(PvpCharacterData())) {
-                    ToastUtil.short(tip)
-                } else {
-                    toResult(selectedIds.subList(0, 5).getIdStr())
-                }
-            }
-        }
-
     }
 
 }
@@ -379,20 +443,18 @@ fun PvpIconItem(
 @ExperimentalAnimationApi
 @Composable
 fun PvpSearchResult(
-    idString: String,
+    defData: List<PvpCharacterData>,
     toCharacter: (Int) -> Unit,
     vibrated: MutableState<Boolean>,
     viewModel: PvpViewModel = hiltViewModel()
 ) {
     val ids = JsonArray()
-    for (id in idString.split("-")) {
-        if (id.isNotBlank()) {
-            ids.add(id.toInt())
-        }
+    for (data in defData) {
+        ids.add(data.unitId)
     }
     val region = getRegion()
     viewModel.getPVPData(ids)
-    viewModel.getFavoritesList(idString, region)
+    viewModel.getFavoritesList(defData.getIdStr(), region)
     navViewModel.loading.postValue(true)
     //结果
     val result = viewModel.pvpResult.observeAsState()
@@ -406,87 +468,59 @@ fun PvpSearchResult(
     }
     val context = LocalContext.current
 
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        //防守
-        Row(
-            modifier = Modifier
-                .padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            ids.forEach {
-                IconCompose(
-                    data = CharacterIdUtil.getMaxIconUrl(
-                        it.asInt,
-                        MainActivity.r6Ids.contains(it.asInt)
-                    ),
-                    modifier = Modifier.padding(end = Dimen.smallPadding),
-                ) {
-                    toCharacter(it.asInt)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.bg_gray))
+    ) {
+        if (result.value != null) {
+            navViewModel.loading.postValue(false)
+            if (result.value!!.message == "success") {
+                //振动提醒
+                if (!vibrated.value) {
+                    vibrated.value = true
+                    VibrateUtil(context).done()
                 }
-            }
-        }
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = Dimen.cardElevation,
-            shape = CardTopShape
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(colorResource(id = R.color.bg_gray))
-            ) {
-                if (result.value != null) {
-                    navViewModel.loading.postValue(false)
-                    if (result.value!!.message == "success") {
-                        //振动提醒
-                        if (!vibrated.value) {
-                            vibrated.value = true
-                            VibrateUtil(context).done()
-                        }
-                        val success = result.value!!.data!!.isNotEmpty()
-                        if (success) {
-                            //查询成功
-                            val list = result.value!!.data!!.sortedByDescending { it.up }
-                            SlideAnimation(visible = success) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(colorResource(id = R.color.bg_gray))
-                                ) {
-                                    //展示查询结果
-                                    LazyColumn {
-                                        itemsIndexed(items = list) { index, item ->
-                                            PvpAtkTeam(
-                                                toCharacter,
-                                                favoritesList,
-                                                index + 1,
-                                                item,
-                                                region,
-                                                viewModel
-                                            )
-                                        }
-                                        item {
-                                            CommonSpacer()
-                                        }
-                                    }
+                val success = result.value!!.data!!.isNotEmpty()
+                if (success) {
+                    //查询成功
+                    val list = result.value!!.data!!.sortedByDescending { it.up }
+                    SlideAnimation(visible = success) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(colorResource(id = R.color.bg_gray))
+                        ) {
+                            //展示查询结果
+                            LazyColumn {
+                                itemsIndexed(items = list) { index, item ->
+                                    PvpAtkTeam(
+                                        toCharacter,
+                                        favoritesList,
+                                        index + 1,
+                                        item,
+                                        region,
+                                        viewModel
+                                    )
+                                }
+                                item {
+                                    CommonSpacer()
                                 }
                             }
-                        } else {
-                            MainText(
-                                text = stringResource(id = R.string.pvp_no_data),
-                                modifier = Modifier.align(Alignment.Center)
-                            )
                         }
-                    } else {
-                        MainText(
-                            text = stringResource(id = R.string.data_get_error),
-                            modifier = Modifier.align(Alignment.Center)
-                        )
                     }
+                } else {
+                    MainText(
+                        text = stringResource(id = R.string.pvp_no_data),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
+            } else {
+                MainText(
+                    text = stringResource(id = R.string.data_get_error),
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }

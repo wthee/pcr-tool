@@ -4,8 +4,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -59,7 +57,6 @@ object Navigation {
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_CALENDAR = "toolCalendar"
     const val TOOL_PVP = "toolPvpSearch"
-    const val TOOL_PVP_RESULT = "toolPvpResult"
     const val TOOL_PVP_IDS = "toolPvpSelectIds"
     const val TOOL_PVP_FAVORITE = "toolPvpFavorite"
     const val TOOL_NEWS = "toolNews"
@@ -305,37 +302,35 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                PvpSearchCompose(actions.toPvpResult, actions.toPvpFavorite)
+                PvpSearchCompose(
+                    toFavorite = actions.toPvpFavorite,
+                    toCharacter = actions.toCharacterDetail
+                )
             }
         }
 
-        //竞技场查询结果
+        //竞技场重新查询
         composable(
-            "${Navigation.TOOL_PVP_RESULT}/{${Navigation.TOOL_PVP_IDS}}",
+            "${Navigation.TOOL_PVP}/{${Navigation.TOOL_PVP_IDS}}",
             arguments = listOf(navArgument(Navigation.TOOL_PVP_IDS) {
                 type = NavType.StringType
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            val vibrated = remember {
-                mutableStateOf(false)
-            }
-            StatusBarBox {
-                PvpSearchResult(
-                    arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
-                    actions.toCharacterDetail,
-                    vibrated
-                )
-            }
+
+            PvpSearchCompose(
+                ids = arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
+                toFavorite = actions.toPvpFavorite,
+                toCharacter = actions.toCharacterDetail
+            )
         }
 
         //竞技场收藏
         composable(Navigation.TOOL_PVP_FAVORITE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             StatusBarBox {
-                PvpFavorites(actions.toCharacterDetail, actions.toPvpResult)
+                PvpFavorites(actions.toCharacterDetail, actions.toPvpResearch)
             }
         }
 
@@ -458,14 +453,6 @@ class NavActions(navController: NavHostController) {
         navController.navigate("${Navigation.TOOL_CLAN_BOSS_INFO}/${clanId}/${index}")
     }
 
-
-    /**
-     * 竞技场查询结果
-     */
-    val toPvpResult = { ids: String ->
-        navController.navigate("${Navigation.TOOL_PVP_RESULT}/${ids}")
-    }
-
     /**
      * 官方公告详情
      */
@@ -473,6 +460,13 @@ class NavActions(navController: NavHostController) {
         { title: String, url: String, region: Int, date: String ->
             navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${title}/${region}/${url}/${date}")
         }
+
+    /**
+     * 竞技场
+     */
+    val toPvpResearch = { ids: String ->
+        navController.navigate("${Navigation.TOOL_PVP}/${ids}")
+    }
 
     /**
      * 竞技场收藏
