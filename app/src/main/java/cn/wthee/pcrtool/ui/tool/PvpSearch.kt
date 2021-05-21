@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -49,6 +50,7 @@ import kotlin.math.round
 
 /**
  * 竞技场查询
+ * fixme 逻辑优化
  */
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -56,10 +58,9 @@ import kotlin.math.round
 @ExperimentalFoundationApi
 @Composable
 fun PvpSearchCompose(
-    ids: String = "",
     toFavorite: () -> Unit,
-    toCharacter: (Int) -> Unit,
-    viewModel: CharacterViewModel = hiltViewModel()
+    viewModel: CharacterViewModel = hiltViewModel(),
+    pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
     //获取数据
     viewModel.getAllCharacter()
@@ -77,12 +78,11 @@ fun PvpSearchCompose(
         mutableStateOf(2)
     }
     //显示类型
-    val showType = remember {
-        //0：选择，1：正常。2：收藏进入
-        mutableStateOf(0)
+    val showResult = remember {
+        mutableStateOf(false)
     }
     //已选择的id
-    val navIds = navViewModel.selectedIds.value
+    val navIds = navViewModel.selectedPvpData.value
     val selectedIds = remember {
         if (navIds != null && navIds.isNotEmpty()) {
             mutableStateListOf(
@@ -101,50 +101,54 @@ fun PvpSearchCompose(
                 PvpCharacterData(),
             )
         }
-
     }
-    navViewModel.selectedIds.postValue(selectedIds.subList(0, 5))
+    navViewModel.selectedPvpData.postValue(selectedIds.subList(0, 5))
 
-    //从收藏重新查询时，自动填充数据
     val research = remember {
         mutableStateOf(true)
     }
-    if (ids != "" && research.value) {
-        val idList = arrayListOf<Int>()
-        for (id in ids.split("-")) {
-            if (id.isNotBlank()) {
-                idList.add(id.toInt())
-            }
-        }
-        //获取带角色站位的数据
-        viewModel.getPvpCharacterByIds(idList)
-        val selectedData = viewModel.selectPvpCharacterData.value
-        if (selectedData != null && selectedData.isNotEmpty()) {
-            for (i in 0..4) {
-                selectedIds[i] = selectedData[4 - i]
-            }
-            showType.value = 2
-        }
-    }
-
+    val ids = navViewModel.selectedIds.observeAsState().value ?: ""
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
-    val vibrateState = remember {
-        mutableStateOf(false)
-    }
 
-    if (showType.value != 0) {
+    if (showResult.value) {
         navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
     } else {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
     }
 
+    //返回选择
     if (close) {
-        showType.value = 0
+        showResult.value = false
         research.value = false
+        navViewModel.loading.postValue(false)
         navViewModel.fabCloseClick.postValue(false)
+        navViewModel.selectedIds.postValue("")
+        pvpViewModel.pvpResult.postValue(null)
+        pvpViewModel.requesting.postValue(false)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
+        //从收藏重新查询时，自动填充数据
+        if (ids != "" && research.value) {
+            val idList = arrayListOf<Int>()
+            for (id in ids.split("-")) {
+                if (id.isNotBlank()) {
+                    idList.add(id.toInt())
+                }
+            }
+            //获取带角色站位的数据
+            scope.launch {
+                val selectedData = viewModel.getPvpCharacterByIds(idList)
+                if (selectedData.isNotEmpty()) {
+                    for (i in 0..4) {
+                        selectedIds[i] = selectedData[4 - i]
+                    }
+                    showResult.value = true
+                    research.value = false
+                }
+            }
+        }
+
         Column {
             //标题
             MainTitleText(
@@ -173,14 +177,26 @@ fun PvpSearchCompose(
                     elevation = Dimen.cardElevation,
                     shape = CardTopShape
                 ) {
-                    Box {
-                        if (showType.value != 0) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(id = R.color.bg_gray))
+                    ) {
+                        if (showResult.value) {
                             //展示搜索结果
-                            PvpSearchResult(
-                                selectedIds.subList(0, 5),
-                                toCharacter,
-                                vibrateState
-                            )
+                            navViewModel.loading.postValue(true)
+                            val idArray = JsonArray()
+                            for (sel in selectedIds.subList(0, 5)) {
+                                idArray.add(sel.unitId)
+                            }
+                            pvpViewModel.getPVPData(idArray)
+                            pvpViewModel.requesting.postValue(true)
+                            val result = pvpViewModel.pvpResult.observeAsState().value
+                            if (result != null) {
+                                navViewModel.loading.postValue(false)
+                                PvpSearchResult(selectedIds.subList(0, 5).getIdStr(), result)
+                            }
+
                         } else {
                             //选择页面
                             data.value?.let { dataValue ->
@@ -230,7 +246,7 @@ fun PvpSearchCompose(
                                     }
 
                                 }
-                                Box(modifier = Modifier.background(color = colorResource(id = R.color.bg_gray))) {
+                                Box {
                                     //供选择列表
                                     LazyVerticalGrid(
                                         cells = GridCells.Fixed(spanCount),
@@ -318,12 +334,11 @@ fun PvpSearchCompose(
                         }
 
                     }
-
                 }
             }
-
         }
-        if (showType.value == 0) {
+        //底部悬浮按钮
+        if (!showResult.value) {
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -356,7 +371,7 @@ fun PvpSearchCompose(
                             ToastUtil.short(tip)
                         } else {
                             navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            showType.value = 1
+                            showResult.value = true
                         }
                     }
                 }
@@ -439,27 +454,20 @@ fun PvpIconItem(
 
 /**
  * 查询结果页面
+ * fixme 页面重复加载
  */
 @ExperimentalAnimationApi
 @Composable
 fun PvpSearchResult(
-    defData: List<PvpCharacterData>,
-    toCharacter: (Int) -> Unit,
-    vibrated: MutableState<Boolean>,
-    viewModel: PvpViewModel = hiltViewModel()
+    defIds: String,
+    result: ResponseData<List<PvpResultData>>,
+    pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
-    val ids = JsonArray()
-    for (data in defData) {
-        ids.add(data.unitId)
-    }
     val region = getRegion()
-    viewModel.getPVPData(ids)
-    viewModel.getFavoritesList(defData.getIdStr(), region)
-    navViewModel.loading.postValue(true)
+    pvpViewModel.getFavoritesList(defIds, region)
     //结果
-    val result = viewModel.pvpResult.observeAsState()
     //收藏信息
-    val favorites = viewModel.favorites.observeAsState()
+    val favorites = pvpViewModel.favorites.observeAsState()
     val favoritesList = arrayListOf<String>()
     favorites.value?.let {
         it.forEach { data ->
@@ -467,71 +475,65 @@ fun PvpSearchResult(
         }
     }
     val context = LocalContext.current
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(id = R.color.bg_gray))
-    ) {
-        if (result.value != null) {
-            navViewModel.loading.postValue(false)
-            if (result.value!!.message == "success") {
-                //振动提醒
-                if (!vibrated.value) {
-                    vibrated.value = true
-                    VibrateUtil(context).done()
-                }
-                val success = result.value!!.data!!.isNotEmpty()
-                if (success) {
-                    //查询成功
-                    val list = result.value!!.data!!.sortedByDescending { it.up }
-                    SlideAnimation(visible = success) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(colorResource(id = R.color.bg_gray))
-                        ) {
-                            //展示查询结果
-                            LazyColumn {
-                                itemsIndexed(items = list) { index, item ->
-                                    PvpAtkTeam(
-                                        toCharacter,
-                                        favoritesList,
-                                        index + 1,
-                                        item,
-                                        region,
-                                        viewModel
-                                    )
-                                }
-                                item {
-                                    CommonSpacer()
-                                }
+    val vibrated = remember {
+        mutableStateOf(false)
+    }
+    Box(modifier = Modifier.fillMaxSize()) {
+        navViewModel.loading.postValue(false)
+        if (result.message == "success") {
+            //振动提醒
+            if (!vibrated.value) {
+                vibrated.value = true
+                VibrateUtil(context).done()
+            }
+            val success = result.data!!.isNotEmpty()
+            if (success) {
+                //查询成功
+                val list = result.data!!.sortedByDescending { it.up }
+                SlideAnimation(visible = success) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colorResource(id = R.color.bg_gray))
+                    ) {
+                        //展示查询结果
+                        LazyColumn {
+                            itemsIndexed(items = list) { index, item ->
+                                PvpAtkTeam(
+                                    favoritesList,
+                                    index + 1,
+                                    item,
+                                    region,
+                                    pvpViewModel
+                                )
+                            }
+                            item {
+                                CommonSpacer()
                             }
                         }
                     }
-                } else {
-                    MainText(
-                        text = stringResource(id = R.string.pvp_no_data),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
                 }
             } else {
                 MainText(
-                    text = stringResource(id = R.string.data_get_error),
+                    text = stringResource(id = R.string.pvp_no_data),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+        } else {
+            MainText(
+                text = stringResource(id = R.string.data_get_error),
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
 
 /**
- * 查询结果
+ * 查询结果 Item
  */
 @Composable
 private fun PvpAtkTeam(
-    toCharacter: (Int) -> Unit,
     favoritesList: List<String>,
     i: Int,
     item: PvpResultData,
@@ -622,9 +624,7 @@ private fun PvpAtkTeam(
                                 MainActivity.r6Ids.contains(it)
                             ),
                             modifier = Modifier.padding(end = Dimen.largePadding)
-                        ) {
-                            toCharacter(it)
-                        }
+                        )
                     }
                 }
             }

@@ -27,6 +27,7 @@ class PvpViewModel @Inject constructor(
     var allFavorites = MutableLiveData<List<PvpFavoriteData>>()
     var favorites = MutableLiveData<List<PvpFavoriteData>>()
     val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
+    val requesting = MutableLiveData(false)
 
     /**
      * 根据游戏版本 [region]，获取收藏信息
@@ -74,8 +75,9 @@ class PvpViewModel @Inject constructor(
      */
     fun getPVPData(ids: JsonArray) {
         viewModelScope.launch {
-            if (pvpResult.value == null) {
+            if (pvpResult.value == null && requesting.value == false) {
                 val data = apiRepository.getPVPData(ids)
+                requesting.postValue(false)
                 pvpResult.postValue(data)
             }
         }

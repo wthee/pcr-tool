@@ -33,7 +33,6 @@ object Navigation {
     const val CHARACTER_DETAIL = "characterDetail"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
     const val UNIT_ID = "unitId"
-    const val UNIT_SIX_ID = "r6Id"
     const val EQUIP_LIST = "equipList"
     const val EQUIP_ID = "equipId"
     const val EQUIP_DETAIL = "equipDetail"
@@ -57,7 +56,6 @@ object Navigation {
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_CALENDAR = "toolCalendar"
     const val TOOL_PVP = "toolPvpSearch"
-    const val TOOL_PVP_IDS = "toolPvpSelectIds"
     const val TOOL_PVP_FAVORITE = "toolPvpFavorite"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
@@ -305,25 +303,8 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             StatusBarBox {
                 PvpSearchCompose(
                     toFavorite = actions.toPvpFavorite,
-                    toCharacter = actions.toCharacterDetail
                 )
             }
-        }
-
-        //竞技场重新查询
-        composable(
-            "${Navigation.TOOL_PVP}/{${Navigation.TOOL_PVP_IDS}}",
-            arguments = listOf(navArgument(Navigation.TOOL_PVP_IDS) {
-                type = NavType.StringType
-            })
-        ) {
-            val arguments = requireNotNull(it.arguments)
-
-            PvpSearchCompose(
-                ids = arguments.getString(Navigation.TOOL_PVP_IDS) ?: "",
-                toFavorite = actions.toPvpFavorite,
-                toCharacter = actions.toCharacterDetail
-            )
         }
 
         //竞技场收藏
@@ -462,10 +443,10 @@ class NavActions(navController: NavHostController) {
         }
 
     /**
-     * 竞技场
+     * 竞技场重新查询
      */
-    val toPvpResearch = { ids: String ->
-        navController.navigate("${Navigation.TOOL_PVP}/${ids}")
+    val toPvpResearch = {
+        navController.navigateUp()
     }
 
     /**
@@ -539,7 +520,8 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 竞技场查询角色
      */
-    val selectedIds = MutableLiveData<List<PvpCharacterData>>()
+    val selectedPvpData = MutableLiveData<List<PvpCharacterData>>()
+    val selectedIds = MutableLiveData<String>()
 
     var curRank = MutableLiveData(0)
     var targetRank = MutableLiveData(0)

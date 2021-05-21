@@ -79,6 +79,7 @@ class CharacterViewModel @Inject constructor(
             allPvpCharacterData.postValue(data)
         }
     }
+
     /**
      * 六星 id 列表
      */
@@ -102,10 +103,5 @@ class CharacterViewModel @Inject constructor(
     /**
      * 角色站位
      */
-    fun getPvpCharacterByIds(ids: ArrayList<Int>) {
-        viewModelScope.launch {
-            val data = repository.getCharacterByIds(ids)
-            selectPvpCharacterData.postValue(data)
-        }
-    }
+    suspend fun getPvpCharacterByIds(ids: ArrayList<Int>) = repository.getCharacterByIds(ids)
 }
