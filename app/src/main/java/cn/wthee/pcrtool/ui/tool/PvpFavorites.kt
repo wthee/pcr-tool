@@ -6,14 +6,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -101,10 +99,11 @@ private fun PvpFavoriteItem(
                     .padding(Dimen.mediuPadding)
                     .fillMaxWidth()
             ) {
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = Dimen.mediuPadding)
+                        .padding(bottom = Dimen.mediuPadding),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     //搜索
                     TextButton(onClick = {
@@ -116,17 +115,15 @@ private fun PvpFavoriteItem(
                     }) {
                         IconCompose(
                             data = MainIconType.PVP_SEARCH.icon,
-                            modifier = Modifier.size(Dimen.fabIconSize)
+                            size = Dimen.fabIconSize
                         )
                         MainContentText(text = stringResource(id = R.string.pvp_research))
                     }
+                    Spacer(modifier = Modifier.weight(1f))
                     //取消收藏
                     IconCompose(
                         data = MainIconType.LOVE_FILL.icon,
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .size(Dimen.fabIconSize)
-                            .clip(CircleShape)
+                        Dimen.fabIconSize
                     ) {
                         //点击取消收藏，增加确认 dialog 操作
                         scope.launch {
@@ -141,28 +138,30 @@ private fun PvpFavoriteItem(
                             data = CharacterIdUtil.getMaxIconUrl(
                                 it,
                                 MainActivity.r6Ids.contains(it)
-                            ),
-                            modifier = Modifier.padding(end = Dimen.largePadding)
+                            )
                         ) {
                             toCharacter(it)
                         }
+                        Spacer(modifier = Modifier.padding(start = Dimen.mediuPadding))
                     }
                 }
                 //防守
-                LazyRow {
+                LazyRow(
+                    contentPadding = PaddingValues(
+                        top = Dimen.mediuPadding,
+                        end = Dimen.largePadding
+                    )
+                ) {
                     items(itemData.getDefIds()) {
                         IconCompose(
                             data = CharacterIdUtil.getMaxIconUrl(
                                 it,
                                 MainActivity.r6Ids.contains(it)
                             ),
-                            modifier = Modifier.padding(
-                                top = Dimen.mediuPadding,
-                                end = Dimen.largePadding
-                            )
                         ) {
                             toCharacter(it)
                         }
+                        Spacer(modifier = Modifier.padding(start = Dimen.mediuPadding))
                     }
                 }
             }

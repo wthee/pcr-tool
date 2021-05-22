@@ -48,12 +48,8 @@ fun TopBarCompose(
             .height(Dimen.topBarHeight)
             .background(MaterialTheme.colors.primary)
     ) {
-        IconCompose(
-            iconId,
-            modifier = Modifier
-                .padding(start = Dimen.largePadding)
-                .size(Dimen.topBarIconSize)
-        )
+        Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+        IconCompose(iconId, size = Dimen.topBarIconSize)
         Text(
             text = stringResource(id = titleId),
             style = MaterialTheme.typography.subtitle1,

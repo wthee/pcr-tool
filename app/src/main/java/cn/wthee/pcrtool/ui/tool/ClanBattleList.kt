@@ -7,11 +7,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -28,7 +27,6 @@ import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.enemy
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
@@ -39,7 +37,10 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 /**
@@ -178,10 +179,14 @@ fun ClanBossInfoPager(
     val pagerState = rememberPagerState(pageCount = 5, initialPage = index)
 
     clanInfo.value?.let { clanValue ->
+        val maxSection = clanValue.getAllBossInfo().size
         val section = remember {
-            mutableStateOf(clanValue.getAllBossInfo().size - 1)
+            mutableStateOf(maxSection - 1)
         }
-        val sectionColor = getSectionTextColor(section = section.value + 1)
+        val tabs = arrayListOf<String>()
+        for (i in 1..maxSection) {
+            tabs.add(getZhNumberText(i))
+        }
         val bossInfoList = clanValue.getUnitIdList(section.value)
         val enemyIds = arrayListOf<Int>()
         bossInfoList.forEach {
@@ -190,96 +195,99 @@ fun ClanBossInfoPager(
         clanViewModel.getAllBossAttr(enemyIds)
         val bossDataList = clanViewModel.allClanBossAttr.observeAsState()
 
-        Column(modifier = Modifier.background(colorResource(id = R.color.bg_gray))) {
-            //阶段选择
-            val sectionChipData = arrayListOf<ChipData>()
-            for (i in clanValue.getAllBossInfo().indices) {
-                sectionChipData.add(
-                    ChipData(i, getZhNumberText(i + 1))
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.bg_gray))) {
+            Column() {
+                //图标列表
+                ClanBattleItem(clanValue, pagerState = pagerState, type = 1)
+                //顺序
+                Subtitle2(
+                    text = "BOSS ${pagerState.currentPage + 1} / 阶段${tabs[section.value]}",
+                    color = getSectionTextColor(section = section.value + 1),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = Dimen.smallPadding)
                 )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                TextButton(onClick = {
-
-                }) {
-                    Icon(
-                        imageVector = MainIconType.CLAN_SECTION.icon,
-                        contentDescription = null,
-                        tint = sectionColor
-                    )
-                    MainText(
-                        text = stringResource(id = R.string.title_section),
-                        color = sectionColor
-                    )
-                }
-
-                ChipGroup(
-                    sectionChipData,
-                    section,
-                    modifier = Modifier,
-                    type = 2
-                )
-            }
-            //图标列表
-            ClanBattleItem(clanValue, pagerState = pagerState, type = 1)
-            //指示器
-            HorizontalPagerIndicator(
-                pagerState = pagerState,
-                activeColor = MaterialTheme.colors.primary,
-                inactiveColor = colorResource(id = R.color.alpha_primary),
-                spacing = Dimen.iconSize + Dimen.mediuPadding * 2,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            //顺序
-            Subtitle2(
-                text = "BOSS ${pagerState.currentPage + 1}",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.smallPadding)
-            )
-            //BOSS信息
-            val visible = bossDataList.value != null && bossDataList.value!!.isNotEmpty()
-            SlideAnimation(visible = visible) {
-                HorizontalPager(state = pagerState) { pagerIndex ->
-                    if (visible) {
-                        val bossDataValue = bossDataList.value!![pagerIndex]
-                        Card(
-                            shape = CardTopShape,
-                            elevation = Dimen.cardElevation,
-                            modifier = Modifier
-                                .padding(top = Dimen.mediuPadding)
-                                .fillMaxSize()
-                                .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
-                        ) {
-                            Column(
-                                modifier = Modifier.verticalScroll(rememberScrollState())
+                //BOSS信息
+                val visible = bossDataList.value != null && bossDataList.value!!.isNotEmpty()
+                SlideAnimation(visible = visible) {
+                    HorizontalPager(state = pagerState) { pagerIndex ->
+                        if (visible) {
+                            val bossDataValue = bossDataList.value!![pagerIndex]
+                            Card(
+                                shape = CardTopShape,
+                                elevation = Dimen.cardElevation,
+                                modifier = Modifier
+                                    .padding(top = Dimen.mediuPadding)
+                                    .fillMaxSize()
+                                    .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
                             ) {
-                                //名称
-                                MainText(
-                                    text = bossDataValue.name,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                                )
-                                //等级
-                                Subtitle2(
-                                    text = stringResource(id = R.string.level, bossDataValue.level),
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                                )
-                                //属性
-                                AttrList(attrs = bossDataValue.attr.enemy())
-                                //技能
-                                BossSkillList(pagerIndex, bossDataList.value!!)
+                                Column(
+                                    modifier = Modifier.verticalScroll(rememberScrollState())
+                                ) {
+                                    //名称
+                                    MainText(
+                                        text = bossDataValue.name,
+                                        modifier = Modifier
+                                            .align(Alignment.CenterHorizontally)
+                                            .padding(Dimen.mediuPadding)
+                                    )
+                                    //等级
+                                    Subtitle2(
+                                        text = stringResource(
+                                            id = R.string.level,
+                                            bossDataValue.level
+                                        ),
+                                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                                    )
+                                    //属性
+                                    AttrList(attrs = bossDataValue.attr.enemy())
+                                    //技能
+                                    BossSkillList(pagerIndex, bossDataList.value!!)
+                                }
                             }
                         }
-                    }
 
+                    }
+                }
+            }
+            //阶段选择
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(
+                        start = Dimen.fabMarginEnd,
+                        end = Dimen.fabMarginEnd,
+                        bottom = Dimen.fabMargin
+                    )
+                    .height(Dimen.fabSize)
+                    .shadow(elevation = Dimen.fabElevation, shape = CircleShape, clip = true)
+                    .background(color = MaterialTheme.colors.surface, shape = CircleShape)
+            ) {
+                TabRow(
+                    selectedTabIndex = section.value,
+                    backgroundColor = Color.Transparent,
+                    contentColor = MaterialTheme.colors.primary,
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            text = {
+                                Text(
+                                    title,
+                                    color = getSectionTextColor(section = index + 1)
+                                )
+                            },
+                            selected = section.value == index,
+                            onClick = {
+                                section.value = index
+                            },
+                        )
+                    }
                 }
             }
         }
+
 
     }
 }

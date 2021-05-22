@@ -3,20 +3,22 @@ package cn.wthee.pcrtool.ui.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
@@ -33,9 +35,7 @@ import com.google.accompanist.imageloading.ImageLoadState
 @Composable
 fun CharacterCard(
     url: String,
-    clip: Boolean = false,
-    scrollState: ScrollState? = null,
-    showLoading: Boolean = true
+    scrollState: ScrollState? = null
 ) {
 
     val modifier = Modifier
@@ -46,25 +46,17 @@ fun CharacterCard(
         val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
         modifier.offset(y = move)
     }
-    if (clip) {
-        modifier.clip(CardTopShape)
-    }
-    Box {
-        val painter = rememberCoilPainter(request = url)
-        Image(
-            painter = when (painter.loadState) {
-                is ImageLoadState.Success -> painter
-                is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                else -> if (showLoading) {
-                    rememberCoilPainter(request = R.drawable.load)
-                } else {
-                    painter
-                }
-            },
-            contentDescription = null,
-            modifier = modifier
-        )
-    }
+    val painter = rememberCoilPainter(request = url)
+
+    Image(
+        painter = when (painter.loadState) {
+            is ImageLoadState.Success -> painter
+            is ImageLoadState.Loading -> rememberCoilPainter(request = R.drawable.load)
+            else -> rememberCoilPainter(request = R.drawable.error)
+        },
+        contentDescription = null,
+        modifier = modifier
+    )
 }
 
 
@@ -94,7 +86,7 @@ fun PositionIcon(position: Int) {
 @Composable
 fun IconCompose(
     data: Any,
-    modifier: Modifier = Modifier,
+    size: Dp = Dimen.iconSize,
     tint: Color = MaterialTheme.colors.primary,
     onClick: (() -> Unit)? = null
 ) {
@@ -106,39 +98,32 @@ fun IconCompose(
             .clickable(onClick = onClick.vibrate {
                 VibrateUtil(context).single()
             })
-            .sizeIn(
-                minWidth = Dimen.iconMinSize, minHeight = Dimen.iconMinSize,
-                maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize
-            )
+            .size(size)
     } else {
         Modifier
             .clip(Shapes.small)
-            .sizeIn(
-                minWidth = Dimen.iconMinSize, minHeight = Dimen.iconMinSize,
-                maxWidth = Dimen.iconSize, maxHeight = Dimen.iconSize
-            )
+            .size(size)
     }
-    Box(modifier, contentAlignment = Alignment.Center) {
-        if (data is ImageVector) {
-            Icon(
-                imageVector = data,
-                contentDescription = null,
-                tint = tint,
-                modifier = mModifier
-            )
-        } else {
-            val painter = rememberCoilPainter(request = data)
-            Image(
-                painter = when (painter.loadState) {
-                    is ImageLoadState.Success -> painter
-                    is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.unknown_gray)
-                    else -> rememberCoilPainter(request = R.drawable.unknown_gray)
-                },
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = mModifier
-            )
-        }
+
+    if (data is ImageVector) {
+        Icon(
+            imageVector = data,
+            contentDescription = null,
+            tint = tint,
+            modifier = mModifier
+        )
+    } else {
+        val painter = rememberCoilPainter(request = data)
+        Image(
+            painter = when (painter.loadState) {
+                is ImageLoadState.Success -> painter
+                is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.unknown_gray)
+                else -> rememberCoilPainter(request = R.drawable.unknown_gray)
+            },
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = mModifier
+        )
     }
 }
 

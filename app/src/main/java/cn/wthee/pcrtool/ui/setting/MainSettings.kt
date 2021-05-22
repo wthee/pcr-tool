@@ -55,8 +55,8 @@ fun MainSettings() {
     FadeAnimation(visible = true) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(Dimen.mediuPadding),
+                .padding(top = Dimen.mediuPadding)
+                .fillMaxSize(),
         ) {
             //数据更新
             MainText(
@@ -131,11 +131,10 @@ fun MainSettings() {
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
                 IconCompose(
                     data = MainIconType.VIBRATE.icon,
-                    modifier = Modifier
-                        .padding(Dimen.mediuPadding)
-                        .size(Dimen.settingIconSize)
+                    size = Dimen.settingIconSize
                 )
                 Column(
                     modifier = Modifier
@@ -150,6 +149,7 @@ fun MainSettings() {
                     sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
                     VibrateUtil(context).single()
                 })
+                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
             }
             //- 动画效果
             val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
@@ -171,11 +171,10 @@ fun MainSettings() {
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
                 IconCompose(
                     data = MainIconType.ANIMATION.icon,
-                    modifier = Modifier
-                        .padding(Dimen.mediuPadding)
-                        .size(Dimen.settingIconSize)
+                    size = Dimen.settingIconSize
                 )
                 Column(
                     modifier = Modifier
@@ -190,6 +189,7 @@ fun MainSettings() {
                     sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
                     VibrateUtil(context).single()
                 })
+                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
             }
             LineCompose()
             //感谢友链
@@ -248,15 +248,15 @@ private fun SettingItem(
     val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.clickable(onClick = onClick.vibrate {
-            VibrateUtil(context).single()
-        })
+        modifier = Modifier
+            .clickable(onClick = onClick.vibrate {
+                VibrateUtil(context).single()
+            })
     ) {
+        Spacer(modifier = Modifier.width(Dimen.mediuPadding))
         IconCompose(
             data = iconType.icon,
-            modifier = Modifier
-                .padding(Dimen.mediuPadding)
-                .size(Dimen.settingIconSize)
+            size = Dimen.settingIconSize
         )
         Column(
             modifier = Modifier
@@ -266,6 +266,7 @@ private fun SettingItem(
             TitleText(text = title)
             SummaryText(text = summary)
         }
+        Spacer(modifier = Modifier.width(Dimen.mediuPadding))
     }
 }
 

@@ -56,7 +56,6 @@ fun GachaList(
                 }
             }
         }
-
         //回到顶部
         FabCompose(
             iconType = MainIconType.GACHA,
@@ -103,7 +102,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                 ) {
                     IconCompose(
                         data = MainIconType.TIME_LEFT.icon,
-                        modifier = Modifier.size(Dimen.smallIconSize)
+                        size = Dimen.smallIconSize,
                     )
                     MainContentText(
                         text = stringResource(R.string.in_progress, gachaInfo.endTime.dates(today)),

@@ -276,9 +276,20 @@ fun PagerIndicator(pagerState: PagerState, modifier: Modifier) {
 
 @Composable
 fun CommonSpacer() {
-    Spacer(modifier = Modifier
-        .navigationBarsPadding()
-        .height(Dimen.fabSize + Dimen.fabMargin))
+    Spacer(
+        modifier = Modifier
+            .navigationBarsPadding()
+            .height(Dimen.fabSize + Dimen.fabMargin)
+    )
+}
+
+@Composable
+fun CommonIconSpacer() {
+    Spacer(
+        modifier = Modifier
+            .navigationBarsPadding()
+            .size(Dimen.iconSize)
+    )
 }
 
 /**

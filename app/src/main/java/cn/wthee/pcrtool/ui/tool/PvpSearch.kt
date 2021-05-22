@@ -1,10 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +48,6 @@ import kotlin.math.round
 
 /**
  * 竞技场查询
- * fixme 逻辑优化
  */
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -213,10 +210,14 @@ fun PvpSearchCompose(
                                 val showIcon = listOf(0, 0, 1, 0, 0)
                                 //站位图标在列表中的位置
                                 val positions = arrayListOf(0, 0, 0)
-                                val filledCount1 = spanCount - character0.size % spanCount
+                                //中卫以上填充数
+                                val filledCount1 =
+                                    (spanCount - character0.size % spanCount) % spanCount
                                 positions[1] =
                                     (spanCount + character0.size + filledCount1) / spanCount
-                                val filledCount2 = spanCount - character1.size % spanCount
+                                //后卫以上填充数
+                                val filledCount2 =
+                                    (spanCount - character1.size % spanCount) % spanCount
                                 positions[0] =
                                     ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
                                 //滚动监听
@@ -274,7 +275,7 @@ fun PvpSearchCompose(
                                             PvpIconItem(selectedIds, it)
                                         }
                                         //后
-                                        items(filledCount2) {
+                                        items(filledCount2 % spanCount) {
                                             CommonSpacer()
                                         }
                                         itemsIndexed(showIcon) { index, _ ->
@@ -316,17 +317,17 @@ fun PvpSearchCompose(
                                             } else {
                                                 Modifier.padding(Dimen.smallPadding)
                                             }
-                                            IconCompose(
-                                                data = it,
+                                            Image(painter = painterResource(id = it),
+                                                contentDescription = null,
                                                 modifier = modifier
-                                                    .size(Dimen.fabIconSize)
                                                     .clip(CircleShape)
-                                            ) {
-                                                positionIndex.value = index
-                                                scope.launch {
-                                                    scrollState.scrollToItem(positions[index])
-                                                }
-                                            }
+                                                    .size(Dimen.fabIconSize)
+                                                    .clickable {
+                                                        positionIndex.value = index
+                                                        scope.launch {
+                                                            scrollState.scrollToItem(positions[index])
+                                                        }
+                                                    })
                                         }
                                     }
                                 }
@@ -387,13 +388,12 @@ private fun PvpPositionIcon(iconId: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(Dimen.iconSize)
+            .height(Dimen.iconSize),
+        contentAlignment = Alignment.Center
     ) {
         IconCompose(
             data = iconId,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .size(Dimen.fabIconSize)
+            size = Dimen.fabIconSize
         )
     }
 }
@@ -454,7 +454,6 @@ fun PvpIconItem(
 
 /**
  * 查询结果页面
- * fixme 页面重复加载
  */
 @ExperimentalAnimationApi
 @Composable
@@ -558,7 +557,10 @@ private fun PvpAtkTeam(
             }
             Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
                 //点赞信息
-                Row(modifier = Modifier.padding(bottom = Dimen.smallPadding)) {
+                Row(
+                    modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     MainContentText(
                         text = "${upRatio}%",
                         color = MaterialTheme.colors.primary,
@@ -575,56 +577,49 @@ private fun PvpAtkTeam(
                         text = item.down.toString(),
                         color = colorResource(id = R.color.color_rank_18_20),
                         textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(0.4f)
+                        modifier = Modifier.weight(1f)
                     )
                     //收藏
-                    Box(
-                        modifier = Modifier.weight(0.2f)
+                    IconCompose(
+                        data = if (favorites) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
+                        size = Dimen.fabIconSize
                     ) {
-                        IconCompose(
-                            data = if (favorites) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
-                            modifier = Modifier
-                                .size(Dimen.fabIconSize)
-                                .clip(CircleShape)
-                                .align(Alignment.CenterEnd)
-                        ) {
-                            scope.launch {
-                                if (favorites) {
-                                    //已收藏，取消收藏
-                                    viewModel.delete(item.atk, item.def, region)
-                                } else {
-                                    //未收藏，添加收藏
-                                    val simpleDateFormat =
-                                        SimpleDateFormat(
-                                            "yyyy/MM/dd HH:mm:ss.SSS",
-                                            Locale.CHINESE
-                                        )
-                                    val date = Date(System.currentTimeMillis())
-                                    viewModel.insert(
-                                        PvpFavoriteData(
-                                            item.id,
-                                            item.atk,
-                                            item.def,
-                                            simpleDateFormat.format(date),
-                                            region
-                                        )
+                        scope.launch {
+                            if (favorites) {
+                                //已收藏，取消收藏
+                                viewModel.delete(item.atk, item.def, region)
+                            } else {
+                                //未收藏，添加收藏
+                                val simpleDateFormat =
+                                    SimpleDateFormat(
+                                        "yyyy/MM/dd HH:mm:ss.SSS",
+                                        Locale.CHINESE
                                     )
-                                }
+                                val date = Date(System.currentTimeMillis())
+                                viewModel.insert(
+                                    PvpFavoriteData(
+                                        item.id,
+                                        item.atk,
+                                        item.def,
+                                        simpleDateFormat.format(date),
+                                        region
+                                    )
+                                )
                             }
                         }
                     }
                 }
                 //队伍角色图标
                 //进攻
-                LazyRow {
+                LazyRow(contentPadding = PaddingValues(end = Dimen.largePadding)) {
                     items(item.getIdList(0)) {
                         IconCompose(
                             data = CharacterIdUtil.getMaxIconUrl(
                                 it,
                                 MainActivity.r6Ids.contains(it)
                             ),
-                            modifier = Modifier.padding(end = Dimen.largePadding)
                         )
+                        Spacer(modifier = Modifier.padding(start = Dimen.mediuPadding))
                     }
                 }
             }

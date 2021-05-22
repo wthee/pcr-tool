@@ -3,8 +3,7 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.ui.compose.CommonIconSpacer
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.getGridData
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -46,10 +45,7 @@ private fun IconListRow(list: List<Int>, toCharacterDetail: (Int) -> Unit) {
                 unitId = it
             }
             if (it == 0) {
-                IconCompose(
-                    data = R.drawable.unknown_gray,
-                    modifier = Modifier.alpha(0f)
-                )
+                CommonIconSpacer()
             } else {
                 IconCompose(
                     data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP

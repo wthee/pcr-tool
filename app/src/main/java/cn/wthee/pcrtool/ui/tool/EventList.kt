@@ -148,7 +148,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 if (inProgress) {
                     IconCompose(
                         data = MainIconType.TIME_LEFT.icon,
-                        modifier = Modifier.size(Dimen.smallIconSize)
+                        size = Dimen.smallIconSize,
                     )
                     MainContentText(
                         text = stringResource(R.string.in_progress, event.endTime.dates(today)),
@@ -160,7 +160,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 if (comingSoon) {
                     IconCompose(
                         data = MainIconType.COUNTDOWN.icon,
-                        modifier = Modifier.size(Dimen.smallIconSize),
+                        size = Dimen.smallIconSize,
                         tint = typeColor
                     )
                     MainContentText(
@@ -183,7 +183,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 //图标
                 IconListCompose(event.unitIds.intArrayList(), toCharacterDetail)
                 //结束日期
-                if (endDate != "2030/12/30") {
+                if (event.eventId / 10000 != 2) {
                     CaptionText(
                         text = event.endTime,
                         modifier = Modifier.align(Alignment.End)

@@ -142,7 +142,7 @@ fun LeaderboardItem(info: LeaderboardData) {
                 modifier = Modifier.padding(Dimen.smallPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconCompose(data = info.icon, modifier = Modifier.size(Dimen.iconSize))
+                IconCompose(data = info.icon, size = Dimen.iconSize)
                 GradeText(info.all, modifier = Modifier.weight(0.25f))
                 GradeText(info.pvp, modifier = Modifier.weight(0.25f))
                 GradeText(info.clan, modifier = Modifier.weight(0.25f))

@@ -55,7 +55,7 @@ fun DownloadCompose(viewModel: NavViewModel) {
                 } else {
                     IconCompose(
                         MainIconType.OK.icon,
-                        modifier = Modifier.size(28.dp)
+                        size = 28.dp
                     )
                 }
             },

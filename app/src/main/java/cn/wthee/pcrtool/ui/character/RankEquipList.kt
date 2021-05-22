@@ -94,17 +94,17 @@ fun RankEquipListItem(
             val allIds = unitPromotion.getAllOrderIds()
             allIds.forEachIndexed { index, _ ->
                 if (index % 2 == 0) {
-                    Row(horizontalArrangement = Arrangement.SpaceAround) {
-                        IconCompose(
-                            data = getEquipIconUrl(allIds[index]),
-                            modifier = Modifier.padding(Dimen.smallPadding)
-                        ) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier
+                            .padding(Dimen.smallPadding)
+                            .fillMaxWidth()
+                    ) {
+                        IconCompose(data = getEquipIconUrl(allIds[index])) {
                             toEquipDetail(allIds[index])
                         }
-                        IconCompose(
-                            data = getEquipIconUrl(allIds[index + 1]),
-                            modifier = Modifier.padding(Dimen.smallPadding)
-                        ) {
+                        Spacer(modifier = Modifier.width(Dimen.smallPadding))
+                        IconCompose(data = getEquipIconUrl(allIds[index + 1])) {
                             toEquipDetail(allIds[index + 1])
                         }
                     }

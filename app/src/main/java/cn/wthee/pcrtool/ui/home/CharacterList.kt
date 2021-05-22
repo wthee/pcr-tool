@@ -6,7 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -52,7 +52,6 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色列表
- * fixme 页面空白问题
  */
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
@@ -110,11 +109,10 @@ fun CharacterList(
                     state = scrollState,
                     modifier = Modifier
                         .padding(top = marginTop)
-                        .fillMaxSize()
                         .background(color = MaterialTheme.colors.background, shape = CardTopShape)
                 ) {
-                    itemsIndexed(list.value!!) { index, data ->
-                        CharacterItem(data, filter.value!!, toDetail)
+                    items(list.value!!) {
+                        CharacterItem(it, filter.value!!, toDetail)
                     }
                     items(2) {
                         CommonSpacer()
@@ -180,6 +178,7 @@ private fun CharacterItem(
         Color.Unspecified
     }
 
+
     MainCard(
         modifier = Modifier.padding(Dimen.mediuPadding),
         onClick = {
@@ -194,12 +193,15 @@ private fun CharacterItem(
                 CharacterIdUtil.getMaxCardUrl(
                     character.id,
                     MainActivity.r6Ids.contains(character.id)
-                ),
-                true
+                )
             )
             //名字、位置
             Row(
-                modifier = Modifier.padding(Dimen.smallPadding),
+                modifier = Modifier.padding(
+                    start = Dimen.smallPadding,
+                    end = Dimen.smallPadding,
+                    top = Dimen.smallPadding
+                ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -214,7 +216,11 @@ private fun CharacterItem(
             //其它属性
             Row(
                 modifier = Modifier
-                    .padding(Dimen.smallPadding)
+                    .padding(
+                        start = Dimen.smallPadding,
+                        end = Dimen.smallPadding,
+                        bottom = Dimen.smallPadding
+                    )
                     .fillMaxWidth()
             ) {
                 CharacterNumberText(character.getFixedAge())
@@ -344,13 +350,13 @@ private fun FilterCharacterSheet(
             leadingIcon = {
                 IconCompose(
                     data = MainIconType.CHARACTER.icon,
-                    modifier = Modifier.size(Dimen.fabIconSize)
+                    size = Dimen.fabIconSize
                 )
             },
             trailingIcon = {
                 IconCompose(
                     data = MainIconType.SEARCH.icon,
-                    modifier = Modifier.size(Dimen.fabIconSize)
+                    size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()
                     navViewModel.fabOKCilck.postValue(true)

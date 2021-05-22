@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getDatabaseType
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -43,7 +42,6 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltViewModel()) {
 
     val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    MainActivity.navViewModel.loading.postValue(true)
     val title = when (getDatabaseType()) {
         1 -> stringResource(id = R.string.db_cn)
         else -> stringResource(id = R.string.db_jp)
@@ -54,16 +52,13 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltViewModel()) {
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        SlideAnimation(visible = calendarData.value != null) {
-            calendarData.value?.let { data ->
-                MainActivity.navViewModel.loading.postValue(false)
-                LazyColumn(state = state) {
-                    items(data) {
-                        CalendarItem(it)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
+        calendarData.value?.let { data ->
+            LazyColumn(state = state) {
+                items(data) {
+                    CalendarItem(it)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
@@ -131,7 +126,7 @@ private fun CalendarItem(calendar: DropEvent) {
                 if (inProgress) {
                     IconCompose(
                         data = MainIconType.TIME_LEFT.icon,
-                        modifier = Modifier.size(Dimen.smallIconSize),
+                        size = Dimen.smallIconSize,
                         tint = color
                     )
                     MainContentText(
@@ -144,7 +139,7 @@ private fun CalendarItem(calendar: DropEvent) {
                 if (comingSoon) {
                     IconCompose(
                         data = MainIconType.COUNTDOWN.icon,
-                        modifier = Modifier.size(Dimen.smallIconSize),
+                        size = Dimen.smallIconSize,
                         tint = color
                     )
                     MainContentText(
@@ -165,7 +160,6 @@ private fun CalendarItem(calendar: DropEvent) {
                 getTypeData(calendar).forEach {
                     Subtitle1(
                         text = it.title + it.info,
-//                        color = colorResource(id = it.colorId),
                         modifier = Modifier.padding(
                             top = Dimen.smallPadding,
                             bottom = Dimen.smallPadding

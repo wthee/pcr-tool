@@ -165,13 +165,12 @@ private fun EquipItem(
         Color.Unspecified
     }
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = Dimen.mediuPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IconCompose(
-            data = getEquipIconUrl(equip.equipmentId),
-            modifier = Modifier.padding(top = Dimen.mediuPadding)
-        ) {
+        IconCompose(data = getEquipIconUrl(equip.equipmentId)) {
             toEquipDetail(equip.equipmentId)
         }
         //装备名称
@@ -256,13 +255,13 @@ private fun FilterEquipSheet(
             leadingIcon = {
                 IconCompose(
                     data = MainIconType.EQUIP.icon,
-                    modifier = Modifier.size(Dimen.fabIconSize)
+                    size = Dimen.fabIconSize
                 )
             },
             trailingIcon = {
                 IconCompose(
                     data = MainIconType.SEARCH.icon,
-                    modifier = Modifier.size(Dimen.fabIconSize)
+                    size = Dimen.fabIconSize
                 ) {
                     keyboardController?.hide()
                     navViewModel.fabOKCilck.postValue(true)

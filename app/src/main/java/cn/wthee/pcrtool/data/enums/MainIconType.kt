@@ -108,7 +108,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 公会
      */
-    GUILD(Icons.Rounded.TripOrigin),
+    GUILD(Icons.Rounded.Group),
 
     /**
      * 排行
@@ -128,7 +128,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 官网公告
      */
-    NEWS(Icons.Rounded.Campaign),
+    NEWS(Icons.Rounded.Public),
 
     /**
      * 更新通知

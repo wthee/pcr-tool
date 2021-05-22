@@ -73,11 +73,6 @@ data class SkillActionPro(
     )
 
     /**
-     * 依赖技能
-     */
-    private fun getDependAction() = if (dependId != 0) "受到动作(${dependId % 10})影响的" else ""
-
-    /**
      * 技能目标
      */
     private fun getTargetAssignment() = when (target_assignment) {
@@ -148,7 +143,12 @@ data class SkillActionPro(
     }
 
     private fun getTarget(): String {
-        return (getTargetType() + getTargetNumber() + getTargetRange() + getDependAction() + getTargetAssignment() + getTargetCount())
+        return (getTargetType() + getTargetNumber() + getTargetRange() + if (dependId != 0) {
+            "受到动作(${dependId % 10})影响的目标"
+        } else {
+            "" + getTargetAssignment()
+        }
+                + getTargetCount())
             .replace("己方自身", "自身")
             .replace("自身己方", "自身")
             .replace("自身全体", "自身")
@@ -175,6 +175,7 @@ data class SkillActionPro(
         var summonUnitId = 0
         val status = when (action_detail_1) {
             100 -> "无法行动"
+            101 -> "加速状态"
             200 -> "失明"
             300 -> "魅惑状态"
             400 -> "挑衅状态"
@@ -455,7 +456,7 @@ data class SkillActionPro(
                     }
                 }
                 //条件
-                if (action_detail_1 == 100 || action_detail_1 == 200 || action_detail_1 == 300 || action_detail_1 == 500 || action_detail_1 == 501
+                if (action_detail_1 == 100 || action_detail_1 == 101 || action_detail_1 == 200 || action_detail_1 == 300 || action_detail_1 == 500 || action_detail_1 == 501
                     || action_detail_1 == 502 || action_detail_1 == 503 || action_detail_1 == 512
                     || (action_detail_1 in 600..899) || (action_detail_1 in 901..999)
                     || action_detail_1 == 1300 || action_detail_1 == 1400
@@ -896,7 +897,7 @@ data class SkillActionPro(
                 "自身的${name}提升 ${getValueText(2, action_value_2, action_value_3)}"
             }
             SkillActionType.CHANGE_TP_RATIO -> {
-                "包括通过受伤获得的 TP奖励值在内，使${getTarget()}获得的所有 TP回复效果值变为 [原本的值 * ${action_value_1}]"
+                "包括通过受伤获得的TP奖励值在内，使${getTarget()}获得的所有TP回复效果值变为 [原本的值 * ${action_value_1}]"
             }
             SkillActionType.IGNOR_TAUNT -> {
                 "攻击${getTarget()}时，无视其他目标的挑衅效果"

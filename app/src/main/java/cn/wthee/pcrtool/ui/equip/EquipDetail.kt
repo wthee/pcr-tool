@@ -131,11 +131,15 @@ private fun EquipMaterialList(
         //装备合成素材
         LazyVerticalGrid(
             cells = GridCells.Fixed(6),
-            modifier = Modifier.padding(top = Dimen.largePadding)
+            modifier = Modifier.padding(
+                top = Dimen.mediuPadding,
+                start = Dimen.smallPadding,
+                end = Dimen.smallPadding,
+            )
         ) {
             itemsIndexed(data) { _, material ->
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     //选中判断
                     val color =
@@ -241,7 +245,7 @@ private fun AreaEquipList(
     val spanCount = 6
     val placeholder = EquipmentIdWithOdd()
     val newList = getGridData(spanCount = spanCount, list = odds, placeholder = placeholder)
-    Column(Modifier.padding(top = Dimen.mediuPadding)) {
+    Column(Modifier.padding(Dimen.smallPadding)) {
         newList.forEachIndexed { index, _ ->
             if (index % spanCount == 0) {
                 AreaEquipItem(selectedId, newList.subList(index, index + spanCount), placeholder)
@@ -258,19 +262,18 @@ private fun AreaEquipItem(
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Dimen.smallPadding)
+        modifier = Modifier.fillMaxWidth()
     ) {
         odds.forEach {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val alpha = if (it == placeholder) 0f else 1f
                 val selected = selectedId == it.eid
                 Box {
-                    IconCompose(
-                        data = getEquipIconUrl(it.eid),
-                        modifier = Modifier.alpha(alpha)
-                    )
+                    if (alpha == 1f) {
+                        IconCompose(data = getEquipIconUrl(it.eid))
+                    } else {
+                        CommonIconSpacer()
+                    }
                     if (selected) {
                         Spacer(
                             modifier = Modifier

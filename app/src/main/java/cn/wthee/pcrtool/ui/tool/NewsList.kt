@@ -105,7 +105,6 @@ fun NewsList(
                 }
             }
         }
-        //fixme 快速滑动时，指示器异常
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -187,16 +186,11 @@ private fun NewsItem(
         MainCard(onClick = {
             toDetail(news.title.fix(), news.url.fix(), region, news.date)
         }) {
-            Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                //内容
-                Subtitle1(
-                    text = news.title,
-                    modifier = Modifier.padding(
-                        top = Dimen.smallPadding,
-                        bottom = Dimen.smallPadding
-                    ),
-                )
-            }
+            //内容
+            Subtitle1(
+                text = news.title,
+                modifier = Modifier.padding(Dimen.mediuPadding),
+            )
         }
     }
 }
