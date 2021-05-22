@@ -17,6 +17,7 @@ import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import com.umeng.umcrash.UMCrash
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -62,7 +63,9 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(version.data!!, from, force)
         } catch (e: Exception) {
-            ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
+            if (!(e is CancellationException)) {
+                ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
+            }
         }
     }
 

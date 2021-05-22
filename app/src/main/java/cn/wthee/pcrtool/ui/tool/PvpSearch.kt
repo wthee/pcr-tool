@@ -64,10 +64,6 @@ fun PvpSearchCompose(
     val data = viewModel.allPvpCharacterData.observeAsState()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val url = stringResource(id = R.string.pcrdfans_url)
-    val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
-    val addTip = stringResource(id = R.string.pvp_info_add_tip)
-    val urlTip = stringResource(id = R.string.pcrdfans_com)
 
     //滚动状态
     val scrollState = rememberLazyListState()
@@ -112,6 +108,9 @@ fun PvpSearchCompose(
     } else {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
     }
+
+    val url = stringResource(id = R.string.pcrdfans_url)
+    val urlTip = stringResource(id = R.string.pcrdfans_com)
 
     //返回选择
     if (close) {
@@ -345,6 +344,14 @@ fun PvpSearchCompose(
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
             ) {
+                //跳转
+                FabCompose(
+                    iconType = MainIconType.FRIEND_LINK,
+                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                ) {
+                    //打开网页
+                    openWebView(context, url, urlTip)
+                }
                 //收藏
                 FabCompose(
                     iconType = MainIconType.LOVE_FILL,
@@ -353,6 +360,8 @@ fun PvpSearchCompose(
                     toFavorite()
                 }
                 //添加信息
+                val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
+                val addTip = stringResource(id = R.string.pvp_info_add_tip)
                 FabCompose(
                     iconType = MainIconType.PVP_ADD,
                     modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)

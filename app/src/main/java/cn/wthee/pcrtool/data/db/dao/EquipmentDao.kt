@@ -46,8 +46,7 @@ FROM
 
 //装备筛选
 const val equipWhere = """
-    WHERE a.craft_flg = 1 
-        AND a.equipment_name like '%' || :name || '%' 
+    WHERE a.equipment_name like '%' || :name || '%' 
         AND (
             (a.equipment_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
             OR 
@@ -57,6 +56,9 @@ const val equipWhere = """
         AND 1 = CASE
             WHEN  '全部' = :type  THEN 1 
             WHEN  b.description = :type  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  a.craft_flg = :craft  THEN 1 
         END
         ORDER BY  a.require_level DESC
     """
@@ -79,27 +81,12 @@ interface EquipmentDao {
     @Transaction
     @Query("""$viewEquipmentMaxData  $equipWhere""")
     suspend fun getEquipments(
+        craft: Int,
         type: String,
         name: String,
         showAll: Int,
         starIds: List<Int>
     ): List<EquipmentMaxData>
-
-    /**
-     * 根据筛选条件获取所有装备数量
-     */
-    @Transaction
-    @Query(
-        """
-    SELECT
-        COUNT(b.description)
-    FROM
-        equipment_data AS a
-        LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
-    $equipWhere
-    """
-    )
-    suspend fun getEquipmentCount(type: String, name: String, showAll: Int, starIds: List<Int>): Int
 
     /**
      * 根据 [eid]，获取装备提升属性 [EquipmentEnhanceRate]

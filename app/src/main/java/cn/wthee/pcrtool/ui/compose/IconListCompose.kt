@@ -1,39 +1,24 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.ui.compose.CommonIconSpacer
 import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.getGridData
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 
 /**
  * 角色图标列表
  */
 @Composable
 fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
-    val spanCount = 6
-    val newList = getGridData(spanCount = spanCount, list = icons, 0)
-    Column {
-        newList.forEachIndexed { index, _ ->
-            if (index % spanCount == 0) {
-                IconListRow(newList.subList(index, index + spanCount), toCharacterDetail)
-            }
-        }
-    }
-}
-
-@Composable
-private fun IconListRow(list: List<Int>, toCharacterDetail: (Int) -> Unit) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Dimen.mediuPadding)
+    FlowRow(
+        mainAxisSize = SizeMode.Expand,
+        mainAxisSpacing = Dimen.largePadding,
+        crossAxisSpacing = Dimen.mediuPadding,
     ) {
-        list.forEach {
+        icons.forEach {
             val unitId: Int
             val iconId: Int
             if (it / 10000 == 3) {
@@ -48,7 +33,7 @@ private fun IconListRow(list: List<Int>, toCharacterDetail: (Int) -> Unit) {
                 CommonIconSpacer()
             } else {
                 IconCompose(
-                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP
+                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP,
                 ) {
                     toCharacterDetail(unitId)
                 }

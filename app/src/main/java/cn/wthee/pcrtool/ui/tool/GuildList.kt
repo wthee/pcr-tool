@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.fillPlaceholder
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import kotlinx.coroutines.launch
 
@@ -44,7 +45,7 @@ fun GuildList(
     ) {
         SlideAnimation(visible = guilds.value != null) {
             guilds.value?.let { data ->
-                LazyColumn(state = state) {
+                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
                     items(data) {
                         GuildItem(it, toCharacterDetail)
                     }
@@ -77,26 +78,23 @@ fun GuildList(
  */
 @Composable
 private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
-    ) {
-        MainTitleText(
-            text = guild.guildName,
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
-        )
-        MainCard {
-            Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                //内容
-                MainContentText(
-                    text = guild.getDesc(),
-                    modifier = Modifier.padding(bottom = Dimen.smallPadding),
-                    textAlign = TextAlign.Start
-                )
-                //图标/描述
-                IconListCompose(guild.getMemberIds(), toCharacterDetail)
-            }
+    MainTitleText(
+        text = guild.guildName,
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+    )
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
+        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+            //内容
+            MainContentText(
+                text = guild.getDesc(),
+                modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                textAlign = TextAlign.Start
+            )
+            //图标/描述
+            IconListCompose(
+                guild.getMemberIds().fillPlaceholder(),
+                toCharacterDetail
+            )
         }
     }
 }

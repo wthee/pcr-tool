@@ -21,6 +21,7 @@ import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.compose.StatusBarBox
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
+import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.CharacterList
 import cn.wthee.pcrtool.ui.setting.MainSettings
 import cn.wthee.pcrtool.ui.tool.*
@@ -44,6 +45,7 @@ object Navigation {
     const val RARITY = "rarity"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     const val EQUIP_COUNT = "equipCount"
+    const val EQUIP_MATERIAL = "equipMaterial"
 
     //工具
     const val TOOL_LEADER = "toolLeader"
@@ -81,10 +83,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //首页
         composable(Navigation.CHARACTER_LIST) {
             StatusBarBox {
-                CharacterList(
-                    actions.toCharacterDetail,
-                    viewModel
-                )
+                CharacterList(actions.toCharacterDetail)
             }
         }
 
@@ -146,7 +145,10 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         //装备列表
         composable(Navigation.EQUIP_LIST) {
             StatusBarBox {
-                EquipList(viewModel, toEquipDetail = actions.toEquipDetail)
+                EquipList(
+                    toEquipDetail = actions.toEquipDetail,
+                    toEquipMaterial = actions.toEquipMaterail
+                )
             }
         }
 
@@ -159,7 +161,20 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             StatusBarBox {
-                EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID))
+                EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterail)
+            }
+        }
+
+        //装备素材详情
+        composable(
+            "${Navigation.EQUIP_MATERIAL}/{${Navigation.EQUIP_ID}}",
+            arguments = listOf(navArgument(Navigation.EQUIP_ID) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            StatusBarBox {
+                EquipMaterialDeatil(arguments.getInt(Navigation.EQUIP_ID))
             }
         }
 
@@ -222,7 +237,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 RankEquipCount(
                     unitId = arguments.getInt(Navigation.UNIT_ID),
                     maxRank = arguments.getInt(Navigation.MAX_RANK),
-                    actions.toEquipDetail,
+                    actions.toEquipMaterail,
                     navViewModel = viewModel
                 )
             }
@@ -387,6 +402,13 @@ class NavActions(navController: NavHostController) {
      */
     val toEquipDetail: (Int) -> Unit = { equipId: Int ->
         navController.navigate("${Navigation.EQUIP_DETAIL}/${equipId}")
+    }
+
+    /**
+     * 装备素材详情
+     */
+    val toEquipMaterail: (Int) -> Unit = { equipId: Int ->
+        navController.navigate("${Navigation.EQUIP_MATERIAL}/${equipId}")
     }
 
     /**

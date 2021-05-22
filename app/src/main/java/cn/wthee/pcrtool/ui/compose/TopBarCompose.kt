@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.compose
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,7 +27,6 @@ import com.google.accompanist.insets.toPaddingValues
  */
 @Composable
 fun TopBarCompose(
-    @DrawableRes iconId: Int = R.mipmap.ic_logo,
     @StringRes titleId: Int = R.string.app_name,
     scrollState: LazyListState
 ) {
@@ -41,21 +39,20 @@ fun TopBarCompose(
     }
 
     Row(
-        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .padding(top = Dimen.smallPadding)
             .fillMaxWidth()
             .offset(y = offset)
-            .height(Dimen.topBarHeight)
-            .background(MaterialTheme.colors.primary)
     ) {
-        Spacer(modifier = Modifier.width(Dimen.mediuPadding))
-        IconCompose(iconId, size = Dimen.topBarIconSize)
+        IconCompose(R.mipmap.ic_launcher, size = Dimen.topBarIconSize)
         Text(
             text = stringResource(id = titleId),
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onPrimary,
-            modifier = Modifier.padding(start = Dimen.mediuPadding)
+            color = MaterialTheme.colors.primary,
+            modifier = Modifier.padding(start = Dimen.smallPadding)
         )
     }
 }

@@ -111,7 +111,7 @@ fun MenuAnimation(
         visible = visible,
         enter = if (animOn) {
             slideInVertically(
-                initialOffsetY = { it / 4 },
+                initialOffsetY = { it / 2 },
                 animationSpec = defaultSpring()
             )
         } else {

@@ -36,6 +36,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.model.isFilter
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
@@ -56,9 +57,9 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @Composable
 fun EquipList(
-    navViewModel: NavViewModel,
     viewModel: EquipmentViewModel = hiltViewModel(),
-    toEquipDetail: (Int) -> Unit
+    toEquipDetail: (Int) -> Unit,
+    toEquipMaterial: (Int) -> Unit,
 ) {
     val equips = viewModel.equips.observeAsState().value ?: listOf()
     //筛选状态
@@ -97,7 +98,7 @@ fun EquipList(
                 SlideAnimation(visible = equips.isNotEmpty()) {
                     LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
                         items(equips) { equip ->
-                            EquipItem(filterValue, equip, toEquipDetail)
+                            EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                         }
                         items(spanCount) {
                             CommonSpacer()
@@ -156,7 +157,8 @@ fun EquipList(
 private fun EquipItem(
     filter: FilterEquipment,
     equip: EquipmentMaxData,
-    toEquipDetail: (Int) -> Unit
+    toEquipDetail: (Int) -> Unit,
+    toEquipMaterial: (Int) -> Unit,
 ) {
     val loved = filter.starIds.contains(equip.equipmentId)
     val nameColor = if (loved) {
@@ -171,7 +173,11 @@ private fun EquipItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(data = getEquipIconUrl(equip.equipmentId)) {
-            toEquipDetail(equip.equipmentId)
+            if (equip.craftFlg == 1) {
+                toEquipDetail(equip.equipmentId)
+            } else {
+                toEquipMaterial(equip.equipmentId)
+            }
         }
         //装备名称
         Text(
@@ -205,6 +211,11 @@ private fun FilterEquipSheet(
 
     val textState = remember { mutableStateOf(TextFieldValue(text = filter.name)) }
     filter.name = textState.value.text
+    //合成类型
+    val craftIndex = remember {
+        mutableStateOf(filter.craft)
+    }
+    filter.craft = craftIndex.value
     //收藏筛选
     val loveIndex = remember {
         mutableStateOf(if (filter.all) 0 else 1)
@@ -227,7 +238,6 @@ private fun FilterEquipSheet(
         modifier = Modifier
             .clip(CardTopShape)
             .fillMaxWidth()
-            .padding(Dimen.mediuPadding)
             .verticalScroll(rememberScrollState())
     ) {
         if (reset) {
@@ -237,6 +247,7 @@ private fun FilterEquipSheet(
             textState.value = TextFieldValue(text = "")
             loveIndex.value = 0
             typeIndex.value = 0
+            craftIndex.value = 1
             navViewModel.resetClick.postValue(false)
             navViewModel.filterEquip.postValue(FilterEquipment())
         }
@@ -284,6 +295,20 @@ private fun FilterEquipSheet(
             modifier = Modifier
                 .padding(Dimen.largePadding)
                 .fillMaxWidth()
+        )
+        //装备类型
+        MainText(
+            text = stringResource(id = R.string.equip_craft),
+            modifier = Modifier.padding(top = Dimen.largePadding)
+        )
+        val craftChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.uncraft)),
+            ChipData(1, stringResource(id = R.string.craft)),
+        )
+        ChipGroup(
+            craftChipData,
+            craftIndex,
+            modifier = Modifier.padding(Dimen.smallPadding),
         )
         //收藏
         MainText(

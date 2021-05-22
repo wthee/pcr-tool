@@ -47,7 +47,7 @@ fun EventList(
     ) {
         SlideAnimation(visible = events.value != null) {
             events.value?.let { data ->
-                LazyColumn(state = state) {
+                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
                     items(data) {
                         EventItem(it, toCharacterDetail)
                     }
@@ -119,78 +119,75 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         today.hourInt(event.startTime) > 0 && event.endTime.hourInt(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.hourInt(event.startTime) < 0 && (!preEvent)
 
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
-    ) {
-        //标题
-        Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+    //标题
+    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        MainTitleText(
+            text = type,
+            backgroundColor = typeColor
+        )
+        MainTitleText(
+            text = if (preEvent) "预告" else startDate,
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+        )
+        if (showDays) {
             MainTitleText(
-                text = type,
-                backgroundColor = typeColor
+                text = days,
+                modifier = Modifier.padding(start = Dimen.smallPadding)
             )
-            MainTitleText(
-                text = if (preEvent) "预告" else startDate,
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-            )
-            if (showDays) {
-                MainTitleText(
-                    text = days,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
+        }
+        //计时
+        Row(
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (inProgress) {
+                IconCompose(
+                    data = MainIconType.TIME_LEFT.icon,
+                    size = Dimen.smallIconSize,
+                )
+                MainContentText(
+                    text = stringResource(R.string.in_progress, event.endTime.dates(today)),
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.primary
                 )
             }
-            //计时
-            Row(
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (inProgress) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT.icon,
-                        size = Dimen.smallIconSize,
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.in_progress, event.endTime.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colors.primary
-                    )
-                }
-                if (comingSoon) {
-                    IconCompose(
-                        data = MainIconType.COUNTDOWN.icon,
-                        size = Dimen.smallIconSize,
-                        tint = typeColor
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, event.startTime.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = typeColor
-                    )
-                }
+            if (comingSoon) {
+                IconCompose(
+                    data = MainIconType.COUNTDOWN.icon,
+                    size = Dimen.smallIconSize,
+                    tint = typeColor
+                )
+                MainContentText(
+                    text = stringResource(R.string.coming_soon, event.startTime.dates(today)),
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    textAlign = TextAlign.Start,
+                    color = typeColor
+                )
             }
         }
-        MainCard {
-            Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                //内容
-                MainContentText(
-                    text = event.getEventTitle(),
-                    modifier = Modifier.padding(bottom = Dimen.smallPadding),
-                    textAlign = TextAlign.Start
+    }
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
+        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+            //内容
+            MainContentText(
+                text = event.getEventTitle(),
+                modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                textAlign = TextAlign.Start
+            )
+            //图标
+            IconListCompose(
+                icons = event.unitIds.intArrayList().fillPlaceholder(),
+                toCharacterDetail
+            )
+            //结束日期
+            if (event.eventId / 10000 != 2) {
+                CaptionText(
+                    text = event.endTime,
+                    modifier = Modifier.align(Alignment.End)
                 )
-                //图标
-                IconListCompose(event.unitIds.intArrayList(), toCharacterDetail)
-                //结束日期
-                if (event.eventId / 10000 != 2) {
-                    CaptionText(
-                        text = event.endTime,
-                        modifier = Modifier.align(Alignment.End)
-                    )
-                }
-
             }
+
         }
     }
 }

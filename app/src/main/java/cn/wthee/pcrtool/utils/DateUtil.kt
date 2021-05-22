@@ -38,25 +38,6 @@ fun getToday(): String {
 }
 
 /**
- *  把 - 拼接的字符串，转化为数组
- */
-fun String.intArrayList(): ArrayList<Int> {
-    val list = arrayListOf<Int>()
-    val ids = this.split("-")
-    ids.forEachIndexed { _, id ->
-        if (id != "") {
-            list.add(id.toInt())
-        }
-    }
-    return list
-}
-
-/**
- * 去除空格等无用字符
- */
-fun String.deleteSpace() = this.replace("\\s".toRegex(), "")
-
-/**
  *  计算日期字符串间隔天数 yyyy/MM/dd  this - str2 相差天数
  */
 fun String.days(str2: String): String {

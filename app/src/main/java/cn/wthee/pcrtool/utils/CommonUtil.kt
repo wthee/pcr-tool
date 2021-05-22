@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.content.ContextCompat
 import cn.wthee.pcrtool.MyApplication
+import java.util.*
 
 /**
  * 权限校验
@@ -37,3 +38,34 @@ fun openWebView(context: Context, url: String, title: String = "请选择浏览�
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
     context.startActivity(Intent.createChooser(intent, title))
 }
+
+
+/**
+ *  把 - 拼接的字符串，转化为数组
+ */
+fun String.intArrayList(): List<Int> {
+    val list = arrayListOf<Int>()
+    val ids = this.split("-")
+    ids.forEachIndexed { _, id ->
+        if (id != "") {
+            list.add(id.toInt())
+        }
+    }
+    return list
+}
+
+fun List<Int>.fillPlaceholder(): ArrayList<Int> {
+    val list = arrayListOf<Int>()
+    list.addAll(this)
+    if (this.size % 6 != 0) {
+        for (i in 0 until 6 - this.size % 6) {
+            list.add(0)
+        }
+    }
+    return list
+}
+
+/**
+ * 去除空格等无用字符
+ */
+fun String.deleteSpace() = this.replace("\\s".toRegex(), "")

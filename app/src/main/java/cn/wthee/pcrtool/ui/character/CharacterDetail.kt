@@ -132,7 +132,6 @@ fun CharacterDetail(
                     top = Dimen.largePadding,
                     start = Dimen.mediuPadding,
                     end = Dimen.mediuPadding,
-                    bottom = Dimen.sheetMarginBottom
                 )
             )
         }

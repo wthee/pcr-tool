@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -34,12 +33,11 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.MenuAnimation
 import cn.wthee.pcrtool.ui.compose.defaultSpring
-import cn.wthee.pcrtool.ui.compose.defaultTween
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.addToClip
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -61,16 +59,18 @@ fun MenuContent(
     val coroutineScope = rememberCoroutineScope()
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
 
-    val backgroundAnim = animateFloatAsState(
-        targetValue = if (fabMainIcon == MainIconType.DOWN) 1f else 0f,
-        animationSpec = defaultTween()
-    )
+    val systemUiController = rememberSystemUiController()
+    if (fabMainIcon == MainIconType.DOWN) {
+        systemUiController.setStatusBarColor(Color.Transparent)
+    } else {
+        systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
+    }
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .alpha(backgroundAnim.value)
+        .alpha(if (fabMainIcon == MainIconType.DOWN) 1f else 0f)
         .background(colorResource(id = R.color.alpha_black))
-        .clickable(enabled = backgroundAnim.value == 1f) {
+        .clickable(enabled = fabMainIcon == MainIconType.DOWN) {
             viewModel.fabMainIcon.postValue(MainIconType.MAIN)
         }
     ) {
@@ -269,13 +269,11 @@ fun MenuItem(
         targetValue = if (state.value == MenuState.TOUCH) 0.95f else 1f, defaultSpring()
     )
 
-
     Card(
         backgroundColor = backgroundColor,
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)
-            .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
             .scale(scaleAnimation.value)
             .pointerInput(Unit) {
                 detectTapGestures(

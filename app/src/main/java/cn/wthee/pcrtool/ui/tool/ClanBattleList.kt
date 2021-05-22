@@ -33,13 +33,14 @@ import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
@@ -67,9 +68,9 @@ fun ClanBattleList(
         SlideAnimation(visible = clanList.value != null) {
             clanList.value?.let { data ->
                 navViewModel.loading.postValue(false)
-                LazyColumn(state = state) {
+                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
                     items(data) {
-                        ClanBattleItem(it, toClanBossInfo, type = 0)
+                        ClanBattleItem(it, toClanBossInfo)
                     }
                     item {
                         CommonSpacer()
@@ -102,59 +103,41 @@ fun ClanBattleList(
 @Composable
 private fun ClanBattleItem(
     clanInfo: ClanBattleInfo,
-    toClanBossInfo: ((Int, Int) -> Unit)? = null,
-    pagerState: PagerState? = null,
-    type: Int
+    toClanBossInfo: (Int, Int) -> Unit,
 ) {
     val section = clanInfo.getAllBossInfo().size
-    val scope = rememberCoroutineScope()
     val list = clanInfo.getUnitIdList(0)
 
+    //标题
+    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        MainTitleText(text = clanInfo.getDate())
+        MainTitleText(
+            text = stringResource(
+                id = R.string.section,
+                getZhNumberText(section)
+            ),
+            backgroundColor = getSectionTextColor(section),
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+        )
+    }
 
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
-    ) {
-        //标题
-        Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-            MainTitleText(text = clanInfo.getDate())
-            if (type == 0) {
-                MainTitleText(
-                    text = stringResource(
-                        id = R.string.section,
-                        getZhNumberText(section)
-                    ),
-                    backgroundColor = getSectionTextColor(section),
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                )
-            }
-        }
-
-        MainCard {
-            //图标
-            Row(
-                modifier = Modifier.padding(Dimen.mediuPadding),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                list.forEachIndexed { index, it ->
-                    Box {
-                        IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
-                            if (type == 0 && toClanBossInfo != null) {
-                                toClanBossInfo(clanInfo.clan_battle_id, index)
-                            } else {
-                                scope.launch {
-                                    pagerState?.scrollToPage(index)
-                                }
-                            }
-                        }
-                        //多目标提示
-                        if (it.targetCount > 1) {
-                            MainTitleText(
-                                text = "${it.targetCount - 1}",
-                                modifier = Modifier.align(Alignment.BottomEnd)
-                            )
-                        }
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
+        //图标
+        Row(
+            modifier = Modifier.padding(Dimen.mediuPadding),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            list.forEachIndexed { index, it ->
+                Box {
+                    IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
+                        toClanBossInfo(clanInfo.clan_battle_id, index)
+                    }
+                    //多目标提示
+                    if (it.targetCount > 1) {
+                        MainTitleText(
+                            text = "${it.targetCount - 1}",
+                            modifier = Modifier.align(Alignment.BottomEnd)
+                        )
                     }
                 }
             }
@@ -177,16 +160,21 @@ fun ClanBossInfoPager(
     clanViewModel.getClanInfo(clanId)
     val clanInfo = clanViewModel.clanInfo.observeAsState()
     val pagerState = rememberPagerState(pageCount = 5, initialPage = index)
+    val scope = rememberCoroutineScope()
 
     clanInfo.value?.let { clanValue ->
+        //最大阶段数
         val maxSection = clanValue.getAllBossInfo().size
+        //阶段选择状态
         val section = remember {
             mutableStateOf(maxSection - 1)
         }
+        //阶段文本
         val tabs = arrayListOf<String>()
         for (i in 1..maxSection) {
             tabs.add(getZhNumberText(i))
         }
+        //Boss 信息
         val bossInfoList = clanValue.getUnitIdList(section.value)
         val enemyIds = arrayListOf<Int>()
         bossInfoList.forEach {
@@ -195,20 +183,62 @@ fun ClanBossInfoPager(
         clanViewModel.getAllBossAttr(enemyIds)
         val bossDataList = clanViewModel.allClanBossAttr.observeAsState()
 
+        //页面
         Box(modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))) {
-            Column() {
+            Column {
                 //图标列表
-                ClanBattleItem(clanValue, pagerState = pagerState, type = 1)
-                //顺序
-                Subtitle2(
-                    text = "BOSS ${pagerState.currentPage + 1} / 阶段${tabs[section.value]}",
+                val list = clanValue.getUnitIdList(0)
+                //标题
+                Subtitle1(
+                    text = "阶段${tabs[section.value]}",
                     color = getSectionTextColor(section = section.value + 1),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = Dimen.smallPadding)
                 )
+                Subtitle2(
+                    text = clanValue.getDate(),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = Dimen.smallPadding)
+                )
+                //图标
+                Row(
+                    modifier = Modifier
+                        .padding(Dimen.mediuPadding)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    list.forEachIndexed { index, it ->
+                        Box {
+                            IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
+                                scope.launch {
+                                    pagerState.scrollToPage(index)
+                                }
+                            }
+                            //多目标提示
+                            if (it.targetCount > 1) {
+                                MainTitleText(
+                                    text = "${it.targetCount - 1}",
+                                    modifier = Modifier.align(Alignment.BottomEnd)
+                                )
+                            }
+                            if (index == pagerState.currentPage) {
+                                Spacer(
+                                    modifier = Modifier
+                                        .navigationBarsPadding()
+                                        .size(Dimen.iconSize)
+                                        .background(
+                                            color = colorResource(id = R.color.alpha_primary),
+                                            shape = Shapes.small
+                                        )
+                                )
+                            }
+                        }
+                    }
+                }
                 //BOSS信息
                 val visible = bossDataList.value != null && bossDataList.value!!.isNotEmpty()
                 SlideAnimation(visible = visible) {
@@ -221,17 +251,21 @@ fun ClanBossInfoPager(
                                 modifier = Modifier
                                     .padding(top = Dimen.mediuPadding)
                                     .fillMaxSize()
-                                    .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
                             ) {
                                 Column(
                                     modifier = Modifier.verticalScroll(rememberScrollState())
                                 ) {
+
                                     //名称
                                     MainText(
                                         text = bossDataValue.name,
                                         modifier = Modifier
                                             .align(Alignment.CenterHorizontally)
                                             .padding(Dimen.mediuPadding)
+                                    )
+                                    Subtitle2(
+                                        text = "BOSS ${pagerIndex + 1}",
+                                        modifier = Modifier.align(Alignment.CenterHorizontally)
                                     )
                                     //等级
                                     Subtitle2(
@@ -245,6 +279,7 @@ fun ClanBossInfoPager(
                                     AttrList(attrs = bossDataValue.attr.enemy())
                                     //技能
                                     BossSkillList(pagerIndex, bossDataList.value!!)
+                                    CommonSpacer()
                                 }
                             }
                         }
@@ -314,7 +349,8 @@ private fun BossSkillList(
             if (allLoopData.value != null && allIcon.value != null) {
                 SkillLoopList(
                     allLoopData.value!![index],
-                    allIcon.value!![index]
+                    allIcon.value!![index],
+                    scrollable = false
                 )
             }
             list[index].forEach {

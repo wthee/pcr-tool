@@ -1,13 +1,14 @@
 package cn.wthee.pcrtool.ui.skill
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
@@ -23,6 +24,8 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 
 /**
  * 角色技能列表
@@ -95,7 +98,7 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
         //技能名
         val type = getSkillType(skillDetail.skillId)
         val color = getSkillColor(type)
-        val name = if (skillDetail.name.isBlank()) type else skillDetail.name
+        val name = if (skillDetail.skillId.toString()[0] != '1') type else skillDetail.name
         MainText(
             text = name,
             color = colorResource(color),
@@ -104,14 +107,16 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
                 .padding(top = Dimen.largePadding)
         )
         //技能类型
-        Text(
-            text = type,
-            color = colorResource(color),
-            style = MaterialTheme.typography.caption,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.smallPadding)
-        )
+        if (skillDetail.skillId.toString()[0] == '1') {
+            Text(
+                text = type,
+                color = colorResource(color),
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = Dimen.smallPadding)
+            )
+        }
         //图标、等级、描述
         Row(
             modifier = Modifier
@@ -253,7 +258,8 @@ fun SkillActionItem(skillAction: SkillActionText) {
 fun SkillLoopList(
     loopData: List<AttackPattern>,
     iconTypes: HashMap<Int, Int>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollable: Boolean = true
 ) {
     val loops = arrayListOf<SkillLoop>()
     loopData.forEach { ap ->
@@ -265,14 +271,15 @@ fun SkillLoopList(
         }
     }
     Column(
-        modifier = modifier
+        modifier = if (scrollable) modifier.verticalScroll(rememberScrollState()) else modifier
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
                 SkillLoopItem(loop = it, iconTypes)
             }
-        } else {
-            Text(text = "")
+        }
+        if (scrollable) {
+            CommonSpacer()
         }
     }
 }
@@ -293,68 +300,45 @@ private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
  */
 @Composable
 private fun SkillLoopIconList(iconList: List<Int>, iconTypes: HashMap<Int, Int>) {
-    val spanCount = 5
-    val newList = getGridData(spanCount = spanCount, list = iconList, placeholder = 0)
-    Column(Modifier.padding(top = Dimen.mediuPadding)) {
-        newList.forEachIndexed { index, _ ->
-            if (index % spanCount == 0) {
-                SkillLoopIconListRow(newList.subList(index, index + spanCount), iconTypes)
+    FlowRow(
+        modifier = Modifier.padding(Dimen.mediuPadding),
+        mainAxisSize = SizeMode.Expand,
+        mainAxisSpacing = Dimen.largePadding,
+        crossAxisSpacing = Dimen.mediuPadding,
+    ) {
+        iconList.forEachIndexed { index, it ->
+            val type: String
+            val url: String
+            if (it == 1) {
+                type = "普攻"
+                url = Constants.EQUIPMENT_URL + Constants.UNKNOWN_EQUIP_ID + Constants.WEBP
+            } else {
+                type = when (it / 1000) {
+                    1 -> "技能 ${it % 10}"
+                    2 -> "SP技能 ${it % 10}"
+                    else -> ""
+                }
+                val iconType = when (it) {
+                    1001 -> iconTypes[2]
+                    1002 -> iconTypes[3]
+                    1003 -> iconTypes[1]
+                    2001 -> iconTypes[101]
+                    2002 -> iconTypes[102]
+                    2003 -> iconTypes[103]
+                    else -> 0
+                }
+                url = Constants.SKILL_ICON_URL + iconType + Constants.WEBP
             }
-        }
-    }
-}
-
-/**
- * 技能循环图标列表
- */
-@Composable
-private fun SkillLoopIconListRow(
-    iconList: List<Int>,
-    iconTypes: HashMap<Int, Int>
-) {
-    if (iconTypes.isNotEmpty()) {
-        Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()) {
-            iconList.forEach {
-                val type: String
-                val url: String
-                if (it == 1) {
-                    type = "普攻"
-                    url = Constants.EQUIPMENT_URL + Constants.UNKNOWN_EQUIP_ID + Constants.WEBP
-                } else {
-                    type = when (it / 1000) {
-                        1 -> "技能 ${it % 10}"
-                        2 -> "SP技能 ${it % 10}"
-                        else -> ""
-                    }
-                    val iconType = when (it) {
-                        1001 -> iconTypes[2]
-                        1002 -> iconTypes[3]
-                        1003 -> iconTypes[1]
-                        2001 -> iconTypes[101]
-                        2002 -> iconTypes[102]
-                        2003 -> iconTypes[103]
-                        else -> 0
-                    }
-                    url = Constants.SKILL_ICON_URL + iconType + Constants.WEBP
-                }
-
-
-                val alpha = if (it == 0) 0f else 1f
-                Column(
+            Column {
+                IconCompose(data = url)
+                Text(
+                    text = type,
+                    color = colorResource(getSkillColor(type = type)),
+                    style = MaterialTheme.typography.caption,
                     modifier = Modifier
-                        .padding(Dimen.mediuPadding)
-                        .alpha(alpha)
-                ) {
-                    IconCompose(data = url)
-                    Text(
-                        text = type,
-                        color = colorResource(getSkillColor(type = type)),
-                        style = MaterialTheme.typography.caption,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(top = Dimen.smallPadding)
-                    )
-                }
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = Dimen.smallPadding)
+                )
             }
         }
     }

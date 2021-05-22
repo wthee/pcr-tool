@@ -29,8 +29,6 @@ class EquipmentViewModel @Inject constructor(
     var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
     var rankEquipMaterials = MutableLiveData<List<EquipmentMaterial>>()
     var dropInfo = MutableLiveData<List<EquipmentDropInfo>>()
-    var loading = MutableLiveData<Boolean>()
-    var selectId = MutableLiveData<Int>()
     var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
     var equipTypes = MutableLiveData<List<String>>()
 
@@ -187,7 +185,6 @@ class EquipmentViewModel @Inject constructor(
     fun getDropInfos(equipmentId: Int) {
         viewModelScope.launch {
             if (equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-                loading.postValue(true)
                 val equip = equipmentRepository.getEquipmentData(equipmentId)
                 val fixedId = if (equip.craftFlg == 1) {
                     equipmentRepository.getEquipmentCraft(equipmentId).cid1
@@ -197,8 +194,6 @@ class EquipmentViewModel @Inject constructor(
                 val infos =
                     equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipmentId))
                 dropInfo.postValue(infos)
-                selectId.postValue(equipmentId)
-                loading.postValue(false)
             }
         }
     }

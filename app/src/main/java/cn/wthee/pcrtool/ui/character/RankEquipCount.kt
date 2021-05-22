@@ -14,16 +14,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -34,7 +39,7 @@ import kotlinx.coroutines.launch
 fun RankEquipCount(
     unitId: Int,
     maxRank: Int,
-    toEquipDetail: (Int) -> Unit,
+    toEquipMaterial: (Int) -> Unit,
     navViewModel: NavViewModel,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
@@ -52,7 +57,6 @@ fun RankEquipCount(
     if (targetRank != 0) {
         rank1.value = targetRank ?: maxRank
     }
-
     if (rank1.value > 0 && rank0.value > 0) {
         equipmentViewModel.getEquipByRank(unitId, rank0.value, rank1.value)
     }
@@ -72,6 +76,7 @@ fun RankEquipCount(
     if (rankEquipMaterials.value == null) {
         navViewModel.loading.postValue(true)
     }
+    val filter = navViewModel.filterEquip.observeAsState()
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -132,14 +137,20 @@ fun RankEquipCount(
                 }
                 //装备素材列表
                 val spanCount = 5
-                if (rankEquipMaterials.value != null) {
-                    navViewModel.loading.postValue(false)
-                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                        items(items = rankEquipMaterials.value!!) { item ->
-                            EquipCountItem(item, toEquipDetail)
-                        }
-                        items(spanCount) {
-                            CommonSpacer()
+                filter.value?.let { filterValue ->
+                    filterValue.starIds =
+                        GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
+                            ?: arrayListOf()
+
+                    if (rankEquipMaterials.value != null) {
+                        navViewModel.loading.postValue(false)
+                        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+                            items(items = rankEquipMaterials.value!!) { item ->
+                                EquipCountItem(item, filterValue, toEquipMaterial)
+                            }
+                            items(spanCount) {
+                                CommonSpacer()
+                            }
                         }
                     }
                 }
@@ -170,17 +181,26 @@ fun RankEquipCount(
 @Composable
 private fun EquipCountItem(
     item: EquipmentMaterial,
-    toEquipDetail: (Int) -> Unit
+    filter: FilterEquipment,
+    toEquipMaterial: (Int) -> Unit
 ) {
+    val loved = filter.starIds.contains(item.id)
+    val nameColor = if (loved) {
+        MaterialTheme.colors.primary
+    } else {
+        Color.Unspecified
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(data = getEquipIconUrl(item.id)) {
-            toEquipDetail(item.id)
+            toEquipMaterial(item.id)
         }
         MainContentText(
             text = item.count.toString(),
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+            modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+            color = nameColor
         )
     }
 }

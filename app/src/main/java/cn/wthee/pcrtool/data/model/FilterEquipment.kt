@@ -8,6 +8,7 @@ import com.google.gson.Gson
 @Suppress("RemoveRedundantCallsOfConversionMethods")
 class FilterEquipment(
     var all: Boolean = true,
+    var craft: Int = 1,
     var type: Int = 0,
     var name: String = "",
 ) {
@@ -42,5 +43,5 @@ class FilterEquipment(
 }
 
 fun FilterEquipment.isFilter(): Boolean {
-    return !(all && type == 0 && name == "")
+    return !(all && type == 0 && name == "" && craft == 1)
 }

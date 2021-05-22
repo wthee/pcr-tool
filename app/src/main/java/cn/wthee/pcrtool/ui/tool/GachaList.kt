@@ -46,7 +46,7 @@ fun GachaList(
     ) {
         SlideAnimation(visible = gachas.value != null) {
             gachas.value?.let { data ->
-                LazyColumn(state = state) {
+                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
                     items(data) {
                         GachaItem(it, toCharacterDetail)
                     }
@@ -82,63 +82,63 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val sd = gachaInfo.startTime
     val ed = gachaInfo.endTime
     val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
-    ) {
-        //标题
-        Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-            MainTitleText(text = gachaInfo.startTime.formatTime().substring(0, 10))
-            MainTitleText(
-                text = gachaInfo.endTime.days(gachaInfo.startTime),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-            //计时
-            if (inProgress) {
-                Row(
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT.icon,
-                        size = Dimen.smallIconSize,
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.in_progress, gachaInfo.endTime.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colors.primary
-                    )
-                }
-            }
-        }
-        MainCard {
-            Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                //内容
-                MainContentText(
-                    text = gachaInfo.getType(),
-                    modifier = Modifier.padding(bottom = Dimen.smallPadding),
-                    textAlign = TextAlign.Start
+
+    val icons = gachaInfo.unitIds.intArrayList().fillPlaceholder()
+
+    //标题
+    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        MainTitleText(text = gachaInfo.startTime.formatTime().substring(0, 10))
+        MainTitleText(
+            text = gachaInfo.endTime.days(gachaInfo.startTime),
+            modifier = Modifier.padding(start = Dimen.smallPadding)
+        )
+        //计时
+        if (inProgress) {
+            Row(
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconCompose(
+                    data = MainIconType.TIME_LEFT.icon,
+                    size = Dimen.smallIconSize,
                 )
-                //图标/描述
-                val icons = gachaInfo.unitIds.intArrayList()
-                if (icons.isEmpty()) {
-                    MainContentText(
-                        text = gachaInfo.getDesc(),
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        textAlign = TextAlign.Start
-                    )
-                } else {
-                    IconListCompose(icons, toCharacterDetail)
-                }
-                //结束日期
-                CaptionText(
-                    text = gachaInfo.endTime.formatTime(),
-                    modifier = Modifier.align(Alignment.End)
+                MainContentText(
+                    text = stringResource(R.string.in_progress, gachaInfo.endTime.dates(today)),
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.primary
                 )
             }
         }
     }
+
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
+        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+            //内容
+            MainContentText(
+                text = gachaInfo.getType(),
+                modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                textAlign = TextAlign.Start
+            )
+
+            //图标/描述
+            if (icons.isEmpty()) {
+                MainContentText(
+                    text = gachaInfo.getDesc(),
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    textAlign = TextAlign.Start
+                )
+            } else {
+                IconListCompose(icons, toCharacterDetail)
+            }
+
+            //结束日期
+            CaptionText(
+                text = gachaInfo.endTime.formatTime(),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+
 }
 

@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,6 +39,7 @@ import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
@@ -60,7 +62,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun CharacterList(
     toDetail: (Int) -> Unit,
-    navViewModel: NavViewModel,
     viewModel: CharacterViewModel = hiltViewModel(),
 ) {
     val list = viewModel.characterList.observeAsState()
@@ -101,15 +102,15 @@ fun CharacterList(
             val r6Ids = viewModel.getR6Ids()
             navViewModel.r6Ids.postValue(r6Ids)
         }
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.bg_gray))) {
             TopBarCompose(scrollState = scrollState)
             if (list.value != null) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
-                    modifier = Modifier
-                        .padding(top = marginTop)
-                        .background(color = MaterialTheme.colors.background, shape = CardTopShape)
+                    modifier = Modifier.padding(top = marginTop)
                 ) {
                     items(list.value!!) {
                         CharacterItem(it, filter.value!!, toDetail)
@@ -119,8 +120,6 @@ fun CharacterList(
                     }
                 }
             }
-
-
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)

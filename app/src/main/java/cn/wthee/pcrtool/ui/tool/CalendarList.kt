@@ -52,16 +52,19 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltViewModel()) {
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        calendarData.value?.let { data ->
-            LazyColumn(state = state) {
-                items(data) {
-                    CalendarItem(it)
-                }
-                item {
-                    CommonSpacer()
+        SlideAnimation(visible = calendarData.value != null) {
+            calendarData.value?.let { data ->
+                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
+                    items(data) {
+                        CalendarItem(it)
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
             }
         }
+
 
         //回到顶部
         FabCompose(
@@ -102,76 +105,59 @@ private fun CalendarItem(calendar: DropEvent) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
-    ) {
-        Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-            //开始日期
-            MainTitleText(
-                text = sd.substring(0, 10),
-                backgroundColor = color
-            )
-            //天数
-            MainTitleText(
-                text = ed.days(sd),
-                modifier = Modifier.padding(start = Dimen.smallPadding), backgroundColor = color
-            )
-            //计时
-            Row(
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (inProgress) {
-                    IconCompose(
-                        data = MainIconType.TIME_LEFT.icon,
-                        size = Dimen.smallIconSize,
-                        tint = color
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.in_progress, ed.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = color
-                    )
-                }
-                if (comingSoon) {
-                    IconCompose(
-                        data = MainIconType.COUNTDOWN.icon,
-                        size = Dimen.smallIconSize,
-                        tint = color
-                    )
-                    MainContentText(
-                        text = stringResource(R.string.coming_soon, sd.dates(today)),
-                        modifier = Modifier.padding(start = Dimen.smallPadding),
-                        textAlign = TextAlign.Start,
-                        color = color
-                    )
-                }
-            }
-        }
-
-        MainCard {
-            Column(
-                modifier = Modifier.padding(Dimen.mediuPadding)
-            ) {
-                //内容
-                getTypeData(calendar).forEach {
-                    Subtitle1(
-                        text = it.title + it.info,
-                        modifier = Modifier.padding(
-                            top = Dimen.smallPadding,
-                            bottom = Dimen.smallPadding
-                        ),
-                    )
-                }
-                //结束日期
-                CaptionText(
-                    text = ed,
-                    modifier = Modifier.align(Alignment.End)
+    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        //开始日期
+        MainTitleText(
+            text = sd.substring(0, 10),
+            backgroundColor = color
+        )
+        //天数
+        MainTitleText(
+            text = ed.days(sd),
+            modifier = Modifier.padding(start = Dimen.smallPadding), backgroundColor = color
+        )
+        //计时
+        Row(
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (inProgress) {
+                IconCompose(
+                    data = MainIconType.TIME_LEFT.icon,
+                    size = Dimen.smallIconSize,
+                    tint = color
+                )
+                MainContentText(
+                    text = stringResource(R.string.in_progress, ed.dates(today)),
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    textAlign = TextAlign.Start,
+                    color = color
                 )
             }
+            if (comingSoon) {
+                IconCompose(
+                    data = MainIconType.COUNTDOWN.icon,
+                    size = Dimen.smallIconSize,
+                    tint = color
+                )
+                MainContentText(
+                    text = stringResource(R.string.coming_soon, sd.dates(today)),
+                    modifier = Modifier.padding(start = Dimen.smallPadding),
+                    textAlign = TextAlign.Start,
+                    color = color
+                )
+            }
+        }
+    }
+
+    MainCard(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+            //内容
+            getTypeData(calendar).forEach {
+                Subtitle1(text = it.title + it.info)
+            }
+            //结束日期
+            CaptionText(text = ed, modifier = Modifier.fillMaxWidth())
         }
     }
 }
