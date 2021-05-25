@@ -125,10 +125,12 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             text = type,
             backgroundColor = typeColor
         )
-        MainTitleText(
-            text = if (preEvent) "预告" else startDate,
-            modifier = Modifier.padding(start = Dimen.smallPadding),
-        )
+        if(!preEvent){
+             MainTitleText(
+                text = startDate,
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+            )
+        }
         if (showDays) {
             MainTitleText(
                 text = days,
