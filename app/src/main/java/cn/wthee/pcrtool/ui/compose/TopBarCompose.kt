@@ -46,7 +46,7 @@ fun TopBarCompose(
             .fillMaxWidth()
             .offset(y = offset)
     ) {
-        IconCompose(R.mipmap.ic_launcher, size = Dimen.topBarIconSize)
+        IconCompose(R.mipmap.ic_launcher, size = Dimen.topBarIconSize, fade = true)
         Text(
             text = stringResource(id = titleId),
             style = MaterialTheme.typography.h6,

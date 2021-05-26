@@ -23,7 +23,7 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 400, easing = FastOutLinearInEasing, delayMillis = 50)
+    return tween(durationMillis = 350, easing = FastOutLinearInEasing, delayMillis = 50)
 }
 
 /**
@@ -43,7 +43,7 @@ fun SlideAnimation(
         enter = if (animOn) {
             slideInVertically(
                 initialOffsetY = { 40 },
-                animationSpec = defaultSpring()
+                animationSpec = defaultTween()
             )
         } else {
             fadeIn(1f)
@@ -111,7 +111,7 @@ fun MenuAnimation(
         visible = visible,
         enter = if (animOn) {
             slideInVertically(
-                initialOffsetY = { it / 2 },
+                initialOffsetY = { it / 4 },
                 animationSpec = defaultSpring()
             )
         } else {

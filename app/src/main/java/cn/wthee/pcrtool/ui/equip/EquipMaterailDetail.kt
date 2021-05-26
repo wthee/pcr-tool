@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +46,9 @@ fun EquipMaterialDeatil(
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     equipmentViewModel.getDropInfos(equipId)
+    equipmentViewModel.getEquip(equipId)
     val dropInfoList = equipmentViewModel.dropInfo.observeAsState()
+    val basicInfo = equipmentViewModel.equip.observeAsState()
     navViewModel.loading.postValue(dropInfoList.value == null)
     val filter = navViewModel.filterEquip.observeAsState()
     val loved = remember {
@@ -62,6 +65,23 @@ fun EquipMaterialDeatil(
     Box(modifier = Modifier.fillMaxSize()) {
         dropInfoList.value?.let { list ->
             LazyColumn {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(Dimen.mediuPadding),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        basicInfo.value?.let {
+                            IconCompose(data = getEquipIconUrl(equipId))
+                            Subtitle2(
+                                text = it.equipmentName,
+                                modifier = Modifier.padding(top = Dimen.mediuPadding),
+                                color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified
+                            )
+                        }
+                    }
+                }
                 items(list) {
                     val pre = when (it.questId / 1000000) {
                         11 -> stringResource(id = R.string.normal)
@@ -94,7 +114,9 @@ fun EquipMaterialDeatil(
                     AreaEquipList(equipId, it.getAllOdd())
                 }
             }
+
         }
+
         //装备收藏
         FabCompose(
             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,

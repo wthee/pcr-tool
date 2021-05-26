@@ -33,7 +33,7 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        backupMode = +tryOpenDatabase() == 0
+        backupMode = tryOpenDatabase() == 0
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -45,11 +45,11 @@ class MyApplication : Application(), ImageLoaderFactory {
                     add(GifDecoder())
                 }
             }
-            .allowHardware(true)
+            .allowHardware(false)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .networkCachePolicy(CachePolicy.ENABLED)
-            .availableMemoryPercentage(0.75)
+            .availableMemoryPercentage(0.5)
             .okHttpClient {
                 ApiUtil.getClient(60)
             }

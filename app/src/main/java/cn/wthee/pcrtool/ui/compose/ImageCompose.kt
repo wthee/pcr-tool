@@ -88,6 +88,7 @@ fun IconCompose(
     data: Any,
     size: Dp = Dimen.iconSize,
     tint: Color = MaterialTheme.colors.primary,
+    fade: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -113,7 +114,7 @@ fun IconCompose(
             modifier = mModifier
         )
     } else {
-        val painter = rememberCoilPainter(request = data)
+        val painter = rememberCoilPainter(request = data, fadeIn = fade, fadeInDurationMs = 400)
         Image(
             painter = when (painter.loadState) {
                 is ImageLoadState.Success -> painter
