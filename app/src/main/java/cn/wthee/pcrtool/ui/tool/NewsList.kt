@@ -49,6 +49,7 @@ import kotlinx.coroutines.launch
 
 /**
  * 公告列表
+ * fixme 滚动位置记录
  */
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -79,7 +80,7 @@ fun NewsList(
             .fillMaxSize()
             .background(colorResource(id = R.color.bg_gray))
     ) {
-        //fixme 闪动问题
+        //fixme 切换时，重新加载
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
             val data = when (index) {
                 0 -> newsCN
