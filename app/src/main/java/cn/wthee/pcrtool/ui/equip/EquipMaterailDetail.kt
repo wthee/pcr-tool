@@ -2,23 +2,20 @@ package cn.wthee.pcrtool.ui.equip
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
@@ -27,17 +24,22 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 
 /**
  * 装备素材信息
  */
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
@@ -55,6 +57,7 @@ fun EquipMaterialDeatil(
         mutableStateOf(false)
     }
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip_material)
+    val scope = rememberCoroutineScope()
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -64,57 +67,90 @@ fun EquipMaterialDeatil(
 
     Box(modifier = Modifier.fillMaxSize()) {
         dropInfoList.value?.let { list ->
-            LazyColumn {
-                item {
-                    Column(
+            var pagerCount = 0
+            val lists = arrayListOf(
+                list.filter { it.questId / 1000000 == 11 },
+                list.filter { it.questId / 1000000 == 12 },
+                list.filter { it.questId / 1000000 == 13 },
+            )
+            val tabs = arrayListOf<String>()
+            //颜色
+            val color = listOf(R.color.color_map_n, R.color.color_map_h, R.color.color_map_vh)
+            lists.forEachIndexed { index, it ->
+                if (it.isNotEmpty()) {
+                    pagerCount++
+                    tabs.add(
+                        when (index) {
+                            0 -> "Normal"
+                            1 -> "Hard"
+                            2 -> "Very Hard"
+                            else -> "？"
+                        }
+                    )
+                }
+            }
+            val pagerState = rememberPagerState(pageCount = pagerCount)
+            //按照地图难度分类
+            Column(modifier = Modifier.fillMaxSize()) {
+                basicInfo.value?.let {
+                    MainText(
+                        text = it.equipmentName,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(Dimen.mediuPadding),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        basicInfo.value?.let {
-                            IconCompose(data = getEquipIconUrl(equipId))
-                            Subtitle2(
-                                text = it.equipmentName,
-                                modifier = Modifier.padding(top = Dimen.mediuPadding),
-                                color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified
+                            .padding(top = Dimen.mediuPadding),
+                        color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified
+                    )
+                }
+                //Tab
+                TabRow(
+                    modifier = Modifier
+                        .padding(top = Dimen.mediuPadding)
+                        .fillMaxWidth(0.62f),
+                    selectedTabIndex = pagerState.currentPage,
+                    backgroundColor = Color.Transparent,
+                    contentColor = MaterialTheme.colors.primary,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                        )
+                    },
+                    divider = {
+                        TabRowDefaults.Divider(color = Color.Transparent)
+                    }
+                ) {
+                    tabs.forEachIndexed { index, s ->
+                        Tab(
+                            selected = index == pagerState.currentPage,
+                            onClick = {
+                                scope.launch {
+                                    pagerState.scrollToPage(index)
+                                }
+                            }
+                        ) {
+                            Text(
+                                text = s,
+                                color = colorResource(id = color[index]),
+                                modifier = Modifier.padding(bottom = Dimen.smallPadding)
                             )
                         }
                     }
                 }
-                items(list) {
-                    val pre = when (it.questId / 1000000) {
-                        11 -> stringResource(id = R.string.normal)
-                        12 -> stringResource(id = R.string.hard)
-                        13 -> stringResource(id = R.string.very_hard)
-                        else -> "？"
-                    }
-                    //颜色
-                    val color = when (it.questId / 1000000) {
-                        11 -> R.color.color_map_n
-                        12 -> R.color.color_map_h
-                        13 -> R.color.color_map_vh
-                        else -> R.color.color_map_n
-                    }
-                    Row(
-                        modifier = Modifier.padding(
-                            start = Dimen.mediuPadding,
-                            top = Dimen.largePadding,
-                        )
+                //pager
+                HorizontalPager(state = pagerState) { pagerIndex ->
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        contentPadding = PaddingValues(top = Dimen.mediuPadding)
                     ) {
-                        MainTitleText(
-                            text = it.getNum(),
-                        )
-                        MainTitleText(
-                            text = pre,
-                            modifier = Modifier.padding(start = Dimen.mediuPadding),
-                            backgroundColor = colorResource(id = color)
-                        )
+                        items(lists[pagerIndex]) {
+                            MainText(text = it.getNum())
+                            AreaEquipList(equipId, it.getAllOdd())
+                        }
+                        item {
+                            CommonSpacer()
+                        }
                     }
-                    AreaEquipList(equipId, it.getAllOdd())
                 }
             }
-
         }
 
         //装备收藏
@@ -147,40 +183,19 @@ private fun AreaEquipList(
     selectedId: Int,
     odds: ArrayList<EquipmentIdWithOdd>
 ) {
-    val spanCount = 6
-    val placeholder = EquipmentIdWithOdd()
-    val newList = getGridData(spanCount = spanCount, list = odds, placeholder = placeholder)
-
     FlowRow(
         modifier = Modifier.padding(Dimen.mediuPadding),
         mainAxisSize = SizeMode.Expand,
         mainAxisSpacing = Dimen.largePadding,
-        crossAxisSpacing = Dimen.mediuPadding,
+        crossAxisSpacing = Dimen.mediuPadding
     ) {
-        newList.forEach {
+        odds.forEach {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                val alpha = if (it == placeholder) 0f else 1f
                 val selected = selectedId == it.eid
-                Box {
-                    if (alpha == 1f) {
-                        IconCompose(data = getEquipIconUrl(it.eid))
-                    } else {
-                        CommonIconSpacer()
-                    }
-                    if (selected) {
-                        Spacer(
-                            modifier = Modifier
-                                .size(Dimen.iconSize)
-                                .background(colorResource(id = R.color.alpha_primary), Shapes.small)
-                        )
-                    }
-                }
-                Text(
-                    text = "${it.odd}%",
-                    color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                    fontWeight = if (selected) FontWeight.Black else FontWeight.Light,
-                    style = MaterialTheme.typography.body1,
-                    modifier = Modifier.alpha(alpha)
+                IconCompose(data = getEquipIconUrl(it.eid))
+                SelectText(
+                    selected = selected,
+                    text = "${it.odd}%"
                 )
             }
         }

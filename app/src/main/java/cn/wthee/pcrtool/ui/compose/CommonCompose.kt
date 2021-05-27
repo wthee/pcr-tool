@@ -15,6 +15,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
@@ -137,18 +138,18 @@ fun Subtitle2(
  */
 @Composable
 fun CaptionText(
-    text: String,
     modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Transparent,
     textAlign: TextAlign = TextAlign.End
 ) {
-    SelectionContainer(modifier = modifier) {
-        Text(
-            text = text,
-            textAlign = textAlign,
-            style = MaterialTheme.typography.caption,
-        )
-    }
-
+    Text(
+        text = text,
+        textAlign = textAlign,
+        color = color,
+        style = MaterialTheme.typography.caption,
+        modifier = modifier
+    )
 }
 
 /**
@@ -264,7 +265,7 @@ fun getRankColor(rank: Int): Color {
 
 @ExperimentalPagerApi
 @Composable
-fun PagerIndicator(pagerState: PagerState, modifier: Modifier) {
+fun PagerIndicator(pagerState: PagerState, modifier: Modifier = Modifier) {
     HorizontalPagerIndicator(
         pagerState = pagerState,
         activeColor = MaterialTheme.colors.primary,
@@ -316,5 +317,36 @@ fun MainCard(
     Card(
         modifier = mModifier,
         content = content
+    )
+}
+
+/**
+ * 选中文本
+ * @param selected 是否选中
+ * @param selectedColor 选中的颜色
+ */
+@Composable
+fun SelectText(
+    modifier: Modifier = Modifier,
+    selected: Boolean,
+    text: String,
+    selectedColor: Color = MaterialTheme.colors.primary
+) {
+    val mModifier = if (selected) {
+        modifier
+            .padding(top = Dimen.smallPadding)
+            .background(color = selectedColor, shape = Shapes.small)
+            .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
+    } else {
+        modifier.padding(top = Dimen.smallPadding)
+    }
+    Text(
+        text = text,
+        color = if (selected) MaterialTheme.colors.onPrimary else Color.Unspecified,
+        style = MaterialTheme.typography.body2,
+        maxLines = 1,
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+        modifier = mModifier
     )
 }

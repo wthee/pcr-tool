@@ -132,7 +132,7 @@ interface EquipmentDao {
             LEFT JOIN enemy_reward_data c ON c.drop_reward_id IN ( b.drop_reward_id_1, b.drop_reward_id_2, b.drop_reward_id_3, b.drop_reward_id_4, b.drop_reward_id_5 )  
             AND c.reward_id_1 > 100000  
             WHERE 
-                a.quest_id < 18000000  
+                a.quest_id < 18000000
                 GROUP BY 
                 a.quest_id  
                 ORDER BY 

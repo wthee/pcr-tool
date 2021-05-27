@@ -39,8 +39,6 @@ object Dimen {
 
     val sheetMarginBottom = 60.dp
 
-    val iconMinSize = 40.dp
-
     val lineHeight = 3.dp
 
     val divLineHeight = 1.dp
@@ -59,7 +57,7 @@ object Dimen {
 
     val settingIconSize = 30.dp
 
-    val statusExHeight = 8.dp
+    val equipDropIconSize = 40.dp
 
     fun getWordWidth(length: Float): Dp {
         return (15 * length).sp2dp

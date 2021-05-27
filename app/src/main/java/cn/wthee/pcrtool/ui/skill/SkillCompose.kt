@@ -54,8 +54,13 @@ fun SkillCompose(
 /**
  * 技能
  */
+@Suppress("RegExpRedundantEscape")
 @Composable
-fun SkillItem(level: Int, skillDetail: SkillDetail) {
+fun SkillItem(
+    level: Int,
+    skillDetail: SkillDetail,
+    isClanBoss: Boolean = false
+) {
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
     try {
@@ -98,7 +103,7 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
         //技能名
         val type = getSkillType(skillDetail.skillId)
         val color = getSkillColor(type)
-        val name = if (skillDetail.skillId.toString()[0] != '1') type else skillDetail.name
+        val name = if (isClanBoss) type else skillDetail.name
         MainText(
             text = name,
             color = colorResource(color),
@@ -107,7 +112,7 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
                 .padding(top = Dimen.largePadding)
         )
         //技能类型
-        if (skillDetail.skillId.toString()[0] == '1') {
+        if (!isClanBoss) {
             Text(
                 text = type,
                 color = colorResource(color),
@@ -128,7 +133,7 @@ fun SkillItem(level: Int, skillDetail: SkillDetail) {
             IconCompose(data = url)
             Column(modifier = Modifier.padding(start = Dimen.mediuPadding)) {
                 //等级
-                if (skillDetail.skillId.toString()[0] != '1') {
+                if (isClanBoss) {
                     Text(
                         text = stringResource(id = R.string.skill_level, level),
                         color = MaterialTheme.colors.primary,
@@ -259,7 +264,7 @@ fun SkillLoopList(
     loopData: List<AttackPattern>,
     iconTypes: HashMap<Int, Int>,
     modifier: Modifier = Modifier,
-    scrollable: Boolean = true
+    isClanBoss: Boolean = false
 ) {
     val loops = arrayListOf<SkillLoop>()
     loopData.forEach { ap ->
@@ -271,14 +276,14 @@ fun SkillLoopList(
         }
     }
     Column(
-        modifier = if (scrollable) modifier.verticalScroll(rememberScrollState()) else modifier
+        modifier = if (!isClanBoss) modifier.verticalScroll(rememberScrollState()) else modifier
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
                 SkillLoopItem(loop = it, iconTypes)
             }
         }
-        if (scrollable) {
+        if (!isClanBoss) {
             CommonSpacer()
         }
     }
@@ -299,14 +304,17 @@ private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
  * 技能循环图标列表
  */
 @Composable
-private fun SkillLoopIconList(iconList: List<Int>, iconTypes: HashMap<Int, Int>) {
+private fun SkillLoopIconList(
+    iconList: List<Int>,
+    iconTypes: HashMap<Int, Int>
+) {
     FlowRow(
         modifier = Modifier.padding(Dimen.mediuPadding),
         mainAxisSize = SizeMode.Expand,
         mainAxisSpacing = Dimen.largePadding,
         crossAxisSpacing = Dimen.mediuPadding,
     ) {
-        iconList.forEachIndexed { index, it ->
+        iconList.forEach {
             val type: String
             val url: String
             if (it == 1) {
@@ -325,9 +333,9 @@ private fun SkillLoopIconList(iconList: List<Int>, iconTypes: HashMap<Int, Int>)
                     2001 -> iconTypes[101]
                     2002 -> iconTypes[102]
                     2003 -> iconTypes[103]
-                    else -> 0
+                    else -> null
                 }
-                url = Constants.SKILL_ICON_URL + iconType + Constants.WEBP
+                url = Constants.SKILL_ICON_URL + (iconType ?: 1001) + Constants.WEBP
             }
             Column {
                 IconCompose(data = url)
@@ -370,7 +378,7 @@ private fun getSkillType(skillId: Int) = when (skillId % 1000) {
     1, 21 -> "连结爆发"
     11 -> "连结爆发+"
     else -> {
-        val skillIndex = skillId % 1000 % 10 - 1
+        val skillIndex = skillId % 10 - 1
         if (skillId % 1000 / 10 == 1) {
             "技能 ${skillIndex}+"
         } else {

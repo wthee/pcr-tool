@@ -24,11 +24,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
@@ -94,17 +91,14 @@ fun EquipList(
                     .background(color = MaterialTheme.colors.background)
                     .fillMaxSize()
             ) {
-                val spanCount = 5
-                SlideAnimation(visible = equips.isNotEmpty()) {
-                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                        items(equips) { equip ->
-                            EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
-                        }
-                        items(spanCount) {
-                            CommonSpacer()
-                        }
+                val spanCount = 4
+                LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+                    items(equips) { equip ->
+                        EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                     }
-
+                    items(spanCount) {
+                        CommonSpacer()
+                    }
                 }
                 Row(
                     modifier = Modifier
@@ -180,17 +174,10 @@ private fun EquipItem(
             }
         }
         //装备名称
-        Text(
-            text = equip.equipmentName,
-            style = MaterialTheme.typography.caption,
-            maxLines = 1,
-            textAlign = TextAlign.Center,
-            overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold,
-            color = nameColor,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(Dimen.smallPadding)
+        SelectText(
+            modifier = Modifier.padding(Dimen.smallPadding),
+            loved,
+            text = equip.equipmentName
         )
     }
 }

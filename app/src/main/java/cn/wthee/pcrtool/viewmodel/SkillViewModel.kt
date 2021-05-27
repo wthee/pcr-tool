@@ -103,7 +103,10 @@ class SkillViewModel @Inject constructor(
             val skill = repository.getSkillData(sid)
             if (skill != null) {
                 val lv = if (lvs.size == 1) lvs[0] else lvs[index]
-                val aid = skill.skill_id % 1000
+                var aid = skill.skill_id % 1000
+                if (aid < 100) {
+                    aid %= 10
+                }
                 map[aid] = skill.icon_type
                 val info = SkillDetail(
                     skill.skill_id,

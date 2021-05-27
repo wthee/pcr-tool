@@ -5,14 +5,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -133,7 +131,7 @@ private fun EquipMaterialList(
         Spacer(
             modifier = Modifier
                 .padding(Dimen.largePadding)
-                .width(Dimen.iconSize)
+                .width(Dimen.smallIconSize)
                 .height(Dimen.lineHeight)
                 .background(MaterialTheme.colors.primary)
                 .align(Alignment.CenterHorizontally)
@@ -143,7 +141,7 @@ private fun EquipMaterialList(
             modifier = Modifier.padding(Dimen.mediuPadding),
             mainAxisSize = SizeMode.Expand,
             mainAxisSpacing = Dimen.largePadding,
-            crossAxisSpacing = Dimen.mediuPadding,
+            crossAxisSpacing = Dimen.mediuPadding
         ) {
             data.forEach { material ->
                 val loved = filter.starIds.contains(material.id)
@@ -152,10 +150,9 @@ private fun EquipMaterialList(
                         clickId.value = material.id
                         toEquipMaterail(material.id)
                     }
-                    Text(
-                        text = material.count.toString(),
-                        style = MaterialTheme.typography.body1,
-                        color = if (loved) MaterialTheme.colors.primary else Color.Unspecified
+                    SelectText(
+                        selected = loved,
+                        text = material.count.toString()
                     )
                 }
             }

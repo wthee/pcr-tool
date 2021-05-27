@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getDatabaseType
-import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.LineCompose
 import cn.wthee.pcrtool.ui.compose.MainText
@@ -52,187 +51,185 @@ fun MainSettings() {
     )
     //应用版本
     val appVersionGroup = stringResource(id = R.string.app_version, BuildConfig.VERSION_NAME)
-    FadeAnimation(visible = true) {
-        Column(
-            modifier = Modifier
-                .padding(top = Dimen.mediuPadding)
-                .fillMaxSize(),
+    Column(
+        modifier = Modifier
+            .padding(top = Dimen.mediuPadding)
+            .fillMaxSize(),
+    ) {
+        //数据更新
+        MainText(
+            text = dbVersionGroup,
+            modifier = Modifier.padding(bottom = Dimen.largePadding)
+        )
+        //- 强制更新
+        SettingItem(
+            MainIconType.DB_DOWNLOAD,
+            stringResource(id = R.string.redownload_db),
+            stringResource(id = R.string.redownload_db_summary)
         ) {
-            //数据更新
-            MainText(
-                text = dbVersionGroup,
-                modifier = Modifier.padding(bottom = Dimen.largePadding)
-            )
-            //- 强制更新
+            scope.launch {
+                DatabaseUpdater.checkDBVersion(0, force = true)
+            }
+        }
+        //- 历史数据
+        val oldFileSize = remember {
+            mutableStateOf(FileUtil.getOldDatabaseSize())
+        }
+        val deleteTip = stringResource(id = R.string.clean_success)
+        if (oldFileSize.value > 0) {
             SettingItem(
-                MainIconType.DB_DOWNLOAD,
-                stringResource(id = R.string.redownload_db),
-                stringResource(id = R.string.redownload_db_summary)
+                MainIconType.DELETE,
+                stringResource(id = R.string.clean_database),
+                FileUtil.getOldDatabaseSize().convertFileSize()
             ) {
-                scope.launch {
-                    DatabaseUpdater.checkDBVersion(0, force = true)
-                }
+                FileUtil.deleteOldDatabase()
+                ToastUtil.short(deleteTip)
+                oldFileSize.value = 0
             }
-            //- 历史数据
-            val oldFileSize = remember {
-                mutableStateOf(FileUtil.getOldDatabaseSize())
-            }
-            val deleteTip = stringResource(id = R.string.clean_success)
-            if (oldFileSize.value > 0) {
-                SettingItem(
-                    MainIconType.DELETE,
-                    stringResource(id = R.string.clean_database),
-                    FileUtil.getOldDatabaseSize().convertFileSize()
-                ) {
-                    FileUtil.deleteOldDatabase()
-                    ToastUtil.short(deleteTip)
-                    oldFileSize.value = 0
-                }
-            }
-            LineCompose()
-            //应用相关
-            MainText(
-                text = appVersionGroup,
-                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
-            )
-            //- 查看项目地址
-            val projectUrl = stringResource(id = R.string.project_url)
-            SettingItem(
-                MainIconType.MY_PROJECT,
-                stringResource(id = R.string.app_sourcce),
-                projectUrl
-            ) {
-                openWebView(context, projectUrl)
-            }
-            //其它设置
-            LineCompose()
-            MainText(
-                text = stringResource(id = R.string.other_settings),
-                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
-            )
-            //- 振动开关
-            val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
-            val vibrateState = remember {
-                mutableStateOf(vibrateOn)
-            }
+        }
+        LineCompose()
+        //应用相关
+        MainText(
+            text = appVersionGroup,
+            modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+        )
+        //- 查看项目地址
+        val projectUrl = stringResource(id = R.string.project_url)
+        SettingItem(
+            MainIconType.MY_PROJECT,
+            stringResource(id = R.string.app_sourcce),
+            projectUrl
+        ) {
+            openWebView(context, projectUrl)
+        }
+        //其它设置
+        LineCompose()
+        MainText(
+            text = stringResource(id = R.string.other_settings),
+            modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+        )
+        //- 振动开关
+        val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
+        val vibrateState = remember {
+            mutableStateOf(vibrateOn)
+        }
 
-            val vibrateSummary =
-                stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        vibrateState.value = !vibrateState.value
-                        sp
-                            .edit()
-                            .putBoolean(Constants.SP_VIBRATE_STATE, vibrateState.value)
-                            .apply()
-                        VibrateUtil(context).single()
-                    },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
-                IconCompose(
-                    data = MainIconType.VIBRATE.icon,
-                    size = Dimen.settingIconSize
-                )
-                Column(
-                    modifier = Modifier
-                        .padding(Dimen.largePadding)
-                        .weight(1f)
-                ) {
-                    TitleText(text = stringResource(id = R.string.vibrate))
-                    SummaryText(text = vibrateSummary)
-                }
-                Switch(checked = vibrateState.value, onCheckedChange = {
-                    vibrateState.value = it
-                    sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
+        val vibrateSummary =
+            stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    vibrateState.value = !vibrateState.value
+                    sp
+                        .edit()
+                        .putBoolean(Constants.SP_VIBRATE_STATE, vibrateState.value)
+                        .apply()
                     VibrateUtil(context).single()
-                })
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
-            }
-            //- 动画效果
-            val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
-            val animState = remember {
-                mutableStateOf(animOn)
-            }
-            val animSummary =
-                stringResource(id = if (animState.value) R.string.animation_on else R.string.animation_off)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        animState.value = !animState.value
-                        sp
-                            .edit()
-                            .putBoolean(Constants.SP_ANIM_STATE, animState.value)
-                            .apply()
-                        VibrateUtil(context).single()
-                    },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
-                IconCompose(
-                    data = MainIconType.ANIMATION.icon,
-                    size = Dimen.settingIconSize
-                )
-                Column(
-                    modifier = Modifier
-                        .padding(Dimen.largePadding)
-                        .weight(1f)
-                ) {
-                    TitleText(text = stringResource(id = R.string.animation))
-                    SummaryText(text = animSummary)
-                }
-                Switch(checked = animState.value, onCheckedChange = {
-                    animState.value = it
-                    sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
-                    VibrateUtil(context).single()
-                })
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
-            }
-            LineCompose()
-            //感谢友链
-            MainText(
-                text = stringResource(id = R.string.thanks),
-                modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+            IconCompose(
+                data = MainIconType.VIBRATE.icon,
+                size = Dimen.settingIconSize
             )
-            //- 干炸里脊资源
-            val dataFromUrl = stringResource(id = R.string.data_from_url)
-            SettingItem(
-                MainIconType.DATA_SOURCE,
-                stringResource(id = R.string.data_from),
-                stringResource(id = R.string.data_from_hint),
+            Column(
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+                    .weight(1f)
             ) {
-                openWebView(context, dataFromUrl)
+                TitleText(text = stringResource(id = R.string.vibrate))
+                SummaryText(text = vibrateSummary)
             }
-            //- 静流笔记
-            val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
-            SettingItem(
-                MainIconType.NOTE,
-                stringResource(id = R.string.shizuru_note),
-                stringResource(id = R.string.shizuru_note_tip),
+            Switch(checked = vibrateState.value, onCheckedChange = {
+                vibrateState.value = it
+                sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
+                VibrateUtil(context).single()
+            })
+            Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+        }
+        //- 动画效果
+        val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
+        val animState = remember {
+            mutableStateOf(animOn)
+        }
+        val animSummary =
+            stringResource(id = if (animState.value) R.string.animation_on else R.string.animation_off)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    animState.value = !animState.value
+                    sp
+                        .edit()
+                        .putBoolean(Constants.SP_ANIM_STATE, animState.value)
+                        .apply()
+                    VibrateUtil(context).single()
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+            IconCompose(
+                data = MainIconType.ANIMATION.icon,
+                size = Dimen.settingIconSize
+            )
+            Column(
+                modifier = Modifier
+                    .padding(Dimen.largePadding)
+                    .weight(1f)
             ) {
-                openWebView(context, shizuruUrl)
+                TitleText(text = stringResource(id = R.string.animation))
+                SummaryText(text = animSummary)
             }
-            //- 竞技场
-            val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
-            SettingItem(
-                MainIconType.PVP_SEARCH,
-                stringResource(id = R.string.pcrdfans),
-                stringResource(id = R.string.pcrdfans_tip),
-            ) {
-                openWebView(context, pcrdfansUrl)
-            }
-            //- 排行
-            val appMediaUrl = stringResource(id = R.string.leader_source_url)
-            SettingItem(
-                MainIconType.LEADER,
-                stringResource(id = R.string.leader_source),
-                stringResource(id = R.string.leader_tip),
-            ) {
-                openWebView(context, appMediaUrl)
-            }
+            Switch(checked = animState.value, onCheckedChange = {
+                animState.value = it
+                sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
+                VibrateUtil(context).single()
+            })
+            Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+        }
+        LineCompose()
+        //感谢友链
+        MainText(
+            text = stringResource(id = R.string.thanks),
+            modifier = Modifier.padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+        )
+        //- 干炸里脊资源
+        val dataFromUrl = stringResource(id = R.string.data_from_url)
+        SettingItem(
+            MainIconType.DATA_SOURCE,
+            stringResource(id = R.string.data_from),
+            stringResource(id = R.string.data_from_hint),
+        ) {
+            openWebView(context, dataFromUrl)
+        }
+        //- 静流笔记
+        val shizuruUrl = stringResource(id = R.string.shizuru_note_url)
+        SettingItem(
+            MainIconType.NOTE,
+            stringResource(id = R.string.shizuru_note),
+            stringResource(id = R.string.shizuru_note_tip),
+        ) {
+            openWebView(context, shizuruUrl)
+        }
+        //- 竞技场
+        val pcrdfansUrl = stringResource(id = R.string.pcrdfans_url)
+        SettingItem(
+            MainIconType.PVP_SEARCH,
+            stringResource(id = R.string.pcrdfans),
+            stringResource(id = R.string.pcrdfans_tip),
+        ) {
+            openWebView(context, pcrdfansUrl)
+        }
+        //- 排行
+        val appMediaUrl = stringResource(id = R.string.leader_source_url)
+        SettingItem(
+            MainIconType.LEADER,
+            stringResource(id = R.string.leader_source),
+            stringResource(id = R.string.leader_tip),
+        ) {
+            openWebView(context, appMediaUrl)
         }
     }
 }

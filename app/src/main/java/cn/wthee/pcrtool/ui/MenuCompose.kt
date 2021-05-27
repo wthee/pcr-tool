@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.MenuAnimation
 import cn.wthee.pcrtool.ui.compose.defaultSpring
+import cn.wthee.pcrtool.ui.compose.defaultTween
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.addToClip
@@ -59,16 +61,26 @@ fun MenuContent(
     val coroutineScope = rememberCoroutineScope()
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
 
+
+    val backgroundAnim = animateFloatAsState(
+        targetValue = if (fabMainIcon == MainIconType.DOWN) 1f else 0f,
+        animationSpec = defaultTween()
+    )
     val systemUiController = rememberSystemUiController()
-    if (fabMainIcon == MainIconType.DOWN) {
-        systemUiController.setStatusBarColor(Color.Transparent)
-    } else {
-        systemUiController.setStatusBarColor(MaterialTheme.colors.primary)
-    }
+    val colorAnim =
+        animateColorAsState(
+            targetValue = if (fabMainIcon == MainIconType.DOWN) {
+                Color.Transparent
+            } else {
+                MaterialTheme.colors.primary
+            }, animationSpec = defaultTween()
+        )
+    systemUiController.setStatusBarColor(colorAnim.value)
+
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .alpha(if (fabMainIcon == MainIconType.DOWN) 1f else 0f)
+        .alpha(backgroundAnim.value)
         .background(colorResource(id = R.color.alpha_black))
         .clickable(enabled = fabMainIcon == MainIconType.DOWN) {
             viewModel.fabMainIcon.postValue(MainIconType.MAIN)

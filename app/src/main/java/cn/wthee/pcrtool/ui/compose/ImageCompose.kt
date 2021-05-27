@@ -122,7 +122,7 @@ fun IconCompose(
                 else -> rememberCoilPainter(request = R.drawable.unknown_gray)
             },
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Inside,
             modifier = mModifier
         )
     }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -17,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -33,14 +31,13 @@ import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
@@ -184,59 +181,91 @@ fun ClanBossInfoPager(
         val bossDataList = clanViewModel.allClanBossAttr.observeAsState()
 
         //页面
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))) {
-            Column {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.bg_gray))
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                //标题
+                MainText(
+                    text = clanValue.getDate(),
+                    modifier = Modifier.padding(top = Dimen.mediuPadding)
+                )
+                //阶段选择
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MainText(text = stringResource(id = R.string.title_section))
+                    TabRow(
+                        selectedTabIndex = section.value,
+                        backgroundColor = Color.Transparent,
+                        contentColor = MaterialTheme.colors.primary,
+                        indicator = {
+                            TabRowDefaults.Indicator(color = Color.Transparent)
+                        },
+                        divider = {
+                            TabRowDefaults.Divider(color = Color.Transparent)
+                        },
+                    ) {
+                        tabs.forEachIndexed { index, title ->
+                            Tab(
+                                text = {
+                                    SelectText(
+                                        selected = section.value == index,
+                                        text = title,
+                                        selectedColor = getSectionTextColor(section = index + 1)
+                                    )
+                                },
+                                selected = section.value == index,
+                                onClick = {
+                                    section.value = index
+                                },
+                            )
+                        }
+                    }
+                }
                 //图标列表
                 val list = clanValue.getUnitIdList(0)
-                //标题
-                Subtitle1(
-                    text = "阶段${tabs[section.value]}",
-                    color = getSectionTextColor(section = section.value + 1),
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = Dimen.smallPadding)
-                )
-                Subtitle2(
-                    text = clanValue.getDate(),
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = Dimen.smallPadding)
-                )
                 //图标
-                Row(
-                    modifier = Modifier
-                        .padding(Dimen.mediuPadding)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                TabRow(
+                    modifier = Modifier.fillMaxWidth(0.95f),
+                    selectedTabIndex = pagerState.currentPage,
+                    backgroundColor = Color.Transparent,
+                    contentColor = MaterialTheme.colors.primary,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                        )
+                    },
+                    divider = {
+                        TabRowDefaults.Divider(color = Color.Transparent)
+                    },
                 ) {
-                    list.forEachIndexed { index, it ->
-                        Box {
-                            IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
-                                scope.launch {
-                                    pagerState.scrollToPage(index)
-                                }
-                            }
-                            //多目标提示
-                            if (it.targetCount > 1) {
-                                MainTitleText(
-                                    text = "${it.targetCount - 1}",
-                                    modifier = Modifier.align(Alignment.BottomEnd)
-                                )
-                            }
-                            if (index == pagerState.currentPage) {
-                                Spacer(
-                                    modifier = Modifier
-                                        .navigationBarsPadding()
-                                        .size(Dimen.iconSize)
-                                        .background(
-                                            color = colorResource(id = R.color.alpha_primary),
-                                            shape = Shapes.small
+                    for (tabIndex in 0 until 5) {
+                        Tab(
+                            modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+                            icon = {
+                                val it = list[tabIndex]
+                                Box {
+                                    IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP)
+                                    //多目标提示
+                                    if (it.targetCount > 1) {
+                                        MainTitleText(
+                                            text = "${it.targetCount - 1}",
+                                            modifier = Modifier.align(Alignment.BottomEnd)
                                         )
-                                )
-                            }
-                        }
+                                    }
+                                }
+                            },
+                            selected = pagerState.currentPage == tabIndex,
+                            onClick = {
+                                scope.launch {
+                                    pagerState.scrollToPage(tabIndex)
+                                }
+                            },
+                        )
                     }
                 }
                 //BOSS信息
@@ -287,40 +316,6 @@ fun ClanBossInfoPager(
                     }
                 }
             }
-            //阶段选择
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(
-                        start = Dimen.fabMarginEnd,
-                        end = Dimen.fabMarginEnd,
-                        bottom = Dimen.fabMargin
-                    )
-                    .height(Dimen.fabSize)
-                    .shadow(elevation = Dimen.fabElevation, shape = CircleShape, clip = true)
-                    .background(color = MaterialTheme.colors.surface, shape = CircleShape)
-            ) {
-                TabRow(
-                    selectedTabIndex = section.value,
-                    backgroundColor = Color.Transparent,
-                    contentColor = MaterialTheme.colors.primary,
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            text = {
-                                Text(
-                                    title,
-                                    color = getSectionTextColor(section = index + 1)
-                                )
-                            },
-                            selected = section.value == index,
-                            onClick = {
-                                section.value = index
-                            },
-                        )
-                    }
-                }
-            }
         }
 
 
@@ -350,11 +345,11 @@ private fun BossSkillList(
                 SkillLoopList(
                     allLoopData.value!![index],
                     allIcon.value!![index],
-                    scrollable = false
+                    isClanBoss = true
                 )
             }
             list[index].forEach {
-                SkillItem(level = it.level, skillDetail = it)
+                SkillItem(level = it.level, skillDetail = it, isClanBoss = true)
             }
         }
     }

@@ -22,11 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
@@ -102,9 +100,11 @@ fun CharacterList(
             val r6Ids = viewModel.getR6Ids()
             navViewModel.r6Ids.postValue(r6Ids)
         }
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.bg_gray))
+        ) {
             TopBarCompose(scrollState = scrollState)
             if (list.value != null) {
                 LazyVerticalGrid(
@@ -171,12 +171,6 @@ private fun CharacterItem(
     toDetail: (Int) -> Unit,
 ) {
     val loved = filter.starIds.contains(character.id)
-    val nameColor = if (loved) {
-        MaterialTheme.colors.primary
-    } else {
-        Color.Unspecified
-    }
-
 
     MainCard(
         modifier = Modifier.padding(Dimen.mediuPadding),
@@ -199,17 +193,15 @@ private fun CharacterItem(
                 modifier = Modifier.padding(
                     start = Dimen.smallPadding,
                     end = Dimen.smallPadding,
-                    top = Dimen.smallPadding
+                    top = Dimen.divLineHeight
                 ),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = character.getNameF(),
-                    style = MaterialTheme.typography.subtitle2,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f),
-                    color = nameColor
+                SelectText(
+                    selected = loved,
+                    text = character.getNameF()
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 PositionIcon(character.position)
             }
             //其它属性

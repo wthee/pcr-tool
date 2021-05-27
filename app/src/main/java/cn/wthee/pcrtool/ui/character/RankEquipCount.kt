@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -185,22 +184,16 @@ private fun EquipCountItem(
     toEquipMaterial: (Int) -> Unit
 ) {
     val loved = filter.starIds.contains(item.id)
-    val nameColor = if (loved) {
-        MaterialTheme.colors.primary
-    } else {
-        Color.Unspecified
-    }
-
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(Dimen.smallPadding),
     ) {
         IconCompose(data = getEquipIconUrl(item.id)) {
             toEquipMaterial(item.id)
         }
-        MainContentText(
-            text = item.count.toString(),
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-            color = nameColor
+        SelectText(
+            selected = loved,
+            text = item.count.toString()
         )
     }
 }
