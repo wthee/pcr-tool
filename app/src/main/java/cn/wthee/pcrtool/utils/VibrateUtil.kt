@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.MainActivity
 
 /**
  * 振动
@@ -17,7 +17,7 @@ class VibrateUtil(context: Context) {
     private val vibrateStrength = 32
 
     //是否开启振动
-    private val vibrateOn = mainSP().getBoolean(Constants.SP_VIBRATE_STATE, true)
+    private val vibrateOn = MainActivity.vibrateOn
 
 
     fun single() {

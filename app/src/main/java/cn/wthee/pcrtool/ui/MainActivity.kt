@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var handler: Handler
         lateinit var navViewModel: NavViewModel
+        var vibrateOn = true
         var r6Ids = listOf<Int>()
     }
 
@@ -78,6 +79,7 @@ class MainActivity : ComponentActivity() {
         //设置 handler
         setHandler()
         UMengInitializer().create(this)
+        vibrateOn = mainSP().getBoolean(Constants.SP_VIBRATE_STATE, true)
     }
 
     //返回拦截

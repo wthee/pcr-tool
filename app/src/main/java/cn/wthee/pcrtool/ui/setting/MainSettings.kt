@@ -22,6 +22,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getDatabaseType
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.LineCompose
 import cn.wthee.pcrtool.ui.compose.MainText
@@ -113,7 +114,7 @@ fun MainSettings() {
         val vibrateState = remember {
             mutableStateOf(vibrateOn)
         }
-
+        MainActivity.vibrateOn = vibrateState.value
         val vibrateSummary =
             stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
         Row(
