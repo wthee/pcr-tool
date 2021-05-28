@@ -42,7 +42,7 @@ fun GachaList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))
+            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = gachas.value != null) {
             gachas.value?.let { data ->
@@ -86,7 +86,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val ed = gachaInfo.endTime
     val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
 
-    val icons = gachaInfo.unitIds.intArrayList().fillPlaceholder()
+    val icons = gachaInfo.unitIds.intArrayList()
 
     //标题
     Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {

@@ -11,7 +11,7 @@ val code = 100
 android {
 
     compileSdk = 30
-    buildToolsVersion = "31.0.0-rc3"
+    buildToolsVersion = "31.0.0-rc4"
     flavorDimensions("version")
 
     defaultConfig {

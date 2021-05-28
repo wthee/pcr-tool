@@ -180,7 +180,7 @@ fun CharacterDetail(
             ) {
                 FadeAnimation(visible = rarityMax.value != 0) {
                     Box(modifier = Modifier
-                        .background(color = colorResource(id = R.color.bg_gray))
+                        .background(color = colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
                         .clickable {
                             //跳转角色图片列表
                             toPics(unitId)

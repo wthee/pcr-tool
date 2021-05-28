@@ -60,7 +60,7 @@ fun ClanBattleList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))
+            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = clanList.value != null) {
             clanList.value?.let { data ->
@@ -187,7 +187,7 @@ fun ClanBossInfoPager(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(id = R.color.bg_gray))
+                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 //标题

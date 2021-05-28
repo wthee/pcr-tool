@@ -38,6 +38,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -78,7 +79,7 @@ fun NewsList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))
+            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         //fixme 切换时，重新加载
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
@@ -113,6 +114,7 @@ fun NewsList(
         }
         Box(
             modifier = Modifier
+                .navigationBarsPadding()
                 .align(Alignment.BottomCenter)
                 .padding(
                     start = Dimen.fabMarginEnd,

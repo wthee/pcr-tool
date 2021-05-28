@@ -43,7 +43,7 @@ fun EventList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))
+            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = events.value != null) {
             events.value?.let { data ->
@@ -182,7 +182,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             )
             //图标
             IconListCompose(
-                icons = event.unitIds.intArrayList().fillPlaceholder(),
+                icons = event.unitIds.intArrayList(),
                 toCharacterDetail
             )
             //结束日期

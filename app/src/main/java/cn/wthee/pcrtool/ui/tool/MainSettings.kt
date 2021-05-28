@@ -3,6 +3,8 @@ package cn.wthee.pcrtool.ui.setting
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
@@ -23,6 +25,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.compose.CommonSpacer
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.LineCompose
 import cn.wthee.pcrtool.ui.compose.MainText
@@ -58,7 +61,8 @@ fun MainSettings() {
     Column(
         modifier = Modifier
             .padding(top = Dimen.mediuPadding)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         //数据更新
         MainText(
@@ -235,6 +239,7 @@ fun MainSettings() {
         ) {
             openWebView(context, appMediaUrl)
         }
+        CommonSpacer()
     }
 }
 

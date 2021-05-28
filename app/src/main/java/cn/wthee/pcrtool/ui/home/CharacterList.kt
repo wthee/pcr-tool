@@ -102,7 +102,7 @@ fun CharacterList(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(id = R.color.bg_gray))
+                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
         ) {
             TopBarCompose(scrollState = scrollState)
             if (list.value != null) {

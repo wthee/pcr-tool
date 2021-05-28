@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
-        classpath("com.android.tools.build:gradle:7.0.0-alpha15")
+        classpath("com.android.tools.build:gradle:7.0.0-beta03")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
 
         // NOTE: Do not place your application dependencies here; they belong

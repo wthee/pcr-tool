@@ -8,6 +8,7 @@ import android.os.Looper
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -17,13 +18,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -38,6 +40,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
@@ -70,7 +73,10 @@ class MainActivity : ComponentActivity() {
                     //状态栏、导航栏适配
                     val ui = rememberSystemUiController()
                     val isLight = MaterialTheme.colors.isLight
-                    ui.setNavigationBarColor(Color.Transparent, darkIcons = isLight)
+                    ui.setNavigationBarColor(
+                        colorResource(id = if (isLight) R.color.alpha_white else R.color.alpha_black),
+                        darkIcons = isLight
+                    )
                     Home()
                 }
             }
@@ -80,6 +86,11 @@ class MainActivity : ComponentActivity() {
         setHandler()
         UMengInitializer().create(this)
         vibrateOn = mainSP().getBoolean(Constants.SP_VIBRATE_STATE, true)
+        val noticeViewModel: NoticeViewModel by viewModels()
+        MainScope().launch {
+            DatabaseUpdater.checkDBVersion()
+            noticeViewModel.check()
+        }
     }
 
     //返回拦截
@@ -135,20 +146,12 @@ fun Home() {
     val navController = rememberNavController()
     val actions = remember(navController) { NavActions(navController) }
     navViewModel = hiltViewModel()
-    val noticeViewModel: NoticeViewModel = hiltViewModel()
-    val scope = rememberCoroutineScope()
     val loading = navViewModel.loading.observeAsState().value ?: false
     val r6IdList = navViewModel.r6Ids.observeAsState()
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-
     Box(modifier = Modifier.fillMaxSize()) {
-        //数据库版本检查
-        scope.launch {
-            DatabaseUpdater.checkDBVersion()
-            noticeViewModel.check()
-        }
         NavGraph(navController, navViewModel, actions)
         //菜单
         MenuContent(navViewModel, navController)

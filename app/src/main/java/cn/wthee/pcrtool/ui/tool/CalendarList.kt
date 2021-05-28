@@ -52,7 +52,7 @@ fun CalendarCompose(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.bg_gray))
+            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = calendarData.value != null) {
             calendarData.value?.let { data ->

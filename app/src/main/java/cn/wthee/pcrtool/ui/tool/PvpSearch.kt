@@ -176,7 +176,7 @@ fun PvpSearchCompose(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(colorResource(id = R.color.bg_gray))
+                            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
                     ) {
                         if (showResult.value) {
                             //展示搜索结果
@@ -503,7 +503,7 @@ fun PvpSearchResult(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(colorResource(id = R.color.bg_gray))
+                            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
                     ) {
                         //展示查询结果
                         LazyColumn {

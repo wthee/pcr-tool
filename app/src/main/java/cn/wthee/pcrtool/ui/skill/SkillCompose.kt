@@ -189,7 +189,7 @@ fun SkillActionItem(skillAction: SkillActionText) {
     val colors =
         arrayListOf(
             R.color.color_rank_21,
-            R.color.black,
+            if (MaterialTheme.colors.isLight) R.color.black else R.color.alpha_white,
             R.color.color_rank_11_17,
             R.color.colorPrimary
         )

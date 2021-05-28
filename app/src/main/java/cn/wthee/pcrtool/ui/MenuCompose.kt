@@ -278,7 +278,7 @@ fun MenuItem(
         mutableStateOf(MenuState.DEFAULT)
     }
     val scaleAnimation = animateFloatAsState(
-        targetValue = if (state.value == MenuState.TOUCH) 0.95f else 1f, defaultSpring()
+        targetValue = if (state.value == MenuState.TOUCH) 0.85f else 1f, defaultSpring()
     )
 
     Card(

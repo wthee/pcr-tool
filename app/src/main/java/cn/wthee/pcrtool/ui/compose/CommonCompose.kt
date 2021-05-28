@@ -140,7 +140,7 @@ fun Subtitle2(
 fun CaptionText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Transparent,
+    color: Color = Color.Unspecified,
     textAlign: TextAlign = TextAlign.End
 ) {
     Text(
