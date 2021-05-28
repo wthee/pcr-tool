@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -54,6 +55,7 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @Composable
 fun EquipList(
+    scrollState: LazyListState,
     viewModel: EquipmentViewModel = hiltViewModel(),
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
@@ -68,7 +70,6 @@ fun EquipList(
     val coroutineScope = rememberCoroutineScope()
     val sp = mainSP()
     val keyboardController = LocalSoftwareKeyboardController.current
-
     //关闭时监听
     if (!state.isVisible) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -92,7 +93,7 @@ fun EquipList(
                     .fillMaxSize()
             ) {
                 val spanCount = 4
-                LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+                LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
                     items(equips) { equip ->
                         EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                     }

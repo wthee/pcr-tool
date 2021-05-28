@@ -55,6 +55,7 @@ import kotlin.math.round
 @ExperimentalFoundationApi
 @Composable
 fun PvpSearchCompose(
+    scrollState: LazyListState,
     toFavorite: () -> Unit,
     viewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -66,7 +67,6 @@ fun PvpSearchCompose(
     val context = LocalContext.current
 
     //滚动状态
-    val scrollState = rememberLazyListState()
     val positionIndex = remember {
         mutableStateOf(2)
     }

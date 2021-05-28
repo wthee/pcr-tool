@@ -3,8 +3,8 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,10 +32,12 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalAnimationApi
 @Composable
-fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltViewModel()) {
+fun LeaderboardList(
+    scrollState: LazyListState,
+    leaderViewModel: LeaderViewModel = hiltViewModel()
+) {
     leaderViewModel.getLeader()
     val list = leaderViewModel.leaderData.observeAsState()
-    val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -78,7 +80,7 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltViewModel()) {
                         modifier = Modifier.weight(0.25f)
                     )
                 }
-                LazyColumn(state = state) {
+                LazyColumn(state = scrollState) {
                     items(info) {
                         LeaderboardItem(it)
                     }
@@ -109,7 +111,7 @@ fun LeaderboardList(leaderViewModel: LeaderViewModel = hiltViewModel()) {
                 text = stringResource(id = R.string.tool_leader)
             ) {
                 coroutineScope.launch {
-                    state.scrollToItem(0)
+                    scrollState.scrollToItem(0)
                 }
             }
         }

@@ -1,8 +1,8 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -27,6 +27,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 @ExperimentalAnimationApi
 @Composable
 fun CharacterBasicInfo(
+    scrollState: ScrollState,
     unitId: Int,
     viewModel: CharacterViewModel = hiltViewModel()
 ) {
@@ -39,7 +40,7 @@ fun CharacterBasicInfo(
                 modifier = Modifier
                     .padding(Dimen.mediuPadding)
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
             ) {
                 //标题
                 MainText(

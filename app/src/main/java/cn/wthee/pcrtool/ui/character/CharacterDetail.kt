@@ -46,6 +46,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun CharacterDetail(
+    scrollState: ScrollState,
     unitId: Int,
     toEquipDetail: (Int) -> Unit,
     toCharacterBasicInfo: (Int) -> Unit,
@@ -97,8 +98,7 @@ fun CharacterDetail(
     }
     //卡面高度
     val cardHeight = ScreenUtil.getCharacterCardHeight().toInt().px2dp - 10
-    //保存滚动状态
-    val scrollState = rememberScrollState()
+    //滚动距离
     val marginTop = when {
         scrollState.value < 0 -> cardHeight
         cardHeight - scrollState.value < 0 -> 0

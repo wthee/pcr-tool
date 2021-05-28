@@ -4,8 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,12 +32,12 @@ import kotlinx.coroutines.launch
 @ExperimentalAnimationApi
 @Composable
 fun EventList(
+    scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
     eventViewModel.getEventHistory()
     val events = eventViewModel.events.observeAsState()
-    val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     Box(
@@ -47,7 +47,10 @@ fun EventList(
     ) {
         SlideAnimation(visible = events.value != null) {
             events.value?.let { data ->
-                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                ) {
                     items(data) {
                         EventItem(it, toCharacterDetail)
                     }
@@ -66,7 +69,7 @@ fun EventList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                state.scrollToItem(0)
+                scrollState.scrollToItem(0)
             }
         }
     }

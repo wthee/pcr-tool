@@ -8,13 +8,10 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -49,7 +46,6 @@ import kotlinx.coroutines.launch
 
 /**
  * 公告列表
- * fixme 滚动位置记录
  */
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -57,13 +53,16 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun NewsList(
+    scrollState0: LazyListState,
+    scrollState1: LazyListState,
+    scrollState2: LazyListState,
+    pagerIndexState: MutableState<Int>,
     toDetail: (String, String, Int, String) -> Unit,
     viewModel: NewsViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val states =
-        arrayListOf(rememberLazyListState(), rememberLazyListState(), rememberLazyListState())
-    val pagerState = rememberPagerState(pageCount = 3)
+    val pagerState = rememberPagerState(pageCount = 3, initialPage = pagerIndexState.value)
+    pagerIndexState.value = pagerState.currentPage
     val newsCN = viewModel.getNewsCN().collectAsLazyPagingItems()
     val newsTW = viewModel.getNewsTW().collectAsLazyPagingItems()
     val newsJP = viewModel.getNewsJP().collectAsLazyPagingItems()
@@ -73,6 +72,7 @@ fun NewsList(
         stringResource(id = R.string.tool_news_tw),
         stringResource(id = R.string.tool_news_jp),
     )
+
 
 
     Box(
@@ -87,8 +87,13 @@ fun NewsList(
                 1 -> newsTW
                 else -> newsJP
             }
+            val state = when (index) {
+                0 -> scrollState0
+                1 -> scrollState1
+                else -> scrollState2
+            }
             LazyColumn(
-                state = states[index],
+                state = state,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .fillMaxSize()
@@ -137,7 +142,12 @@ fun NewsList(
                                 if (pagerState.currentPage != index) {
                                     pagerState.scrollToPage(index)
                                 } else {
-                                    states[index].scrollToItem(0)
+                                    val state = when (index) {
+                                        0 -> scrollState0
+                                        1 -> scrollState1
+                                        else -> scrollState2
+                                    }
+                                    state.scrollToItem(0)
                                 }
                             }
                         },

@@ -4,8 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -48,12 +48,12 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun ClanBattleList(
+    scrollState: LazyListState,
     toClanBossInfo: (Int, Int) -> Unit,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
     clanViewModel.getAllClanBattleData()
     val clanList = clanViewModel.clanInfoList.observeAsState()
-    val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     navViewModel.loading.postValue(true)
 
@@ -65,7 +65,10 @@ fun ClanBattleList(
         SlideAnimation(visible = clanList.value != null) {
             clanList.value?.let { data ->
                 navViewModel.loading.postValue(false)
-                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                ) {
                     items(data) {
                         ClanBattleItem(it, toClanBossInfo)
                     }
@@ -85,7 +88,7 @@ fun ClanBattleList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                state.scrollToItem(0)
+                scrollState.scrollToItem(0)
             }
         }
     }

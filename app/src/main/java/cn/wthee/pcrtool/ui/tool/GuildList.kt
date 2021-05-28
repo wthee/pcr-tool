@@ -4,8 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,12 +30,12 @@ import kotlinx.coroutines.launch
 @ExperimentalAnimationApi
 @Composable
 fun GuildList(
+    scrollState: LazyListState,
     toCharacterDetail: (Int) -> Unit,
     guildViewModel: GuildViewModel = hiltViewModel()
 ) {
     guildViewModel.getGuilds()
     val guilds = guildViewModel.guilds.observeAsState()
-    val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     Box(
@@ -45,7 +45,10 @@ fun GuildList(
     ) {
         SlideAnimation(visible = guilds.value != null) {
             guilds.value?.let { data ->
-                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                ) {
                     items(data) {
                         GuildItem(it, toCharacterDetail)
                     }
@@ -65,7 +68,7 @@ fun GuildList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                state.scrollToItem(0)
+                scrollState.scrollToItem(0)
             }
         }
     }

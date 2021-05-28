@@ -4,8 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,10 +32,12 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalAnimationApi
 @Composable
-fun NoticeList(noticeViewModel: NoticeViewModel = hiltViewModel()) {
+fun NoticeList(
+    scrollState: LazyListState,
+    noticeViewModel: NoticeViewModel = hiltViewModel()
+) {
     noticeViewModel.getNotice()
     val noticeList = noticeViewModel.notice.observeAsState()
-    val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     MainActivity.navViewModel.loading.postValue(true)
 
@@ -50,7 +52,7 @@ fun NoticeList(noticeViewModel: NoticeViewModel = hiltViewModel()) {
     ) {
         noticeList.value?.let { data ->
             MainActivity.navViewModel.loading.postValue(false)
-            LazyColumn(state = state) {
+            LazyColumn(state = scrollState) {
                 items(data.data ?: arrayListOf()) {
                     NoticeItem(it)
                 }
@@ -83,7 +85,7 @@ fun NoticeList(noticeViewModel: NoticeViewModel = hiltViewModel()) {
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                state.scrollToItem(0)
+                scrollState.scrollToItem(0)
             }
         }
     }

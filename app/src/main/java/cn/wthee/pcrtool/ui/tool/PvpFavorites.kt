@@ -3,9 +3,9 @@ package cn.wthee.pcrtool.ui.tool
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 @ExperimentalAnimationApi
 @Composable
 fun PvpFavorites(
+    scrollState: LazyListState,
     toCharacter: (Int) -> Unit,
     toResearch: () -> Boolean,
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -40,12 +41,11 @@ fun PvpFavorites(
     val region = getRegion()
     pvpViewModel.getAllFavorites(region)
     val list = pvpViewModel.allFavorites.observeAsState()
-    val state = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value != null) {
-            LazyColumn(state = state) {
+            LazyColumn(state = scrollState) {
                 items(list.value!!) { data ->
                     PvpFavoriteItem(toCharacter, toResearch, region, data, pvpViewModel)
                 }
@@ -63,7 +63,7 @@ fun PvpFavorites(
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
                     scope.launch {
-                        state.scrollToItem(0)
+                        scrollState.scrollToItem(0)
                     }
                 }
             } else {

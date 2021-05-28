@@ -5,8 +5,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -36,11 +36,13 @@ import java.util.*
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
-fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltViewModel()) {
+fun CalendarCompose(
+    scrollState: LazyListState,
+    calendarViewModel: CalendarViewModel = hiltViewModel()
+) {
     calendarViewModel.getDropEvent()
     val calendarData = calendarViewModel.dropEvents.observeAsState()
 
-    val state = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val title = when (getDatabaseType()) {
         1 -> stringResource(id = R.string.db_cn)
@@ -54,7 +56,10 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltViewModel()) {
     ) {
         SlideAnimation(visible = calendarData.value != null) {
             calendarData.value?.let { data ->
-                LazyColumn(state = state, contentPadding = PaddingValues(Dimen.mediuPadding)) {
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                ) {
                     items(data) {
                         CalendarItem(it)
                     }
@@ -75,7 +80,7 @@ fun CalendarCompose(calendarViewModel: CalendarViewModel = hiltViewModel()) {
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                state.scrollToItem(0)
+                scrollState.scrollToItem(0)
             }
         }
     }
