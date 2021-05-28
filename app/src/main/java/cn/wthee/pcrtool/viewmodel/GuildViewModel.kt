@@ -12,11 +12,11 @@ import javax.inject.Inject
 /**
  * 活动 ViewModel
  *
- * 数据来源 [UnitRepository]
+ * @param unitRepository
  */
 @HiltViewModel
 class GuildViewModel @Inject constructor(
-    private val repository: UnitRepository
+    private val unitRepository: UnitRepository
 ) : ViewModel() {
 
     var guilds = MutableLiveData<List<GuildData>>()
@@ -26,7 +26,7 @@ class GuildViewModel @Inject constructor(
      */
     fun getGuilds() {
         viewModelScope.launch {
-            val data = repository.getGuilds()
+            val data = unitRepository.getGuilds()
             guilds.postValue(data)
         }
     }

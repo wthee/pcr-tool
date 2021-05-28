@@ -21,11 +21,11 @@ import javax.inject.Inject
 /**
  * 角色 ViewModel
  *
- * 数据来源 [UnitRepository]
+ * @param unitRepository
  */
 @HiltViewModel
 class CharacterViewModel @Inject constructor(
-    private val repository: UnitRepository
+    private val unitRepository: UnitRepository
 ) : ViewModel() {
 
     lateinit var characters: Flow<PagingData<CharacterInfo>>
@@ -36,26 +36,30 @@ class CharacterViewModel @Inject constructor(
     var guilds = MutableLiveData<List<GuildData>>()
 
     /**
-     * 角色基本资料 [CharacterInfo]
+     * 获取角色基本信息列表
+     *
+     * @param params 角色筛选
      */
     fun getCharacters(params: FilterCharacter) {
         viewModelScope.launch {
             val guildName = if (params.guild > 0)
-                repository.getGuilds()[params.guild - 1].guildName
+                unitRepository.getGuilds()[params.guild - 1].guildName
             else
                 "全部"
-            val data = repository.getInfoAndData(params, guildName)
+            val data = unitRepository.getInfoAndData(params, guildName)
             characterList.postValue(data)
         }
     }
 
 
     /**
-     * 角色基本资料 [CharacterInfoPro]
+     * 获取角色基本资料
+     *
+     * @param unitId 角色编号
      */
-    fun getCharacter(uid: Int) {
+    fun getCharacter(unitId: Int) {
         viewModelScope.launch {
-            val data = repository.getInfoPro(uid)
+            val data = unitRepository.getInfoPro(unitId)
             data?.let {
                 character.postValue(it)
             }
@@ -63,7 +67,7 @@ class CharacterViewModel @Inject constructor(
                 MainScope().launch {
                     UMCrash.generateCustomLog(
                         NullPointerException(),
-                        Constants.EXCEPTION_UNIT_NULL + "unit_id:$uid"
+                        Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
                     )
                 }
             }
@@ -75,7 +79,7 @@ class CharacterViewModel @Inject constructor(
      */
     fun getAllCharacter() {
         viewModelScope.launch {
-            val data = repository.getCharacterByPosition(0, 999)
+            val data = unitRepository.getCharacterByPosition(0, 999)
             allPvpCharacterData.postValue(data)
         }
     }
@@ -83,25 +87,20 @@ class CharacterViewModel @Inject constructor(
     /**
      * 六星 id 列表
      */
-    suspend fun getR6Ids() = repository.getR6Ids()
+    suspend fun getR6Ids() = unitRepository.getR6Ids()
 
     /**
      * 公会信息
      */
     fun getGuilds() {
         viewModelScope.launch {
-            val data = repository.getGuilds()
+            val data = unitRepository.getGuilds()
             guilds.postValue(data)
         }
     }
 
     /**
-     * 角色碎片掉落信息
-     */
-    suspend fun getDrops(uid: Int) = repository.getItemDropInfos(uid)
-
-    /**
      * 角色站位
      */
-    suspend fun getPvpCharacterByIds(ids: ArrayList<Int>) = repository.getCharacterByIds(ids)
+    suspend fun getPvpCharacterByIds(ids: ArrayList<Int>) = unitRepository.getCharacterByIds(ids)
 }

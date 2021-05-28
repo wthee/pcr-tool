@@ -70,13 +70,18 @@ const val equipWhere = """
 interface EquipmentDao {
 
     /**
-     * 获取装备所有类型列表 [String]
+     * 获取装备所有类型列表
      */
     @Query("""SELECT description as type FROM equipment_enhance_rate GROUP BY description""")
     suspend fun getEquipTypes(): List<String>
 
     /**
      * 根据筛选条件获取所有装备分页信息 [EquipmentMaxData]
+     * @param craft -1：全部，0：素材：1：装备
+     * @param type 装备类型
+     * @param name 装备名称
+     * @param showAll 0: 仅收藏，1：全部
+     * @param starIds 收藏的装备编号
      */
     @Transaction
     @Query("""$viewEquipmentMaxData  $equipWhere""")
@@ -89,19 +94,22 @@ interface EquipmentDao {
     ): List<EquipmentMaxData>
 
     /**
-     * 根据 [eid]，获取装备提升属性 [EquipmentEnhanceRate]
+     * 获取装备提升属性
+     * @param equipId 装备编号
      */
-    @Query("SELECT * FROM equipment_enhance_rate WHERE equipment_enhance_rate.equipment_id = :eid ")
-    suspend fun getEquipmentEnhanceData(eid: Int): EquipmentEnhanceRate
+    @Query("SELECT * FROM equipment_enhance_rate WHERE equipment_enhance_rate.equipment_id = :equipId ")
+    suspend fun getEquipmentEnhanceData(equipId: Int): EquipmentEnhanceRate
 
     /**
-     * 根据 [eid]，获取装备合成信息 [EquipmentCraft]
+     * 获取装备合成信息
+     * @param equipId 装备编号
      */
-    @Query("SELECT * FROM equipment_craft WHERE equipment_craft.equipment_id = :eid ")
-    suspend fun getEquipmentCraft(eid: Int): EquipmentCraft
+    @Query("SELECT * FROM equipment_craft WHERE equipment_craft.equipment_id = :equipId ")
+    suspend fun getEquipmentCraft(equipId: Int): EquipmentCraft
 
     /**
-     * 根据 [eid]，获取装备掉落区域信息 [EquipmentDropInfo]
+     * 获取装备掉落区域信息
+     * @param equipId 装备编号
      */
     @Transaction
     @Query(
@@ -109,7 +117,7 @@ interface EquipmentDao {
         SELECT 
             quest_id, 
             quest_name, 
-            :eid as eid, 
+            :equipId as equip_id, 
             reward_1 || '-' || reward_2 || '-' || reward_3 || '-' || reward_4 || '-' || reward_5 AS rewards, 
             odd_1 || '-' || odd_2 || '-' || odd_3 || '-' || odd_4 || '-' || odd_5 AS odds  
         FROM 
@@ -139,19 +147,22 @@ interface EquipmentDao {
                 a.quest_id ASC, 
                 a.quest_name ASC )  
         WHERE 
-            rewards LIKE '%' || :eid || '%'"""
+            rewards LIKE '%' || :equipId || '%'"""
     )
-    suspend fun getEquipDropAreas(eid: Int): List<EquipmentDropInfo>
+    suspend fun getEquipDropAreas(equipId: Int): List<EquipmentDropInfo>
 
     /**
-     * 根据 [eid]，获取装备数值信息 [EquipmentMaxData]
+     * 获取装备数值信息
+     * @param equipId 装备编号
      */
     @Transaction
-    @Query("$viewEquipmentMaxData WHERE a.equipment_id =:eid")
-    suspend fun getEquipInfos(eid: Int): EquipmentMaxData
+    @Query("$viewEquipmentMaxData WHERE a.equipment_id =:equipId")
+    suspend fun getEquipInfos(equipId: Int): EquipmentMaxData
 
     /**
-     * 根据 专武角色[uid] 装备等级[lv]，获取专武信息 [UniqueEquipmentMaxData]
+     * 获取专武信息
+     * @param unitId 角色编号
+     * @param lv 装备等级
      */
     @Transaction
     @Query(
@@ -185,20 +196,21 @@ interface EquipmentDao {
             AND SUBSTR( c.unit_id, 2, 3 ) = SUBSTR( a.equipment_id, 3, 3 )
             LEFT OUTER JOIN unique_equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
         WHERE
-            a.equipment_id IS NOT NULL AND unit_id =:uid
+            a.equipment_id IS NOT NULL AND unit_id =:unitId
     """
     )
-    suspend fun getUniqueEquipInfos(uid: Int, lv: Int): UniqueEquipmentMaxData?
+    suspend fun getUniqueEquipInfos(unitId: Int, lv: Int): UniqueEquipmentMaxData?
 
     /**
-     * 根获取专武最大强化等级 [Int]
+     * 根获取专武最大强化等级
      */
     @Transaction
     @Query(" SELECT MAX( unique_equipment_enhance_data.enhance_level ) FROM unique_equipment_enhance_data")
     suspend fun getUniqueEquipMaxLv(): Int
 
     /**
-     * 根据角色id [uid] 获取对应 Rank 范围 所需的装备
+     * 获取角色  Rank 范围所需的装备
+     * @param unitId 角色编号
      */
     @Query(
         """
@@ -212,15 +224,16 @@ interface EquipmentDao {
         FROM
             unit_promotion 
         WHERE
-            unit_id =  :uid AND promotion_level >= :startRank AND promotion_level <= :endRank
+            unit_id =  :unitId AND promotion_level >= :startRank AND promotion_level <= :endRank
         GROUP BY
             unit_id
     """
     )
-    suspend fun getEquipByRank(uid: Int, startRank: Int, endRank: Int): CharacterPromotionEquip
+    suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int): CharacterPromotionEquip
 
     /**
      * 获取角色各 RANK 装备信息
+     * @param unitId 角色编号
      */
     @Query("SELECT * FROM unit_promotion WHERE unit_id = :unitId ORDER BY promotion_level DESC")
     suspend fun getAllRankEquip(unitId: Int): List<UnitPromotion>

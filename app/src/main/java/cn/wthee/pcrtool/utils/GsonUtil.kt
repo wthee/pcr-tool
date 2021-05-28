@@ -12,7 +12,6 @@ object GsonUtil {
      */
     inline fun <reified T : Any> fromJson(json: String?): T? {
         return Gson().fromJson(json, T::class.java)
-
     }
 }
 

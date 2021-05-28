@@ -6,7 +6,7 @@ import javax.inject.Inject
 /**
  * 剧情活动 Repository
  *
- * 数据来源 [EventDao]
+ * @param eventDao
  */
 class EventRepository @Inject constructor(private val eventDao: EventDao) {
 

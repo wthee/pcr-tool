@@ -37,27 +37,24 @@ const val query = """
 @Dao
 interface ClanBattleDao {
 
-
+    /**
+     * 获取怪物基本参数
+     * @param enemyId 怪物编号
+     */
     @SkipQueryVerification
     @Query("""SELECT * FROM enemy_parameter WHERE enemy_id = :enemyId""")
     suspend fun getBossAttr(enemyId: Int): EnemyParameter
 
-    @Query(
-        """
-        $query
-        GROUP BY a.clan_battle_id
-        ORDER BY a.start_time DESC
-    """
-    )
+    /**
+     * 获取所有团队战信息
+     */
+    @Query("$query GROUP BY a.clan_battle_id ORDER BY a.start_time DESC")
     suspend fun getAllClanBattleData(): List<ClanBattleInfo>
 
-    @Query(
-        """
-        $query
-        WHERE a.clan_battle_id = :clanId
-        GROUP BY a.clan_battle_id
-        ORDER BY a.start_time DESC
-    """
-    )
+    /**
+     * 获取单期团队战信息
+     * @param clanId 团队战编号
+     */
+    @Query(" $query  WHERE a.clan_battle_id = :clanId GROUP BY a.clan_battle_id ORDER BY a.start_time DESC")
     suspend fun getClanInfo(clanId: Int): ClanBattleInfo
 }

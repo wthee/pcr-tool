@@ -38,6 +38,8 @@ import kotlinx.coroutines.launch
 
 /**
  * 装备素材信息
+ *
+ * @param equipId 装备编号
  */
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
@@ -175,6 +177,8 @@ fun EquipMaterialDeatil(
 
 /**
  *  地区的装备掉落列表
+ *
+ *  @param selectedId 选择的装备
  */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi

@@ -6,7 +6,7 @@ import javax.inject.Inject
 /**
  * 卡池 Repository
  *
- * 数据来源 [GachaDao]
+ * @param gachaDao
  */
 class GachaRepository @Inject constructor(private val gachaDao: GachaDao) {
 

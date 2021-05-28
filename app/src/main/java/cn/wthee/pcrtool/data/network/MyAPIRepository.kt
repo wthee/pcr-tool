@@ -18,12 +18,13 @@ import javax.inject.Inject
 /**
  * 接口 Repository
  *
- * 数据来源 [MyAPIService]
+ * @param service 接口服务
  */
 class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
 
     /**
-     * 根据防守方 id [ids] 查询竞技场对战信息
+     * 查询竞技场对战信息
+     * @param ids 防守方队伍角色编号
      */
     suspend fun getPVPData(ids: JsonArray): ResponseData<List<PvpResultData>> {
         val region = getRegion()
@@ -56,7 +57,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
-     * 根据游戏版本 [region] 页数 [page]，查询公告信息
+     * 查询公告信息
+     * @param region 区服 2：b服，3：台服，4：日服
+     * @param page 页码
      */
     suspend fun getNews(region: Int, page: Int): ResponseData<List<NewsTable>> {
         //接口参数

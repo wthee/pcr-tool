@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * 装备 ViewModel
  *
- * 数据来源 [EquipmentRepository]
+ * @param equipmentRepository
  */
 @HiltViewModel
 class EquipmentViewModel @Inject constructor(
@@ -35,6 +35,8 @@ class EquipmentViewModel @Inject constructor(
 
     /**
      * 获取装备列表
+     *
+     * @param params 装备筛选
      */
     fun getEquips(params: FilterEquipment) {
         viewModelScope.launch {
@@ -47,6 +49,8 @@ class EquipmentViewModel @Inject constructor(
 
     /**
      * 获取装备信息
+     *
+     * @param equipId 装备编号
      */
     fun getEquip(equipId: Int) {
         viewModelScope.launch {
@@ -66,11 +70,15 @@ class EquipmentViewModel @Inject constructor(
     }
 
     /**
-     * 根据角色id [uid] 获取对应 Rank 范围 所需的装备
+     * 根据角色id [unitId] 获取对应 Rank 范围 所需的装备
+     *
+     * @param unitId 角色编号
+     * @param startRank 当前rank
+     * @param endRank 目标rank
      */
-    fun getEquipByRank(uid: Int, startRank: Int, endRank: Int) {
+    fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) {
         viewModelScope.launch {
-            val data = equipmentRepository.getEquipByRank(uid, startRank, endRank)
+            val data = equipmentRepository.getEquipByRank(unitId, startRank, endRank)
             val materials = arrayListOf<EquipmentMaterial>()
             data.getAllEquipId().forEach { map ->
                 val equip = equipmentRepository.getEquipmentData(map.key)
@@ -100,6 +108,8 @@ class EquipmentViewModel @Inject constructor(
 
     /**
      * 获取装备制作材料信息
+     *
+     * @param equip 装备信息
      */
     fun getEquipInfos(equip: EquipmentMaxData) {
         viewModelScope.launch {
@@ -109,6 +119,8 @@ class EquipmentViewModel @Inject constructor(
 
     /**
      * 获取角色 [unitId] 所有 RANK 装备列表
+     *
+     * @param unitId 角色编号
      */
     fun getAllRankEquipList(unitId: Int) {
         viewModelScope.launch {
@@ -118,7 +130,13 @@ class EquipmentViewModel @Inject constructor(
     }
 
     /**
-     * 获取合成材料
+     * 迭代获取合成材料
+     *
+     * @param materials 合成素材
+     * @param equipmentId 装备编号
+     * @param name 装备名称
+     * @param count 所需数量
+     * @param craftFlg 是否可合成 0：不可，1：可合成
      */
     private suspend fun getAllMaterial(
         materials: ArrayList<EquipmentMaterial>,
@@ -162,6 +180,8 @@ class EquipmentViewModel @Inject constructor(
 
     /**
      * 获取装备制作材料信息
+     *
+     * @param equip 装备信息
      */
     private suspend fun getEquipCraft(equip: EquipmentMaxData): ArrayList<EquipmentMaterial> {
         val materials = arrayListOf<EquipmentMaterial>()
@@ -180,19 +200,21 @@ class EquipmentViewModel @Inject constructor(
     }
 
     /**
-     * 根据 [equipmentId]，获取装备掉落关卡信息
+     * 获取装备掉落关卡信息
+     *
+     * @param equipId 装备编号
      */
-    fun getDropInfos(equipmentId: Int) {
+    fun getDropInfos(equipId: Int) {
         viewModelScope.launch {
-            if (equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-                val equip = equipmentRepository.getEquipmentData(equipmentId)
+            if (equipId != Constants.UNKNOWN_EQUIP_ID) {
+                val equip = equipmentRepository.getEquipmentData(equipId)
                 val fixedId = if (equip.craftFlg == 1) {
-                    equipmentRepository.getEquipmentCraft(equipmentId).cid1
+                    equipmentRepository.getEquipmentCraft(equipId).cid1
                 } else
-                    equipmentId
+                    equipId
                 //获取装备掉落信息
                 val infos =
-                    equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipmentId))
+                    equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipId))
                 dropInfo.postValue(infos)
             }
         }
@@ -200,9 +222,11 @@ class EquipmentViewModel @Inject constructor(
 
     /**
      * 根据掉率排序
+     *
+     * @param equipId 装备编号
      */
-    private fun getSort(eid: Int): java.util.Comparator<EquipmentDropInfo> {
-        val str = eid.toString()
+    private fun getSort(equipId: Int): java.util.Comparator<EquipmentDropInfo> {
+        val str = equipId.toString()
         return Comparator { o1: EquipmentDropInfo, o2: EquipmentDropInfo ->
             val a = o1.getOddOfEquip(str)
             val b = o2.getOddOfEquip(str)

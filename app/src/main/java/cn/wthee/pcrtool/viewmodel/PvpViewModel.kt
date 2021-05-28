@@ -16,11 +16,12 @@ import javax.inject.Inject
 /**
  * 竞技场收藏 ViewModel
  *
- * 数据来源 [PvpRepository]
+ * @param pvpRepository
+ * @param apiRepository
  */
 @HiltViewModel
 class PvpViewModel @Inject constructor(
-    private val repository: PvpRepository,
+    private val pvpRepository: PvpRepository,
     private val apiRepository: MyAPIRepository
 ) : ViewModel() {
 
@@ -34,7 +35,7 @@ class PvpViewModel @Inject constructor(
      */
     fun getAllFavorites(region: Int) {
         viewModelScope.launch {
-            val data = repository.getLiked(region)
+            val data = pvpRepository.getLiked(region)
             allFavorites.postValue(data)
         }
     }
@@ -44,7 +45,7 @@ class PvpViewModel @Inject constructor(
      */
     fun getFavoritesList(defs: String, region: Int) {
         viewModelScope.launch {
-            val data = repository.getLikedList(defs, region)
+            val data = pvpRepository.getLikedList(defs, region)
             favorites.postValue(data)
         }
     }
@@ -54,7 +55,7 @@ class PvpViewModel @Inject constructor(
      */
     fun insert(data: PvpFavoriteData) {
         viewModelScope.launch {
-            repository.insert(data)
+            pvpRepository.insert(data)
             getFavoritesList(data.defs, data.region)
         }
     }
@@ -64,7 +65,7 @@ class PvpViewModel @Inject constructor(
      */
     fun delete(atks: String, defs: String, region: Int) {
         viewModelScope.launch {
-            repository.delete(atks, defs, region)
+            pvpRepository.delete(atks, defs, region)
             getAllFavorites(region)
             getFavoritesList(defs, region)
         }

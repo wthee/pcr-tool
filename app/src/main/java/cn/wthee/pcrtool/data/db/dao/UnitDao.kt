@@ -7,7 +7,10 @@ import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.data.db.entity.UnitPromotionStatus
 import cn.wthee.pcrtool.data.db.entity.UnitRarity
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
+import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 
 //角色筛选条件
 const val characterWhere =
@@ -45,6 +48,16 @@ interface UnitDao {
 
     /**
      * 根据筛选、排序条件，获取角色分页列表 [CharacterInfo]
+     * @param sortType 排序类型
+     * @param asc 排序升降 "asc":升序，"desc":降序
+     * @param unitName 角色名字
+     * @param pos1 站位范围开始
+     * @param pos2 站位范围结束
+     * @param atkType 0:全部，1：物理，2：魔法
+     * @param guild 角色所属公会名
+     * @param showAll 0：仅收藏，1：全部
+     * @param r6 0：全部，1：仅六星解放
+     * @param starIds 收藏的角色编号
      */
     @Transaction
     @Query(
@@ -86,28 +99,10 @@ interface UnitDao {
         atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>
     ): List<CharacterInfo>
 
-    /**
-     * 根据筛选、排序条件，获取角色数量 [Int]
-     */
-    @Transaction
-    @Query(
-        """
-        SELECT
-            COUNT(unit_profile.unit_id)
-        FROM
-            unit_profile
-            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
-            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
-        $characterWhere
-            """
-    )
-    suspend fun getInfoAndDataCount(
-        unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>
-    ): Int
 
     /**
-     * 根据角色id [unitId] 获取角色详情基本数据 [CharacterInfoPro]
+     * 获取角色详情基本资料
+     * @param unitId 角色编号
      */
     @Transaction
     @Query(
@@ -150,53 +145,66 @@ interface UnitDao {
     suspend fun getInfoPro(unitId: Int): CharacterInfoPro?
 
     /**
-     * 根据位置范围 [start] <= x <= [end] 获取 [PvpCharacterData] 列表
+     * 根据位置范围 [start] <= x <= [end] 获取角色列表
+     * @param start 开始位置
+     * @param end 结束位置
      */
     @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
 
-    @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE unit_id IN (:ids)  AND comment <> \"\" ORDER BY search_area_width")
-    suspend fun getCharacterByIds(ids: ArrayList<Int>): List<PvpCharacterData>
-
+    /**
+     * 获取角色列表
+     * @param unitIds 角色编号
+     */
+    @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE unit_id IN (:unitIds)  AND comment <> \"\" ORDER BY search_area_width")
+    suspend fun getCharacterByIds(unitIds: ArrayList<Int>): List<PvpCharacterData>
 
     /**
-     * 根据 [unitId] 和 [rank] ,获取所需装备数据 [UnitPromotion]
+     * 获取角色所需装备数据
+     * @param unitId 角色编号
+     * @param rank 角色rank
      */
     @Query("SELECT * FROM unit_promotion WHERE unit_promotion.unit_id = :unitId AND unit_promotion.promotion_level = :rank ")
     suspend fun getRankEquipment(unitId: Int, rank: Int): UnitPromotion
 
     /**
-     * 根据 [unitId] 和 [rank]，获取角色 Rank 属性状态 [UnitPromotionStatus]
+     * 获取角色 Rank 属性状态
+     * @param unitId 角色编号
+     * @param rank 角色rank
      */
     @Query("SELECT * FROM unit_promotion_status WHERE unit_promotion_status.unit_id = :unitId AND unit_promotion_status.promotion_level = :rank ")
     suspend fun getRankStatus(unitId: Int, rank: Int): UnitPromotionStatus?
 
     /**
-     * 根据 [unitId] 和 [rarity]，获取角色角色星级提供的属性 [UnitRarity]
+     * 获取角色角色星级提供的属性
+     * @param unitId 角色编号
+     * @param rarity 角色星级
      */
     @Query("SELECT * FROM unit_rarity WHERE unit_rarity.unit_id = :unitId AND unit_rarity.rarity = :rarity ")
     suspend fun getRarity(unitId: Int, rarity: Int): UnitRarity
 
     /**
-     *  根据 [unitId]，获取角色 Rank 最大值 [Int]
+     * 获取角色 Rank 最大值
+     * @param unitId 角色编号
      */
     @Query("SELECT MAX( promotion_level ) FROM unit_promotion WHERE unit_id = :unitId")
     suspend fun getMaxRank(unitId: Int): Int
 
     /**
-     * 根据 [unitId]，角色星级最大值 [Int]
+     * 获取角色星级最大值
+     * @param unitId 角色编号
      */
     @Query("SELECT MAX( rarity ) FROM unit_rarity  WHERE unit_id = :unitId")
     suspend fun getMaxRarity(unitId: Int): Int
 
     /**
-     * 获取所有公会信息 [GuildData]
+     * 获取所有公会信息
      */
     @Query("SELECT * FROM guild")
     suspend fun getGuilds(): List<GuildData>
 
     /**
-     * 获取已六星角色 id 列表 [Int]
+     * 获取已六星角色 id 列表
      */
     @Transaction
     @Query(
@@ -212,27 +220,8 @@ interface UnitDao {
     suspend fun getR6Ids(): List<Int>
 
     /**
-     * 根据 [unitId]，获取角色碎片掉落信息 [ItemDropInfo]
-     */
-    @Transaction
-    @Query(
-        """
-        SELECT
-            a.quest_id,
-            a.quest_name,
-            b.item_id,
-            b.item_name
-        FROM
-            quest_data AS a
-            LEFT JOIN item_data AS b ON a.reward_image_1 = b.item_id
-        WHERE a.area_id / 1000 = 12
-        AND b.item_id % 10000 = :unitId / 100
-        """
-    )
-    suspend fun getItemDropInfos(unitId: Int): List<ItemDropInfo>
-
-    /**
-     *根据 [unitId]，获取角色剧情属性 [CharacterStoryAttr]
+     * 获取角色剧情属性
+     * @param unitId 角色编号
      */
     @Transaction
     @Query(

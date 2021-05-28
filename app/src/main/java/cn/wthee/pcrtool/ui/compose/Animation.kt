@@ -23,7 +23,7 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 350, easing = FastOutLinearInEasing, delayMillis = 50)
+    return tween(durationMillis = 350, easing = FastOutLinearInEasing)
 }
 
 /**
@@ -42,7 +42,7 @@ fun SlideAnimation(
         modifier = modifier,
         enter = if (animOn) {
             slideInVertically(
-                initialOffsetY = { 40 },
+                initialOffsetY = { 30 },
                 animationSpec = defaultTween()
             )
         } else {

@@ -10,36 +10,48 @@ import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 interface PvpDao {
 
     /**
-     * 根据游戏版本 [region]，获取收藏信息
+     * 获取收藏信息
+     * @param region 区服版本
      */
     @Query("SELECT * FROM pvp_like WHERE region = :region ORDER BY date DESC")
     suspend fun getAll(region: Int): List<PvpFavoriteData>
 
     /**
-     * 根据游戏版本 [region] 进攻 [atks] 防守 [defs]，获取收藏信息
+     * 获取单个收藏信息
+     * @param atks 进攻队伍成员编码
+     * @param defs 防守队伍成员编码
+     * @param region 区服版本
      */
     @Query("SELECT * FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region")
     suspend fun getLiked(atks: String, defs: String, region: Int): PvpFavoriteData?
 
+    /**
+     * 获取收藏列表
+     * @param defs 防守队伍成员编码
+     * @param region 区服版本
+     */
     @Query("SELECT * FROM pvp_like WHERE defs = :defs AND region = :region")
     suspend fun getLikedList(defs: String, region: Int): List<PvpFavoriteData>
 
-
     /**
-     * 插入数据 [PvpFavoriteData]
+     * 插入数据
+     * @param data 对战信息
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(data: PvpFavoriteData)
 
     /**
-     * 根据游戏版本 [region] 进攻 [atks] 防守 [defs]，删除收藏信息
+     * 删除收藏信息
+     * @param atks 进攻队伍成员编码
+     * @param defs 防守队伍成员编码
+     * @param region 区服版本
      */
     @Query("DELETE  FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region")
     suspend fun delete(atks: String, defs: String, region: Int)
 
-
     /**
-     * 删除数据 [PvpFavoriteData]
+     * 删除数据
+     * @param data 对战信息
      */
     @Delete
     suspend fun delete(data: PvpFavoriteData)

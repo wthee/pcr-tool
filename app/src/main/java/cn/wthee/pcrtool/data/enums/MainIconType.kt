@@ -4,6 +4,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
+/**
+ * Google Font Icon
+ *
+ * @param icon 矢量图标
+ */
 enum class MainIconType(val icon: ImageVector) {
     /**
      * 向下折叠

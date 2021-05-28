@@ -14,7 +14,7 @@ import cn.wthee.pcrtool.data.db.view.EventData
 interface EventDao {
 
     /**
-     * 获取所有活动记录 [EventData]
+     * 获取所有活动记录
      */
     @Transaction
     @Query(
@@ -56,7 +56,8 @@ interface EventDao {
 
 
     /**
-     * 根据 [storyId] 获取活动剧情列表
+     * 获取活动剧情列表
+     * @param storyId 剧情活动编号
      */
     @Query("SELECT * FROM event_story_detail WHERE story_group_id = :storyId")
     suspend fun getStoryDetails(storyId: Int): List<EventStoryDetail>

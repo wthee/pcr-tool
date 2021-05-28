@@ -17,11 +17,11 @@ import javax.inject.Inject
 /**
  * 角色技能 ViewModel
  *
- * 数据来源 [SkillRepository]
+ * @param skillRepository
  */
 @HiltViewModel
 class SkillViewModel @Inject constructor(
-    private val repository: SkillRepository
+    private val skillRepository: SkillRepository
 ) : ViewModel() {
 
 
@@ -33,12 +33,16 @@ class SkillViewModel @Inject constructor(
     var allIconTypes = MutableLiveData<ArrayList<HashMap<Int, Int>>>()
 
     /**
-     * 根据 [unitId]， 获取角色技能信息
+     * 获取角色技能信息
+     *
+     * @param lv 技能能级
+     * @param atk 基础攻击力
+     * @param unitId 角色编号
      */
     fun getCharacterSkills(lv: Int, atk: Int, unitId: Int) {
         viewModelScope.launch {
             try {
-                val data = repository.getUnitSkill(unitId)
+                val data = skillRepository.getUnitSkill(unitId)
                 getSkillInfo(data.getAllSkillId(), atk, arrayListOf(lv))
             } catch (e: Exception) {
                 MainScope().launch {
@@ -50,6 +54,8 @@ class SkillViewModel @Inject constructor(
 
     /**
      * 获取怪物技能信息
+     *
+     * @param list 怪物基本参数列表
      */
     fun getAllEnemySkill(list: List<EnemyParameter>) {
         viewModelScope.launch {
@@ -57,7 +63,7 @@ class SkillViewModel @Inject constructor(
                 val allSkill = arrayListOf<List<SkillDetail>>()
                 val allIcon = arrayListOf<HashMap<Int, Int>>()
                 list.forEach {
-                    val data = repository.getUnitSkill(it.unit_id)
+                    val data = skillRepository.getUnitSkill(it.unit_id)
                     val (infos, map) = getSkill(
                         data.getEnemySkillId(),
                         it.getSkillLv(),
@@ -91,6 +97,13 @@ class SkillViewModel @Inject constructor(
 
     }
 
+    /**
+     * 获取技能信息
+     *
+     * @param skillIds 技能编号列表
+     * @param lvs 技能等级列表
+     * @param atk 基础攻击力
+     */
     private suspend fun getSkill(
         skillIds: List<Int>,
         lvs: List<Int>,
@@ -100,7 +113,7 @@ class SkillViewModel @Inject constructor(
         val map = hashMapOf<Int, Int>()
         //技能信息
         skillIds.forEachIndexed { index, sid ->
-            val skill = repository.getSkillData(sid)
+            val skill = skillRepository.getSkillData(sid)
             if (skill != null) {
                 val lv = if (lvs.size == 1) lvs[0] else lvs[index]
                 var aid = skill.skill_id % 1000
@@ -117,7 +130,7 @@ class SkillViewModel @Inject constructor(
                     lv,
                     atk
                 )
-                val actions = repository.getSkillActions(0, lv, atk, skill.getAllActionId())
+                val actions = skillRepository.getSkillActions(lv, atk, skill.getAllActionId())
                 val dependIds = skill.getSkillDependData()
                 actions.forEachIndexed { i, action ->
                     if (i != 0) {
@@ -132,22 +145,29 @@ class SkillViewModel @Inject constructor(
     }
 
     /**
-     * 根据 [unitId]，角色技能循环
+     * 获取角色技能循环
+     *
+     * @param unitId 角色编号
      */
     fun getCharacterSkillLoops(unitId: Int) {
         viewModelScope.launch {
             //技能循环
-            val pattern = repository.getAttackPattern(unitId)
+            val pattern = skillRepository.getAttackPattern(unitId)
             atkPattern.postValue(pattern)
         }
     }
 
+    /**
+     * 获取全部技能循环
+     *
+     * @param list 怪物基本参数列表
+     */
     fun getAllSkillLoops(list: List<EnemyParameter>) {
         viewModelScope.launch {
             //技能循环
             val allList = arrayListOf<List<AttackPattern>>()
             list.forEach {
-                val pattern = repository.getAttackPattern(it.unit_id)
+                val pattern = skillRepository.getAttackPattern(it.unit_id)
                 allList.add(pattern)
             }
             allAtkPattern.postValue(allList)

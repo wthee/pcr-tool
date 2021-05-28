@@ -32,6 +32,9 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
 import kotlinx.coroutines.launch
 
+/**
+ * 设置页面
+ */
 @ExperimentalAnimationApi
 @Composable
 fun MainSettings() {

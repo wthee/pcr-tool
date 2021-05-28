@@ -31,6 +31,12 @@ import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * rank 范围装备素材数量统计
+ *
+ * @param unitId 角色编号
+ * @param maxRank 角色最大rank
+ */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi

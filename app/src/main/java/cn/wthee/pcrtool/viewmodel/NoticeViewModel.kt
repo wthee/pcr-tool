@@ -15,10 +15,11 @@ import javax.inject.Inject
 /**
  * 通知 ViewModel
  *
- * 数据来源 [MyAPIRepository]
+ * @param apiRepository
  */
 @HiltViewModel
-class NoticeViewModel @Inject constructor(private val repository: MyAPIRepository) : ViewModel() {
+class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIRepository) :
+    ViewModel() {
 
     val notice = MutableLiveData<ResponseData<List<AppNotice>>>()
 
@@ -36,7 +37,7 @@ class NoticeViewModel @Inject constructor(private val repository: MyAPIRepositor
      */
     fun getNotice() {
         viewModelScope.launch {
-            val data = repository.getNotice()
+            val data = apiRepository.getNotice()
             notice.postValue(data)
         }
     }
@@ -47,7 +48,7 @@ class NoticeViewModel @Inject constructor(private val repository: MyAPIRepositor
     fun check() {
         viewModelScope.launch {
             try {
-                val version = repository.getAppUpdateNotice()
+                val version = apiRepository.getAppUpdateNotice()
                 if (version.status == 0) {
                     if (version.data != null && version.data == true) {
                         updateApp.postValue(1)

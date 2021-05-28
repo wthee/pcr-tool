@@ -14,8 +14,6 @@ import javax.inject.Inject
 
 /**
  * 公告 ViewModel
- *
- * 数据来源 [NewsRemoteMediator]
  */
 @HiltViewModel
 @ExperimentalPagingApi

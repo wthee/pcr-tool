@@ -10,7 +10,7 @@ val df: DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
 val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
 
 /**
- * 格式化时间
+ * 格式化时间 yyyy/MM/dd HH:mm:ss
  */
 fun String.formatTime(): String {
     val list = this.split(" ")[0].split("/")

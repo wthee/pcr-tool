@@ -28,8 +28,10 @@ import kotlinx.coroutines.launch
 
 /**
  * RANK 选择页面
- * type: 0 默认
- * type: 1 当前 <= 目标
+ * @param rank0 当前rank
+ * @param rank1 目标rank
+ * @param maxRank rank最大值
+ * @param type 0：默认，1：限制（当前[rank0] <= 目标[rank1]）
  */
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi

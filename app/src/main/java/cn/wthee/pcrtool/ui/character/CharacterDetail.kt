@@ -37,6 +37,8 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色信息
+ *
+ * @param unitId 角色编号
  */
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -266,7 +268,7 @@ fun CharacterDetail(
                                 }
                                 //技能
                                 CharacterSkill(
-                                    id = unitId,
+                                    unitId = unitId,
                                     level = level.value!!,
                                     atk = allData.value!!.sumAttr.atk.int
                                 )
@@ -375,6 +377,9 @@ fun CharacterDetail(
 
 /**
  * 角色 RANK 装备
+ * @param unitId 角色编号
+ * @param rank 当前rank
+ * @param equips 装备列表
  */
 @Composable
 private fun CharacterEquip(
@@ -457,6 +462,9 @@ private fun CharacterEquip(
 
 /**
  * 专武信息
+ * @param uniqueEquipLevelMax 最大等级
+ * @param silderState 等级滑动条状态
+ * @param uniqueEquipmentMaxData 专武数值信息
  */
 @Composable
 private fun UniqueEquip(
@@ -518,6 +526,8 @@ private fun UniqueEquip(
 
 /**
  * 星级选择
+ * @param max 最大值
+ * @param rarity 当前值
  */
 @Composable
 private fun StarSelect(

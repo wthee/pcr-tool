@@ -38,6 +38,12 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色 RANK 对比
+ *
+ * @param unitId 角色编号
+ * @param maxRank 角色rank最大值
+ * @param level 角色等级
+ * @param rarity 角色星级
+ * @param uniqueEquipLevel 角色专武等级
  */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi

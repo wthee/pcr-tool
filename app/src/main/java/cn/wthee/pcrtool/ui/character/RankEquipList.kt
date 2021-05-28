@@ -25,7 +25,9 @@ import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
- * 角色各 RANK 装备列表
+ * 角色 RANK 选择装备列表
+ *
+ * @param unitId 角色编号
  */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi

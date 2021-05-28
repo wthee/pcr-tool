@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.view.DropEvent
-import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.hourInt
@@ -18,7 +17,7 @@ import kotlin.Comparator
 /**
  * 日历 ViewModel
  *
- * 数据来源 [MyAPIRepository] [EventRepository]
+ * @param eventRepository
  */
 @HiltViewModel
 class CalendarViewModel @Inject constructor(

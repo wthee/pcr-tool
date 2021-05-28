@@ -13,11 +13,11 @@ import javax.inject.Inject
 /**
  * 活动 ViewModel
  *
- * 数据来源 [EventRepository]
+ * @param eventRepository
  */
 @HiltViewModel
 class EventViewModel @Inject constructor(
-    private val repository: EventRepository
+    private val eventRepository: EventRepository
 ) : ViewModel() {
 
     var events = MutableLiveData<List<EventData>>()
@@ -29,18 +29,8 @@ class EventViewModel @Inject constructor(
      */
     fun getEventHistory() {
         viewModelScope.launch {
-            val data = repository.getAllEvents()
+            val data = eventRepository.getAllEvents()
             events.postValue(data)
-        }
-    }
-
-    /**
-     * 获取活动剧情记录
-     */
-    fun getStoryDetails(storyId: Int) {
-        viewModelScope.launch {
-            val data = repository.getStoryDetails(storyId)
-            storys.postValue(data)
         }
     }
 }

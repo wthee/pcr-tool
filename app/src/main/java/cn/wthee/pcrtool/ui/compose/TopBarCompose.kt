@@ -24,6 +24,9 @@ import com.google.accompanist.insets.toPaddingValues
 
 /**
  * 顶部工具栏
+ *
+ * @param titleId 字符串资源 id
+ * @param scrollState 页面滚动状态
  */
 @Composable
 fun TopBarCompose(
@@ -57,7 +60,9 @@ fun TopBarCompose(
     }
 }
 
-//状态栏
+/**
+ * 状态栏
+ */
 @Composable
 fun StatusBarBox(content: @Composable () -> Unit) {
     val statusBarHeight =
@@ -78,6 +83,8 @@ fun StatusBarBox(content: @Composable () -> Unit) {
 
 /**
  * 距离屏幕顶部的距离
+ *
+ * @param scrollState 页面滚动状态
  */
 @Composable
 fun marginTopBar(scrollState: LazyListState): Dp {

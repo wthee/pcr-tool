@@ -7,7 +7,7 @@ import javax.inject.Inject
 /**
  * 竞技场收藏 Repository
  *
- * 数据来源 [PvpDao]
+ * @param pvpDao
  */
 class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
 

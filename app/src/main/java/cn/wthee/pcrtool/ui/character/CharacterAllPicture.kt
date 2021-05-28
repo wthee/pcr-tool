@@ -41,6 +41,9 @@ import kotlinx.coroutines.launch
 /**
  * 角色图片
  *
+ * fixme 指示器用角色icon替代
+ *
+ * @param unitId 角色编号
  */
 @ExperimentalAnimationApi
 @ExperimentalPagerApi

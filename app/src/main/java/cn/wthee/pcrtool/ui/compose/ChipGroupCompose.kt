@@ -22,11 +22,11 @@ import com.google.accompanist.flowlayout.FlowRow
 
 
 /**
- * chip 选择组
+ * ChipGroup
  *
- * type: 0 默认
- * 1: rank 选择模式
- * 2: 阶段选择
+ * @param items chip 数据列表
+ * @param selectIndex 选择位置状态
+ * @param type 0：默认，1：rank选择（字体颜色改变），2：阶段选择（字体颜色改变）
  */
 @Composable
 fun ChipGroup(
@@ -43,7 +43,7 @@ fun ChipGroup(
 }
 
 /**
- * chip 选择组
+ * ChipItem
  */
 @Composable
 fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: Int, type: Int) {

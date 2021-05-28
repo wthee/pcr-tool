@@ -43,9 +43,8 @@ object DatabaseUpdater {
     /**
      * 检查是否需要更新
      *
-     * [from] -1:正常调用  0：点击版本号  1：切换版本调用
-     *
-     * [force] 是否强制更新
+     * @param from  -1:正常调用  0：点击版本号  1：切换版本调用
+     * @param force 是否强制更新
      */
     suspend fun checkDBVersion(from: Int = -1, force: Boolean = false) {
         //获取数据库最新版本

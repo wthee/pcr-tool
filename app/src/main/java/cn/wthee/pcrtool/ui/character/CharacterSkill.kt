@@ -11,15 +11,19 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 
 /**
  * 角色技能列表
+ *
+ * @param unitId 角色编号
+ * @param level 角色等级
+ * @param atk 角色攻击力
  */
 @Composable
 fun CharacterSkill(
-    id: Int,
+    unitId: Int,
     level: Int,
     atk: Int,
 ) {
     Column {
-        SkillCompose(level = level, atk = atk, id = id)
+        SkillCompose(unitId = unitId, level = level, atk = atk)
         CommonSpacer()
         Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
     }

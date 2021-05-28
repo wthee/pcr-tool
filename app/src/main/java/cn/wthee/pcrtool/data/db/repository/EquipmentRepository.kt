@@ -7,11 +7,11 @@ import javax.inject.Inject
 /**
  * 装备Repository
  *
- * 数据来源 [EquipmentDao]
+ * @param equipmentDao
  */
 class EquipmentRepository @Inject constructor(private val equipmentDao: EquipmentDao) {
 
-    suspend fun getEquipmentData(eid: Int) = equipmentDao.getEquipInfos(eid)
+    suspend fun getEquipmentData(equipId: Int) = equipmentDao.getEquipInfos(equipId)
 
     suspend fun getEquipTypes() = equipmentDao.getEquipTypes()
 
@@ -24,16 +24,17 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
             filter.starIds
         )
 
-    suspend fun getEquipDropAreas(eid: Int) = equipmentDao.getEquipDropAreas(eid)
+    suspend fun getEquipDropAreas(equipId: Int) = equipmentDao.getEquipDropAreas(equipId)
 
-    suspend fun getEquipmentCraft(eid: Int) = equipmentDao.getEquipmentCraft(eid)
+    suspend fun getEquipmentCraft(equipId: Int) = equipmentDao.getEquipmentCraft(equipId)
 
-    suspend fun getUniqueEquipInfo(uid: Int, lv: Int) = equipmentDao.getUniqueEquipInfos(uid, lv)
+    suspend fun getUniqueEquipInfo(unitId: Int, lv: Int) =
+        equipmentDao.getUniqueEquipInfos(unitId, lv)
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
 
-    suspend fun getEquipByRank(uid: Int, startRank: Int, endRank: Int) =
-        equipmentDao.getEquipByRank(uid, startRank, endRank)
+    suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) =
+        equipmentDao.getEquipByRank(unitId, startRank, endRank)
 
     /**
      * 获取角色各 RANK 装备信息

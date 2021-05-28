@@ -13,11 +13,11 @@ import javax.inject.Inject
 /**
  * 活动 ViewModel
  *
- * 数据来源 [ClanRepository]
+ * @param clanRepository
  */
 @HiltViewModel
 class ClanViewModel @Inject constructor(
-    private val repository: ClanRepository
+    private val clanRepository: ClanRepository
 ) : ViewModel() {
 
     var clanInfoList = MutableLiveData<List<ClanBattleInfo>>()
@@ -30,29 +30,33 @@ class ClanViewModel @Inject constructor(
      */
     fun getAllClanBattleData() {
         viewModelScope.launch {
-            val data = repository.getAllClanBattleData()
+            val data = clanRepository.getAllClanBattleData()
             clanInfoList.postValue(data)
         }
     }
 
     /**
      * 获取单个团队战信息
+     *
+     * @param clanId 团队战编号
      */
     fun getClanInfo(clanId: Int) {
         viewModelScope.launch {
-            val data = repository.getClanInfo(clanId)
+            val data = clanRepository.getClanInfo(clanId)
             clanInfo.postValue(data)
         }
     }
 
     /**
      * 获取 BOSS 属性
+     *
+     * @param enemyIds boss编号列表
      */
     fun getAllBossAttr(enemyIds: List<Int>) {
         viewModelScope.launch {
             val list = arrayListOf<EnemyParameter>()
             enemyIds.forEach {
-                val data = repository.getBossAttr(it)
+                val data = clanRepository.getBossAttr(it)
                 list.add(data)
             }
             allClanBossAttr.postValue(list)

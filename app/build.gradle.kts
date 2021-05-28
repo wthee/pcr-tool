@@ -145,7 +145,7 @@ dependencies {
 
     //umeng
     implementation("com.umeng.umsdk:common:9.3.8")
-    implementation("com.umeng.umsdk:asms:1.2.2")
+    implementation("com.umeng.umsdk:asms:1.2.3")
     implementation("com.umeng.umsdk:apm:1.2.0")
 
     //Work

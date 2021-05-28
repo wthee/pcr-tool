@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.db.view.GachaInfo
 interface GachaDao {
 
     /**
-     * 获取所有卡池记录 [GachaInfo]
+     * 获取所有卡池记录
      */
     @Transaction
     @Query(

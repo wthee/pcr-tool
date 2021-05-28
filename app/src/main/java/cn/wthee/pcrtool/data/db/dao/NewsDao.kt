@@ -20,13 +20,15 @@ interface NewsDao {
     suspend fun insertAll(news: List<NewsTable>)
 
     /**
-     * 获取公告 [NewsTable]
+     * 获取公告
+     * @param query 查询筛选条件（区服区分）
      */
     @Query("SELECT * FROM news WHERE id LIKE :query")
     fun pagingSource(query: String): PagingSource<Int, NewsTable>
 
     /**
-     * 根据 [region] 清空数据
+     * 清空数据
+     * @param region 区服
      */
     @Query("DELETE FROM news WHERE id LIKE :region")
     suspend fun clearAll(region: String)

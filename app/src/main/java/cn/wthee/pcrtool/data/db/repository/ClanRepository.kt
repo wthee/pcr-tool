@@ -6,7 +6,7 @@ import javax.inject.Inject
 /**
  * 团队战 Repository
  *
- * 数据来源 [ClanBattleDao]
+ * @param clanBattleDao
  */
 class ClanRepository @Inject constructor(private val clanBattleDao: ClanBattleDao) {
 

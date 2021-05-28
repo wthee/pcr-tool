@@ -20,7 +20,8 @@ import javax.inject.Inject
 /**
  * 角色面板属性 ViewModel
  *
- * 数据来源 [UnitRepository] [EquipmentRepository]
+ * @param unitRepository
+ * @param equipmentRepository
  *
  */
 @HiltViewModel
@@ -40,6 +41,11 @@ class CharacterAttrViewModel @Inject constructor(
     /**
      * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
+     * @param unitId 角色编号
+     * @param level 角色等级
+     * @param rank 角色rank
+     * @param rarity 角色星级
+     * @param uniqueEquipLevel 角色专武等级
      */
     fun getCharacterInfo(unitId: Int, level: Int, rank: Int, rarity: Int, uniqueEquipLevel: Int) {
         //计算属性
@@ -51,8 +57,7 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     * 根据角色 id  星级 等级 专武等级
-     * 获取角色属性信息 [Attr]
+     * 获取角色属性信息
      */
     private suspend fun getAttrs(
         unitId: Int,
@@ -120,7 +125,9 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     *根据 [unitId]，获取角色剧情属性 [Attr]
+     * 获取角色剧情属性
+     *
+     * @param unitId 角色编号
      */
     private suspend fun getStoryAttrs(unitId: Int): Attr {
         val storyAttr = Attr()
@@ -136,11 +143,13 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     * 根据 [unitId]，获取最大Rank和星级
+     * 获取最大Rank和星级
      * 0: level
      * 1: rank
      * 3: rarity
      * 4: uniqueEquipLevel
+     *
+     * @param unitId 角色编号
      */
     suspend fun getMaxRankAndRarity(unitId: Int): ArrayList<Int> {
         try {
@@ -156,7 +165,9 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     * 根据 [unitId]，判断角色是否有技能等信息
+     * 判断角色是否有技能等信息
+     *
+     * @param unitId 角色编号
      */
     fun isUnknown(unitId: Int) {
         viewModelScope.launch {
@@ -170,7 +181,10 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     * 获取指定角色属性
+     * 获取指定角色属性对比
+     *
+     * @param rank0 当前rank
+     * @param rank1 目标rank
      */
     fun getUnitAttrCompare(
         unitId: Int,

@@ -29,15 +29,19 @@ import com.google.accompanist.flowlayout.SizeMode
 
 /**
  * 角色技能列表
+ *
+ * @param unitId 角色编号
+ * @param level 等级
+ * @param atk 攻击力
  */
 @Composable
 fun SkillCompose(
+    unitId: Int,
     level: Int = 0,
     atk: Int,
-    id: Int,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    skillViewModel.getCharacterSkills(level, atk, id)
+    skillViewModel.getCharacterSkills(level, atk, unitId)
     val skillList = skillViewModel.skills.observeAsState().value ?: listOf()
 
     Column(

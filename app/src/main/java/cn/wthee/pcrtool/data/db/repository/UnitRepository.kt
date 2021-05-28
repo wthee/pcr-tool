@@ -7,7 +7,7 @@ import javax.inject.Inject
 /**
  * 角色 Repository
  *
- * 数据来源 [UnitDao]
+ * @param unitDao
  */
 class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
@@ -24,12 +24,12 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         filter.starIds
     )
 
-    suspend fun getInfoPro(uid: Int) = unitDao.getInfoPro(uid)
+    suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
 
     suspend fun getCharacterByPosition(start: Int, end: Int) =
         unitDao.getCharacterByPosition(start, end)
 
-    suspend fun getCharacterByIds(ids: ArrayList<Int>) = unitDao.getCharacterByIds(ids)
+    suspend fun getCharacterByIds(unitIds: ArrayList<Int>) = unitDao.getCharacterByIds(unitIds)
 
 
     suspend fun getEquipmentIds(unitId: Int, rank: Int) =
@@ -39,15 +39,13 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getRarity(unitId: Int, rarity: Int) = unitDao.getRarity(unitId, rarity)
 
-    suspend fun getMaxRank(id: Int) = unitDao.getMaxRank(id)
+    suspend fun getMaxRank(unitId: Int) = unitDao.getMaxRank(unitId)
 
-    suspend fun getMaxRarity(id: Int) = unitDao.getMaxRarity(id)
+    suspend fun getMaxRarity(unitId: Int) = unitDao.getMaxRarity(unitId)
 
     suspend fun getGuilds() = unitDao.getGuilds()
 
     suspend fun getR6Ids() = unitDao.getR6Ids()
-
-    suspend fun getItemDropInfos(unitId: Int) = unitDao.getItemDropInfos(unitId)
 
     suspend fun getCharacterStoryStatus(unitId: Int) = unitDao.getCharacterStoryStatus(unitId)
 

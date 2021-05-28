@@ -18,7 +18,10 @@ fun hasPermissions(context: Context, permissions: Array<String>) = permissions.a
 }
 
 /**
- * 添加 [str] 到系统剪切板
+ * 添加文本 [str] 系统剪切板
+ *
+ * @param str 文本内容
+ * @param tipText 复制提示
  */
 fun addToClip(str: String, tipText: String = "内容已复制~") {
     val clipboardManager =
@@ -30,6 +33,9 @@ fun addToClip(str: String, tipText: String = "内容已复制~") {
 
 /**
  * 在浏览器中打开 [url]
+ *
+ * @param url 链接
+ * @param title 标题
  */
 fun openWebView(context: Context, url: String, title: String = "请选择浏览器") {
     val intent = Intent()

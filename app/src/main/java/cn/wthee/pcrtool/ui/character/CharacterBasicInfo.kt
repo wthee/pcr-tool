@@ -21,6 +21,8 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
 /**
  * 角色基本信息
+ *
+ * @param unitId 角色编号
  */
 @ExperimentalAnimationApi
 @Composable

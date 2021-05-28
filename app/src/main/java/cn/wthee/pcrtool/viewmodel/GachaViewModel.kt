@@ -12,11 +12,11 @@ import javax.inject.Inject
 /**
  * 卡池 ViewModel
  *
- * 数据来源 [GachaRepository]
+ * @param gachaRepository
  */
 @HiltViewModel
 class GachaViewModel @Inject constructor(
-    private val repository: GachaRepository
+    private val gachaRepository: GachaRepository
 ) : ViewModel() {
 
     var gachas = MutableLiveData<List<GachaInfo>>()
@@ -27,7 +27,7 @@ class GachaViewModel @Inject constructor(
      */
     fun getGachaHistory() {
         viewModelScope.launch {
-            val data = repository.getGachaHistory()
+            val data = gachaRepository.getGachaHistory()
             gachas.postValue(data)
         }
     }

@@ -17,8 +17,3 @@ val CardTopShape = RoundedCornerShape(
     topStart = Dimen.cardRadius,
     topEnd = Dimen.cardRadius
 )
-
-val CardBottomShape = RoundedCornerShape(
-    bottomStart = Dimen.cardRadius,
-    bottomEnd = Dimen.cardRadius
-)

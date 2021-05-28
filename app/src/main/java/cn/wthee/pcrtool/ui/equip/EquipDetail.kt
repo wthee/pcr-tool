@@ -31,6 +31,8 @@ import com.google.accompanist.flowlayout.SizeMode
 
 /**
  * 装备详情
+ *
+ * @param equipId 装备编号
  */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -107,6 +109,9 @@ fun EquipMainInfo(
 
 /**
  * 装备合成素材
+ *
+ * @param equip 装备信息
+ * @param filter 装备过滤
  */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi

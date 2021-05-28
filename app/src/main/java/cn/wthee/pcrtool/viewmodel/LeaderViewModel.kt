@@ -13,16 +13,17 @@ import javax.inject.Inject
 /**
  * 角色排行 ViewModel
  *
- * 数据来源 [MyAPIRepository]
+ * @param apiRepository
  */
 @HiltViewModel
-class LeaderViewModel @Inject constructor(private val repository: MyAPIRepository) : ViewModel() {
+class LeaderViewModel @Inject constructor(private val apiRepository: MyAPIRepository) :
+    ViewModel() {
 
     val leaderData = MutableLiveData<ResponseData<LeaderData>>()
 
     fun getLeader() {
         viewModelScope.launch {
-            val data = repository.getLeader()
+            val data = apiRepository.getLeader()
             leaderData.postValue(data)
         }
     }

@@ -7,63 +7,76 @@ object CharacterIdUtil {
 
     /**
      * 获取角色卡面 urls
+     *
+     * @param unitId 角色编号
+     * @param r6Id 是否已解放六星
      */
-    fun getAllPicUrl(id: Int, r6Id: Boolean): ArrayList<String> {
+    fun getAllPicUrl(unitId: Int, r6Id: Boolean): ArrayList<String> {
         val list = arrayListOf<String>()
         if (r6Id) {
-            list.add(Constants.CHARACTER_FULL_URL + getStarId(id, 6) + Constants.WEBP)
+            list.add(Constants.CHARACTER_FULL_URL + getStarId(unitId, 6) + Constants.WEBP)
         }
-        list.add(Constants.CHARACTER_FULL_URL + getStarId(id, 3) + Constants.WEBP)
-        list.add(Constants.CHARACTER_URL + getStarId(id, 1) + Constants.WEBP)
-        if (!Constants.notExistsIDs.contains(getFixedId(id))) {
-            list.add(Constants.Reality_CHARACTER_URL + getFixedId(id) + Constants.WEBP)
+        list.add(Constants.CHARACTER_FULL_URL + getStarId(unitId, 3) + Constants.WEBP)
+        list.add(Constants.CHARACTER_URL + getStarId(unitId, 1) + Constants.WEBP)
+        if (!Constants.notExistsIDs.contains(getFixedId(unitId))) {
+            list.add(Constants.Reality_CHARACTER_URL + getFixedId(unitId) + Constants.WEBP)
         }
         return list
     }
 
     /**
      * 获取星级最高的角色图片
+     *
+     * @param unitId 角色编号
+     * @param r6Id 是否已解放六星
      */
-    fun getMaxCardUrl(uid: Int, r6Id: Boolean): String {
+    fun getMaxCardUrl(unitId: Int, r6Id: Boolean): String {
         if (r6Id) {
-            return Constants.CHARACTER_FULL_URL + getStarId(uid, 6) + Constants.WEBP
+            return Constants.CHARACTER_FULL_URL + getStarId(unitId, 6) + Constants.WEBP
         }
-        return Constants.CHARACTER_FULL_URL + getStarId(uid, 3) + Constants.WEBP
+        return Constants.CHARACTER_FULL_URL + getStarId(unitId, 3) + Constants.WEBP
     }
 
-    fun getMaxIconUrl(uid: Int, r6Id: Boolean): String {
+    /**
+     * 获取星级最高的角色图标
+     *
+     * @param unitId 角色编号
+     * @param r6Id 是否已解放六星
+     */
+    fun getMaxIconUrl(unitId: Int, r6Id: Boolean): String {
         if (r6Id) {
-            return Constants.UNIT_ICON_URL + getStarId(uid, 6) + Constants.WEBP
+            return Constants.UNIT_ICON_URL + getStarId(unitId, 6) + Constants.WEBP
         }
-        return Constants.UNIT_ICON_URL + getStarId(uid, 3) + Constants.WEBP
+        return Constants.UNIT_ICON_URL + getStarId(unitId, 3) + Constants.WEBP
     }
 
     /**
      * 获取角色图片 urls
      */
-    fun getAllIconUrl(uid: Int, r6Id: Boolean): ArrayList<String> {
+    fun getAllIconUrl(unitId: Int, r6Id: Boolean): ArrayList<String> {
         val list = arrayListOf<String>()
 
         if (r6Id) {
-            list.add(Constants.UNIT_ICON_URL + getStarId(uid, 6) + Constants.WEBP)
+            list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 6) + Constants.WEBP)
         }
-        list.add(Constants.UNIT_ICON_URL + getStarId(uid, 3) + Constants.WEBP)
-        list.add(Constants.UNIT_ICON_URL + getStarId(uid, 1) + Constants.WEBP)
+        list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 3) + Constants.WEBP)
+        list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 1) + Constants.WEBP)
         return list
     }
 
     /**
      * 获取星级 [star] id
      */
-    private fun getStarId(uid: Int, star: Int): String {
-        val idStr = uid.toString()
+    private fun getStarId(unitId: Int, star: Int): String {
+        val idStr = unitId.toString()
         return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
     }
 
     /**
      * 去除无效id
      */
-    private fun getFixedId(id: Int) = id + if (Constants.errorIDs.contains(id)) 31 else 30
+    private fun getFixedId(unitId: Int) =
+        unitId + if (Constants.errorIDs.contains(unitId)) 31 else 30
 
 
 }

@@ -9,7 +9,7 @@ import java.io.Serializable
  * 最终掉落信息视图
  */
 data class EquipmentDropInfo(
-    @ColumnInfo(name = "eid") val eid: Int,
+    @ColumnInfo(name = "equip_id") val equipId: Int,
     @ColumnInfo(name = "quest_id") val questId: Int,
     @ColumnInfo(name = "quest_name") val questName: String,
     @ColumnInfo(name = "rewards") val rewards: String,

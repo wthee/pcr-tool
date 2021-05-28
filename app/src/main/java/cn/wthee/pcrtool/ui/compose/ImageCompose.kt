@@ -31,6 +31,8 @@ import com.google.accompanist.imageloading.ImageLoadState
 /**
  * 角色卡面
  * 通过设置 aspectRatio, 使图片加载前时，有默认高度
+ *
+ * @sample cn.wthee.pcrtool.utils.Constants.RATIO
  */
 @Composable
 fun CharacterCard(
@@ -122,7 +124,7 @@ fun IconCompose(
                 else -> rememberCoilPainter(request = R.drawable.unknown_gray)
             },
             contentDescription = null,
-            contentScale = ContentScale.Inside,
+            contentScale = ContentScale.Crop,
             modifier = mModifier
         )
     }

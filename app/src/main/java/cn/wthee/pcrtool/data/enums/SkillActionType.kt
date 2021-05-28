@@ -4,6 +4,9 @@ package cn.wthee.pcrtool.data.enums
  * 技能效果枚举
  *
  * fixme 调整描述 [desc]
+ * @param type action_type
+ * @param desc 技能标签
+ * @sample cn.wthee.pcrtool.data.db.entity.SkillAction.action_type
  */
 enum class SkillActionType(val type: Int, val desc: String) {
 
