@@ -56,6 +56,7 @@ class DatabaseDownloadWorker(
         val type = inputData.getInt(KEY_VERSION_TYPE, 1)
         val fileName = inputData.getString(KEY_FILE)
         val from = inputData.getInt(KEY_FROM, -1)
+        //fixme
         setForegroundAsync(createForegroundInfo())
         val result = download(version, type, fileName ?: "")
         if (result == Result.success()) {

@@ -216,6 +216,7 @@ fun AttrCompare(compareData: List<RankCompareData>) {
                 )
             }
         }
+        CommonSpacer()
     }
 }
 

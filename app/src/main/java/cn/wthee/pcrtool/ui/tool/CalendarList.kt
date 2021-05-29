@@ -74,7 +74,7 @@ fun CalendarCompose(
         //回到顶部
         FabCompose(
             iconType = MainIconType.CALENDAR,
-            text = title + stringResource(id = R.string.tool_calendar),
+            text = title + stringResource(id = R.string.calendar),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)

@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -65,6 +66,7 @@ fun EquipMainInfo(
             equipMaxData?.let {
                 MainText(
                     text = it.equipmentName,
+                    color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Row(

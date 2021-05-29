@@ -49,6 +49,9 @@ fun RankEquipList(
             items(allRankEquip) {
                 RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
             }
+            items(3) {
+                CommonSpacer()
+            }
         }
     }
 

@@ -133,7 +133,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 官网公告
      */
-    NEWS(Icons.Rounded.Public),
+    NEWS(Icons.Rounded.Campaign),
 
     /**
      * 更新通知

@@ -38,6 +38,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
@@ -293,6 +294,7 @@ fun PvpSearchCompose(
                                     Row(
                                         modifier = Modifier
                                             .align(Alignment.BottomEnd)
+                                            .navigationBarsPadding()
                                             .padding(
                                                 bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
                                                 start = Dimen.mediuPadding,

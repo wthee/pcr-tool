@@ -132,12 +132,65 @@ fun MenuContent(
                     }
                 }
 
-                Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {
+                Row(modifier = Modifier.height(Dimen.largeMenuHeight + Dimen.menuHeight)) {
+
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(0.5f)
                     ) {
+                        //官网公告
+                        MenuItem(
+                            route = "${Navigation.TOOL_NEWS}/2",
+                            navController = navController,
+                            text = stringResource(id = R.string.tool_news_cn),
+                            iconType = MainIconType.NEWS,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+
+                        )
+                        //官网公告
+                        MenuItem(
+                            route = "${Navigation.TOOL_NEWS}/3",
+                            navController = navController,
+                            text = stringResource(id = R.string.tool_news_tw),
+                            iconType = MainIconType.NEWS,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+
+                        )
+                        //官网公告
+                        MenuItem(
+                            route = "${Navigation.TOOL_NEWS}/4",
+                            navController = navController,
+                            text = stringResource(id = R.string.tool_news_jp),
+                            iconType = MainIconType.NEWS,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(0.5f)
+                    ) {
+
+                        //竞技场
+                        MenuItem(
+                            route = Navigation.TOOL_PVP,
+                            navController = navController,
+                            text = stringResource(id = R.string.tool_pvp),
+                            iconType = MainIconType.PVP_SEARCH,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(0.6f)
+                        )
+
                         //日历
                         MenuItem(
                             route = Navigation.TOOL_CALENDAR,
@@ -148,29 +201,9 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(0.3f)
                         )
-                        //官网公告
-                        MenuItem(
-                            route = Navigation.TOOL_NEWS,
-                            navController = navController,
-                            text = stringResource(id = R.string.tool_news),
-                            iconType = MainIconType.NEWS,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(0.3f)
 
-                        )
                     }
 
-                    //竞技场
-                    MenuItem(
-                        route = Navigation.TOOL_PVP,
-                        navController = navController,
-                        text = stringResource(id = R.string.tool_pvp),
-                        iconType = MainIconType.PVP_SEARCH,
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .fillMaxHeight()
-                    )
                 }
 
                 Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {

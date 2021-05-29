@@ -6,8 +6,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -360,19 +358,24 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         }
 
         //公告
-        composable(Navigation.TOOL_NEWS) {
+        composable(
+            "${Navigation.TOOL_NEWS}/{${Navigation.TOOL_NEWS_REGION}}",
+            arguments = listOf(
+                navArgument(Navigation.TOOL_NEWS_REGION) {
+                    type = NavType.IntType
+                },
+            )
+        ) {
+            val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val scrollState0 = rememberLazyListState()
-            val scrollState1 = rememberLazyListState()
-            val scrollState2 = rememberLazyListState()
-            val pagerIndexState = rememberSaveable { mutableStateOf(0) }
+
+            val scrollState = rememberLazyListState()
+            val region = arguments.getInt(Navigation.TOOL_NEWS_REGION)
 
             StatusBarBox {
                 NewsList(
-                    scrollState0,
-                    scrollState1,
-                    scrollState2,
-                    pagerIndexState,
+                    scrollState,
+                    region,
                     actions.toNewsDetail
                 )
             }

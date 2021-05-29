@@ -9,14 +9,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -38,11 +40,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
-import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 /**
@@ -54,26 +52,28 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun NewsList(
-    scrollState0: LazyListState,
-    scrollState1: LazyListState,
-    scrollState2: LazyListState,
-    pagerIndexState: MutableState<Int>,
+    scrollState: LazyListState,
+    region: Int,
     toDetail: (String, String, Int, String) -> Unit,
     viewModel: NewsViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(pageCount = 3, initialPage = pagerIndexState.value)
-    pagerIndexState.value = pagerState.currentPage
-    val newsCN = viewModel.getNewsCN().collectAsLazyPagingItems()
-    val newsTW = viewModel.getNewsTW().collectAsLazyPagingItems()
-    val newsJP = viewModel.getNewsJP().collectAsLazyPagingItems()
-    val regions = listOf(2, 3, 4)
-    val tabs = listOf(
-        stringResource(id = R.string.tool_news_cn),
-        stringResource(id = R.string.tool_news_tw),
-        stringResource(id = R.string.tool_news_jp),
-    )
-
+    val news: LazyPagingItems<NewsTable>
+    val tab: String
+    when (region) {
+        2 -> {
+            tab = stringResource(id = R.string.tool_news_cn)
+            news = viewModel.getNewsCN().collectAsLazyPagingItems()
+        }
+        3 -> {
+            tab = stringResource(id = R.string.tool_news_tw)
+            news = viewModel.getNewsTW().collectAsLazyPagingItems()
+        }
+        else -> {
+            tab = stringResource(id = R.string.tool_news_jp)
+            news = viewModel.getNewsJP().collectAsLazyPagingItems()
+        }
+    }
 
 
     Box(
@@ -82,82 +82,39 @@ fun NewsList(
             .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         //fixme 切换时，重新加载
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
-            val data = when (index) {
-                0 -> newsCN
-                1 -> newsTW
-                else -> newsJP
-            }
-            val state = when (index) {
-                0 -> scrollState0
-                1 -> scrollState1
-                else -> scrollState2
-            }
-            LazyColumn(
-                state = state,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxSize()
-            ) {
-                itemsIndexed(data) { _, it ->
-                    if (it != null) {
-                        NewsItem(regions[index], news = it, toDetail)
-                    }
-                }
-                item {
-                    NewsPlaceholder(data)
-                }
-                item {
-                    CommonSpacer()
-                }
-            }
-        }
-        Box(
+        LazyColumn(
+            state = scrollState,
             modifier = Modifier
-                .navigationBarsPadding()
-                .align(Alignment.BottomCenter)
-                .padding(
-                    start = Dimen.fabMarginEnd,
-                    end = Dimen.fabMarginEnd,
-                    bottom = Dimen.fabMargin
-                )
-                .height(Dimen.fabSize)
-                .shadow(elevation = Dimen.fabElevation, shape = CircleShape, clip = true)
-                .background(color = MaterialTheme.colors.surface, shape = CircleShape)
+                .align(Alignment.TopCenter)
+                .fillMaxSize()
         ) {
-            TabRow(
-                selectedTabIndex = pagerState.currentPage,
-                backgroundColor = Color.Transparent,
-                contentColor = MaterialTheme.colors.primary,
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                    )
-                },
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        text = { Text(title) },
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                if (pagerState.currentPage != index) {
-                                    pagerState.scrollToPage(index)
-                                } else {
-                                    val state = when (index) {
-                                        0 -> scrollState0
-                                        1 -> scrollState1
-                                        else -> scrollState2
-                                    }
-                                    state.scrollToItem(0)
-                                }
-                            }
-                        },
-                    )
+            itemsIndexed(news) { _, it ->
+                if (it != null) {
+                    NewsItem(region, news = it, toDetail)
                 }
+            }
+            item {
+                NewsPlaceholder(news)
+            }
+            item {
+                CommonSpacer()
             }
         }
 
+        FabCompose(
+            iconType = MainIconType.NEWS,
+            text = tab,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(
+                    end = Dimen.fabMarginEnd,
+                    bottom = Dimen.fabMargin
+                )
+        ) {
+            coroutineScope.launch {
+                scrollState.scrollToItem(0)
+            }
+        }
     }
 }
 

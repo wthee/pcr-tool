@@ -88,7 +88,8 @@
     <!--  工具  -->
     <string name="download_pic">下载图片</string>
     <string name="tool_leader">排行</string>
-    <string name="tool_calendar">日历</string>
+    <string name="calendar">日历</string>
+    <string name="tool_calendar">活动日历</string>
     <string name="tool_pvp">竞技场</string>
     <string name="tip_pvp_favorites">暂无收藏</string>
     <string name="tool_clan">团队战</string>
@@ -104,10 +105,9 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
-    <string name="tool_news">官网公告</string>
-    <string name="tool_news_cn">国服</string>
-    <string name="tool_news_tw">台服</string>
-    <string name="tool_news_jp">日服</string>
+    <string name="tool_news_cn">国服公告</string>
+    <string name="tool_news_tw">台服公告</string>
+    <string name="tool_news_jp">日服公告</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
     <string name="jjc">竞技场</string>

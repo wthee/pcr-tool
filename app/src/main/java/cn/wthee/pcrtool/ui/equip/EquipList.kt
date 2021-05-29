@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -156,11 +155,6 @@ private fun EquipItem(
     toEquipMaterial: (Int) -> Unit,
 ) {
     val loved = filter.starIds.contains(equip.equipmentId)
-    val nameColor = if (loved) {
-        MaterialTheme.colors.primary
-    } else {
-        Color.Unspecified
-    }
     Column(
         modifier = Modifier
             .fillMaxWidth()

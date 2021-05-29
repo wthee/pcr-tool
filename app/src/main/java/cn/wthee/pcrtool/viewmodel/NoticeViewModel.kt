@@ -37,8 +37,10 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
      */
     fun getNotice() {
         viewModelScope.launch {
-            val data = apiRepository.getNotice()
-            notice.postValue(data)
+            if (notice.value == null || notice.value!!.status != 0) {
+                val data = apiRepository.getNotice()
+                notice.postValue(data)
+            }
         }
     }
 

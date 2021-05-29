@@ -23,8 +23,10 @@ class LeaderViewModel @Inject constructor(private val apiRepository: MyAPIReposi
 
     fun getLeader() {
         viewModelScope.launch {
-            val data = apiRepository.getLeader()
-            leaderData.postValue(data)
+            if (leaderData.value == null || leaderData.value!!.status != 0) {
+                val data = apiRepository.getLeader()
+                leaderData.postValue(data)
+            }
         }
     }
 

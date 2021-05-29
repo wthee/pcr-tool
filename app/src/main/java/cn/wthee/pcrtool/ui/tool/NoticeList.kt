@@ -53,7 +53,7 @@ fun NoticeList(
     ) {
         noticeList.value?.let { data ->
             MainActivity.navViewModel.loading.postValue(false)
-            LazyColumn(state = scrollState) {
+            LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.mediuPadding)) {
                 items(data.data ?: arrayListOf()) {
                     NoticeItem(it)
                 }
@@ -118,44 +118,38 @@ private fun NoticeItem(data: AppNotice) {
     val context = LocalContext.current
 
 
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
+    Row(
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
     ) {
-        Row(
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
-        ) {
-            MainTitleText(text = data.title)
-            if (exTitle != "") {
-                MainTitleText(
-                    text = exTitle,
-                    backgroundColor = exTitleColor,
-                    modifier = Modifier.padding(start = Dimen.smallPadding)
-                )
-            }
+        MainTitleText(text = data.title)
+        if (exTitle != "") {
+            MainTitleText(
+                text = exTitle,
+                backgroundColor = exTitleColor,
+                modifier = Modifier.padding(start = Dimen.smallPadding)
+            )
         }
+    }
 
-        MainCard(onClick = {
-            if (data.type == 0 || data.type == -1) {
-                openWebView(context, data.url)
-            }
-        }) {
-            Column(modifier = Modifier.padding(Dimen.largePadding)) {
-                //内容
+    MainCard(onClick = {
+        if (data.type == 0 || data.type == -1) {
+            openWebView(context, data.url)
+        }
+    }) {
+        Column(modifier = Modifier.padding(Dimen.largePadding)) {
+            //内容
+            MainContentText(
+                text = data.message,
+                textAlign = TextAlign.Start
+            )
+            if (data.type == 0 && newVersion) {
                 MainContentText(
-                    text = data.message,
-                    textAlign = TextAlign.Start
+                    text = stringResource(id = R.string.to_update),
+                    color = colorResource(id = R.color.color_rank_21),
+                    modifier = Modifier.padding(top = Dimen.mediuPadding)
                 )
-                if (data.type == 0 && newVersion) {
-                    MainContentText(
-                        text = stringResource(id = R.string.to_update),
-                        color = colorResource(id = R.color.color_rank_21),
-                        modifier = Modifier.padding(top = Dimen.mediuPadding)
-                    )
-                }
             }
-
         }
+
     }
 }

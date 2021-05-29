@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.database
 
+import android.annotation.SuppressLint
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SupportSQLiteOpenHelper
@@ -71,6 +72,7 @@ object DatabaseUpdater {
     /**
      * 下载数据库文件
      */
+    @SuppressLint("UnsafeOptInUsageError")
     private fun downloadDB(
         ver: DatabaseVersion,
         from: Int = -1,
