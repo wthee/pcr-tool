@@ -16,7 +16,7 @@ object ScreenUtil {
      */
     private fun getDm(): DisplayMetrics {
         val outMetrics = DisplayMetrics()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val display = ActivityHelper.instance.currentActivity?.display
             display?.getRealMetrics(outMetrics)
         } else {

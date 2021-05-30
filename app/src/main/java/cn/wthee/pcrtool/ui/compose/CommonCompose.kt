@@ -23,9 +23,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.pager.PagerState
 
 /**
  * 蓝底白字
@@ -209,24 +206,6 @@ fun SubButton(
     }
 }
 
-
-/**
- * 转化成 gridlist 数据
- */
-@Composable
-fun <T> getGridData(spanCount: Int, list: List<T>, placeholder: T): ArrayList<T> {
-    //不足 spanCount 的倍数，填充空的占位
-    val newList = arrayListOf<T>()
-    newList.addAll(list)
-    if (newList.size % spanCount != 0) {
-        val rowNum = newList.size / spanCount + 1
-        for (i in newList.size until rowNum * spanCount) {
-            newList.add(placeholder)
-        }
-    }
-    return newList
-}
-
 /**
  * RANK 文本
  */
@@ -261,18 +240,6 @@ fun getRankColor(rank: Int): Color {
         }
     }
     return colorResource(id = colorId)
-}
-
-@ExperimentalPagerApi
-@Composable
-fun PagerIndicator(pagerState: PagerState, modifier: Modifier = Modifier) {
-    HorizontalPagerIndicator(
-        pagerState = pagerState,
-        activeColor = MaterialTheme.colors.primary,
-        inactiveColor = colorResource(id = R.color.alpha_primary),
-        modifier = modifier
-            .padding(bottom = Dimen.sheetMarginBottom + Dimen.largePadding)
-    )
 }
 
 @Composable

@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.CharacterList
-import cn.wthee.pcrtool.ui.setting.MainSettings
 import cn.wthee.pcrtool.ui.tool.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel

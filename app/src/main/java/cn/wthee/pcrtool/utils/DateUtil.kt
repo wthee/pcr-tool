@@ -64,12 +64,16 @@ fun String.dates(str2: String): String {
         val day = time / (60 * 60 * 1000 * 24)
         val hour = time / (60 * 60 * 1000) - day * 24
         val min = time % (60 * 60 * 1000) / (60 * 1000)
-        if (day == 0L) {
-            "${hour}时${min}分"
-        } else if (hour == 0L) {
-            "${min}分"
-        } else {
-            "${day}天${hour}时${min}分"
+        when {
+            day == 0L -> {
+                "${hour}时${min}分"
+            }
+            hour == 0L -> {
+                "${min}分"
+            }
+            else -> {
+                "${day}天${hour}时${min}分"
+            }
         }
     } catch (e: Exception) {
         "0"

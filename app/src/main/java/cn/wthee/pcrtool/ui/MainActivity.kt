@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -46,7 +47,8 @@ import kotlinx.coroutines.launch
 /**
  * 本地存储
  */
-fun mainSP() = MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)
+fun mainSP(): SharedPreferences =
+    MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

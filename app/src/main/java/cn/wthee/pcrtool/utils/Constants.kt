@@ -21,8 +21,6 @@ object Constants {
     //接口正式地址
     const val API_URL = "https://wthee.xyz:8848/api/"
 
-    const val JETPACK_COMPOSE_LOGO = RESOURCE_URL + "jetpack_compose.png"
-
     //日服数据库
     const val DATABASE_DOWNLOAD_FILE_NAME_JP = "redive_jp.db.br"
     const val DATABASE_VERSION_URL_JP = "last_version_jp.json"

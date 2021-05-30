@@ -35,7 +35,7 @@ object Dimen {
 
     val menuHeight = 64.dp
 
-    val largeMenuHeight = 140.dp
+    val largeMenuHeight = 150.dp
 
     val iconSize = 48.dp
 
@@ -49,8 +49,6 @@ object Dimen {
 
     val topBarHeight = 42.dp
 
-    val topBarIconSize = 32.dp
-
     val slideHeight = 28.dp
 
     val starIconSize = 26.dp
@@ -58,8 +56,6 @@ object Dimen {
     val cardHeight = 52.dp
 
     val settingIconSize = 30.dp
-
-    val equipDropIconSize = 40.dp
 
     fun getWordWidth(length: Float): Dp {
         return (15 * length).sp2dp
