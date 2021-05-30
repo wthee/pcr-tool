@@ -155,7 +155,7 @@ private fun CalendarItem(calendar: DropEvent) {
         }
     }
 
-    MainCard(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
         Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
             //内容
             getTypeData(calendar).forEach {

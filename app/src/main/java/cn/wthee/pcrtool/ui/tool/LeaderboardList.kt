@@ -126,15 +126,15 @@ fun LeaderboardList(
  */
 @Composable
 fun LeaderboardItem(info: LeaderboardData) {
+    val context = LocalContext.current
+    val title = stringResource(id = R.string.visit_detail)
+
     //标题
     MainTitleText(
         text = info.name,
         modifier = Modifier.padding(bottom = Dimen.mediuPadding)
     )
-    val context = LocalContext.current
-    val title = stringResource(id = R.string.visit_detail)
-
-    MainCard(onClick = {
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
         //打开浏览器
         openWebView(context, info.url, title)
     }) {

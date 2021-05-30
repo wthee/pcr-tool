@@ -117,7 +117,6 @@ private fun NoticeItem(data: AppNotice) {
     }
     val context = LocalContext.current
 
-
     Row(
         modifier = Modifier.padding(bottom = Dimen.mediuPadding)
     ) {
@@ -131,7 +130,7 @@ private fun NoticeItem(data: AppNotice) {
         }
     }
 
-    MainCard(onClick = {
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
         if (data.type == 0 || data.type == -1) {
             openWebView(context, data.url)
         }

@@ -29,7 +29,7 @@ object Dimen {
 
     val mediuPadding = 8.dp
 
-    val largePadding = 12.dp
+    val largePadding = 14.dp
 
     val smallIconSize = 18.dp
 
