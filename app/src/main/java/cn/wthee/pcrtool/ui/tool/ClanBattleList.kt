@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +33,7 @@ import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -161,6 +163,7 @@ fun ClanBossInfoPager(
     val clanInfo = clanViewModel.clanInfo.observeAsState()
     val pagerState = rememberPagerState(pageCount = 5, initialPage = index)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     clanInfo.value?.let { clanValue ->
         //最大阶段数
@@ -224,6 +227,7 @@ fun ClanBossInfoPager(
                                 selected = section.value == index,
                                 onClick = {
                                     section.value = index
+                                    VibrateUtil(context).single()
                                 },
                             )
                         }
@@ -267,6 +271,7 @@ fun ClanBossInfoPager(
                                 scope.launch {
                                     pagerState.scrollToPage(tabIndex)
                                 }
+                                VibrateUtil(context).single()
                             },
                         )
                     }

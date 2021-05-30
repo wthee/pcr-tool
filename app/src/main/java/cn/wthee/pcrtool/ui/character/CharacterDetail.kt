@@ -10,6 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -105,6 +106,7 @@ fun CharacterDetail(
         else -> cardHeight - scrollState.value
     }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -184,6 +186,7 @@ fun CharacterDetail(
                         .clickable {
                             //跳转角色图片列表
                             toPics(unitId)
+                            VibrateUtil(context).single()
                         }) {
                         //图片
                         CharacterCard(

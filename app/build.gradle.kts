@@ -88,10 +88,7 @@ dependencies {
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_version"]}")
     //ktx
-    implementation("androidx.appcompat:appcompat:1.3.0")
-    implementation("androidx.activity:activity-ktx:1.2.2")
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.activity:activity-compose:1.3.0-alpha08")
+//    implementation("androidx.activity:activity-compose:1.3.0-alpha08")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     //Accompanist
@@ -149,7 +146,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.2.0")
 
     //Work
-    val workVersion = "2.7.0-alpha02"
+    val workVersion = "2.7.0-alpha03"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 

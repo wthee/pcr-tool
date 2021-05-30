@@ -59,7 +59,7 @@
     <string name="change_db">数据切换</string>
     <string name="clean_database">删除历史数据文件</string>
     <string name="clean_success">删除成功</string>
-    <string name="app_version">应用版本：%s</string>
+    <string name="app_version">%s</string>
     <string name="app_notice">通知</string>
 
     <!--筛选  -->

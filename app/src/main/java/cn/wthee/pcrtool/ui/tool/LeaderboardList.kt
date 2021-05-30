@@ -80,7 +80,10 @@ fun LeaderboardList(
                         modifier = Modifier.weight(0.25f)
                     )
                 }
-                LazyColumn(state = scrollState) {
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                ) {
                     items(info) {
                         LeaderboardItem(it)
                     }
@@ -123,33 +126,27 @@ fun LeaderboardList(
  */
 @Composable
 fun LeaderboardItem(info: LeaderboardData) {
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
-    ) {
-        //标题
-        MainTitleText(
-            text = info.name,
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
-        )
-        val context = LocalContext.current
-        val title = stringResource(id = R.string.visit_detail)
+    //标题
+    MainTitleText(
+        text = info.name,
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+    )
+    val context = LocalContext.current
+    val title = stringResource(id = R.string.visit_detail)
 
-        MainCard(onClick = {
-            //打开浏览器
-            openWebView(context, info.url, title)
-        }) {
-            Row(
-                modifier = Modifier.padding(Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconCompose(data = info.icon, size = Dimen.iconSize)
-                GradeText(info.all, modifier = Modifier.weight(0.25f))
-                GradeText(info.pvp, modifier = Modifier.weight(0.25f))
-                GradeText(info.clan, modifier = Modifier.weight(0.25f))
-                GradeText(info.tower, modifier = Modifier.weight(0.25f))
-            }
+    MainCard(onClick = {
+        //打开浏览器
+        openWebView(context, info.url, title)
+    }) {
+        Row(
+            modifier = Modifier.padding(Dimen.smallPadding),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconCompose(data = info.icon, size = Dimen.iconSize)
+            GradeText(info.all, modifier = Modifier.weight(0.25f))
+            GradeText(info.pvp, modifier = Modifier.weight(0.25f))
+            GradeText(info.clan, modifier = Modifier.weight(0.25f))
+            GradeText(info.tower, modifier = Modifier.weight(0.25f))
         }
     }
 }

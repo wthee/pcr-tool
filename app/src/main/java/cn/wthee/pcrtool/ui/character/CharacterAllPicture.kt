@@ -28,13 +28,9 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.CommonSpacer
 import cn.wthee.pcrtool.ui.compose.FabCompose
-import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.CharacterIdUtil
-import cn.wthee.pcrtool.utils.ImageDownloadHelper
-import cn.wthee.pcrtool.utils.ToastUtil
-import cn.wthee.pcrtool.utils.hasPermissions
+import cn.wthee.pcrtool.utils.*
 import coil.Coil
 import coil.request.ImageRequest
 import com.google.accompanist.coil.rememberCoilPainter
@@ -93,20 +89,18 @@ fun CharacterAllPicture(unitId: Int) {
                     drawables[pagerIndex] = image
                 }
                 val painter = rememberCoilPainter(request = picUrls[pagerIndex])
-                FadeAnimation(visible = painter.loadState is ImageLoadState.Success) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Image(
-                            painter = when (painter.loadState) {
-                                is ImageLoadState.Success -> {
-                                    loaded[pagerIndex] = true
-                                    painter
-                                }
-                                is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                                else -> rememberCoilPainter(request = R.drawable.load)
-                            },
-                            contentDescription = null,
-                        )
-                    }
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Image(
+                        painter = when (painter.loadState) {
+                            is ImageLoadState.Success -> {
+                                loaded[pagerIndex] = true
+                                painter
+                            }
+                            is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
+                            else -> rememberCoilPainter(request = R.drawable.load)
+                        },
+                        contentDescription = null,
+                    )
                 }
             }
             TabRow(
@@ -132,6 +126,7 @@ fun CharacterAllPicture(unitId: Int) {
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.scrollToPage(tabIndex)
+                                VibrateUtil(context).single()
                             }
                         },
                     )
