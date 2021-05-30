@@ -1,9 +1,31 @@
-### PCRTool
+## PCRTool
 - [下载地址](https://www.coolapk.com/apk/273453)
 
 - 数据来源：[干炸里脊资源站](https://redive.estertion.win/)
 
-### 更新记录
+## 更新记录
+
+### 1.X.X
+
+> UI 框架更换为 Jetpack Compose
+
+#### 1.0.0
+
+- UI 细节调整
+
+- 部分功能优化、调整
+
+  
+### 0.X.X
+
+#### 0.8.4
+
+- 修复已知 BUG
+
+#### 0.8.3
+
+- 修复团队战页面 BUG
+- 修复其它已知 BUG
 
 #### 0.8.2
 
