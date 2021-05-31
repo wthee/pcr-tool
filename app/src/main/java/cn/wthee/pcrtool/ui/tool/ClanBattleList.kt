@@ -127,7 +127,7 @@ private fun ClanBattleItem(
         //图标
         Row(
             modifier = Modifier.padding(Dimen.mediuPadding),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             list.forEachIndexed { index, it ->
                 Box {

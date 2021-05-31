@@ -92,7 +92,7 @@ fun RankEquipListItem(
             modifier = Modifier
                 .padding(Dimen.mediuPadding)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             allIds.forEach {
                 IconCompose(data = getEquipIconUrl(it)) {

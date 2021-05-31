@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -29,6 +30,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
@@ -220,7 +222,6 @@ fun AttrCompare(compareData: List<RankCompareData>) {
     }
 }
 
-
 /**
  * 星级显示
  */
@@ -244,5 +245,14 @@ private fun StarCompose(
                     .size(Dimen.starIconSize)
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    PcrtoolcomposeTheme {
+        val data = listOf(RankCompareData(), RankCompareData(), RankCompareData())
+        AttrCompare(compareData = data)
     }
 }

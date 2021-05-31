@@ -55,6 +55,6 @@ data class EquipmentIdWithOdd(
  */
 data class EquipmentMaterial(
     var id: Int = Constants.UNKNOWN_EQUIP_ID,
-    var name: String = "",
+    var name: String = "???",
     var count: Int = 0
 ) : Serializable

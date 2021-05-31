@@ -266,6 +266,7 @@ fun CommonIconSpacer() {
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colors.background,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
@@ -283,7 +284,8 @@ fun MainCard(
 
     Card(
         modifier = mModifier,
-        content = content
+        content = content,
+        backgroundColor = backgroundColor
     )
 }
 
@@ -297,7 +299,9 @@ fun SelectText(
     modifier: Modifier = Modifier,
     selected: Boolean,
     text: String,
-    selectedColor: Color = MaterialTheme.colors.primary
+    selectedColor: Color = MaterialTheme.colors.primary,
+    textColor: Color = Color.Unspecified,
+    style: TextStyle = MaterialTheme.typography.body2
 ) {
     val mModifier = if (selected) {
         modifier
@@ -309,8 +313,8 @@ fun SelectText(
     }
     Text(
         text = text,
-        color = if (selected) MaterialTheme.colors.onPrimary else Color.Unspecified,
-        style = MaterialTheme.typography.body2,
+        color = if (selected) MaterialTheme.colors.onPrimary else textColor,
+        style = style,
         maxLines = 1,
         textAlign = TextAlign.Center,
         overflow = TextOverflow.Ellipsis,

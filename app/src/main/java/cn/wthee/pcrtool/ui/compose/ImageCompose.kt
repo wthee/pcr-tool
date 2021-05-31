@@ -48,8 +48,7 @@ fun CharacterCard(
         val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
         modifier.offset(y = move)
     }
-    val painter = rememberCoilPainter(request = url)
-
+    val painter = rememberCoilPainter(request = url, previewPlaceholder = R.drawable.error)
     Image(
         painter = when (painter.loadState) {
             is ImageLoadState.Success -> painter
@@ -116,7 +115,12 @@ fun IconCompose(
             modifier = mModifier
         )
     } else {
-        val painter = rememberCoilPainter(request = data, fadeIn = fade, fadeInDurationMs = 400)
+        val painter = rememberCoilPainter(
+            request = data,
+            fadeIn = fade,
+            fadeInDurationMs = 400,
+            previewPlaceholder = R.mipmap.ic_logo
+        )
         Image(
             painter = when (painter.loadState) {
                 is ImageLoadState.Success -> painter
