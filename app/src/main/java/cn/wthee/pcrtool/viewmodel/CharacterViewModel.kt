@@ -11,9 +11,8 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
-import com.umeng.umcrash.UMCrash
+import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -64,12 +63,10 @@ class CharacterViewModel @Inject constructor(
                 character.postValue(it)
             }
             if (data == null) {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(
-                        NullPointerException(),
-                        Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
-                    )
-                }
+                UMengLogUtil.upload(
+                    NullPointerException(),
+                    Constants.EXCEPTION_UNIT_NULL + "unit_id:$unitId"
+                )
             }
         }
     }

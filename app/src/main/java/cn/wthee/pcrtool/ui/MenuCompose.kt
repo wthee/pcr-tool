@@ -75,7 +75,7 @@ fun MenuContent(
                 MaterialTheme.colors.primary
             }, animationSpec = defaultTween()
         )
-    systemUiController.setStatusBarColor(colorAnim.value)
+//    systemUiController.setStatusBarColor(colorAnim.value)
 
 
     Box(modifier = Modifier

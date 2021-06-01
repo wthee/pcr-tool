@@ -22,17 +22,17 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.MOVE_SPEED_RATIO
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 
+const val RATIO = 1.78f
+const val MOVE_SPEED_RATIO = 0.5
+
 /**
  * 角色卡面
  * 通过设置 aspectRatio, 使图片加载前时，有默认高度
- *
- * @sample cn.wthee.pcrtool.utils.Constants.RATIO
  */
 @Composable
 fun CharacterCard(
@@ -41,7 +41,7 @@ fun CharacterCard(
 ) {
 
     val modifier = Modifier
-        .aspectRatio(Constants.RATIO)
+        .aspectRatio(RATIO)
         .fillMaxWidth()
     if (scrollState != null) {
         //滑动时，向上平移

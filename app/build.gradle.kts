@@ -111,7 +111,8 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha02")
 
     //Lifecycle
-    val lifecycleVersion = "2.3.1"
+    val lifecycleVersion = "2.4.0-alpha01"
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha05")

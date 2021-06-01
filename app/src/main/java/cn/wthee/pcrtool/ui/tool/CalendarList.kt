@@ -31,7 +31,6 @@ import java.util.*
 
 /**
  * 日历活动
- * fixme 进入时卡顿
  */
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi

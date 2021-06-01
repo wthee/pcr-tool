@@ -159,8 +159,7 @@ data class SkillActionPro(
     /**
      * 获取技能效果
      *
-     * 技能效果判断逻辑来源 @author MalitsPlus[https://github.com/MalitsPlus]
-     *
+     * 判断逻辑参考  MalitsPlus [https://github.com/MalitsPlus]
      */
     fun getActionDesc(): SkillActionText {
 //        if (isEmptyAction()) {

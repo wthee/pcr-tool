@@ -61,7 +61,9 @@ object CharacterIdUtil {
         }
         list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 3) + Constants.WEBP)
         list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 1) + Constants.WEBP)
-        list.add(Constants.UNKNOWN_EQUIPMENT_ICON)
+        if (!Constants.notExistsIDs.contains(getFixedId(unitId))) {
+            list.add(Constants.UNKNOWN_EQUIPMENT_ICON)
+        }
         return list
     }
 

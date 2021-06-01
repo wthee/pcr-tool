@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色信息
  *
+ * fixme 数据初始加载逻辑优化
  * @param unitId 角色编号
  */
 @ExperimentalAnimationApi

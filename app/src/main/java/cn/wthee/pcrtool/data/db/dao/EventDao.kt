@@ -84,7 +84,7 @@ interface EventDao {
             value 
         ORDER BY
             start_time DESC 
-            LIMIT 100 OFFSET 0
+            LIMIT 50 OFFSET 0
     """
     )
     suspend fun getDropEvent(): List<DropEvent>

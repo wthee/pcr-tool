@@ -84,7 +84,7 @@ fun RankEquipListItem(
             textColor = if (selected) MaterialTheme.colors.onPrimary else getRankColor(rank = rank),
             selectedColor = getRankColor(rank = rank),
             style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+            modifier = Modifier.padding(top = Dimen.mediuPadding)
         )
         //图标列表
         val allIds = unitPromotion.getRowIds()

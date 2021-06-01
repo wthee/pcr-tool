@@ -1,13 +1,11 @@
 package cn.wthee.pcrtool.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,7 +55,6 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
                     }
                 }
             } catch (e: Exception) {
-                Log.e(Constants.LOG_TAG, e.message ?: "")
             }
             updateApp.postValue(0)
         }

@@ -3,9 +3,7 @@ package cn.wthee.pcrtool.data.model
 import cn.wthee.pcrtool.data.db.view.SkillActionPro
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.utils.Constants
-import com.umeng.umcrash.UMCrash
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import cn.wthee.pcrtool.utils.UMengLogUtil
 
 /**
  * 角色技能信息
@@ -54,13 +52,10 @@ data class SkillDetail(
                             list.add(ShowCoe(next, 1, coe))
                         }
                     }
-
                 }
             }
         } catch (e: Exception) {
-            MainScope().launch {
-                UMCrash.generateCustomLog(e, Constants.EXCEPTION_SKILL + "skill_id:$skillId")
-            }
+            UMengLogUtil.upload(e, Constants.EXCEPTION_SKILL + "skill_id:$skillId")
         }
 
         return list

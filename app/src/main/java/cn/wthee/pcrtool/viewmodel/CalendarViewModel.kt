@@ -10,9 +10,7 @@ import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.hourInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
-import kotlin.Comparator
 
 /**
  * 日历 ViewModel
@@ -33,8 +31,6 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             val data = eventRepository.getDropEvent()
             //按进行中排序
-            val cal = Calendar.getInstance()
-            cal.time = Date(System.currentTimeMillis())
             val today = getToday()
             dropEvents.postValue(data.sortedWith(compare(today)))
         }

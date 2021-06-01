@@ -54,8 +54,10 @@ fun NoticeList(
         noticeList.value?.let { data ->
             MainActivity.navViewModel.loading.postValue(false)
             LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.mediuPadding)) {
-                items(data.data ?: arrayListOf()) {
-                    NoticeItem(it)
+                data.data?.let { list ->
+                    items(list) {
+                        NoticeItem(it)
+                    }
                 }
                 //查看更多
                 item {
