@@ -92,7 +92,7 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     //Accompanist
-    val accompanistVersion = "0.10.0"
+    val accompanistVersion = "0.11.1"
     implementation("com.google.accompanist:accompanist-coil:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
@@ -115,17 +115,17 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha05")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha06")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha01")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
 
     //okio
     implementation("com.squareup.okio:okio:2.10.0")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.0")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha09")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha10")
 
     //Retrofit
     val retrofitVersion = "2.9.0"
@@ -147,7 +147,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.2.0")
 
     //Work
-    val workVersion = "2.7.0-alpha03"
+    val workVersion = "2.7.0-alpha04"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 

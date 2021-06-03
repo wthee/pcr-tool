@@ -66,7 +66,7 @@ fun NewsList(
         else -> stringResource(id = R.string.tool_news_jp)
     }
 
-    var news =
+    val news =
         viewModel.getNews(region = region).flowWithLifecycle(lifecycle).collectAsLazyPagingItems()
 
     Box(
@@ -312,6 +312,7 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
 /**
  * 底部加载占位
  */
+@ExperimentalMaterialApi
 @Composable
 private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
     val clickType = remember {

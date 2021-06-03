@@ -7,10 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +47,7 @@ enum class MenuState {
 /**
  * 菜单
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun MenuContent(
@@ -75,7 +73,7 @@ fun MenuContent(
                 MaterialTheme.colors.primary
             }, animationSpec = defaultTween()
         )
-//    systemUiController.setStatusBarColor(colorAnim.value)
+    systemUiController.setStatusBarColor(colorAnim.value)
 
 
     Box(modifier = Modifier
@@ -296,6 +294,7 @@ fun MenuContent(
 /**
  * 菜单项
  */
+@ExperimentalMaterialApi
 @Composable
 fun MenuItem(
     backgroundColor: Color = MaterialTheme.colors.primary,
@@ -316,6 +315,7 @@ fun MenuItem(
 
     Card(
         backgroundColor = backgroundColor,
+        onClick = { navController.navigate(route) },
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)

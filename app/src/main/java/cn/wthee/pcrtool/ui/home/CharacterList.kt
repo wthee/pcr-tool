@@ -163,6 +163,7 @@ fun CharacterList(
 /**
  * 角色列表项
  */
+@ExperimentalMaterialApi
 @Composable
 private fun CharacterItem(
     character: CharacterInfo,

@@ -1,10 +1,14 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -13,14 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.getFormatText
+import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -28,7 +30,9 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
  *
  * @param unitId 角色编号
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
+@ExperimentalFoundationApi
 @Composable
 fun RankEquipList(
     unitId: Int,
@@ -41,12 +45,13 @@ fun RankEquipList(
     val selectedRank = remember {
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
+    val spanCount = 3
     SlideAnimation(visible = allRankEquip.isNotEmpty()) {
-        LazyColumn() {
+        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
             items(allRankEquip) {
                 RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
             }
-            item {
+            items(spanCount) {
                 CommonSpacer()
             }
         }
@@ -57,6 +62,7 @@ fun RankEquipList(
 /**
  * RANK 装备图标列表
  */
+@ExperimentalMaterialApi
 @Composable
 fun RankEquipListItem(
     unitPromotion: UnitPromotion,
@@ -64,39 +70,52 @@ fun RankEquipListItem(
     toEquipDetail: (Int) -> Unit,
     navViewModel: NavViewModel,
 ) {
-    val context = LocalContext.current
+    val colorAnim = animateColorAsState(
+        targetValue = if (unitPromotion.promotionLevel == selectedRank.value)
+            MaterialTheme.colors.primary
+        else
+            MaterialTheme.colors.surface,
+        animationSpec = defaultSpring()
+    )
 
-    //RANK
-    val selected = unitPromotion.promotionLevel == selectedRank.value
-    val rank = unitPromotion.promotionLevel
-    Column(
-        modifier = Modifier
-            .clickable {
-                VibrateUtil(context).single()
-                selectedRank.value = unitPromotion.promotionLevel
-                navViewModel.selectRank.postValue(unitPromotion.promotionLevel)
-            },
-        horizontalAlignment = Alignment.CenterHorizontally
+
+    MainCard(
+        modifier = Modifier.padding(Dimen.mediuPadding),
+        onClick = {
+            selectedRank.value = unitPromotion.promotionLevel
+            navViewModel.selectRank.postValue(unitPromotion.promotionLevel)
+        }
     ) {
-        SelectText(
-            selected = selected,
-            text = getFormatText(rank),
-            textColor = if (selected) MaterialTheme.colors.onPrimary else getRankColor(rank = rank),
-            selectedColor = getRankColor(rank = rank),
-            style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(top = Dimen.mediuPadding)
-        )
         //图标列表
-        val allIds = unitPromotion.getRowIds()
-        Row(
+        Column(
             modifier = Modifier
-                .padding(Dimen.mediuPadding)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth()
+                .background(colorAnim.value, Shapes.large),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            allIds.forEach {
-                IconCompose(data = getEquipIconUrl(it)) {
-                    toEquipDetail(it)
+            //RANK
+            RankText(
+                rank = unitPromotion.promotionLevel,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.padding(Dimen.mediuPadding)
+            )
+            val allIds = unitPromotion.getAllOrderIds()
+            allIds.forEachIndexed { index, _ ->
+                if (index % 2 == 0) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier
+                            .padding(Dimen.smallPadding)
+                            .fillMaxWidth()
+                    ) {
+                        IconCompose(data = getEquipIconUrl(allIds[index])) {
+                            toEquipDetail(allIds[index])
+                        }
+                        Spacer(modifier = Modifier.width(Dimen.smallPadding))
+                        IconCompose(data = getEquipIconUrl(allIds[index + 1])) {
+                            toEquipDetail(allIds[index + 1])
+                        }
+                    }
                 }
             }
         }

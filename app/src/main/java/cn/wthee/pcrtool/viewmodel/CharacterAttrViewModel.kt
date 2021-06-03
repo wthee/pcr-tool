@@ -13,6 +13,7 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -109,14 +110,16 @@ class CharacterAttrViewModel @Inject constructor(
             allAttr.postValue(allData)
             throw SecurityException()
         } catch (e: Exception) {
-            UMengLogUtil.upload(
-                e, Constants.EXCEPTION_LOAD_ATTR +
-                        "uid:$unitId," +
-                        "rank:${rank}," +
-                        "rarity:${rarity}" +
-                        "lv:${level}" +
-                        "ueLv:${uniqueEquipLevel}"
-            )
+            if (!(e is CancellationException)) {
+                UMengLogUtil.upload(
+                    e, Constants.EXCEPTION_LOAD_ATTR +
+                            "uid:$unitId," +
+                            "rank:${rank}," +
+                            "rarity:${rarity}" +
+                            "lv:${level}" +
+                            "ueLv:${uniqueEquipLevel}"
+                )
+            }
         }
         return allData
     }

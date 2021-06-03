@@ -466,6 +466,7 @@ fun PvpIconItem(
 /**
  * 查询结果页面
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun PvpSearchResult(
@@ -542,6 +543,7 @@ fun PvpSearchResult(
 /**
  * 查询结果 Item
  */
+@ExperimentalMaterialApi
 @Composable
 private fun PvpAtkTeam(
     favoritesList: List<String>,

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色卡池页面
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun GachaList(
@@ -79,6 +81,7 @@ fun GachaList(
 /**
  * 单个卡池
  */
+@ExperimentalMaterialApi
 @Composable
 private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val today = getToday()

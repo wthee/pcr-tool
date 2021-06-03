@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
@@ -263,6 +262,7 @@ fun CommonIconSpacer() {
 /**
  * 卡片布局
  */
+@ExperimentalMaterialApi
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,
@@ -272,21 +272,28 @@ fun MainCard(
 ) {
     val context = LocalContext.current
 
-    var mModifier = modifier
+    val mModifier = modifier
         .fillMaxWidth()
         .heightIn(min = Dimen.cardHeight)
         .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
+
     if (onClick != null) {
-        mModifier = mModifier.clickable(onClick = onClick.vibrate {
-            VibrateUtil(context).single()
-        })
+        Card(
+            modifier = mModifier,
+            content = content,
+            onClick = onClick.vibrate {
+                VibrateUtil(context).single()
+            },
+            backgroundColor = backgroundColor
+        )
+    } else {
+        Card(
+            modifier = mModifier,
+            content = content,
+            backgroundColor = backgroundColor
+        )
     }
 
-    Card(
-        modifier = mModifier,
-        content = content,
-        backgroundColor = backgroundColor
-    )
 }
 
 /**
