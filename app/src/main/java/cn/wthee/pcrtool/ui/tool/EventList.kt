@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 /**
  * 剧情活动
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -82,6 +84,7 @@ fun EventList(
 /**
  * 剧情活动
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {

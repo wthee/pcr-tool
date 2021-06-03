@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色公会
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -81,6 +83,7 @@ fun GuildList(
 /**
  * 公会
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {

@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -29,7 +28,6 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -91,9 +89,6 @@ fun CharacterDetail(
     //专武等级滑动条
     val sliderUniqueEquipLevel = remember {
         mutableStateOf(0)
-    }
-    if (sliderUniqueEquipLevel.value != 0) {
-        attrViewModel.uniqueEquipLevelValue.postValue(sliderUniqueEquipLevel.value)
     }
     if (selectRank != 0) {
         attrViewModel.rankValue.postValue(selectRank)
@@ -206,9 +201,9 @@ fun CharacterDetail(
                                 //等级
                                 Text(
                                     text = sliderLevel.value.toString(),
+                                    modifier = Modifier.align(Alignment.CenterHorizontally),
                                     color = MaterialTheme.colors.primary,
-                                    style = MaterialTheme.typography.h6,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                    style = MaterialTheme.typography.h6
                                 )
                                 Slider(
                                     value = sliderLevel.value.toFloat(),
@@ -495,53 +490,46 @@ private fun UniqueEquip(
     silderState: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
-//    val attrViewModel: CharacterAttrViewModel = hiltViewModel()
+    val attrViewModel: CharacterAttrViewModel = hiltViewModel()
     uniqueEquipmentMaxData?.let {
         Column(
-            modifier = Modifier
-                .padding(
-                    top = Dimen.largePadding,
-                    start = Dimen.mediuPadding,
-                    end = Dimen.mediuPadding
-                )
+            modifier = Modifier.padding(top = Dimen.largePadding)
         ) {
             //名称
             MainText(
                 text = it.equipmentName,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+            //专武等级选
+            Subtitle1(
+                text = silderState.value.toString(),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = MaterialTheme.colors.primary
+            )
+            //专武等级选择
+            Slider(
+                value = silderState.value.toFloat(),
+                onValueChange = { silderState.value = it.toInt() },
+                onValueChangeFinished = {
+                    attrViewModel.uniqueEquipLevelValue.postValue(silderState.value)
+                },
+                valueRange = 0f..uniqueEquipLevelMax.toFloat(),
+                modifier = Modifier
+                    .fillMaxWidth(0.618f)
+                    .height(Dimen.slideHeight)
+                    .align(Alignment.CenterHorizontally)
+            )
             //图标描述
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .padding(Dimen.mediuPadding)
+                    .fillMaxWidth()
+            ) {
                 IconCompose(getEquipIconUrl(it.equipmentId))
                 Subtitle2(
                     text = it.getDesc(),
                     modifier = Modifier.padding(start = Dimen.mediuPadding)
                 )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = silderState.value.toString(),
-                    color = MaterialTheme.colors.primary,
-                    modifier = Modifier.weight(0.191f),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.subtitle2,
-                )
-                //专武等级选择
-                Slider(
-                    value = silderState.value.toFloat(),
-                    onValueChange = { silderState.value = it.toInt() },
-                    onValueChangeFinished = {
-//                    attrViewModel.uniqueEquipLevelValue.postValue(silderState.value)
-                    },
-                    valueRange = 0f..uniqueEquipLevelMax.toFloat(),
-                    modifier = Modifier
-                        .fillMaxWidth(0.618f)
-                        .height(Dimen.slideHeight)
-                )
-                Spacer(modifier = Modifier.weight(0.191f))
             }
             //属性
             AttrList(attrs = it.attr.allNotZero())
@@ -581,21 +569,5 @@ private fun StarSelect(
                     }
             )
         }
-    }
-}
-
-
-@Preview
-@Composable
-private fun PreviewUniqueEquip() {
-    val silderState = remember {
-        mutableStateOf(100)
-    }
-    PcrtoolcomposeTheme {
-        UniqueEquip(
-            uniqueEquipLevelMax = 100,
-            silderState = silderState,
-            uniqueEquipmentMaxData = UniqueEquipmentMaxData()
-        )
     }
 }

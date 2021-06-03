@@ -28,7 +28,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
@@ -81,16 +80,21 @@ fun NewsList(
                 .fillMaxSize(),
             contentPadding = PaddingValues(Dimen.mediuPadding)
         ) {
+            item {
+                if (news.loadState.append is LoadState.Loading) {
+                    MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
+                        news.retry()
+                    }) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(Dimen.fabIconSize)
+                        )
+                    }
+                }
+            }
             itemsIndexed(news) { _, it ->
                 if (it != null) {
                     NewsItem(region, news = it, toDetail)
                 }
-            }
-            item {
-                NewsPlaceholder(news)
-            }
-            item {
-                CommonSpacer()
             }
         }
         FabCompose(
@@ -307,56 +311,4 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
 
     }
 
-}
-
-/**
- * 底部加载占位
- */
-@ExperimentalMaterialApi
-@Composable
-private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
-    val clickType = remember {
-        mutableStateOf(0)
-    }
-
-    MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
-        when (clickType.value) {
-            0 -> state.retry()
-            -1 -> state.refresh()
-        }
-    }) {
-        Box(contentAlignment = Alignment.Center) {
-            if (state.loadState.refresh is LoadState.Loading) {
-                //初始加载
-                CircularProgressIndicator(
-                    modifier = Modifier.size(Dimen.fabIconSize)
-                )
-            } else {
-                //底部加载
-                when (state.loadState.append) {
-                    is LoadState.Loading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(Dimen.fabIconSize)
-                        )
-                    }
-                    is LoadState.Error -> {
-                        Subtitle2(
-                            text = stringResource(R.string.data_get_error),
-                            color = MaterialTheme.colors.primary
-                        )
-                        clickType.value = -1
-                    }
-                    else -> {
-                        if (state.loadState.append.endOfPaginationReached) {
-                            Subtitle2(
-                                text = stringResource(R.string.all_data_load),
-                                color = MaterialTheme.colors.primary
-                            )
-                        }
-                    }
-                }
-            }
-
-        }
-    }
 }

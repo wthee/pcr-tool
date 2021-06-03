@@ -140,11 +140,18 @@ fun EquipMaterialDeatil(
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
                         contentPadding = PaddingValues(top = Dimen.mediuPadding)
                     ) {
                         items(lists[pagerIndex]) {
-                            MainText(text = it.getNum())
+                            Text(
+                                text = it.getNum(),
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier.padding(
+                                    start = Dimen.mediuPadding,
+                                    top = Dimen.mediuPadding
+                                ),
+                                color = colorResource(id = color[pagerIndex])
+                            )
                             AreaEquipList(equipId, it.getAllOdd())
                         }
                         item {
