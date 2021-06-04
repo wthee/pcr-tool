@@ -135,9 +135,7 @@ object DatabaseUpdater {
                     uploadWorkRequest
                 )
             } catch (e: Exception) {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_DOWNLOAD_DB)
-                }
+                UMengLogUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
             }
         } else {
             //强制更新/切换成功

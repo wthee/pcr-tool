@@ -7,10 +7,10 @@ import cn.wthee.pcrtool.R
  * 活动信息
  */
 data class DropEvent(
-    @ColumnInfo(name = "type") val type: String,
-    @ColumnInfo(name = "value") val value: Int,
-    @ColumnInfo(name = "start_time") val startTime: String,
-    @ColumnInfo(name = "end_time") val endTime: String,
+    @ColumnInfo(name = "type") val type: String = "31",
+    @ColumnInfo(name = "value") val value: Int = 1500,
+    @ColumnInfo(name = "start_time") val startTime: String = "2021-01-01 00:00:00",
+    @ColumnInfo(name = "end_time") val endTime: String = "2021-01-07 00:00:00",
 ) {
     /*
      * 去零

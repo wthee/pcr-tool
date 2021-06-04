@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,8 +32,8 @@ import java.util.*
 
 /**
  * 日历活动
- * fixme 进入时卡顿
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
@@ -90,6 +91,7 @@ fun CalendarCompose(
 /**
  * 日历信息
  */
+@ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: DropEvent) {
     val today = getToday()

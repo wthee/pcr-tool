@@ -34,7 +34,11 @@ object CharacterIdUtil {
         if (r6Id) {
             return Constants.CHARACTER_FULL_URL + getStarId(unitId, 6) + Constants.WEBP
         }
-        return Constants.CHARACTER_FULL_URL + getStarId(unitId, 3) + Constants.WEBP
+        return if (unitId == 106701) {
+            Constants.CHARACTER_URL + getStarId(unitId, 1)
+        } else {
+            Constants.CHARACTER_FULL_URL + getStarId(unitId, 3)
+        } + Constants.WEBP
     }
 
     /**
@@ -61,7 +65,9 @@ object CharacterIdUtil {
         }
         list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 3) + Constants.WEBP)
         list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 1) + Constants.WEBP)
-        list.add(Constants.UNKNOWN_EQUIPMENT_ICON)
+        if (!Constants.notExistsIDs.contains(getFixedId(unitId))) {
+            list.add(Constants.UNKNOWN_EQUIPMENT_ICON)
+        }
         return list
     }
 

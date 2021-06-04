@@ -14,7 +14,6 @@ import cn.wthee.pcrtool.data.network.DatabaseService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.utils.*
-import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -89,9 +88,7 @@ class DatabaseDownloadWorker(
             //下载文件
             response = service.execute()
         } catch (e: Exception) {
-            MainScope().launch {
-                UMCrash.generateCustomLog(e, Constants.EXCEPTION_DOWNLOAD_DB)
-            }
+            UMengLogUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
         }
         try {
             //创建数据库文件夹
@@ -124,9 +121,7 @@ class DatabaseDownloadWorker(
             updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
-            MainScope().launch {
-                UMCrash.generateCustomLog(e, Constants.EXCEPTION_SAVE_DB)
-            }
+            UMengLogUtil.upload(e, Constants.EXCEPTION_SAVE_DB)
             return Result.failure()
         }
     }

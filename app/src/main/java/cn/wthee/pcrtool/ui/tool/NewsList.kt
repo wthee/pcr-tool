@@ -20,13 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
@@ -40,16 +41,15 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
 /**
  * 公告列表
+ * fixme 列表滚动状态未能正常保存
  */
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagingApi
-@ExperimentalPagerApi
 @Composable
 fun NewsList(
     scrollState: LazyListState,
@@ -57,50 +57,46 @@ fun NewsList(
     toDetail: (String, String, Int, String) -> Unit,
     viewModel: NewsViewModel = hiltViewModel()
 ) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     val coroutineScope = rememberCoroutineScope()
-    val news: LazyPagingItems<NewsTable>
-    val tab: String
-    when (region) {
-        2 -> {
-            tab = stringResource(id = R.string.tool_news_cn)
-            news = viewModel.getNewsCN().collectAsLazyPagingItems()
-        }
-        3 -> {
-            tab = stringResource(id = R.string.tool_news_tw)
-            news = viewModel.getNewsTW().collectAsLazyPagingItems()
-        }
-        else -> {
-            tab = stringResource(id = R.string.tool_news_jp)
-            news = viewModel.getNewsJP().collectAsLazyPagingItems()
-        }
+    val tab = when (region) {
+        2 -> stringResource(id = R.string.tool_news_cn)
+        3 -> stringResource(id = R.string.tool_news_tw)
+        else -> stringResource(id = R.string.tool_news_jp)
     }
 
+    val news =
+        viewModel.getNews(region = region).flowWithLifecycle(lifecycle).collectAsLazyPagingItems()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
-        //fixme 切换时，重新加载
         LazyColumn(
             state = scrollState,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentPadding = PaddingValues(Dimen.mediuPadding)
         ) {
+            item {
+                if (news.loadState.append is LoadState.Loading) {
+                    MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
+                        news.retry()
+                    }) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(Dimen.fabIconSize)
+                        )
+                    }
+                }
+            }
             itemsIndexed(news) { _, it ->
                 if (it != null) {
                     NewsItem(region, news = it, toDetail)
                 }
             }
-            item {
-                NewsPlaceholder(news)
-            }
-            item {
-                CommonSpacer()
-            }
         }
-
         FabCompose(
             iconType = MainIconType.NEWS,
             text = tab,
@@ -136,32 +132,25 @@ private fun NewsItem(
         "系統" -> R.color.news_system
         else -> R.color.colorPrimary
     }
-
-    Column(
-        modifier = Modifier
-            .padding(Dimen.mediuPadding)
-            .fillMaxWidth()
-    ) {
-        //标题
-        Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-            MainTitleText(
-                text = tag,
-                backgroundColor = colorResource(id = colorId)
-            )
-            MainTitleText(
-                text = news.date,
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-            )
-        }
-        MainCard(onClick = {
-            toDetail(news.title.fix(), news.url.fix(), region, news.date)
-        }) {
-            //内容
-            Subtitle1(
-                text = news.title,
-                modifier = Modifier.padding(Dimen.mediuPadding),
-            )
-        }
+    //标题
+    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        MainTitleText(
+            text = tag,
+            backgroundColor = colorResource(id = colorId)
+        )
+        MainTitleText(
+            text = news.date,
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+        )
+    }
+    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
+        toDetail(news.title.fix(), news.url.fix(), region, news.date)
+    }) {
+        //内容
+        Subtitle1(
+            text = news.title,
+            modifier = Modifier.padding(Dimen.mediuPadding),
+        )
     }
 }
 
@@ -264,6 +253,7 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                                 $('.news_con').css('padding','0px');
                                 $('section').css('padding','0px');
                                 $('body').css('background-image','none');
+                                $('.news_con').css('box-shadow','none');
                             """.trimIndent()
                                 )
                             }
@@ -322,55 +312,3 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
     }
 
 }
-
-/**
- * 底部加载占位
- */
-@Composable
-private fun NewsPlaceholder(state: LazyPagingItems<NewsTable>) {
-    val clickType = remember {
-        mutableStateOf(0)
-    }
-
-    MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
-        when (clickType.value) {
-            0 -> state.retry()
-            -1 -> state.refresh()
-        }
-    }) {
-        Box(contentAlignment = Alignment.Center) {
-            if (state.loadState.refresh is LoadState.Loading) {
-                //初始加载
-                CircularProgressIndicator(
-                    modifier = Modifier.size(Dimen.fabIconSize)
-                )
-            } else {
-                //底部加载
-                when (state.loadState.append) {
-                    is LoadState.Loading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(Dimen.fabIconSize)
-                        )
-                    }
-                    is LoadState.Error -> {
-                        Subtitle2(
-                            text = stringResource(R.string.data_get_error),
-                            color = MaterialTheme.colors.primary
-                        )
-                        clickType.value = -1
-                    }
-                    else -> {
-                        if (state.loadState.append.endOfPaginationReached) {
-                            Subtitle2(
-                                text = stringResource(R.string.all_data_load),
-                                color = MaterialTheme.colors.primary
-                            )
-                        }
-                    }
-                }
-            }
-
-        }
-    }
-}
-

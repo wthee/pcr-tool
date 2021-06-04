@@ -7,10 +7,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -115,6 +112,10 @@ fun CharacterAllPicture(unitId: Int) {
                 divider = {
                     TabRowDefaults.Divider(color = Color.Transparent)
                 },
+                modifier = Modifier
+                    .padding(Dimen.fabMargin)
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
             ) {
                 for (tabIndex in icons.indices) {
                     Tab(
@@ -152,11 +153,10 @@ fun CharacterAllPicture(unitId: Int) {
                 ) {
                     requestPermissions(context as Activity, permissions, 1)
                 } else {
-                    //fixme 保存时卡顿
                     drawables[index]?.let {
-                        ImageDownloadHelper(context).save(
-                            (it as BitmapDrawable).bitmap,
-                            "${unitId}_${index}.jpg"
+                        ImageDownloadHelper(context).saveBitmap(
+                            bitmap = (it as BitmapDrawable).bitmap,
+                            displayName = "${unitId}_${index}.jpg"
                         )
                     }
                 }

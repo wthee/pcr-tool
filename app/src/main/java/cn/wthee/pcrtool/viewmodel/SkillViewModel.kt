@@ -8,9 +8,8 @@ import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
-import com.umeng.umcrash.UMCrash
+import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,9 +44,7 @@ class SkillViewModel @Inject constructor(
                 val data = skillRepository.getUnitSkill(unitId)
                 getSkillInfo(data.getAllSkillId(), atk, arrayListOf(lv))
             } catch (e: Exception) {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
-                }
+                UMengLogUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
             }
         }
     }
@@ -75,12 +72,10 @@ class SkillViewModel @Inject constructor(
                 allSkills.postValue(allSkill)
                 allIconTypes.postValue(allIcon)
             } catch (e: Exception) {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(
-                        e,
-                        Constants.EXCEPTION_SKILL + "enemy:${list[0].enemy_id}"
-                    )
-                }
+                UMengLogUtil.upload(
+                    e,
+                    Constants.EXCEPTION_SKILL + "enemy:${list[0].enemy_id}"
+                )
             }
         }
     }

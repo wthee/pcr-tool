@@ -8,8 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -19,21 +17,10 @@ import java.io.OutputStream
  */
 class ImageDownloadHelper(private val context: Context) {
 
-    private val activity = ActivityHelper.instance.currentActivity
-
-    /**
-     * 保存文件，文件名 [name]
-     */
-    fun save(bitmap: Bitmap, name: String) {
-        activity?.lifecycleScope?.launch {
-            saveBitmap(bitmap, name)
-        }
-    }
-
     /**
      * 保存bitmap
      */
-    private fun saveBitmap(bitmap: Bitmap, displayName: String): Boolean {
+    fun saveBitmap(bitmap: Bitmap, displayName: String): Boolean {
         var stream: OutputStream? = null
         val path = getImagePath()
         try {

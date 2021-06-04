@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -29,6 +30,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
  *
  * @param unitId 角色编号
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
@@ -49,7 +51,7 @@ fun RankEquipList(
             items(allRankEquip) {
                 RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
             }
-            items(3) {
+            items(spanCount) {
                 CommonSpacer()
             }
         }
@@ -60,6 +62,7 @@ fun RankEquipList(
 /**
  * RANK 装备图标列表
  */
+@ExperimentalMaterialApi
 @Composable
 fun RankEquipListItem(
     unitPromotion: UnitPromotion,

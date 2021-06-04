@@ -368,6 +368,11 @@ enum class SkillActionType(val type: Int, val desc: String) {
     IF_BUFF_SEAL(77, "刻印"),
 
     /**
+     * 79：行动时，造成伤害
+     */
+    ACTION_DOT(79, "行动伤害"),
+
+    /**
      * 90：EX被动
      */
     EX(90, "被动"),

@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 /**
  * 已收藏数据
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun PvpFavorites(
@@ -76,6 +78,7 @@ fun PvpFavorites(
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun PvpFavoriteItem(
     toCharacter: (Int) -> Unit,

@@ -8,10 +8,10 @@ import cn.wthee.pcrtool.data.db.view.compare
  * 角色 Rank 对比数据
  */
 data class RankCompareData(
-    val title: String,
-    val attr0: Double,
-    val attr1: Double,
-    val attrCompare: Double
+    val title: String = "???",
+    val attr0: Double = 0.0,
+    val attr1: Double = 0.0,
+    val attrCompare: Double = 0.0
 )
 
 

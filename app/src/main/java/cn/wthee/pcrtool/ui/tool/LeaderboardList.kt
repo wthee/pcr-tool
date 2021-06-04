@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色排行
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun LeaderboardList(
@@ -124,6 +126,7 @@ fun LeaderboardList(
 /**
  * 角色评价信息
  */
+@ExperimentalMaterialApi
 @Composable
 fun LeaderboardItem(info: LeaderboardData) {
     val context = LocalContext.current

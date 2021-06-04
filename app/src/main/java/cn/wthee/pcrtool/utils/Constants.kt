@@ -9,8 +9,6 @@ object Constants {
 
     //图片格式
     const val WEBP = ".webp"
-    const val RATIO = 1.78f
-    const val MOVE_SPEED_RATIO = 0.5
 
     //图片资源地址
     private const val RESOURCE_URL = "https://wthee.xyz/resource/"
@@ -86,10 +84,6 @@ object Constants {
     const val NOTICE_TOAST_CHANGE_SUCCESS = "数据切换完成！"
     const val RANK_UPPER = "RANK"
 
-    //常量值
-    const val LOG_TAG = "log_tag"
-    const val RANK = "rank"
-
     val ATTR = arrayListOf(
         "HP",
         "HP吸收",
@@ -110,6 +104,7 @@ object Constants {
         "TP消耗减少",
     )
 
+    //现实图片有误的角色编号
     val errorIDs = arrayListOf(
         101001,
         101301,
@@ -122,21 +117,17 @@ object Constants {
         105401,
     )
 
+    //无现实图片角色
     val notExistsIDs = arrayListOf(
         109731, 109831, 109931,
     )
 
     // 异常
     const val EXCEPTION = "异常"
-    const val EXCEPTION_BACK_TOP = "回到顶部$EXCEPTION"
-    const val EXCEPTION_MENU_NAV = "菜单跳转$EXCEPTION"
     const val EXCEPTION_API = "接口$EXCEPTION"
     const val EXCEPTION_DOWNLOAD_DB = "数据库文件下载$EXCEPTION"
     const val EXCEPTION_SAVE_DB = "数据库文件保存$EXCEPTION"
-    const val EXCEPTION_LOAD_PIC = "图片加载$EXCEPTION"
-    const val EXCEPTION_DOWNLOAD_PIC = "图片下载$EXCEPTION"
     const val EXCEPTION_LOAD_ATTR = "获取属性$EXCEPTION"
     const val EXCEPTION_UNIT_NULL = "角色信息空值$EXCEPTION"
     const val EXCEPTION_SKILL = "角色技能$EXCEPTION"
-    const val EXCEPTION_PVP_DIALOG = "竞技场查询弹窗$EXCEPTION"
 }

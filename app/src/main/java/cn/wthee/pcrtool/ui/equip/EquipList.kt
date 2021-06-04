@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.equip
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -59,7 +58,7 @@ fun EquipList(
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
 ) {
-    val equips = viewModel.equips.observeAsState().value ?: listOf()
+    val equips = viewModel.equips.observeAsState().value
     //筛选状态
     val filter = navViewModel.filterEquip.observeAsState()
     // dialog 状态
@@ -86,18 +85,16 @@ fun EquipList(
                 FilterEquipSheet(navViewModel, coroutineScope, state)
             }
         ) {
-            Box(
-                modifier = Modifier
-                    .background(color = MaterialTheme.colors.background)
-                    .fillMaxSize()
-            ) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 val spanCount = 4
-                LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
-                    items(equips) { equip ->
-                        EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
-                    }
-                    items(spanCount) {
-                        CommonSpacer()
+                if (equips != null) {
+                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
+                        items(equips!!) { equip ->
+                            EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
+                        }
+                        items(4) {
+                            CommonSpacer()
+                        }
                     }
                 }
                 Row(
@@ -118,7 +115,7 @@ fun EquipList(
                             navViewModel.resetClick.postValue(true)
                         }
                     }
-                    val count = equips.size
+                    val count = equips?.size ?: 0
                     // 数量显示&筛选按钮
                     FabCompose(
                         iconType = MainIconType.EQUIP,
@@ -170,8 +167,7 @@ private fun EquipItem(
         }
         //装备名称
         SelectText(
-            modifier = Modifier.padding(Dimen.smallPadding),
-            loved,
+            selected = loved,
             text = equip.equipmentName
         )
     }

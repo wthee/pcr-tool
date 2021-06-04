@@ -5,12 +5,8 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -40,7 +35,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.addToClip
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 enum class MenuState {
@@ -50,6 +44,7 @@ enum class MenuState {
 /**
  * 菜单
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun MenuContent(
@@ -296,6 +291,7 @@ fun MenuContent(
 /**
  * 菜单项
  */
+@ExperimentalMaterialApi
 @Composable
 fun MenuItem(
     backgroundColor: Color = MaterialTheme.colors.primary,
@@ -316,28 +312,27 @@ fun MenuItem(
 
     Card(
         backgroundColor = backgroundColor,
+        onClick = {
+            VibrateUtil(context).single()
+            navController.navigate(route)
+        },
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)
             .scale(scaleAnimation.value)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        scope.launch {
-                            state.value = MenuState.TOUCH
-                            delay(50L)
-                            state.value = MenuState.DEFAULT
-                            VibrateUtil(context).single()
-                            delay(50L)
-                        }
-                    },
-                    onTap = {
-                        navController.navigate(route)
-                    }
-                )
-            }
-
-
+//            .pointerInput(Unit) {
+//                detectTapGestures(
+//                    onPress = {
+//                        scope.launch {
+//                            state.value = MenuState.TOUCH
+//                            delay(50L)
+//                            state.value = MenuState.DEFAULT
+//                            VibrateUtil(context).single()
+//                            delay(50L)
+//                        }
+//                    },
+//                )
+//            }
     ) {
         Box {
             Text(

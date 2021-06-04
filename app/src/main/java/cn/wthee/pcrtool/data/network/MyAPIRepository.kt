@@ -5,9 +5,9 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.UMengLogUtil
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -48,7 +48,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_API)
+                    UMengLogUtil.upload(e, Constants.EXCEPTION_API + "pvp" + ids)
                 }
             }
         }
@@ -81,9 +81,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_API)
-                }
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$page")
             }
         }
         return error()
@@ -104,9 +102,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_API)
-                }
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "leader")
             }
         }
         return error()
@@ -127,9 +123,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_API)
-                }
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "notice")
             }
         }
         return error()
@@ -157,9 +151,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                MainScope().launch {
-                    UMCrash.generateCustomLog(e, Constants.EXCEPTION_API)
-                }
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "update")
             }
         }
         return error()

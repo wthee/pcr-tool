@@ -32,4 +32,12 @@ interface NewsDao {
      */
     @Query("DELETE FROM news WHERE id LIKE :region")
     suspend fun clearAll(region: String)
+
+    /**
+     * 获取公告
+     * @param query 查询筛选条件（区服区分）
+     */
+    @Query("SELECT * FROM news WHERE id LIKE :query")
+    suspend fun getNewsList(query: String): List<NewsTable>
+
 }

@@ -1,21 +1,20 @@
 package cn.wthee.pcrtool.ui.compose
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode.Expand
 
 /**
  * 角色图标列表
  */
 @Composable
 fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
-    FlowRow(
-        mainAxisSize = Expand,
-        mainAxisSpacing = Dimen.largePadding,
-        crossAxisSpacing = Dimen.mediuPadding,
-    ) {
+    VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediuPadding * 2) {
         icons.forEach {
             val unitId: Int
             val iconId: Int
@@ -27,15 +26,23 @@ fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
                 iconId = it + 30
                 unitId = it
             }
-            if (it == 0) {
-                CommonIconSpacer()
-            } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding,
+                        bottom = Dimen.mediuPadding
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 IconCompose(
-                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP,
+                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP
                 ) {
                     toCharacterDetail(unitId)
                 }
             }
+
         }
     }
 }

@@ -46,6 +46,7 @@ import kotlinx.coroutines.launch
 /**
  * 每月 BOSS 信息列表
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
@@ -101,6 +102,7 @@ fun ClanBattleList(
  * 图标列表
  * type 0：点击查看详情， 1：点击切换 BOSS
  */
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 private fun ClanBattleItem(
@@ -127,7 +129,7 @@ private fun ClanBattleItem(
         //图标
         Row(
             modifier = Modifier.padding(Dimen.mediuPadding),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             list.forEachIndexed { index, it ->
                 Box {

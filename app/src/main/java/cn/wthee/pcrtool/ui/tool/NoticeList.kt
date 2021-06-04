@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 /**
  * 通知列表
  */
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun NoticeList(
@@ -54,8 +56,10 @@ fun NoticeList(
         noticeList.value?.let { data ->
             MainActivity.navViewModel.loading.postValue(false)
             LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.mediuPadding)) {
-                items(data.data ?: arrayListOf()) {
-                    NoticeItem(it)
+                data.data?.let { list ->
+                    items(list) {
+                        NoticeItem(it)
+                    }
                 }
                 //查看更多
                 item {
@@ -98,6 +102,7 @@ fun NoticeList(
 /**
  * 通知
  */
+@ExperimentalMaterialApi
 @Composable
 private fun NoticeItem(data: AppNotice) {
     var exTitle = ""

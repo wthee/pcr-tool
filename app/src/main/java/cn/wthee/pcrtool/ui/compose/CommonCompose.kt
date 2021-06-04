@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
@@ -263,28 +262,38 @@ fun CommonIconSpacer() {
 /**
  * 卡片布局
  */
+@ExperimentalMaterialApi
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colors.background,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
 
-    var mModifier = modifier
+    val mModifier = modifier
         .fillMaxWidth()
         .heightIn(min = Dimen.cardHeight)
         .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
+
     if (onClick != null) {
-        mModifier = mModifier.clickable(onClick = onClick.vibrate {
-            VibrateUtil(context).single()
-        })
+        Card(
+            modifier = mModifier,
+            content = content,
+            onClick = onClick.vibrate {
+                VibrateUtil(context).single()
+            },
+            backgroundColor = backgroundColor
+        )
+    } else {
+        Card(
+            modifier = mModifier,
+            content = content,
+            backgroundColor = backgroundColor
+        )
     }
 
-    Card(
-        modifier = mModifier,
-        content = content
-    )
 }
 
 /**
@@ -297,7 +306,9 @@ fun SelectText(
     modifier: Modifier = Modifier,
     selected: Boolean,
     text: String,
-    selectedColor: Color = MaterialTheme.colors.primary
+    selectedColor: Color = MaterialTheme.colors.primary,
+    textColor: Color = Color.Unspecified,
+    style: TextStyle = MaterialTheme.typography.body2
 ) {
     val mModifier = if (selected) {
         modifier
@@ -309,8 +320,8 @@ fun SelectText(
     }
     Text(
         text = text,
-        color = if (selected) MaterialTheme.colors.onPrimary else Color.Unspecified,
-        style = MaterialTheme.typography.body2,
+        color = if (selected) MaterialTheme.colors.onPrimary else textColor,
+        style = style,
         maxLines = 1,
         textAlign = TextAlign.Center,
         overflow = TextOverflow.Ellipsis,

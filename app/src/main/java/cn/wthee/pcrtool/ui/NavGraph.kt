@@ -349,9 +349,9 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //更新通知
         composable(Navigation.APP_NOTICE) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             StatusBarBox {
+                viewModel.fabMainIcon.postValue(MainIconType.BACK)
                 NoticeList(scrollState)
             }
         }
@@ -365,11 +365,10 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 },
             )
         ) {
-            val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-
-            val scrollState = rememberLazyListState()
+            val arguments = requireNotNull(it.arguments)
             val region = arguments.getInt(Navigation.TOOL_NEWS_REGION)
+            val scrollState = rememberLazyListState()
 
             StatusBarBox {
                 NewsList(
@@ -569,8 +568,19 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 竞技场查询角色
      */
     val selectedPvpData = MutableLiveData<List<PvpCharacterData>>()
+
+    /**
+     * 竞技场查询id
+     */
     val selectedIds = MutableLiveData<String>()
 
+    /**
+     * rank 选择，当前
+     */
     var curRank = MutableLiveData(0)
+
+    /**
+     * rank 选择，目标
+     */
     var targetRank = MutableLiveData(0)
 }
