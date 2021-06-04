@@ -27,8 +27,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -93,7 +91,10 @@ fun EquipMaterialDeatil(
             }
             val pagerState = rememberPagerState(pageCount = pagerCount)
             //按照地图难度分类
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 basicInfo.value?.let {
                     MainText(
                         text = it.equipmentName,
@@ -194,14 +195,17 @@ private fun AreaEquipList(
     selectedId: Int,
     odds: ArrayList<EquipmentIdWithOdd>
 ) {
-    FlowRow(
-        modifier = Modifier.padding(Dimen.mediuPadding),
-        mainAxisSize = SizeMode.Expand,
-        mainAxisSpacing = Dimen.largePadding,
-        crossAxisSpacing = Dimen.mediuPadding
-    ) {
+    VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediuPadding * 2) {
         odds.forEach {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding,
+                        bottom = Dimen.mediuPadding
+                    ), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 val selected = selectedId == it.eid
                 IconCompose(data = getEquipIconUrl(it.eid))
                 SelectText(
