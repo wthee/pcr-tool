@@ -24,8 +24,6 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
 
 /**
  * 角色技能列表
@@ -312,36 +310,42 @@ private fun SkillLoopIconList(
     iconList: List<Int>,
     iconTypes: HashMap<Int, Int>
 ) {
-    FlowRow(
-        modifier = Modifier.padding(Dimen.mediuPadding),
-        mainAxisSize = SizeMode.Expand,
-        mainAxisSpacing = Dimen.largePadding,
-        crossAxisSpacing = Dimen.mediuPadding,
+    VerticalGrid(
+        modifier = Modifier.padding(top = Dimen.mediuPadding),
+        maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
     ) {
         iconList.forEach {
-            val type: String
-            val url: String
-            if (it == 1) {
-                type = "普攻"
-                url = Constants.EQUIPMENT_URL + Constants.UNKNOWN_EQUIP_ID + Constants.WEBP
-            } else {
-                type = when (it / 1000) {
-                    1 -> "技能 ${it % 10}"
-                    2 -> "SP技能 ${it % 10}"
-                    else -> ""
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding,
+                        bottom = Dimen.mediuPadding
+                    ), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val type: String
+                val url: String
+                if (it == 1) {
+                    type = "普攻"
+                    url = Constants.EQUIPMENT_URL + Constants.UNKNOWN_EQUIP_ID + Constants.WEBP
+                } else {
+                    type = when (it / 1000) {
+                        1 -> "技能 ${it % 10}"
+                        2 -> "SP技能 ${it % 10}"
+                        else -> ""
+                    }
+                    val iconType = when (it) {
+                        1001 -> iconTypes[2]
+                        1002 -> iconTypes[3]
+                        1003 -> iconTypes[1]
+                        2001 -> iconTypes[101]
+                        2002 -> iconTypes[102]
+                        2003 -> iconTypes[103]
+                        else -> null
+                    }
+                    url = Constants.SKILL_ICON_URL + (iconType ?: 1001) + Constants.WEBP
                 }
-                val iconType = when (it) {
-                    1001 -> iconTypes[2]
-                    1002 -> iconTypes[3]
-                    1003 -> iconTypes[1]
-                    2001 -> iconTypes[101]
-                    2002 -> iconTypes[102]
-                    2003 -> iconTypes[103]
-                    else -> null
-                }
-                url = Constants.SKILL_ICON_URL + (iconType ?: 1001) + Constants.WEBP
-            }
-            Column {
                 IconCompose(data = url)
                 Text(
                     text = type,

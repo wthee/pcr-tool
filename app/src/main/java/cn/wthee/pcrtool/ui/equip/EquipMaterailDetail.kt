@@ -139,7 +139,7 @@ fun EquipMaterialDeatil(
                 //pager
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         contentPadding = PaddingValues(top = Dimen.mediuPadding)
                     ) {
                         items(lists[pagerIndex]) {
