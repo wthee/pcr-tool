@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
+import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.model.AllAttrData
@@ -27,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterAttrViewModel @Inject constructor(
     private val unitRepository: UnitRepository,
+    private val skillRepository: SkillRepository,
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
@@ -58,6 +60,7 @@ class CharacterAttrViewModel @Inject constructor(
 
     /**
      * 获取角色属性信息
+     * fixme 成长属性，存在误差：-1 ~ 0 * (level + rank) ？
      */
     private suspend fun getAttrs(
         unitId: Int,
@@ -69,17 +72,18 @@ class CharacterAttrViewModel @Inject constructor(
         val info = Attr()
         val allData = AllAttrData()
         try {
-
             val rankData = unitRepository.getRankStatus(unitId, rank)
             val rarityData = unitRepository.getRarity(unitId, rarity)
             val ids = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
-            //计算指定rank星级下的角色属性
+            //星级属性
+            info.add(rarityData.attr)
+            //成长属性
+            info.add(Attr.setGrowthValue(rarityData).multiply((level + rank).toDouble()))
+            //rank属性
             rankData?.let {
                 info.add(rankData.attr)
             }
-            info.add(rarityData.attr)
-                .add(Attr.setGrowthValue(rarityData).multiply(level + rank))
-
+            //装备
             val eqs = arrayListOf<EquipmentMaxData>()
             ids.forEach {
                 if (it == UNKNOWN_EQUIP_ID || it == 0)
@@ -88,7 +92,7 @@ class CharacterAttrViewModel @Inject constructor(
                     eqs.add(equipmentRepository.getEquipmentData(it))
             }
             allData.equips = eqs
-            //计算穿戴装备后属性
+            //装备属性
             eqs.forEach { eq ->
                 if (eq.equipmentId == UNKNOWN_EQUIP_ID) return@forEach
                 info.add(eq.attr)
@@ -106,11 +110,22 @@ class CharacterAttrViewModel @Inject constructor(
             val storyAttr = getStoryAttrs(unitId)
             info.add(storyAttr)
             allData.stroyAttr = storyAttr
+            //被动技能数值
+            val skillActionData = getExSkillAttr(unitId, rarity, level)
+            val skillAttr = Attr()
+            val skillValue = skillActionData.action_value_2 + skillActionData.action_value_3 * level
+            when (skillActionData.action_detail_1) {
+                1 -> skillAttr.hp = skillValue
+                2 -> skillAttr.atk = skillValue
+                3 -> skillAttr.def = skillValue
+                4 -> skillAttr.magicStr = skillValue
+                5 -> skillAttr.magicDef = skillValue
+            }
+            info.add(skillAttr)
             allData.sumAttr = info
             allAttr.postValue(allData)
-            throw SecurityException()
         } catch (e: Exception) {
-            if (!(e is CancellationException)) {
+            if (e !is CancellationException) {
                 UMengLogUtil.upload(
                     e, Constants.EXCEPTION_LOAD_ATTR +
                             "uid:$unitId," +
@@ -142,6 +157,16 @@ class CharacterAttrViewModel @Inject constructor(
         return storyAttr
     }
 
+    private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionPro {
+        //100101
+        val skillActionId = if (rarity >= 5) {
+            unitId / 100 * 1000 + 511
+        } else {
+            unitId / 100 * 1000 + 501
+        } * 100 + 1
+        return skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))[0]
+    }
+
     /**
      * 获取最大Rank和星级
      * 0: level
@@ -156,8 +181,8 @@ class CharacterAttrViewModel @Inject constructor(
             val rank = unitRepository.getMaxRank(unitId)
             val rarity = unitRepository.getMaxRarity(unitId)
             val level = unitRepository.getMaxLevel()
-            val ueLv = equipmentRepository.getUniqueEquipMaxLv()
-            return arrayListOf(level, rank, rarity, ueLv)
+            val uniqueEquipLevel = equipmentRepository.getUniqueEquipMaxLv()
+            return arrayListOf(level, rank, rarity, uniqueEquipLevel)
         } catch (e: Exception) {
 
         }

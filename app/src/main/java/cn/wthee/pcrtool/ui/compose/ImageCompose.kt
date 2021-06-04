@@ -89,22 +89,23 @@ fun IconCompose(
     data: Any,
     size: Dp = Dimen.iconSize,
     tint: Color = MaterialTheme.colors.primary,
+    wrapSize: Boolean = false,
     fade: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
 
-    val mModifier = if (onClick != null) {
+    var mModifier = if (onClick != null) {
         Modifier
             .clip(Shapes.small)
             .clickable(onClick = onClick.vibrate {
                 VibrateUtil(context).single()
             })
-            .size(size)
     } else {
-        Modifier
-            .clip(Shapes.small)
-            .size(size)
+        Modifier.clip(Shapes.small)
+    }
+    if (!wrapSize) {
+        mModifier = mModifier.size(size)
     }
 
     if (data is ImageVector) {
@@ -128,7 +129,7 @@ fun IconCompose(
                 else -> rememberCoilPainter(request = R.drawable.unknown_gray)
             },
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillWidth,
             modifier = mModifier
         )
     }

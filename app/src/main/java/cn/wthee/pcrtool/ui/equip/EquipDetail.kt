@@ -26,8 +26,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
 
 
 /**
@@ -144,15 +142,18 @@ private fun EquipMaterialList(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        FlowRow(
-            modifier = Modifier.padding(Dimen.mediuPadding),
-            mainAxisSize = SizeMode.Expand,
-            mainAxisSpacing = Dimen.largePadding,
-            crossAxisSpacing = Dimen.mediuPadding
-        ) {
+        VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2) {
             data.forEach { material ->
                 val loved = filter.starIds.contains(material.id)
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = Dimen.mediuPadding,
+                            end = Dimen.mediuPadding,
+                            bottom = Dimen.mediuPadding
+                        ), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     IconCompose(data = getEquipIconUrl(material.id)) {
                         clickId.value = material.id
                         toEquipMaterail(material.id)

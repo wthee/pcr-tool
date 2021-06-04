@@ -36,11 +36,11 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 /**
  * 角色信息
  *
- * fixme 数据初始加载逻辑优化
  * @param unitId 角色编号
  */
 @ExperimentalAnimationApi
@@ -91,9 +91,6 @@ fun CharacterDetail(
     //专武等级滑动条
     val sliderUniqueEquipLevel = remember {
         mutableStateOf(0)
-    }
-    if (sliderUniqueEquipLevel.value != 0) {
-        attrViewModel.uniqueEquipLevelValue.postValue(sliderUniqueEquipLevel.value)
     }
     if (selectRank != 0) {
         attrViewModel.rankValue.postValue(selectRank)
@@ -185,9 +182,11 @@ fun CharacterDetail(
                     .verticalScroll(scrollState)
                     .fillMaxSize()
             ) {
-                FadeAnimation(visible = rarityMax.value != 0) {
+                //角色卡面
+                FadeAnimation(visible = rarityMax.value != 0 || unknown) {
                     CardImage(toPics, unitId, scrollState, rarityMax.value, rarity.value ?: 5)
                 }
+                //数据加载后，展示页面
                 val visible =
                     levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()
                 SlideAnimation(visible = visible) {
@@ -255,25 +254,35 @@ fun CharacterDetail(
                                 CharacterSkill(
                                     unitId = unitId,
                                     level = level.value!!,
-                                    atk = allData.value!!.sumAttr.atk.int
+                                    atk = max(
+                                        allData.value!!.sumAttr.atk.int,
+                                        allData.value!!.sumAttr.magicStr.int
+                                    )
                                 )
                             }
                         }
-                    } else {
-                        //未知角色占位页面
-                        if (unknown) {
-                            //等级
-                            Text(
-                                text = stringResource(R.string.unknown_character),
-                                color = MaterialTheme.colors.primary,
-                                style = MaterialTheme.typography.h6,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
                     }
                 }
-
+                SlideAnimation(visible = unknown) {
+                    //未知角色占位页面
+                    Card(
+                        shape = CardTopShape,
+                        elevation = Dimen.cardElevation,
+                        modifier = Modifier
+                            .padding(top = marginTop.dp)
+                            .fillMaxSize()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.unknown_character),
+                            color = MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.h6,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(Dimen.largePadding)
+                        )
+                    }
+                }
             }
             Column(
                 modifier = Modifier.align(Alignment.BottomEnd),
@@ -353,8 +362,6 @@ fun CharacterDetail(
                     }
                 }
             }
-
-
         }
     }
 

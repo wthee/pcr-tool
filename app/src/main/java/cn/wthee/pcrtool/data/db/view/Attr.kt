@@ -105,7 +105,7 @@ fun Attr.add(other: Attr): Attr {
 /**
  * 属性乘积
  */
-fun Attr.multiply(mult: Int): Attr {
+fun Attr.multiply(mult: Double): Attr {
     this.hp *= mult
     this.atk *= mult
     this.magicStr *= mult
