@@ -55,3 +55,4 @@
 
 # 实体类
 -keep class cn.wthee.pcrtool.data.model.** { *; }
+-keep class cn.wthee.pcrtool.data.db.entity.NewsTable { *; }

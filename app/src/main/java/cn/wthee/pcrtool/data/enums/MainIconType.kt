@@ -126,11 +126,6 @@ enum class MainIconType(val icon: ImageVector) {
     CLAN(Icons.Rounded.Security),
 
     /**
-     * 团队战阶段
-     */
-    CLAN_SECTION(Icons.Rounded.SignalCellularAlt),
-
-    /**
      * 官网公告
      */
     NEWS(Icons.Rounded.Campaign),
@@ -224,11 +219,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 数据更新
      */
     DB_DOWNLOAD(Icons.Rounded.CloudDownload),
-
-    /**
-     * 项目
-     */
-    MY_PROJECT(Icons.Rounded.Coffee),
 
     /**
      * 数据来源

@@ -72,7 +72,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
     buildFeatures {
         compose = true
@@ -94,9 +93,10 @@ dependencies {
     implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.foundation:foundation:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_version"]}")
-    //material
-//    implementation("com.google.android.material:material:1.3.0")
+
+    //icon
     implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_version"]}")
+
     //ktx
     implementation("androidx.preference:preference-ktx:1.1.1")
 

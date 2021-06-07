@@ -143,13 +143,12 @@ data class SkillActionPro(
     }
 
     private fun getTarget(): String {
-        return (getTargetType() + getTargetNumber() + getTargetRange() + if (dependId != 0) {
-            "受到动作(${dependId % 10})影响的目标"
+        val target = if (dependId != 0) {
+            "受到动作(${dependId % 10})影响的"
         } else {
-            "" + getTargetAssignment()
-        }
-                + getTargetCount())
-            .replace("己方自身", "自身")
+            getTargetType()
+        } + getTargetNumber() + getTargetRange() + getTargetAssignment() + getTargetCount()
+        return target.replace("己方自身", "自身")
             .replace("自身己方", "自身")
             .replace("自身全体", "自身")
     }
@@ -702,7 +701,7 @@ data class SkillActionPro(
             SkillActionType.CHANGE_ACTION_SPEED_FIELD -> ""
             SkillActionType.CHANGE_UB_TIME -> ""
             SkillActionType.LOOP_TRIGGER -> {
-                when (action_detail_2) {
+                when (action_detail_1) {
                     2 -> "条件：[${action_value_4.toInt()}] 秒内受到伤害时，以 ${
                         getValueText(
                             1,
