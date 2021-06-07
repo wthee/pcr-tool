@@ -32,7 +32,17 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+
+        debug {
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -75,7 +85,7 @@ android {
 dependencies {
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0-RC-native-mt")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
     //compose
     implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["compose_version"]}")
@@ -85,10 +95,9 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:${rootProject.extra["compose_version"]}")
     implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_version"]}")
     //material
-    implementation("com.google.android.material:material:1.3.0")
+//    implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_version"]}")
     //ktx
-//    implementation("androidx.activity:activity-compose:1.3.0-alpha08")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     //Accompanist
@@ -101,9 +110,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     //coil-gif
     implementation("io.coil-kt:coil-gif:1.2.1")
-
-    //DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0-beta01")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
