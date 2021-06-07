@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.utils.fillZero
-import java.io.Serializable
 
 
 data class ClanBattleInfo(
@@ -11,7 +10,7 @@ data class ClanBattleInfo(
     @ColumnInfo(name = "start_time") val start_time: String,
     @ColumnInfo(name = "enemyIds") val enemyIds: String,
     @ColumnInfo(name = "unitIds") val unitIds: String,
-) : Serializable {
+) {
 
     fun getUnitIdList(selectedSection: Int): List<ClanBossTargetInfo> {
         val clanBossData = getAllBossInfo()[selectedSection]

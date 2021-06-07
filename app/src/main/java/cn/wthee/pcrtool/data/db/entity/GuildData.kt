@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
 /**
  * 公会信息
@@ -45,7 +44,7 @@ data class GuildData(
     @ColumnInfo(name = "member28") val member28: Int,
     @ColumnInfo(name = "member29") val member29: Int,
     @ColumnInfo(name = "member30") val member30: Int
-) : Serializable {
+) {
 
     fun getMemberIds() = arrayListOf(
         member1,

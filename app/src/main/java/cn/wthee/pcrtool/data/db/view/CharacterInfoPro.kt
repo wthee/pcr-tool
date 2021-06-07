@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import java.io.Serializable
 
 
 /**
@@ -31,7 +30,7 @@ data class CharacterInfoPro(
     @ColumnInfo(name = "rarity") val rarity: Int = 3,
     @ColumnInfo(name = "comments") val comments: String = "???",
     @ColumnInfo(name = "room_comments") val roomComments: String = "???",
-) : Serializable {
+) {
 
     /**
      * 格式化年龄

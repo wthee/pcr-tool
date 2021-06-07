@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
 /**
  * 动作循环
@@ -35,7 +34,7 @@ data class AttackPattern(
     @ColumnInfo(name = "atk_pattern_18") val atkPattern18: Int,
     @ColumnInfo(name = "atk_pattern_19") val atkPattern19: Int,
     @ColumnInfo(name = "atk_pattern_20") val atkPattern20: Int
-) : Serializable {
+) {
 
     fun getBefore(): MutableList<Int> {
         val list = getList()

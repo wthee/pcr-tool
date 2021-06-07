@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import java.io.Serializable
 
 
 /**
@@ -20,7 +19,7 @@ data class CharacterInfo(
     @ColumnInfo(name = "atk_type") val atkType: Int,
     @ColumnInfo(name = "start_time") val startTime: String,
     @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
-) : Serializable {
+) {
 
     /**
      * 格式化年龄

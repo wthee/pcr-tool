@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,7 +26,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
@@ -67,6 +65,7 @@ fun NewsList(
 
     val news =
         viewModel.getNews(region = region).flowWithLifecycle(lifecycle).collectAsLazyPagingItems()
+    navViewModel.loading.postValue(true)
 
     Box(
         modifier = Modifier
@@ -80,19 +79,11 @@ fun NewsList(
                 .fillMaxSize(),
             contentPadding = PaddingValues(Dimen.mediuPadding)
         ) {
-            item {
-                if (news.loadState.append is LoadState.Loading) {
-                    MainCard(modifier = Modifier.padding(Dimen.mediuPadding), onClick = {
-                        news.retry()
-                    }) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(Dimen.fabIconSize)
-                        )
-                    }
-                }
-            }
             itemsIndexed(news) { _, it ->
                 if (it != null) {
+                    if (navViewModel.loading.value == true) {
+                        navViewModel.loading.postValue(false)
+                    }
                     NewsItem(region, news = it, toDetail)
                 }
             }
@@ -125,7 +116,6 @@ private fun NewsItem(
     news: NewsTable,
     toDetail: (String, String, Int, String) -> Unit,
 ) {
-
     val tag = news.getTag()
     val colorId = when (tag) {
         "公告", "更新" -> R.color.news_update

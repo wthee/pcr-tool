@@ -5,7 +5,6 @@ import cn.wthee.pcrtool.data.enums.SortType
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.Constants
 import com.google.gson.Gson
-import java.io.Serializable
 
 /**
  * 角色信息筛选
@@ -21,7 +20,7 @@ class FilterCharacter(
     var sortType: SortType = SortType.SORT_DATE,
     var name: String = "",
     var asc: Boolean = false
-) : Serializable {
+) {
     var starIds = arrayListOf<Int>()
         set(value) {
             val list = arrayListOf<Int>()

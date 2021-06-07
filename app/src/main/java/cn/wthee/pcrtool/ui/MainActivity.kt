@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
         lateinit var handler: Handler
         lateinit var navViewModel: NavViewModel
         var vibrateOn = true
+        var animOn = true
         var r6Ids = listOf<Int>()
     }
 
@@ -88,6 +89,7 @@ class MainActivity : ComponentActivity() {
         setHandler()
         UMengInitializer().create(this)
         vibrateOn = mainSP().getBoolean(Constants.SP_VIBRATE_STATE, true)
+        animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
         val noticeViewModel: NoticeViewModel by viewModels()
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()

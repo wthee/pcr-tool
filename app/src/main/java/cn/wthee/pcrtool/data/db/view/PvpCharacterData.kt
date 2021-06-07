@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
-import java.io.Serializable
 
 /**
  *  角色位置
@@ -9,7 +8,7 @@ import java.io.Serializable
 data class PvpCharacterData(
     @ColumnInfo(name = "unit_id") val unitId: Int = 0,
     @ColumnInfo(name = "position") val position: Int = 999
-) : Serializable
+)
 
 /**
  * 用 - 拼接角色id

@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
-import java.io.Serializable
 
 /**
  * 装备最大强化后属性视图
@@ -17,7 +16,7 @@ data class EquipmentMaxData(
     @ColumnInfo(name = "require_level") var requireLevel: Int = 0,
     @ColumnInfo(name = "promotion_level") var promotionLevel: Int = 0,
     @Embedded var attr: Attr = Attr(),
-) : Serializable {
+) {
 
     /**
      * 装备描述

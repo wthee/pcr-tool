@@ -5,9 +5,6 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.utils.ApiUtil
 import coil.ImageLoader
@@ -27,7 +24,6 @@ class MyApplication : Application(), ImageLoaderFactory {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
         var backupMode = false
-        val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "main")
     }
 
     override fun onCreate() {

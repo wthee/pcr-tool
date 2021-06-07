@@ -5,8 +5,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.ui.MainActivity.Companion.animOn
 import cn.wthee.pcrtool.utils.ScreenUtil
 
 /**
@@ -36,7 +35,7 @@ fun SlideAnimation(
     visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
-    val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
+
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
@@ -62,7 +61,7 @@ fun FadeAnimation(
     visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
-    val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
+
     AnimatedVisibility(
         visible = visible,
         enter = if (animOn) {
@@ -84,7 +83,7 @@ fun ExtendedAnimation(
     visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
-    val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
+
     AnimatedVisibility(
         visible = visible,
         enter = if (animOn) {
@@ -106,7 +105,7 @@ fun MenuAnimation(
     visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
-    val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
+
     AnimatedVisibility(
         visible = visible,
         enter = if (animOn) {
@@ -133,7 +132,7 @@ fun SlideDownAnimation(
     visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
-    val animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
+
     val halfImageHeight = ScreenUtil.getCharacterCardHeight().toInt() / 2
     AnimatedVisibility(
         visible = visible,
