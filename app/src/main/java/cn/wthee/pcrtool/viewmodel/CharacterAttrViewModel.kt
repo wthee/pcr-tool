@@ -123,7 +123,6 @@ class CharacterAttrViewModel @Inject constructor(
             }
             info.add(skillAttr)
             allData.sumAttr = info
-            allAttr.postValue(allData)
         } catch (e: Exception) {
             if (e !is CancellationException) {
                 UMengLogUtil.upload(

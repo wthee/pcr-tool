@@ -63,3 +63,11 @@ fun String.intArrayList(): List<Int> {
  * 去除空格等无用字符
  */
 fun String.deleteSpace() = this.replace("\\s".toRegex(), "")
+
+/**
+ * [Double] 转 [Int]，四舍五入
+ */
+val Double.int: Int
+    get() {
+        return (this + 0.5).toInt()
+    }
