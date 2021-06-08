@@ -16,7 +16,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
-import cn.wthee.pcrtool.utils.Constants.SP_PVP_TW
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
@@ -236,15 +235,4 @@ fun openDatabase(helper: SupportSQLiteOpenHelper) {
 /**
  * 获取已选择的游戏版本
  */
-fun getRegion() = if (getDatabaseType() == 1) {
-    2
-} else {
-    //获取查询设置
-    val sp = mainSP()
-    val tw = sp.getBoolean(SP_PVP_TW, false)
-    if (tw) {
-        3
-    } else {
-        4
-    }
-}
+fun getRegion() = if (getDatabaseType() == 1) 2 else 4

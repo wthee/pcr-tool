@@ -40,8 +40,7 @@
     <string name="redownload_db_summary">重新下载最新数据</string>
     <string name="data_version">数据版本：%s</string>
     <string name="app_sourcce">项目地址</string>
-    <string name="pvp_search_jp">查询台服竞技场数据</string>
-    <string name="pvp_search_summary">查询返回%s数据</string>
+    <string name="pvp_search_jp">竞技场数据</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
     <string name="data_from_hint">数据和图片来源</string>
