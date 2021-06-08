@@ -176,47 +176,59 @@ private fun CalendarItem(calendar: DropEvent) {
 @Composable
 private fun getTypeData(data: DropEvent): ArrayList<CalendarEventData> {
     val events = arrayListOf<CalendarEventData>()
-    val list = data.type.split("-")
-    list.forEach { s ->
-        var colorId = R.color.black
-        val title = when (s.toInt()) {
-            31 -> {
-                colorId = R.color.color_map_n
-                stringResource(id = R.string.normal)
+    if (data.type != "1") {
+        //正常活动
+        val list = data.type.split("-")
+        list.forEach { s ->
+            var colorId = R.color.black
+            val title = when (s.toInt()) {
+                31 -> {
+                    colorId = R.color.color_map_n
+                    stringResource(id = R.string.normal)
+                }
+                32 -> {
+                    colorId = R.color.color_map_h
+                    stringResource(id = R.string.hard)
+                }
+                39 -> {
+                    colorId = R.color.color_map_vh
+                    stringResource(id = R.string.very_hard)
+                }
+                34 -> {
+                    colorId = R.color.color_rank_21
+                    stringResource(id = R.string.explore)
+                }
+                37 -> {
+                    colorId = R.color.news_update
+                    stringResource(id = R.string.shrine)
+                }
+                38 -> {
+                    colorId = R.color.news_update
+                    stringResource(id = R.string.temple)
+                }
+                45 -> {
+                    colorId = R.color.color_rank_2_3
+                    stringResource(id = R.string.dungeon)
+                }
+                else -> ""
             }
-            32 -> {
-                colorId = R.color.color_map_h
-                stringResource(id = R.string.hard)
-            }
-            39 -> {
-                colorId = R.color.color_map_vh
-                stringResource(id = R.string.very_hard)
-            }
-            34 -> {
-                colorId = R.color.color_rank_21
-                stringResource(id = R.string.explore)
-            }
-            37 -> {
-                colorId = R.color.news_update
-                stringResource(id = R.string.shrine)
-            }
-            38 -> {
-                colorId = R.color.news_update
-                stringResource(id = R.string.temple)
-            }
-            45 -> {
-                colorId = R.color.color_rank_2_3
-                stringResource(id = R.string.dungeon)
-            }
-            else -> ""
+            events.add(
+                CalendarEventData(
+                    title,
+                    stringResource(id = R.string.drop_x, data.getFixedValue()),
+                    colorId
+                )
+            )
         }
+    } else {
+        //露娜塔
         events.add(
             CalendarEventData(
-                title,
-                stringResource(id = R.string.drop_x, data.getFixedValue()),
-                colorId
+                stringResource(id = R.string.tower),
+                "",
             )
         )
     }
+
     return events
 }

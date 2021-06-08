@@ -89,4 +89,24 @@ interface EventDao {
     )
     suspend fun getDropEvent(): List<DropEvent>
 
+    /**
+     * 获取加倍活动信息
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT
+            1 AS type,
+            0 AS value,
+            start_time,
+            end_time
+        FROM
+            tower_schedule 
+        ORDER BY
+            start_time DESC 
+            LIMIT 50 OFFSET 0
+    """
+    )
+    suspend fun getTowerEvent(): List<DropEvent>
+
 }

@@ -29,10 +29,11 @@ class CalendarViewModel @Inject constructor(
      */
     fun getDropEvent() {
         viewModelScope.launch {
-            val data = eventRepository.getDropEvent()
+            val data0 = eventRepository.getDropEvent()
+            val data1 = eventRepository.getTowerEvent()
             //按进行中排序
             val today = getToday()
-            dropEvents.postValue(data.sortedWith(compare(today)))
+            dropEvents.postValue((data0 + data1).sortedWith(compare(today)))
         }
     }
 
