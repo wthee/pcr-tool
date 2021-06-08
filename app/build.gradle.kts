@@ -126,9 +126,6 @@ dependencies {
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
 
-    //okio
-    implementation("com.squareup.okio:okio:2.10.0")
-
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.0")
     implementation("androidx.paging:paging-compose:1.0.0-alpha10")
