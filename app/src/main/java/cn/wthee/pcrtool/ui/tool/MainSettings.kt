@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getDatabaseType
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
@@ -50,6 +51,7 @@ fun MainSettings() {
     val sp = mainSP()
     val scope = rememberCoroutineScope()
     val painter = rememberCoilPainter(request = R.mipmap.ic_launcher_foreground)
+    val region = getRegion()
 
     val visibility = remember {
         mutableStateOf(false)
@@ -149,6 +151,53 @@ fun MainSettings() {
                     oldFileSize.value = 0
                 }
             }
+            //- 台服数据查询
+            if (region != 2) {
+                val twOn = sp.getBoolean(Constants.SP_PVP_TW, false)
+                val twState = remember {
+                    mutableStateOf(twOn)
+                }
+                val twSummary =
+                    stringResource(
+                        id = R.string.pvp_search_summary, if (twState.value) {
+                            stringResource(id = R.string.db_tw)
+                        } else {
+                            stringResource(id = R.string.db_jp)
+                        }
+                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            twState.value = !twState.value
+                            sp.edit {
+                                putBoolean(Constants.SP_PVP_TW, twState.value)
+                            }
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                    IconCompose(
+                        data = MainIconType.PVP_SEARCH.icon,
+                        size = Dimen.settingIconSize
+                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(Dimen.largePadding)
+                            .weight(1f)
+                    ) {
+                        TitleText(text = stringResource(id = R.string.pvp_search_jp))
+                        SummaryText(text = twSummary)
+                    }
+                    Switch(checked = twState.value, onCheckedChange = {
+                        twState.value = it
+                        sp.edit().putBoolean(Constants.SP_PVP_TW, it).apply()
+                        VibrateUtil(context).single()
+                    })
+                    Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                }
+            }
+
             //其它设置
             LineCompose()
             MainText(

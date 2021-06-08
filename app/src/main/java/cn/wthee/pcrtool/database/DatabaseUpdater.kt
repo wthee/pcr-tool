@@ -16,6 +16,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
+import cn.wthee.pcrtool.utils.Constants.SP_PVP_TW
 import com.umeng.umcrash.UMCrash
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
@@ -62,7 +63,7 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(version.data!!, from, force)
         } catch (e: Exception) {
-            if (!(e is CancellationException)) {
+            if (e !is CancellationException) {
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
             }
         }
@@ -235,4 +236,15 @@ fun openDatabase(helper: SupportSQLiteOpenHelper) {
 /**
  * 获取已选择的游戏版本
  */
-fun getRegion() = if (getDatabaseType() == 1) 2 else 4
+fun getRegion() = if (getDatabaseType() == 1) {
+    2
+} else {
+    //获取查询设置
+    val sp = mainSP()
+    val tw = sp.getBoolean(SP_PVP_TW, false)
+    if (tw) {
+        3
+    } else {
+        4
+    }
+}

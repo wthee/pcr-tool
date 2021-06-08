@@ -88,8 +88,9 @@ class MainActivity : ComponentActivity() {
         //设置 handler
         setHandler()
         UMengInitializer().create(this)
-        vibrateOn = mainSP().getBoolean(Constants.SP_VIBRATE_STATE, true)
-        animOn = mainSP().getBoolean(Constants.SP_ANIM_STATE, true)
+        val sp = mainSP()
+        vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
+        animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
         val noticeViewModel: NoticeViewModel by viewModels()
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()

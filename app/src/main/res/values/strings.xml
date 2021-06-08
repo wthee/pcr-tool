@@ -40,6 +40,8 @@
     <string name="redownload_db_summary">重新下载最新数据</string>
     <string name="data_version">数据版本：%s</string>
     <string name="app_sourcce">项目地址</string>
+    <string name="pvp_search_jp">查询台服竞技场数据</string>
+    <string name="pvp_search_summary">查询返回%s数据</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
     <string name="data_from_hint">数据和图片来源</string>
@@ -55,6 +57,7 @@
     <string name="leader_tip">角色排行数据来源</string>
     <string name="leader_source_url">https://appmedia.jp/priconne-redive/1642761#b</string>
     <string name="db_cn">国服</string>
+    <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
     <string name="change_db">数据切换</string>
     <string name="clean_database">删除历史数据文件</string>
@@ -117,7 +120,6 @@
     <string name="pcrdfans_com">前往 pcrdfans.com</string>
     <string name="result">数值变化</string>
     <string name="team_no">进攻队伍 %s</string>
-    <string name="pvp_search_jp">查询台服竞技场数据</string>
     <string name="tool_equip">装备</string>
     <string name="character_name">角色名</string>
     <string name="equip_name">装备名</string>
