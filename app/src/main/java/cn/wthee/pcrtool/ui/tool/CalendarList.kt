@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
-import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.compose.*
@@ -42,7 +42,7 @@ fun CalendarCompose(
     calendarViewModel: CalendarViewModel = hiltViewModel()
 ) {
     calendarViewModel.getDropEvent()
-    val calendarData = calendarViewModel.dropEvents.observeAsState()
+    val calendarData = calendarViewModel.events.observeAsState()
 
     val coroutineScope = rememberCoroutineScope()
     val title = when (getDatabaseType()) {
@@ -93,7 +93,7 @@ fun CalendarCompose(
  */
 @ExperimentalMaterialApi
 @Composable
-private fun CalendarItem(calendar: DropEvent) {
+private fun CalendarItem(calendar: CalendarEvent) {
     val today = getToday()
     val sd = calendar.startTime.formatTime()
     val ed = calendar.endTime.formatTime()
@@ -174,7 +174,7 @@ private fun CalendarItem(calendar: DropEvent) {
  * 获取事项信息
  */
 @Composable
-private fun getTypeData(data: DropEvent): ArrayList<CalendarEventData> {
+private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
     val events = arrayListOf<CalendarEventData>()
     if (data.type != "1") {
         //正常活动

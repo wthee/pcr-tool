@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.entity.EventStoryDetail
-import cn.wthee.pcrtool.data.db.view.DropEvent
+import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.EventData
 
 /**
@@ -87,10 +87,10 @@ interface EventDao {
             LIMIT 50 OFFSET 0
     """
     )
-    suspend fun getDropEvent(): List<DropEvent>
+    suspend fun getDropEvent(): List<CalendarEvent>
 
     /**
-     * 获取加倍活动信息
+     * 获取露娜塔信息
      */
     @Transaction
     @Query(
@@ -107,6 +107,6 @@ interface EventDao {
             LIMIT 50 OFFSET 0
     """
     )
-    suspend fun getTowerEvent(): List<DropEvent>
+    suspend fun getTowerEvent(): List<CalendarEvent>
 
 }
