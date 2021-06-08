@@ -43,7 +43,6 @@ import kotlinx.coroutines.launch
 
 /**
  * 公告列表
- * fixme 列表滚动状态未能正常保存
  */
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -62,44 +61,48 @@ fun NewsList(
         3 -> stringResource(id = R.string.tool_news_tw)
         else -> stringResource(id = R.string.tool_news_jp)
     }
+    viewModel.getNews(region)
+    val flow = viewModel.newsPageList
+    if (flow != null) {
+        val news = remember(flow, lifecycle) {
+            flow.flowWithLifecycle(lifecycle = lifecycle)
+        }.collectAsLazyPagingItems()
+        navViewModel.loading.postValue(true)
 
-    val news =
-        viewModel.getNews(region = region).flowWithLifecycle(lifecycle).collectAsLazyPagingItems()
-    navViewModel.loading.postValue(true)
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
-    ) {
-        LazyColumn(
-            state = scrollState,
+        Box(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxSize(),
-            contentPadding = PaddingValues(Dimen.mediuPadding)
+                .fillMaxSize()
+                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
         ) {
-            itemsIndexed(news) { _, it ->
-                if (it != null) {
-                    if (navViewModel.loading.value == true) {
-                        navViewModel.loading.postValue(false)
+            LazyColumn(
+                state = scrollState,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(Dimen.mediuPadding)
+            ) {
+                itemsIndexed(news) { _, it ->
+                    if (it != null) {
+                        if (navViewModel.loading.value == true) {
+                            navViewModel.loading.postValue(false)
+                        }
+                        NewsItem(region, news = it, toDetail)
                     }
-                    NewsItem(region, news = it, toDetail)
                 }
             }
-        }
-        FabCompose(
-            iconType = MainIconType.NEWS,
-            text = tab,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(
-                    end = Dimen.fabMarginEnd,
-                    bottom = Dimen.fabMargin
-                )
-        ) {
-            coroutineScope.launch {
-                scrollState.scrollToItem(0)
+            FabCompose(
+                iconType = MainIconType.NEWS,
+                text = tab,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        end = Dimen.fabMarginEnd,
+                        bottom = Dimen.fabMargin
+                    )
+            ) {
+                coroutineScope.launch {
+                    scrollState.scrollToItem(0)
+                }
             }
         }
     }
