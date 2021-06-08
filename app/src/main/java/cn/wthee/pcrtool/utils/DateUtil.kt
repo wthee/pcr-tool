@@ -14,7 +14,6 @@ val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
  */
 fun String.formatTime(): String {
     val list = this.split(" ")[0].split("/")
-    //2020/01/01 12:121
     return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
         var hms = this.substring(this.length - 8, this.length)
         hms = hms.replace(' ', '0')

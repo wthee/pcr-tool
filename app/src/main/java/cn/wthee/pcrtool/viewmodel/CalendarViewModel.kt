@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EventRepository
-import cn.wthee.pcrtool.data.db.view.DropEvent
+import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.hourInt
@@ -22,24 +22,25 @@ class CalendarViewModel @Inject constructor(
     private val eventRepository: EventRepository
 ) : ViewModel() {
 
-    val dropEvents = MutableLiveData<List<DropEvent>>()
+    val events = MutableLiveData<List<CalendarEvent>>()
 
     /**
      * 获取加倍活动信息
      */
     fun getDropEvent() {
         viewModelScope.launch {
-            val data = eventRepository.getDropEvent()
+            val data0 = eventRepository.getDropEvent()
+            val data1 = eventRepository.getTowerEvent()
             //按进行中排序
             val today = getToday()
-            dropEvents.postValue(data.sortedWith(compare(today)))
+            events.postValue((data0 + data1).sortedWith(compare(today)))
         }
     }
 
     /**
      * 排序
      */
-    private fun compare(today: String) = Comparator<DropEvent> { o1, o2 ->
+    private fun compare(today: String) = Comparator<CalendarEvent> { o1, o2 ->
         val sd1 = o1.startTime.formatTime()
         val ed1 = o1.endTime.formatTime()
         val sd2 = o2.startTime.formatTime()

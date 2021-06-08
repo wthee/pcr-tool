@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.db.entity.UnitRarity
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
-import java.io.Serializable
 
 /**
  * 面板属性
@@ -27,7 +26,7 @@ data class Attr(
     @ColumnInfo(name = "energy_recovery_rate") var energyRecoveryRate: Double,
     @ColumnInfo(name = "energy_reduce_rate") var energyReduceRate: Double,
     @ColumnInfo(name = "accuracy") var accuracy: Double
-) : Serializable {
+) {
     companion object {
 
         /**

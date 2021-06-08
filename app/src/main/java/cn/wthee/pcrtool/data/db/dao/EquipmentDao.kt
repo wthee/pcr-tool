@@ -41,7 +41,7 @@ const val viewEquipmentMaxData = """
 FROM
 	equipment_data AS a
 	LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
-	LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON b.promotion_level = d.promotion_level
+	LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON a.promotion_level = d.promotion_level
  """
 
 //装备筛选

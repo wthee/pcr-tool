@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.db.view
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
-import java.io.Serializable
 
 /**
  * 面板属性
@@ -26,7 +25,7 @@ data class AttrInt(
     @ColumnInfo(name = "energy_recovery_rate") var energyRecoveryRate: Int,
     @ColumnInfo(name = "energy_reduce_rate") var energyReduceRate: Int,
     @ColumnInfo(name = "accuracy") var accuracy: Int
-) : Serializable {
+) {
 
     constructor() : this(
         0,

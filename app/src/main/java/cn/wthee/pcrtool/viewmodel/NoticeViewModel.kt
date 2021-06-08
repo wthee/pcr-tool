@@ -55,8 +55,8 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
                     }
                 }
             } catch (e: Exception) {
+
             }
-            updateApp.postValue(0)
         }
     }
 }

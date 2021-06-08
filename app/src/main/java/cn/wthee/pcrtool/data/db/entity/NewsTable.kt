@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
 /**
  * 官网公告
@@ -15,7 +14,7 @@ data class NewsTable(
     val tags: String,
     val url: String,
     val date: String
-) : Serializable {
+) {
 
     fun getTag(): String {
         val tags = tags.split(",").filter {

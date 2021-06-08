@@ -60,7 +60,6 @@ class CharacterAttrViewModel @Inject constructor(
 
     /**
      * 获取角色属性信息
-     * fixme 成长属性，存在误差：-1 ~ 0 * (level + rank) ？
      */
     private suspend fun getAttrs(
         unitId: Int,
@@ -94,8 +93,9 @@ class CharacterAttrViewModel @Inject constructor(
             allData.equips = eqs
             //装备属性
             eqs.forEach { eq ->
-                if (eq.equipmentId == UNKNOWN_EQUIP_ID) return@forEach
-                info.add(eq.attr)
+                if (eq.equipmentId != UNKNOWN_EQUIP_ID) {
+                    info.add(eq.attr)
+                }
             }
             //专武
             val uniqueEquip = equipmentRepository.getUniqueEquipInfo(unitId, uniqueEquipLevel)
@@ -123,7 +123,6 @@ class CharacterAttrViewModel @Inject constructor(
             }
             info.add(skillAttr)
             allData.sumAttr = info
-            allAttr.postValue(allData)
         } catch (e: Exception) {
             if (e !is CancellationException) {
                 UMengLogUtil.upload(

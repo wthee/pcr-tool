@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.R
 /**
  * 活动信息
  */
-data class DropEvent(
+data class CalendarEvent(
     @ColumnInfo(name = "type") val type: String = "31",
     @ColumnInfo(name = "value") val value: Int = 1500,
     @ColumnInfo(name = "start_time") val startTime: String = "2021-01-01 00:00:00",

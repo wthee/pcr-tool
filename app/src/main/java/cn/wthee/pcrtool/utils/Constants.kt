@@ -77,6 +77,7 @@ object Constants {
     const val SP_STAR_EQUIP = "star_equip"
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
+    const val SP_PVP_TW = "pvp_region"
 
     //默认值
     const val NOTICE_TITLE = "正在下载数据"

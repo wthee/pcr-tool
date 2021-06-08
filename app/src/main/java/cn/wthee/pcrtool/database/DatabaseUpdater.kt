@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.database
 
 import android.annotation.SuppressLint
 import androidx.core.content.edit
-import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -63,7 +62,7 @@ object DatabaseUpdater {
             //更新判断
             downloadDB(version.data!!, from, force)
         } catch (e: Exception) {
-            if (!(e is CancellationException)) {
+            if (e !is CancellationException) {
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
             }
         }
@@ -236,13 +235,4 @@ fun openDatabase(helper: SupportSQLiteOpenHelper) {
 /**
  * 获取已选择的游戏版本
  */
-fun getRegion() = if (getDatabaseType() == 1) 2 else {
-    //获取查询设置
-    val tw = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
-        .getBoolean("pvp_region", false)
-    if (tw) {
-        3
-    } else {
-        4
-    }
-}
+fun getRegion() = if (getDatabaseType() == 1) 2 else 4

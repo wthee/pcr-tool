@@ -1,15 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import kotlin.math.ceil
-
-/**
- * [Double] 转 [Int]，向上取整
- */
-val Double.int: Int
-    get() {
-        return ceil(this).toInt()
-    }
-
 
 /**
  * Rank 格式化

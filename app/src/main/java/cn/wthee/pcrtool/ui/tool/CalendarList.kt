@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
-import cn.wthee.pcrtool.data.db.view.DropEvent
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.compose.*
@@ -42,7 +42,7 @@ fun CalendarCompose(
     calendarViewModel: CalendarViewModel = hiltViewModel()
 ) {
     calendarViewModel.getDropEvent()
-    val calendarData = calendarViewModel.dropEvents.observeAsState()
+    val calendarData = calendarViewModel.events.observeAsState()
 
     val coroutineScope = rememberCoroutineScope()
     val title = when (getDatabaseType()) {
@@ -93,7 +93,7 @@ fun CalendarCompose(
  */
 @ExperimentalMaterialApi
 @Composable
-private fun CalendarItem(calendar: DropEvent) {
+private fun CalendarItem(calendar: CalendarEvent) {
     val today = getToday()
     val sd = calendar.startTime.formatTime()
     val ed = calendar.endTime.formatTime()
@@ -174,49 +174,61 @@ private fun CalendarItem(calendar: DropEvent) {
  * 获取事项信息
  */
 @Composable
-private fun getTypeData(data: DropEvent): ArrayList<CalendarEventData> {
+private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
     val events = arrayListOf<CalendarEventData>()
-    val list = data.type.split("-")
-    list.forEach { s ->
-        var colorId = R.color.black
-        val title = when (s.toInt()) {
-            31 -> {
-                colorId = R.color.color_map_n
-                stringResource(id = R.string.normal)
+    if (data.type != "1") {
+        //正常活动
+        val list = data.type.split("-")
+        list.forEach { s ->
+            var colorId = R.color.black
+            val title = when (s.toInt()) {
+                31 -> {
+                    colorId = R.color.color_map_n
+                    stringResource(id = R.string.normal)
+                }
+                32 -> {
+                    colorId = R.color.color_map_h
+                    stringResource(id = R.string.hard)
+                }
+                39 -> {
+                    colorId = R.color.color_map_vh
+                    stringResource(id = R.string.very_hard)
+                }
+                34 -> {
+                    colorId = R.color.color_rank_21
+                    stringResource(id = R.string.explore)
+                }
+                37 -> {
+                    colorId = R.color.news_update
+                    stringResource(id = R.string.shrine)
+                }
+                38 -> {
+                    colorId = R.color.news_update
+                    stringResource(id = R.string.temple)
+                }
+                45 -> {
+                    colorId = R.color.color_rank_2_3
+                    stringResource(id = R.string.dungeon)
+                }
+                else -> ""
             }
-            32 -> {
-                colorId = R.color.color_map_h
-                stringResource(id = R.string.hard)
-            }
-            39 -> {
-                colorId = R.color.color_map_vh
-                stringResource(id = R.string.very_hard)
-            }
-            34 -> {
-                colorId = R.color.color_rank_21
-                stringResource(id = R.string.explore)
-            }
-            37 -> {
-                colorId = R.color.news_update
-                stringResource(id = R.string.shrine)
-            }
-            38 -> {
-                colorId = R.color.news_update
-                stringResource(id = R.string.temple)
-            }
-            45 -> {
-                colorId = R.color.color_rank_2_3
-                stringResource(id = R.string.dungeon)
-            }
-            else -> ""
+            events.add(
+                CalendarEventData(
+                    title,
+                    stringResource(id = R.string.drop_x, data.getFixedValue()),
+                    colorId
+                )
+            )
         }
+    } else {
+        //露娜塔
         events.add(
             CalendarEventData(
-                title,
-                stringResource(id = R.string.drop_x, data.getFixedValue()),
-                colorId
+                stringResource(id = R.string.tower),
+                "",
             )
         )
     }
+
     return events
 }
