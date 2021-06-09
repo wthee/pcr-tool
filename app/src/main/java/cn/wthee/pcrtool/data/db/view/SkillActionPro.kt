@@ -345,15 +345,12 @@ data class SkillActionPro(
                 }
             }
             SkillActionType.CHANGE_TP -> {
-                val expr = if (action_value_2 > 0)
-                    "[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级>"
-                else
-                    "[${(action_value_1).int}]"
+                val value = getValueText(1, action_value_1, action_value_2)
                 tag = when (action_detail_1) {
                     1 -> "TP回复"
                     else -> "TP减少"
                 }
-                "${getTarget()}${tag} $expr"
+                "${getTarget()}${tag} $value"
             }
             SkillActionType.TRIGGER -> {
                 val expr = when (action_detail_1) {
@@ -373,7 +370,8 @@ data class SkillActionPro(
             SkillActionType.CHARGE, SkillActionType.DAMAGE_CHARGE -> {
                 "蓄力 [${action_value_3}] 秒" + when {
                     action_detail_2 > 0 -> {
-                        "，下一个动作的效果增加 [${(action_value_1 + action_value_2 * level)}] <$action_value_1 + $action_value_2 * 技能等级> * 蓄力中受到的伤害"
+                        val value = getValueText(1, action_value_1, action_value_2)
+                        "，下一个动作的效果增加 $value * 蓄力中受到的伤害"
                     }
                     action_value_1 > 0 -> {
                         "，下一个动作的效果增加 [${action_value_1}] * 蓄力中受到的伤害"
@@ -564,7 +562,7 @@ data class SkillActionPro(
                     10 -> "魔法防御力"
                     else -> "?"
                 }
-                val commonExpr = getValueText(2, action_value_2, action_value_3)
+                val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
                 val commonDesc =
                     "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $commonExpr"
 
@@ -604,7 +602,7 @@ data class SkillActionPro(
 //                    desc
             }
             SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
-                val commonExpr = getValueText(2, action_value_2, action_value_3)
+                val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
                 val commonDesc =
                     "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $commonExpr"
 
@@ -633,7 +631,8 @@ data class SkillActionPro(
             SkillActionType.KILL_ME -> "${getTargetType()}死亡"
             SkillActionType.CONTINUOUS_ATTACK_NEARBY -> ""
             SkillActionType.LIFE_STEAL -> {
-                "为${getTarget()}的下 [${action_value_3.toInt()}] 次攻击附加 ${toSkillActionType(action_type).desc}[${(action_value_1 + action_value_2 * level).int}] <$action_value_1 + $action_value_2 * 技能等级> 效果"
+                val value = getValueText(1, action_value_1, action_value_2)
+                "为${getTarget()}的下 [${action_value_3.toInt()}] 次攻击附加 ${toSkillActionType(action_type).desc}$value 的效果"
             }
             SkillActionType.STRIKE_BACK -> {
                 val value = getValueText(1, action_value_1, action_value_2)
@@ -651,7 +650,8 @@ data class SkillActionPro(
                 }
             }
             SkillActionType.ACCUMULATIVE_DAMAGE -> {
-                "每次攻击当前的目标，将会追加 [${(action_value_2 + action_value_3 * level).int}] <$action_value_2 + $action_value_3 * 技能等级> , 叠加上限 [${(action_value_4).int}]"
+                val value = getValueText(2, action_value_2, action_value_3)
+                "每次攻击当前的目标，将会追加伤害 $value , 叠加上限 [${(action_value_4).int}]"
             }
             SkillActionType.SEAL -> {
                 if (action_value_4.toInt() > 0) {
@@ -765,7 +765,7 @@ data class SkillActionPro(
                 val percent = if (action_value_1.toInt() == 1) "" else "%"
                 val value = getValueText(2, action_value_2, action_value_3, percent = percent)
                 val aura = getAura(action_detail_1)
-                "${getTarget()}${aura} $value ${time}，受到 [${action_detail_3}] 次伤害时被中断"
+                "${getTarget()}${aura} $value ${time}，受到 [${action_detail_3}] 次伤害时中断"
             }
             SkillActionType.CHANGE_WIDTH -> {
                 "将模型的宽度变为[${action_value_1}]"
@@ -936,7 +936,7 @@ data class SkillActionPro(
     /**
      * 获取数值
      *
-     * @param index v1 传值 action_value_? , index = ?
+     * @param index v1 传的值 action_value_? -> index = ?
      * @param percent 显示 %
      */
     private fun getValueText(
@@ -944,13 +944,14 @@ data class SkillActionPro(
         v1: Double,
         v2: Double,
         v3: Double = 0.0,
-        percent: String = ""
+        percent: String = "",
+        hideIndex: Boolean = false
     ): String {
-        return if (v3.int == 0) {
+        val value = if (v3.int == 0) {
             if (v1.int == 0 && v2.int != 0) {
-                "[${(v2 * level).int}$percent] <{{${index + 1}}$v2 * 技能等级>"
+                "[${(v2 * level).int}$percent] <{${index + 1}}$v2 * 技能等级>"
             } else if (v1.int != 0 && v2.int == 0) {
-                "[${v1}$percent]"
+                "{${index}}[${v1}$percent]"
             } else if (v1.int != 0 && v2.int != 0) {
                 "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级>"
             } else {
@@ -966,6 +967,11 @@ data class SkillActionPro(
             } else {
                 "?"
             }
+        }
+        return if (hideIndex) {
+            value.replace(Regex("\\{.*?\\}"), "")
+        } else {
+            value
         }
     }
 
