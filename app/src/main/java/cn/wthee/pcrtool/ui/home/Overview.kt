@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.ui.home
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,16 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.MainText
-import cn.wthee.pcrtool.ui.compose.Subtitle1
-import cn.wthee.pcrtool.ui.compose.TopBarCompose
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.vibrate
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
@@ -41,8 +37,11 @@ fun Overview(
     overviewViewModel: OverviewViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
+
     overviewViewModel.getCharacterList()
+    overviewViewModel.getEquipList()
     val characterList = overviewViewModel.characterList.observeAsState()
+    val equipList = overviewViewModel.equipList.observeAsState()
 
     Column(
         modifier = Modifier
@@ -57,9 +56,18 @@ fun Overview(
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
             characterList.value?.let { list ->
                 list.forEach {
-                    CharacterItem(it, FilterCharacter()) { id ->
-                        actions.toCharacterDetail(id)
-                    }
+                    CharacterCard(
+                        CharacterIdUtil.getMaxCardUrl(
+                            it.id,
+                            MainActivity.r6Ids.contains(it.id)
+                        ),
+                        modifier = Modifier
+                            .padding(Dimen.mediuPadding)
+                            .width(200.dp)
+                            .clickable {
+                                actions.toCharacterDetail(it.id)
+                            }
+                    )
                 }
             }
         }
@@ -67,9 +75,23 @@ fun Overview(
         SectionHead(MainIconType.EQUIP, R.string.tool_equip) {
             actions.toEquipList()
         }
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            equipList.value?.let { list ->
+                list.forEach {
+                    Box(modifier = Modifier.padding(Dimen.mediuPadding)) {
+                        IconCompose(data = getEquipIconUrl(it.equipmentId)) {
+                            actions.toEquipDetail(it.equipmentId)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
+/**
+ * 标题
+ */
 @Composable
 private fun SectionHead(
     iconType: MainIconType,

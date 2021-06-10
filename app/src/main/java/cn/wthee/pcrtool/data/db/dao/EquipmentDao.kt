@@ -93,6 +93,10 @@ interface EquipmentDao {
         starIds: List<Int>
     ): List<EquipmentMaxData>
 
+    @Transaction
+    @Query("""$viewEquipmentMaxData ORDER BY  a.require_level DESC LIMIT 0,:limit""")
+    suspend fun getEquipments(limit: Int): List<EquipmentMaxData>
+
     /**
      * 获取装备提升属性
      * @param equipId 装备编号

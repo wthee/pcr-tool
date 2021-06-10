@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -37,16 +36,16 @@ const val MOVE_SPEED_RATIO = 0.5
 @Composable
 fun CharacterCard(
     url: String,
+    modifier: Modifier = Modifier,
     scrollState: ScrollState? = null
 ) {
 
-    val modifier = Modifier
+    val mModifier = modifier
         .aspectRatio(RATIO)
-        .fillMaxWidth()
     if (scrollState != null) {
         //滑动时，向上平移
         val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
-        modifier.offset(y = move)
+        mModifier.offset(y = move)
     }
     val painter = rememberCoilPainter(request = url, previewPlaceholder = R.drawable.error)
     Image(
@@ -56,7 +55,7 @@ fun CharacterCard(
             else -> rememberCoilPainter(request = R.drawable.error)
         },
         contentDescription = null,
-        modifier = modifier
+        modifier = mModifier
     )
 }
 

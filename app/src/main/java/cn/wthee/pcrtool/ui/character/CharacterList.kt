@@ -108,7 +108,7 @@ fun CharacterList(
                     state = scrollState,
                 ) {
                     items(list.value!!) {
-                        CharacterItem(it, filter.value!!, toDetail)
+                        CharacterItem(it, filter.value!!, toDetail = toDetail)
                     }
                     items(2) {
                         CommonSpacer()
@@ -164,20 +164,19 @@ fun CharacterList(
 fun CharacterItem(
     character: CharacterInfo,
     filter: FilterCharacter,
+    modifier: Modifier = Modifier,
     toDetail: (Int) -> Unit,
 ) {
     val loved = filter.starIds.contains(character.id)
 
     MainCard(
-        modifier = Modifier.padding(Dimen.mediuPadding),
+        modifier = modifier.padding(Dimen.mediuPadding),
         onClick = {
             //跳转至详情
             toDetail(character.id)
         }) {
         Column {
             //图片
-            var id = character.id
-            id += if (MainActivity.r6Ids.contains(character.id)) 60 else 30
             CharacterCard(
                 CharacterIdUtil.getMaxCardUrl(
                     character.id,

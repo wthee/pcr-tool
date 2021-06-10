@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class OverviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     var characterList = MutableLiveData<List<CharacterInfo>>()
+    var equipList = MutableLiveData<List<EquipmentMaxData>>()
 
 
     /**
@@ -29,6 +31,16 @@ class OverviewViewModel @Inject constructor(
         viewModelScope.launch {
             val data = unitRepository.getInfoAndData(10)
             characterList.postValue(data)
+        }
+    }
+
+    /**
+     * 获取装备列表
+     */
+    fun getEquipList() {
+        viewModelScope.launch {
+            val data = equipmentRepository.getEquipments(10)
+            equipList.postValue(data)
         }
     }
 }
