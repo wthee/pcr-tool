@@ -25,12 +25,14 @@ import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.CharacterList
+import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.tool.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 object Navigation {
+    const val HOME = "home"
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
@@ -79,9 +81,15 @@ object Navigation {
 @Composable
 fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions: NavActions) {
 
-    NavHost(navController, startDestination = Navigation.CHARACTER_LIST) {
+    NavHost(navController, startDestination = Navigation.HOME) {
 
         //首页
+        composable(Navigation.HOME) {
+            StatusBarBox {
+                Overview(actions)
+            }
+        }
+        //角色列表
         composable(Navigation.CHARACTER_LIST) {
             val scrollState = rememberLazyListState()
             StatusBarBox {
@@ -415,6 +423,14 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
  * 导航
  */
 class NavActions(navController: NavHostController) {
+
+    /**
+     * 角色列表
+     */
+    val toCharacterList: () -> Unit = {
+        navController.navigate(Navigation.CHARACTER_LIST)
+    }
+
     /**
      * 角色详情
      */
@@ -501,6 +517,83 @@ class NavActions(navController: NavHostController) {
      */
     val toPvpFavorite = {
         navController.navigate(Navigation.TOOL_PVP_FAVORITE)
+    }
+
+    /**
+     * 卡池
+     */
+    val toGacha = {
+        navController.navigate(Navigation.TOOL_GACHA)
+    }
+
+    /**
+     * 团队战
+     */
+    val toClan = {
+        navController.navigate(Navigation.TOOL_CLAN)
+    }
+
+    /**
+     * 剧情活动
+     */
+    val toEvent = {
+        navController.navigate(Navigation.TOOL_EVENT)
+    }
+
+    /**
+     * 角色公会
+     */
+    val toGuild = {
+        navController.navigate(Navigation.TOOL_GUILD)
+    }
+
+    /**
+     * 公告
+     */
+    val toNews: (Int) -> Unit = { region ->
+        navController.navigate("${Navigation.TOOL_GUILD}/$region")
+    }
+
+    /**
+     * 竞技场
+     */
+    val toPvp = {
+        navController.navigate(Navigation.TOOL_PVP)
+    }
+
+    /**
+     * 日历
+     */
+    val toCalendar = {
+        navController.navigate(Navigation.TOOL_CALENDAR)
+    }
+
+    /**
+     * 排行
+     */
+    val toLeader = {
+        navController.navigate(Navigation.TOOL_LEADER)
+    }
+
+    /**
+     * 装备列表
+     */
+    val toEquipList = {
+        navController.navigate(Navigation.EQUIP_LIST)
+    }
+
+    /**
+     * 通知
+     */
+    val toNotice = {
+        navController.navigate(Navigation.APP_NOTICE)
+    }
+
+    /**
+     * 设置
+     */
+    val toSetting = {
+        navController.navigate(Navigation.MAIN_SETTINGS)
     }
 }
 
