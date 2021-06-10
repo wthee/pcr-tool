@@ -159,7 +159,7 @@ fun Home() {
     Box(modifier = Modifier.fillMaxSize()) {
         NavGraph(navController, navViewModel, actions)
         //菜单
-        MenuContent(navViewModel, navController)
+        MenuContent(navViewModel, actions)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             DownloadCompose(navViewModel)
             FabMain(

@@ -22,7 +22,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -49,13 +48,13 @@ enum class MenuState {
 @Composable
 fun MenuContent(
     viewModel: NavViewModel,
-    navController: NavHostController,
+    actions: NavActions,
     noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
-
+    val context = LocalContext.current
 
     val backgroundAnim = animateFloatAsState(
         targetValue = if (fabMainIcon == MainIconType.DOWN) 1f else 0f,
@@ -67,7 +66,7 @@ fun MenuContent(
             targetValue = if (fabMainIcon == MainIconType.DOWN) {
                 Color.Transparent
             } else {
-                MaterialTheme.colors.primary
+                MaterialTheme.colors.background
             }, animationSpec = defaultTween()
         )
     systemUiController.setStatusBarColor(colorAnim.value)
@@ -86,44 +85,48 @@ fun MenuContent(
                 Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {
                     //卡池
                     MenuItem(
-                        route = Navigation.TOOL_GACHA,
-                        navController = navController,
                         text = stringResource(id = R.string.tool_gacha),
                         iconType = MainIconType.GACHA,
                         modifier = Modifier
                             .weight(0.382f)
                             .height(Dimen.largeMenuHeight),
-                    )
+                    ) {
+                        VibrateUtil(context).single()
+                        actions.toGacha()
+                    }
                     //团队战
                     MenuItem(
-                        route = Navigation.TOOL_CLAN,
-                        navController = navController,
                         text = stringResource(id = R.string.tool_clan),
                         iconType = MainIconType.CLAN,
                         modifier = Modifier
                             .weight(0.382f)
                             .height(Dimen.largeMenuHeight)
-                    )
+                    ) {
+                        VibrateUtil(context).single()
+                        actions.toClan()
+                    }
                     //剧情活动
                     Column(modifier = Modifier.weight(0.618f)) {
                         MenuItem(
-                            route = Navigation.TOOL_EVENT,
-                            navController = navController,
                             text = stringResource(id = R.string.tool_event),
                             iconType = MainIconType.EVENT,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.5f)
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toEvent()
+                        }
                         MenuItem(
-                            route = Navigation.TOOL_GUILD,
-                            navController = navController,
                             text = stringResource(id = R.string.tool_guild),
                             iconType = MainIconType.GUILD,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.5f)
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toGuild()
+                        }
                     }
                 }
 
@@ -136,37 +139,37 @@ fun MenuContent(
                     ) {
                         //官网公告
                         MenuItem(
-                            route = "${Navigation.TOOL_NEWS}/2",
-                            navController = navController,
                             text = stringResource(id = R.string.tool_news_cn),
                             iconType = MainIconType.NEWS,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
-
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toNews(2)
+                        }
                         //官网公告
                         MenuItem(
-                            route = "${Navigation.TOOL_NEWS}/3",
-                            navController = navController,
                             text = stringResource(id = R.string.tool_news_tw),
                             iconType = MainIconType.NEWS,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
-
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toNews(3)
+                        }
                         //官网公告
                         MenuItem(
-                            route = "${Navigation.TOOL_NEWS}/4",
-                            navController = navController,
                             text = stringResource(id = R.string.tool_news_jp),
                             iconType = MainIconType.NEWS,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
-
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toNews(4)
+                        }
                     }
 
                     Column(
@@ -174,28 +177,29 @@ fun MenuContent(
                             .fillMaxHeight()
                             .weight(0.5f)
                     ) {
-
                         //竞技场
                         MenuItem(
-                            route = Navigation.TOOL_PVP,
-                            navController = navController,
                             text = stringResource(id = R.string.tool_pvp),
                             iconType = MainIconType.PVP_SEARCH,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.6f)
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toPvp()
+                        }
 
                         //日历
                         MenuItem(
-                            route = Navigation.TOOL_CALENDAR,
-                            navController = navController,
                             text = stringResource(id = R.string.tool_calendar),
                             iconType = MainIconType.CALENDAR,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(0.3f)
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toCalendar()
+                        }
 
                     }
 
@@ -204,24 +208,26 @@ fun MenuContent(
                 Row(modifier = Modifier.height(Dimen.largeMenuHeight)) {
                     //排行
                     MenuItem(
-                        route = Navigation.TOOL_LEADER,
-                        navController = navController,
                         text = stringResource(id = R.string.tool_leader),
                         iconType = MainIconType.LEADER,
                         modifier = Modifier
                             .weight(0.3f)
                             .fillMaxHeight()
-                    )
+                    ) {
+                        VibrateUtil(context).single()
+                        actions.toLeader()
+                    }
                     //装备
                     MenuItem(
-                        route = Navigation.EQUIP_LIST,
-                        navController = navController,
                         text = stringResource(id = R.string.tool_equip),
                         iconType = MainIconType.EQUIP,
                         modifier = Modifier
                             .weight(0.38f)
                             .fillMaxHeight()
-                    )
+                    ) {
+                        VibrateUtil(context).single()
+                        actions.toEquipList()
+                    }
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -229,25 +235,27 @@ fun MenuContent(
                     ) {
                         //通知
                         MenuItem(
-                            route = Navigation.APP_NOTICE,
-                            navController = navController,
                             backgroundColor = if (updateApp == 1) colorResource(id = R.color.color_rank_21) else MaterialTheme.colors.primary,
                             text = stringResource(id = if (updateApp == 1) R.string.to_update else R.string.app_notice),
                             iconType = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE,
                             modifier = Modifier
                                 .weight(0.5f)
                                 .fillMaxWidth()
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toNotice()
+                        }
                         //设置
                         MenuItem(
-                            route = Navigation.MAIN_SETTINGS,
-                            navController = navController,
                             text = stringResource(id = R.string.setting),
                             iconType = MainIconType.SETTING,
                             modifier = Modifier
                                 .weight(0.5f)
                                 .fillMaxWidth()
-                        )
+                        ) {
+                            VibrateUtil(context).single()
+                            actions.toSetting()
+                        }
                     }
 
                 }
@@ -298,11 +306,8 @@ fun MenuItem(
     text: String,
     iconType: MainIconType,
     modifier: Modifier,
-    navController: NavHostController,
-    route: String,
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val state = remember {
         mutableStateOf(MenuState.DEFAULT)
     }
@@ -312,10 +317,7 @@ fun MenuItem(
 
     Card(
         backgroundColor = backgroundColor,
-        onClick = {
-            VibrateUtil(context).single()
-            navController.navigate(route)
-        },
+        onClick = onClick,
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)
