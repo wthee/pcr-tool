@@ -27,7 +27,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
@@ -75,7 +74,7 @@ fun CharacterList(
 
     //关闭时监听
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         navViewModel.resetClick.postValue(false)
         keyboardController?.hide()
@@ -94,7 +93,6 @@ fun CharacterList(
             FilterCharacterSheet(navViewModel, coroutineScope, state)
         }
     ) {
-        val marginTop: Dp = marginTopBar(scrollState)
         coroutineScope.launch {
             val r6Ids = viewModel.getR6Ids()
             navViewModel.r6Ids.postValue(r6Ids)
@@ -104,12 +102,10 @@ fun CharacterList(
                 .fillMaxSize()
                 .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
         ) {
-            TopBarCompose(scrollState = scrollState)
             if (list.value != null) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
-                    modifier = Modifier.padding(top = marginTop)
                 ) {
                     items(list.value!!) {
                         CharacterItem(it, filter.value!!, toDetail)
@@ -145,7 +141,7 @@ fun CharacterList(
                 ) {
                     coroutineScope.launch {
                         if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                             state.hide()
                         } else {
                             navViewModel.fabMainIcon.postValue(MainIconType.OK)
@@ -165,7 +161,7 @@ fun CharacterList(
  */
 @ExperimentalMaterialApi
 @Composable
-private fun CharacterItem(
+fun CharacterItem(
     character: CharacterInfo,
     filter: FilterCharacter,
     toDetail: (Int) -> Unit,
@@ -330,7 +326,7 @@ private fun FilterCharacterSheet(
             }
             navViewModel.filterCharacter.postValue(filter)
             navViewModel.fabOKCilck.postValue(false)
-            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
         //角色名搜索
         val keyboardController = LocalSoftwareKeyboardController.current

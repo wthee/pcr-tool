@@ -32,6 +32,7 @@ import cn.wthee.pcrtool.ui.compose.defaultTween
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.addToClip
+import cn.wthee.pcrtool.utils.vibrate
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
@@ -54,7 +55,6 @@ fun MenuContent(
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
-    val context = LocalContext.current
 
     val backgroundAnim = animateFloatAsState(
         targetValue = if (fabMainIcon == MainIconType.DOWN) 1f else 0f,
@@ -91,7 +91,6 @@ fun MenuContent(
                             .weight(0.382f)
                             .height(Dimen.largeMenuHeight),
                     ) {
-                        VibrateUtil(context).single()
                         actions.toGacha()
                     }
                     //团队战
@@ -102,7 +101,6 @@ fun MenuContent(
                             .weight(0.382f)
                             .height(Dimen.largeMenuHeight)
                     ) {
-                        VibrateUtil(context).single()
                         actions.toClan()
                     }
                     //剧情活动
@@ -114,7 +112,6 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(0.5f)
                         ) {
-                            VibrateUtil(context).single()
                             actions.toEvent()
                         }
                         MenuItem(
@@ -124,7 +121,6 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(0.5f)
                         ) {
-                            VibrateUtil(context).single()
                             actions.toGuild()
                         }
                     }
@@ -145,7 +141,6 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(1f)
                         ) {
-                            VibrateUtil(context).single()
                             actions.toNews(2)
                         }
                         //官网公告
@@ -156,7 +151,6 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(1f)
                         ) {
-                            VibrateUtil(context).single()
                             actions.toNews(3)
                         }
                         //官网公告
@@ -167,7 +161,6 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(1f)
                         ) {
-                            VibrateUtil(context).single()
                             actions.toNews(4)
                         }
                     }
@@ -185,7 +178,6 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(0.6f)
                         ) {
-                            VibrateUtil(context).single()
                             actions.toPvp()
                         }
 
@@ -197,7 +189,6 @@ fun MenuContent(
                                 .fillMaxWidth()
                                 .weight(0.3f)
                         ) {
-                            VibrateUtil(context).single()
                             actions.toCalendar()
                         }
 
@@ -214,7 +205,6 @@ fun MenuContent(
                             .weight(0.3f)
                             .fillMaxHeight()
                     ) {
-                        VibrateUtil(context).single()
                         actions.toLeader()
                     }
                     //装备
@@ -225,7 +215,6 @@ fun MenuContent(
                             .weight(0.38f)
                             .fillMaxHeight()
                     ) {
-                        VibrateUtil(context).single()
                         actions.toEquipList()
                     }
                     Column(
@@ -242,7 +231,6 @@ fun MenuContent(
                                 .weight(0.5f)
                                 .fillMaxWidth()
                         ) {
-                            VibrateUtil(context).single()
                             actions.toNotice()
                         }
                         //设置
@@ -253,7 +241,6 @@ fun MenuContent(
                                 .weight(0.5f)
                                 .fillMaxWidth()
                         ) {
-                            VibrateUtil(context).single()
                             actions.toSetting()
                         }
                     }
@@ -314,10 +301,13 @@ fun MenuItem(
     val scaleAnimation = animateFloatAsState(
         targetValue = if (state.value == MenuState.TOUCH) 0.85f else 1f, defaultSpring()
     )
+    val context = LocalContext.current
 
     Card(
         backgroundColor = backgroundColor,
-        onClick = onClick,
+        onClick = onClick.vibrate {
+            VibrateUtil(context).single()
+        },
         contentColor = MaterialTheme.colors.onSurface,
         modifier = modifier
             .padding(Dimen.mediuPadding)

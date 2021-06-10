@@ -85,12 +85,15 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
 
         //首页
         composable(Navigation.HOME) {
+            viewModel.fabMainIcon.postValue(MainIconType.MAIN)
             StatusBarBox {
                 Overview(actions)
             }
         }
+
         //角色列表
         composable(Navigation.CHARACTER_LIST) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             StatusBarBox {
                 CharacterList(scrollState, actions.toCharacterDetail)

@@ -15,11 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.statusBarsHeight
-import com.google.accompanist.insets.toPaddingValues
 
 
 /**
@@ -45,7 +46,7 @@ fun TopBarCompose(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(top = Dimen.smallPadding)
+            .padding(Dimen.largePadding)
             .fillMaxWidth()
             .offset(y = offset)
     ) {
@@ -54,7 +55,15 @@ fun TopBarCompose(
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.primary,
+            modifier = Modifier.weight(1f)
         )
+        IconCompose(
+            data = MainIconType.SETTING.icon,
+            tint = MaterialTheme.colors.onSurface,
+            size = Dimen.fabIconSize
+        ) {
+
+        }
     }
 }
 
@@ -64,8 +73,10 @@ fun TopBarCompose(
 @Composable
 fun StatusBarBox(content: @Composable () -> Unit) {
     val statusBarHeight =
-        LocalWindowInsets.current.systemBars.toPaddingValues().calculateTopPadding()
-    Box(Modifier.background(MaterialTheme.colors.primary)) {
+        rememberInsetsPaddingValues(
+            insets = LocalWindowInsets.current.systemBars
+        ).calculateTopPadding()
+    Box(Modifier.background(MaterialTheme.colors.background)) {
         Card(
             shape = CardTopShape,
             content = content,

@@ -73,6 +73,7 @@ fun MainContentText(
 fun MainText(
     modifier: Modifier = Modifier,
     text: String,
+    textAlign: TextAlign = TextAlign.Center,
     color: Color = MaterialTheme.colors.primary
 ) {
     SelectionContainer(
@@ -85,7 +86,7 @@ fun MainText(
             text = text,
             color = color,
             style = MaterialTheme.typography.subtitle1,
-            textAlign = TextAlign.Center,
+            textAlign = textAlign,
             fontWeight = FontWeight.Black,
         )
     }
