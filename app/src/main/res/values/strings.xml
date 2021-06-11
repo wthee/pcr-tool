@@ -157,7 +157,7 @@
     <string name="target_rank">目标</string>
 
     <!-- 下载相关-->
-    <string name="db_checking">数据校验中</string>
+    <string name="checking">校验中</string>
     <string name="db_downloading">下载中 </string>
     <string name="db_downloaded">数据已更新</string>
     <string name="wait_pic_load">请等待图片加载完成</string>

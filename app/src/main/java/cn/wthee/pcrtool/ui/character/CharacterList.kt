@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -23,7 +22,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -35,7 +33,6 @@ import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -97,11 +94,7 @@ fun CharacterList(
             val r6Ids = viewModel.getR6Ids()
             navViewModel.r6Ids.postValue(r6Ids)
         }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             if (list.value != null) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
@@ -178,10 +171,7 @@ fun CharacterItem(
         Column {
             //图片
             CharacterCard(
-                CharacterIdUtil.getMaxCardUrl(
-                    character.id,
-                    MainActivity.r6Ids.contains(character.id)
-                )
+                CharacterIdUtil.getMaxCardUrl(character.id)
             )
             //名字、位置
             Row(

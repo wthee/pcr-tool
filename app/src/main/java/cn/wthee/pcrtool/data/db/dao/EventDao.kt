@@ -84,7 +84,7 @@ interface EventDao {
             value 
         ORDER BY
             start_time DESC 
-            LIMIT 50 OFFSET 0
+        LIMIT 0,50
     """
     )
     suspend fun getDropEvent(): List<CalendarEvent>
@@ -104,9 +104,9 @@ interface EventDao {
             tower_schedule 
         ORDER BY
             start_time DESC 
-            LIMIT 50 OFFSET 0
+            LIMIT 0,:limit
     """
     )
-    suspend fun getTowerEvent(): List<CalendarEvent>
+    suspend fun getTowerEvent(limit: Int): List<CalendarEvent>
 
 }

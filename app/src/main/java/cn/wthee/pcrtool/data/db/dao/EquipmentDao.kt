@@ -94,7 +94,7 @@ interface EquipmentDao {
     ): List<EquipmentMaxData>
 
     @Transaction
-    @Query("""$viewEquipmentMaxData ORDER BY  a.require_level DESC LIMIT 0,:limit""")
+    @Query("""$viewEquipmentMaxData WHERE a.craft_flg = 1 ORDER BY  a.require_level DESC LIMIT 0,:limit""")
     suspend fun getEquipments(limit: Int): List<EquipmentMaxData>
 
     /**

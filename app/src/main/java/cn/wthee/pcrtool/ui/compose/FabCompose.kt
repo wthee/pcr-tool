@@ -64,7 +64,7 @@ fun FabCompose(
                 style = MaterialTheme.typography.subtitle2,
                 textAlign = TextAlign.Center,
                 modifier = if (text != "") {
-                    Modifier.padding(start = Dimen.fabPadding, end = Dimen.fabPadding)
+                    Modifier.padding(start = Dimen.smallPadding, end = Dimen.mediuPadding)
                 } else {
                     Modifier
                 }.animateContentSize(defaultTween())

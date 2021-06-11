@@ -48,8 +48,9 @@ object DatabaseUpdater {
      */
     suspend fun checkDBVersion(from: Int = -1, force: Boolean = false) {
         //获取数据库最新版本
-        if (force) {
+        try {
             MainActivity.navViewModel.downloadProgress.postValue(-1)
+        } catch (e: Exception) {
         }
         try {
             //创建服务
@@ -65,6 +66,7 @@ object DatabaseUpdater {
             if (e !is CancellationException) {
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
             }
+            MainActivity.navViewModel.downloadProgress.postValue(-2)
         }
     }
 
@@ -146,6 +148,7 @@ object DatabaseUpdater {
                 updateLocalDataBaseVersion(ver.toString())
             } catch (e: Exception) {
             }
+            MainActivity.navViewModel.downloadProgress.postValue(-2)
         }
     }
 

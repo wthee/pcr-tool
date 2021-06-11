@@ -9,9 +9,9 @@ import android.os.Looper
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -30,14 +30,16 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
-import cn.wthee.pcrtool.ui.compose.DownloadCompose
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +58,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var handler: Handler
         lateinit var navViewModel: NavViewModel
+        lateinit var noticeViewModel: NoticeViewModel
         var vibrateOn = true
         var animOn = true
         var r6Ids = listOf<Int>()
@@ -80,7 +83,10 @@ class MainActivity : ComponentActivity() {
                         colorResource(id = if (isLight) R.color.alpha_white else R.color.alpha_black),
                         darkIcons = isLight
                     )
-                    Home()
+                    ui.setStatusBarColor(MaterialTheme.colors.background, darkIcons = isLight)
+                    Surface(modifier = Modifier.background(MaterialTheme.colors.background)) {
+                        Home()
+                    }
                 }
             }
         }
@@ -91,10 +97,8 @@ class MainActivity : ComponentActivity() {
         val sp = mainSP()
         vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
-        val noticeViewModel: NoticeViewModel by viewModels()
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()
-            noticeViewModel.check()
         }
     }
 
@@ -151,17 +155,29 @@ fun Home() {
     val navController = rememberNavController()
     val actions = remember(navController) { NavActions(navController) }
     navViewModel = hiltViewModel()
+    noticeViewModel = hiltViewModel()
+    LaunchedEffect({}) {
+        noticeViewModel.check()
+    }
     val loading = navViewModel.loading.observeAsState().value ?: false
     val r6IdList = navViewModel.r6Ids.observeAsState()
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }
-    Box(modifier = Modifier.fillMaxSize()) {
+    val statusBarHeight =
+        rememberInsetsPaddingValues(
+            insets = LocalWindowInsets.current.systemBars
+        ).calculateTopPadding()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = statusBarHeight)
+    ) {
         NavGraph(navController, navViewModel, actions)
         //菜单
-        MenuContent(navViewModel, actions)
+//        MenuContent(navViewModel, actions)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
-            DownloadCompose(navViewModel)
             FabMain(
                 navController,
                 modifier = Modifier

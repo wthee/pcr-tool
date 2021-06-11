@@ -17,7 +17,7 @@ private val LightColorPalette = lightColors(
     primary = colorPrimary,
     primaryVariant = colorAccent,
     secondary = colorPrimary,
-    secondaryVariant = colorPrimary
+    secondaryVariant = colorPrimary,
 )
 
 @Composable

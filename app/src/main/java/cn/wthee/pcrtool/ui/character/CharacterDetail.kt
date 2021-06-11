@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,7 +21,6 @@ import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
@@ -378,7 +376,6 @@ private fun CardImage(
 ) {
     val context = LocalContext.current
     Box(modifier = Modifier
-        .background(color = colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
         .clickable {
             //跳转角色图片列表
             toPics(unitId)
@@ -386,10 +383,7 @@ private fun CardImage(
         }) {
         //图片
         CharacterCard(
-            CharacterIdUtil.getMaxCardUrl(
-                unitId,
-                MainActivity.r6Ids.contains(unitId)
-            ),
+            CharacterIdUtil.getMaxCardUrl(unitId),
             scrollState = scrollState,
         )
         //星级

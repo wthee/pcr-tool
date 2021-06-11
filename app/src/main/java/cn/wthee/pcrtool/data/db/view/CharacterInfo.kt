@@ -7,18 +7,18 @@ import androidx.room.ColumnInfo
  * 角色信息视图
  */
 data class CharacterInfo(
-    @ColumnInfo(name = "unit_id") val id: Int,
-    @ColumnInfo(name = "unit_name") val name: String,
-    @ColumnInfo(name = "kana") val kana: String,
-    @ColumnInfo(name = "age_int") val age: String,
-    @ColumnInfo(name = "guild") val guild: String,
-    @ColumnInfo(name = "race") val race: String,
-    @ColumnInfo(name = "height_int") val height: String,
-    @ColumnInfo(name = "weight_int") val weight: String,
-    @ColumnInfo(name = "search_area_width") val position: Int,
-    @ColumnInfo(name = "atk_type") val atkType: Int,
-    @ColumnInfo(name = "start_time") val startTime: String,
-    @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int,
+    @ColumnInfo(name = "unit_id") val id: Int = 100000,
+    @ColumnInfo(name = "unit_name") val name: String = "",
+    @ColumnInfo(name = "kana") val kana: String = "",
+    @ColumnInfo(name = "age_int") val age: String = "",
+    @ColumnInfo(name = "guild") val guild: String = "",
+    @ColumnInfo(name = "race") val race: String = "",
+    @ColumnInfo(name = "height_int") val height: String = "",
+    @ColumnInfo(name = "weight_int") val weight: String = "",
+    @ColumnInfo(name = "search_area_width") val position: Int = 0,
+    @ColumnInfo(name = "atk_type") val atkType: Int = 0,
+    @ColumnInfo(name = "start_time") val startTime: String = "",
+    @ColumnInfo(name = "rarity_6_quest_id") val r6Id: Int = 0,
 ) {
 
     /**

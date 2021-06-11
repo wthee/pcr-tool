@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -53,7 +52,6 @@ fun CalendarCompose(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = calendarData.value != null) {
             calendarData.value?.let { data ->
@@ -93,7 +91,7 @@ fun CalendarCompose(
  */
 @ExperimentalMaterialApi
 @Composable
-private fun CalendarItem(calendar: CalendarEvent) {
+fun CalendarItem(calendar: CalendarEvent) {
     val today = getToday()
     val sd = calendar.startTime.formatTime()
     val ed = calendar.endTime.formatTime()
