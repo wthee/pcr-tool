@@ -84,7 +84,7 @@ fun LeaderboardList(
                 }
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
                     items(info) {
                         LeaderboardItem(it)

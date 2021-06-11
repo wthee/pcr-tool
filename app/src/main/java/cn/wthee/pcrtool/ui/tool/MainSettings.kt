@@ -305,7 +305,7 @@ private fun SettingItem(
                 VibrateUtil(context).single()
             })
     ) {
-        Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
         IconCompose(
             data = iconType.icon,
             size = Dimen.settingIconSize

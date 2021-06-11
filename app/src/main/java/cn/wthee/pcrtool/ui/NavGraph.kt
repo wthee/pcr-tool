@@ -23,7 +23,6 @@ import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
-import cn.wthee.pcrtool.ui.home.CharacterList
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.tool.*
 import com.google.accompanist.pager.ExperimentalPagerApi

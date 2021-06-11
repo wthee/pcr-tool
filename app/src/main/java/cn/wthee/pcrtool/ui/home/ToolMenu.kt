@@ -3,13 +3,17 @@ package cn.wthee.pcrtool.ui.home
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,10 +27,12 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.CaptionText
 import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.VerticalGrid
+import cn.wthee.pcrtool.ui.compose.defaultSpring
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.vibrate
+import java.util.*
 
 data class ToolMenuData(
     @StringRes val titleId: Int,
@@ -34,33 +40,52 @@ data class ToolMenuData(
     val regionForNews: Int = 0
 )
 
+enum class ToolMenuState {
+    FLOD, EXPAND
+}
+
 /**
  * 菜单
+ * fixme 公告优化
  */
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-fun ToolMenu(actions: NavActions) {
+fun ToolMenu(
+    actions: NavActions, state: MutableState<ToolMenuState> = remember {
+        mutableStateOf(ToolMenuState.FLOD)
+    }
+) {
     val context = LocalContext.current
     val updateApp = MainActivity.noticeViewModel.updateApp.observeAsState().value ?: -1
 
     val list = arrayListOf(
+        ToolMenuData(R.string.character, MainIconType.CHARACTER),
+        ToolMenuData(R.string.tool_equip, MainIconType.EQUIP),
+        ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
+        ToolMenuData(R.string.tool_calendar, MainIconType.CALENDAR),
+        ToolMenuData(R.string.tool_news_cn, MainIconType.NEWS, 2),
+        ToolMenuData(R.string.tool_news_tw, MainIconType.NEWS, 3),
+        ToolMenuData(R.string.tool_news_jp, MainIconType.NEWS, 4),
+        ToolMenuData(R.string.app_notice, MainIconType.NOTICE),
         ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),
         ToolMenuData(R.string.tool_clan, MainIconType.CLAN),
         ToolMenuData(R.string.tool_event, MainIconType.EVENT),
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
-        ToolMenuData(R.string.tool_news_cn, MainIconType.NEWS, 2),
-        ToolMenuData(R.string.tool_news_tw, MainIconType.NEWS, 3),
-        ToolMenuData(R.string.tool_news_jp, MainIconType.NEWS, 4),
-        ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
-        ToolMenuData(R.string.tool_calendar, MainIconType.CALENDAR),
         ToolMenuData(R.string.tool_leader, MainIconType.LEADER),
-        ToolMenuData(R.string.tool_equip, MainIconType.EQUIP),
-        ToolMenuData(R.string.app_notice, MainIconType.NOTICE),
     )
-
-    VerticalGrid(maxColumnWidth = Dimen.toolMenuWidth) {
-        list.forEach {
+    val newlist: ArrayList<ToolMenuData>
+    if (state.value == ToolMenuState.FLOD) {
+        newlist = arrayListOf()
+        newlist.addAll(list.subList(0, 8))
+    } else {
+        newlist = list
+    }
+    VerticalGrid(
+        maxColumnWidth = Dimen.toolMenuWidth,
+        modifier = Modifier.animateContentSize(defaultSpring())
+    ) {
+        newlist.forEach {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -136,6 +161,7 @@ private fun getAction(context: Context, actions: NavActions, tool: ToolMenuData)
     return {}.vibrate {
         VibrateUtil(context).single()
         when (tool.iconType) {
+            MainIconType.CHARACTER -> actions.toCharacterList()
             MainIconType.GACHA -> actions.toGacha()
             MainIconType.CLAN -> actions.toClan()
             MainIconType.EVENT -> actions.toEvent()

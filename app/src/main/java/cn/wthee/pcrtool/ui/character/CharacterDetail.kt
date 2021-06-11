@@ -526,7 +526,7 @@ private fun UniqueEquip(
             //图标描述
             Row(
                 modifier = Modifier
-                    .padding(Dimen.mediuPadding)
+                    .padding(Dimen.largePadding)
                     .fillMaxWidth()
             ) {
                 IconCompose(getEquipIconUrl(it.equipmentId))

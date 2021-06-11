@@ -50,7 +50,7 @@ fun CharacterBasicInfo(
 private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollState) {
     Column(
         modifier = Modifier
-            .padding(Dimen.mediuPadding)
+            .padding(start = Dimen.largePadding, end = Dimen.largePadding)
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
@@ -59,7 +59,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             text = info.catchCopy.deleteSpace(),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(bottom = Dimen.mediuPadding)
+                .padding(top = Dimen.mediuPadding, end = Dimen.mediuPadding)
         )
         //介绍
         Text(
@@ -196,11 +196,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.favorite,
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            ),
+            modifier = Modifier.padding(Dimen.mediuPadding),
             textAlign = TextAlign.Start
         )
         info.getSelf()?.let {
@@ -213,11 +209,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             }
             MainContentText(
                 text = it,
-                modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                ),
+                modifier = Modifier.padding(Dimen.mediuPadding),
                 textAlign = TextAlign.Start
             )
         }
@@ -230,11 +222,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.getCommentsText(),
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            ),
+            modifier = Modifier.padding(Dimen.mediuPadding),
             textAlign = TextAlign.Start
         )
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
@@ -246,11 +234,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.getRoomCommentsText(),
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            ),
+            modifier = Modifier.padding(Dimen.mediuPadding),
             textAlign = TextAlign.Start
         )
         CommonSpacer()

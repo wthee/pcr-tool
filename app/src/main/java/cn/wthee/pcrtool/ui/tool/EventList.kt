@@ -51,7 +51,7 @@ fun EventList(
             events.value?.let { data ->
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
                     items(data) {
                         EventItem(it, toCharacterDetail)

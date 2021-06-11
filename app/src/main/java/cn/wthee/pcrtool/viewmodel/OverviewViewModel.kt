@@ -35,10 +35,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCharacterList() {
         viewModelScope.launch {
-            var data = unitRepository.getInfoAndData(10)
-            if (data.isEmpty()) {
-                data = arrayListOf(CharacterInfo())
-            }
+            val data = unitRepository.getInfoAndData(10)
             characterList.postValue(data)
         }
     }
@@ -48,10 +45,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getEquipList() {
         viewModelScope.launch {
-            var data = equipmentRepository.getEquipments(10)
-            if (data.isEmpty()) {
-                data = arrayListOf(EquipmentMaxData())
-            }
+            val data = equipmentRepository.getEquipments(10)
             equipList.postValue(data)
         }
     }

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.home
+package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -99,6 +99,7 @@ fun CharacterList(
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
                 ) {
                     items(list.value!!) {
                         CharacterItem(it, filter.value!!, toDetail = toDetail)

@@ -176,7 +176,7 @@ fun Home() {
     ) {
         NavGraph(navController, navViewModel, actions)
         //菜单
-//        MenuContent(navViewModel, actions)
+        MoreFabCompose(navViewModel)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             FabMain(
                 navController,

@@ -13,7 +13,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 向下折叠
      */
-    DOWN(Icons.Rounded.ExpandMore),
+    DOWN(Icons.Rounded.Remove),
 
     /**
      * 主菜单

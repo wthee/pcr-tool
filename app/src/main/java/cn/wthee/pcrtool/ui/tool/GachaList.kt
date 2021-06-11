@@ -49,7 +49,7 @@ fun GachaList(
             gachas.value?.let { data ->
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
                     items(data) {
                         GachaItem(it, toCharacterDetail)

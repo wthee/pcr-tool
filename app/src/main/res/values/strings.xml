@@ -28,6 +28,8 @@
     <!--功能-->
     <string name="setting">设置</string>
     <string name="more">更多</string>
+    <string name="flod">折叠</string>
+    <string name="expand">展开</string>
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>

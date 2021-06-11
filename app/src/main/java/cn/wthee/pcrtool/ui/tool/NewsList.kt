@@ -76,7 +76,7 @@ fun NewsList(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .fillMaxSize(),
-                contentPadding = PaddingValues(Dimen.mediuPadding)
+                contentPadding = PaddingValues(Dimen.largePadding)
             ) {
                 itemsIndexed(news) { _, it ->
                     if (it != null) {
@@ -161,7 +161,11 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimen.mediuPadding),
+                .padding(
+                    top = Dimen.mediuPadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             MainText(text = originalTitle, modifier = Modifier.padding(Dimen.mediuPadding))
@@ -277,6 +281,7 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                     loadUrl(originalUrl)
                 }
             })
+            CommonSpacer()
         }
         Row(
             modifier = Modifier

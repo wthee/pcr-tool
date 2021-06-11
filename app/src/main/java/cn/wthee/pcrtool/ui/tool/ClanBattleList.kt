@@ -68,7 +68,7 @@ fun ClanBattleList(
                 navViewModel.loading.postValue(false)
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
                     items(data) {
                         ClanBattleItem(it, toClanBossInfo)

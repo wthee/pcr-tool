@@ -122,6 +122,29 @@ fun MenuAnimation(
 
 }
 
+/**
+ * 菜单动画
+ */
+@ExperimentalAnimationApi
+@Composable
+fun MoreFabAnimation(
+    visible: Boolean,
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = if (animOn) {
+            slideInHorizontally(initialOffsetX = { 100 }, animationSpec = defaultSpring())
+        } else {
+            fadeIn(1f)
+        },
+        exit = fadeOut(),
+        content = content
+    )
+
+}
+
 
 /**
  * 从上至下移动
