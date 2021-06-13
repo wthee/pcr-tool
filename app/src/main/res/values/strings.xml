@@ -28,8 +28,7 @@
     <!--功能-->
     <string name="setting">设置</string>
     <string name="more">更多</string>
-    <string name="flod">折叠</string>
-    <string name="expand">展开</string>
+    <string name="function">功能</string>
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
@@ -110,6 +109,7 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
+    <string name="tool_news">公告</string>
     <string name="tool_news_cn">国服公告</string>
     <string name="tool_news_tw">台服公告</string>
     <string name="tool_news_jp">日服公告</string>

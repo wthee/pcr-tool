@@ -128,17 +128,18 @@ class MainActivity : ComponentActivity() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
             viewModelStore.clear()
+
             recreate()
-            when (it.what) {
-                //正常更新
-                -1, 0 -> {
-                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-                }
-                //数据切换
-                1 -> {
-                    ToastUtil.short(Constants.NOTICE_TOAST_CHANGE_SUCCESS)
-                }
-            }
+//            when (it.what) {
+//                //正常更新
+//                -1, 0 -> {
+//                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
+//                }
+//                //数据切换
+//                1 -> {
+//                    ToastUtil.short(Constants.NOTICE_TOAST_CHANGE_SUCCESS)
+//                }
+//            }
             return@Callback true
         })
     }
@@ -161,6 +162,7 @@ fun Home() {
     }
     val loading = navViewModel.loading.observeAsState().value ?: false
     val r6IdList = navViewModel.r6Ids.observeAsState()
+
     if (r6IdList.value != null) {
         r6Ids = r6IdList.value!!
     }

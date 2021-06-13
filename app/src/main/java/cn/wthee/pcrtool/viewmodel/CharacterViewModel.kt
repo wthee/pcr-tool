@@ -82,11 +82,6 @@ class CharacterViewModel @Inject constructor(
     }
 
     /**
-     * 六星 id 列表
-     */
-    suspend fun getR6Ids() = unitRepository.getR6Ids()
-
-    /**
      * 公会信息
      */
     fun getGuilds() {

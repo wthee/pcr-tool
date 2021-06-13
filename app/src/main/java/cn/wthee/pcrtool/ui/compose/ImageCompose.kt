@@ -55,7 +55,8 @@ fun CharacterCard(
             else -> rememberCoilPainter(request = R.drawable.error)
         },
         contentDescription = null,
-        modifier = mModifier
+        modifier = mModifier,
+        contentScale = ContentScale.FillWidth
     )
 }
 

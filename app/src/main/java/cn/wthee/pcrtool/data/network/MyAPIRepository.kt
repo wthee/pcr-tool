@@ -88,6 +88,27 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
+     * 最新公告
+     */
+    suspend fun getNewsOverview(): ResponseData<List<NewsTable>> {
+        //请求
+        try {
+            val response = service.getNewsOverview()
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+            }
+        }
+        return error()
+    }
+
+    /**
      * 获取排名信息
      */
     suspend fun getLeader(): ResponseData<LeaderData> {

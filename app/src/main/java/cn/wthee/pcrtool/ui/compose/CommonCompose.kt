@@ -31,18 +31,16 @@ fun MainTitleText(
     modifier: Modifier = Modifier,
     text: String,
     small: Boolean = false,
-    backgroundColor: Color = MaterialTheme.colors.primary,
+    backgroundColor: Color = MaterialTheme.colors.primary
 ) {
-    SelectionContainer(modifier = modifier) {
-        Text(
-            text = text,
-            color = MaterialTheme.colors.onPrimary,
-            style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
-            modifier = Modifier
-                .background(color = backgroundColor, shape = Shapes.small)
-                .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
-        )
-    }
+    Text(
+        text = text,
+        color = MaterialTheme.colors.onPrimary,
+        style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
+        modifier = modifier
+            .background(color = backgroundColor, shape = Shapes.small)
+            .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
+    )
 }
 
 /**
@@ -53,17 +51,27 @@ fun MainContentText(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
-    textAlign: TextAlign = TextAlign.End
+    textAlign: TextAlign = TextAlign.End,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(modifier = modifier) {
+    if (selectable) {
+        SelectionContainer(modifier = modifier) {
+            Text(
+                text = text,
+                textAlign = textAlign,
+                color = color,
+                style = MaterialTheme.typography.body1,
+            )
+        }
+    } else {
         Text(
             text = text,
             textAlign = textAlign,
             color = color,
             style = MaterialTheme.typography.body1,
+            modifier = modifier
         )
     }
-
 }
 
 /**
@@ -74,22 +82,35 @@ fun MainText(
     modifier: Modifier = Modifier,
     text: String,
     textAlign: TextAlign = TextAlign.Center,
-    color: Color = MaterialTheme.colors.primary
+    color: Color = MaterialTheme.colors.primary,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(
-        modifier = modifier.padding(
-            start = Dimen.mediuPadding,
-            end = Dimen.mediuPadding
-        )
-    ) {
+    if (selectable) {
+        SelectionContainer(
+            modifier = modifier.padding(
+                start = Dimen.mediuPadding,
+                end = Dimen.mediuPadding
+            )
+        ) {
+            Text(
+                text = text,
+                color = color,
+                style = MaterialTheme.typography.subtitle1,
+                textAlign = textAlign,
+                fontWeight = FontWeight.Black,
+            )
+        }
+    } else {
         Text(
             text = text,
             color = color,
             style = MaterialTheme.typography.subtitle1,
             textAlign = textAlign,
             fontWeight = FontWeight.Black,
+            modifier = modifier
         )
     }
+
 }
 
 /**
@@ -99,14 +120,25 @@ fun MainText(
 fun Subtitle1(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified
+    color: Color = Color.Unspecified,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(modifier = modifier) {
+    if (selectable) {
+        SelectionContainer(modifier = modifier) {
+            Text(
+                text = text,
+                color = color,
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.typography.subtitle1,
+            )
+        }
+    } else {
         Text(
             text = text,
             color = color,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.subtitle1,
+            modifier = modifier
         )
     }
 }
@@ -118,14 +150,25 @@ fun Subtitle1(
 fun Subtitle2(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified
+    color: Color = Color.Unspecified,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(modifier = modifier) {
+    if (selectable) {
+        SelectionContainer(modifier = modifier) {
+            Text(
+                text = text,
+                color = color,
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.typography.subtitle2,
+            )
+        }
+    } else {
         Text(
             text = text,
             color = color,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.subtitle2,
+            modifier = modifier
         )
     }
 }

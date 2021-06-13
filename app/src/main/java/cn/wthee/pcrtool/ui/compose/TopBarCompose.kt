@@ -44,7 +44,11 @@ fun TopBarCompose(actions: NavActions) {
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.primary,
         )
-        Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.End) {
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             //数据切换
             if (downloadState == -2) {
                 IconCompose(

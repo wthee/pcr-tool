@@ -88,7 +88,11 @@ fun EquipList(
             Box(modifier = Modifier.fillMaxSize()) {
                 val spanCount = 4
                 if (equips != null) {
-                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
+                    LazyVerticalGrid(
+                        cells = GridCells.Fixed(spanCount),
+                        state = scrollState,
+                        contentPadding = PaddingValues(Dimen.mediuPadding)
+                    ) {
                         items(equips!!) { equip ->
                             EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                         }
@@ -155,7 +159,7 @@ private fun EquipItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = Dimen.mediuPadding),
+            .padding(Dimen.mediuPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(data = getEquipIconUrl(equip.equipmentId)) {

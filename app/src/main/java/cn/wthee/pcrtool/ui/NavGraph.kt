@@ -112,7 +112,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 actions.toCharacteRankEquip,
                 actions.toCharacteRankCompare,
                 actions.toCharacteEquipCount,
-                actions.toCharacterPic,
                 viewModel
             )
 
@@ -128,19 +127,6 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             val arguments = requireNotNull(it.arguments)
             val scrollState = rememberScrollState()
             CharacterBasicInfo(scrollState, unitId = arguments.getInt(Navigation.UNIT_ID))
-        }
-
-        //角色图片
-        composable(
-            "${Navigation.PICS}/{${Navigation.UNIT_ID}}",
-            arguments = listOf(navArgument(Navigation.UNIT_ID) {
-                type = NavType.IntType
-            })
-        ) {
-            val arguments = requireNotNull(it.arguments)
-            CharacterAllPicture(
-                unitId = arguments.getInt(Navigation.UNIT_ID)
-            )
         }
 
         //装备列表

@@ -90,10 +90,6 @@ fun CharacterList(
             FilterCharacterSheet(navViewModel, coroutineScope, state)
         }
     ) {
-        coroutineScope.launch {
-            val r6Ids = viewModel.getR6Ids()
-            navViewModel.r6Ids.postValue(r6Ids)
-        }
         Box(modifier = Modifier.fillMaxSize()) {
             if (list.value != null) {
                 LazyVerticalGrid(

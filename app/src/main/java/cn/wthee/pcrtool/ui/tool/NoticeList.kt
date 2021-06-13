@@ -120,7 +120,8 @@ private fun NoticeItem(data: AppNotice) {
     val context = LocalContext.current
 
     Row(
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         MainTitleText(text = data.title)
         if (exTitle != "") {

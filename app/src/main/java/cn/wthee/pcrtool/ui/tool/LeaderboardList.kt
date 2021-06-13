@@ -59,7 +59,7 @@ fun LeaderboardList(
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.padding(
-                        top = Dimen.mediuPadding,
+                        top = Dimen.largePadding,
                         start = Dimen.mediuPadding,
                         end = Dimen.mediuPadding
                     )

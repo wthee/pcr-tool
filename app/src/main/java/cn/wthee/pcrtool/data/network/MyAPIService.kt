@@ -44,6 +44,13 @@ interface MyAPIService {
     suspend fun getNewsData(@Body body: RequestBody): ResponseData<List<NewsTable>>
 
     /**
+     * 获取公告
+     */
+    @POST("news/overview")
+    suspend fun getNewsOverview(): ResponseData<List<NewsTable>>
+
+
+    /**
      * 排行信息
      */
     @POST("leaders")

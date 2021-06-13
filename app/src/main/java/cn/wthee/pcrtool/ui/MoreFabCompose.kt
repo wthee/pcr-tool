@@ -12,7 +12,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.compose.FabCompose
-import cn.wthee.pcrtool.ui.compose.MoreFabAnimation
+import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.addToClip
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ fun MoreFabCompose(viewModel: NavViewModel) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
 
-    MoreFabAnimation(visible = fabMainIcon == MainIconType.DOWN) {
+    FadeAnimation(visible = fabMainIcon == MainIconType.DOWN) {
         Column(verticalArrangement = Arrangement.Bottom, modifier = Modifier.fillMaxSize()) {
             Row(
                 modifier = Modifier

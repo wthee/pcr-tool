@@ -4,7 +4,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.TextButton
@@ -47,9 +46,12 @@ fun PvpFavorites(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value != null) {
-            LazyColumn(state = scrollState) {
+            LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.mediuPadding)) {
                 items(list.value!!) { data ->
                     PvpFavoriteItem(toCharacter, toResearch, region, data, pvpViewModel)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
             //已收藏
@@ -90,84 +92,81 @@ private fun PvpFavoriteItem(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    Column(
+    Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(Dimen.mediuPadding)
+            .padding(end = Dimen.mediuPadding)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        MainCard {
-            //队伍角色图标
-            Column(
+        //搜索
+        TextButton(onClick = {
+            //重置页面
+            MainActivity.navViewModel.selectedIds.postValue(itemData.defs)
+            pvpViewModel.pvpResult.postValue(null)
+            VibrateUtil(context).single()
+            toResearch()
+        }) {
+            IconCompose(
+                data = MainIconType.PVP_SEARCH.icon,
+                size = Dimen.fabIconSize
+            )
+            MainContentText(text = stringResource(id = R.string.pvp_research))
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        //取消收藏
+        IconCompose(
+            data = MainIconType.LOVE_FILL.icon,
+            Dimen.fabIconSize
+        ) {
+            //点击取消收藏，增加确认 dialog 操作
+            scope.launch {
+                pvpViewModel.delete(itemData.atks, itemData.defs, region)
+            }
+        }
+    }
+
+    MainCard(modifier = Modifier.padding((Dimen.mediuPadding))) {
+        //队伍角色图标
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimen.mediuPadding)
+        ) {
+            //进攻
+            Row(
                 modifier = Modifier
-                    .padding(Dimen.mediuPadding)
-                    .fillMaxWidth()
+                    .padding(bottom = Dimen.largePadding)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = Dimen.mediuPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //搜索
-                    TextButton(onClick = {
-                        //重置页面
-                        MainActivity.navViewModel.selectedIds.postValue(itemData.defs)
-                        pvpViewModel.pvpResult.postValue(null)
-                        VibrateUtil(context).single()
-                        toResearch()
-                    }) {
-                        IconCompose(
-                            data = MainIconType.PVP_SEARCH.icon,
-                            size = Dimen.fabIconSize
-                        )
-                        MainContentText(text = stringResource(id = R.string.pvp_research))
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    //取消收藏
+                itemData.getAtkIds().forEachIndexed { index, it ->
                     IconCompose(
-                        data = MainIconType.LOVE_FILL.icon,
-                        Dimen.fabIconSize
+                        data = CharacterIdUtil.getMaxIconUrl(
+                            it,
+                            MainActivity.r6Ids.contains(it)
+                        )
                     ) {
-                        //点击取消收藏，增加确认 dialog 操作
-                        scope.launch {
-                            pvpViewModel.delete(itemData.atks, itemData.defs, region)
-                        }
+                        toCharacter(it)
                     }
                 }
-                //进攻
-                LazyRow {
-                    items(itemData.getAtkIds()) {
-                        IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
-                                it,
-                                MainActivity.r6Ids.contains(it)
-                            )
-                        ) {
-                            toCharacter(it)
-                        }
-                        Spacer(modifier = Modifier.padding(start = Dimen.mediuPadding))
-                    }
-                }
-                //防守
-                LazyRow(
-                    contentPadding = PaddingValues(
-                        top = Dimen.mediuPadding,
-                        end = Dimen.largePadding
-                    )
-                ) {
-                    items(itemData.getDefIds()) {
-                        IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
-                                it,
-                                MainActivity.r6Ids.contains(it)
-                            ),
-                        ) {
-                            toCharacter(it)
-                        }
-                        Spacer(modifier = Modifier.padding(start = Dimen.mediuPadding))
+            }
+            //防守
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                itemData.getDefIds().forEachIndexed { index, it ->
+                    IconCompose(
+                        data = CharacterIdUtil.getMaxIconUrl(
+                            it,
+                            MainActivity.r6Ids.contains(it)
+                        )
+                    ) {
+                        toCharacter(it)
                     }
                 }
             }
         }
     }
+
 }

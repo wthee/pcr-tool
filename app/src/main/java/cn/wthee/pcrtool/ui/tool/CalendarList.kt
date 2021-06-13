@@ -110,7 +110,10 @@ fun CalendarItem(calendar: CalendarEvent) {
         }
     }
 
-    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+    Row(
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         //开始日期
         MainTitleText(
             text = sd.substring(0, 10),

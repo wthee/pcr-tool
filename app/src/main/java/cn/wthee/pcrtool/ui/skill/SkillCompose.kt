@@ -111,7 +111,8 @@ fun SkillItem(
             color = colorResource(color),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.largePadding)
+                .padding(top = Dimen.largePadding),
+            selectable = true
         )
         //技能类型
         if (!isClanBoss) {
@@ -144,7 +145,7 @@ fun SkillItem(
                     )
                 }
                 //描述
-                Subtitle2(text = skillDetail.desc)
+                Subtitle2(text = skillDetail.desc, selectable = true)
             }
 
         }

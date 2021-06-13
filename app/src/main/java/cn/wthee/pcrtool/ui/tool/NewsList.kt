@@ -140,6 +140,7 @@ private fun NewsItem(
         Subtitle1(
             text = news.title,
             modifier = Modifier.padding(Dimen.mediuPadding),
+            selectable = true
         )
     }
 }
@@ -168,17 +169,22 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            MainText(text = originalTitle, modifier = Modifier.padding(Dimen.mediuPadding))
+            MainText(
+                text = originalTitle,
+                modifier = Modifier.padding(Dimen.mediuPadding),
+                selectable = true
+            )
             Subtitle2(text = date)
-            AndroidView(modifier = Modifier
-                .alpha(alpha)
-                .padding(Dimen.largePadding), factory = {
-                WebView(it).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                    )
-                    settings.apply {
+            AndroidView(
+                modifier = Modifier
+                    .alpha(alpha)
+                    .padding(Dimen.largePadding), factory = {
+                    WebView(it).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                        )
+                        settings.apply {
                         domStorageEnabled = true
                         javaScriptEnabled = true
                         cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK

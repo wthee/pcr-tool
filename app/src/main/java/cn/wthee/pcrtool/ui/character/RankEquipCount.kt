@@ -103,7 +103,7 @@ fun RankEquipCount(
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
-                    .padding(top = Dimen.mediuPadding)
+                    .padding(top = Dimen.largePadding)
                     .fillMaxWidth()
             ) {
                 FadeAnimation(visible = rankEquipMaterials.value != null) {

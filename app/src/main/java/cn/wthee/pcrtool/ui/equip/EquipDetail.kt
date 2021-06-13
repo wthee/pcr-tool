@@ -56,7 +56,7 @@ fun EquipMainInfo(
 
     Box(
         modifier = Modifier
-            .padding(top = Dimen.mediuPadding)
+            .padding(top = Dimen.largePadding)
             .fillMaxSize()
     ) {
 
@@ -65,17 +65,19 @@ fun EquipMainInfo(
                 MainText(
                     text = it.equipmentName,
                     color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    selectable = true
                 )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(Dimen.mediuPadding)
+                        .padding(Dimen.largePadding)
                 ) {
                     IconCompose(data = getEquipIconUrl(equipId))
                     Subtitle2(
                         text = it.getDesc(),
-                        modifier = Modifier.padding(start = Dimen.mediuPadding)
+                        modifier = Modifier.padding(start = Dimen.mediuPadding),
+                        selectable = true
                     )
                 }
                 //属性
@@ -142,16 +144,16 @@ private fun EquipMaterialList(
                 .align(Alignment.CenterHorizontally)
         )
         //装备合成素材
-        VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2) {
+        VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
             data.forEach { material ->
                 val loved = filter.starIds.contains(material.id)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            start = Dimen.mediuPadding,
-                            end = Dimen.mediuPadding,
-                            bottom = Dimen.mediuPadding
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding,
+                            bottom = Dimen.largePadding
                         ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IconCompose(data = getEquipIconUrl(material.id)) {

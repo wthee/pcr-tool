@@ -59,13 +59,13 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             text = info.catchCopy.deleteSpace(),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.mediuPadding, end = Dimen.mediuPadding)
+                .padding(Dimen.largePadding),
+            selectable = true
         )
         //介绍
         Text(
             info.getIntroText(),
             style = MaterialTheme.typography.subtitle2,
-            modifier = Modifier.padding(top = Dimen.mediuPadding)
         )
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
             MainTitleText(
@@ -160,7 +160,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 text = info.race,
                 modifier = Modifier
                     .weight(0.35f)
-                    .padding(end = Dimen.mediuPadding)
+                    .padding(end = Dimen.mediuPadding),
+                selectable = true
             )
             MainTitleText(
                 text = stringResource(id = R.string.cv),
@@ -168,7 +169,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             )
             MainContentText(
                 text = info.voice,
-                modifier = Modifier.weight(0.35f)
+                modifier = Modifier.weight(0.35f),
+                selectable = true
             )
         }
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
@@ -185,7 +187,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 start = Dimen.largePadding,
                 end = Dimen.largePadding
             ),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
             MainTitleText(
@@ -197,7 +200,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         MainContentText(
             text = info.favorite,
             modifier = Modifier.padding(Dimen.mediuPadding),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         info.getSelf()?.let {
             Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
@@ -210,7 +214,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             MainContentText(
                 text = it,
                 modifier = Modifier.padding(Dimen.mediuPadding),
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                selectable = true
             )
         }
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
@@ -223,7 +228,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         MainContentText(
             text = info.getCommentsText(),
             modifier = Modifier.padding(Dimen.mediuPadding),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
             MainTitleText(
@@ -235,7 +241,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         MainContentText(
             text = info.getRoomCommentsText(),
             modifier = Modifier.padding(Dimen.mediuPadding),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         CommonSpacer()
     }

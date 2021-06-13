@@ -121,7 +121,7 @@ fun MainSettings() {
             //数据更新
             MainText(
                 text = dbVersionGroup,
-                modifier = Modifier.padding(bottom = Dimen.largePadding)
+                modifier = Modifier.padding(Dimen.largePadding)
             )
             //- 强制更新
             SettingItem(
@@ -153,10 +153,7 @@ fun MainSettings() {
             LineCompose()
             MainText(
                 text = stringResource(id = R.string.other_settings),
-                modifier = Modifier.padding(
-                    top = Dimen.largePadding,
-                    bottom = Dimen.largePadding
-                )
+                modifier = Modifier.padding(Dimen.largePadding)
             )
             //- 振动开关
             val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
@@ -178,7 +175,7 @@ fun MainSettings() {
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
                 IconCompose(
                     data = MainIconType.VIBRATE.icon,
                     size = Dimen.settingIconSize
@@ -196,7 +193,7 @@ fun MainSettings() {
                     sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
                     VibrateUtil(context).single()
                 })
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
             //- 动画效果
             val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
@@ -218,7 +215,7 @@ fun MainSettings() {
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
                 IconCompose(
                     data = MainIconType.ANIMATION.icon,
                     size = Dimen.settingIconSize
@@ -236,16 +233,13 @@ fun MainSettings() {
                     sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
                     VibrateUtil(context).single()
                 })
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
             LineCompose()
             //感谢友链
             MainText(
                 text = stringResource(id = R.string.thanks),
-                modifier = Modifier.padding(
-                    top = Dimen.largePadding,
-                    bottom = Dimen.largePadding
-                )
+                modifier = Modifier.padding(Dimen.largePadding)
             )
             //- 干炸里脊资源
             val dataFromUrl = stringResource(id = R.string.data_from_url)

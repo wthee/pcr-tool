@@ -114,7 +114,7 @@ fun RankCompare(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = Dimen.mediuPadding)
+                    .padding(top = Dimen.largePadding)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     //头像
