@@ -13,7 +13,9 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.hourInt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +33,8 @@ class OverviewViewModel @Inject constructor(
 
     var characterList = MutableLiveData<List<CharacterInfo>>()
     var equipList = MutableLiveData<List<EquipmentMaxData>>()
-    var eventList = MutableLiveData<List<CalendarEvent>>()
+    var inProgressEventList = MutableLiveData<List<CalendarEvent>>()
+    var comingSoonEventList = MutableLiveData<List<CalendarEvent>>()
     var newsList = MutableLiveData<ResponseData<List<NewsTable>>>()
 
 
@@ -64,10 +67,21 @@ class OverviewViewModel @Inject constructor(
             val data1 = eventRepository.getTowerEvent(1)
             //按进行中排序
             val today = getToday()
-            val data = data0 + data1
-            if (data.size > 4) {
-                eventList.postValue(data.sortedWith(compare(today)).subList(0, 3))
-            }
+            val list0 = (data0 + data1).filter {
+                val sd = it.startTime.formatTime()
+                val ed = it.endTime.formatTime()
+                val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
+                val comingSoon = today.hourInt(sd) < 0
+                inProgress
+            }.sortedWith(compare(today))
+            val list1 = (data0 + data1).filter {
+                val sd = it.startTime.formatTime()
+                val ed = it.endTime.formatTime()
+                val comingSoon = today.hourInt(sd) < 0
+                comingSoon
+            }.sortedWith(compare(today))
+            inProgressEventList.postValue(list0)
+            comingSoonEventList.postValue(list1)
         }
     }
 

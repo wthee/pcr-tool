@@ -52,7 +52,6 @@ fun ToolMenu(actions: NavActions) {
 
     val list = arrayListOf(
         ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
-        ToolMenuData(R.string.tool_calendar, MainIconType.CALENDAR),
         ToolMenuData(R.string.tool_clan, MainIconType.CLAN),
         ToolMenuData(R.string.tool_leader, MainIconType.LEADER),
         ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),

@@ -93,7 +93,8 @@
     <string name="download_pic">下载图片</string>
     <string name="tool_leader">排行</string>
     <string name="calendar">日历</string>
-    <string name="tool_calendar">活动日历</string>
+    <string name="tool_calendar">进行中活动</string>
+    <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_pvp">竞技场</string>
     <string name="tip_pvp_favorites">暂无收藏</string>
     <string name="tool_clan">团队战</string>
@@ -109,7 +110,7 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="drop_info">掉落地区</string>
-    <string name="tool_news">公告</string>
+    <string name="tool_news">最新公告</string>
     <string name="tool_news_cn">国服公告</string>
     <string name="tool_news_tw">台服公告</string>
     <string name="tool_news_jp">日服公告</string>
@@ -170,4 +171,5 @@
     <string name="feedback">反馈</string>
     <string name="qq_group">1033289878</string>
     <string name="copy_qq_tip">已复制反馈 QQ 群号，请加群反馈~</string>
+    <string name="no_event">暂无活动</string>
 </resources>

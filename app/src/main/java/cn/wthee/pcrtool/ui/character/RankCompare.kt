@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.CharacterIdUtil
@@ -116,45 +117,64 @@ fun RankCompare(
                     .fillMaxSize()
                     .padding(top = Dimen.largePadding)
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    //头像
-                    IconCompose(
-                        data = CharacterIdUtil.getMaxIconUrl(
-                            unitId,
-                            MainActivity.r6Ids.contains(unitId)
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(start = Dimen.largePadding)
+                    ) {
+                        //头像
+                        IconCompose(
+                            data = CharacterIdUtil.getMaxIconUrl(
+                                unitId,
+                                MainActivity.r6Ids.contains(unitId)
+                            ),
+                            size = Dimen.largeIconSize
                         )
-                    )
-                    //等级
-                    Text(
-                        text = "$level",
-                        color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h6
-                    )
-                    StarCompose(rarity)
-                    Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                        Spacer(modifier = Modifier.weight(0.3f))
-                        RankText(
-                            rank = rank0.value,
-                            style = MaterialTheme.typography.subtitle1,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier
-                                .weight(0.2f)
-                                .padding(0.dp)
-                        )
-                        RankText(
-                            rank = rank1.value,
-                            style = MaterialTheme.typography.subtitle1,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier.weight(0.2f)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.result),
-                            textAlign = TextAlign.End,
-                            style = MaterialTheme.typography.subtitle1,
-                            modifier = Modifier.weight(0.2f)
-                        )
+                        Column(modifier = Modifier.padding(start = Dimen.mediuPadding)) {
+                            //等级
+                            Text(
+                                text = "$level",
+                                color = MaterialTheme.colors.primary,
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier.padding(start = Dimen.smallPadding)
+                            )
+                            StarCompose(rarity)
+                        }
                     }
-                    AttrCompare(attrCompareData)
+                    Card(
+                        shape = CardTopShape,
+                        elevation = Dimen.cardElevation,
+                        modifier = Modifier
+                            .padding(top = Dimen.largePadding)
+                            .fillMaxSize()
+                    ) {
+                        Column {
+                            Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
+                                Spacer(modifier = Modifier.weight(0.3f))
+                                RankText(
+                                    rank = rank0.value,
+                                    style = MaterialTheme.typography.subtitle1,
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier
+                                        .weight(0.2f)
+                                        .padding(0.dp)
+                                )
+                                RankText(
+                                    rank = rank1.value,
+                                    style = MaterialTheme.typography.subtitle1,
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier.weight(0.2f)
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.result),
+                                    textAlign = TextAlign.End,
+                                    style = MaterialTheme.typography.subtitle1,
+                                    modifier = Modifier.weight(0.2f)
+                                )
+                            }
+                            AttrCompare(attrCompareData)
+                        }
+                    }
                 }
                 FabCompose(
                     iconType = MainIconType.RANK_SELECT,

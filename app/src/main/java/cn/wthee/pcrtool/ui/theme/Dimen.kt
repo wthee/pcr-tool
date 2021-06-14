@@ -33,11 +33,9 @@ object Dimen {
 
     val smallIconSize = 18.dp
 
-    val menuHeight = 64.dp
-
-    val largeMenuHeight = 150.dp
-
     val iconSize = 48.dp
+
+    val largeIconSize = 56.dp
 
     val sheetMarginBottom = 60.dp
 

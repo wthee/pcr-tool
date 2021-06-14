@@ -61,7 +61,8 @@ fun Overview(
     val characterList =
         overviewViewModel.characterList.observeAsState().value
     val equipList = overviewViewModel.equipList.observeAsState().value
-    val eventList = overviewViewModel.eventList.observeAsState().value
+    val inProgressEventList = overviewViewModel.inProgressEventList.observeAsState().value
+    val comingSoonEventList = overviewViewModel.comingSoonEventList.observeAsState().value
     val newsList = overviewViewModel.newsList.observeAsState().value
 
     Column(
@@ -135,26 +136,6 @@ fun Overview(
             loadState = false
         )
         ToolMenu(actions = actions)
-        //日历
-        SectionHead(
-            titleId = R.string.tool_calendar,
-            loadState = eventList == null || eventList.isEmpty()
-        ) {
-            actions.toCalendar()
-        }
-        Column(
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            )
-        ) {
-            eventList?.let { list ->
-                list.forEach {
-                    CalendarItem(it)
-                }
-            }
-        }
         //新闻
         SectionHead(
             titleId = R.string.tool_news,
@@ -178,7 +159,47 @@ fun Overview(
                 }
             }
         }
+        //日历
+        if (inProgressEventList != null && inProgressEventList.isNotEmpty()) {
+            SectionHead(
+                titleId = R.string.tool_calendar,
+                loadState = false
+            )
+            Column(
+                modifier = Modifier
+                    .padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
+                    .fillMaxWidth()
+            ) {
+                inProgressEventList.forEach {
+                    CalendarItem(it)
+                }
+            }
 
+        }
+        if (comingSoonEventList != null && comingSoonEventList.isNotEmpty()) {
+            SectionHead(
+                titleId = R.string.tool_calendar_comming,
+                loadState = false
+            )
+            Column(
+                modifier = Modifier
+                    .padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
+                    .fillMaxWidth()
+            ) {
+                comingSoonEventList.forEach {
+                    CalendarItem(it)
+                }
+            }
+
+        }
 
         CommonSpacer()
     }
@@ -248,9 +269,9 @@ private fun NewsItem(
     toDetail: (String, String, Int, String) -> Unit,
 ) {
     val tag = when (region) {
-        2 -> R.string.tool_news_cn
-        3 -> R.string.tool_news_tw
-        else -> R.string.tool_news_jp
+        2 -> R.string.db_cn
+        3 -> R.string.db_tw
+        else -> R.string.db_jp
     }
     val colorId = when (region) {
         2 -> R.color.news_update
