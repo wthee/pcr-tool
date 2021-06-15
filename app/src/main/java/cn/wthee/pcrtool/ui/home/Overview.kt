@@ -272,6 +272,8 @@ private fun NewsItem(
     toNewsList: (Int) -> Unit,
     toDetail: (String, String, Int, String) -> Unit,
 ) {
+    val context = LocalContext.current
+
     val tag = when (region) {
         2 -> R.string.db_cn
         3 -> R.string.db_tw
@@ -304,6 +306,7 @@ private fun NewsItem(
             modifier = Modifier
                 .clip(Shapes.small)
                 .clickable {
+                    VibrateUtil(context).single()
                     toNewsList(region)
                 }
                 .padding(Dimen.smallPadding)

@@ -27,27 +27,60 @@ class NewsViewModel @Inject constructor(
     private val pageSize = 10
     private val initSize = 20
 
-    private var currentRegion = 0
 
-    var newsPageList: Flow<PagingData<NewsTable>>? = null
+    var newsPageList0: Flow<PagingData<NewsTable>>? = null
+    var newsPageList1: Flow<PagingData<NewsTable>>? = null
+    var newsPageList2: Flow<PagingData<NewsTable>>? = null
 
     /**
      * 公告数据
      */
     fun getNews(region: Int) {
-        if (newsPageList == null || region != currentRegion) {
-            currentRegion = region
-            newsPageList = Pager(
-                config = androidx.paging.PagingConfig(
-                    pageSize = pageSize,
-                    initialLoadSize = initSize,
-                    enablePlaceholders = true
-                ),
-                remoteMediator = NewsRemoteMediator(region, database, apiRepository)
-            ) {
-                newsDao.pagingSource("${region}-%")
-            }.flow
+        when (region) {
+            2 -> {
+                if (newsPageList0 == null) {
+                    newsPageList0 = Pager(
+                        config = androidx.paging.PagingConfig(
+                            pageSize = pageSize,
+                            initialLoadSize = initSize,
+                            enablePlaceholders = true
+                        ),
+                        remoteMediator = NewsRemoteMediator(region, database, apiRepository)
+                    ) {
+                        newsDao.pagingSource("${region}-%")
+                    }.flow
+                }
+            }
+            3 -> {
+                if (newsPageList1 == null) {
+                    newsPageList1 = Pager(
+                        config = androidx.paging.PagingConfig(
+                            pageSize = pageSize,
+                            initialLoadSize = initSize,
+                            enablePlaceholders = true
+                        ),
+                        remoteMediator = NewsRemoteMediator(region, database, apiRepository)
+                    ) {
+                        newsDao.pagingSource("${region}-%")
+                    }.flow
+                }
+            }
+            else -> {
+                if (newsPageList2 == null) {
+                    newsPageList2 = Pager(
+                        config = androidx.paging.PagingConfig(
+                            pageSize = pageSize,
+                            initialLoadSize = initSize,
+                            enablePlaceholders = true
+                        ),
+                        remoteMediator = NewsRemoteMediator(region, database, apiRepository)
+                    ) {
+                        newsDao.pagingSource("${region}-%")
+                    }.flow
+                }
+            }
         }
+
 
     }
 }

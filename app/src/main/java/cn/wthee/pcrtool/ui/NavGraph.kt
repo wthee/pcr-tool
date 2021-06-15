@@ -6,15 +6,20 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -25,6 +30,7 @@ import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.tool.*
+import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -76,8 +82,29 @@ object Navigation {
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions: NavActions) {
+fun NavGraph(
+    navController: NavHostController,
+    viewModel: NavViewModel,
+    actions: NavActions,
+    newsViewModel: NewsViewModel = hiltViewModel()
+) {
 
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    newsViewModel.getNews(2)
+    newsViewModel.getNews(3)
+    newsViewModel.getNews(4)
+    val flow0 = newsViewModel.newsPageList0
+    val flow1 = newsViewModel.newsPageList1
+    val flow2 = newsViewModel.newsPageList2
+    val news0 = remember(flow0, lifecycle) {
+        flow0?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news1 = remember(flow1, lifecycle) {
+        flow1?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news2 = remember(flow2, lifecycle) {
+        flow2?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
     NavHost(navController, startDestination = Navigation.HOME) {
 
         //首页
@@ -322,8 +349,9 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             val scrollState = rememberLazyListState()
 
             NewsList(
-                scrollState,
-                region,
+                news0,
+                news1,
+                news2,
                 actions.toNewsDetail
             )
         }
