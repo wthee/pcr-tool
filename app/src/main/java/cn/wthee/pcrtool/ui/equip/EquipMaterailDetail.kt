@@ -142,9 +142,16 @@ fun EquipMaterialDeatil(
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        contentPadding = PaddingValues(top = Dimen.mediuPadding)
+                        contentPadding = PaddingValues(top = Dimen.mediuPadding),
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        items(lists[pagerIndex]) {
+                        items(
+                            when (tabs[pagerIndex]) {
+                                "Normal" -> lists[0]
+                                "Hard" -> lists[1]
+                                else -> lists[2]
+                            }
+                        ) {
                             Text(
                                 text = it.getNum(),
                                 style = MaterialTheme.typography.h6,
