@@ -22,7 +22,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 
@@ -98,8 +97,9 @@ fun IconCompose(
     var mModifier = if (onClick != null) {
         Modifier
             .clip(Shapes.small)
-            .clickable(onClick = onClick.vibrate {
+            .clickable(onClick = {
                 VibrateUtil(context).single()
+                onClick.invoke()
             })
     } else {
         Modifier.clip(Shapes.small)

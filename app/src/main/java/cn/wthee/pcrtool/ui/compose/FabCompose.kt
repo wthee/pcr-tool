@@ -18,7 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.insets.navigationBarsPadding
 
 /**
@@ -41,8 +40,9 @@ fun FabCompose(
     }
 
     FloatingActionButton(
-        onClick = onClick.vibrate {
+        onClick = {
             VibrateUtil(context).single()
+            onClick.invoke()
         },
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),

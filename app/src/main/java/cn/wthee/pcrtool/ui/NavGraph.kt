@@ -40,7 +40,6 @@ object Navigation {
     const val EQUIP_DETAIL = "equipDetail"
     const val RANK_EQUIP = "rankEquip"
     const val RANK_COMPARE = "rankCompare"
-    const val PICS = "pictures"
     const val MAX_RANK = "maxRank"
     const val LEVEL = "level"
     const val RARITY = "rarity"
@@ -400,13 +399,6 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 角色图片
-     */
-    val toCharacterPic: (Int) -> Unit = { unitId: Int ->
-        navController.navigate("${Navigation.PICS}/${unitId}")
-    }
-
-    /**
      * 角色 RANK 装备
      */
     val toCharacteRankEquip: (Int) -> Unit = { unitId: Int ->
@@ -571,14 +563,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * >0: 进度
      */
     val downloadProgress = MutableLiveData(-1)
-
-    /**
-     * 应用更新
-     * -1：获取中
-     * 0：无更新
-     * 1：有更新
-     */
-    val updateApp = MutableLiveData(-1)
 
     /**
      * 加载中

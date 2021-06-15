@@ -71,12 +71,10 @@ class OverviewViewModel @Inject constructor(
                 val sd = it.startTime.formatTime()
                 val ed = it.endTime.formatTime()
                 val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
-                val comingSoon = today.hourInt(sd) < 0
                 inProgress
             }.sortedWith(compare(today))
             val list1 = (data0 + data1).filter {
                 val sd = it.startTime.formatTime()
-                val ed = it.endTime.formatTime()
                 val comingSoon = today.hourInt(sd) < 0
                 comingSoon
             }.sortedWith(compare(today))

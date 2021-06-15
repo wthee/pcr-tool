@@ -52,8 +52,3 @@ class VibrateUtil(context: Context) {
         }
     }
 }
-
-fun (() -> Unit).vibrate(arg: () -> Unit): () -> Unit = {
-    arg()
-    this()
-}

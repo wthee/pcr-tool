@@ -32,7 +32,10 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.ui.tool.CalendarItem
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.CharacterIdUtil
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.px2dp
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
 /**
@@ -245,8 +248,9 @@ private fun SectionHead(
         } else {
             Modifier
                 .clip(Shapes.small)
-                .clickable(onClick = onClick.vibrate {
+                .clickable(onClick = {
                     VibrateUtil(context).single()
+                    onClick.invoke()
                 })
         }).padding(Dimen.smallPadding)
 

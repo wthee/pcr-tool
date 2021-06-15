@@ -396,6 +396,7 @@ private fun CardImage(unitId: Int) {
                     modifier = Modifier.padding(Dimen.largePadding),
                     onClick = {
                         //下载
+                        VibrateUtil(context).single()
                         if (loaded[pagerIndex]) {
                             //权限校验
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
@@ -414,6 +415,7 @@ private fun CardImage(unitId: Int) {
                                         bitmap = (it as BitmapDrawable).bitmap,
                                         displayName = "${unitId}_${pagerIndex}.jpg"
                                     )
+                                    VibrateUtil(context).done()
                                 }
                             }
                         } else {

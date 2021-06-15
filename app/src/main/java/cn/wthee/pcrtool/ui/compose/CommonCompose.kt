@@ -20,7 +20,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.insets.navigationBarsPadding
 
 /**
@@ -218,8 +217,9 @@ fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit)
     Button(
         shape = Shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
-        onClick = onClick.vibrate {
+        onClick = {
             VibrateUtil(context).single()
+            onClick.invoke()
         }
     ) {
         Text(text = text, style = MaterialTheme.typography.button)
@@ -241,8 +241,9 @@ fun SubButton(
     OutlinedButton(
         shape = Shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
-        onClick = onClick.vibrate {
+        onClick = {
             VibrateUtil(context).single()
+            onClick.invoke()
         }
     ) {
         Text(text = text, color = color, style = MaterialTheme.typography.button)
@@ -325,8 +326,9 @@ fun MainCard(
         Card(
             modifier = mModifier,
             content = content,
-            onClick = onClick.vibrate {
+            onClick = {
                 VibrateUtil(context).single()
+                onClick.invoke()
             },
             backgroundColor = backgroundColor
         )
