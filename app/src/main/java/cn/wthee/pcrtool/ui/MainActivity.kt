@@ -128,18 +128,7 @@ class MainActivity : ComponentActivity() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
             viewModelStore.clear()
-
             recreate()
-//            when (it.what) {
-//                //正常更新
-//                -1, 0 -> {
-//                    ToastUtil.short(Constants.NOTICE_TOAST_SUCCESS)
-//                }
-//                //数据切换
-//                1 -> {
-//                    ToastUtil.short(Constants.NOTICE_TOAST_CHANGE_SUCCESS)
-//                }
-//            }
             return@Callback true
         })
     }

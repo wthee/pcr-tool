@@ -12,9 +12,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,17 +27,17 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.openWebView
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
-import kotlinx.coroutines.launch
 
 /**
  * 设置页面
@@ -48,13 +48,39 @@ fun MainSettings() {
     val context = LocalContext.current
     val type = getDatabaseType()
     val sp = mainSP()
-    val scope = rememberCoroutineScope()
     val painter = rememberCoilPainter(request = R.mipmap.ic_launcher_foreground)
+    SideEffect {
+        //自动删除历史数据
+        val oldFileSize = FileUtil.getOldDatabaseSize()
+        if (oldFileSize > 0) {
+            try {
+                FileUtil.deleteOldDatabase()
+            } catch (e: Exception) {
 
+            }
+        }
+    }
     val visibility = remember {
         mutableStateOf(false)
     }
     visibility.value = painter.loadState is ImageLoadState.Success
+    //数据库版本
+    val typeName = stringResource(
+        id = if (type == 1) {
+            R.string.db_cn
+        } else {
+            R.string.db_jp
+        }
+    )
+    val localVersion = sp.getString(
+        if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+        ""
+    )
+    val dbVersionGroup = if (localVersion != null) {
+        localVersion.split("/")[0]
+    } else {
+        ""
+    }
 
     SlideAnimation(visible = visibility.value) {
         Column(
@@ -104,50 +130,11 @@ fun MainSettings() {
                         color = MaterialTheme.colors.primary
                     )
                 }
-            }
-            //数据库版本
-            val localVersion = sp.getString(
-                if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-                ""
-            )
-            val dbVersionGroup = stringResource(
-                id = R.string.data_version, if (localVersion != null) {
-                    localVersion.split("/")[0]
-                } else {
-                    ""
-                }
-            )
 
-            //数据更新
-            MainText(
-                text = dbVersionGroup,
-                modifier = Modifier.padding(Dimen.largePadding)
-            )
-            //- 强制更新
-            SettingItem(
-                MainIconType.DB_DOWNLOAD,
-                stringResource(id = R.string.redownload_db),
-                stringResource(id = R.string.redownload_db_summary)
-            ) {
-                scope.launch {
-                    DatabaseUpdater.checkDBVersion(0, force = true)
-                }
-            }
-            //- 历史数据
-            val oldFileSize = remember {
-                mutableStateOf(FileUtil.getOldDatabaseSize())
-            }
-            val deleteTip = stringResource(id = R.string.clean_success)
-            if (oldFileSize.value > 0) {
-                SettingItem(
-                    MainIconType.DELETE,
-                    stringResource(id = R.string.clean_database),
-                    FileUtil.getOldDatabaseSize().convertFileSize()
-                ) {
-                    FileUtil.deleteOldDatabase()
-                    ToastUtil.short(deleteTip)
-                    oldFileSize.value = 0
-                }
+                Subtitle2(
+                    text = "${typeName}：${dbVersionGroup}",
+                    color = MaterialTheme.colors.primary
+                )
             }
             //其它设置
             LineCompose()
@@ -295,8 +282,9 @@ private fun SettingItem(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clickable(onClick = onClick.vibrate {
+            .clickable(onClick = {
                 VibrateUtil(context).single()
+                onClick.invoke()
             })
     ) {
         Spacer(modifier = Modifier.width(Dimen.largePadding))
