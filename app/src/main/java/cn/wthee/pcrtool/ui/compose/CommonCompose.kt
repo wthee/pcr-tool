@@ -34,7 +34,7 @@ fun MainTitleText(
 ) {
     Text(
         text = text,
-        color = MaterialTheme.colors.onPrimary,
+        color = MaterialTheme.colors.onSurface,
         style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
             .background(color = backgroundColor, shape = Shapes.small)
@@ -366,7 +366,7 @@ fun SelectText(
     }
     Text(
         text = text,
-        color = if (selected) MaterialTheme.colors.onPrimary else textColor,
+        color = if (selected) MaterialTheme.colors.onSurface else textColor,
         style = style,
         maxLines = 1,
         textAlign = TextAlign.Center,

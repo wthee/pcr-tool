@@ -335,19 +335,8 @@ fun NavGraph(
         }
 
         //公告
-        composable(
-            "${Navigation.TOOL_NEWS}/{${Navigation.TOOL_NEWS_REGION}}",
-            arguments = listOf(
-                navArgument(Navigation.TOOL_NEWS_REGION) {
-                    type = NavType.IntType
-                },
-            )
-        ) {
+        composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val arguments = requireNotNull(it.arguments)
-            val region = arguments.getInt(Navigation.TOOL_NEWS_REGION)
-            val scrollState = rememberLazyListState()
-
             NewsList(
                 news0,
                 news1,
@@ -510,8 +499,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 公告
      */
-    val toNews: (Int) -> Unit = { region ->
-        navController.navigate("${Navigation.TOOL_NEWS}/$region")
+    val toNews: () -> Unit = {
+        navController.navigate(Navigation.TOOL_NEWS)
     }
 
     /**

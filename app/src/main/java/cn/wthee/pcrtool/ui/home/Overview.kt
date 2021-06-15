@@ -143,7 +143,9 @@ fun Overview(
         SectionHead(
             titleId = R.string.tool_news,
             loadState = newsList?.data == null
-        )
+        ) {
+            actions.toNews()
+        }
         Column(
             modifier = Modifier.padding(
                 top = Dimen.mediuPadding,
@@ -156,7 +158,6 @@ fun Overview(
                     NewsItem(
                         region = it.getRegion(),
                         news = it,
-                        actions.toNews,
                         actions.toNewsDetail
                     )
                 }
@@ -269,10 +270,8 @@ private fun SectionHead(
 private fun NewsItem(
     region: Int,
     news: NewsTable,
-    toNewsList: (Int) -> Unit,
     toDetail: (String, String, Int, String) -> Unit,
 ) {
-    val context = LocalContext.current
 
     val tag = when (region) {
         2 -> R.string.db_cn
@@ -298,18 +297,6 @@ private fun NewsItem(
         MainTitleText(
             text = news.date,
             modifier = Modifier.padding(start = Dimen.smallPadding),
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Subtitle2(
-            text = stringResource(id = R.string.more),
-            color = MaterialTheme.colors.primary,
-            modifier = Modifier
-                .clip(Shapes.small)
-                .clickable {
-                    VibrateUtil(context).single()
-                    toNewsList(region)
-                }
-                .padding(Dimen.smallPadding)
         )
     }
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {

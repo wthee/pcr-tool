@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -88,6 +89,8 @@ fun RankEquipCount(
 
     ModalBottomSheetLayout(
         sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel, 1)

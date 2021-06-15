@@ -98,6 +98,8 @@ fun RankCompare(
 
     ModalBottomSheetLayout(
         sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel)

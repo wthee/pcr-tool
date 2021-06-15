@@ -71,3 +71,28 @@ fun FadeAnimation(
         content = content,
     )
 }
+
+
+/**
+ * 页面进入动画
+ */
+@ExperimentalAnimationApi
+@Composable
+fun SlideLeftAnimation(
+    visible: Boolean,
+    content: @Composable AnimatedVisibilityScope.() -> Unit
+) {
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = if (animOn) {
+            slideInHorizontally(initialOffsetX = {
+                40
+            }, defaultSpring())
+        } else {
+            fadeIn(1f)
+        },
+        exit = fadeOut(),
+        content = content,
+    )
+}

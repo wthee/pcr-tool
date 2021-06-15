@@ -20,8 +20,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -36,7 +36,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
@@ -81,6 +80,8 @@ fun EquipList(
 
         ModalBottomSheetLayout(
             sheetState = state,
+            scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+            sheetElevation = Dimen.sheetElevation,
             sheetContent = {
                 FilterEquipSheet(navViewModel, coroutineScope, state)
             }
@@ -218,7 +219,7 @@ private fun FilterEquipSheet(
     //选择状态
     Column(
         modifier = Modifier
-            .clip(CardTopShape)
+            .padding(start = Dimen.largePadding, end = Dimen.largePadding)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
@@ -274,9 +275,7 @@ private fun FilterEquipSheet(
                     style = MaterialTheme.typography.button
                 )
             },
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         )
         //装备类型
         MainText(

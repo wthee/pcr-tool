@@ -13,6 +13,8 @@ object Dimen {
 
     val fabElevation = 8.dp
 
+    val sheetElevation = 24.dp
+
     val fabSize = 40.dp
 
     val fabIconSize = 26.dp

@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.app.ActivityCompat
@@ -133,6 +134,8 @@ fun CharacterDetail(
     //页面
     ModalBottomSheetLayout(
         sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
         sheetContent = {
             SkillLoopList(
                 loopData, iconTypes, Modifier.padding(

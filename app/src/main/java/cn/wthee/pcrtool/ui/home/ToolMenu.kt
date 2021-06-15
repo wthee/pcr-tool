@@ -156,7 +156,6 @@ private fun getAction(
             MainIconType.CLAN -> actions.toClan()
             MainIconType.EVENT -> actions.toEvent()
             MainIconType.GUILD -> actions.toGuild()
-            MainIconType.NEWS -> actions.toNews(tool.regionForNews)
             MainIconType.PVP_SEARCH -> actions.toPvp()
             MainIconType.CALENDAR -> actions.toCalendar()
             MainIconType.LEADER -> actions.toLeader()

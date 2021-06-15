@@ -46,14 +46,14 @@ fun FabCompose(
         },
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.onPrimary,
+        backgroundColor = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.primary,
         modifier = mModifier.defaultMinSize(minWidth = Dimen.fabSize, minHeight = Dimen.fabSize),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = if (text != "") {
-                Modifier.padding(start = Dimen.mediuPadding)
+                Modifier.padding(start = Dimen.largePadding)
             } else {
                 Modifier
             }
@@ -64,7 +64,7 @@ fun FabCompose(
                 style = MaterialTheme.typography.subtitle2,
                 textAlign = TextAlign.Center,
                 modifier = if (text != "") {
-                    Modifier.padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
+                    Modifier.padding(start = Dimen.mediuPadding, end = Dimen.largePadding)
                 } else {
                     Modifier
                 }.animateContentSize(defaultTween())

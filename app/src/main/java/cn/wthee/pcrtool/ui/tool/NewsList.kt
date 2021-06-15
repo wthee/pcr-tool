@@ -7,8 +7,8 @@ import android.webkit.*
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +34,11 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.openWebView
-import com.google.accompanist.pager.*
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 /**
@@ -66,76 +70,6 @@ fun NewsList(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        NewsPager(
-            pagerState,
-            tab,
-            scrollState0,
-            scrollState1,
-            scrollState2,
-            news0,
-            news1,
-            news2,
-            toDetail
-        )
-
-        FabCompose(
-            iconType = MainIconType.NEWS,
-            text = stringResource(id = R.string.tool_news),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(
-                    end = Dimen.fabMarginEnd,
-                    bottom = Dimen.fabMargin
-                )
-        ) {
-            coroutineScope.launch {
-                when (pagerState.currentPage) {
-                    0 -> scrollState0
-                    1 -> scrollState1
-                    else -> scrollState2
-                }.scrollToItem(0)
-            }
-        }
-    }
-}
-
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
-@Composable
-private fun NewsPager(
-    pagerState: PagerState,
-    tab: ArrayList<String>,
-    scrollState0: LazyListState = rememberLazyListState(),
-    scrollState1: LazyListState = rememberLazyListState(),
-    scrollState2: LazyListState = rememberLazyListState(),
-    news0: LazyPagingItems<NewsTable>?,
-    news1: LazyPagingItems<NewsTable>?,
-    news2: LazyPagingItems<NewsTable>?,
-    toDetail: (String, String, Int, String) -> Unit
-) {
-    val coroutineScope = rememberCoroutineScope()
-
-    Column {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            backgroundColor = MaterialTheme.colors.background,
-            contentColor = MaterialTheme.colors.primary,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                )
-            },
-        ) {
-            tab.forEachIndexed { index, s ->
-                Tab(selected = pagerState.currentPage == index, onClick = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(index)
-                    }
-                }) {
-                    MainText(text = s)
-                }
-            }
-        }
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { pagerIndex ->
             val scrollState = when (pagerIndex) {
                 0 -> scrollState0
@@ -167,6 +101,50 @@ private fun NewsPager(
             }
         }
 
+        Card(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(0.618f)
+                .padding(bottom = Dimen.fabMargin)
+                .navigationBarsPadding(),
+            shape = CircleShape,
+            elevation = Dimen.cardElevation,
+        ) {
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                backgroundColor = MaterialTheme.colors.background,
+                contentColor = MaterialTheme.colors.primary,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                    )
+                },
+            ) {
+                tab.forEachIndexed { index, s ->
+                    Tab(
+                        modifier = Modifier
+                            .width(Dimen.fabSize)
+                            .height(Dimen.fabSize),
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+
+                            coroutineScope.launch {
+                                if (pagerState.currentPage == index) {
+                                    when (pagerState.currentPage) {
+                                        0 -> scrollState0
+                                        1 -> scrollState1
+                                        else -> scrollState2
+                                    }.scrollToItem(0)
+                                } else {
+                                    pagerState.scrollToPage(index)
+                                }
+                            }
+                        }) {
+                        Subtitle2(text = s)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -227,11 +205,7 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.mediuPadding,
-                    end = Dimen.mediuPadding
-                ),
+                .padding(Dimen.mediuPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             MainText(
@@ -243,7 +217,12 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
             AndroidView(
                 modifier = Modifier
                     .alpha(alpha)
-                    .padding(Dimen.largePadding), factory = {
+                    .padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    ),
+                factory = {
                     WebView(it).apply {
                         layoutParams = ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -351,8 +330,8 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                         //加载网页
                         loadUrl(originalUrl)
                     }
-                })
-            CommonSpacer()
+                }
+            )
         }
         Row(
             modifier = Modifier
