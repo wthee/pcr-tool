@@ -126,6 +126,7 @@ fun RankEquipCount(
                         //标题
                         Row(
                             horizontalArrangement = Arrangement.SpaceAround,
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             MainTitleText(text = stringResource(id = R.string.cur_rank))

@@ -4,10 +4,10 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,10 +40,14 @@ import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.px2dp
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 
 /**
  * 首页纵览
  */
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
@@ -55,6 +60,8 @@ fun Overview(
         MainActivity.navViewModel.r6Ids.postValue(r6Ids)
     }
     val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     SideEffect {
         overviewViewModel.getCharacterList()
@@ -86,26 +93,26 @@ fun Overview(
                 actions.toCharacterList()
             }
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-            ) {
-                characterList?.forEach {
-                    MainCard(
+            characterList?.let {
+                val pagerState =
+                    rememberPagerState(pageCount = it.size)
+                HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
+                    val id = it[index].id
+                    Card(
                         modifier = Modifier
                             .padding(
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding,
                                 top = Dimen.mediuPadding,
-                                bottom = Dimen.mediuPadding
+                                bottom = Dimen.mediuPadding,
+                                end = Dimen.mediuPadding
                             )
-                            .width(cardWidth),
+                            .fillMaxWidth(0.90f),
                         onClick = {
-                            actions.toCharacterDetail(it.id)
-                        }
+                            VibrateUtil(context).single()
+                            actions.toCharacterDetail(id)
+                        },
+                        elevation = 0.dp
                     ) {
-                        CharacterCard(CharacterIdUtil.getMaxCardUrl(it.id))
+                        CharacterCard(CharacterIdUtil.getMaxCardUrl(id))
                     }
                 }
             }
@@ -120,27 +127,23 @@ fun Overview(
                 actions.toEquipList()
             }
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-            ) {
-                equipList?.let { list ->
+            equipList?.let { list ->
+                VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
                     list.forEach {
                         Box(
-                            modifier = Modifier.padding(
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding,
-                                top = Dimen.mediuPadding,
-                                bottom = Dimen.mediuPadding
-                            )
+                            modifier = Modifier
+                                .padding(Dimen.mediuPadding)
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center
                         ) {
                             IconCompose(data = getEquipIconUrl(it.equipmentId)) {
                                 actions.toEquipDetail(it.equipmentId)
                             }
                         }
+
                     }
                 }
+
             }
         }
 

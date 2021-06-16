@@ -88,11 +88,15 @@ private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {
         modifier = Modifier.padding(bottom = Dimen.mediuPadding)
     )
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column {
+        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //内容
             MainContentText(
                 text = guild.getDesc(),
-                modifier = Modifier.padding(Dimen.mediuPadding),
+                modifier = Modifier.padding(
+                    top = Dimen.mediuPadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
+                ),
                 textAlign = TextAlign.Start
             )
             //图标/描述

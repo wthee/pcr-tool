@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -88,49 +86,32 @@ fun MainSettings() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
         ) {
-            val expanded = remember {
-                mutableStateOf(false)
-            }
-            val sizeChange =
-                animateDpAsState(targetValue = if (expanded.value) 120.dp else 64.dp)
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(bottom = Dimen.largePadding)
                     .fillMaxWidth()
-                    .clickable {
-                        expanded.value = !expanded.value
-                    }) {
-                AnimatedVisibility(visible = expanded.value) {
-                    Text(
-                        text = stringResource(id = R.string.app_name) + " " + BuildConfig.VERSION_NAME,
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary,
-                        modifier = Modifier.padding(top = Dimen.smallPadding)
-                    )
-                }
-                AnimatedVisibility(visible = expanded.value) {
-                    //- 查看项目地址
-                    val projectUrl = stringResource(id = R.string.project_url)
-                    val project = stringResource(id = R.string.app_sourcce)
-                    Subtitle2(
-                        text = projectUrl,
-                        modifier = Modifier.clickable {
-                            openWebView(context, projectUrl, project)
-                        })
-                }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier.padding(top = Dimen.smallPadding)
+                )
+                //- 查看项目地址
+                val projectUrl = stringResource(id = R.string.project_url)
+                val project = stringResource(id = R.string.app_sourcce)
+                Subtitle2(
+                    text = projectUrl,
+                    modifier = Modifier.clickable {
+                        openWebView(context, projectUrl, project)
+                    })
                 Image(
                     painter = painter,
                     contentDescription = null,
-                    modifier = Modifier.size(sizeChange.value)
+                    modifier = Modifier.size(120.dp)
                 )
-                AnimatedVisibility(visible = !expanded.value) {
-                    Subtitle1(
-                        text = BuildConfig.VERSION_NAME,
-                        color = MaterialTheme.colors.primary
-                    )
-                }
-
                 Subtitle2(
                     text = "${typeName}：${dbVersionGroup}",
                     color = MaterialTheme.colors.primary

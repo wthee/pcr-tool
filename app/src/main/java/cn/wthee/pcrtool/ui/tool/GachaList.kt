@@ -138,12 +138,16 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     }
 
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //图标/描述
             if (icons.isEmpty()) {
                 MainContentText(
                     text = gachaInfo.getDesc(),
-                    modifier = Modifier.padding(Dimen.smallPadding),
+                    modifier = Modifier.padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding
+                    ),
                     textAlign = TextAlign.Start
                 )
             } else {
@@ -155,7 +159,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                 text = gachaInfo.endTime.formatTime(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
+                    .padding(end = Dimen.mediuPadding)
 
             )
         }

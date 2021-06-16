@@ -377,6 +377,7 @@ private fun CardImage(unitId: Int) {
     }
     val pagerState = rememberPagerState(pageCount = picUrls.size)
     val coroutineScope = rememberCoroutineScope()
+
     //权限
     val permissions = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -385,7 +386,7 @@ private fun CardImage(unitId: Int) {
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
 
     Box {
-        HorizontalPager(state = pagerState) { pagerIndex ->
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { pagerIndex ->
             val request = ImageRequest.Builder(context)
                 .data(picUrls[pagerIndex])
                 .build()
@@ -394,55 +395,54 @@ private fun CardImage(unitId: Int) {
                 drawables[pagerIndex] = image
             }
             val painter = rememberCoilPainter(request = picUrls[pagerIndex])
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Card(
-                    modifier = Modifier.padding(Dimen.largePadding),
-                    onClick = {
-                        //下载
-                        VibrateUtil(context).single()
-                        if (loaded[pagerIndex]) {
-                            //权限校验
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
-                                    context,
-                                    permissions
-                                )
-                            ) {
-                                ActivityCompat.requestPermissions(
-                                    context as Activity,
-                                    permissions,
-                                    1
-                                )
-                            } else {
-                                drawables[pagerIndex]?.let {
-                                    ImageDownloadHelper(context).saveBitmap(
-                                        bitmap = (it as BitmapDrawable).bitmap,
-                                        displayName = "${unitId}_${pagerIndex}.jpg"
-                                    )
-                                    VibrateUtil(context).done()
-                                }
-                            }
+            Card(
+                modifier = Modifier
+                    .padding(Dimen.largePadding),
+                onClick = {
+                    VibrateUtil(context).single()
+                    //下载
+                    if (loaded[pagerIndex]) {
+                        //权限校验
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
+                                context,
+                                permissions
+                            )
+                        ) {
+                            ActivityCompat.requestPermissions(
+                                context as Activity,
+                                permissions,
+                                1
+                            )
                         } else {
-                            ToastUtil.short(unLoadToast)
+                            drawables[pagerIndex]?.let {
+                                ImageDownloadHelper(context).saveBitmap(
+                                    bitmap = (it as BitmapDrawable).bitmap,
+                                    displayName = "${unitId}_${pagerIndex}.jpg"
+                                )
+                                VibrateUtil(context).done()
+                            }
                         }
-                    },
-                    shape = Shapes.large,
-                ) {
-                    Box {
-                        //图片
-                        Image(
-                            painter = when (painter.loadState) {
-                                is ImageLoadState.Success -> {
-                                    loaded[pagerIndex] = true
-                                    painter
-                                }
-                                is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                                else -> rememberCoilPainter(request = R.drawable.load)
-                            },
-                            contentDescription = null,
-                            modifier = Modifier.aspectRatio(RATIO),
-                            contentScale = ContentScale.FillWidth
-                        )
+                    } else {
+                        ToastUtil.short(unLoadToast)
                     }
+                },
+                shape = Shapes.large,
+            ) {
+                Box {
+                    //图片
+                    Image(
+                        painter = when (painter.loadState) {
+                            is ImageLoadState.Success -> {
+                                loaded[pagerIndex] = true
+                                painter
+                            }
+                            is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
+                            else -> rememberCoilPainter(request = R.drawable.load)
+                        },
+                        contentDescription = null,
+                        modifier = Modifier.aspectRatio(RATIO),
+                        contentScale = ContentScale.FillWidth
+                    )
                 }
             }
         }

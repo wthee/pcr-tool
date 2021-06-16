@@ -33,6 +33,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.openWebView
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -56,6 +57,7 @@ fun NewsList(
     toDetail: (String, String, Int, String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     val tab = arrayListOf(
         stringResource(id = R.string.db_cn),
         stringResource(id = R.string.db_tw),
@@ -127,7 +129,7 @@ fun NewsList(
                             .height(Dimen.fabSize),
                         selected = pagerState.currentPage == index,
                         onClick = {
-
+                            VibrateUtil(context).single()
                             coroutineScope.launch {
                                 if (pagerState.currentPage == index) {
                                     when (pagerState.currentPage) {

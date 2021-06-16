@@ -44,7 +44,7 @@ class OverviewViewModel @Inject constructor(
     fun getCharacterList() {
         viewModelScope.launch {
             if (characterList.value == null) {
-                val data = unitRepository.getInfoAndData(10)
+                val data = unitRepository.getInfoAndData(6)
                 characterList.postValue(data)
             }
         }

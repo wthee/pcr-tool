@@ -32,7 +32,11 @@ fun TopBarCompose(actions: NavActions) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(Dimen.largePadding)
+            .padding(
+                top = Dimen.largePadding,
+                start = Dimen.largePadding,
+                end = Dimen.largePadding
+            )
             .fillMaxWidth()
     ) {
         Text(

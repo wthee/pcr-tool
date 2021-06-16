@@ -180,11 +180,15 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
     }
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column {
+        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //内容
             MainContentText(
                 text = event.getEventTitle(),
-                modifier = Modifier.padding(Dimen.mediuPadding),
+                modifier = Modifier.padding(
+                    top = Dimen.mediuPadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
+                ),
                 textAlign = TextAlign.Start
             )
             //图标
@@ -198,7 +202,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     text = event.endTime,
                     modifier = Modifier
                         .align(Alignment.End)
-                        .padding(end = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
+                        .padding(end = Dimen.mediuPadding)
                 )
             }
 

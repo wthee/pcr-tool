@@ -110,7 +110,7 @@ fun NavGraph(
         //首页
         composable(Navigation.HOME) {
             viewModel.fabMainIcon.postValue(MainIconType.MAIN)
-            Overview(actions)
+            Overview(actions = actions)
         }
 
         //角色列表
