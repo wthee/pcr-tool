@@ -37,6 +37,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
+import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -127,6 +128,7 @@ class MainActivity : ComponentActivity() {
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
+            savedStateRegistry.unregisterSavedStateProvider(OverviewViewModel::class.java.name)
             viewModelStore.clear()
             recreate()
             return@Callback true
@@ -141,11 +143,15 @@ class MainActivity : ComponentActivity() {
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
-fun Home() {
+fun Home(
+    mNavViewModel: NavViewModel = hiltViewModel(),
+    mNoticeViewModel: NoticeViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
     val actions = remember(navController) { NavActions(navController) }
-    navViewModel = hiltViewModel()
-    noticeViewModel = hiltViewModel()
+    navViewModel = mNavViewModel
+    noticeViewModel = mNoticeViewModel
+
     LaunchedEffect({}) {
         noticeViewModel.check()
     }

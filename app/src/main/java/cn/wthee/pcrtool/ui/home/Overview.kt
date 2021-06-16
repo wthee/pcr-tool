@@ -13,6 +13,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,10 +56,12 @@ fun Overview(
     }
     val scrollState = rememberScrollState()
 
-    overviewViewModel.getCharacterList()
-    overviewViewModel.getEquipList()
-    overviewViewModel.getCalendarEventList()
-    overviewViewModel.getNewsOverview()
+    SideEffect {
+        overviewViewModel.getCharacterList()
+        overviewViewModel.getEquipList()
+        overviewViewModel.getCalendarEventList()
+        overviewViewModel.getNewsOverview()
+    }
 
     val characterList =
         overviewViewModel.characterList.observeAsState().value
@@ -251,13 +254,15 @@ private fun Section(
 
     Column(
         modifier = Modifier
-            .padding(top = Dimen.mediuPadding)
+            .padding(top = Dimen.largePadding)
             .animateContentSize(defaultSpring())
     ) {
         Row(
             modifier = modifier.padding(
                 start = Dimen.largePadding,
                 end = Dimen.largePadding,
+                top = Dimen.mediuPadding,
+                bottom = Dimen.mediuPadding
             ),
             verticalAlignment = Alignment.CenterVertically
         ) {

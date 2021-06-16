@@ -43,8 +43,10 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCharacterList() {
         viewModelScope.launch {
-            val data = unitRepository.getInfoAndData(10)
-            characterList.postValue(data)
+            if (characterList.value == null) {
+                val data = unitRepository.getInfoAndData(10)
+                characterList.postValue(data)
+            }
         }
     }
 
@@ -53,8 +55,10 @@ class OverviewViewModel @Inject constructor(
      */
     fun getEquipList() {
         viewModelScope.launch {
-            val data = equipmentRepository.getEquipments(10)
-            equipList.postValue(data)
+            if (equipList.value == null) {
+                val data = equipmentRepository.getEquipments(10)
+                equipList.postValue(data)
+            }
         }
     }
 
@@ -63,23 +67,25 @@ class OverviewViewModel @Inject constructor(
      */
     fun getCalendarEventList() {
         viewModelScope.launch {
-            val data0 = eventRepository.getDropEvent()
-            val data1 = eventRepository.getTowerEvent(1)
-            //按进行中排序
-            val today = getToday()
-            val list0 = (data0 + data1).filter {
-                val sd = it.startTime.formatTime()
-                val ed = it.endTime.formatTime()
-                val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
-                inProgress
-            }.sortedWith(compare(today))
-            val list1 = (data0 + data1).filter {
-                val sd = it.startTime.formatTime()
-                val comingSoon = today.hourInt(sd) < 0
-                comingSoon
-            }.sortedWith(compare(today))
-            inProgressEventList.postValue(list0)
-            comingSoonEventList.postValue(list1)
+            if (inProgressEventList.value == null || comingSoonEventList.value == null) {
+                val data0 = eventRepository.getDropEvent()
+                val data1 = eventRepository.getTowerEvent(1)
+                //按进行中排序
+                val today = getToday()
+                val list0 = (data0 + data1).filter {
+                    val sd = it.startTime.formatTime()
+                    val ed = it.endTime.formatTime()
+                    val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
+                    inProgress
+                }.sortedWith(compare(today))
+                val list1 = (data0 + data1).filter {
+                    val sd = it.startTime.formatTime()
+                    val comingSoon = today.hourInt(sd) < 0
+                    comingSoon
+                }.sortedWith(compare(today))
+                inProgressEventList.postValue(list0)
+                comingSoonEventList.postValue(list1)
+            }
         }
     }
 
@@ -88,8 +94,10 @@ class OverviewViewModel @Inject constructor(
      */
     fun getNewsOverview() {
         viewModelScope.launch {
-            val data = apiRepository.getNewsOverview()
-            newsList.postValue(data)
+            if (newsList.value == null) {
+                val data = apiRepository.getNewsOverview()
+                newsList.postValue(data)
+            }
         }
     }
 
