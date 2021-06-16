@@ -34,7 +34,7 @@ fun MainTitleText(
 ) {
     Text(
         text = text,
-        color = MaterialTheme.colors.onSurface,
+        color = MaterialTheme.colors.onPrimary,
         style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
             .background(color = backgroundColor, shape = Shapes.small)
@@ -295,15 +295,6 @@ fun CommonSpacer() {
     )
 }
 
-@Composable
-fun CommonIconSpacer() {
-    Spacer(
-        modifier = Modifier
-            .navigationBarsPadding()
-            .size(Dimen.iconSize)
-    )
-}
-
 /**
  * 卡片布局
  */
@@ -366,7 +357,7 @@ fun SelectText(
     }
     Text(
         text = text,
-        color = if (selected) MaterialTheme.colors.onSurface else textColor,
+        color = if (selected) MaterialTheme.colors.onPrimary else textColor,
         style = style,
         maxLines = 1,
         textAlign = TextAlign.Center,

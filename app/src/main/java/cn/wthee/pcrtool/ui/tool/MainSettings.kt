@@ -139,7 +139,7 @@ fun MainSettings() {
             //其它设置
             LineCompose()
             MainText(
-                text = stringResource(id = R.string.other_settings),
+                text = stringResource(id = R.string.app_setting),
                 modifier = Modifier.padding(Dimen.largePadding)
             )
             //- 振动开关

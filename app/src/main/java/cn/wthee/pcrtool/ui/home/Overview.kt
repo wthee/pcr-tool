@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.fix
+import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.*
@@ -40,8 +41,6 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 
 /**
  * 首页纵览
- *
- * fixme 数据未加载时，显示占位
  */
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -76,133 +75,151 @@ fun Overview(
         TopBarCompose(actions)
         //角色
         val cardWidth = ScreenUtil.getWidth().px2dp.dp * 0.618f
-        SectionHead(
-            R.string.character,
-            loadState = characterList == null || characterList.isEmpty()
+        Section(
+            titleId = R.string.character,
+            iconType = MainIconType.CHARACTER,
+            loadState = characterList == null || characterList.isEmpty(),
+            onClick = {
+                actions.toCharacterList()
+            }
         ) {
-            actions.toCharacterList()
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(defaultSpring())
-                .horizontalScroll(rememberScrollState())
-        ) {
-            characterList?.forEach {
-                MainCard(
-                    modifier = Modifier
-                        .padding(
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding,
-                            top = Dimen.mediuPadding,
-                            bottom = Dimen.mediuPadding
-                        )
-                        .width(cardWidth),
-                    onClick = {
-                        actions.toCharacterDetail(it.id)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+            ) {
+                characterList?.forEach {
+                    MainCard(
+                        modifier = Modifier
+                            .padding(
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding,
+                                top = Dimen.mediuPadding,
+                                bottom = Dimen.mediuPadding
+                            )
+                            .width(cardWidth),
+                        onClick = {
+                            actions.toCharacterDetail(it.id)
+                        }
+                    ) {
+                        CharacterCard(CharacterIdUtil.getMaxCardUrl(it.id))
                     }
-                ) {
-                    CharacterCard(CharacterIdUtil.getMaxCardUrl(it.id))
                 }
             }
         }
+
         //装备
-        SectionHead(R.string.tool_equip, loadState = equipList == null || equipList.isEmpty()) {
-            actions.toEquipList()
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(defaultSpring())
-                .horizontalScroll(rememberScrollState())
+        Section(
+            titleId = R.string.tool_equip,
+            iconType = MainIconType.EQUIP,
+            loadState = equipList == null || equipList.isEmpty(),
+            onClick = {
+                actions.toEquipList()
+            }
         ) {
-            equipList?.let { list ->
-                list.forEach {
-                    Box(
-                        modifier = Modifier.padding(
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding,
-                            top = Dimen.mediuPadding,
-                            bottom = Dimen.mediuPadding
-                        )
-                    ) {
-                        IconCompose(data = getEquipIconUrl(it.equipmentId)) {
-                            actions.toEquipDetail(it.equipmentId)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+            ) {
+                equipList?.let { list ->
+                    list.forEach {
+                        Box(
+                            modifier = Modifier.padding(
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding,
+                                top = Dimen.mediuPadding,
+                                bottom = Dimen.mediuPadding
+                            )
+                        ) {
+                            IconCompose(data = getEquipIconUrl(it.equipmentId)) {
+                                actions.toEquipDetail(it.equipmentId)
+                            }
                         }
                     }
                 }
             }
         }
+
         //更多功能
-        SectionHead(
+        Section(
             titleId = R.string.function,
+            iconType = MainIconType.FUNCTION,
             loadState = false
-        )
-        ToolMenu(actions = actions)
-        //新闻
-        SectionHead(
-            titleId = R.string.tool_news,
-            loadState = newsList?.data == null
         ) {
-            actions.toNews()
+            ToolMenu(actions = actions)
         }
-        Column(
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            )
+
+        //新闻
+        Section(
+            titleId = R.string.tool_news,
+            iconType = MainIconType.NEWS,
+            loadState = newsList?.data == null,
+            onClick = {
+                actions.toNews()
+            }
         ) {
-            newsList?.data?.let { list ->
-                list.forEach {
-                    NewsItem(
-                        region = it.getRegion(),
-                        news = it,
-                        actions.toNewsDetail
-                    )
+            Column(
+                modifier = Modifier.padding(
+                    top = Dimen.mediuPadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+            ) {
+                newsList?.data?.let { list ->
+                    list.forEach {
+                        NewsItem(
+                            region = it.getRegion(),
+                            news = it,
+                            actions.toNewsDetail
+                        )
+                    }
                 }
             }
         }
         //日历
         if (inProgressEventList != null && inProgressEventList.isNotEmpty()) {
-            SectionHead(
+            Section(
                 titleId = R.string.tool_calendar,
+                iconType = MainIconType.CALENDAR_TODAY,
                 loadState = false
-            )
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = Dimen.mediuPadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-                    .fillMaxWidth()
             ) {
-                inProgressEventList.forEach {
-                    CalendarItem(it)
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.mediuPadding,
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        )
+                        .fillMaxWidth()
+                ) {
+                    inProgressEventList.forEach {
+                        CalendarItem(it)
+                    }
                 }
             }
-
         }
         if (comingSoonEventList != null && comingSoonEventList.isNotEmpty()) {
-            SectionHead(
+            Section(
                 titleId = R.string.tool_calendar_comming,
+                iconType = MainIconType.CALENDAR,
                 loadState = false
-            )
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = Dimen.mediuPadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-                    .fillMaxWidth()
             ) {
-                comingSoonEventList.forEach {
-                    CalendarItem(it)
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.mediuPadding,
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        )
+                        .fillMaxWidth()
+                ) {
+                    comingSoonEventList.forEach {
+                        CalendarItem(it)
+                    }
                 }
-            }
 
+            }
         }
 
         CommonSpacer()
@@ -213,56 +230,74 @@ fun Overview(
  * 标题
  */
 @Composable
-private fun SectionHead(
+private fun Section(
     @StringRes titleId: Int,
+    iconType: MainIconType,
     loadState: Boolean,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
+    val modifier = (if (onClick == null) {
+        Modifier.clip(Shapes.small)
+    } else {
+        Modifier
+            .clip(Shapes.small)
+            .clickable(onClick = {
+                VibrateUtil(context).single()
+                onClick.invoke()
+            })
+    })
 
-    Row(
-        modifier = Modifier.padding(
-            start = Dimen.largePadding,
-            end = Dimen.largePadding,
-            top = Dimen.mediuPadding
-        ),
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = Modifier
+            .padding(top = Dimen.mediuPadding)
+            .animateContentSize(defaultSpring())
     ) {
-        MainText(
-            text = stringResource(id = titleId),
-            modifier = Modifier.weight(1f),
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface
-        )
+        Row(
+            modifier = modifier.padding(
+                start = Dimen.largePadding,
+                end = Dimen.largePadding,
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconCompose(
+                data = iconType.icon,
+                size = Dimen.fabIconSize,
+                tint = MaterialTheme.colors.onSurface
+            )
+            MainText(
+                text = stringResource(id = titleId),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = Dimen.mediuPadding),
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colors.onSurface
+            )
+            if (onClick != null) {
+                IconCompose(
+                    data = MainIconType.MORE.icon,
+                    size = Dimen.fabIconSize,
+                    onClick = onClick,
+                    tint = MaterialTheme.colors.onSurface
+                )
+            }
+        }
         if (loadState) {
             CircularProgressIndicator(
                 modifier = Modifier
+                    .padding(Dimen.largePadding)
                     .size(Dimen.fabIconSize)
-                    .padding(Dimen.lineHeight),
+                    .padding(Dimen.lineHeight)
+                    .align(Alignment.CenterHorizontally),
                 color = MaterialTheme.colors.primary,
                 strokeWidth = Dimen.lineHeight
             )
-        }
-
-        val modifier = (if (onClick == null) {
-            Modifier.clip(Shapes.small)
         } else {
-            Modifier
-                .clip(Shapes.small)
-                .clickable(onClick = {
-                    VibrateUtil(context).single()
-                    onClick.invoke()
-                })
-        }).padding(Dimen.smallPadding)
-
-        Subtitle2(
-            text = if (onClick != null) {
-                stringResource(id = R.string.more)
-            } else "",
-            modifier = modifier,
-            color = MaterialTheme.colors.primary
-        )
+            content.invoke()
+        }
     }
+
 }
 
 @ExperimentalMaterialApi

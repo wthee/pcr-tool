@@ -27,12 +27,11 @@
 
     <!--功能-->
     <string name="setting">设置</string>
-    <string name="more">更多</string>
     <string name="function">功能</string>
 
     <!-- 设置页面   -->
     <string name="redownload_db">强制更新</string>
-    <string name="other_settings">其它</string>
+    <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
     <string name="vibrate_on">振动开启</string>
