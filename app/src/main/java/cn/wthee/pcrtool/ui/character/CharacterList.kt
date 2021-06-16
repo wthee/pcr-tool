@@ -1,8 +1,7 @@
-package cn.wthee.pcrtool.ui.home
+package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -21,14 +20,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -36,12 +34,10 @@ import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
@@ -75,7 +71,7 @@ fun CharacterList(
 
     //关闭时监听
     if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         navViewModel.resetClick.postValue(false)
         keyboardController?.hide()
@@ -90,29 +86,21 @@ fun CharacterList(
 
     ModalBottomSheetLayout(
         sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
         }
     ) {
-        val marginTop: Dp = marginTopBar(scrollState)
-        coroutineScope.launch {
-            val r6Ids = viewModel.getR6Ids()
-            navViewModel.r6Ids.postValue(r6Ids)
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
-        ) {
-            TopBarCompose(scrollState = scrollState)
+        Box(modifier = Modifier.fillMaxSize()) {
             if (list.value != null) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
-                    modifier = Modifier.padding(top = marginTop)
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
                 ) {
                     items(list.value!!) {
-                        CharacterItem(it, filter.value!!, toDetail)
+                        CharacterItem(it, filter.value!!, toDetail = toDetail)
                     }
                     items(2) {
                         CommonSpacer()
@@ -145,7 +133,7 @@ fun CharacterList(
                 ) {
                     coroutineScope.launch {
                         if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                             state.hide()
                         } else {
                             navViewModel.fabMainIcon.postValue(MainIconType.OK)
@@ -165,29 +153,29 @@ fun CharacterList(
  */
 @ExperimentalMaterialApi
 @Composable
-private fun CharacterItem(
+fun CharacterItem(
     character: CharacterInfo,
     filter: FilterCharacter,
+    modifier: Modifier = Modifier,
     toDetail: (Int) -> Unit,
 ) {
     val loved = filter.starIds.contains(character.id)
 
     MainCard(
-        modifier = Modifier.padding(Dimen.mediuPadding),
+        modifier = modifier.padding(Dimen.mediuPadding),
         onClick = {
             //跳转至详情
             toDetail(character.id)
         }) {
         Column {
             //图片
-            var id = character.id
-            id += if (MainActivity.r6Ids.contains(character.id)) 60 else 30
             CharacterCard(
-                CharacterIdUtil.getMaxCardUrl(
-                    character.id,
-                    MainActivity.r6Ids.contains(character.id)
-                )
+                CharacterIdUtil.getMaxCardUrl(character.id)
             )
+            //编号
+            if (BuildConfig.debug) {
+                Text(text = character.id.toString())
+            }
             //名字、位置
             Row(
                 modifier = Modifier.padding(
@@ -306,7 +294,7 @@ private fun FilterCharacterSheet(
     //选择状态
     Column(
         modifier = Modifier
-            .clip(CardTopShape)
+            .padding(start = Dimen.largePadding, end = Dimen.largePadding)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
@@ -330,7 +318,7 @@ private fun FilterCharacterSheet(
             }
             navViewModel.filterCharacter.postValue(filter)
             navViewModel.fabOKCilck.postValue(false)
-            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
         //角色名搜索
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -367,10 +355,7 @@ private fun FilterCharacterSheet(
                     style = MaterialTheme.typography.button
                 )
             },
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-                .fillMaxWidth()
-
+            modifier = Modifier.fillMaxWidth()
         )
         //排序类型
         MainText(

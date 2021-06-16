@@ -27,12 +27,13 @@ import java.io.File
  */
 object DatabaseUpdater {
 
+    val sp = mainSP()
+
     /**
      * 切换版本
      */
     suspend fun changeType() {
         val type = getDatabaseType()
-        val sp = mainSP()
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, if (type == 1) 2 else 1)
         }
@@ -44,12 +45,12 @@ object DatabaseUpdater {
      * 检查是否需要更新
      *
      * @param from  -1:正常调用  0：点击版本号  1：切换版本调用
-     * @param force 是否强制更新
      */
-    suspend fun checkDBVersion(from: Int = -1, force: Boolean = false) {
+    suspend fun checkDBVersion(from: Int = -1) {
         //获取数据库最新版本
-        if (force) {
+        try {
             MainActivity.navViewModel.downloadProgress.postValue(-1)
+        } catch (e: Exception) {
         }
         try {
             //创建服务
@@ -60,11 +61,12 @@ object DatabaseUpdater {
             )
             val version = service.getDbVersion(getVersionFileName())
             //更新判断
-            downloadDB(version.data!!, from, force)
+            downloadDB(version.data!!, from)
         } catch (e: Exception) {
             if (e !is CancellationException) {
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
             }
+            MainActivity.navViewModel.downloadProgress.postValue(-2)
         }
     }
 
@@ -75,10 +77,8 @@ object DatabaseUpdater {
     private fun downloadDB(
         ver: DatabaseVersion,
         from: Int = -1,
-        force: Boolean = false
     ) {
         val databaseType = getDatabaseType()
-        val sp = mainSP()
         val localVersion = sp.getString(
             if (databaseType == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
             ""
@@ -87,7 +87,7 @@ object DatabaseUpdater {
         val remoteBackupMode = MyApplication.backupMode
         //正常下载
         val toDownload = localVersion != ver.toString()  //版本号hash远程不一致
-                || force
+                || from == 0
                 || (from == -1 && (FileUtil.needUpdate(databaseType) || localVersion == "0"))  //打开应用，数据库wal被清空
                 || (from == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
         //下载远程备份
@@ -109,7 +109,7 @@ object DatabaseUpdater {
                 }
             }
             //强制更新时
-            if (force) {
+            if (from == 0) {
                 fileName = if (databaseType == 1) {
                     Constants.DATABASE_DOWNLOAD_FILE_NAME
                 } else {
@@ -146,6 +146,7 @@ object DatabaseUpdater {
                 updateLocalDataBaseVersion(ver.toString())
             } catch (e: Exception) {
             }
+            MainActivity.navViewModel.downloadProgress.postValue(-2)
         }
     }
 
@@ -228,8 +229,9 @@ fun tryOpenDatabase(): Int {
  * 打开数据库
  */
 fun openDatabase(helper: SupportSQLiteOpenHelper) {
-    helper.readableDatabase
-    helper.close()
+    helper.use {
+        it.readableDatabase
+    }
 }
 
 /**

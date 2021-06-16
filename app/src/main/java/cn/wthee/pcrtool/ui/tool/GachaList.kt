@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -46,13 +45,12 @@ fun GachaList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = gachas.value != null) {
             gachas.value?.let { data ->
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
                     items(data) {
                         GachaItem(it, toCharacterDetail)
@@ -93,14 +91,32 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
 
     val icons = gachaInfo.unitIds.intArrayList()
+    val type = gachaInfo.getType()
+    val color = when {
+        type == "PICK UP" -> colorResource(id = R.color.news_update)
+        type == "复刻" -> colorResource(id = R.color.color_rank_7_10)
+        type == "公主庆典" -> colorResource(id = R.color.color_rank_21)
+        else -> MaterialTheme.colors.primary
+    }
 
     //标题
-    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
-        MainTitleText(text = gachaInfo.startTime.formatTime().substring(0, 10))
+    Row(
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        MainTitleText(
+            text = type,
+            backgroundColor = color
+        )
+        MainTitleText(
+            text = gachaInfo.startTime.formatTime().substring(0, 10),
+            modifier = Modifier.padding(start = Dimen.smallPadding),
+        )
         MainTitleText(
             text = gachaInfo.endTime.days(gachaInfo.startTime),
             modifier = Modifier.padding(start = Dimen.smallPadding)
         )
+
         //计时
         if (inProgress) {
             Row(
@@ -122,19 +138,16 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     }
 
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
-            //内容
-            MainContentText(
-                text = gachaInfo.getType(),
-                modifier = Modifier.padding(bottom = Dimen.smallPadding),
-                textAlign = TextAlign.Start
-            )
-
+        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //图标/描述
             if (icons.isEmpty()) {
                 MainContentText(
                     text = gachaInfo.getDesc(),
-                    modifier = Modifier.padding(Dimen.smallPadding),
+                    modifier = Modifier.padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding
+                    ),
                     textAlign = TextAlign.Start
                 )
             } else {
@@ -144,7 +157,10 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             //结束日期
             CaptionText(
                 text = gachaInfo.endTime.formatTime(),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = Dimen.mediuPadding)
+
             )
         }
     }

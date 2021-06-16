@@ -6,31 +6,37 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.compose.StatusBarBox
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
-import cn.wthee.pcrtool.ui.home.CharacterList
+import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.tool.*
+import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 object Navigation {
+    const val HOME = "home"
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
@@ -40,7 +46,6 @@ object Navigation {
     const val EQUIP_DETAIL = "equipDetail"
     const val RANK_EQUIP = "rankEquip"
     const val RANK_COMPARE = "rankCompare"
-    const val PICS = "pictures"
     const val MAX_RANK = "maxRank"
     const val LEVEL = "level"
     const val RARITY = "rarity"
@@ -77,16 +82,42 @@ object Navigation {
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
-fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions: NavActions) {
+fun NavGraph(
+    navController: NavHostController,
+    viewModel: NavViewModel,
+    actions: NavActions,
+    newsViewModel: NewsViewModel = hiltViewModel()
+) {
 
-    NavHost(navController, startDestination = Navigation.CHARACTER_LIST) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    newsViewModel.getNews(2)
+    newsViewModel.getNews(3)
+    newsViewModel.getNews(4)
+    val flow0 = newsViewModel.newsPageList0
+    val flow1 = newsViewModel.newsPageList1
+    val flow2 = newsViewModel.newsPageList2
+    val news0 = remember(flow0, lifecycle) {
+        flow0?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news1 = remember(flow1, lifecycle) {
+        flow1?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news2 = remember(flow2, lifecycle) {
+        flow2?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    NavHost(navController, startDestination = Navigation.HOME) {
 
         //首页
+        composable(Navigation.HOME) {
+            viewModel.fabMainIcon.postValue(MainIconType.MAIN)
+            Overview(actions = actions)
+        }
+
+        //角色列表
         composable(Navigation.CHARACTER_LIST) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                CharacterList(scrollState, actions.toCharacterDetail)
-            }
+            CharacterList(scrollState, actions.toCharacterDetail)
         }
 
         //角色属性详情
@@ -99,19 +130,16 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberScrollState()
-            StatusBarBox {
-                CharacterDetail(
-                    scrollState,
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    actions.toEquipDetail,
-                    actions.toCharacterBasicInfo,
-                    actions.toCharacteRankEquip,
-                    actions.toCharacteRankCompare,
-                    actions.toCharacteEquipCount,
-                    actions.toCharacterPic,
-                    viewModel
-                )
-            }
+            CharacterDetail(
+                scrollState,
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                actions.toEquipDetail,
+                actions.toCharacterBasicInfo,
+                actions.toCharacteRankEquip,
+                actions.toCharacteRankCompare,
+                actions.toCharacteEquipCount,
+                viewModel
+            )
 
         }
 
@@ -124,36 +152,18 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             val arguments = requireNotNull(it.arguments)
             val scrollState = rememberScrollState()
-            StatusBarBox {
-                CharacterBasicInfo(scrollState, unitId = arguments.getInt(Navigation.UNIT_ID))
-            }
-        }
-
-        //角色图片
-        composable(
-            "${Navigation.PICS}/{${Navigation.UNIT_ID}}",
-            arguments = listOf(navArgument(Navigation.UNIT_ID) {
-                type = NavType.IntType
-            })
-        ) {
-            val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                CharacterAllPicture(
-                    unitId = arguments.getInt(Navigation.UNIT_ID)
-                )
-            }
+            CharacterBasicInfo(scrollState, unitId = arguments.getInt(Navigation.UNIT_ID))
         }
 
         //装备列表
         composable(Navigation.EQUIP_LIST) {
-            StatusBarBox {
-                val scrollState = rememberLazyListState()
-                EquipList(
-                    scrollState,
-                    toEquipDetail = actions.toEquipDetail,
-                    toEquipMaterial = actions.toEquipMaterail
-                )
-            }
+            val scrollState = rememberLazyListState()
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            EquipList(
+                scrollState,
+                toEquipDetail = actions.toEquipDetail,
+                toEquipMaterial = actions.toEquipMaterail
+            )
         }
 
         //装备详情
@@ -163,10 +173,9 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
                 type = NavType.IntType
             })
         ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterail)
-            }
+            EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterail)
         }
 
         //装备素材详情
@@ -177,9 +186,7 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                EquipMaterialDeatil(arguments.getInt(Navigation.EQUIP_ID))
-            }
+            EquipMaterialDeatil(arguments.getInt(Navigation.EQUIP_ID))
         }
 
         //角色 RANK 装备
@@ -190,13 +197,11 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                RankEquipList(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    toEquipDetail = actions.toEquipDetail,
-                    navViewModel = viewModel
-                )
-            }
+            RankEquipList(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                toEquipDetail = actions.toEquipDetail,
+                navViewModel = viewModel
+            )
         }
 
         //角色 RANK 对比
@@ -215,16 +220,14 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                RankCompare(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    maxRank = arguments.getInt(Navigation.MAX_RANK),
-                    level = arguments.getInt(Navigation.LEVEL),
-                    rarity = arguments.getInt(Navigation.RARITY),
-                    uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL),
-                    navViewModel = viewModel
-                )
-            }
+            RankCompare(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                maxRank = arguments.getInt(Navigation.MAX_RANK),
+                level = arguments.getInt(Navigation.LEVEL),
+                rarity = arguments.getInt(Navigation.RARITY),
+                uniqueEquipLevel = arguments.getInt(Navigation.UNIQUE_EQUIP_LEVEL),
+                navViewModel = viewModel
+            )
         }
 
         //角色装备统计
@@ -237,60 +240,47 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                RankEquipCount(
-                    unitId = arguments.getInt(Navigation.UNIT_ID),
-                    maxRank = arguments.getInt(Navigation.MAX_RANK),
-                    actions.toEquipMaterail,
-                    navViewModel = viewModel
-                )
-            }
+            RankEquipCount(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                maxRank = arguments.getInt(Navigation.MAX_RANK),
+                actions.toEquipMaterail,
+                navViewModel = viewModel
+            )
         }
 
         //角色排行
         composable(Navigation.TOOL_LEADER) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                LeaderboardList(scrollState)
-            }
+            LeaderboardList(scrollState)
         }
 
         //角色卡池
         composable(Navigation.TOOL_GACHA) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                GachaList(scrollState, actions.toCharacterDetail)
-            }
+            GachaList(scrollState, actions.toCharacterDetail)
         }
 
         //剧情活动
         composable(Navigation.TOOL_EVENT) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                EventList(scrollState, actions.toCharacterDetail)
-            }
+            EventList(scrollState, actions.toCharacterDetail)
         }
 
         //角色公会
         composable(Navigation.TOOL_GUILD) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                GuildList(scrollState, actions.toCharacterDetail)
-            }
+            GuildList(scrollState, actions.toCharacterDetail)
         }
 
         //团队战
         composable(Navigation.TOOL_CLAN) {
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                ClanBattleList(scrollState, actions.toClanBossInfo)
-            }
-
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            ClanBattleList(scrollState, actions.toClanBossInfo)
         }
 
         //团队战详情
@@ -303,80 +293,56 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
             })
         ) {
             val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                ClanBossInfoPager(
-                    arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
-                    arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
-                )
-            }
+            ClanBossInfoPager(
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
+            )
         }
 
         //日历活动
         composable(Navigation.TOOL_CALENDAR) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                CalendarCompose(scrollState)
-            }
+            CalendarCompose(scrollState)
         }
 
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
-            StatusBarBox {
-                val scrollState = rememberLazyListState()
-                PvpSearchCompose(
-                    scrollState, toFavorite = actions.toPvpFavorite,
-                )
-            }
+            val scrollState = rememberLazyListState()
+            PvpSearchCompose(
+                scrollState, toFavorite = actions.toPvpFavorite,
+            )
         }
 
         //竞技场收藏
         composable(Navigation.TOOL_PVP_FAVORITE) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                PvpFavorites(scrollState, actions.toCharacterDetail, actions.toPvpResearch)
-            }
+            PvpFavorites(scrollState, actions.toCharacterDetail, actions.toPvpResearch)
         }
 
         //设置页面
         composable(Navigation.MAIN_SETTINGS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            StatusBarBox {
-                MainSettings()
-            }
+            MainSettings()
         }
 
         //更新通知
         composable(Navigation.APP_NOTICE) {
             val scrollState = rememberLazyListState()
-            StatusBarBox {
-                viewModel.fabMainIcon.postValue(MainIconType.BACK)
-                NoticeList(scrollState)
-            }
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            NoticeList(scrollState)
         }
 
         //公告
-        composable(
-            "${Navigation.TOOL_NEWS}/{${Navigation.TOOL_NEWS_REGION}}",
-            arguments = listOf(
-                navArgument(Navigation.TOOL_NEWS_REGION) {
-                    type = NavType.IntType
-                },
-            )
-        ) {
+        composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val arguments = requireNotNull(it.arguments)
-            val region = arguments.getInt(Navigation.TOOL_NEWS_REGION)
-            val scrollState = rememberLazyListState()
-
-            StatusBarBox {
-                NewsList(
-                    scrollState,
-                    region,
-                    actions.toNewsDetail
-                )
-            }
+            NewsList(
+                news0,
+                news1,
+                news2,
+                actions.toNewsDetail
+            )
         }
 
         //公告详情
@@ -399,14 +365,12 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            StatusBarBox {
-                NewsDetail(
-                    arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
-                    arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
-                    arguments.getInt(Navigation.TOOL_NEWS_REGION),
-                    arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
-                )
-            }
+            NewsDetail(
+                arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
+                arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
+                arguments.getInt(Navigation.TOOL_NEWS_REGION),
+                arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
+            )
         }
     }
 }
@@ -415,6 +379,14 @@ fun NavGraph(navController: NavHostController, viewModel: NavViewModel, actions:
  * 导航
  */
 class NavActions(navController: NavHostController) {
+
+    /**
+     * 角色列表
+     */
+    val toCharacterList: () -> Unit = {
+        navController.navigate(Navigation.CHARACTER_LIST)
+    }
+
     /**
      * 角色详情
      */
@@ -441,13 +413,6 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacterBasicInfo: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${Navigation.CHARACTER_BASIC_INFO}/${unitId}")
-    }
-
-    /**
-     * 角色图片
-     */
-    val toCharacterPic: (Int) -> Unit = { unitId: Int ->
-        navController.navigate("${Navigation.PICS}/${unitId}")
     }
 
     /**
@@ -502,6 +467,83 @@ class NavActions(navController: NavHostController) {
     val toPvpFavorite = {
         navController.navigate(Navigation.TOOL_PVP_FAVORITE)
     }
+
+    /**
+     * 卡池
+     */
+    val toGacha = {
+        navController.navigate(Navigation.TOOL_GACHA)
+    }
+
+    /**
+     * 团队战
+     */
+    val toClan = {
+        navController.navigate(Navigation.TOOL_CLAN)
+    }
+
+    /**
+     * 剧情活动
+     */
+    val toEvent = {
+        navController.navigate(Navigation.TOOL_EVENT)
+    }
+
+    /**
+     * 角色公会
+     */
+    val toGuild = {
+        navController.navigate(Navigation.TOOL_GUILD)
+    }
+
+    /**
+     * 公告
+     */
+    val toNews: () -> Unit = {
+        navController.navigate(Navigation.TOOL_NEWS)
+    }
+
+    /**
+     * 竞技场
+     */
+    val toPvp = {
+        navController.navigate(Navigation.TOOL_PVP)
+    }
+
+    /**
+     * 日历
+     */
+    val toCalendar = {
+        navController.navigate(Navigation.TOOL_CALENDAR)
+    }
+
+    /**
+     * 排行
+     */
+    val toLeader = {
+        navController.navigate(Navigation.TOOL_LEADER)
+    }
+
+    /**
+     * 装备列表
+     */
+    val toEquipList = {
+        navController.navigate(Navigation.EQUIP_LIST)
+    }
+
+    /**
+     * 通知
+     */
+    val toNotice = {
+        navController.navigate(Navigation.APP_NOTICE)
+    }
+
+    /**
+     * 设置
+     */
+    val toSetting = {
+        navController.navigate(Navigation.MAIN_SETTINGS)
+    }
 }
 
 /**
@@ -537,7 +579,7 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * -1: 显示加载中
      * >0: 进度
      */
-    val downloadProgress = MutableLiveData(-2)
+    val downloadProgress = MutableLiveData(-1)
 
     /**
      * 加载中

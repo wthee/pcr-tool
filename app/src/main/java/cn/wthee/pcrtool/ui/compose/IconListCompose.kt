@@ -32,7 +32,7 @@ fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
                     .padding(
                         start = Dimen.mediuPadding,
                         end = Dimen.mediuPadding,
-                        bottom = Dimen.mediuPadding
+                        top = Dimen.mediuPadding
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

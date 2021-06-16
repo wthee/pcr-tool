@@ -32,6 +32,12 @@ data class NewsTable(
     }
 
     fun getTrueId() = id.split("-")[1].toInt()
+
+    fun getRegion() = when {
+        url.contains("bilibili") -> 2
+        url.contains(".tw") -> 3
+        else -> 4
+    }
 }
 
 fun String.fix() = replace('/', '$')

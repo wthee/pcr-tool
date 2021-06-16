@@ -13,6 +13,8 @@ object Dimen {
 
     val fabElevation = 8.dp
 
+    val sheetElevation = 24.dp
+
     val fabSize = 40.dp
 
     val fabIconSize = 26.dp
@@ -33,11 +35,9 @@ object Dimen {
 
     val smallIconSize = 18.dp
 
-    val menuHeight = 64.dp
-
-    val largeMenuHeight = 150.dp
-
     val iconSize = 48.dp
+
+    val largeIconSize = 56.dp
 
     val sheetMarginBottom = 60.dp
 
@@ -47,8 +47,6 @@ object Dimen {
 
     val border = 3.dp
 
-    val topBarHeight = 42.dp
-
     val slideHeight = 28.dp
 
     val starIconSize = 26.dp
@@ -57,9 +55,9 @@ object Dimen {
 
     val settingIconSize = 30.dp
 
-    fun getWordWidth(length: Float): Dp {
-        return (15 * length).sp2dp
-    }
+    val toolMenuWidth = 100.dp
+
+    val menuIconSize = 30.dp
 }
 
 

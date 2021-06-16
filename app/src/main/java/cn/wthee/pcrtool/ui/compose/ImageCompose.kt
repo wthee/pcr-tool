@@ -1,11 +1,8 @@
 package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,13 +14,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 
@@ -37,18 +32,9 @@ const val MOVE_SPEED_RATIO = 0.5
 @Composable
 fun CharacterCard(
     url: String,
-    scrollState: ScrollState? = null
+    modifier: Modifier = Modifier
 ) {
-
-    val modifier = Modifier
-        .aspectRatio(RATIO)
-        .fillMaxWidth()
-    if (scrollState != null) {
-        //滑动时，向上平移
-        val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
-        modifier.offset(y = move)
-    }
-    val painter = rememberCoilPainter(request = url, previewPlaceholder = R.drawable.error)
+    val painter = rememberCoilPainter(request = url)
     Image(
         painter = when (painter.loadState) {
             is ImageLoadState.Success -> painter
@@ -56,7 +42,8 @@ fun CharacterCard(
             else -> rememberCoilPainter(request = R.drawable.error)
         },
         contentDescription = null,
-        modifier = modifier
+        modifier = modifier.aspectRatio(RATIO),
+        contentScale = ContentScale.FillWidth
     )
 }
 
@@ -98,8 +85,9 @@ fun IconCompose(
     var mModifier = if (onClick != null) {
         Modifier
             .clip(Shapes.small)
-            .clickable(onClick = onClick.vibrate {
+            .clickable(onClick = {
                 VibrateUtil(context).single()
+                onClick.invoke()
             })
     } else {
         Modifier.clip(Shapes.small)

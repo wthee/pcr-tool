@@ -13,7 +13,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 向下折叠
      */
-    DOWN(Icons.Rounded.ExpandMore),
+    DOWN(Icons.Rounded.Remove),
 
     /**
      * 主菜单
@@ -41,9 +41,14 @@ enum class MainIconType(val icon: ImageVector) {
     RESET(Icons.Rounded.Refresh),
 
     /**
-     * 下载
+     * 更多
      */
-    DWONLOAD(Icons.Rounded.Download),
+    MORE(Icons.Rounded.NavigateNext),
+
+    /**
+     * 功能
+     */
+    FUNCTION(Icons.Rounded.Api),
 
     /**
      * 设置
@@ -128,7 +133,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 官网公告
      */
-    NEWS(Icons.Rounded.Campaign),
+    NEWS(Icons.Rounded.Public),
 
     /**
      * 更新通知
@@ -148,6 +153,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 日历
      */
+    CALENDAR_TODAY(Icons.Rounded.EventAvailable),
     CALENDAR(Icons.Rounded.EventNote),
 
     /**
@@ -184,11 +190,6 @@ enum class MainIconType(val icon: ImageVector) {
      * 倒计时
      */
     COUNTDOWN(Icons.Rounded.HourglassTop),
-
-    /**
-     * 图片
-     */
-    IMAGE(Icons.Rounded.Image),
 
     /**
      * 浏览器

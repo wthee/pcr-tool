@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,9 +10,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,17 +25,17 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.utils.FileUtil.convertFileSize
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.FileUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.openWebView
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
-import kotlinx.coroutines.launch
 
 /**
  * 设置页面
@@ -48,13 +46,39 @@ fun MainSettings() {
     val context = LocalContext.current
     val type = getDatabaseType()
     val sp = mainSP()
-    val scope = rememberCoroutineScope()
     val painter = rememberCoilPainter(request = R.mipmap.ic_launcher_foreground)
+    SideEffect {
+        //自动删除历史数据
+        val oldFileSize = FileUtil.getOldDatabaseSize()
+        if (oldFileSize > 0) {
+            try {
+                FileUtil.deleteOldDatabase()
+            } catch (e: Exception) {
 
+            }
+        }
+    }
     val visibility = remember {
         mutableStateOf(false)
     }
     visibility.value = painter.loadState is ImageLoadState.Success
+    //数据库版本
+    val typeName = stringResource(
+        id = if (type == 1) {
+            R.string.db_cn
+        } else {
+            R.string.db_jp
+        }
+    )
+    val localVersion = sp.getString(
+        if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+        ""
+    )
+    val dbVersionGroup = if (localVersion != null) {
+        localVersion.split("/")[0]
+    } else {
+        ""
+    }
 
     SlideAnimation(visible = visibility.value) {
         Column(
@@ -62,101 +86,42 @@ fun MainSettings() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
         ) {
-            val expanded = remember {
-                mutableStateOf(false)
-            }
-            val sizeChange =
-                animateDpAsState(targetValue = if (expanded.value) 120.dp else 64.dp)
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(bottom = Dimen.largePadding)
                     .fillMaxWidth()
-                    .clickable {
-                        expanded.value = !expanded.value
-                    }) {
-                AnimatedVisibility(visible = expanded.value) {
-                    Text(
-                        text = stringResource(id = R.string.app_name) + " " + BuildConfig.VERSION_NAME,
-                        style = MaterialTheme.typography.h6,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.primary,
-                        modifier = Modifier.padding(top = Dimen.smallPadding)
-                    )
-                }
-                AnimatedVisibility(visible = expanded.value) {
-                    //- 查看项目地址
-                    val projectUrl = stringResource(id = R.string.project_url)
-                    val project = stringResource(id = R.string.app_sourcce)
-                    Subtitle2(
-                        text = projectUrl,
-                        modifier = Modifier.clickable {
-                            openWebView(context, projectUrl, project)
-                        })
-                }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+                    style = MaterialTheme.typography.h6,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier.padding(top = Dimen.smallPadding)
+                )
+                //- 查看项目地址
+                val projectUrl = stringResource(id = R.string.project_url)
+                val project = stringResource(id = R.string.app_sourcce)
+                Subtitle2(
+                    text = projectUrl,
+                    modifier = Modifier.clickable {
+                        openWebView(context, projectUrl, project)
+                    })
                 Image(
                     painter = painter,
                     contentDescription = null,
-                    modifier = Modifier.size(sizeChange.value)
+                    modifier = Modifier.size(120.dp)
                 )
-                AnimatedVisibility(visible = !expanded.value) {
-                    Subtitle1(
-                        text = BuildConfig.VERSION_NAME,
-                        color = MaterialTheme.colors.primary
-                    )
-                }
-            }
-            //数据库版本
-            val localVersion = sp.getString(
-                if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-                ""
-            )
-            val dbVersionGroup = stringResource(
-                id = R.string.data_version, if (localVersion != null) {
-                    localVersion.split("/")[0]
-                } else {
-                    ""
-                }
-            )
-
-            //数据更新
-            MainText(
-                text = dbVersionGroup,
-                modifier = Modifier.padding(bottom = Dimen.largePadding)
-            )
-            //- 强制更新
-            SettingItem(
-                MainIconType.DB_DOWNLOAD,
-                stringResource(id = R.string.redownload_db),
-                stringResource(id = R.string.redownload_db_summary)
-            ) {
-                scope.launch {
-                    DatabaseUpdater.checkDBVersion(0, force = true)
-                }
-            }
-            //- 历史数据
-            val oldFileSize = remember {
-                mutableStateOf(FileUtil.getOldDatabaseSize())
-            }
-            val deleteTip = stringResource(id = R.string.clean_success)
-            if (oldFileSize.value > 0) {
-                SettingItem(
-                    MainIconType.DELETE,
-                    stringResource(id = R.string.clean_database),
-                    FileUtil.getOldDatabaseSize().convertFileSize()
-                ) {
-                    FileUtil.deleteOldDatabase()
-                    ToastUtil.short(deleteTip)
-                    oldFileSize.value = 0
-                }
+                Subtitle2(
+                    text = "${typeName}：${dbVersionGroup}",
+                    color = MaterialTheme.colors.primary
+                )
             }
             //其它设置
             LineCompose()
             MainText(
-                text = stringResource(id = R.string.other_settings),
-                modifier = Modifier.padding(
-                    top = Dimen.largePadding,
-                    bottom = Dimen.largePadding
-                )
+                text = stringResource(id = R.string.app_setting),
+                modifier = Modifier.padding(Dimen.largePadding)
             )
             //- 振动开关
             val vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
@@ -178,7 +143,7 @@ fun MainSettings() {
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
                 IconCompose(
                     data = MainIconType.VIBRATE.icon,
                     size = Dimen.settingIconSize
@@ -196,7 +161,7 @@ fun MainSettings() {
                     sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
                     VibrateUtil(context).single()
                 })
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
             //- 动画效果
             val animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
@@ -218,7 +183,7 @@ fun MainSettings() {
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
                 IconCompose(
                     data = MainIconType.ANIMATION.icon,
                     size = Dimen.settingIconSize
@@ -236,16 +201,13 @@ fun MainSettings() {
                     sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
                     VibrateUtil(context).single()
                 })
-                Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
             }
             LineCompose()
             //感谢友链
             MainText(
                 text = stringResource(id = R.string.thanks),
-                modifier = Modifier.padding(
-                    top = Dimen.largePadding,
-                    bottom = Dimen.largePadding
-                )
+                modifier = Modifier.padding(Dimen.largePadding)
             )
             //- 干炸里脊资源
             val dataFromUrl = stringResource(id = R.string.data_from_url)
@@ -301,11 +263,12 @@ private fun SettingItem(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clickable(onClick = onClick.vibrate {
+            .clickable(onClick = {
                 VibrateUtil(context).single()
+                onClick.invoke()
             })
     ) {
-        Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+        Spacer(modifier = Modifier.width(Dimen.largePadding))
         IconCompose(
             data = iconType.icon,
             size = Dimen.settingIconSize

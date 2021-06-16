@@ -15,6 +15,7 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillActionText
@@ -45,7 +46,7 @@ fun SkillCompose(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Dimen.mediuPadding)
+            .padding(Dimen.largePadding)
     ) {
         skillList.forEach {
             SkillItem(level = level, skillDetail = it)
@@ -111,7 +112,8 @@ fun SkillItem(
             color = colorResource(color),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.largePadding)
+                .padding(top = Dimen.largePadding),
+            selectable = true
         )
         //技能类型
         if (!isClanBoss) {
@@ -144,7 +146,7 @@ fun SkillItem(
                     )
                 }
                 //描述
-                Subtitle2(text = skillDetail.desc)
+                Subtitle2(text = skillDetail.desc, selectable = true)
             }
 
         }
@@ -157,6 +159,9 @@ fun SkillItem(
         }
         //动作
         actionData.forEach {
+            if (BuildConfig.DEBUG) {
+                Text(it.actionId.toString())
+            }
             SkillActionItem(skillAction = it)
         }
     }

@@ -49,13 +49,13 @@ class NoticeViewModel @Inject constructor(private val apiRepository: MyAPIReposi
         viewModelScope.launch {
             try {
                 val version = apiRepository.getAppUpdateNotice()
-                if (version.status == 0) {
-                    if (version.data != null && version.data == true) {
-                        updateApp.postValue(1)
-                    }
+                if (version.status == 0 && version.data != null && version.data == true) {
+                    updateApp.postValue(1)
+                } else {
+                    updateApp.postValue(0)
                 }
             } catch (e: Exception) {
-
+                updateApp.postValue(0)
             }
         }
     }

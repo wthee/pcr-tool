@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,6 +26,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.CharacterIdUtil
@@ -87,6 +89,8 @@ fun RankEquipCount(
 
     ModalBottomSheetLayout(
         sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel, 1)
@@ -103,31 +107,27 @@ fun RankEquipCount(
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
-                    .padding(top = Dimen.mediuPadding)
+                    .padding(top = Dimen.largePadding)
                     .fillMaxWidth()
             ) {
-                FadeAnimation(visible = rankEquipMaterials.value != null) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(start = Dimen.largePadding)
                     ) {
                         //头像
                         IconCompose(
                             data = CharacterIdUtil.getMaxIconUrl(
                                 unitId,
                                 MainActivity.r6Ids.contains(unitId)
-                            )
+                            ),
+                            size = Dimen.largeIconSize
                         )
                         //标题
                         Row(
                             horizontalArrangement = Arrangement.SpaceAround,
-                            modifier = Modifier
-                                .padding(
-                                    top = Dimen.largePadding,
-                                    bottom = Dimen.largePadding
-                                )
-                                .fillMaxWidth()
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             MainTitleText(text = stringResource(id = R.string.cur_rank))
                             RankText(
@@ -143,24 +143,36 @@ fun RankEquipCount(
                     }
                 }
                 //装备素材列表
-                val spanCount = 5
-                filter.value?.let { filterValue ->
-                    filterValue.starIds =
-                        GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
-                            ?: arrayListOf()
+                Card(
+                    shape = CardTopShape,
+                    elevation = Dimen.cardElevation,
+                    modifier = Modifier
+                        .padding(top = Dimen.largePadding)
+                        .fillMaxSize()
+                ) {
+                    val spanCount = 5
+                    filter.value?.let { filterValue ->
+                        filterValue.starIds =
+                            GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
+                                ?: arrayListOf()
 
-                    if (rankEquipMaterials.value != null) {
-                        navViewModel.loading.postValue(false)
-                        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
-                            items(items = rankEquipMaterials.value!!) { item ->
-                                EquipCountItem(item, filterValue, toEquipMaterial)
-                            }
-                            items(spanCount) {
-                                CommonSpacer()
+                        if (rankEquipMaterials.value != null) {
+                            navViewModel.loading.postValue(false)
+                            LazyVerticalGrid(
+                                cells = GridCells.Fixed(spanCount),
+                                contentPadding = PaddingValues(Dimen.mediuPadding)
+                            ) {
+                                items(items = rankEquipMaterials.value!!) { item ->
+                                    EquipCountItem(item, filterValue, toEquipMaterial)
+                                }
+                                items(spanCount) {
+                                    CommonSpacer()
+                                }
                             }
                         }
                     }
                 }
+
             }
             //选择
             FabCompose(
@@ -194,7 +206,7 @@ private fun EquipCountItem(
     val loved = filter.starIds.contains(item.id)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(Dimen.smallPadding),
+        modifier = Modifier.padding(Dimen.mediuPadding),
     ) {
         IconCompose(data = getEquipIconUrl(item.id)) {
             toEquipMaterial(item.id)

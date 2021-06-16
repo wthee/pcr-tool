@@ -59,9 +59,9 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
         2 -> getSectionTextColor(index + 1)
         else -> {
             if (selectIndex.value == index)
-                MaterialTheme.colors.primary
+                MaterialTheme.colors.background
             else
-                MaterialTheme.colors.onBackground
+                MaterialTheme.colors.onSurface
         }
     }
     Box(

@@ -7,7 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -20,7 +19,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
-import cn.wthee.pcrtool.utils.vibrate
 import com.google.accompanist.insets.navigationBarsPadding
 
 /**
@@ -31,18 +29,16 @@ fun MainTitleText(
     modifier: Modifier = Modifier,
     text: String,
     small: Boolean = false,
-    backgroundColor: Color = MaterialTheme.colors.primary,
+    backgroundColor: Color = MaterialTheme.colors.primary
 ) {
-    SelectionContainer(modifier = modifier) {
-        Text(
-            text = text,
-            color = MaterialTheme.colors.onPrimary,
-            style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
-            modifier = Modifier
-                .background(color = backgroundColor, shape = Shapes.small)
-                .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
-        )
-    }
+    Text(
+        text = text,
+        color = MaterialTheme.colors.onPrimary,
+        style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
+        modifier = modifier
+            .background(color = backgroundColor, shape = Shapes.small)
+            .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
+    )
 }
 
 /**
@@ -53,17 +49,27 @@ fun MainContentText(
     text: String,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
-    textAlign: TextAlign = TextAlign.End
+    textAlign: TextAlign = TextAlign.End,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(modifier = modifier) {
+    if (selectable) {
+        SelectionContainer(modifier = modifier) {
+            Text(
+                text = text,
+                textAlign = textAlign,
+                color = color,
+                style = MaterialTheme.typography.body1,
+            )
+        }
+    } else {
         Text(
             text = text,
             textAlign = textAlign,
             color = color,
             style = MaterialTheme.typography.body1,
+            modifier = modifier
         )
     }
-
 }
 
 /**
@@ -73,22 +79,36 @@ fun MainContentText(
 fun MainText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.colors.primary
+    textAlign: TextAlign = TextAlign.Center,
+    color: Color = MaterialTheme.colors.primary,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(
-        modifier = modifier.padding(
-            start = Dimen.mediuPadding,
-            end = Dimen.mediuPadding
-        )
-    ) {
+    if (selectable) {
+        SelectionContainer(
+            modifier = modifier.padding(
+                start = Dimen.mediuPadding,
+                end = Dimen.mediuPadding
+            )
+        ) {
+            Text(
+                text = text,
+                color = color,
+                style = MaterialTheme.typography.subtitle1,
+                textAlign = textAlign,
+                fontWeight = FontWeight.Black,
+            )
+        }
+    } else {
         Text(
             text = text,
             color = color,
             style = MaterialTheme.typography.subtitle1,
-            textAlign = TextAlign.Center,
+            textAlign = textAlign,
             fontWeight = FontWeight.Black,
+            modifier = modifier
         )
     }
+
 }
 
 /**
@@ -98,14 +118,25 @@ fun MainText(
 fun Subtitle1(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified
+    color: Color = Color.Unspecified,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(modifier = modifier) {
+    if (selectable) {
+        SelectionContainer(modifier = modifier) {
+            Text(
+                text = text,
+                color = color,
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.typography.subtitle1,
+            )
+        }
+    } else {
         Text(
             text = text,
             color = color,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.subtitle1,
+            modifier = modifier
         )
     }
 }
@@ -117,14 +148,25 @@ fun Subtitle1(
 fun Subtitle2(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified
+    color: Color = Color.Unspecified,
+    selectable: Boolean = false
 ) {
-    SelectionContainer(modifier = modifier) {
+    if (selectable) {
+        SelectionContainer(modifier = modifier) {
+            Text(
+                text = text,
+                color = color,
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.typography.subtitle2,
+            )
+        }
+    } else {
         Text(
             text = text,
             color = color,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.subtitle2,
+            modifier = modifier
         )
     }
 }
@@ -174,8 +216,9 @@ fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit)
     Button(
         shape = Shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
-        onClick = onClick.vibrate {
+        onClick = {
             VibrateUtil(context).single()
+            onClick.invoke()
         }
     ) {
         Text(text = text, style = MaterialTheme.typography.button)
@@ -197,8 +240,9 @@ fun SubButton(
     OutlinedButton(
         shape = Shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
-        onClick = onClick.vibrate {
+        onClick = {
             VibrateUtil(context).single()
+            onClick.invoke()
         }
     ) {
         Text(text = text, color = color, style = MaterialTheme.typography.button)
@@ -250,15 +294,6 @@ fun CommonSpacer() {
     )
 }
 
-@Composable
-fun CommonIconSpacer() {
-    Spacer(
-        modifier = Modifier
-            .navigationBarsPadding()
-            .size(Dimen.iconSize)
-    )
-}
-
 /**
  * 卡片布局
  */
@@ -275,22 +310,24 @@ fun MainCard(
     val mModifier = modifier
         .fillMaxWidth()
         .heightIn(min = Dimen.cardHeight)
-        .shadow(elevation = Dimen.cardElevation, shape = Shapes.large, clip = true)
 
     if (onClick != null) {
         Card(
             modifier = mModifier,
             content = content,
-            onClick = onClick.vibrate {
+            onClick = {
                 VibrateUtil(context).single()
+                onClick.invoke()
             },
-            backgroundColor = backgroundColor
+            backgroundColor = backgroundColor,
+            elevation = Dimen.cardElevation
         )
     } else {
         Card(
             modifier = mModifier,
             content = content,
-            backgroundColor = backgroundColor
+            backgroundColor = backgroundColor,
+            elevation = Dimen.cardElevation
         )
     }
 

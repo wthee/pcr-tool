@@ -99,15 +99,16 @@ fun EquipMaterialDeatil(
                     MainText(
                         text = it.equipmentName,
                         modifier = Modifier
-                            .padding(top = Dimen.mediuPadding),
-                        color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified
+                            .padding(top = Dimen.largePadding),
+                        color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
+                        selectable = true
                     )
                 }
                 //Tab
                 TabRow(
                     modifier = Modifier
                         .padding(top = Dimen.mediuPadding)
-                        .fillMaxWidth(0.62f),
+                        .fillMaxWidth(0.8f),
                     selectedTabIndex = pagerState.currentPage,
                     backgroundColor = Color.Transparent,
                     contentColor = MaterialTheme.colors.primary,
@@ -141,9 +142,16 @@ fun EquipMaterialDeatil(
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        contentPadding = PaddingValues(top = Dimen.mediuPadding)
+                        contentPadding = PaddingValues(top = Dimen.mediuPadding),
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        items(lists[pagerIndex]) {
+                        items(
+                            when (tabs[pagerIndex]) {
+                                "Normal" -> lists[0]
+                                "Hard" -> lists[1]
+                                else -> lists[2]
+                            }
+                        ) {
                             Text(
                                 text = it.getNum(),
                                 style = MaterialTheme.typography.h6,
@@ -195,15 +203,15 @@ private fun AreaEquipList(
     selectedId: Int,
     odds: ArrayList<EquipmentIdWithOdd>
 ) {
-    VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediuPadding * 2) {
+    VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
         odds.forEach {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding,
-                        bottom = Dimen.mediuPadding
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding,
+                        bottom = Dimen.largePadding
                     ), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val selected = selectedId == it.eid

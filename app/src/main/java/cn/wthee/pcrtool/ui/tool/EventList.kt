@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -47,13 +46,12 @@ fun EventList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = events.value != null) {
             events.value?.let { data ->
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
                     items(data) {
                         EventItem(it, toCharacterDetail)
@@ -129,13 +127,16 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val comingSoon = today.hourInt(event.startTime) < 0 && (!preEvent)
 
     //标题
-    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+    Row(
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         MainTitleText(
             text = type,
             backgroundColor = typeColor
         )
-        if(!preEvent){
-             MainTitleText(
+        if (!preEvent) {
+            MainTitleText(
                 text = startDate,
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
@@ -179,11 +180,15 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
     }
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //内容
             MainContentText(
                 text = event.getEventTitle(),
-                modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                modifier = Modifier.padding(
+                    top = Dimen.mediuPadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
+                ),
                 textAlign = TextAlign.Start
             )
             //图标
@@ -195,7 +200,9 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             if (event.eventId / 10000 != 2) {
                 CaptionText(
                     text = event.endTime,
-                    modifier = Modifier.align(Alignment.End)
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(end = Dimen.mediuPadding)
                 )
             }
 

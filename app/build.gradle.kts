@@ -5,8 +5,9 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "1.0.2"
-val code = 102
+val name = "1.1.0"
+val code = 110
+val sql = 110
 
 android {
 
@@ -22,7 +23,7 @@ android {
         versionName = name
 
 
-        buildConfigField("int", "SQLITE_VERSION", code.toString())
+        buildConfigField("int", "SQLITE_VERSION", sql.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -41,8 +42,8 @@ android {
         }
 
         debug {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -56,6 +57,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@mipmap/ic_launcher"
             resValue("string", "app_name", "PCR Tool")
+            buildConfigField("boolean", "debug", "false")
         }
 
         create("beta") {
@@ -63,6 +65,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@drawable/ic_star"
             resValue("string", "app_name", "PCR Tool βeta")
+            buildConfigField("boolean", "debug", "true")
         }
     }
 

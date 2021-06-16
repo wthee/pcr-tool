@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -63,14 +62,13 @@ fun ClanBattleList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
         SlideAnimation(visible = clanList.value != null) {
             clanList.value?.let { data ->
                 navViewModel.loading.postValue(false)
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
                     items(data) {
                         ClanBattleItem(it, toClanBossInfo)
@@ -113,7 +111,10 @@ private fun ClanBattleItem(
     val list = clanInfo.getUnitIdList(0)
 
     //标题
-    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+    Row(
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         MainTitleText(text = clanInfo.getDate())
         MainTitleText(
             text = stringResource(
@@ -192,7 +193,6 @@ fun ClanBossInfoPager(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 //标题
@@ -202,7 +202,9 @@ fun ClanBossInfoPager(
                 )
                 //阶段选择
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = Dimen.largePadding, end = Dimen.largePadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     MainText(text = stringResource(id = R.string.title_section))
@@ -294,13 +296,13 @@ fun ClanBossInfoPager(
                                 Column(
                                     modifier = Modifier.verticalScroll(rememberScrollState())
                                 ) {
-
                                     //名称
                                     MainText(
                                         text = bossDataValue.name,
                                         modifier = Modifier
                                             .align(Alignment.CenterHorizontally)
-                                            .padding(Dimen.mediuPadding)
+                                            .padding(Dimen.mediuPadding),
+                                        selectable = true
                                     )
                                     Subtitle2(
                                         text = "BOSS ${pagerIndex + 1}",
@@ -348,7 +350,7 @@ private fun BossSkillList(
     allSkillList.value?.let { list ->
         Column(
             modifier = Modifier
-                .padding(Dimen.mediuPadding)
+                .padding(Dimen.largePadding)
                 .fillMaxSize()
         ) {
             if (allLoopData.value != null && allIcon.value != null) {

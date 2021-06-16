@@ -5,12 +5,11 @@ import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,14 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
@@ -37,71 +33,117 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
+import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.openWebView
-import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 /**
  * 公告列表
  */
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagingApi
 @Composable
 fun NewsList(
-    scrollState: LazyListState,
-    region: Int,
-    toDetail: (String, String, Int, String) -> Unit,
-    viewModel: NewsViewModel = hiltViewModel()
+    news0: LazyPagingItems<NewsTable>?,
+    news1: LazyPagingItems<NewsTable>?,
+    news2: LazyPagingItems<NewsTable>?,
+    toDetail: (String, String, Int, String) -> Unit
 ) {
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
     val coroutineScope = rememberCoroutineScope()
-    val tab = when (region) {
-        2 -> stringResource(id = R.string.tool_news_cn)
-        3 -> stringResource(id = R.string.tool_news_tw)
-        else -> stringResource(id = R.string.tool_news_jp)
-    }
-    viewModel.getNews(region)
-    val flow = viewModel.newsPageList
-    if (flow != null) {
-        val news = remember(flow, lifecycle) {
-            flow.flowWithLifecycle(lifecycle = lifecycle)
-        }.collectAsLazyPagingItems()
-        navViewModel.loading.postValue(true)
+    val context = LocalContext.current
+    val tab = arrayListOf(
+        stringResource(id = R.string.db_cn),
+        stringResource(id = R.string.db_tw),
+        stringResource(id = R.string.db_jp)
+    )
+    val pagerState = rememberPagerState(pageCount = 3)
+    val scrollState0 = rememberLazyListState()
+    val scrollState1 = rememberLazyListState()
+    val scrollState2 = rememberLazyListState()
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
-        ) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { pagerIndex ->
+            val scrollState = when (pagerIndex) {
+                0 -> scrollState0
+                1 -> scrollState1
+                else -> scrollState2
+            }
             LazyColumn(
                 state = scrollState,
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
                     .fillMaxSize(),
-                contentPadding = PaddingValues(Dimen.mediuPadding)
+                contentPadding = PaddingValues(Dimen.largePadding)
             ) {
-                itemsIndexed(news) { _, it ->
-                    if (it != null) {
-                        if (navViewModel.loading.value == true) {
-                            navViewModel.loading.postValue(false)
+                val news = when (pagerIndex) {
+                    0 -> news0
+                    1 -> news1
+                    else -> news2
+                }
+                news?.let { list ->
+                    itemsIndexed(list) { _, it ->
+                        if (it != null) {
+                            if (navViewModel.loading.value == true) {
+                                navViewModel.loading.postValue(false)
+                            }
+                            NewsItem(pagerIndex + 2, news = it, toDetail)
                         }
-                        NewsItem(region, news = it, toDetail)
                     }
                 }
+
             }
-            FabCompose(
-                iconType = MainIconType.NEWS,
-                text = tab,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(
-                        end = Dimen.fabMarginEnd,
-                        bottom = Dimen.fabMargin
+        }
+
+        Card(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(0.618f)
+                .padding(bottom = Dimen.fabMargin)
+                .navigationBarsPadding(),
+            shape = CircleShape,
+            elevation = Dimen.cardElevation,
+        ) {
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                backgroundColor = MaterialTheme.colors.background,
+                contentColor = MaterialTheme.colors.primary,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                     )
+                },
             ) {
-                coroutineScope.launch {
-                    scrollState.scrollToItem(0)
+                tab.forEachIndexed { index, s ->
+                    Tab(
+                        modifier = Modifier
+                            .width(Dimen.fabSize)
+                            .height(Dimen.fabSize),
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            VibrateUtil(context).single()
+                            coroutineScope.launch {
+                                if (pagerState.currentPage == index) {
+                                    when (pagerState.currentPage) {
+                                        0 -> scrollState0
+                                        1 -> scrollState1
+                                        else -> scrollState2
+                                    }.scrollToItem(0)
+                                } else {
+                                    pagerState.scrollToPage(index)
+                                }
+                            }
+                        }) {
+                        Subtitle2(text = s)
+                    }
                 }
             }
         }
@@ -143,6 +185,7 @@ private fun NewsItem(
         Subtitle1(
             text = news.title,
             modifier = Modifier.padding(Dimen.mediuPadding),
+            selectable = true
         )
     }
 }
@@ -167,55 +210,65 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                 .padding(Dimen.mediuPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            MainText(text = originalTitle, modifier = Modifier.padding(Dimen.mediuPadding))
+            MainText(
+                text = originalTitle,
+                modifier = Modifier.padding(Dimen.mediuPadding),
+                selectable = true
+            )
             Subtitle2(text = date)
-            AndroidView(modifier = Modifier
-                .alpha(alpha)
-                .padding(Dimen.largePadding), factory = {
-                WebView(it).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                    )
-                    settings.apply {
-                        domStorageEnabled = true
-                        javaScriptEnabled = true
-                        cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
-                        useWideViewPort = true //将图片调整到适合webView的大小
-                        loadWithOverviewMode = true // 缩放至屏幕的大小
-                        javaScriptCanOpenWindowsAutomatically = true
-                        loadsImagesAutomatically = false
-                        blockNetworkImage = true
-                    }
-                    webChromeClient = WebChromeClient()
-                    webViewClient = object : WebViewClient() {
-
-                        override fun shouldOverrideUrlLoading(
-                            view: WebView,
-                            url: String?
-                        ): Boolean {
-                            view.loadUrl(url!!)
-                            return true
+            AndroidView(
+                modifier = Modifier
+                    .alpha(alpha)
+                    .padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    ),
+                factory = {
+                    WebView(it).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                        )
+                        settings.apply {
+                            domStorageEnabled = true
+                            javaScriptEnabled = true
+                            cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                            useWideViewPort = true //将图片调整到适合webView的大小
+                            loadWithOverviewMode = true // 缩放至屏幕的大小
+                            javaScriptCanOpenWindowsAutomatically = true
+                            loadsImagesAutomatically = false
+                            blockNetworkImage = true
                         }
+                        webChromeClient = WebChromeClient()
+                        webViewClient = object : WebViewClient() {
 
-                        override fun onReceivedSslError(
-                            view: WebView?,
-                            handler: SslErrorHandler?,
-                            error: SslError?
-                        ) {
-                            handler?.proceed()
-                        }
-
-                        override fun onPageFinished(view: WebView?, url: String?) {
-                            super.onPageFinished(view, url)
-                            settings.apply {
-                                loadsImagesAutomatically = true
-                                blockNetworkImage = false
+                            override fun shouldOverrideUrlLoading(
+                                view: WebView,
+                                url: String?
+                            ): Boolean {
+                                view.loadUrl(url!!)
+                                return true
                             }
-                            if (region == 2) {
-                                //取消内部滑动
-                                loadUrl(
-                                    """
+
+                            override fun onReceivedSslError(
+                                view: WebView?,
+                                handler: SslErrorHandler?,
+                                error: SslError?
+                            ) {
+                                handler?.proceed()
+                            }
+
+                            override fun onPageFinished(view: WebView?, url: String?) {
+                                super.onPageFinished(view, url)
+                                settings.apply {
+                                    loadsImagesAutomatically = true
+                                    blockNetworkImage = false
+                                }
+                                if (region == 2) {
+                                    //取消内部滑动
+                                    loadUrl(
+                                        """
                                 javascript:
                                 $('#news-content').css('overflow','inherit');
                                 $('#news-content').css('margin-top','0');
@@ -226,11 +279,11 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                                 $('.header').css('visibility','hidden');
                                 $('#news-content').css('margin-bottom','1rem');
                             """.trimIndent()
-                                )
-                            }
-                            if (region == 3) {
-                                loadUrl(
-                                    """
+                                    )
+                                }
+                                if (region == 3) {
+                                    loadUrl(
+                                        """
                                 javascript:
                                 $('.menu').css('display','none');
                                 $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
@@ -248,11 +301,11 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                                 $('body').css('background-image','none');
                                 $('.news_con').css('box-shadow','none');
                             """.trimIndent()
-                                )
-                            }
-                            if (region == 4) {
-                                loadUrl(
-                                    """
+                                    )
+                                }
+                                if (region == 4) {
+                                    loadUrl(
+                                        """
                                 javascript:
                                 $('#main_area').css('display','none');
                                 $('.bg-gray').css('display','none');
@@ -271,15 +324,16 @@ fun NewsDetail(text: String, url: String, region: Int, date: String) {
                                 $('.news_detail_container').css('width','100%');
                                 $('.meta-info').css('margin','0');
                             """.trimIndent()
-                                )
+                                    )
+                                }
+                                loading.value = false
                             }
-                            loading.value = false
                         }
+                        //加载网页
+                        loadUrl(originalUrl)
                     }
-                    //加载网页
-                    loadUrl(originalUrl)
                 }
-            })
+            )
         }
         Row(
             modifier = Modifier
