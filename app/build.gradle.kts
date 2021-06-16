@@ -5,9 +5,9 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "2.0.0"
-val code = 200
-val sql = 200
+val name = "1.1.0"
+val code = 110
+val sql = 110
 
 android {
 
