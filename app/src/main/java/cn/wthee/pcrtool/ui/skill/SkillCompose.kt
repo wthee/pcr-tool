@@ -15,6 +15,7 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
 import cn.wthee.pcrtool.data.db.view.SkillActionText
@@ -158,6 +159,9 @@ fun SkillItem(
         }
         //动作
         actionData.forEach {
+            if (BuildConfig.DEBUG) {
+                Text(it.actionId.toString())
+            }
             SkillActionItem(skillAction = it)
         }
     }

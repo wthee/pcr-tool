@@ -913,6 +913,7 @@ data class SkillActionPro(
             else -> false
         }
         return SkillActionText(
+            action_id,
             tag,
             "(${action_id % 10}) $formatDesc",
             summonUnitId,
@@ -1027,6 +1028,7 @@ data class SkillActionPro(
  * 简化技能效果数据
  */
 data class SkillActionText(
+    val actionId: Int,
     val tag: String,
     var action: String,
     val summonUnitId: Int,

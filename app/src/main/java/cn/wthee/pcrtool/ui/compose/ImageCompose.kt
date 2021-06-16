@@ -1,10 +1,8 @@
 package cn.wthee.pcrtool.ui.compose
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -16,7 +14,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
@@ -35,18 +32,9 @@ const val MOVE_SPEED_RATIO = 0.5
 @Composable
 fun CharacterCard(
     url: String,
-    modifier: Modifier = Modifier,
-    scrollState: ScrollState? = null
+    modifier: Modifier = Modifier
 ) {
-
-    val mModifier = modifier
-        .aspectRatio(RATIO)
-    if (scrollState != null) {
-        //滑动时，向上平移
-        val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
-        mModifier.offset(y = move)
-    }
-    val painter = rememberCoilPainter(request = url, previewPlaceholder = R.drawable.error)
+    val painter = rememberCoilPainter(request = url)
     Image(
         painter = when (painter.loadState) {
             is ImageLoadState.Success -> painter
@@ -54,7 +42,7 @@ fun CharacterCard(
             else -> rememberCoilPainter(request = R.drawable.error)
         },
         contentDescription = null,
-        modifier = mModifier,
+        modifier = modifier.aspectRatio(RATIO),
         contentScale = ContentScale.FillWidth
     )
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -171,6 +172,10 @@ fun CharacterItem(
             CharacterCard(
                 CharacterIdUtil.getMaxCardUrl(character.id)
             )
+            //编号
+            if (BuildConfig.debug) {
+                Text(text = character.id.toString())
+            }
             //名字、位置
             Row(
                 modifier = Modifier.padding(

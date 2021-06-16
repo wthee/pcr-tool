@@ -7,6 +7,7 @@ plugins {
 
 val name = "2.0.0"
 val code = 200
+val sql = 200
 
 android {
 
@@ -22,7 +23,7 @@ android {
         versionName = name
 
 
-        buildConfigField("int", "SQLITE_VERSION", code.toString())
+        buildConfigField("int", "SQLITE_VERSION", sql.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -56,6 +57,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@mipmap/ic_launcher"
             resValue("string", "app_name", "PCR Tool")
+            buildConfigField("boolean", "debug", "false")
         }
 
         create("beta") {
@@ -63,6 +65,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@drawable/ic_star"
             resValue("string", "app_name", "PCR Tool βeta")
+            buildConfigField("boolean", "debug", "true")
         }
     }
 
