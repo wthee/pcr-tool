@@ -25,7 +25,6 @@ import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.enemy
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
@@ -40,6 +39,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -57,29 +59,37 @@ fun ClanBattleList(
     clanViewModel.getAllClanBattleData()
     val clanList = clanViewModel.clanInfoList.observeAsState()
     val coroutineScope = rememberCoroutineScope()
-    navViewModel.loading.postValue(true)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SlideAnimation(visible = clanList.value != null) {
-            clanList.value?.let { data ->
-                navViewModel.loading.postValue(false)
-                LazyColumn(
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.largePadding)
-                ) {
-                    items(data) {
+        val visible = clanList.value != null && clanList.value!!.isNotEmpty()
+        FadeAnimation(visible = visible) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                clanList.value?.let { list ->
+                    items(list) {
                         ClanBattleItem(it, toClanBossInfo)
                     }
-                    item {
-                        CommonSpacer()
-                    }
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
-
+        FadeAnimation(visible = !visible) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(20) {
+                    ClanBattleItem(ClanBattleInfo(), toClanBossInfo)
+                }
+            }
+        }
         //回到顶部
         FabCompose(
             iconType = MainIconType.CLAN,
@@ -107,6 +117,7 @@ private fun ClanBattleItem(
     clanInfo: ClanBattleInfo,
     toClanBossInfo: (Int, Int) -> Unit,
 ) {
+    val placeholder = clanInfo.clan_battle_id == -1
     val section = clanInfo.getAllBossInfo().size
     val list = clanInfo.getUnitIdList(0)
 
@@ -115,18 +126,36 @@ private fun ClanBattleItem(
         modifier = Modifier.padding(bottom = Dimen.mediuPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MainTitleText(text = clanInfo.getDate())
+        MainTitleText(
+            text = clanInfo.getDate(),
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            )
+        )
         MainTitleText(
             text = stringResource(
                 id = R.string.section,
                 getZhNumberText(section)
             ),
             backgroundColor = getSectionTextColor(section),
-            modifier = Modifier.padding(start = Dimen.smallPadding),
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .placeholder(
+                    visible = placeholder,
+                    highlight = PlaceholderHighlight.shimmer()
+                ),
         )
     }
 
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
+    MainCard(
+        modifier = Modifier
+            .padding(bottom = Dimen.largePadding)
+            .placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            )
+    ) {
         //图标
         Row(
             modifier = Modifier.padding(Dimen.mediuPadding),
@@ -135,7 +164,9 @@ private fun ClanBattleItem(
             list.forEachIndexed { index, it ->
                 Box {
                     IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
-                        toClanBossInfo(clanInfo.clan_battle_id, index)
+                        if (!placeholder) {
+                            toClanBossInfo(clanInfo.clan_battle_id, index)
+                        }
                     }
                     //多目标提示
                     if (it.targetCount > 1) {

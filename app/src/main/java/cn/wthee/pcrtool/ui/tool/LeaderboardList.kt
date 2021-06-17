@@ -21,11 +21,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -44,44 +46,49 @@ fun LeaderboardList(
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
-            navViewModel.loading.postValue(true)
-        } else if (list.value!!.message != "success") {
-            navViewModel.loading.postValue(false)
-            MainText(
-                text = stringResource(id = R.string.data_get_error),
-                modifier = Modifier.align(Alignment.Center)
-            )
-        } else {
-            navViewModel.loading.postValue(false)
-            val info = list.value!!.data!!.leader
-            Column {
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding
-                    )
-                ) {
-                    Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
+                )
+            ) {
+                Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
+                MainText(
+                    text = stringResource(id = R.string.grade),
+                    modifier = Modifier.weight(0.25f)
+                )
+                MainText(
+                    text = stringResource(id = R.string.jjc),
+                    modifier = Modifier.weight(0.25f)
+                )
+                MainText(
+                    text = stringResource(id = R.string.clan),
+                    modifier = Modifier.weight(0.25f)
+                )
+                MainText(
+                    text = stringResource(id = R.string.tower),
+                    modifier = Modifier.weight(0.25f)
+                )
+            }
+            if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
+                //显示占位图
+                Column(modifier = Modifier.padding(Dimen.largePadding)) {
+                    for (i in 0..20) {
+                        LeaderboardItem(LeaderboardData())
+                    }
+                }
+            } else if (list.value!!.message != "success") {
+                Box(modifier = Modifier.fillMaxSize()) {
                     MainText(
-                        text = stringResource(id = R.string.grade),
-                        modifier = Modifier.weight(0.25f)
-                    )
-                    MainText(
-                        text = stringResource(id = R.string.jjc),
-                        modifier = Modifier.weight(0.25f)
-                    )
-                    MainText(
-                        text = stringResource(id = R.string.clan),
-                        modifier = Modifier.weight(0.25f)
-                    )
-                    MainText(
-                        text = stringResource(id = R.string.tower),
-                        modifier = Modifier.weight(0.25f)
+                        text = stringResource(id = R.string.data_get_error),
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
+            } else {
+                val info = list.value!!.data!!.leader
                 LazyColumn(
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.largePadding)
@@ -95,6 +102,7 @@ fun LeaderboardList(
                 }
             }
         }
+
         Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -129,18 +137,26 @@ fun LeaderboardList(
 @ExperimentalMaterialApi
 @Composable
 fun LeaderboardItem(info: LeaderboardData) {
+    val placeholder = info.icon == ""
     val context = LocalContext.current
     val title = stringResource(id = R.string.visit_detail)
 
     //标题
     MainTitleText(
         text = info.name,
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+        modifier = Modifier
+            .padding(bottom = Dimen.mediuPadding)
+            .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
     )
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
-        //打开浏览器
-        openWebView(context, info.url, title)
-    }) {
+    MainCard(modifier = Modifier
+        .padding(bottom = Dimen.largePadding)
+        .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer()),
+        onClick = {
+            //打开浏览器
+            if (!placeholder) {
+                openWebView(context, info.url, title)
+            }
+        }) {
         Row(
             modifier = Modifier.padding(Dimen.smallPadding),
             verticalAlignment = Alignment.CenterVertically

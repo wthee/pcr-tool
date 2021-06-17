@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,13 +35,14 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.ui.tool.CalendarItem
 import cn.wthee.pcrtool.utils.CharacterIdUtil
-import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.px2dp
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 
 /**
  * 首页纵览
@@ -60,7 +60,6 @@ fun Overview(
         MainActivity.navViewModel.r6Ids.postValue(r6Ids)
     }
     val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     SideEffect {
@@ -84,11 +83,10 @@ fun Overview(
     ) {
         TopBarCompose(actions)
         //角色
-        val cardWidth = ScreenUtil.getWidth().px2dp.dp * 0.618f
         Section(
             titleId = R.string.character,
             iconType = MainIconType.CHARACTER,
-            loadState = characterList == null || characterList.isEmpty(),
+            visible = characterList != null && characterList.isNotEmpty(),
             onClick = {
                 actions.toCharacterList()
             }
@@ -122,36 +120,31 @@ fun Overview(
         Section(
             titleId = R.string.tool_equip,
             iconType = MainIconType.EQUIP,
-            loadState = equipList == null || equipList.isEmpty(),
+            visible = equipList != null && equipList.isNotEmpty(),
             onClick = {
                 actions.toEquipList()
             }
         ) {
-            equipList?.let { list ->
-                VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                    list.forEach {
-                        Box(
-                            modifier = Modifier
-                                .padding(Dimen.mediuPadding)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            IconCompose(data = getEquipIconUrl(it.equipmentId)) {
-                                actions.toEquipDetail(it.equipmentId)
-                            }
+            VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+                equipList?.forEach {
+                    Box(
+                        modifier = Modifier
+                            .padding(Dimen.mediuPadding)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconCompose(data = getEquipIconUrl(it.equipmentId)) {
+                            actions.toEquipDetail(it.equipmentId)
                         }
-
                     }
                 }
-
             }
         }
 
         //更多功能
         Section(
             titleId = R.string.function,
-            iconType = MainIconType.FUNCTION,
-            loadState = false
+            iconType = MainIconType.FUNCTION
         ) {
             ToolMenu(actions = actions)
         }
@@ -160,24 +153,32 @@ fun Overview(
         Section(
             titleId = R.string.tool_news,
             iconType = MainIconType.NEWS,
-            loadState = newsList?.data == null,
             onClick = {
                 actions.toNews()
             }
         ) {
             Column(
-                modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                )
+                modifier = Modifier
+                    .padding(
+                        top = Dimen.mediuPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
             ) {
-                newsList?.data?.let { list ->
-                    list.forEach {
+                if (newsList?.data != null) {
+                    newsList.data!!.forEach {
                         NewsItem(
                             region = it.getRegion(),
                             news = it,
-                            actions.toNewsDetail
+                            toDetail = actions.toNewsDetail
+                        )
+                    }
+                } else {
+                    for (i in 0..2) {
+                        NewsItem(
+                            region = 2,
+                            news = NewsTable(),
+                            toDetail = actions.toNewsDetail
                         )
                     }
                 }
@@ -187,8 +188,7 @@ fun Overview(
         if (inProgressEventList != null && inProgressEventList.isNotEmpty()) {
             Section(
                 titleId = R.string.tool_calendar,
-                iconType = MainIconType.CALENDAR_TODAY,
-                loadState = false
+                iconType = MainIconType.CALENDAR_TODAY
             ) {
                 Column(
                     modifier = Modifier
@@ -208,8 +208,7 @@ fun Overview(
         if (comingSoonEventList != null && comingSoonEventList.isNotEmpty()) {
             Section(
                 titleId = R.string.tool_calendar_comming,
-                iconType = MainIconType.CALENDAR,
-                loadState = false
+                iconType = MainIconType.CALENDAR
             ) {
                 Column(
                     modifier = Modifier
@@ -239,7 +238,7 @@ fun Overview(
 private fun Section(
     @StringRes titleId: Int,
     iconType: MainIconType,
-    loadState: Boolean,
+    visible: Boolean = true,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
@@ -291,7 +290,7 @@ private fun Section(
                 )
             }
         }
-        if (loadState) {
+        if (!visible) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(Dimen.largePadding)
@@ -315,7 +314,7 @@ private fun NewsItem(
     news: NewsTable,
     toDetail: (String, String, Int, String) -> Unit,
 ) {
-
+    val placeholder = news.title == ""
     val tag = when (region) {
         2 -> R.string.db_cn
         3 -> R.string.db_tw
@@ -335,16 +334,34 @@ private fun NewsItem(
     ) {
         MainTitleText(
             text = stringResource(id = tag),
-            backgroundColor = colorResource(id = colorId)
+            backgroundColor = colorResource(id = colorId),
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            )
         )
         MainTitleText(
             text = news.date,
-            modifier = Modifier.padding(start = Dimen.smallPadding),
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .placeholder(
+                    visible = placeholder,
+                    highlight = PlaceholderHighlight.shimmer()
+                ),
         )
     }
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
-        toDetail(news.title.fix(), news.url.fix(), region, news.date)
-    }) {
+    MainCard(modifier = Modifier
+        .padding(bottom = Dimen.largePadding)
+        .placeholder(
+            visible = placeholder,
+            highlight = PlaceholderHighlight.shimmer()
+        ),
+        onClick = {
+            if (!placeholder) {
+                toDetail(news.title.fix(), news.url.fix(), region, news.date)
+            }
+        }
+    ) {
         //内容
         Subtitle1(
             text = news.title,

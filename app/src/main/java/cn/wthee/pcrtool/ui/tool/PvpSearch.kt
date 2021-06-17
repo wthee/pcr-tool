@@ -43,6 +43,9 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -120,7 +123,6 @@ fun PvpSearchCompose(
     if (close) {
         showResult.value = false
         research.value = false
-        navViewModel.loading.postValue(false)
         navViewModel.fabCloseClick.postValue(false)
         navViewModel.selectedIds.postValue("")
         pvpViewModel.pvpResult.postValue(null)
@@ -188,7 +190,6 @@ fun PvpSearchCompose(
                     ) {
                         if (showResult.value) {
                             //展示搜索结果
-                            navViewModel.loading.postValue(true)
                             val idArray = JsonArray()
                             for (sel in selectedIds.subList(0, 5)) {
                                 idArray.add(sel.unitId)
@@ -196,11 +197,7 @@ fun PvpSearchCompose(
                             pvpViewModel.getPVPData(idArray)
                             pvpViewModel.requesting.postValue(true)
                             val result = pvpViewModel.pvpResult.observeAsState().value
-                            if (result != null) {
-                                navViewModel.loading.postValue(false)
-                                PvpSearchResult(selectedIds.subList(0, 5).getIdStr(), result)
-                            }
-
+                            PvpSearchResult(selectedIds.subList(0, 5).getIdStr(), result)
                         } else {
                             //选择页面
                             data.value?.let { dataValue ->
@@ -479,9 +476,10 @@ fun PvpIconItem(
 @Composable
 fun PvpSearchResult(
     defIds: String,
-    result: ResponseData<List<PvpResultData>>,
+    result: ResponseData<List<PvpResultData>>?,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
+    val placeholder = result == null
     val region = getRegion()
     pvpViewModel.getFavoritesList(defIds, region)
     //结果
@@ -502,58 +500,89 @@ fun PvpSearchResult(
                 }
             }
         }
+
         Box(modifier = Modifier.fillMaxSize()) {
-            navViewModel.loading.postValue(false)
-            if (result.message == "success") {
-                //振动提醒
-                if (!vibrated.value) {
-                    vibrated.value = true
-                    VibrateUtil(context).done()
-                }
-                val success = result.data!!.isNotEmpty()
-                if (success) {
-                    //查询成功
-                    val list = result.data!!.sortedByDescending { it.up }
-                    SlideAnimation(visible = success) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            //展示查询结果
-                            LazyColumn(
-                                contentPadding = PaddingValues(
-                                    start = Dimen.mediuPadding,
-                                    end = Dimen.mediuPadding
-                                )
+            if (!placeholder) {
+                if (result!!.message == "success") {
+                    //振动提醒
+                    if (!vibrated.value) {
+                        vibrated.value = true
+                        VibrateUtil(context).done()
+                    }
+                    val hasData = result.data!!.isNotEmpty()
+                    if (hasData) {
+                        //查询成功
+                        val list = result.data!!.sortedByDescending { it.up }
+                        FadeAnimation(visible = hasData) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .fillMaxSize()
                             ) {
-                                itemsIndexed(items = list) { index, item ->
-                                    PvpAtkTeam(
-                                        favoritesList,
-                                        index + 1,
-                                        item,
-                                        region,
-                                        pvpViewModel
+                                //展示查询结果
+                                LazyColumn(
+                                    contentPadding = PaddingValues(
+                                        start = Dimen.mediuPadding,
+                                        end = Dimen.mediuPadding
                                     )
-                                }
-                                item {
-                                    CommonSpacer()
+                                ) {
+                                    itemsIndexed(items = list) { index, item ->
+                                        PvpAtkTeam(
+                                            favoritesList,
+                                            index + 1,
+                                            item,
+                                            region,
+                                            pvpViewModel
+                                        )
+                                    }
+                                    item {
+                                        CommonSpacer()
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        MainText(
+                            text = stringResource(id = R.string.pvp_no_data),
+                            modifier = Modifier.align(Alignment.Center)
+                        )
                     }
                 } else {
                     MainText(
-                        text = stringResource(id = R.string.pvp_no_data),
+                        text = stringResource(id = R.string.data_get_error),
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
             } else {
-                MainText(
-                    text = stringResource(id = R.string.data_get_error),
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                //占位图
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    //展示查询结果
+                    LazyColumn(
+                        contentPadding = PaddingValues(
+                            start = Dimen.mediuPadding,
+                            end = Dimen.mediuPadding
+                        )
+                    ) {
+                        items(10) {
+                            PvpAtkTeam(
+                                favoritesList,
+                                0,
+                                PvpResultData(),
+                                region,
+                                pvpViewModel
+                            )
+                        }
+                        item {
+                            CommonSpacer()
+                        }
+                    }
+                }
             }
+
         }
     }
 
@@ -571,6 +600,7 @@ private fun PvpAtkTeam(
     region: Int,
     viewModel: PvpViewModel
 ) {
+    val placeholder = item.id == ""
     val scope = rememberCoroutineScope()
     val favorites = remember {
         mutableStateOf(favoritesList.contains(item.atk))
@@ -584,7 +614,9 @@ private fun PvpAtkTeam(
         Row {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
-                modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+                modifier = Modifier
+                    .padding(bottom = Dimen.mediuPadding)
+                    .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
             )
             Spacer(modifier = Modifier.weight(1f))
             //收藏
@@ -592,34 +624,41 @@ private fun PvpAtkTeam(
                 data = if (favorites.value) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
                 size = Dimen.fabIconSize
             ) {
-                scope.launch {
-                    if (favorites.value) {
-                        //已收藏，取消收藏
-                        viewModel.delete(item.atk, item.def, region)
-                    } else {
-                        //未收藏，添加收藏
-                        val simpleDateFormat =
-                            SimpleDateFormat(
-                                "yyyy/MM/dd HH:mm:ss.SSS",
-                                Locale.CHINESE
+                if (!placeholder) {
+                    scope.launch {
+                        if (favorites.value) {
+                            //已收藏，取消收藏
+                            viewModel.delete(item.atk, item.def, region)
+                        } else {
+                            //未收藏，添加收藏
+                            val simpleDateFormat =
+                                SimpleDateFormat(
+                                    "yyyy/MM/dd HH:mm:ss.SSS",
+                                    Locale.CHINESE
+                                )
+                            val date = Date(System.currentTimeMillis())
+                            viewModel.insert(
+                                PvpFavoriteData(
+                                    item.id,
+                                    item.atk,
+                                    item.def,
+                                    simpleDateFormat.format(date),
+                                    region
+                                )
                             )
-                        val date = Date(System.currentTimeMillis())
-                        viewModel.insert(
-                            PvpFavoriteData(
-                                item.id,
-                                item.atk,
-                                item.def,
-                                simpleDateFormat.format(date),
-                                region
-                            )
-                        )
+                        }
+                        favorites.value = !favorites.value
                     }
-                    favorites.value = !favorites.value
                 }
             }
         }
 
-        MainCard {
+        MainCard(
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            )
+        ) {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
             }

@@ -20,11 +20,13 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -40,7 +42,6 @@ fun NoticeList(
     noticeViewModel.getNotice()
     val noticeList = noticeViewModel.notice.observeAsState()
     val coroutineScope = rememberCoroutineScope()
-    MainActivity.navViewModel.loading.postValue(true)
 
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
     val icon = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE
@@ -50,32 +51,35 @@ fun NoticeList(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        noticeList.value?.let { data ->
-            MainActivity.navViewModel.loading.postValue(false)
-            LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.largePadding)) {
-                data.data?.let { list ->
-                    items(list) {
-                        NoticeItem(it)
-                    }
+        val visible =
+            noticeList.value != null && noticeList.value!!.data != null && noticeList.value!!.data!!.isNotEmpty()
+        LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.largePadding)) {
+            if (visible) {
+                items(noticeList.value!!.data!!) {
+                    NoticeItem(it)
                 }
-                //查看更多
-                item {
-                    NoticeItem(
-                        AppNotice(
-                            "",
-                            "",
-                            -1,
-                            "",
-                            stringResource(R.string.visit_more_log),
-                            stringResource(R.string.update_log),
-                            -1,
-                            stringResource(R.string.readme)
-                        )
+            } else {
+                items(12) {
+                    NoticeItem(AppNotice())
+                }
+            }
+            //查看更多
+            item {
+                NoticeItem(
+                    AppNotice(
+                        "",
+                        "",
+                        -1,
+                        "",
+                        stringResource(R.string.visit_more_log),
+                        stringResource(R.string.update_log),
+                        -1,
+                        stringResource(R.string.readme)
                     )
-                }
-                item {
-                    CommonSpacer()
-                }
+                )
+            }
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部
@@ -102,6 +106,7 @@ fun NoticeList(
 @ExperimentalMaterialApi
 @Composable
 private fun NoticeItem(data: AppNotice) {
+    val placeholder = data.id == -1
     var exTitle = ""
     var exTitleColor = colorResource(id = R.color.news_update)
     var newVersion = false
@@ -123,21 +128,41 @@ private fun NoticeItem(data: AppNotice) {
         modifier = Modifier.padding(bottom = Dimen.mediuPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        MainTitleText(text = data.title)
+        MainTitleText(
+            text = data.title,
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            )
+        )
         if (exTitle != "") {
             MainTitleText(
                 text = exTitle,
                 backgroundColor = exTitleColor,
-                modifier = Modifier.padding(start = Dimen.smallPadding)
+                modifier = Modifier
+                    .padding(start = Dimen.smallPadding)
+                    .placeholder(
+                        visible = placeholder,
+                        highlight = PlaceholderHighlight.shimmer()
+                    )
             )
         }
     }
 
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
-        if (data.type == 0 || data.type == -1) {
-            openWebView(context, data.url)
+    MainCard(modifier = Modifier
+        .padding(bottom = Dimen.largePadding)
+        .placeholder(
+            visible = placeholder,
+            highlight = PlaceholderHighlight.shimmer()
+        ),
+        onClick = {
+            if (data.type == 0 || data.type == -1) {
+                if (!placeholder) {
+                    openWebView(context, data.url)
+                }
+            }
         }
-    }) {
+    ) {
         Column(modifier = Modifier.padding(Dimen.largePadding)) {
             //内容
             MainContentText(

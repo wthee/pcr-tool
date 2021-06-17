@@ -22,6 +22,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
@@ -40,6 +41,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
@@ -96,6 +100,11 @@ fun NewsList(
                                 navViewModel.loading.postValue(false)
                             }
                             NewsItem(pagerIndex + 2, news = it, toDetail)
+                        }
+                    }
+                    if (list.loadState.append == LoadState.Loading) {
+                        item {
+                            NewsItem(pagerIndex + 2, news = NewsTable(), toDetail)
                         }
                     }
                 }
@@ -161,6 +170,7 @@ private fun NewsItem(
     news: NewsTable,
     toDetail: (String, String, Int, String) -> Unit,
 ) {
+    val placeholder = news.title == ""
     val tag = news.getTag()
     val colorId = when (tag) {
         "公告", "更新" -> R.color.news_update
@@ -171,16 +181,32 @@ private fun NewsItem(
     Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
         MainTitleText(
             text = tag,
-            backgroundColor = colorResource(id = colorId)
+            backgroundColor = colorResource(id = colorId),
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            )
         )
         MainTitleText(
             text = news.date,
-            modifier = Modifier.padding(start = Dimen.smallPadding),
+            modifier = Modifier
+                .padding(start = Dimen.smallPadding)
+                .placeholder(
+                    visible = placeholder,
+                    highlight = PlaceholderHighlight.shimmer()
+                ),
         )
     }
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
-        toDetail(news.title.fix(), news.url.fix(), region, news.date)
-    }) {
+    MainCard(modifier = Modifier
+        .padding(bottom = Dimen.largePadding)
+        .placeholder(
+            visible = placeholder,
+            highlight = PlaceholderHighlight.shimmer()
+        ),
+        onClick = {
+            toDetail(news.title.fix(), news.url.fix(), region, news.date)
+        }
+    ) {
         //内容
         Subtitle1(
             text = news.title,
