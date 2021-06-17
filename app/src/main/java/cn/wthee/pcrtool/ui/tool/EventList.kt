@@ -112,7 +112,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             typeColor = colorResource(id = R.color.color_rank_7_10)
         }
         //预告
-        event.startTime.hourInt(today) > 0 || preEvent -> {
+        event.startTime.second(today) > 0 || preEvent -> {
             type = "预告"
             typeColor = colorResource(id = R.color.news_system)
         }
@@ -123,8 +123,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
     }
     val inProgress =
-        today.hourInt(event.startTime) > 0 && event.endTime.hourInt(today) > 0 && event.eventId / 10000 != 2
-    val comingSoon = today.hourInt(event.startTime) < 0 && (!preEvent)
+        today.second(event.startTime) > 0 && event.endTime.second(today) > 0 && event.eventId / 10000 != 2
+    val comingSoon = today.second(event.startTime) < 0 && (!preEvent)
 
     //标题
     Row(

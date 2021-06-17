@@ -79,17 +79,17 @@ fun String.dates(str2: String): String {
 }
 
 /**
- * 相差的小时数
+ * 相差的秒数
  */
-fun String.hourInt(str2: String): Int {
+fun String.second(str2: String): Long {
     return try {
         val d1 = df1.parse(this.formatTime())!!
         val d2 = df1.parse(str2.formatTime())!!
         // + 1s
         val time = d1.time - d2.time + 1000
-        (time / (60 * 60 * 1000.0)).int
+        time / 1000
     } catch (e: Exception) {
-        0
+        0L
     }
 }
 
