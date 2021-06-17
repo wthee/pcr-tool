@@ -75,8 +75,8 @@ fun LeaderboardList(
             }
             if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
                 //显示占位图
-                Column(modifier = Modifier.padding(Dimen.largePadding)) {
-                    for (i in 0..20) {
+                LazyColumn(contentPadding = PaddingValues(Dimen.largePadding)) {
+                    items(20) {
                         LeaderboardItem(LeaderboardData())
                     }
                 }
@@ -124,7 +124,10 @@ fun LeaderboardList(
                 text = stringResource(id = R.string.tool_leader)
             ) {
                 coroutineScope.launch {
-                    scrollState.scrollToItem(0)
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (e: Exception) {
+                    }
                 }
             }
         }

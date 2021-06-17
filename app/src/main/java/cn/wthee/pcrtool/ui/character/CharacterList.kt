@@ -113,6 +113,16 @@ fun CharacterList(
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
                 horizontalArrangement = Arrangement.End
             ) {
+                FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
+                    FabCompose(
+                        iconType = MainIconType.TOP,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        coroutineScope.launch {
+                            scrollState.scrollToItem(0)
+                        }
+                    }
+                }
                 //重置筛选
                 if (filter.value != null && filter.value!!.isFilter()) {
                     FabCompose(

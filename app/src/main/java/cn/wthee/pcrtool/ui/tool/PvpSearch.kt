@@ -156,7 +156,7 @@ fun PvpSearchCompose(
             MainTitleText(
                 text = stringResource(id = R.string.pcrdfans),
                 modifier = Modifier
-                    .padding(start = Dimen.largePadding)
+                    .padding(start = Dimen.largePadding, top = Dimen.largePadding)
                     .clickable {
                         openWebView(context, url, urlTip)
                     }

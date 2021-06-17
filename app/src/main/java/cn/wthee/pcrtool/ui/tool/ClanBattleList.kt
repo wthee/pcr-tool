@@ -81,10 +81,7 @@ fun ClanBattleList(
             }
         }
         FadeAnimation(visible = !visible) {
-            LazyColumn(
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
-            ) {
+            LazyColumn(contentPadding = PaddingValues(Dimen.largePadding)) {
                 items(20) {
                     ClanBattleItem(ClanBattleInfo(), toClanBossInfo)
                 }
@@ -99,7 +96,10 @@ fun ClanBattleList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                scrollState.scrollToItem(0)
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (e: Exception) {
+                }
             }
         }
     }

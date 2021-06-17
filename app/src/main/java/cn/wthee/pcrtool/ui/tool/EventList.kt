@@ -71,7 +71,10 @@ fun EventList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                scrollState.scrollToItem(0)
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (e: Exception) {
+                }
             }
         }
     }
