@@ -202,6 +202,16 @@ enum class MainIconType(val icon: ImageVector) {
     BROWSER(Icons.Rounded.OpenInBrowser),
 
     /**
+     * 悬浮窗
+     */
+    FLOAT(Icons.Rounded.CloseFullscreen),
+
+    /**
+     * 悬浮窗关闭
+     */
+    FLOAT_CLOSE(Icons.Rounded.Cancel),
+
+    /**
      * 静流笔记
      */
     NOTE(Icons.Rounded.Stream),

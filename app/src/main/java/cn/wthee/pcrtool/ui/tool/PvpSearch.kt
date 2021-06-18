@@ -1,5 +1,9 @@
 package cn.wthee.pcrtool.ui.tool
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -25,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -33,6 +38,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.service.PvpService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -55,6 +61,8 @@ import kotlin.math.round
 
 /**
  * 竞技场查询
+ *
+ * TODO 调整页面，适配悬浮窗
  */
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -64,6 +72,7 @@ import kotlin.math.round
 fun PvpSearchCompose(
     scrollState: LazyListState,
     toFavorite: () -> Unit,
+    floatWindow: Boolean = false,
     viewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
@@ -153,28 +162,32 @@ fun PvpSearchCompose(
 
         Column {
             //标题
-            MainTitleText(
-                text = stringResource(id = R.string.pcrdfans),
-                modifier = Modifier
-                    .padding(start = Dimen.largePadding, top = Dimen.largePadding)
-                    .clickable {
-                        openWebView(context, url, urlTip)
-                    }
-            )
+            if (!floatWindow) {
+                MainTitleText(
+                    text = stringResource(id = R.string.pcrdfans),
+                    modifier = Modifier
+                        .padding(start = Dimen.largePadding, top = Dimen.largePadding)
+                        .clickable {
+                            openWebView(context, url, urlTip)
+                        }
+                )
+            }
             //已选择列表
             Row(
                 modifier = Modifier
                     .padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding,
+                        top = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
+                        start = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
+                        end = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
                         bottom = Dimen.smallPadding
                     )
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 selectedIds.forEach {
-                    PvpIconItem(selectedIds = selectedIds, it = it)
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        PvpIconItem(selectedIds = selectedIds, it = it, floatWindow)
+                    }
                 }
             }
             //供选择列表
@@ -197,7 +210,11 @@ fun PvpSearchCompose(
                             pvpViewModel.getPVPData(idArray)
                             pvpViewModel.requesting.postValue(true)
                             val result = pvpViewModel.pvpResult.observeAsState().value
-                            PvpSearchResult(selectedIds.subList(0, 5).getIdStr(), result)
+                            PvpSearchResult(
+                                selectedIds.subList(0, 5).getIdStr(),
+                                result,
+                                floatWindow
+                            )
                         } else {
                             //选择页面
                             data.value?.let { dataValue ->
@@ -264,7 +281,7 @@ fun PvpSearchCompose(
                                             }
                                         }
                                         items(character0) {
-                                            PvpIconItem(selectedIds, it)
+                                            PvpIconItem(selectedIds, it, floatWindow)
                                         }
                                         //中
                                         items(filledCount1) {
@@ -276,7 +293,7 @@ fun PvpSearchCompose(
                                             }
                                         }
                                         items(character1) {
-                                            PvpIconItem(selectedIds, it)
+                                            PvpIconItem(selectedIds, it, floatWindow)
                                         }
                                         //后
                                         items(filledCount2 % spanCount) {
@@ -288,7 +305,7 @@ fun PvpSearchCompose(
                                             }
                                         }
                                         items(character2) {
-                                            PvpIconItem(selectedIds, it)
+                                            PvpIconItem(selectedIds, it, floatWindow)
                                         }
                                         items(spanCount) {
                                             Spacer(modifier = Modifier.height(Dimen.iconSize))
@@ -346,53 +363,98 @@ fun PvpSearchCompose(
         }
         //底部悬浮按钮
         if (!showResult.value) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            Column(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                horizontalAlignment = Alignment.End
             ) {
-                //跳转
-                FabCompose(
-                    iconType = MainIconType.FRIEND_LINK,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                Row(
+                    modifier = Modifier
+                        .padding(end = Dimen.fabMargin, bottom = Dimen.fabMargin)
                 ) {
-                    //打开网页
-                    openWebView(context, url, urlTip)
-                }
-                //收藏
-                FabCompose(
-                    iconType = MainIconType.LOVE_FILL,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                ) {
-                    toFavorite()
-                }
-                //添加信息
-                val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
-                val addTip = stringResource(id = R.string.pvp_info_add_tip)
-                FabCompose(
-                    iconType = MainIconType.PVP_ADD,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                ) {
-                    //打开网页
-                    openWebView(context, addUrl, addTip)
-                }
-                //查询
-                val tip = stringResource(id = R.string.tip_select_5)
-                FabCompose(
-                    iconType = MainIconType.PVP_SEARCH,
-                    text = stringResource(id = R.string.pvp_search)
-                ) {
-                    //查询
-                    scope.launch {
-                        if (selectedIds.contains(PvpCharacterData())) {
-                            ToastUtil.short(tip)
+                    //悬浮窗
+                    FabCompose(
+                        iconType = if (floatWindow) MainIconType.FLOAT_CLOSE else MainIconType.FLOAT,
+                        defaultPadding = false
+                    ) {
+                        val serviceIntent = Intent(context, PvpService::class.java)
+                        val homeIntent = Intent(Intent.ACTION_MAIN)
+                        homeIntent.addCategory(Intent.CATEGORY_HOME)
+
+                        if (floatWindow) {
+                            //结束悬浮窗服务
+                            context.stopService(serviceIntent)
                         } else {
-                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            showResult.value = true
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Settings.canDrawOverlays(context)) {
+                                    //启动悬浮服务
+                                    context.startService(serviceIntent)
+                                    context.startActivity(homeIntent)
+                                } else {
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:${MyApplication.context.packageName}")
+                                    )
+                                    context.startActivity(intent)
+                                }
+                            } else {
+                                context.startService(serviceIntent)
+                                context.startActivity(homeIntent)
+                            }
+
+                        }
+
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
+                    //跳转
+                    if (!floatWindow) {
+                        FabCompose(
+                            iconType = MainIconType.FRIEND_LINK,
+                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        ) {
+                            //打开网页
+                            openWebView(context, url, urlTip)
+                        }
+                    }
+                    //收藏
+                    FabCompose(
+                        iconType = MainIconType.LOVE_FILL,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        toFavorite()
+                    }
+                    //添加信息
+                    val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
+                    val addTip = stringResource(id = R.string.pvp_info_add_tip)
+                    FabCompose(
+                        iconType = MainIconType.PVP_ADD,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        //打开网页
+                        openWebView(context, addUrl, addTip)
+                    }
+                    //查询
+                    val tip = stringResource(id = R.string.tip_select_5)
+                    FabCompose(
+                        iconType = MainIconType.PVP_SEARCH,
+                        text = stringResource(id = R.string.pvp_search)
+                    ) {
+                        //查询
+                        scope.launch {
+                            if (selectedIds.contains(PvpCharacterData())) {
+                                ToastUtil.short(tip)
+                            } else {
+                                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                                showResult.value = true
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 
@@ -418,12 +480,16 @@ private fun PvpPositionIcon(iconId: Int) {
 @Composable
 fun PvpIconItem(
     selectedIds: SnapshotStateList<PvpCharacterData>,
-    it: PvpCharacterData
+    it: PvpCharacterData,
+    floatWindow: Boolean
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(Dimen.smallPadding)
+    ) {
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {
@@ -456,15 +522,17 @@ fun PvpIconItem(
             selectedIds.sortByDescending { it.position }
         }
         //位置
-        val text =
-            if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
-        Text(
-            text = text,
-            color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-            style = MaterialTheme.typography.subtitle2,
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
-        )
+        if (!floatWindow) {
+            val text =
+                if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
+            Text(
+                text = text,
+                color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(bottom = Dimen.smallPadding)
+            )
+        }
     }
 }
 
@@ -477,6 +545,7 @@ fun PvpIconItem(
 fun PvpSearchResult(
     defIds: String,
     result: ResponseData<List<PvpResultData>>?,
+    floatWindow: Boolean,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
     val placeholder = result == null
@@ -491,6 +560,7 @@ fun PvpSearchResult(
     val vibrated = remember {
         mutableStateOf(false)
     }
+    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
 
     if (favorites.value != null) {
         SideEffect {
@@ -522,8 +592,8 @@ fun PvpSearchResult(
                                 //展示查询结果
                                 LazyColumn(
                                     contentPadding = PaddingValues(
-                                        start = Dimen.mediuPadding,
-                                        end = Dimen.mediuPadding
+                                        start = mediuPadding,
+                                        end = mediuPadding
                                     )
                                 ) {
                                     itemsIndexed(items = list) { index, item ->
@@ -532,6 +602,7 @@ fun PvpSearchResult(
                                             index + 1,
                                             item,
                                             region,
+                                            floatWindow,
                                             pvpViewModel
                                         )
                                     }
@@ -563,8 +634,8 @@ fun PvpSearchResult(
                     //展示查询结果
                     LazyColumn(
                         contentPadding = PaddingValues(
-                            start = Dimen.mediuPadding,
-                            end = Dimen.mediuPadding
+                            start = mediuPadding,
+                            end = mediuPadding
                         )
                     ) {
                         items(10) {
@@ -573,6 +644,7 @@ fun PvpSearchResult(
                                 0,
                                 PvpResultData(),
                                 region,
+                                floatWindow,
                                 pvpViewModel
                             )
                         }
@@ -598,6 +670,7 @@ private fun PvpAtkTeam(
     i: Int,
     item: PvpResultData,
     region: Int,
+    floatWindow: Boolean,
     viewModel: PvpViewModel
 ) {
     val placeholder = item.id == ""
@@ -606,16 +679,18 @@ private fun PvpAtkTeam(
         mutableStateOf(favoritesList.contains(item.atk))
     }
 
+    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimen.mediuPadding)
+            .padding(mediuPadding)
     ) {
         Row {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
                 modifier = Modifier
-                    .padding(bottom = Dimen.mediuPadding)
+                    .padding(bottom = mediuPadding)
                     .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -664,8 +739,8 @@ private fun PvpAtkTeam(
             }
             Column(
                 modifier = Modifier.padding(
-                    start = Dimen.mediuPadding,
-                    end = Dimen.mediuPadding
+                    start = mediuPadding,
+                    end = mediuPadding
                 )
             ) {
                 //点赞信息
@@ -696,17 +771,24 @@ private fun PvpAtkTeam(
                 //进攻
                 Row(
                     modifier = Modifier
-                        .padding(bottom = Dimen.largePadding)
+                        .padding(bottom = if (floatWindow) Dimen.smallPadding else Dimen.largePadding)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     item.getIdList(0).forEachIndexed { index, it ->
-                        IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
-                                it,
-                                MainActivity.r6Ids.contains(it)
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(Dimen.smallPadding),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            IconCompose(
+                                data = CharacterIdUtil.getMaxIconUrl(
+                                    it,
+                                    MainActivity.r6Ids.contains(it)
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

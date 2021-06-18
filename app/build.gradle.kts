@@ -85,6 +85,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("androidx.fragment:fragment:1.3.5")
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
@@ -127,6 +129,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
