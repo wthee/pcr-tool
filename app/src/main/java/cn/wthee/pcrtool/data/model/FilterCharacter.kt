@@ -19,7 +19,8 @@ class FilterCharacter(
     var guild: Int = 0,
     var sortType: SortType = SortType.SORT_DATE,
     var name: String = "",
-    var asc: Boolean = false
+    var asc: Boolean = false,
+    var type: Int = 0 // 1:常驻 2：限定 3：活动限定
 ) {
     var starIds = arrayListOf<Int>()
         set(value) {
@@ -45,13 +46,6 @@ class FilterCharacter(
         sp.edit {
             putString(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
         }
-//        MainScope().launch {
-//            DataStoreUtil.save(Constants.SP_STAR_CHARACTER, Gson().toJson(list))
-////            DataStoreUtil.get(Constants.SP_STAR_CHARACTER).collect { str ->
-////                val newStarIds = DataStoreUtil.fromJson<ArrayList<Int>>(str)
-////                starIds = newStarIds ?: arrayListOf()
-////            }
-//        }
     }
 
     fun position() = when (this.positon) {
@@ -67,5 +61,5 @@ class FilterCharacter(
  * 是否有过滤
  */
 fun FilterCharacter.isFilter(): Boolean {
-    return !(all && positon == 0 && atk == 0 && (!r6) && guild == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc))
+    return !(all && positon == 0 && atk == 0 && (!r6) && guild == 0 && sortType == SortType.SORT_DATE && name == "" && (!asc) && type == 0)
 }

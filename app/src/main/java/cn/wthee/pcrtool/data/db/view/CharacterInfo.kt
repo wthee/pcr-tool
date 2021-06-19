@@ -9,6 +9,8 @@ import androidx.room.ColumnInfo
 data class CharacterInfo(
     @ColumnInfo(name = "unit_id") val id: Int,
     @ColumnInfo(name = "unit_name") val name: String,
+    @ColumnInfo(name = "is_limited") val isLimited: Int,
+    @ColumnInfo(name = "rarity") val rarity: Int,
     @ColumnInfo(name = "kana") val kana: String,
     @ColumnInfo(name = "age_int") val age: String,
     @ColumnInfo(name = "guild") val guild: String,

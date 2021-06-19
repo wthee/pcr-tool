@@ -297,6 +297,12 @@ private fun FilterCharacterSheet(
     }
     filter.guild = guildIndex.value
 
+    //限定类型
+    val typeIndex = remember {
+        mutableStateOf(filter.type)
+    }
+    filter.type = typeIndex.value
+
     //确认操作
     val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
     val reset = navViewModel.resetClick.observeAsState().value ?: false
@@ -318,6 +324,7 @@ private fun FilterCharacterSheet(
             positionIndex.value = 0
             atkIndex.value = 0
             guildIndex.value = 0
+            typeIndex.value = 0
             navViewModel.resetClick.postValue(false)
             navViewModel.filterCharacter.postValue(FilterCharacter())
         }
@@ -410,6 +417,22 @@ private fun FilterCharacterSheet(
         ChipGroup(
             loveChipData,
             loveIndex,
+            modifier = Modifier.padding(Dimen.smallPadding),
+        )
+        //类型
+        MainText(
+            text = stringResource(id = R.string.title_type),
+            modifier = Modifier.padding(top = Dimen.largePadding)
+        )
+        val typeChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.all)),
+            ChipData(1, stringResource(id = R.string.type_normal)),
+            ChipData(2, stringResource(id = R.string.type_limit)),
+            ChipData(3, stringResource(id = R.string.type_event_limit)),
+        )
+        ChipGroup(
+            typeChipData,
+            typeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //六星
