@@ -64,7 +64,6 @@ object Navigation {
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_CALENDAR = "toolCalendar"
     const val TOOL_PVP = "toolPvpSearch"
-    const val TOOL_PVP_FAVORITE = "toolPvpFavorite"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
     const val TOOL_NEWS_TITLE = "toolNewsTitle"
@@ -308,17 +307,9 @@ fun NavGraph(
 
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
-            val scrollState = rememberLazyListState()
             PvpSearchCompose(
-                scrollState, toFavorite = actions.toPvpFavorite,
+                toCharacter = actions.toCharacterDetail
             )
-        }
-
-        //竞技场收藏
-        composable(Navigation.TOOL_PVP_FAVORITE) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val scrollState = rememberLazyListState()
-            PvpFavorites(scrollState, actions.toCharacterDetail, actions.toPvpResearch)
         }
 
         //设置页面
@@ -453,20 +444,6 @@ class NavActions(navController: NavHostController) {
         { title: String, url: String, region: Int, date: String ->
             navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${title}/${region}/${url}/${date}")
         }
-
-    /**
-     * 竞技场重新查询
-     */
-    val toPvpResearch = {
-        navController.navigateUp()
-    }
-
-    /**
-     * 竞技场收藏
-     */
-    val toPvpFavorite = {
-        navController.navigate(Navigation.TOOL_PVP_FAVORITE)
-    }
 
     /**
      * 卡池
@@ -614,7 +591,7 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 竞技场查询id
      */
-    val selectedIds = MutableLiveData<String>()
+    val idsFromFavorite = MutableLiveData<String>()
 
     /**
      * rank 选择，当前
@@ -625,4 +602,20 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * rank 选择，目标
      */
     var targetRank = MutableLiveData(0)
+
+    /**
+     * 悬浮服务
+     */
+    val floatServiceRun = MutableLiveData(true)
+
+    /**
+     * 悬浮闯最小化
+     */
+    val floatSearchMin = MutableLiveData(false)
+
+    /**
+     * pvp 查询结果显示
+     */
+    val showResult = MutableLiveData(false)
+
 }

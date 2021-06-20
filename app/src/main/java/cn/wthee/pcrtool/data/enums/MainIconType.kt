@@ -209,7 +209,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 悬浮窗关闭
      */
-    FLOAT_CLOSE(Icons.Rounded.Cancel),
+    FLOAT_CLOSE(Icons.Rounded.ExitToApp),
 
     /**
      * 静流笔记

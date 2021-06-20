@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,6 +31,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.actions
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
@@ -62,6 +64,8 @@ class MainActivity : ComponentActivity() {
         lateinit var navViewModel: NavViewModel
         lateinit var noticeViewModel: NoticeViewModel
         lateinit var actions: NavActions
+        var mFloatingWindowHeight = 0
+        lateinit var navController: NavHostController
         var vibrateOn = true
         var animOn = true
         var r6Ids = listOf<Int>()
@@ -103,6 +107,13 @@ class MainActivity : ComponentActivity() {
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        val width = ScreenUtil.getWidth()
+        val height = ScreenUtil.getHeight()
+        mFloatingWindowHeight = if (width > height) height - 48f.dp2px else width - 48f.dp2px
+        super.onConfigurationChanged(newConfig)
     }
 
     //返回拦截
@@ -149,7 +160,7 @@ fun Home(
     mNavViewModel: NavViewModel = hiltViewModel(),
     mNoticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
-    val navController = rememberNavController()
+    navController = rememberNavController()
     actions = remember(navController) { NavActions(navController) }
     navViewModel = mNavViewModel
     noticeViewModel = mNoticeViewModel
@@ -178,7 +189,6 @@ fun Home(
         MoreFabCompose(navViewModel)
         Column(modifier = Modifier.align(Alignment.BottomEnd)) {
             FabMain(
-                navController,
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(Dimen.fabMargin)
@@ -196,7 +206,7 @@ fun Home(
 
 @ExperimentalAnimationApi
 @Composable
-fun FabMain(navController: NavHostController, modifier: Modifier) {
+fun FabMain(modifier: Modifier = Modifier) {
     val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
 
     FabCompose(icon, modifier = modifier) {
