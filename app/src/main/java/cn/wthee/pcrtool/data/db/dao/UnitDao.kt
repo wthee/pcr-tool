@@ -12,34 +12,6 @@ import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 
-//角色筛选条件
-const val characterWhere =
-    """ 
-        WHERE 
-            unit_profile.unit_name like '%' || :unitName || '%'
-        AND (
-            (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-            OR 
-            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-        )
-        AND 1 = CASE
-            WHEN  0 = :r6  THEN 1
-            WHEN  rarity_6_quest_id != 0 AND 1 = :r6  THEN 1 
-        END
-        AND unit_profile.unit_id < 200000 
-        AND 1 = CASE
-            WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
-        END
-        AND 1 = CASE
-            WHEN  0 = :atkType  THEN 1
-            WHEN  unit_data.atk_type = :atkType  THEN 1 
-        END
-        AND 1 = CASE
-            WHEN  "全部" = :guild  THEN 1 
-            WHEN  unit_profile.guild = :guild  THEN 1 
-        END     
-    """
-
 /**
  * 角色数据 DAO
  */
@@ -65,6 +37,8 @@ interface UnitDao {
         SELECT
             unit_profile.unit_id,
             unit_profile.unit_name,
+            unit_data.is_limited,
+            unit_data.rarity,
             COALESCE( unit_data.kana, "" ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
@@ -79,8 +53,35 @@ interface UnitDao {
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
-
-        $characterWhere
+        WHERE 
+            unit_profile.unit_name like '%' || :unitName || '%'
+        AND (
+            (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
+            OR 
+            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
+        )
+        AND 1 = CASE
+            WHEN  0 = :r6  THEN 1
+            WHEN  rarity_6_quest_id != 0 AND 1 = :r6  THEN 1 
+        END
+        AND unit_profile.unit_id < 200000 
+        AND 1 = CASE
+            WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  0 = :atkType  THEN 1
+            WHEN  unit_data.atk_type = :atkType  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  "全部" = :guild  THEN 1 
+            WHEN  unit_profile.guild = :guild  THEN 1 
+        END     
+        AND 1 = CASE
+            WHEN  0 = :type  THEN 1
+            WHEN  1 = :type AND is_limited = 0 THEN 1 
+            WHEN  2 = :type AND is_limited = 1 AND rarity = 3 THEN 1 
+            WHEN  3 = :type AND is_limited = 1 AND rarity = 1 THEN 1 
+        END
         ORDER BY 
         CASE WHEN :sortType = 0 AND :asc = 'asc'  THEN start_time END ASC,
         CASE WHEN :sortType = 0 AND :asc = 'desc'  THEN start_time END DESC,
@@ -96,7 +97,8 @@ interface UnitDao {
     )
     suspend fun getInfoAndData(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>
+        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>,
+        type: Int
     ): List<CharacterInfo>
 
 
@@ -109,7 +111,8 @@ interface UnitDao {
         SELECT
             unit_profile.unit_id,
             unit_profile.unit_name,
-            COALESCE( unit_data.kana, "" ) AS kana,
+            unit_data.is_limited,
+            unit_data.rarity,COALESCE( unit_data.kana, "" ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
             unit_profile.race,

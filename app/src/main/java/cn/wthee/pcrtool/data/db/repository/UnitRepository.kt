@@ -21,7 +21,8 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         guildName,
         if (filter.all) 1 else 0,
         if (filter.r6) 1 else 0,
-        filter.starIds
+        filter.starIds,
+        filter.type
     )
 
     suspend fun getInfoAndData(limit: Int) = unitDao.getInfoAndData(limit)

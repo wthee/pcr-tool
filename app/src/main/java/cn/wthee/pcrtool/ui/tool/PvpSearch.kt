@@ -1,5 +1,9 @@
 package cn.wthee.pcrtool.ui.tool
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -25,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -33,6 +38,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.service.PvpService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -43,6 +49,9 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import com.google.gson.JsonArray
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -52,6 +61,8 @@ import kotlin.math.round
 
 /**
  * 竞技场查询
+ *
+ * TODO 调整页面，适配悬浮窗
  */
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -61,6 +72,7 @@ import kotlin.math.round
 fun PvpSearchCompose(
     scrollState: LazyListState,
     toFavorite: () -> Unit,
+    floatWindow: Boolean = false,
     viewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
@@ -120,7 +132,6 @@ fun PvpSearchCompose(
     if (close) {
         showResult.value = false
         research.value = false
-        navViewModel.loading.postValue(false)
         navViewModel.fabCloseClick.postValue(false)
         navViewModel.selectedIds.postValue("")
         pvpViewModel.pvpResult.postValue(null)
@@ -151,28 +162,32 @@ fun PvpSearchCompose(
 
         Column {
             //标题
-            MainTitleText(
-                text = stringResource(id = R.string.pcrdfans),
-                modifier = Modifier
-                    .padding(start = Dimen.largePadding)
-                    .clickable {
-                        openWebView(context, url, urlTip)
-                    }
-            )
+            if (!floatWindow) {
+                MainTitleText(
+                    text = stringResource(id = R.string.pcrdfans),
+                    modifier = Modifier
+                        .padding(start = Dimen.largePadding, top = Dimen.largePadding)
+                        .clickable {
+                            openWebView(context, url, urlTip)
+                        }
+                )
+            }
             //已选择列表
             Row(
                 modifier = Modifier
                     .padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding,
+                        top = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
+                        start = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
+                        end = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
                         bottom = Dimen.smallPadding
                     )
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 selectedIds.forEach {
-                    PvpIconItem(selectedIds = selectedIds, it = it)
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        PvpIconItem(selectedIds = selectedIds, it = it, floatWindow)
+                    }
                 }
             }
             //供选择列表
@@ -188,7 +203,6 @@ fun PvpSearchCompose(
                     ) {
                         if (showResult.value) {
                             //展示搜索结果
-                            navViewModel.loading.postValue(true)
                             val idArray = JsonArray()
                             for (sel in selectedIds.subList(0, 5)) {
                                 idArray.add(sel.unitId)
@@ -196,11 +210,11 @@ fun PvpSearchCompose(
                             pvpViewModel.getPVPData(idArray)
                             pvpViewModel.requesting.postValue(true)
                             val result = pvpViewModel.pvpResult.observeAsState().value
-                            if (result != null) {
-                                navViewModel.loading.postValue(false)
-                                PvpSearchResult(selectedIds.subList(0, 5).getIdStr(), result)
-                            }
-
+                            PvpSearchResult(
+                                selectedIds.subList(0, 5).getIdStr(),
+                                result,
+                                floatWindow
+                            )
                         } else {
                             //选择页面
                             data.value?.let { dataValue ->
@@ -267,7 +281,7 @@ fun PvpSearchCompose(
                                             }
                                         }
                                         items(character0) {
-                                            PvpIconItem(selectedIds, it)
+                                            PvpIconItem(selectedIds, it, floatWindow)
                                         }
                                         //中
                                         items(filledCount1) {
@@ -279,7 +293,7 @@ fun PvpSearchCompose(
                                             }
                                         }
                                         items(character1) {
-                                            PvpIconItem(selectedIds, it)
+                                            PvpIconItem(selectedIds, it, floatWindow)
                                         }
                                         //后
                                         items(filledCount2 % spanCount) {
@@ -291,7 +305,7 @@ fun PvpSearchCompose(
                                             }
                                         }
                                         items(character2) {
-                                            PvpIconItem(selectedIds, it)
+                                            PvpIconItem(selectedIds, it, floatWindow)
                                         }
                                         items(spanCount) {
                                             Spacer(modifier = Modifier.height(Dimen.iconSize))
@@ -349,53 +363,98 @@ fun PvpSearchCompose(
         }
         //底部悬浮按钮
         if (!showResult.value) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+            Column(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                horizontalAlignment = Alignment.End
             ) {
-                //跳转
-                FabCompose(
-                    iconType = MainIconType.FRIEND_LINK,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                Row(
+                    modifier = Modifier
+                        .padding(end = Dimen.fabMargin, bottom = Dimen.fabMargin)
                 ) {
-                    //打开网页
-                    openWebView(context, url, urlTip)
-                }
-                //收藏
-                FabCompose(
-                    iconType = MainIconType.LOVE_FILL,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                ) {
-                    toFavorite()
-                }
-                //添加信息
-                val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
-                val addTip = stringResource(id = R.string.pvp_info_add_tip)
-                FabCompose(
-                    iconType = MainIconType.PVP_ADD,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
-                ) {
-                    //打开网页
-                    openWebView(context, addUrl, addTip)
-                }
-                //查询
-                val tip = stringResource(id = R.string.tip_select_5)
-                FabCompose(
-                    iconType = MainIconType.PVP_SEARCH,
-                    text = stringResource(id = R.string.pvp_search)
-                ) {
-                    //查询
-                    scope.launch {
-                        if (selectedIds.contains(PvpCharacterData())) {
-                            ToastUtil.short(tip)
+                    //悬浮窗
+                    FabCompose(
+                        iconType = if (floatWindow) MainIconType.FLOAT_CLOSE else MainIconType.FLOAT,
+                        defaultPadding = false
+                    ) {
+                        val serviceIntent = Intent(context, PvpService::class.java)
+                        val homeIntent = Intent(Intent.ACTION_MAIN)
+                        homeIntent.addCategory(Intent.CATEGORY_HOME)
+
+                        if (floatWindow) {
+                            //结束悬浮窗服务
+                            context.stopService(serviceIntent)
                         } else {
-                            navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                            showResult.value = true
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Settings.canDrawOverlays(context)) {
+                                    //启动悬浮服务
+                                    context.startService(serviceIntent)
+                                    context.startActivity(homeIntent)
+                                } else {
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:${MyApplication.context.packageName}")
+                                    )
+                                    context.startActivity(intent)
+                                }
+                            } else {
+                                context.startService(serviceIntent)
+                                context.startActivity(homeIntent)
+                            }
+
+                        }
+
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
+                ) {
+                    //跳转
+                    if (!floatWindow) {
+                        FabCompose(
+                            iconType = MainIconType.FRIEND_LINK,
+                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        ) {
+                            //打开网页
+                            openWebView(context, url, urlTip)
+                        }
+                    }
+                    //收藏
+                    FabCompose(
+                        iconType = MainIconType.LOVE_FILL,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        toFavorite()
+                    }
+                    //添加信息
+                    val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
+                    val addTip = stringResource(id = R.string.pvp_info_add_tip)
+                    FabCompose(
+                        iconType = MainIconType.PVP_ADD,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        //打开网页
+                        openWebView(context, addUrl, addTip)
+                    }
+                    //查询
+                    val tip = stringResource(id = R.string.tip_select_5)
+                    FabCompose(
+                        iconType = MainIconType.PVP_SEARCH,
+                        text = stringResource(id = R.string.pvp_search)
+                    ) {
+                        //查询
+                        scope.launch {
+                            if (selectedIds.contains(PvpCharacterData())) {
+                                ToastUtil.short(tip)
+                            } else {
+                                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                                showResult.value = true
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 
@@ -421,12 +480,16 @@ private fun PvpPositionIcon(iconId: Int) {
 @Composable
 fun PvpIconItem(
     selectedIds: SnapshotStateList<PvpCharacterData>,
-    it: PvpCharacterData
+    it: PvpCharacterData,
+    floatWindow: Boolean
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(Dimen.smallPadding)
+    ) {
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {
@@ -459,15 +522,17 @@ fun PvpIconItem(
             selectedIds.sortByDescending { it.position }
         }
         //位置
-        val text =
-            if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
-        Text(
-            text = text,
-            color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-            style = MaterialTheme.typography.subtitle2,
-            modifier = Modifier.padding(bottom = Dimen.mediuPadding)
-        )
+        if (!floatWindow) {
+            val text =
+                if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
+            Text(
+                text = text,
+                color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier.padding(bottom = Dimen.smallPadding)
+            )
+        }
     }
 }
 
@@ -479,9 +544,11 @@ fun PvpIconItem(
 @Composable
 fun PvpSearchResult(
     defIds: String,
-    result: ResponseData<List<PvpResultData>>,
+    result: ResponseData<List<PvpResultData>>?,
+    floatWindow: Boolean,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
+    val placeholder = result == null
     val region = getRegion()
     pvpViewModel.getFavoritesList(defIds, region)
     //结果
@@ -493,6 +560,7 @@ fun PvpSearchResult(
     val vibrated = remember {
         mutableStateOf(false)
     }
+    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
 
     if (favorites.value != null) {
         SideEffect {
@@ -502,58 +570,91 @@ fun PvpSearchResult(
                 }
             }
         }
+
         Box(modifier = Modifier.fillMaxSize()) {
-            navViewModel.loading.postValue(false)
-            if (result.message == "success") {
-                //振动提醒
-                if (!vibrated.value) {
-                    vibrated.value = true
-                    VibrateUtil(context).done()
-                }
-                val success = result.data!!.isNotEmpty()
-                if (success) {
-                    //查询成功
-                    val list = result.data!!.sortedByDescending { it.up }
-                    SlideAnimation(visible = success) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            //展示查询结果
-                            LazyColumn(
-                                contentPadding = PaddingValues(
-                                    start = Dimen.mediuPadding,
-                                    end = Dimen.mediuPadding
-                                )
+            if (!placeholder) {
+                if (result!!.message == "success") {
+                    //振动提醒
+                    if (!vibrated.value) {
+                        vibrated.value = true
+                        VibrateUtil(context).done()
+                    }
+                    val hasData = result.data!!.isNotEmpty()
+                    if (hasData) {
+                        //查询成功
+                        val list = result.data!!.sortedByDescending { it.up }
+                        FadeAnimation(visible = hasData) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .fillMaxSize()
                             ) {
-                                itemsIndexed(items = list) { index, item ->
-                                    PvpAtkTeam(
-                                        favoritesList,
-                                        index + 1,
-                                        item,
-                                        region,
-                                        pvpViewModel
+                                //展示查询结果
+                                LazyColumn(
+                                    contentPadding = PaddingValues(
+                                        start = mediuPadding,
+                                        end = mediuPadding
                                     )
-                                }
-                                item {
-                                    CommonSpacer()
+                                ) {
+                                    itemsIndexed(items = list) { index, item ->
+                                        PvpAtkTeam(
+                                            favoritesList,
+                                            index + 1,
+                                            item,
+                                            region,
+                                            floatWindow,
+                                            pvpViewModel
+                                        )
+                                    }
+                                    item {
+                                        CommonSpacer()
+                                    }
                                 }
                             }
                         }
+                    } else {
+                        MainText(
+                            text = stringResource(id = R.string.pvp_no_data),
+                            modifier = Modifier.align(Alignment.Center)
+                        )
                     }
                 } else {
                     MainText(
-                        text = stringResource(id = R.string.pvp_no_data),
+                        text = stringResource(id = R.string.data_get_error),
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
             } else {
-                MainText(
-                    text = stringResource(id = R.string.data_get_error),
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                //占位图
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    //展示查询结果
+                    LazyColumn(
+                        contentPadding = PaddingValues(
+                            start = mediuPadding,
+                            end = mediuPadding
+                        )
+                    ) {
+                        items(10) {
+                            PvpAtkTeam(
+                                favoritesList,
+                                0,
+                                PvpResultData(),
+                                region,
+                                floatWindow,
+                                pvpViewModel
+                            )
+                        }
+                        item {
+                            CommonSpacer()
+                        }
+                    }
+                }
             }
+
         }
     }
 
@@ -569,22 +670,28 @@ private fun PvpAtkTeam(
     i: Int,
     item: PvpResultData,
     region: Int,
+    floatWindow: Boolean,
     viewModel: PvpViewModel
 ) {
+    val placeholder = item.id == ""
     val scope = rememberCoroutineScope()
     val favorites = remember {
         mutableStateOf(favoritesList.contains(item.atk))
     }
 
+    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimen.mediuPadding)
+            .padding(mediuPadding)
     ) {
         Row {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
-                modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+                modifier = Modifier
+                    .padding(bottom = mediuPadding)
+                    .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
             )
             Spacer(modifier = Modifier.weight(1f))
             //收藏
@@ -592,41 +699,48 @@ private fun PvpAtkTeam(
                 data = if (favorites.value) MainIconType.LOVE_FILL.icon else MainIconType.LOVE_LINE.icon,
                 size = Dimen.fabIconSize
             ) {
-                scope.launch {
-                    if (favorites.value) {
-                        //已收藏，取消收藏
-                        viewModel.delete(item.atk, item.def, region)
-                    } else {
-                        //未收藏，添加收藏
-                        val simpleDateFormat =
-                            SimpleDateFormat(
-                                "yyyy/MM/dd HH:mm:ss.SSS",
-                                Locale.CHINESE
+                if (!placeholder) {
+                    scope.launch {
+                        if (favorites.value) {
+                            //已收藏，取消收藏
+                            viewModel.delete(item.atk, item.def, region)
+                        } else {
+                            //未收藏，添加收藏
+                            val simpleDateFormat =
+                                SimpleDateFormat(
+                                    "yyyy/MM/dd HH:mm:ss.SSS",
+                                    Locale.CHINESE
+                                )
+                            val date = Date(System.currentTimeMillis())
+                            viewModel.insert(
+                                PvpFavoriteData(
+                                    item.id,
+                                    item.atk,
+                                    item.def,
+                                    simpleDateFormat.format(date),
+                                    region
+                                )
                             )
-                        val date = Date(System.currentTimeMillis())
-                        viewModel.insert(
-                            PvpFavoriteData(
-                                item.id,
-                                item.atk,
-                                item.def,
-                                simpleDateFormat.format(date),
-                                region
-                            )
-                        )
+                        }
+                        favorites.value = !favorites.value
                     }
-                    favorites.value = !favorites.value
                 }
             }
         }
 
-        MainCard {
+        MainCard(
+            modifier = Modifier.placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            )
+        ) {
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
             }
             Column(
                 modifier = Modifier.padding(
-                    start = Dimen.mediuPadding,
-                    end = Dimen.mediuPadding
+                    start = mediuPadding,
+                    end = mediuPadding
                 )
             ) {
                 //点赞信息
@@ -657,17 +771,24 @@ private fun PvpAtkTeam(
                 //进攻
                 Row(
                     modifier = Modifier
-                        .padding(bottom = Dimen.largePadding)
+                        .padding(bottom = if (floatWindow) Dimen.smallPadding else Dimen.largePadding)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     item.getIdList(0).forEachIndexed { index, it ->
-                        IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
-                                it,
-                                MainActivity.r6Ids.contains(it)
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(Dimen.smallPadding),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            IconCompose(
+                                data = CharacterIdUtil.getMaxIconUrl(
+                                    it,
+                                    MainActivity.r6Ids.contains(it)
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }

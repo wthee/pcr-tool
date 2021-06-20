@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.ui.MainActivity.Companion.actions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
         lateinit var handler: Handler
         lateinit var navViewModel: NavViewModel
         lateinit var noticeViewModel: NoticeViewModel
+        lateinit var actions: NavActions
         var vibrateOn = true
         var animOn = true
         var r6Ids = listOf<Int>()
@@ -148,7 +150,7 @@ fun Home(
     mNoticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
-    val actions = remember(navController) { NavActions(navController) }
+    actions = remember(navController) { NavActions(navController) }
     navViewModel = mNavViewModel
     noticeViewModel = mNoticeViewModel
 

@@ -79,7 +79,10 @@ fun CalendarCompose(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                scrollState.scrollToItem(0)
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (e: Exception) {
+                }
             }
         }
     }
@@ -95,8 +98,8 @@ fun CalendarItem(calendar: CalendarEvent) {
     val today = getToday()
     val sd = calendar.startTime.formatTime()
     val ed = calendar.endTime.formatTime()
-    val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
-    val comingSoon = today.hourInt(sd) < 0
+    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
+    val comingSoon = today.second(sd) < 0
 
     val color = when {
         inProgress -> {

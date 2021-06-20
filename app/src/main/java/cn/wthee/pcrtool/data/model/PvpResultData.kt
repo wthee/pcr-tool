@@ -4,12 +4,12 @@ package cn.wthee.pcrtool.data.model
  * 竞技场查询结果
  */
 data class PvpResultData(
-    val atk: String,
-    val def: String,
-    val down: Int,
-    val id: String,
-    val region: Int,
-    val up: Int
+    val atk: String = "",
+    val def: String = "",
+    val down: Int = 0,
+    val id: String = "",
+    val region: Int = 2,
+    val up: Int = 0
 ) {
 
     /**

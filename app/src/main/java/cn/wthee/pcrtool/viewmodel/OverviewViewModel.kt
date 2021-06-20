@@ -15,7 +15,7 @@ import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.utils.hourInt
+import cn.wthee.pcrtool.utils.second
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -75,12 +75,12 @@ class OverviewViewModel @Inject constructor(
                 val list0 = (data0 + data1).filter {
                     val sd = it.startTime.formatTime()
                     val ed = it.endTime.formatTime()
-                    val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
+                    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
                     inProgress
                 }.sortedWith(compare(today))
                 val list1 = (data0 + data1).filter {
                     val sd = it.startTime.formatTime()
-                    val comingSoon = today.hourInt(sd) < 0
+                    val comingSoon = today.second(sd) < 0
                     comingSoon
                 }.sortedWith(compare(today))
                 inProgressEventList.postValue(list0)

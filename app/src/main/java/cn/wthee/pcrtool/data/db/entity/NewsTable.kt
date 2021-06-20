@@ -9,11 +9,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "news")
 data class NewsTable(
     @PrimaryKey
-    val id: String,
-    val title: String,
-    val tags: String,
-    val url: String,
-    val date: String
+    val id: String = "2-1",
+    val title: String = "",
+    val tags: String = "???",
+    val url: String = "",
+    val date: String = "2021-01-01"
 ) {
 
     fun getTag(): String {

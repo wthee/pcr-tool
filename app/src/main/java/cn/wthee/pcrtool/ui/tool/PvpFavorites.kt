@@ -29,6 +29,8 @@ import kotlinx.coroutines.launch
 
 /**
  * 已收藏数据
+ *
+ * TODO 合并到搜索页面
  */
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -67,7 +69,10 @@ fun PvpFavorites(
                         .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
                 ) {
                     scope.launch {
-                        scrollState.scrollToItem(0)
+                        try {
+                            scrollState.scrollToItem(0)
+                        } catch (e: Exception) {
+                        }
                     }
                 }
             } else {

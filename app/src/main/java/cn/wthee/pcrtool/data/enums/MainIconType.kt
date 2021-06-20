@@ -41,6 +41,11 @@ enum class MainIconType(val icon: ImageVector) {
     RESET(Icons.Rounded.Refresh),
 
     /**
+     * 回到顶部
+     */
+    TOP(Icons.Rounded.ExpandLess),
+
+    /**
      * 更多
      */
     MORE(Icons.Rounded.NavigateNext),
@@ -195,6 +200,16 @@ enum class MainIconType(val icon: ImageVector) {
      * 浏览器
      */
     BROWSER(Icons.Rounded.OpenInBrowser),
+
+    /**
+     * 悬浮窗
+     */
+    FLOAT(Icons.Rounded.CloseFullscreen),
+
+    /**
+     * 悬浮窗关闭
+     */
+    FLOAT_CLOSE(Icons.Rounded.Cancel),
 
     /**
      * 静流笔记

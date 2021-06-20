@@ -70,7 +70,13 @@ fun GachaList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                scrollState.scrollToItem(0)
+                try {
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (e: Exception) {
+                    }
+                } catch (e: Exception) {
+                }
             }
         }
     }
@@ -88,7 +94,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val today = getToday()
     val sd = gachaInfo.startTime
     val ed = gachaInfo.endTime
-    val inProgress = today.hourInt(sd) > 0 && ed.hourInt(today) > 0
+    val inProgress = today.second(sd) > 0 && ed.second(today) > 0
 
     val icons = gachaInfo.unitIds.intArrayList()
     val type = gachaInfo.getType()

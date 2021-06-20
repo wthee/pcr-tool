@@ -5,8 +5,8 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "1.1.0"
-val code = 110
+val name = "1.1.1"
+val code = 111
 val sql = 110
 
 android {
@@ -85,6 +85,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("androidx.fragment:fragment:1.3.5")
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
@@ -104,30 +106,33 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     //Accompanist
-    val accompanistVersion = "0.11.1"
+    val accompanistVersion = "0.12.0"
     implementation("com.google.accompanist:accompanist-coil:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
+
     //coil-gif
     implementation("io.coil-kt:coil-gif:1.2.1")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hilt_version"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha02")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
 
     //Lifecycle
-    val lifecycleVersion = "2.4.0-alpha01"
+    val lifecycleVersion = "2.4.0-alpha02"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha06")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.0")
