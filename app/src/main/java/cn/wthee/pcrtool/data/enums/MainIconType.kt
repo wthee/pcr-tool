@@ -172,9 +172,9 @@ enum class MainIconType(val icon: ImageVector) {
     APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
-     * 群
+     * 反馈
      */
-    GROUP(Icons.Rounded.GroupAdd),
+    ISSUE(Icons.Rounded.BugReport),
 
     /**
      * 友链

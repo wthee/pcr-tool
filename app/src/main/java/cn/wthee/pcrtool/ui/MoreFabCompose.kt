@@ -11,6 +11,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -18,7 +19,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.SlideLeftAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.addToClip
+import cn.wthee.pcrtool.utils.openWebView
 import kotlinx.coroutines.launch
 
 /**
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 fun MoreFabCompose(viewModel: NavViewModel) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     SlideLeftAnimation(visible = fabMainIcon == MainIconType.DOWN) {
         Column(
@@ -42,16 +44,16 @@ fun MoreFabCompose(viewModel: NavViewModel) {
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Bottom
         ) {
-            val qqGroup = stringResource(R.string.qq_group)
-            val tip = stringResource(R.string.copy_qq_tip)
+            val issueUrl = stringResource(R.string.issue_url)
+            val issueTip = stringResource(R.string.issue_tip)
             //群
             FabCompose(
-                iconType = MainIconType.GROUP,
-                text = stringResource(R.string.feedback),
+                iconType = MainIconType.ISSUE,
+                text = stringResource(R.string.issue),
                 modifier = Modifier.padding(bottom = Dimen.fabSmallMarginEnd),
                 defaultPadding = false
             ) {
-                addToClip(qqGroup, tip)
+                openWebView(context, issueUrl, issueTip)
             }
 
             //数据版本切换
