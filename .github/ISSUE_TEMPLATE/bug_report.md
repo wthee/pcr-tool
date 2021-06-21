@@ -1,38 +1,26 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
+name: 问题反馈
+about: 应用使用中遇到的问题，请尽可能按模板填写完整内容
+title: '[问题反馈]'
 labels: ''
 assignees: ''
 
 ---
 
-**Describe the bug**
+**描述**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
+**复现操作**
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
+**预期行为**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**设备**
+ - 硬件: [e.g. 魅族 17]
+ - 系统: [e.g. Android 11]
+ - Version [e.g. 1.0.0]
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
