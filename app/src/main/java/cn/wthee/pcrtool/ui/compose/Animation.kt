@@ -88,14 +88,14 @@ fun SlideLeftAnimation(
         enter = if (animOn) {
             slideInHorizontally(initialOffsetX = {
                 40
-            }, defaultSpring())
+            }, defaultSpring()) + fadeIn(0f)
         } else {
             fadeIn(1f)
         },
         exit = if (animOn) {
             slideOutHorizontally(targetOffsetX = {
-                -40
-            }, defaultSpring())
+                40
+            }, defaultSpring()) + fadeOut(0f)
         } else {
             fadeOut(0f)
         },
