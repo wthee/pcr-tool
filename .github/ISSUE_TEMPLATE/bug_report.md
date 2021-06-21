@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **描述**
-A clear and concise description of what the bug is.
+详细描述一下问题
 
 **复现操作**
 1. Go to '...'
@@ -17,10 +17,10 @@ A clear and concise description of what the bug is.
 4. See error
 
 **预期行为**
-A clear and concise description of what you expected to happen.
+该操作应有的正常行为
 
-**设备**
+**运行环境**
  - 硬件: [e.g. 魅族 17]
  - 系统: [e.g. Android 11]
- - Version [e.g. 1.0.0]
+ - 应用版本 [e.g. 1.0.0]
 
