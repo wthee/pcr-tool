@@ -244,5 +244,5 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 推特信息
      */
-    TWEET(Icons.Rounded.Whatshot),
+    TWEET(Icons.Rounded.Timeline),
 }

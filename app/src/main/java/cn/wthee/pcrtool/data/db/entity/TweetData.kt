@@ -13,4 +13,18 @@ data class TweetData(
     val date: String = "2021-01-01 12:00:00",
     val tweet: String = "",
     val photos: String = ""
-)
+) {
+    fun getImageList(): ArrayList<String> {
+        val urls = arrayListOf<String>()
+        photos.split(",").forEach {
+            if (it != "") {
+                urls.add(it)
+            }
+        }
+        return urls
+    }
+
+    fun getFormatTweet(): String {
+        return tweet.substringBefore("h").replace("  ", "\n").substringBeforeLast("\n")
+    }
+}
