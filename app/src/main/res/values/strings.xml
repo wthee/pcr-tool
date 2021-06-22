@@ -140,6 +140,7 @@
     <string name="compare">对比</string>
     <string name="count">统计</string>
     <string name="share">分享</string>
+    <string name="tweet">推文</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
@@ -169,8 +170,8 @@
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>
     <string name="all_data_load">数据已全部加载</string>
-    <string name="feedback">反馈</string>
-    <string name="qq_group">1033289878</string>
-    <string name="copy_qq_tip">已复制反馈 QQ 群号，请加群反馈~</string>
+    <string name="issue">New issue</string>
+    <string name="issue_url">https://github.com/wthee/pcr-tool/issues/new/choose</string>
+    <string name="issue_tip">前往 github.com ，添加 issue</string>
     <string name="no_event">暂无活动</string>
 </resources>

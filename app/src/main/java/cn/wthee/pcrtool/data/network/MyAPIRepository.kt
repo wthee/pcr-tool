@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.Constants
@@ -103,6 +104,35 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 查询推特信息
+     * @param page 页码
+     */
+    suspend fun getTweet(page: Int): ResponseData<List<TweetData>> {
+        //接口参数
+        val json = JsonObject()
+        json.addProperty("page", page)
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            json.toString()
+        )
+        //请求
+        try {
+            val response = service.getTweetData(body)
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
             }
         }
         return error()

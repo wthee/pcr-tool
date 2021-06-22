@@ -172,9 +172,9 @@ enum class MainIconType(val icon: ImageVector) {
     APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
-     * 群
+     * 反馈
      */
-    GROUP(Icons.Rounded.GroupAdd),
+    ISSUE(Icons.Rounded.BugReport),
 
     /**
      * 友链
@@ -240,4 +240,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 数据来源
      */
     DATA_SOURCE(Icons.Rounded.DataUsage),
+
+    /**
+     * 推特信息
+     */
+    TWEET(Icons.Rounded.Timeline),
 }

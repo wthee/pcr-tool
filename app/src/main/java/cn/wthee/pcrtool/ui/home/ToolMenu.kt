@@ -55,6 +55,7 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),
         ToolMenuData(R.string.tool_event, MainIconType.EVENT),
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
+        ToolMenuData(R.string.tweet, MainIconType.TWEET),
         ToolMenuData(R.string.change_db, MainIconType.CHANGE_DATA),
         ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
     )
@@ -192,6 +193,7 @@ private fun getAction(
             MainIconType.CALENDAR -> actions.toCalendar()
             MainIconType.LEADER -> actions.toLeader()
             MainIconType.EQUIP -> actions.toEquipList()
+            MainIconType.TWEET -> actions.toTweetList()
             MainIconType.CHANGE_DATA -> {
                 coroutineScope.launch {
                     DatabaseUpdater.changeType()
