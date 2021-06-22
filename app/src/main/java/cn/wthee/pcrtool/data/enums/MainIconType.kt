@@ -240,4 +240,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 数据来源
      */
     DATA_SOURCE(Icons.Rounded.DataUsage),
+
+    /**
+     * 推特信息
+     */
+    TWEET(Icons.Rounded.Whatshot),
 }

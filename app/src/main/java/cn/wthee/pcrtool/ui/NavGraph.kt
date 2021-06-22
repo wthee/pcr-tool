@@ -72,6 +72,7 @@ object Navigation {
     const val TOOL_NEWS_URL = "toolNewsUrl"
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
+    const val TWEET = "tweet"
 }
 
 @ExperimentalComposeUiApi
@@ -104,6 +105,7 @@ fun NavGraph(
     val news2 = remember(flow2, lifecycle) {
         flow2?.flowWithLifecycle(lifecycle = lifecycle)
     }?.collectAsLazyPagingItems()
+
     NavHost(navController, startDestination = Navigation.HOME) {
 
         //首页
@@ -363,6 +365,13 @@ fun NavGraph(
                 arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
             )
         }
+
+        //推特信息
+        composable(Navigation.TWEET) {
+            val scrollState = rememberLazyListState()
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            TweetList(scrollState)
+        }
     }
 }
 
@@ -520,6 +529,13 @@ class NavActions(navController: NavHostController) {
      */
     val toSetting = {
         navController.navigate(Navigation.MAIN_SETTINGS)
+    }
+
+    /**
+     * 推特
+     */
+    val toTweetList = {
+        navController.navigate(Navigation.TWEET)
     }
 }
 

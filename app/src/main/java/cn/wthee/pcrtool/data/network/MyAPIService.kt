@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -49,6 +50,11 @@ interface MyAPIService {
     @POST("news/overview")
     suspend fun getNewsOverview(): ResponseData<List<NewsTable>>
 
+    /**
+     * 获取推特
+     */
+    @POST("tweet")
+    suspend fun getTweetData(@Body body: RequestBody): ResponseData<List<TweetData>>
 
     /**
      * 排行信息

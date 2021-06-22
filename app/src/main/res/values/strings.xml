@@ -140,6 +140,7 @@
     <string name="compare">对比</string>
     <string name="count">统计</string>
     <string name="share">分享</string>
+    <string name="tweet">推文</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
