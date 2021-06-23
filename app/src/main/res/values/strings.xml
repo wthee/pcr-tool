@@ -141,6 +141,8 @@
     <string name="count">统计</string>
     <string name="share">分享</string>
     <string name="tweet">推文</string>
+    <string name="comic">漫画</string>
+    <string name="comic_order">第%s话</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>

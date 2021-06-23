@@ -50,6 +50,7 @@ object Constants {
     //其它数据库
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_TWEET = "tweet.db"
+    const val DATABASE_COMIC = "comic.db"
     const val DATABASE_PVP = "pvp.db"
 
     //角色卡片接口

@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.compose
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -23,7 +24,32 @@ import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 
 const val RATIO = 1.78f
-const val MOVE_SPEED_RATIO = 0.5
+
+// 741 * 1200
+const val RATIO_COMIC = 0.6175f
+
+
+@Composable
+fun ImageCompose(url: String, hasRatio: Boolean = false) {
+    val painter = rememberCoilPainter(request = url)
+    val modifier = if (hasRatio) {
+        Modifier
+            .fillMaxWidth()
+            .aspectRatio(RATIO_COMIC)
+    } else {
+        Modifier.fillMaxWidth()
+    }
+    Image(
+        painter = when (painter.loadState) {
+            is ImageLoadState.Success -> painter
+            is ImageLoadState.Loading -> rememberCoilPainter(request = R.drawable.load)
+            else -> rememberCoilPainter(request = R.drawable.error)
+        },
+        contentDescription = null,
+        contentScale = ContentScale.FillWidth,
+        modifier = modifier
+    )
+}
 
 /**
  * 角色卡面

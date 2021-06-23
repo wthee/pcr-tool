@@ -13,7 +13,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 /**
- * 公告加载
+ * 推特加载
  */
 @ExperimentalPagingApi
 class TweetRemoteMediator(
@@ -25,7 +25,6 @@ class TweetRemoteMediator(
     private val remoteKeyDao = database.getRemoteKeyDao()
     private val pageDefaultIndex = 1
     private var currPage = 1
-    private val remoteKeyPre = "tweet_"
 
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, TweetData>
@@ -35,7 +34,7 @@ class TweetRemoteMediator(
                 LoadType.REFRESH -> {
                     val remoteKey = state.anchorPosition?.let { position ->
                         state.closestItemToPosition(position)?.id?.let { repoId ->
-                            remoteKeyDao.remoteKeys(remoteKeyPre + repoId)
+                            remoteKeyDao.remoteKeys(repoId)
                         }
                     }
                     remoteKey?.nextKey?.minus(pageDefaultIndex) ?: pageDefaultIndex
@@ -43,7 +42,7 @@ class TweetRemoteMediator(
                 LoadType.PREPEND -> {
                     val remoteKey = database.withTransaction {
                         val key = state.firstItemOrNull()?.id
-                        if (key == null) null else remoteKeyDao.remoteKeys(remoteKeyPre + key)
+                        if (key == null) null else remoteKeyDao.remoteKeys(key)
                     }
                     if (remoteKey?.prevKey == null) {
                         return MediatorResult.Success(
@@ -55,7 +54,7 @@ class TweetRemoteMediator(
                 LoadType.APPEND -> {
                     val key = state.lastItemOrNull()?.id
                     val remoteKey =
-                        if (key == null) null else remoteKeyDao.remoteKeys(remoteKeyPre + key)
+                        if (key == null) null else remoteKeyDao.remoteKeys(key)
                     if (remoteKey?.nextKey == null) {
                         currPage + 1
 //                        return MediatorResult.Success(
@@ -73,13 +72,13 @@ class TweetRemoteMediator(
             val isEndOfList = response?.isEmpty() ?: false
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    remoteKeyDao.clearRemoteKeys("${remoteKeyPre}-%")
+                    remoteKeyDao.clearAllRemoteKeys()
                     tweetDao.clearAll()
                 }
                 val prevKey = if (page == pageDefaultIndex) null else page - 1
                 val nextKey = if (isEndOfList) null else page + 1
                 val keys = list.map {
-                    RemoteKey(repoId = remoteKeyPre + it.id, prevKey = prevKey, nextKey = nextKey)
+                    RemoteKey(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
                 }
                 remoteKeyDao.insertAll(keys)
                 tweetDao.insertAll(list)

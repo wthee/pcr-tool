@@ -58,6 +58,7 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tweet, MainIconType.TWEET),
         ToolMenuData(R.string.change_db, MainIconType.CHANGE_DATA),
         ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
+        ToolMenuData(R.string.comic, MainIconType.COMIC),
     )
 
     VerticalGrid(
@@ -199,6 +200,7 @@ private fun getAction(
                     DatabaseUpdater.changeType()
                 }
             }
+            MainIconType.COMIC -> actions.toComicList()
             MainIconType.DB_DOWNLOAD -> {
                 coroutineScope.launch {
                     DatabaseUpdater.checkDBVersion(0)

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
- * 公告 ViewModel
+ * 推特 ViewModel
  */
 @HiltViewModel
 @ExperimentalPagingApi
@@ -31,7 +31,7 @@ class TweetViewModel @Inject constructor(
     var tweetPageList: Flow<PagingData<TweetData>>? = null
 
     /**
-     * 公告数据
+     * 推特数据
      */
     fun getTweet() {
         if (tweetPageList == null) {

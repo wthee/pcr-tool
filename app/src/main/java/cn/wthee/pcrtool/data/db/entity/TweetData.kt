@@ -12,7 +12,9 @@ data class TweetData(
     val id: String = "",
     val date: String = "2021-01-01 12:00:00",
     val tweet: String = "",
-    val photos: String = ""
+    val photos: String = "",
+    val urls: String = "",
+    val link: String = "",
 ) {
     fun getImageList(): ArrayList<String> {
         val urls = arrayListOf<String>()

@@ -73,6 +73,7 @@ object Navigation {
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
+    const val COMIC = "comic"
 }
 
 @ExperimentalComposeUiApi
@@ -372,6 +373,13 @@ fun NavGraph(
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             TweetList(scrollState)
         }
+
+        //漫画信息
+        composable(Navigation.COMIC) {
+            val scrollState = rememberLazyListState()
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            ComicList(scrollState)
+        }
     }
 }
 
@@ -536,6 +544,13 @@ class NavActions(navController: NavHostController) {
      */
     val toTweetList = {
         navController.navigate(Navigation.TWEET)
+    }
+
+    /**
+     * 漫画
+     */
+    val toComicList = {
+        navController.navigate(Navigation.COMIC)
     }
 }
 

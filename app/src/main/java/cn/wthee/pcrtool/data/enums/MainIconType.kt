@@ -245,4 +245,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 推特信息
      */
     TWEET(Icons.Rounded.Timeline),
+
+    /**
+     * 漫画信息
+     */
+    COMIC(Icons.Rounded.AutoStories),
 }
