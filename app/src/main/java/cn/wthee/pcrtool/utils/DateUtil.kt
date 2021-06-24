@@ -95,6 +95,16 @@ fun String.second(str2: String): Long {
 
 /**
  * 月份、天份补零
+ *
+ * @param toLength 最终字符长度
  */
-fun String.fillZero() = if (this.length == 1) "0$this" else this
+fun String.fillZero(toLength: Int = 2): String {
+    var temp = this
+    if (this.length < toLength) {
+        for (i in 0 until toLength - this.length) {
+            temp = "0$temp"
+        }
+    }
+    return temp
+}
 

@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -28,14 +26,9 @@ import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.compose.CommonSpacer
-import cn.wthee.pcrtool.ui.compose.FabCompose
-import cn.wthee.pcrtool.ui.compose.FadeAnimation
-import cn.wthee.pcrtool.ui.compose.MainContentText
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -166,17 +159,7 @@ private fun TweetItem(data: TweetData) {
 
         if (urls.isNotEmpty()) {
             HorizontalPager(state = pagerState) { pageIndex ->
-                val painter = rememberCoilPainter(request = urls[pageIndex])
-                Image(
-                    painter = when (painter.loadState) {
-                        is ImageLoadState.Success -> painter
-                        is ImageLoadState.Loading -> rememberCoilPainter(request = R.drawable.load)
-                        else -> rememberCoilPainter(request = R.drawable.error)
-                    },
-                    contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                ImageCompose(urls[pageIndex])
             }
         }
     }

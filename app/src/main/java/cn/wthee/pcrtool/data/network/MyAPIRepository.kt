@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.BuildConfig
+import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
@@ -133,6 +134,27 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 查询漫画信息
+     */
+    suspend fun getComic(): ResponseData<List<ComicData>> {
+        //请求
+        try {
+            val response = service.getComicData()
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet")
             }
         }
         return error()
