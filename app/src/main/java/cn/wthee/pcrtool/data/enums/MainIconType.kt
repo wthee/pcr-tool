@@ -249,5 +249,10 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 漫画信息
      */
-    COMIC(Icons.Rounded.AutoStories),
+    COMIC(Icons.Rounded.Looks4),
+
+    /**
+     * 漫画目录
+     */
+    COMIC_NAV(Icons.Rounded.Toc),
 }

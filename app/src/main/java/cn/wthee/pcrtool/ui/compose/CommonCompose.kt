@@ -285,6 +285,9 @@ fun getRankColor(rank: Int): Color {
     return colorResource(id = colorId)
 }
 
+/**
+ * 底部空白占位
+ */
 @Composable
 fun CommonSpacer() {
     Spacer(

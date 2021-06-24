@@ -376,9 +376,8 @@ fun NavGraph(
 
         //漫画信息
         composable(Navigation.COMIC) {
-            val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            ComicList(scrollState)
+            ComicList()
         }
     }
 }

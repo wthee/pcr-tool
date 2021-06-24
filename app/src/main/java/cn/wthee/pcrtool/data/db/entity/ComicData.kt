@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
 data class ComicData(
     @PrimaryKey
     val id: Int = -1,
-    val title: String = "???",
+    val title: String = "",
     val url: String = "",
-    val date: String
+    val date: String = ""
 )

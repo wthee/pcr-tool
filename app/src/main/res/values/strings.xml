@@ -142,6 +142,7 @@
     <string name="share">分享</string>
     <string name="tweet">推文</string>
     <string name="comic">漫画</string>
+    <string name="comic_nav">目录</string>
     <string name="comic_order">第%s话</string>
 
     <!--  活动相关-->
