@@ -24,8 +24,8 @@
     <string name="title_room_comments">小屋</string>
     <string name="title_material">合成</string>
     <string name="title_story_attr">剧情属性</string>
-
-    <!--功能-->
+    <string name="cur_rank">当前</string>
+    <string name="target_rank">目标</string>
     <string name="setting">设置</string>
     <string name="function">功能</string>
 
@@ -140,10 +140,15 @@
     <string name="compare">对比</string>
     <string name="count">统计</string>
     <string name="share">分享</string>
+    <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
     <string name="comic">漫画</string>
     <string name="comic_nav">目录</string>
     <string name="comic_order">第%s话</string>
+    <string name="tweet_open_tip">查看原文</string>
+    <string name="youtube">YouTube</string>
+    <string name="hibiki">HiBiKi</string>
+    <string name="other">其它</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
@@ -161,8 +166,7 @@
     <string name="check_db_error">数据版本校验失败~</string>
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
-    <string name="cur_rank">当前</string>
-    <string name="target_rank">目标</string>
+
 
     <!-- 下载相关-->
     <string name="checking">校验中</string>

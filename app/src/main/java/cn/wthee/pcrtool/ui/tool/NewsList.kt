@@ -102,10 +102,13 @@ fun NewsList(
                             NewsItem(pagerIndex + 2, news = it, toDetail)
                         }
                     }
-                    if (list.loadState.append == LoadState.Loading) {
+                    if (list.loadState.append is LoadState.Loading) {
                         item {
                             NewsItem(pagerIndex + 2, news = NewsTable(), toDetail)
                         }
+                    }
+                    item {
+                        CommonSpacer()
                     }
                 }
 
@@ -216,6 +219,10 @@ private fun NewsItem(
     }
 }
 
+/**
+ * 公告详情
+ * fixme 从接口获取标题和日期信息
+ */
 @ExperimentalAnimationApi
 @SuppressLint("SetJavaScriptEnabled")
 @Composable

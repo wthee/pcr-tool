@@ -199,7 +199,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 浏览器
      */
-    BROWSER(Icons.Rounded.OpenInBrowser),
+    BROWSER(Icons.Rounded.Explore),
 
     /**
      * 悬浮窗
@@ -255,4 +255,15 @@ enum class MainIconType(val icon: ImageVector) {
      * 漫画目录
      */
     COMIC_NAV(Icons.Rounded.Toc),
+
+    /**
+     * 漫画目录
+     */
+    YOUTUBE(Icons.Rounded.SmartDisplay),
+
+    /**
+     * 推特信息
+     */
+    HIBIKI(Icons.Rounded.GraphicEq),
+
 }
