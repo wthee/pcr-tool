@@ -158,15 +158,6 @@ private fun TweetItem(data: TweetData) {
             )
         }
     }
-    //相关链接跳转
-    if (!placeholder) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            TweetButton(data.link)
-            data.getUrlList().forEach {
-                TweetButton(it)
-            }
-        }
-    }
     //内容
     Column(
         modifier = Modifier
@@ -190,6 +181,15 @@ private fun TweetItem(data: TweetData) {
             textAlign = TextAlign.Start,
             selectable = true
         )
+        //相关链接跳转
+        if (!placeholder) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TweetButton(data.link)
+                data.getUrlList().forEach {
+                    TweetButton(it)
+                }
+            }
+        }
         //图片
         if (photos.isNotEmpty()) {
             HorizontalPager(

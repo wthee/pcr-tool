@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.tool
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,11 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,13 +29,12 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -52,6 +49,9 @@ import kotlinx.coroutines.launch
 fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
+    val selectIndex = remember {
+        mutableStateOf(0)
+    }
 
     comicViewModel.getComic()
     val comic = comicViewModel.comic.observeAsState().value ?: arrayListOf()
@@ -64,9 +64,10 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
         MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         MainActivity.navViewModel.fabOKCilck.postValue(false)
     }
+
     //关闭监听
     val ok = MainActivity.navViewModel.fabOKCilck.observeAsState().value ?: false
-
+    Log.e("DEBUG", state.offset.value.toString())
     Box {
         FadeAnimation(visible = visible) {
             val pagerState = rememberPagerState(pageCount = comic.size)
@@ -74,24 +75,39 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
                 sheetState = state,
                 scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
                 sheetElevation = Dimen.sheetElevation,
+                sheetShape = if (state.offset.value == 0f) {
+                    noShape
+                } else {
+                    MaterialTheme.shapes.large
+                },
                 sheetContent = {
                     //章节选择
-                    SelectPager(scrollState, pagerState, comic)
+                    SelectPager(scrollState, selectIndex, comic)
                 }
             ) {
+                if (ok) {
+                    coroutineScope.launch {
+                        state.hide()
+                    }
+                    MainActivity.navViewModel.fabOKCilck.postValue(false)
+                }
+
+                if (state.isAnimationRunning) {
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(selectIndex.value)
+                    }
+                }
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    if (ok) {
-                        coroutineScope.launch {
-                            state.hide()
-                        }
-                        MainActivity.navViewModel.fabOKCilck.postValue(false)
-                    }
                     HorizontalPager(state = pagerState) { pageIndex ->
-                        ComicItem(data = comic[pageIndex])
+                        if (comic.isNotEmpty()) {
+                            ComicItem(data = comic[pageIndex])
+                        }
                     }
+
                     //选择
                     FabCompose(
                         iconType = MainIconType.COMIC_NAV,
@@ -106,6 +122,8 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
                                 state.hide()
                             } else {
                                 MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                                selectIndex.value = pagerState.currentPage
+                                scrollState.scrollToItem(selectIndex.value)
                                 state.show()
                             }
                         }
@@ -178,13 +196,20 @@ private fun ComicItem(data: ComicData) {
 @Composable
 private fun SelectPager(
     scrollState: LazyListState,
-    pagerState: PagerState,
+    selectIndex: MutableState<Int>,
     comic: List<ComicData>
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.largePadding)) {
+
+    LazyColumn(
+        state = scrollState,
+        modifier = Modifier.padding(
+            top = Dimen.mediuPadding,
+            start = Dimen.largePadding,
+            end = Dimen.largePadding
+        )
+    ) {
         items(comic) {
-            TocItem(scrollState, pagerState, it, coroutineScope)
+            TocItem(selectIndex, comic.size - it.id, it)
         }
         item {
             CommonSpacer()
@@ -198,16 +223,11 @@ private fun SelectPager(
 @ExperimentalPagerApi
 @Composable
 private fun TocItem(
-    scrollState: LazyListState,
-    pagerState: PagerState,
+    selectIndex: MutableState<Int>,
+    index: Int,
     it: ComicData,
-    coroutineScope: CoroutineScope
 ) {
-    val index = pagerState.pageCount - it.id
-    val selected = remember {
-        mutableStateOf(pagerState.currentPage)
-    }
-    val textColor = if (selected.value == index) {
+    val textColor = if (selectIndex.value == index) {
         MaterialTheme.colors.primary
     } else {
         Color.Unspecified
@@ -219,13 +239,7 @@ private fun TocItem(
             .padding(Dimen.smallPadding)
             .clip(Shapes.small)
             .clickable {
-                selected.value = index
-                coroutineScope.launch {
-                    scrollState.animateScrollToItem(index)
-                }
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(index, animationSpec = defaultSpring())
-                }
+                selectIndex.value = index
             },
         verticalAlignment = Alignment.CenterVertically
     ) {

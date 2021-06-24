@@ -35,6 +35,7 @@ import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shapes
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -136,6 +137,11 @@ fun CharacterDetail(
         sheetState = state,
         scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
         sheetElevation = Dimen.sheetElevation,
+        sheetShape = if (state.offset.value == 0f) {
+            noShape
+        } else {
+            MaterialTheme.shapes.large
+        },
         sheetContent = {
             SkillLoopList(
                 loopData, iconTypes, Modifier.padding(
