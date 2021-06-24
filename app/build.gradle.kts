@@ -5,14 +5,14 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "1.2.0"
-val code = 120
+val name = "1.3.0"
+val code = 130
 val sql = 110
 
 android {
 
     compileSdk = 30
-    buildToolsVersion = "31.0.0-rc4"
+    buildToolsVersion = "31.0.0-rc5"
     flavorDimensions("version")
 
     defaultConfig {
