@@ -62,14 +62,14 @@ object Constants {
 
     //装备图标接口
     const val UNKNOWN_EQUIP_ID = 999999
-    const val EQUIPMENT_URL = RESOURCE_URL + "iconType/equipment/"
+    const val EQUIPMENT_URL = RESOURCE_URL + "icon/equipment/"
     const val UNKNOWN_EQUIPMENT_ICON = EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP
 
     //图标接口
-    const val UNIT_ICON_URL = RESOURCE_URL + "iconType/unit/"
+    const val UNIT_ICON_URL = RESOURCE_URL + "icon/unit/"
 
     //技能图标接口
-    const val SKILL_ICON_URL = RESOURCE_URL + "iconType/skill/"
+    const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
     //漫画地址
     const val COMIC_URL = RESOURCE_URL + "comic/"
