@@ -39,6 +39,7 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
@@ -88,6 +89,11 @@ fun CharacterList(
         sheetState = state,
         scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
         sheetElevation = Dimen.sheetElevation,
+        sheetShape = if (state.offset.value == 0f) {
+            noShape
+        } else {
+            MaterialTheme.shapes.large
+        },
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
         }

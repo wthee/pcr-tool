@@ -26,6 +26,16 @@ data class TweetData(
         return urls
     }
 
+    fun getUrlList(): ArrayList<String> {
+        val list = arrayListOf<String>()
+        urls.split(",").forEach {
+            if (it != "") {
+                list.add(it)
+            }
+        }
+        return list
+    }
+
     fun getFormatTweet(): String {
         return tweet.substringBefore("h").replace("  ", "\n").substringBeforeLast("\n")
     }

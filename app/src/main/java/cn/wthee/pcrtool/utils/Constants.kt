@@ -9,6 +9,7 @@ object Constants {
 
     //图片格式
     const val WEBP = ".webp"
+    const val PNG = ".png"
 
     //图片资源地址
     private const val RESOURCE_URL = "https://wthee.xyz/resource/"
@@ -50,7 +51,6 @@ object Constants {
     //其它数据库
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_TWEET = "tweet.db"
-    const val DATABASE_COMIC = "comic.db"
     const val DATABASE_PVP = "pvp.db"
 
     //角色卡片接口
@@ -71,6 +71,9 @@ object Constants {
     //技能图标接口
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
+    //漫画地址
+    const val COMIC_URL = RESOURCE_URL + "comic/"
+
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION = "database_version"
@@ -79,12 +82,9 @@ object Constants {
     const val SP_STAR_EQUIP = "star_equip"
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
-    const val SP_PVP_TW = "pvp_region"
 
     //默认值
     const val NOTICE_TITLE = "正在下载数据"
-    const val NOTICE_TOAST_SUCCESS = "数据更新完成！"
-    const val NOTICE_TOAST_CHANGE_SUCCESS = "数据切换完成！"
     const val RANK_UPPER = "RANK"
 
     val ATTR = arrayListOf(
