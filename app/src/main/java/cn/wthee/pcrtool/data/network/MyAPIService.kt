@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.data.network
 
-import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*

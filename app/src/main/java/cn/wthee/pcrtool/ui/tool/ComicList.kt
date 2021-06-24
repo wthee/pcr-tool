@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.entity.ComicData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
