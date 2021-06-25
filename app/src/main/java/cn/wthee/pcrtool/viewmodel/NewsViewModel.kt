@@ -1,16 +1,20 @@
 package cn.wthee.pcrtool.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import cn.wthee.pcrtool.data.db.dao.NewsDao
 import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.data.paging.NewsRemoteMediator
 import cn.wthee.pcrtool.database.AppNewsDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -31,6 +35,7 @@ class NewsViewModel @Inject constructor(
     var newsPageList0: Flow<PagingData<NewsTable>>? = null
     var newsPageList1: Flow<PagingData<NewsTable>>? = null
     var newsPageList2: Flow<PagingData<NewsTable>>? = null
+    val newsDetail = MutableLiveData<ResponseData<NewsTable>>()
 
     /**
      * 公告数据
@@ -80,7 +85,17 @@ class NewsViewModel @Inject constructor(
                 }
             }
         }
+    }
 
-
+    /**
+     * 获取公告详情
+     */
+    fun getNewsDetail(id: String) {
+        viewModelScope.launch {
+            if (newsDetail.value == null || newsDetail.value!!.status != 0) {
+                val data = apiRepository.getNewsDetail(id)
+                newsDetail.postValue(data)
+            }
+        }
     }
 }

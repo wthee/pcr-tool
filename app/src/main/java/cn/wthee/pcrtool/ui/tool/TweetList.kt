@@ -28,6 +28,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.TweetData
+import cn.wthee.pcrtool.data.db.entity.urlGetId
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.compose.*
@@ -54,6 +55,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TweetList(
     scrollState: LazyListState,
+    toDetail: (String) -> Unit,
     tweetViewModel: TweetViewModel = hiltViewModel()
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -79,7 +81,7 @@ fun TweetList(
                     }
                 }
                 items(tweet) {
-                    TweetItem(it ?: TweetData())
+                    TweetItem(it ?: TweetData(), toDetail)
                 }
                 if (tweet.loadState.append is LoadState.Loading) {
                     item {
@@ -127,7 +129,7 @@ fun TweetList(
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-private fun TweetItem(data: TweetData) {
+private fun TweetItem(data: TweetData, toDetail: ((String) -> Unit)? = null) {
     val placeholder = data.id == ""
     val photos = data.getImageList()
     val pagerState = rememberPagerState(pageCount = photos.size)
@@ -184,9 +186,9 @@ private fun TweetItem(data: TweetData) {
         //相关链接跳转
         if (!placeholder) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                TweetButton(data.link)
+                TweetButton(data.link, toDetail)
                 data.getUrlList().forEach {
-                    TweetButton(it)
+                    TweetButton(it, toDetail)
                 }
             }
         }
@@ -213,11 +215,10 @@ private fun TweetItem(data: TweetData) {
 
 /**
  * 相关链接按钮
- * TODO 公告直接跳转应用内公告详情页面
  */
 @ExperimentalAnimationApi
 @Composable
-private fun TweetButton(url: String) {
+private fun TweetButton(url: String, toDetail: ((String) -> Unit)? = null) {
     val context = LocalContext.current
     //根据链接获取相符的图标
     val btn = when {
@@ -239,7 +240,14 @@ private fun TweetButton(url: String) {
 
     TextButton(
         onClick = {
-            openWebView(context, url)
+            if (btn.iconType == MainIconType.NEWS) {
+                //跳转至公告详情
+                if (toDetail != null) {
+                    toDetail(url.urlGetId())
+                }
+            } else {
+                openWebView(context, url)
+            }
         },
     ) {
         IconCompose(data = btn.iconType.icon, size = Dimen.smallIconSize)

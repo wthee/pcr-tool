@@ -37,6 +37,6 @@ data class TweetData(
     }
 
     fun getFormatTweet(): String {
-        return tweet.substringBefore("h").replace("  ", "\n").substringBeforeLast("\n")
+        return tweet.substringBefore("http").replace("  ", "\n").substringBeforeLast("\n")
     }
 }

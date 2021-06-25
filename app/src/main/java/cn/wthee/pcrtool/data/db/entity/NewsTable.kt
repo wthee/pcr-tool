@@ -31,14 +31,22 @@ data class NewsTable(
         }
     }
 
-    fun getTrueId() = id.split("-")[1].toInt()
 
-    fun getRegion() = when {
-        url.contains("bilibili") -> 2
-        url.contains(".tw") -> 3
-        else -> 4
-    }
 }
 
-fun String.fix() = replace('/', '$')
 fun String.original() = replace('$', '/')
+
+fun String.getRegion() = when {
+    this.contains("bilibili") -> 2
+    this.contains(".tw") -> 3
+    else -> 4
+}
+
+fun String.urlGetId(): String {
+    val url = if (this.last() == '/') {
+        this.substring(0, this.length - 1)
+    } else {
+        this
+    }
+    return url.substringAfterLast("/")
+}

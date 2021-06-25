@@ -66,10 +66,7 @@ object Navigation {
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
-    const val TOOL_NEWS_TITLE = "toolNewsTitle"
-    const val TOOL_NEWS_REGION = "toolNewsRegion"
-    const val TOOL_NEWS_DATE = "toolNewsDate"
-    const val TOOL_NEWS_URL = "toolNewsUrl"
+    const val TOOL_NEWS_KEY = "toolNewsKey"
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
@@ -341,37 +338,23 @@ fun NavGraph(
 
         //公告详情
         composable(
-            "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_TITLE}}/{${Navigation.TOOL_NEWS_REGION}}/{${Navigation.TOOL_NEWS_URL}}/{${Navigation.TOOL_NEWS_DATE}}",
+            "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_KEY}}",
             arguments = listOf(
-                navArgument(Navigation.TOOL_NEWS_TITLE) {
-                    type = NavType.StringType
-                },
-                navArgument(Navigation.TOOL_NEWS_URL) {
-                    type = NavType.StringType
-                },
-                navArgument(Navigation.TOOL_NEWS_REGION) {
-                    type = NavType.IntType
-                },
-                navArgument(Navigation.TOOL_NEWS_DATE) {
+                navArgument(Navigation.TOOL_NEWS_KEY) {
                     type = NavType.StringType
                 },
             )
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            NewsDetail(
-                arguments.getString(Navigation.TOOL_NEWS_TITLE) ?: "",
-                arguments.getString(Navigation.TOOL_NEWS_URL) ?: "",
-                arguments.getInt(Navigation.TOOL_NEWS_REGION),
-                arguments.getString(Navigation.TOOL_NEWS_DATE) ?: "",
-            )
+            NewsDetail(arguments.getString(Navigation.TOOL_NEWS_KEY) ?: "")
         }
 
         //推特信息
         composable(Navigation.TWEET) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            TweetList(scrollState)
+            TweetList(scrollState, actions.toNewsDetail)
         }
 
         //漫画信息
@@ -456,10 +439,9 @@ class NavActions(navController: NavHostController) {
     /**
      * 官方公告详情
      */
-    val toNewsDetail: (String, String, Int, String) -> Unit =
-        { title: String, url: String, region: Int, date: String ->
-            navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${title}/${region}/${url}/${date}")
-        }
+    val toNewsDetail: (String) -> Unit = { key: String ->
+        navController.navigate("${Navigation.TOOL_NEWS_DETAIL}/${key}")
+    }
 
     /**
      * 卡池
