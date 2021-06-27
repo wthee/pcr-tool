@@ -616,6 +616,16 @@ class NavViewModel @Inject constructor() : ViewModel() {
     var targetRank = MutableLiveData(0)
 
     /**
+     * rank 选择，当前
+     */
+    var curRank1 = MutableLiveData(0)
+
+    /**
+     * rank 选择，目标
+     */
+    var targetRank1 = MutableLiveData(0)
+
+    /**
      * 悬浮服务
      */
     val floatServiceRun = MutableLiveData(true)

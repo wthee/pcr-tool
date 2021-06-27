@@ -90,7 +90,7 @@ fun RankCompare(
         ModalBottomSheetValue.Hidden
     )
     val coroutineScope = rememberCoroutineScope()
-    if (!state.isVisible) {
+    if (!state.isVisible && !state.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }

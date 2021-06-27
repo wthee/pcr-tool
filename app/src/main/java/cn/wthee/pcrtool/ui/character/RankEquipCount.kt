@@ -51,19 +51,17 @@ fun RankEquipCount(
     navViewModel: NavViewModel,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    val curRank = navViewModel.curRank.value
-    val targetRank = navViewModel.targetRank.value
+    val curRank = navViewModel.curRank1.value ?: 0
+    val targetRank = navViewModel.targetRank1.value ?: 0
     val rank0 = remember {
         mutableStateOf(1)
     }
     val rank1 = remember {
         mutableStateOf(maxRank)
     }
-    if (curRank != 0) {
-        rank0.value = curRank ?: 1
-    }
-    if (targetRank != 0) {
-        rank1.value = targetRank ?: maxRank
+    if (curRank != 0 && targetRank != 0) {
+        rank0.value = curRank
+        rank1.value = targetRank
     }
     if (rank1.value > 0 && rank0.value > 0) {
         equipmentViewModel.getEquipByRank(unitId, rank0.value, rank1.value)
@@ -75,7 +73,7 @@ fun RankEquipCount(
         ModalBottomSheetValue.Hidden
     )
     val coroutineScope = rememberCoroutineScope()
-    if (!state.isVisible) {
+    if (!state.isVisible && !state.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }
