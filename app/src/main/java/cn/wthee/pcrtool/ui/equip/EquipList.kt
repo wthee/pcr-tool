@@ -69,7 +69,7 @@ fun EquipList(
     val sp = mainSP()
     val keyboardController = LocalSoftwareKeyboardController.current
     //关闭时监听
-    if (!state.isVisible) {
+    if (!state.isVisible && !state.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         keyboardController?.hide()

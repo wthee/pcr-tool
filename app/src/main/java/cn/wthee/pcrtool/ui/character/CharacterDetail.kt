@@ -116,7 +116,7 @@ fun CharacterDetail(
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
-    if (!state.isVisible) {
+    if (!state.isVisible && !state.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabCloseClick.postValue(false)
     }

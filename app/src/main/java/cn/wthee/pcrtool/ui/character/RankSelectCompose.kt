@@ -78,8 +78,14 @@ fun RankSelectCompose(
             navViewModel.fabMainIcon.postValue(MainIconType.BACK)
             rank0.value = maxRank - selectIndex0.value
             rank1.value = maxRank - selectIndex1.value
-            navViewModel.curRank.postValue(maxRank - selectIndex0.value)
-            navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
+            if (type == 0) {
+                navViewModel.curRank.postValue(maxRank - selectIndex0.value)
+                navViewModel.targetRank.postValue(maxRank - selectIndex1.value)
+            } else {
+                navViewModel.curRank1.postValue(maxRank - selectIndex0.value)
+                navViewModel.targetRank1.postValue(maxRank - selectIndex1.value)
+            }
+
         }
         MainText(text = stringResource(id = R.string.cur_rank))
         RankSelectItem(selectIndex = selectIndex0, rankList = rankList)

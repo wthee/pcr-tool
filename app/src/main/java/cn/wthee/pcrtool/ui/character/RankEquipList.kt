@@ -17,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -75,7 +77,7 @@ fun RankEquipListItem(
 ) {
     val colorAnim = animateColorAsState(
         targetValue = if (unitPromotion.promotionLevel == selectedRank.value)
-            MaterialTheme.colors.primary
+            colorResource(id = R.color.alpha_primary)
         else
             MaterialTheme.colors.surface,
         animationSpec = defaultSpring()
@@ -93,7 +95,7 @@ fun RankEquipListItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorAnim.value, Shapes.large),
+                .background(colorAnim.value, Shapes.medium),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK

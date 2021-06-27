@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.entity.fix
+import cn.wthee.pcrtool.data.db.entity.getRegion
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
@@ -168,7 +168,7 @@ fun Overview(
                 if (newsList?.data != null) {
                     newsList.data!!.forEach {
                         NewsItem(
-                            region = it.getRegion(),
+                            region = it.url.getRegion(),
                             news = it,
                             toDetail = actions.toNewsDetail
                         )
@@ -312,7 +312,7 @@ private fun Section(
 private fun NewsItem(
     region: Int,
     news: NewsTable,
-    toDetail: (String, String, Int, String) -> Unit,
+    toDetail: (String) -> Unit,
 ) {
     val placeholder = news.title == ""
     val tag = when (region) {
@@ -358,7 +358,7 @@ private fun NewsItem(
         ),
         onClick = {
             if (!placeholder) {
-                toDetail(news.title.fix(), news.url.fix(), region, news.date)
+                toDetail(news.id)
             }
         }
     ) {

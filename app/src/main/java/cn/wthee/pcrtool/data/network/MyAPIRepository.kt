@@ -89,6 +89,35 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
     }
 
     /**
+     * 查询公告信息
+     * @param id
+     */
+    suspend fun getNewsDetail(id: String): ResponseData<NewsTable> {
+        //接口参数
+        val json = JsonObject()
+        json.addProperty("id", id)
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            json.toString()
+        )
+        //请求
+        try {
+            val response = service.getNewsDetail(body)
+            if (response.message == "failure" || response.data == null) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + "$id")
+            }
+        }
+        return error()
+    }
+
+    /**
      * 最新公告
      */
     suspend fun getNewsOverview(): ResponseData<List<NewsTable>> {

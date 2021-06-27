@@ -71,7 +71,7 @@ fun CharacterList(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
-    if (!state.isVisible) {
+    if (!state.isVisible && !state.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         navViewModel.resetClick.postValue(false)
