@@ -88,3 +88,13 @@ fun AttrInt.enemy(): List<AttrValue> {
     }
     return newList
 }
+
+fun AttrInt.multiplePartEnemy(): List<AttrValue> {
+    val attrs = all()
+    val newList = arrayListOf<AttrValue>()
+    val toShowIndex = arrayListOf(0, 10)
+    toShowIndex.forEach { showIndex ->
+        newList.add(attrs[showIndex])
+    }
+    return newList
+}

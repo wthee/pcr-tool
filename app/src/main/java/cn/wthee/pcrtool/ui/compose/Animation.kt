@@ -57,6 +57,7 @@ fun SlideAnimation(
 @Composable
 fun FadeAnimation(
     visible: Boolean,
+    modifier: Modifier = Modifier,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
 
@@ -69,6 +70,7 @@ fun FadeAnimation(
         },
         exit = fadeOut(),
         content = content,
+        modifier = modifier
     )
 }
 

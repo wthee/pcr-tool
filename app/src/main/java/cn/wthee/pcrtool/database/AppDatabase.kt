@@ -55,6 +55,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
         ClanBattleSchedule::class,
         EnemyParameter::class,
         TowerSchedule::class,
+        UnitEnemyData::class,
     ],
     version = BuildConfig.SQLITE_VERSION,
     exportSchema = false

@@ -1,13 +1,17 @@
+val kotlin_version: String by extra
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
+apply {
+    plugin("kotlin-android")
+}
 
 val name = "132"
 val code = 132
-val sql = 110
+val sql = 132
 
 android {
 

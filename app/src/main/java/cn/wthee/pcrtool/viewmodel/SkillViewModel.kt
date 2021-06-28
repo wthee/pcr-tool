@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
-import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
+import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.UMengLogUtil
@@ -54,7 +54,7 @@ class SkillViewModel @Inject constructor(
      *
      * @param list 怪物基本参数列表
      */
-    fun getAllEnemySkill(list: List<EnemyParameter>) {
+    fun getAllEnemySkill(list: List<EnemyParameterPro>) {
         viewModelScope.launch {
             try {
                 val allSkill = arrayListOf<List<SkillDetail>>()
@@ -157,7 +157,7 @@ class SkillViewModel @Inject constructor(
      *
      * @param list 怪物基本参数列表
      */
-    fun getAllSkillLoops(list: List<EnemyParameter>) {
+    fun getAllSkillLoops(list: List<EnemyParameterPro>) {
         viewModelScope.launch {
             //技能循环
             val allList = arrayListOf<List<AttackPattern>>()

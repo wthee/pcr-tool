@@ -3,9 +3,10 @@ package cn.wthee.pcrtool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.repository.ClanRepository
 import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
+import cn.wthee.pcrtool.data.db.view.ClanBossTargetInfo
+import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +23,8 @@ class ClanViewModel @Inject constructor(
 
     var clanInfoList = MutableLiveData<List<ClanBattleInfo>>()
     var clanInfo = MutableLiveData<ClanBattleInfo>()
-    var allClanBossAttr = MutableLiveData<List<EnemyParameter>>()
-
+    var allClanBossAttr = MutableLiveData<List<EnemyParameterPro>>()
+    var partEnemyAttrMap = MutableLiveData(hashMapOf<Int, List<EnemyParameterPro>>())
 
     /**
      * 获取团队战记录
@@ -54,7 +55,7 @@ class ClanViewModel @Inject constructor(
      */
     fun getAllBossAttr(enemyIds: List<Int>) {
         viewModelScope.launch {
-            val list = arrayListOf<EnemyParameter>()
+            val list = arrayListOf<EnemyParameterPro>()
             enemyIds.forEach {
                 val data = clanRepository.getBossAttr(it)
                 list.add(data)
@@ -63,4 +64,26 @@ class ClanViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 获取多目标部位属性
+     *
+     * @param unitId boss 单位编号
+     * @param enemyId boss编号列表
+     */
+    fun getPartEnemysAttr(bossList: List<ClanBossTargetInfo>) {
+        viewModelScope.launch {
+            val map = partEnemyAttrMap.value ?: hashMapOf()
+            bossList.forEach { boss ->
+                if (boss.partEnemyIds.isNotEmpty()) {
+                    val list = arrayListOf<EnemyParameterPro>()
+                    boss.partEnemyIds.forEach {
+                        val data = clanRepository.getBossAttr(it)
+                        list.add(data)
+                    }
+                    map[boss.unitId] = list
+                }
+            }
+            partEnemyAttrMap.postValue(map)
+        }
+    }
 }

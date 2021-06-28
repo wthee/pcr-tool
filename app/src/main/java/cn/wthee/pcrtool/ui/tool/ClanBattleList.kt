@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -8,22 +10,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.entity.EnemyParameter
-import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
-import cn.wthee.pcrtool.data.db.view.enemy
+import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
@@ -118,7 +116,7 @@ private fun ClanBattleItem(
     toClanBossInfo: (Int, Int) -> Unit,
 ) {
     val placeholder = clanInfo.clan_battle_id == -1
-    val section = clanInfo.getAllBossInfo().size
+    val section = clanInfo.getAllBossIds().size
     val list = clanInfo.getUnitIdList(0)
 
     //标题
@@ -169,9 +167,9 @@ private fun ClanBattleItem(
                         }
                     }
                     //多目标提示
-                    if (it.targetCount > 1) {
+                    if (it.partEnemyIds.isNotEmpty()) {
                         MainTitleText(
-                            text = "${it.targetCount - 1}",
+                            text = it.partEnemyIds.size.toString(),
                             modifier = Modifier.align(Alignment.BottomEnd)
                         )
                     }
@@ -201,7 +199,7 @@ fun ClanBossInfoPager(
 
     clanInfo.value?.let { clanValue ->
         //最大阶段数
-        val maxSection = clanValue.getAllBossInfo().size
+        val maxSection = clanValue.getAllBossIds().size
         //阶段选择状态
         val section = remember {
             mutableStateOf(maxSection - 1)
@@ -219,6 +217,9 @@ fun ClanBossInfoPager(
         }
         clanViewModel.getAllBossAttr(enemyIds)
         val bossDataList = clanViewModel.allClanBossAttr.observeAsState()
+        //Boss 部位信息
+        val partEnemyMap = clanViewModel.partEnemyAttrMap.observeAsState()
+        clanViewModel.getPartEnemysAttr(bossInfoList)
 
         //页面
         Box(
@@ -293,9 +294,9 @@ fun ClanBossInfoPager(
                                 Box {
                                     IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP)
                                     //多目标提示
-                                    if (it.targetCount > 1) {
+                                    if (it.partEnemyIds.isNotEmpty()) {
                                         MainTitleText(
-                                            text = "${it.targetCount - 1}",
+                                            text = it.partEnemyIds.size.toString(),
                                             modifier = Modifier.align(Alignment.BottomEnd)
                                         )
                                     }
@@ -316,46 +317,8 @@ fun ClanBossInfoPager(
                 SlideAnimation(visible = visible) {
                     HorizontalPager(state = pagerState) { pagerIndex ->
                         if (visible) {
-                            val bossDataValue = bossDataList.value!![pagerIndex]
-                            Card(
-                                shape = CardTopShape,
-                                elevation = Dimen.cardElevation,
-                                modifier = Modifier
-                                    .padding(top = Dimen.mediuPadding)
-                                    .fillMaxSize()
-                            ) {
-                                Column(
-                                    modifier = Modifier.verticalScroll(rememberScrollState())
-                                ) {
-                                    //名称
-                                    MainText(
-                                        text = bossDataValue.name,
-                                        modifier = Modifier
-                                            .align(Alignment.CenterHorizontally)
-                                            .padding(Dimen.mediuPadding),
-                                        selectable = true
-                                    )
-                                    Subtitle2(
-                                        text = "BOSS ${pagerIndex + 1}",
-                                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                                    )
-                                    //等级
-                                    Subtitle2(
-                                        text = stringResource(
-                                            id = R.string.level,
-                                            bossDataValue.level
-                                        ),
-                                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                                    )
-                                    //属性
-                                    AttrList(attrs = bossDataValue.attr.enemy())
-                                    //技能
-                                    BossSkillList(pagerIndex, bossDataList.value!!)
-                                    CommonSpacer()
-                                }
-                            }
+                            ClanBossInfoPagerItem(bossDataList, pagerIndex, list, partEnemyMap)
                         }
-
                     }
                 }
             }
@@ -365,10 +328,90 @@ fun ClanBossInfoPager(
     }
 }
 
+/**
+ * Boss 信息详情
+ */
+@ExperimentalAnimationApi
+@Composable
+private fun ClanBossInfoPagerItem(
+    bossDataList: State<List<EnemyParameterPro>?>,
+    pagerIndex: Int,
+    list: List<ClanBossTargetInfo>,
+    partEnemyMap: State<HashMap<Int, List<EnemyParameterPro>>?>
+) {
+    val bossDataValue = bossDataList.value!![pagerIndex]
+    val expanded = remember {
+        mutableStateOf(false)
+    }
+
+    Card(
+        shape = CardTopShape,
+        elevation = Dimen.cardElevation,
+        modifier = Modifier
+            .padding(top = Dimen.mediuPadding)
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
+            //描述
+            val desc = bossDataValue.getDesc()
+            Text(
+                text = desc,
+                maxLines = if (expanded.value) Int.MAX_VALUE else 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.subtitle2,
+                modifier = Modifier
+                    .animateContentSize()
+                    .padding(Dimen.mediuPadding)
+                    .clickable {
+                        expanded.value = !expanded.value
+                    }
+            )
+            //名称
+            MainText(
+                text = stringResource(
+                    id = R.string.boss_title,
+                    bossDataValue.level,
+                    bossDataValue.name
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(Dimen.mediuPadding),
+                selectable = true
+            )
+            //属性
+            val attr = if (list[pagerIndex].partEnemyIds.isNotEmpty()) {
+                bossDataValue.attr.multiplePartEnemy()
+            } else {
+                bossDataValue.attr.enemy()
+            }
+            AttrList(attrs = attr)
+            //多目标部位属性
+            partEnemyMap.value?.let { partEnemyMapValue ->
+                partEnemyMapValue[bossDataValue.unit_id]?.forEach {
+                    MainText(
+                        text = it.name,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(Dimen.mediuPadding),
+                        selectable = true
+                    )
+                    AttrList(attrs = it.attr.enemy())
+                }
+            }
+            //技能
+            BossSkillList(pagerIndex, bossDataList.value!!)
+            CommonSpacer()
+        }
+    }
+}
+
+
 @Composable
 private fun BossSkillList(
     index: Int,
-    bossList: List<EnemyParameter>,
+    bossList: List<EnemyParameterPro>,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getAllEnemySkill(bossList)

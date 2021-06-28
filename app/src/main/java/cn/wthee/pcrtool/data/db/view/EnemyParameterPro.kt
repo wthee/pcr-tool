@@ -1,17 +1,16 @@
-package cn.wthee.pcrtool.data.db.entity
+package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import cn.wthee.pcrtool.data.db.view.AttrInt
 
-@Entity(tableName = "enemy_parameter")
-data class EnemyParameter(
+data class EnemyParameterPro(
     @PrimaryKey
     @ColumnInfo(name = "enemy_id") val enemy_id: Int,
     @ColumnInfo(name = "unit_id") val unit_id: Int,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "comment") val comment: String,
+    @ColumnInfo(name = "normal_atk_cast_time") val atkTime: Double,
     @ColumnInfo(name = "level") val level: Int,
     @ColumnInfo(name = "rarity") val rarity: Int,
     @ColumnInfo(name = "promotion_level") val promotion_level: Int,
@@ -36,4 +35,15 @@ data class EnemyParameter(
 //    @ColumnInfo(name = "break_durability") val break_durability: Int,
 //    @ColumnInfo(name = "virtual_hp") val virtual_hp: Int,
     @Embedded var attr: AttrInt = AttrInt(),
-)
+
+    ) {
+    fun getSkillLv(): ArrayList<Int> {
+        return arrayListOf(
+            union_burst_level,
+            main_skill_lv_1, main_skill_lv_2, main_skill_lv_3, main_skill_lv_4, main_skill_lv_5,
+            main_skill_lv_6, main_skill_lv_7, main_skill_lv_8, main_skill_lv_9, main_skill_lv_10,
+        )
+    }
+
+    fun getDesc() = comment.replace("\\n", "").replace("·", "").replace("　", "")
+}
