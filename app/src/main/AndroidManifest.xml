@@ -27,13 +27,14 @@
         tools:targetApi="n">
         <service
             android:name=".service.PvpService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
-            android:screenOrientation="unspecified">
+            android:screenOrientation="unspecified"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

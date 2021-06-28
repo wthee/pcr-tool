@@ -5,8 +5,8 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "1.3.1"
-val code = 131
+val name = "132"
+val code = 132
 val sql = 110
 
 android {
@@ -28,6 +28,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["room.schemaLocation"] = "$projectDir/schemas"
+            }
         }
     }
 
@@ -116,7 +121,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
 
     //coil-gif
-    implementation("io.coil-kt:coil-gif:1.2.1")
+    implementation("io.coil-kt:coil-gif:1.2.2")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
@@ -128,8 +133,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
@@ -153,9 +158,9 @@ dependencies {
     implementation("androidx.startup:startup-runtime:1.0.0")
 
     //umeng
-    implementation("com.umeng.umsdk:common:9.3.8")
+    implementation("com.umeng.umsdk:common:9.4.0")
     implementation("com.umeng.umsdk:asms:1.2.3")
-    implementation("com.umeng.umsdk:apm:1.2.0")
+    implementation("com.umeng.umsdk:apm:1.3.1")
 
     //Work
     val workVersion = "2.7.0-alpha04"
