@@ -24,7 +24,6 @@ import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -95,7 +94,7 @@ fun RankEquipListItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorAnim.value, Shapes.medium),
+                .background(colorAnim.value, MaterialTheme.shapes.medium),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK

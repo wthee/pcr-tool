@@ -28,7 +28,6 @@ import cn.wthee.pcrtool.ui.compose.IconCompose
 import cn.wthee.pcrtool.ui.compose.VerticalGrid
 import cn.wthee.pcrtool.ui.compose.defaultSpring
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -83,7 +82,7 @@ fun ToolMenu(actions: NavActions) {
                     MainIconType.CHANGE_DATA -> {
                         val modifier = if (downloadState == -2) {
                             Modifier
-                                .clip(Shapes.large)
+                                .clip(MaterialTheme.shapes.medium)
                                 .clickable(
                                     onClick = getAction(
                                         coroutineScope,
@@ -92,14 +91,14 @@ fun ToolMenu(actions: NavActions) {
                                         it
                                     )
                                 )
-                                .fillMaxWidth()
+
                         } else {
-                            Modifier
-                                .clip(Shapes.large)
-                                .fillMaxWidth()
+                            Modifier.clip(MaterialTheme.shapes.medium)
                         }
                         Column(
-                            modifier = modifier,
+                            modifier = modifier
+                                .defaultMinSize(minWidth = Dimen.menuItemSize)
+                                .padding(Dimen.smallPadding),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             if (downloadState == -2) {
@@ -158,9 +157,10 @@ private fun MenuItem(
 ) {
     Column(
         modifier = Modifier
-            .clip(Shapes.large)
+            .clip(MaterialTheme.shapes.medium)
             .clickable(onClick = getAction(coroutineScope, context, actions, it))
-            .fillMaxWidth(),
+            .defaultMinSize(minWidth = Dimen.menuItemSize)
+            .padding(Dimen.smallPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)

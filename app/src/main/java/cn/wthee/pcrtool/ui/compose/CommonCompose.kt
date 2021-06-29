@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.insets.navigationBarsPadding
@@ -36,7 +35,7 @@ fun MainTitleText(
         color = MaterialTheme.colors.onPrimary,
         style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
-            .background(color = backgroundColor, shape = Shapes.small)
+            .background(color = backgroundColor, shape = MaterialTheme.shapes.small)
             .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
     )
 }
@@ -214,7 +213,7 @@ fun LineCompose(modifier: Modifier = Modifier) {
 fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val context = LocalContext.current
     Button(
-        shape = Shapes.large,
+        shape = MaterialTheme.shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
@@ -238,7 +237,7 @@ fun SubButton(
     val context = LocalContext.current
 
     OutlinedButton(
-        shape = Shapes.large,
+        shape = MaterialTheme.shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
@@ -353,7 +352,7 @@ fun SelectText(
     val mModifier = if (selected) {
         modifier
             .padding(top = Dimen.smallPadding)
-            .background(color = selectedColor, shape = Shapes.small)
+            .background(color = selectedColor, shape = MaterialTheme.shapes.small)
             .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
     } else {
         modifier.padding(top = Dimen.smallPadding)

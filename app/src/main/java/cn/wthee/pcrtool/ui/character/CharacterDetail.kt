@@ -34,7 +34,6 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
@@ -432,7 +431,7 @@ private fun CardImage(unitId: Int) {
                         ToastUtil.short(unLoadToast)
                     }
                 },
-                shape = Shapes.large,
+                shape = MaterialTheme.shapes.large,
             ) {
                 Box {
                     //图片

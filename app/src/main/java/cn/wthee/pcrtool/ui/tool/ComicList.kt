@@ -28,7 +28,6 @@ import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import com.google.accompanist.coil.rememberCoilPainter
@@ -237,7 +236,7 @@ private fun TocItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(Dimen.smallPadding)
-            .clip(Shapes.small)
+            .clip(MaterialTheme.shapes.small)
             .clickable {
                 selectIndex.value = index
             },

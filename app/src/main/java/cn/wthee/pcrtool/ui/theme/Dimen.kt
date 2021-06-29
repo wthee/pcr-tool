@@ -56,6 +56,8 @@ object Dimen {
     val toolMenuWidth = 100.dp
 
     val menuIconSize = 30.dp
+
+    val menuItemSize = 64.dp
 }
 
 

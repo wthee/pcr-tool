@@ -32,7 +32,6 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.ui.tool.CalendarItem
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -244,10 +243,10 @@ private fun Section(
 ) {
     val context = LocalContext.current
     val modifier = (if (onClick == null) {
-        Modifier.clip(Shapes.small)
+        Modifier.clip(MaterialTheme.shapes.small)
     } else {
         Modifier
-            .clip(Shapes.small)
+            .clip(MaterialTheme.shapes.small)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick.invoke()
