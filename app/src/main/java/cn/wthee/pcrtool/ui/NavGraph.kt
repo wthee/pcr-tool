@@ -62,7 +62,6 @@ object Navigation {
     const val TOOL_CLAN_BOSS_INFO = "toolClanBattleInfo"
     const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
-    const val TOOL_CALENDAR = "toolCalendar"
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
@@ -71,6 +70,7 @@ object Navigation {
     const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
     const val COMIC = "comic"
+    const val COMIC_ID = "comicId"
 }
 
 @ExperimentalComposeUiApi
@@ -347,13 +347,23 @@ fun NavGraph(
         composable(Navigation.TWEET) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            TweetList(scrollState, actions.toNewsDetail)
+            TweetList(scrollState, actions.toNewsDetail, actions.toComicListIndex)
         }
 
         //漫画信息
         composable(Navigation.COMIC) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             ComicList()
+        }
+
+        composable(
+            "${Navigation.COMIC}/{${Navigation.COMIC_ID}}",
+            arguments = listOf(navArgument(Navigation.COMIC_ID) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            ComicList(arguments.getInt(Navigation.COMIC_ID))
         }
     }
 }
@@ -518,6 +528,13 @@ class NavActions(navController: NavHostController) {
      */
     val toComicList = {
         navController.navigate(Navigation.COMIC)
+    }
+
+    /**
+     * 漫画
+     */
+    val toComicListIndex: (Int) -> Unit = { comicId ->
+        navController.navigate("${Navigation.COMIC}/${comicId}")
     }
 }
 

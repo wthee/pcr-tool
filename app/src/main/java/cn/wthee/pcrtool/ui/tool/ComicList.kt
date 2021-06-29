@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -45,7 +44,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
+fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val selectIndex = remember {
@@ -64,10 +63,12 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
 
     //关闭监听
     val ok = MainActivity.navViewModel.fabOKCilck.observeAsState().value ?: false
-    Log.e("DEBUG", state.offset.value.toString())
     Box {
         FadeAnimation(visible = visible) {
-            val pagerState = rememberPagerState(pageCount = comicList.size)
+            val pagerState = rememberPagerState(
+                pageCount = comicList.size,
+                initialPage = if (comicId != -1) comicList.size - comicId else 0
+            )
             ModalBottomSheetLayout(
                 sheetState = state,
                 scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),

@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 fun TweetList(
     scrollState: LazyListState,
     toDetail: (String) -> Unit,
+    toComic: (Int) -> Unit,
     tweetViewModel: TweetViewModel = hiltViewModel()
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -77,15 +78,15 @@ fun TweetList(
             LazyColumn(state = scrollState) {
                 if (tweet!!.loadState.prepend is LoadState.Loading) {
                     item {
-                        TweetItem(TweetData())
+                        TweetItem(TweetData(), toDetail, toComic)
                     }
                 }
                 items(tweet) {
-                    TweetItem(it ?: TweetData(), toDetail)
+                    TweetItem(it ?: TweetData(), toDetail, toComic)
                 }
                 if (tweet.loadState.append is LoadState.Loading) {
                     item {
-                        TweetItem(TweetData())
+                        TweetItem(TweetData(), toDetail, toComic)
                     }
                 }
                 item {
@@ -96,7 +97,7 @@ fun TweetList(
         FadeAnimation(visible = !visible) {
             LazyColumn(state = rememberLazyListState()) {
                 items(12) {
-                    TweetItem(TweetData())
+                    TweetItem(TweetData(), toDetail, toComic)
                 }
                 item {
                     CommonSpacer()
@@ -129,11 +130,18 @@ fun TweetList(
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-private fun TweetItem(data: TweetData, toDetail: ((String) -> Unit)? = null) {
+private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int) -> Unit) {
     val placeholder = data.id == ""
     val photos = data.getImageList()
     val pagerState = rememberPagerState(pageCount = photos.size)
-
+    var comicId = ""
+    var url = if (data.tweet.startsWith("【ぷりこねっ！りだいぶ】")) {
+        // 四格漫画
+        comicId = getComicId(data.tweet)
+        Constants.COMIC_URL + comicId + Constants.PNG
+    } else {
+        ""
+    }
     // 时间
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -186,9 +194,9 @@ private fun TweetItem(data: TweetData, toDetail: ((String) -> Unit)? = null) {
         //相关链接跳转
         if (!placeholder) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                TweetButton(data.link, toDetail)
+                TweetButton(data.link, toDetail = toDetail, toComic = toComic)
                 data.getUrlList().forEach {
-                    TweetButton(it, toDetail)
+                    TweetButton(it, comicId, toDetail = toDetail, toComic = toComic)
                 }
             }
         }
@@ -198,11 +206,8 @@ private fun TweetItem(data: TweetData, toDetail: ((String) -> Unit)? = null) {
                 state = pagerState,
                 modifier = Modifier.padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
             ) { pageIndex ->
-                val url = if (data.tweet.startsWith("【ぷりこねっ！りだいぶ】")) {
-                    // 四格漫画
-                    Constants.COMIC_URL + getComicId(data.tweet) + Constants.PNG
-                } else {
-                    photos[pageIndex]
+                if (url == "") {
+                    url = photos[pageIndex]
                 }
                 ImageCompose(url)
             }
@@ -218,36 +223,53 @@ private fun TweetItem(data: TweetData, toDetail: ((String) -> Unit)? = null) {
  */
 @ExperimentalAnimationApi
 @Composable
-private fun TweetButton(url: String, toDetail: ((String) -> Unit)? = null) {
+private fun TweetButton(
+    url: String,
+    comicId: String = "",
+    toDetail: (String) -> Unit,
+    toComic: (Int) -> Unit
+) {
     val context = LocalContext.current
     //根据链接获取相符的图标
     val btn = when {
         url.contains("youtu.be") || url.contains("www.youtube.com") -> TweetButtonData(
-            stringResource(id = R.string.youtube), MainIconType.YOUTUBE
-        )
+            stringResource(id = R.string.youtube), MainIconType.YOUTUBE,
+        ) {
+            openWebView(context, url)
+        }
         url.contains("priconne-redive.jp/news/") -> TweetButtonData(
             stringResource(id = R.string.tool_news), MainIconType.NEWS
-        )
+        ) {
+            //跳转至公告详情
+            toDetail(url.urlGetId())
+        }
         url.contains("twitter.com") -> TweetButtonData(
             stringResource(id = R.string.twitter), MainIconType.TWEET
-        )
+        ) {
+            openWebView(context, url)
+        }
         url.contains("hibiki-radio.jp") -> TweetButtonData(
             stringResource(id = R.string.hibiki), MainIconType.HIBIKI
-        )
-        else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER)
+        ) {
+            openWebView(context, url)
+        }
+        url.contains("comic") -> TweetButtonData(
+            stringResource(id = R.string.comic), MainIconType.COMIC
+        ) {
+            //跳转漫画
+            if (comicId != "") {
+                toComic(comicId.toInt())
+            }
+        }
+        else -> TweetButtonData(stringResource(id = R.string.other), MainIconType.BROWSER) {
+            openWebView(context, url)
+        }
     }
 
 
     TextButton(
         onClick = {
-            if (btn.iconType == MainIconType.NEWS) {
-                //跳转至公告详情
-                if (toDetail != null) {
-                    toDetail(url.urlGetId())
-                }
-            } else {
-                openWebView(context, url)
-            }
+            btn.action.invoke()
         },
     ) {
         IconCompose(data = btn.iconType.icon, size = Dimen.smallIconSize)
