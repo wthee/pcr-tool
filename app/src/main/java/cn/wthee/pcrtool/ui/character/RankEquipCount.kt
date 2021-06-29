@@ -7,11 +7,8 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -63,10 +60,10 @@ fun RankEquipCount(
         rank0.value = curRank
         rank1.value = targetRank
     }
-    if (rank1.value > 0 && rank0.value > 0) {
-        equipmentViewModel.getEquipByRank(unitId, rank0.value, rank1.value)
-    }
-    val rankEquipMaterials = equipmentViewModel.rankEquipMaterials.observeAsState()
+    val rankEquipMaterials =
+        equipmentViewModel.getEquipByRank(unitId, rank0.value, rank1.value).collectAsState(
+            initial = arrayListOf()
+        ).value
 
     // dialog 状态
     val state = rememberModalBottomSheetState(
@@ -79,7 +76,7 @@ fun RankEquipCount(
     }
     //关闭监听
     val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
-    if (rankEquipMaterials.value == null) {
+    if (rankEquipMaterials.isEmpty()) {
         navViewModel.loading.postValue(true)
     }
     val filter = navViewModel.filterEquip.observeAsState()
@@ -157,14 +154,13 @@ fun RankEquipCount(
                         filterValue.starIds =
                             GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
                                 ?: arrayListOf()
-
-                        if (rankEquipMaterials.value != null) {
+                        if (rankEquipMaterials.isNotEmpty()) {
                             navViewModel.loading.postValue(false)
                             LazyVerticalGrid(
                                 cells = GridCells.Fixed(spanCount),
                                 contentPadding = PaddingValues(Dimen.mediuPadding)
                             ) {
-                                items(items = rankEquipMaterials.value!!) { item ->
+                                items(items = rankEquipMaterials) { item ->
                                     EquipCountItem(item, filterValue, toEquipMaterial)
                                 }
                                 items(spanCount) {

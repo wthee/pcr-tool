@@ -161,7 +161,7 @@ fun NavGraph(
             EquipList(
                 scrollState,
                 toEquipDetail = actions.toEquipDetail,
-                toEquipMaterial = actions.toEquipMaterail
+                toEquipMaterial = actions.toEquipMaterial
             )
         }
 
@@ -174,7 +174,7 @@ fun NavGraph(
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterail)
+            EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterial)
         }
 
         //装备素材详情
@@ -242,7 +242,7 @@ fun NavGraph(
             RankEquipCount(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 maxRank = arguments.getInt(Navigation.MAX_RANK),
-                actions.toEquipMaterail,
+                actions.toEquipMaterial,
                 navViewModel = viewModel
             )
         }
@@ -296,13 +296,6 @@ fun NavGraph(
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
             )
-        }
-
-        //日历活动
-        composable(Navigation.TOOL_CALENDAR) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val scrollState = rememberLazyListState()
-            CalendarCompose(scrollState)
         }
 
         //竞技场查询
@@ -394,7 +387,7 @@ class NavActions(navController: NavHostController) {
     /**
      * 装备素材详情
      */
-    val toEquipMaterail: (Int) -> Unit = { equipId: Int ->
+    val toEquipMaterial: (Int) -> Unit = { equipId: Int ->
         navController.navigate("${Navigation.EQUIP_MATERIAL}/${equipId}")
     }
 
@@ -483,13 +476,6 @@ class NavActions(navController: NavHostController) {
      */
     val toPvp = {
         navController.navigate(Navigation.TOOL_PVP)
-    }
-
-    /**
-     * 日历
-     */
-    val toCalendar = {
-        navController.navigate(Navigation.TOOL_CALENDAR)
     }
 
     /**

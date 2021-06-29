@@ -98,7 +98,7 @@
     <string name="tool_calendar">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_pvp">竞技场</string>
-    <string name="tip_pvp_favorites">暂无收藏</string>
+    <string name="pvp_no_favorites">暂无收藏</string>
     <string name="tool_clan">团队战</string>
     <string name="tool_guild">角色公会</string>
     <string name="favorite_count">已收藏： %d </string>

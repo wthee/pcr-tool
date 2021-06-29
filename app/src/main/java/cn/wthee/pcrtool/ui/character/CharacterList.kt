@@ -12,11 +12,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -60,7 +57,7 @@ fun CharacterList(
     toDetail: (Int) -> Unit,
     viewModel: CharacterViewModel = hiltViewModel(),
 ) {
-    val list = viewModel.characterList.observeAsState()
+
     //筛选状态
     val filter = navViewModel.filterCharacter.observeAsState()
     // dialog 状态
@@ -82,8 +79,8 @@ fun CharacterList(
         filterValue.starIds =
             GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
                 ?: arrayListOf()
-        viewModel.getCharacters(filterValue)
     }
+    val list = viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -99,13 +96,13 @@ fun CharacterList(
         }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            if (list.value != null) {
+            FadeAnimation(visible = list.isNotEmpty()) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.mediuPadding)
                 ) {
-                    items(list.value!!) {
+                    items(list) {
                         CharacterItem(it, filter.value!!, toDetail = toDetail)
                     }
                     items(2) {
@@ -141,7 +138,7 @@ fun CharacterList(
                         navViewModel.resetClick.postValue(true)
                     }
                 }
-                val count = list.value?.size ?: 0
+                val count = list.size
                 // 数量显示&筛选按钮
                 FabCompose(
                     iconType = MainIconType.CHARACTER,
@@ -293,13 +290,9 @@ private fun FilterCharacterSheet(
     filter.atk = atkIndex.value
 
     //公会
-    characterViewModel.getGuilds()
-    val guildList = characterViewModel.guilds.observeAsState().value ?: arrayListOf()
+    val guildList = characterViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
     val guildIndex = remember {
         mutableStateOf(filter.guild)
-    }
-    if (!filter.isFilter()) {
-        guildIndex.value = 0
     }
     filter.guild = guildIndex.value
 
@@ -487,20 +480,22 @@ private fun FilterCharacterSheet(
             modifier = Modifier.padding(Dimen.smallPadding),
         )
         //公会名
-        MainText(
-            text = stringResource(id = R.string.title_guild),
-            modifier = Modifier.padding(top = Dimen.largePadding)
-        )
-
-        val guildChipData = arrayListOf(ChipData(0, stringResource(id = R.string.all)))
-        guildList.forEachIndexed { index, guildData ->
-            guildChipData.add(ChipData(index + 1, guildData.guildName))
+        if (guildList.isNotEmpty()) {
+            MainText(
+                text = stringResource(id = R.string.title_guild),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            val guildChipData = arrayListOf(ChipData(0, stringResource(id = R.string.all)))
+            guildList.forEachIndexed { index, guildData ->
+                guildChipData.add(ChipData(index + 1, guildData.guildName))
+            }
+            ChipGroup(
+                guildChipData,
+                guildIndex,
+                modifier = Modifier.padding(Dimen.smallPadding),
+            )
         }
-        ChipGroup(
-            guildChipData,
-            guildIndex,
-            modifier = Modifier.padding(Dimen.smallPadding),
-        )
+
     }
 }
 

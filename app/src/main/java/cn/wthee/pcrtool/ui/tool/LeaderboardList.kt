@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,8 +40,7 @@ fun LeaderboardList(
     scrollState: LazyListState,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
-    leaderViewModel.getLeader()
-    val list = leaderViewModel.leaderData.observeAsState()
+    val list = leaderViewModel.getLeader().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -73,27 +72,19 @@ fun LeaderboardList(
                     modifier = Modifier.weight(0.25f)
                 )
             }
-            if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
+            if (list.isEmpty()) {
                 //显示占位图
                 LazyColumn(contentPadding = PaddingValues(Dimen.largePadding)) {
                     items(20) {
                         LeaderboardItem(LeaderboardData())
                     }
                 }
-            } else if (list.value!!.message != "success") {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    MainText(
-                        text = stringResource(id = R.string.data_get_error),
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
             } else {
-                val info = list.value!!.data!!.leader
                 LazyColumn(
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
-                    items(info) {
+                    items(list) {
                         LeaderboardItem(it)
                     }
                     item {

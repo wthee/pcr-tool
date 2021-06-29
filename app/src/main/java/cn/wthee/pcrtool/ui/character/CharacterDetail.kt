@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.db.view.all
 import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -71,13 +72,11 @@ fun CharacterDetail(
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    attrViewModel.isUnknown(unitId)
     //是否已登场
-    val unknown = attrViewModel.isUnknown.observeAsState().value ?: false
+    val unknown = attrViewModel.isUnknown(unitId).collectAsState(initial = false).value
     //选择的 RANK
     val selectRank = navViewModel.selectRank.observeAsState().value ?: 0
-    //最大值
-    val allData = attrViewModel.allAttr.observeAsState()
+
     val levelMax = remember {
         mutableStateOf(0)
     }
@@ -105,11 +104,17 @@ fun CharacterDetail(
     if (selectRank != 0) {
         attrViewModel.rankValue.postValue(selectRank)
     }
-    if (level.value != null && rank.value != 0 && rarity.value != null && uniqueEquipLevel.value != null) {
-        attrViewModel.getCharacterInfo(
-            unitId, level.value!!, rank.value!!, rarity.value!!, uniqueEquipLevel.value!!
-        )
-    }
+    //最大值
+    val allData = attrViewModel.getCharacterInfo(
+        unitId,
+        level.value ?: 0,
+        rank.value ?: 0,
+        rarity.value ?: 0,
+        uniqueEquipLevel.value ?: 0
+    ).collectAsState(
+        initial = AllAttrData()
+    ).value
+
     val coroutineScope = rememberCoroutineScope()
     // dialog 状态
     val state = rememberModalBottomSheetState(
@@ -204,7 +209,7 @@ fun CharacterDetail(
                 )
                 //数据加载后，展示页面
                 val visible =
-                    levelMax.value != 0 && allData.value != null && allData.value!!.equips.isNotEmpty()
+                    levelMax.value != 0 && allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
                 SlideAnimation(visible = visible) {
                     if (visible) {
                         //页面
@@ -234,7 +239,7 @@ fun CharacterDetail(
                                     .align(Alignment.CenterHorizontally)
                             )
                             //属性
-                            AttrList(attrs = allData.value!!.sumAttr.all())
+                            AttrList(attrs = allData.sumAttr.all())
                             //剧情属性
                             MainText(
                                 text = stringResource(id = R.string.title_story_attr),
@@ -245,29 +250,29 @@ fun CharacterDetail(
                                         bottom = Dimen.smallPadding
                                     )
                             )
-                            AttrList(attrs = allData.value!!.stroyAttr.allNotZero())
+                            AttrList(attrs = allData.stroyAttr.allNotZero())
                             //RANK 装备
                             CharacterEquip(
-                                unitId, rank.value!!,
-                                allData.value!!.equips,
+                                unitId, rank.value ?: 1,
+                                allData.equips,
                                 toEquipDetail, toRankEquip,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
                             //显示专武
-                            if (allData.value!!.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                            if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                                 UniqueEquip(
                                     uniqueEquipLevelMax.value,
                                     sliderUniqueEquipLevel,
-                                    allData.value!!.uniqueEquip
+                                    allData.uniqueEquip
                                 )
                             }
                             //技能
                             CharacterSkill(
                                 unitId = unitId,
-                                level = level.value!!,
+                                level = level.value ?: 1,
                                 atk = max(
-                                    allData.value!!.sumAttr.atk.int,
-                                    allData.value!!.sumAttr.magicStr.int
+                                    allData.sumAttr.atk.int,
+                                    allData.sumAttr.magicStr.int
                                 )
                             )
                         }

@@ -2,20 +2,18 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.*
 import cn.wthee.pcrtool.data.model.AllAttrData
-import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -32,9 +30,6 @@ class CharacterAttrViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    val allAttr = MutableLiveData<AllAttrData>()
-    val attrCompareData = MutableLiveData<List<RankCompareData>>()
-    val isUnknown = MutableLiveData<Boolean>()
     val levelValue = MutableLiveData<Int>()
     val rankValue = MutableLiveData<Int>()
     val rarityValue = MutableLiveData<Int>()
@@ -49,14 +44,12 @@ class CharacterAttrViewModel @Inject constructor(
      * @param rarity 角色星级
      * @param uniqueEquipLevel 角色专武等级
      */
-    fun getCharacterInfo(unitId: Int, level: Int, rank: Int, rarity: Int, uniqueEquipLevel: Int) {
-        //计算属性
-        viewModelScope.launch {
-            val attr = getAttrs(unitId, level, rank, rarity, uniqueEquipLevel)
-            allAttr.postValue(attr)
+    fun getCharacterInfo(unitId: Int, level: Int, rank: Int, rarity: Int, uniqueEquipLevel: Int) =
+        flow {
+            if (level != 0 && rank != 0 && rarity != 0 && uniqueEquipLevel != 0) {
+                emit(getAttrs(unitId, level, rank, rarity, uniqueEquipLevel))
+            }
         }
-
-    }
 
     /**
      * 获取角色属性信息
@@ -193,14 +186,12 @@ class CharacterAttrViewModel @Inject constructor(
      *
      * @param unitId 角色编号
      */
-    fun isUnknown(unitId: Int) {
-        viewModelScope.launch {
-            val data = unitRepository.getRankStatus(unitId, 2)
-            if (data == null) {
-                isUnknown.postValue(true)
-            } else {
-                isUnknown.postValue(false)
-            }
+    fun isUnknown(unitId: Int) = flow {
+        val data = unitRepository.getRankStatus(unitId, 2)
+        if (data == null) {
+            emit(true)
+        } else {
+            emit(false)
         }
     }
 
@@ -217,11 +208,9 @@ class CharacterAttrViewModel @Inject constructor(
         uniqueEquipLevel: Int,
         rank0: Int,
         rank1: Int
-    ) {
-        viewModelScope.launch {
-            val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
-            val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
-            attrCompareData.postValue(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
-        }
+    ) = flow {
+        val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
+        val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
+        emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
     }
 }

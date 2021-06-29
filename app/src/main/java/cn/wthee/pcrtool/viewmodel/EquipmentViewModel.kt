@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
@@ -11,7 +8,7 @@ import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -24,27 +21,16 @@ class EquipmentViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    var equip = MutableLiveData<EquipmentMaxData>()
-    var equips = MutableLiveData<List<EquipmentMaxData>>()
-    var equipMaterialInfos = MutableLiveData<List<EquipmentMaterial>>()
-    var rankEquipMaterials = MutableLiveData<List<EquipmentMaterial>>()
-    var dropInfo = MutableLiveData<List<EquipmentDropInfo>>()
-    var allRankEquipList = MutableLiveData<List<UnitPromotion>>()
-    var equipTypes = MutableLiveData<List<String>>()
-
-
     /**
      * 获取装备列表
      *
      * @param params 装备筛选
      */
-    fun getEquips(params: FilterEquipment) {
-        viewModelScope.launch {
-            val typeName =
-                if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
-            val data = equipmentRepository.getEquipments(params, typeName)
-            equips.postValue(data)
-        }
+    fun getEquips(params: FilterEquipment) = flow {
+        val typeName =
+            if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
+        val data = equipmentRepository.getEquipments(params, typeName)
+        emit(data)
     }
 
     /**
@@ -52,21 +38,15 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param equipId 装备编号
      */
-    fun getEquip(equipId: Int) {
-        viewModelScope.launch {
-            val data = equipmentRepository.getEquipmentData(equipId)
-            equip.postValue(data)
-        }
+    fun getEquip(equipId: Int) = flow {
+        emit(equipmentRepository.getEquipmentData(equipId))
     }
 
     /**
      * 获取装备类型
      */
-    fun getTypes() {
-        viewModelScope.launch {
-            val data = equipmentRepository.getEquipTypes()
-            equipTypes.postValue(data)
-        }
+    fun getTypes() = flow {
+        emit(equipmentRepository.getEquipTypes())
     }
 
     /**
@@ -76,8 +56,8 @@ class EquipmentViewModel @Inject constructor(
      * @param startRank 当前rank
      * @param endRank 目标rank
      */
-    fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) {
-        viewModelScope.launch {
+    fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) = flow {
+        if (startRank > 0 && endRank > 0 && startRank <= endRank) {
             val data = equipmentRepository.getEquipByRank(unitId, startRank, endRank)
             val materials = arrayListOf<EquipmentMaterial>()
             data.getAllEquipId().forEach { map ->
@@ -100,7 +80,7 @@ class EquipmentViewModel @Inject constructor(
                 map[key] = it
             }
             //转换为列表
-            rankEquipMaterials.postValue(map.values.sortedByDescending {
+            emit(map.values.sortedByDescending {
                 it.count
             })
         }
@@ -111,10 +91,8 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param equip 装备信息
      */
-    fun getEquipInfos(equip: EquipmentMaxData) {
-        viewModelScope.launch {
-            equipMaterialInfos.postValue(getEquipCraft(equip))
-        }
+    fun getEquipInfos(equip: EquipmentMaxData) = flow {
+        emit(getEquipCraft(equip))
     }
 
     /**
@@ -122,11 +100,8 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param unitId 角色编号
      */
-    fun getAllRankEquipList(unitId: Int) {
-        viewModelScope.launch {
-            val data = equipmentRepository.getAllRankEquip(unitId)
-            allRankEquipList.postValue(data)
-        }
+    fun getAllRankEquipList(unitId: Int) = flow {
+        emit(equipmentRepository.getAllRankEquip(unitId))
     }
 
     /**
@@ -204,19 +179,17 @@ class EquipmentViewModel @Inject constructor(
      *
      * @param equipId 装备编号
      */
-    fun getDropInfos(equipId: Int) {
-        viewModelScope.launch {
-            if (equipId != Constants.UNKNOWN_EQUIP_ID) {
-                val equip = equipmentRepository.getEquipmentData(equipId)
-                val fixedId = if (equip.craftFlg == 1) {
-                    equipmentRepository.getEquipmentCraft(equipId).cid1
-                } else
-                    equipId
-                //获取装备掉落信息
-                val infos =
-                    equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipId))
-                dropInfo.postValue(infos)
-            }
+    fun getDropInfos(equipId: Int) = flow {
+        if (equipId != Constants.UNKNOWN_EQUIP_ID) {
+            val equip = equipmentRepository.getEquipmentData(equipId)
+            val fixedId = if (equip.craftFlg == 1) {
+                equipmentRepository.getEquipmentCraft(equipId).cid1
+            } else
+                equipId
+            //获取装备掉落信息
+            val infos =
+                equipmentRepository.getEquipDropAreas(fixedId).sortedWith(getSort(equipId))
+            emit(infos)
         }
     }
 

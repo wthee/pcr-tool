@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -39,23 +40,18 @@ fun NoticeList(
     scrollState: LazyListState,
     noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
-    noticeViewModel.getNotice()
-    val noticeList = noticeViewModel.notice.observeAsState()
+    val noticeList = noticeViewModel.getNotice().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
     val icon = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        val visible =
-            noticeList.value != null && noticeList.value!!.data != null && noticeList.value!!.data!!.isNotEmpty()
+    Box(modifier = Modifier.fillMaxSize()) {
+        val visible = noticeList.isNotEmpty()
         LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.largePadding)) {
             if (visible) {
-                items(noticeList.value!!.data!!) {
+                items(noticeList) {
                     NoticeItem(it)
                 }
             } else {

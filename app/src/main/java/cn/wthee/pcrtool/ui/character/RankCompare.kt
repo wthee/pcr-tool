@@ -8,11 +8,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,15 +73,14 @@ fun RankCompare(
     if (targetRank != 0) {
         rank1.value = targetRank ?: maxRank
     }
-    attrViewModel.getUnitAttrCompare(
+    val attrCompareData = attrViewModel.getUnitAttrCompare(
         unitId,
         level,
         rarity,
         uniqueEquipLevel,
         rank0.value,
         rank1.value
-    )
-    val attrCompareData = attrViewModel.attrCompareData.observeAsState().value ?: arrayListOf()
+    ).collectAsState(initial = arrayListOf()).value
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden

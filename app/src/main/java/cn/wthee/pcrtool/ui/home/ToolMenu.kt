@@ -187,7 +187,6 @@ private fun getAction(
             MainIconType.EVENT -> actions.toEvent()
             MainIconType.GUILD -> actions.toGuild()
             MainIconType.PVP_SEARCH -> actions.toPvp()
-            MainIconType.CALENDAR -> actions.toCalendar()
             MainIconType.LEADER -> actions.toLeader()
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()

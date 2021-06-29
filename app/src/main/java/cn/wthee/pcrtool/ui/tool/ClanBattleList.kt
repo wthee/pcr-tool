@@ -54,24 +54,23 @@ fun ClanBattleList(
     toClanBossInfo: (Int, Int) -> Unit,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
-    clanViewModel.getAllClanBattleData()
-    val clanList = clanViewModel.clanInfoList.observeAsState()
+
+    val clanList =
+        clanViewModel.getAllClanBattleData().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val visible = clanList.value != null && clanList.value!!.isNotEmpty()
+        val visible = clanList.isNotEmpty()
         FadeAnimation(visible = visible) {
             LazyColumn(
                 state = scrollState,
                 contentPadding = PaddingValues(Dimen.largePadding)
             ) {
-                clanList.value?.let { list ->
-                    items(list) {
-                        ClanBattleItem(it, toClanBossInfo)
-                    }
+                items(clanList) {
+                    ClanBattleItem(it, toClanBossInfo)
                 }
                 item {
                     CommonSpacer()
@@ -191,13 +190,14 @@ fun ClanBossInfoPager(
     index: Int,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
-    clanViewModel.getClanInfo(clanId)
-    val clanInfo = clanViewModel.clanInfo.observeAsState()
-    val pagerState = rememberPagerState(pageCount = 5, initialPage = index)
+    val clanInfo =
+        clanViewModel.getClanInfo(clanId).collectAsState(initial = null).value
+    val pagerState =
+        rememberPagerState(pageCount = 5, initialPage = index, initialOffscreenLimit = 4)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    clanInfo.value?.let { clanValue ->
+    clanInfo?.let { clanValue ->
         //最大阶段数
         val maxSection = clanValue.getAllBossIds().size
         //阶段选择状态
@@ -215,11 +215,11 @@ fun ClanBossInfoPager(
         bossInfoList.forEach {
             enemyIds.add(it.enemyId)
         }
-        clanViewModel.getAllBossAttr(enemyIds)
-        val bossDataList = clanViewModel.allClanBossAttr.observeAsState()
+        val bossDataList =
+            clanViewModel.getAllBossAttr(enemyIds).collectAsState(initial = arrayListOf()).value
         //Boss 部位信息
-        val partEnemyMap = clanViewModel.partEnemyAttrMap.observeAsState()
-        clanViewModel.getPartEnemysAttr(bossInfoList)
+        val partEnemyMap = clanViewModel.getPartEnemyAttr(bossInfoList)
+            .collectAsState(initial = hashMapOf()).value
 
         //页面
         Box(
@@ -313,7 +313,7 @@ fun ClanBossInfoPager(
                     }
                 }
                 //BOSS信息
-                val visible = bossDataList.value != null && bossDataList.value!!.isNotEmpty()
+                val visible = bossDataList.isNotEmpty()
                 SlideAnimation(visible = visible) {
                     HorizontalPager(state = pagerState) { pagerIndex ->
                         if (visible) {
@@ -334,12 +334,12 @@ fun ClanBossInfoPager(
 @ExperimentalAnimationApi
 @Composable
 private fun ClanBossInfoPagerItem(
-    bossDataList: State<List<EnemyParameterPro>?>,
+    bossDataList: List<EnemyParameterPro>,
     pagerIndex: Int,
     list: List<ClanBossTargetInfo>,
-    partEnemyMap: State<HashMap<Int, List<EnemyParameterPro>>?>
+    partEnemyMap: HashMap<Int, List<EnemyParameterPro>>
 ) {
-    val bossDataValue = bossDataList.value!![pagerIndex]
+    val bossDataValue = bossDataList[pagerIndex]
     val expanded = remember {
         mutableStateOf(false)
     }
@@ -389,22 +389,20 @@ private fun ClanBossInfoPagerItem(
             }
             AttrList(attrs = attr)
             //多目标部位属性
-            partEnemyMap.value?.let { partEnemyMapValue ->
-                partEnemyMapValue[bossDataValue.unit_id]?.forEach {
-                    //名称
-                    MainText(
-                        text = it.name,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(top = Dimen.largePadding),
-                        selectable = true
-                    )
-                    //属性
-                    AttrList(attrs = it.attr.enemy())
-                }
+            partEnemyMap[bossDataValue.unit_id]?.forEach {
+                //名称
+                MainText(
+                    text = it.name,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = Dimen.largePadding),
+                    selectable = true
+                )
+                //属性
+                AttrList(attrs = it.attr.enemy())
             }
             //技能
-            BossSkillList(pagerIndex, bossDataList.value!!)
+            BossSkillList(pagerIndex, bossDataList)
             CommonSpacer()
         }
     }

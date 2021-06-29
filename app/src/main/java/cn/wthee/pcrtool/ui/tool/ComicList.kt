@@ -51,10 +51,8 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
     val selectIndex = remember {
         mutableStateOf(0)
     }
-
-    comicViewModel.getComic()
-    val comic = comicViewModel.comic.observeAsState().value ?: arrayListOf()
-    val visible = comic.isNotEmpty()
+    val comicList = comicViewModel.getComic().collectAsState(initial = arrayListOf()).value
+    val visible = comicList.isNotEmpty()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -69,7 +67,7 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
     Log.e("DEBUG", state.offset.value.toString())
     Box {
         FadeAnimation(visible = visible) {
-            val pagerState = rememberPagerState(pageCount = comic.size)
+            val pagerState = rememberPagerState(pageCount = comicList.size)
             ModalBottomSheetLayout(
                 sheetState = state,
                 scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
@@ -81,7 +79,7 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
                 },
                 sheetContent = {
                     //章节选择
-                    SelectPager(scrollState, selectIndex, comic)
+                    SelectPager(scrollState, selectIndex, comicList)
                 }
             ) {
                 if (ok) {
@@ -102,8 +100,8 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
                         .fillMaxSize()
                 ) {
                     HorizontalPager(state = pagerState) { pageIndex ->
-                        if (comic.isNotEmpty()) {
-                            ComicItem(data = comic[pageIndex])
+                        if (comicList.isNotEmpty()) {
+                            ComicItem(data = comicList[pageIndex])
                         }
                     }
 

@@ -8,7 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,15 +35,13 @@ fun CharacterBasicInfo(
     unitId: Int,
     viewModel: CharacterViewModel = hiltViewModel()
 ) {
-    viewModel.getCharacter(unitId)
-    val data = viewModel.character.observeAsState().value
+    val data = viewModel.getCharacter(unitId).collectAsState(initial = null).value
 
     FadeAnimation(visible = data != null) {
         data?.let { info ->
             CharacterInfoCompose(info, scrollState)
         }
     }
-
 }
 
 @Composable
