@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.MyApplication
@@ -183,7 +182,12 @@ fun PvpSearchCompose(
             ) {
                 selectedIds.forEach {
                     Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        PvpIconItem(selectedIds = selectedIds, it = it, floatWindow)
+                        PvpIconItem(
+                            selectedIds = selectedIds,
+                            it = it,
+                            floatWindow = floatWindow,
+                            selectedEffect = false
+                        )
                     }
                 }
             }
@@ -517,7 +521,8 @@ private fun PvpPositionIcon(iconId: Int) {
 fun PvpIconItem(
     selectedIds: SnapshotStateList<PvpCharacterData>,
     it: PvpCharacterData,
-    floatWindow: Boolean
+    floatWindow: Boolean,
+    selectedEffect: Boolean = true
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
@@ -558,17 +563,13 @@ fun PvpIconItem(
             selectedIds.sortByDescending { it.position }
         }
         //位置
-        if (!floatWindow) {
-            val text =
-                if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
-            Text(
-                text = text,
-                color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier.padding(bottom = Dimen.smallPadding)
-            )
-        }
+        val text =
+            if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
+        SelectText(
+            selected = selected && selectedEffect,
+            text = text,
+            padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
+        )
     }
 }
 

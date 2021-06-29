@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -347,15 +348,16 @@ fun SelectText(
     text: String,
     selectedColor: Color = MaterialTheme.colors.primary,
     textColor: Color = Color.Unspecified,
-    style: TextStyle = MaterialTheme.typography.body2
+    style: TextStyle = MaterialTheme.typography.body2,
+    padding: Dp = Dimen.smallPadding
 ) {
     val mModifier = if (selected) {
         modifier
-            .padding(top = Dimen.smallPadding)
+            .padding(top = padding)
             .background(color = selectedColor, shape = MaterialTheme.shapes.small)
-            .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
+            .padding(start = padding, end = padding)
     } else {
-        modifier.padding(top = Dimen.smallPadding)
+        modifier.padding(top = padding)
     }
     Text(
         text = text,
