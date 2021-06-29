@@ -117,10 +117,18 @@ fun SkillItem(
         )
         //技能类型
         if (!isClanBoss) {
-            Text(
+            CaptionText(
                 text = type,
                 color = colorResource(color),
-                style = MaterialTheme.typography.caption,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = Dimen.smallPadding)
+            )
+        }
+        //冷却时间
+        if (isClanBoss && skillDetail.bossUbCooltime > 0.0) {
+            CaptionText(
+                text = skillDetail.bossUbCooltime.toString(),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = Dimen.smallPadding)

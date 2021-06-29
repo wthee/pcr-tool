@@ -123,7 +123,8 @@ class SkillViewModel @Inject constructor(
                     skill.icon_type,
                     skill.skill_cast_time,
                     lv,
-                    atk
+                    atk,
+                    skill.boss_ub_cool_time
                 )
                 val actions = skillRepository.getSkillActions(lv, atk, skill.getAllActionId())
                 val dependIds = skill.getSkillDependData()

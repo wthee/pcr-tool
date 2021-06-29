@@ -370,15 +370,16 @@ private fun ClanBossInfoPagerItem(
             )
             //名称
             MainText(
-                text = stringResource(
-                    id = R.string.boss_title,
-                    bossDataValue.level,
-                    bossDataValue.name
-                ),
+                text = bossDataValue.name,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(Dimen.mediuPadding),
+                    .padding(top = Dimen.mediuPadding),
                 selectable = true
+            )
+            //等级
+            CaptionText(
+                text = bossDataValue.level.toString(),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             //属性
             val attr = if (list[pagerIndex].partEnemyIds.isNotEmpty()) {
@@ -390,13 +391,15 @@ private fun ClanBossInfoPagerItem(
             //多目标部位属性
             partEnemyMap.value?.let { partEnemyMapValue ->
                 partEnemyMapValue[bossDataValue.unit_id]?.forEach {
+                    //名称
                     MainText(
                         text = it.name,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(Dimen.mediuPadding),
+                            .padding(top = Dimen.largePadding),
                         selectable = true
                     )
+                    //属性
                     AttrList(attrs = it.attr.enemy())
                 }
             }
