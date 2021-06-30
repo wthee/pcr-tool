@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
@@ -46,7 +45,6 @@ class CharacterAttrViewModel @Inject constructor(
     fun getCharacterInfo(unitId: Int, property: CharacterProperty?) =
         flow {
             if (property != null && property.isInit()) {
-                Log.e("DEBUG", property.toString())
                 emit(
                     getAttrs(
                         unitId,
