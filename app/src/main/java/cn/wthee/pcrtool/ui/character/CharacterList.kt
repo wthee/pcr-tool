@@ -477,7 +477,7 @@ private fun FilterCharacterSheet(
         ChipGroup(
             atkChipData,
             atkIndex,
-            modifier = Modifier.padding(Dimen.smallPadding),
+            modifier = Modifier.padding(Dimen.smallPadding)
         )
         //公会名
         if (guildList.isNotEmpty()) {
@@ -494,8 +494,8 @@ private fun FilterCharacterSheet(
                 guildIndex,
                 modifier = Modifier.padding(Dimen.smallPadding),
             )
+            CommonSpacer()
         }
-
     }
 }
 

@@ -132,11 +132,7 @@ fun NavGraph(
             CharacterDetail(
                 scrollState,
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                actions.toEquipDetail,
-                actions.toCharacterBasicInfo,
-                actions.toCharacteRankEquip,
-                actions.toCharacteRankCompare,
-                actions.toCharacteEquipCount,
+                actions,
                 viewModel
             )
 

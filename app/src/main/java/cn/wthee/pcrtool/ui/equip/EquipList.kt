@@ -331,6 +331,7 @@ private fun FilterEquipSheet(
             typeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+        CommonSpacer()
     }
 }
 

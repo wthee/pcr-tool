@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel

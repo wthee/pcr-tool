@@ -47,7 +47,7 @@ object Dimen {
 
     val slideHeight = 28.dp
 
-    val starIconSize = 26.dp
+    val starIconSize = 32.dp
 
     val cardHeight = 52.dp
 

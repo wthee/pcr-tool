@@ -10,6 +10,7 @@ import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +27,6 @@ class SkillViewModel @Inject constructor(
 
     var skills = MutableLiveData<List<SkillDetail>>()
     var allSkills = MutableLiveData<ArrayList<List<SkillDetail>>>()
-    var atkPattern = MutableLiveData<List<AttackPattern>>()
     var allAtkPattern = MutableLiveData<ArrayList<List<AttackPattern>>>()
     var iconTypes = MutableLiveData(hashMapOf<Int, Int>())
     var allIconTypes = MutableLiveData<ArrayList<HashMap<Int, Int>>>()
@@ -145,12 +145,8 @@ class SkillViewModel @Inject constructor(
      *
      * @param unitId 角色编号
      */
-    fun getCharacterSkillLoops(unitId: Int) {
-        viewModelScope.launch {
-            //技能循环
-            val pattern = skillRepository.getAttackPattern(unitId)
-            atkPattern.postValue(pattern)
-        }
+    fun getCharacterSkillLoops(unitId: Int) = flow {
+        emit(skillRepository.getAttackPattern(unitId))
     }
 
     /**
