@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -28,7 +27,6 @@ import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
 import com.google.accompanist.coil.rememberCoilPainter
@@ -46,16 +44,14 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
+fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
     val selectIndex = remember {
         mutableStateOf(0)
     }
-
-    comicViewModel.getComic()
-    val comic = comicViewModel.comic.observeAsState().value ?: arrayListOf()
-    val visible = comic.isNotEmpty()
+    val comicList = comicViewModel.getComic().collectAsState(initial = arrayListOf()).value
+    val visible = comicList.isNotEmpty()
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
@@ -67,10 +63,12 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
 
     //关闭监听
     val ok = MainActivity.navViewModel.fabOKCilck.observeAsState().value ?: false
-    Log.e("DEBUG", state.offset.value.toString())
     Box {
         FadeAnimation(visible = visible) {
-            val pagerState = rememberPagerState(pageCount = comic.size)
+            val pagerState = rememberPagerState(
+                pageCount = comicList.size,
+                initialPage = if (comicId != -1) comicList.size - comicId else 0
+            )
             ModalBottomSheetLayout(
                 sheetState = state,
                 scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
@@ -82,7 +80,7 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
                 },
                 sheetContent = {
                     //章节选择
-                    SelectPager(scrollState, selectIndex, comic)
+                    SelectPager(scrollState, selectIndex, comicList)
                 }
             ) {
                 if (ok) {
@@ -103,8 +101,8 @@ fun ComicList(comicViewModel: ComicViewModel = hiltViewModel()) {
                         .fillMaxSize()
                 ) {
                     HorizontalPager(state = pagerState) { pageIndex ->
-                        if (comic.isNotEmpty()) {
-                            ComicItem(data = comic[pageIndex])
+                        if (comicList.isNotEmpty()) {
+                            ComicItem(data = comicList[pageIndex])
                         }
                     }
 
@@ -237,7 +235,7 @@ private fun TocItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(Dimen.smallPadding)
-            .clip(Shapes.small)
+            .clip(MaterialTheme.shapes.small)
             .clickable {
                 selectIndex.value = index
             },

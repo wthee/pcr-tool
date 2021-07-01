@@ -112,7 +112,7 @@ class MainActivity : ComponentActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         val width = ScreenUtil.getWidth()
         val height = ScreenUtil.getHeight()
-        mFloatingWindowHeight = if (width > height) height - 48f.dp2px else width - 48f.dp2px
+        mFloatingWindowHeight = if (width > height) height else width
         super.onConfigurationChanged(newConfig)
     }
 

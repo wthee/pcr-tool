@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
-import cn.wthee.pcrtool.data.db.view.allNotZero
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
@@ -38,10 +38,10 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 @Composable
 fun EquipMainInfo(
     equipId: Int,
-    toEquipMaterail: (Int) -> Unit, equipmentViewModel: EquipmentViewModel = hiltViewModel()
+    toEquipMaterial: (Int) -> Unit, equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    equipmentViewModel.getEquip(equipId)
-    val equipMaxData = equipmentViewModel.equip.observeAsState().value
+    val equipMaxData =
+        equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
     //收藏状态
     val filter = navViewModel.filterEquip.observeAsState()
     val loved = remember {
@@ -61,9 +61,9 @@ fun EquipMainInfo(
     ) {
 
         Column {
-            equipMaxData?.let {
+            if (equipMaxData.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                 MainText(
-                    text = it.equipmentName,
+                    text = equipMaxData.equipmentName,
                     color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     selectable = true
@@ -75,18 +75,19 @@ fun EquipMainInfo(
                 ) {
                     IconCompose(data = getEquipIconUrl(equipId))
                     Subtitle2(
-                        text = it.getDesc(),
+                        text = equipMaxData.getDesc(),
                         modifier = Modifier.padding(start = Dimen.mediuPadding),
                         selectable = true
                     )
                 }
                 //属性
-                AttrList(attrs = it.attr.allNotZero())
+                AttrList(attrs = equipMaxData.attr.allNotZero())
+
             }
-            SlideAnimation(visible = equipMaxData != null) {
+            SlideAnimation(visible = equipMaxData.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                 //合成素材
-                if (equipMaxData != null && filter.value != null) {
-                    EquipMaterialList(equipMaxData, filter.value!!, toEquipMaterail)
+                if (filter.value != null) {
+                    EquipMaterialList(equipMaxData, filter.value!!, toEquipMaterial)
                 }
             }
         }
@@ -121,18 +122,11 @@ fun EquipMainInfo(
 private fun EquipMaterialList(
     equip: EquipmentMaxData,
     filter: FilterEquipment,
-    toEquipMaterail: (Int) -> Unit,
+    toEquipMaterial: (Int) -> Unit,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    equipmentViewModel.getEquipInfos(equip)
-    val data = equipmentViewModel.equipMaterialInfos.observeAsState().value ?: listOf()
-    //点击查看的装备素材
-    val clickId = remember { mutableStateOf(Constants.UNKNOWN_EQUIP_ID) }
-    //默认显示第一个装备掉落信息
-    if (data.isNotEmpty()) {
-        clickId.value = data[0].id
-        equipmentViewModel.getDropInfos(data[0].id)
-    }
+    val materialList =
+        equipmentViewModel.getEquipInfos(equip).collectAsState(initial = arrayListOf()).value
 
     Column {
         Spacer(
@@ -145,7 +139,7 @@ private fun EquipMaterialList(
         )
         //装备合成素材
         VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-            data.forEach { material ->
+            materialList.forEach { material ->
                 val loved = filter.starIds.contains(material.id)
                 Column(
                     modifier = Modifier
@@ -157,8 +151,7 @@ private fun EquipMaterialList(
                         ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IconCompose(data = getEquipIconUrl(material.id)) {
-                        clickId.value = material.id
-                        toEquipMaterail(material.id)
+                        toEquipMaterial(material.id)
                     }
                     SelectText(
                         selected = loved,

@@ -16,6 +16,7 @@ data class SkillDetail(
     val castTime: Double,
     val level: Int,
     val atk: Int,
+    val bossUbCooltime: Double,
 ) {
     /**
      * 角色技能效果

@@ -16,7 +16,6 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-    <string name="level">等级：%d</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
@@ -99,7 +98,7 @@
     <string name="tool_calendar">进行中活动</string>
     <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_pvp">竞技场</string>
-    <string name="tip_pvp_favorites">暂无收藏</string>
+    <string name="pvp_no_favorites">暂无收藏</string>
     <string name="tool_clan">团队战</string>
     <string name="tool_guild">角色公会</string>
     <string name="favorite_count">已收藏： %d </string>

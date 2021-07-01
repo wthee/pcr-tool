@@ -46,45 +46,56 @@ data class AttrInt(
         0,
         0,
     )
-}
 
-/**
- * 全部属性
- */
-fun AttrInt.all(): ArrayList<AttrValue> {
-    val attrs = arrayListOf<AttrValue>()
-    for (i in 0..16) {
-        val value = when (i) {
-            0 -> this.hp
-            1 -> this.lifeSteal
-            2 -> this.atk
-            3 -> this.magicStr
-            4 -> this.def
-            5 -> this.magicDef
-            6 -> this.physicalCritical
-            7 -> this.magicCritical
-            8 -> this.physicalPenetrate
-            9 -> this.magicPenetrate
-            10 -> this.accuracy
-            11 -> this.dodge
-            12 -> this.waveHpRecovery
-            13 -> this.hpRecoveryRate
-            14 -> this.waveEnergyRecovery
-            15 -> this.energyRecoveryRate
-            16 -> this.energyReduceRate
-            else -> 0.0
+
+    /**
+     * 全部属性
+     */
+    fun all(): ArrayList<AttrValue> {
+        val attrs = arrayListOf<AttrValue>()
+        for (i in 0..16) {
+            val value = when (i) {
+                0 -> this.hp
+                1 -> this.lifeSteal
+                2 -> this.atk
+                3 -> this.magicStr
+                4 -> this.def
+                5 -> this.magicDef
+                6 -> this.physicalCritical
+                7 -> this.magicCritical
+                8 -> this.physicalPenetrate
+                9 -> this.magicPenetrate
+                10 -> this.accuracy
+                11 -> this.dodge
+                12 -> this.waveHpRecovery
+                13 -> this.hpRecoveryRate
+                14 -> this.waveEnergyRecovery
+                15 -> this.energyRecoveryRate
+                16 -> this.energyReduceRate
+                else -> 0.0
+            }
+            attrs.add(AttrValue(Constants.ATTR[i], value.toDouble()))
         }
-        attrs.add(AttrValue(Constants.ATTR[i], value.toDouble()))
+        return attrs
     }
-    return attrs
-}
 
-fun AttrInt.enemy(): List<AttrValue> {
-    val attrs = all()
-    val newList = arrayListOf<AttrValue>()
-    val toShowIndex = arrayListOf(0, 10, 2, 3, 4, 5)
-    toShowIndex.forEach { showIndex ->
-        newList.add(attrs[showIndex])
+    fun enemy(): List<AttrValue> {
+        val attrs = all()
+        val newList = arrayListOf<AttrValue>()
+        val toShowIndex = arrayListOf(0, 10, 2, 3, 4, 5)
+        toShowIndex.forEach { showIndex ->
+            newList.add(attrs[showIndex])
+        }
+        return newList
     }
-    return newList
+
+    fun multiplePartEnemy(): List<AttrValue> {
+        val attrs = all()
+        val newList = arrayListOf<AttrValue>()
+        val toShowIndex = arrayListOf(0, 10)
+        toShowIndex.forEach { showIndex ->
+            newList.add(attrs[showIndex])
+        }
+        return newList
+    }
 }

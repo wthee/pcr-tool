@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.data.model
 
 import cn.wthee.pcrtool.data.db.view.Attr
-import cn.wthee.pcrtool.data.db.view.all
-import cn.wthee.pcrtool.data.db.view.compare
 
 /**
  * 角色 Rank 对比数据

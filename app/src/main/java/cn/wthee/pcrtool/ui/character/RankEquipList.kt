@@ -10,11 +10,7 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -24,7 +20,6 @@ import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -42,8 +37,8 @@ fun RankEquipList(
     navViewModel: NavViewModel,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
-    equipmentViewModel.getAllRankEquipList(unitId)
-    val allRankEquip = equipmentViewModel.allRankEquipList.observeAsState().value ?: arrayListOf()
+    val allRankEquip =
+        equipmentViewModel.getAllRankEquipList(unitId).collectAsState(initial = arrayListOf()).value
     val selectedRank = remember {
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
@@ -95,7 +90,7 @@ fun RankEquipListItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorAnim.value, Shapes.medium),
+                .background(colorAnim.value, MaterialTheme.shapes.medium),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK

@@ -12,11 +12,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -58,7 +55,6 @@ fun EquipList(
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
 ) {
-    val equips = viewModel.equips.observeAsState().value
     //筛选状态
     val filter = navViewModel.filterEquip.observeAsState()
     // dialog 状态
@@ -77,8 +73,8 @@ fun EquipList(
     filter.value?.let { filterValue ->
         filterValue.starIds =
             GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EQUIP, "")) ?: arrayListOf()
-        viewModel.getEquips(filterValue)
 
+        val equips = viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf()).value
         ModalBottomSheetLayout(
             sheetState = state,
             scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
@@ -94,16 +90,16 @@ fun EquipList(
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 val spanCount = 4
-                if (equips != null) {
+                FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyVerticalGrid(
                         cells = GridCells.Fixed(spanCount),
                         state = scrollState,
                         contentPadding = PaddingValues(Dimen.mediuPadding)
                     ) {
-                        items(equips!!) { equip ->
+                        items(equips) { equip ->
                             EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                         }
-                        items(4) {
+                        items(spanCount) {
                             CommonSpacer()
                         }
                     }
@@ -221,8 +217,7 @@ private fun FilterEquipSheet(
     }
     filter.all = loveIndex.value == 0
     //装备类型
-    equipmentViewModel.getTypes()
-    val typeList = equipmentViewModel.equipTypes.observeAsState().value ?: arrayListOf()
+    val typeList = equipmentViewModel.getTypes().collectAsState(initial = arrayListOf()).value
     val typeIndex = remember {
         mutableStateOf(filter.type)
     }
@@ -336,6 +331,7 @@ private fun FilterEquipSheet(
             typeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+        CommonSpacer()
     }
 }
 

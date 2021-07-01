@@ -13,7 +13,7 @@ data class ClanBattleInfo(
 ) {
 
     fun getUnitIdList(selectedSection: Int): List<ClanBossTargetInfo> {
-        val bossList = getAllBossInfo()
+        val bossList = getAllBossIds()
         val list = arrayListOf<ClanBossTargetInfo>()
         if (bossList.isNotEmpty()) {
             val clanBossData = bossList[selectedSection]
@@ -24,14 +24,14 @@ data class ClanBattleInfo(
                     it.unitId == s.toInt()
                 }
                 if (findData != null) {
-                    findData.targetCount = findData.targetCount + 1
+                    findData.partEnemyIds.add(clanBossData.enemyIds[index].toInt())
                 } else {
                     val data =
                         ClanBossTargetInfo(
                             selectedSection,
                             s.toInt(),
                             clanBossData.enemyIds[index].toInt(),
-                            1
+                            arrayListOf()
                         )
                     list.add(data)
                 }
@@ -46,7 +46,7 @@ data class ClanBattleInfo(
     /**
      * 获取各阶段 Boss Id 信息
      */
-    fun getAllBossInfo(): List<ClanBossIdData> {
+    fun getAllBossIds(): List<ClanBossIdData> {
         val list = arrayListOf<ClanBossIdData>()
         if (enemyIds != "") {
             val enemyList = enemyIds.split("-")
@@ -66,7 +66,6 @@ data class ClanBattleInfo(
                     )
                 )
                 list.add(
-
                     ClanBossIdData(
                         1,
                         listOf("302100", "302000", "300701", "304000", "302700"),
@@ -113,5 +112,5 @@ data class ClanBossTargetInfo(
     val section: Int = 0,
     val unitId: Int = 0,
     val enemyId: Int = 0,
-    var targetCount: Int = 1
+    var partEnemyIds: MutableList<Int> = arrayListOf()
 )

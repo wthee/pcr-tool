@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -39,23 +40,18 @@ fun NoticeList(
     scrollState: LazyListState,
     noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
-    noticeViewModel.getNotice()
-    val noticeList = noticeViewModel.notice.observeAsState()
+    val noticeList = noticeViewModel.getNotice().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: false
     val icon = if (updateApp == 1) MainIconType.APP_UPDATE else MainIconType.NOTICE
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        val visible =
-            noticeList.value != null && noticeList.value!!.data != null && noticeList.value!!.data!!.isNotEmpty()
+    Box(modifier = Modifier.fillMaxSize()) {
+        val visible = noticeList.isNotEmpty()
         LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.largePadding)) {
             if (visible) {
-                items(noticeList.value!!.data!!) {
+                items(noticeList) {
                     NoticeItem(it)
                 }
             } else {
@@ -69,10 +65,10 @@ fun NoticeList(
                     AppNotice(
                         "",
                         "",
-                        -1,
+                        -2,
                         "",
-                        stringResource(R.string.visit_more_log),
-                        stringResource(R.string.update_log),
+                        message = stringResource(R.string.visit_more_log),
+                        title = stringResource(R.string.update_log),
                         -1,
                         stringResource(R.string.readme)
                     )
@@ -113,18 +109,22 @@ private fun NoticeItem(data: AppNotice) {
     var exTitle = ""
     var exTitleColor = colorResource(id = R.color.news_update)
     var newVersion = false
-    if (data.type == 0) {
-        val remoteVersion = data.title.replace(".", "").toInt()
-        exTitle = if (remoteVersion > BuildConfig.VERSION_CODE) {
-            newVersion = true
-            "版本更新"
-        } else {
-            "当前版本"
+
+    if (data.type != -1) {
+        val itemVersion = data.title.replace(".", "").toInt()
+        if (data.type == 0) {
+            exTitle = if (itemVersion > BuildConfig.VERSION_CODE) {
+                newVersion = true
+                exTitleColor = colorResource(id = R.color.color_rank_21)
+                "版本更新"
+            } else {
+                "当前版本"
+            }
+        } else if (data.type == 1 && itemVersion == BuildConfig.VERSION_CODE) {
+            exTitle = "当前版本"
         }
-        exTitleColor = colorResource(id = R.color.news_update)
-    } else if (data.type == 1) {
-        exTitleColor = colorResource(id = R.color.news_system)
     }
+
     val context = LocalContext.current
 
     Row(
@@ -142,12 +142,7 @@ private fun NoticeItem(data: AppNotice) {
             MainTitleText(
                 text = exTitle,
                 backgroundColor = exTitleColor,
-                modifier = Modifier
-                    .padding(start = Dimen.smallPadding)
-                    .placeholder(
-                        visible = placeholder,
-                        highlight = PlaceholderHighlight.shimmer()
-                    )
+                modifier = Modifier.padding(start = Dimen.smallPadding)
             )
         }
     }

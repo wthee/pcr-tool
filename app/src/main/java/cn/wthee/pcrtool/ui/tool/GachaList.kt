@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -38,26 +39,23 @@ fun GachaList(
     toCharacterDetail: (Int) -> Unit,
     gachaViewModel: GachaViewModel = hiltViewModel()
 ) {
-    gachaViewModel.getGachaHistory()
-    val gachas = gachaViewModel.gachas.observeAsState()
+    val gachas = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SlideAnimation(visible = gachas.value != null) {
-            gachas.value?.let { data ->
-                LazyColumn(
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.largePadding)
-                ) {
-                    items(data) {
-                        GachaItem(it, toCharacterDetail)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
+        SlideAnimation(visible = gachas.isNotEmpty()) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(gachas) {
+                    GachaItem(it, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
@@ -106,9 +104,8 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     }
 
     //标题
-    Row(
+    FlowRow(
         modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-        verticalAlignment = Alignment.CenterVertically
     ) {
         MainTitleText(
             text = type,

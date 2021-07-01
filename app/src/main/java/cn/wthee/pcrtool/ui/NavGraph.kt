@@ -62,7 +62,6 @@ object Navigation {
     const val TOOL_CLAN_BOSS_INFO = "toolClanBattleInfo"
     const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
-    const val TOOL_CALENDAR = "toolCalendar"
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
@@ -71,6 +70,7 @@ object Navigation {
     const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
     const val COMIC = "comic"
+    const val COMIC_ID = "comicId"
 }
 
 @ExperimentalComposeUiApi
@@ -132,11 +132,7 @@ fun NavGraph(
             CharacterDetail(
                 scrollState,
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                actions.toEquipDetail,
-                actions.toCharacterBasicInfo,
-                actions.toCharacteRankEquip,
-                actions.toCharacteRankCompare,
-                actions.toCharacteEquipCount,
+                actions,
                 viewModel
             )
 
@@ -161,7 +157,7 @@ fun NavGraph(
             EquipList(
                 scrollState,
                 toEquipDetail = actions.toEquipDetail,
-                toEquipMaterial = actions.toEquipMaterail
+                toEquipMaterial = actions.toEquipMaterial
             )
         }
 
@@ -174,7 +170,7 @@ fun NavGraph(
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
-            EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterail)
+            EquipMainInfo(arguments.getInt(Navigation.EQUIP_ID), actions.toEquipMaterial)
         }
 
         //装备素材详情
@@ -242,7 +238,7 @@ fun NavGraph(
             RankEquipCount(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
                 maxRank = arguments.getInt(Navigation.MAX_RANK),
-                actions.toEquipMaterail,
+                actions.toEquipMaterial,
                 navViewModel = viewModel
             )
         }
@@ -298,13 +294,6 @@ fun NavGraph(
             )
         }
 
-        //日历活动
-        composable(Navigation.TOOL_CALENDAR) {
-            viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val scrollState = rememberLazyListState()
-            CalendarCompose(scrollState)
-        }
-
         //竞技场查询
         composable(Navigation.TOOL_PVP) {
             PvpSearchCompose(
@@ -354,13 +343,23 @@ fun NavGraph(
         composable(Navigation.TWEET) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            TweetList(scrollState, actions.toNewsDetail)
+            TweetList(scrollState, actions.toNewsDetail, actions.toComicListIndex)
         }
 
         //漫画信息
         composable(Navigation.COMIC) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             ComicList()
+        }
+
+        composable(
+            "${Navigation.COMIC}/{${Navigation.COMIC_ID}}",
+            arguments = listOf(navArgument(Navigation.COMIC_ID) {
+                type = NavType.IntType
+            })
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            ComicList(arguments.getInt(Navigation.COMIC_ID))
         }
     }
 }
@@ -394,7 +393,7 @@ class NavActions(navController: NavHostController) {
     /**
      * 装备素材详情
      */
-    val toEquipMaterail: (Int) -> Unit = { equipId: Int ->
+    val toEquipMaterial: (Int) -> Unit = { equipId: Int ->
         navController.navigate("${Navigation.EQUIP_MATERIAL}/${equipId}")
     }
 
@@ -486,13 +485,6 @@ class NavActions(navController: NavHostController) {
     }
 
     /**
-     * 日历
-     */
-    val toCalendar = {
-        navController.navigate(Navigation.TOOL_CALENDAR)
-    }
-
-    /**
      * 排行
      */
     val toLeader = {
@@ -532,6 +524,13 @@ class NavActions(navController: NavHostController) {
      */
     val toComicList = {
         navController.navigate(Navigation.COMIC)
+    }
+
+    /**
+     * 漫画
+     */
+    val toComicListIndex: (Int) -> Unit = { comicId ->
+        navController.navigate("${Navigation.COMIC}/${comicId}")
     }
 }
 
@@ -598,12 +597,15 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 竞技场查询角色
      */
-    val selectedPvpData = MutableLiveData<List<PvpCharacterData>>()
-
-    /**
-     * 竞技场查询id
-     */
-    val idsFromFavorite = MutableLiveData<String>()
+    val selectedPvpData = MutableLiveData(
+        arrayListOf(
+            PvpCharacterData(),
+            PvpCharacterData(),
+            PvpCharacterData(),
+            PvpCharacterData(),
+            PvpCharacterData()
+        )
+    )
 
     /**
      * rank 选择，当前
@@ -639,5 +641,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * pvp 查询结果显示
      */
     val showResult = MutableLiveData(false)
+
 
 }

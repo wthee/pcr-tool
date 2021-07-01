@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -39,26 +40,23 @@ fun EventList(
     toCharacterDetail: (Int) -> Unit,
     eventViewModel: EventViewModel = hiltViewModel()
 ) {
-    eventViewModel.getEventHistory()
-    val events = eventViewModel.events.observeAsState()
+    val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SlideAnimation(visible = events.value != null) {
-            events.value?.let { data ->
-                LazyColumn(
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.largePadding)
-                ) {
-                    items(data) {
-                        EventItem(it, toCharacterDetail)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
+        SlideAnimation(visible = events.isNotEmpty()) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(events) {
+                    EventItem(it, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
@@ -130,9 +128,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val comingSoon = today.second(event.startTime) < 0 && (!preEvent)
 
     //标题
-    Row(
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-        verticalAlignment = Alignment.CenterVertically
+    FlowRow(
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
     ) {
         MainTitleText(
             text = type,

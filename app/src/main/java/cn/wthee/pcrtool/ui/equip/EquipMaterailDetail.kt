@@ -6,11 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -47,17 +45,18 @@ fun EquipMaterialDeatil(
     equipId: Int,
     equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
-    equipmentViewModel.getDropInfos(equipId)
-    equipmentViewModel.getEquip(equipId)
-    val dropInfoList = equipmentViewModel.dropInfo.observeAsState()
-    val basicInfo = equipmentViewModel.equip.observeAsState()
-    navViewModel.loading.postValue(dropInfoList.value == null)
+
+    val dropInfoList =
+        equipmentViewModel.getDropInfos(equipId).collectAsState(initial = arrayListOf()).value
+    val basicInfo =
+        equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
     val filter = navViewModel.filterEquip.observeAsState()
     val loved = remember {
         mutableStateOf(false)
     }
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip_material)
     val scope = rememberCoroutineScope()
+    navViewModel.loading.postValue(dropInfoList.isEmpty())
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -66,12 +65,12 @@ fun EquipMaterialDeatil(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        dropInfoList.value?.let { list ->
+        if (dropInfoList.isNotEmpty()) {
             var pagerCount = 0
             val lists = arrayListOf(
-                list.filter { it.questId / 1000000 == 11 },
-                list.filter { it.questId / 1000000 == 12 },
-                list.filter { it.questId / 1000000 == 13 },
+                dropInfoList.filter { it.questId / 1000000 == 11 },
+                dropInfoList.filter { it.questId / 1000000 == 12 },
+                dropInfoList.filter { it.questId / 1000000 == 13 },
             )
             val tabs = arrayListOf<String>()
             //颜色
@@ -95,15 +94,13 @@ fun EquipMaterialDeatil(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                basicInfo.value?.let {
-                    MainText(
-                        text = it.equipmentName,
-                        modifier = Modifier
-                            .padding(top = Dimen.largePadding),
-                        color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
-                        selectable = true
-                    )
-                }
+                MainText(
+                    text = basicInfo.equipmentName,
+                    modifier = Modifier
+                        .padding(top = Dimen.largePadding),
+                    color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
+                    selectable = true
+                )
                 //Tab
                 TabRow(
                     modifier = Modifier

@@ -14,9 +14,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.insets.navigationBarsPadding
@@ -36,7 +36,7 @@ fun MainTitleText(
         color = MaterialTheme.colors.onPrimary,
         style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
-            .background(color = backgroundColor, shape = Shapes.small)
+            .background(color = backgroundColor, shape = MaterialTheme.shapes.small)
             .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
     )
 }
@@ -208,24 +208,6 @@ fun LineCompose(modifier: Modifier = Modifier) {
 }
 
 /**
- * 主操作按钮
- */
-@Composable
-fun MainButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val context = LocalContext.current
-    Button(
-        shape = Shapes.large,
-        modifier = modifier.padding(Dimen.smallPadding),
-        onClick = {
-            VibrateUtil(context).single()
-            onClick.invoke()
-        }
-    ) {
-        Text(text = text, style = MaterialTheme.typography.button)
-    }
-}
-
-/**
  * 次操作按钮
  */
 @Composable
@@ -238,7 +220,7 @@ fun SubButton(
     val context = LocalContext.current
 
     OutlinedButton(
-        shape = Shapes.large,
+        shape = MaterialTheme.shapes.large,
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
@@ -348,15 +330,16 @@ fun SelectText(
     text: String,
     selectedColor: Color = MaterialTheme.colors.primary,
     textColor: Color = Color.Unspecified,
-    style: TextStyle = MaterialTheme.typography.body2
+    style: TextStyle = MaterialTheme.typography.body2,
+    padding: Dp = Dimen.smallPadding
 ) {
     val mModifier = if (selected) {
         modifier
-            .padding(top = Dimen.smallPadding)
-            .background(color = selectedColor, shape = Shapes.small)
-            .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
+            .padding(top = padding)
+            .background(color = selectedColor, shape = MaterialTheme.shapes.small)
+            .padding(start = padding, end = padding)
     } else {
-        modifier.padding(top = Dimen.smallPadding)
+        modifier.padding(top = padding)
     }
     Text(
         text = text,

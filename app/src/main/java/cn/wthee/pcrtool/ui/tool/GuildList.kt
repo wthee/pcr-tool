@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,26 +35,23 @@ fun GuildList(
     toCharacterDetail: (Int) -> Unit,
     guildViewModel: GuildViewModel = hiltViewModel()
 ) {
-    guildViewModel.getGuilds()
-    val guilds = guildViewModel.guilds.observeAsState()
+    val guilds = guildViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SlideAnimation(visible = guilds.value != null) {
-            guilds.value?.let { data ->
-                LazyColumn(
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.largePadding)
-                ) {
-                    items(data) {
-                        GuildItem(it, toCharacterDetail)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
+        SlideAnimation(visible = guilds.isNotEmpty()) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(guilds) {
+                    GuildItem(it, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }

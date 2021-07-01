@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import com.google.accompanist.coil.rememberCoilPainter
@@ -110,13 +109,13 @@ fun IconCompose(
 
     var mModifier = if (onClick != null) {
         Modifier
-            .clip(Shapes.small)
+            .clip(MaterialTheme.shapes.small)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick.invoke()
             })
     } else {
-        Modifier.clip(Shapes.small)
+        Modifier.clip(MaterialTheme.shapes.small)
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)

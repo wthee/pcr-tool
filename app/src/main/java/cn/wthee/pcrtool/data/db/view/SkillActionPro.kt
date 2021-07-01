@@ -190,8 +190,18 @@ data class SkillActionPro(
                     2 -> "魔法"
                     else -> ""
                 }
+
                 val value = getValueText(1, action_value_1, action_value_2, action_value_3)
-                "对${getTarget()}造成 $value 的${atkType}伤害"
+                "对${getTarget()}造成 $value 的${atkType}伤害" + if (action_value_6 > 0) {
+                    val multiple = if (action_value_6 > 1) {
+                        "[1 ~ ${action_value_6}]"
+                    } else {
+                        "[1]"
+                    }
+                    "；暴击时，造成 {6}$multiple * 2 倍伤害 "
+                } else {
+                    ""
+                }
             }
             SkillActionType.MOVE -> {
                 val directionText = if (action_value_1 > 0) "向前" else "向后"
@@ -948,22 +958,22 @@ data class SkillActionPro(
         percent: String = "",
         hideIndex: Boolean = false
     ): String {
-        val value = if (v3.int == 0) {
+        val value = if (v3 == 0.0) {
             if (v1.int == 0 && v2.int != 0) {
                 "[${(v2 * level).int}$percent] <{${index + 1}}$v2 * 技能等级>"
-            } else if (v1.int != 0 && v2.int == 0) {
+            } else if (v1 != 0.0 && v2 == 0.0) {
                 "{${index}}[${v1}$percent]"
-            } else if (v1.int != 0 && v2.int != 0) {
+            } else if (v1 != 0.0 && v2 != 0.0) {
                 "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级>"
             } else {
                 "?"
             }
         } else {
-            if (v1.int == 0 && v2.int != 0) {
+            if (v1 == 0.0 && v2 != 0.0) {
                 "[${(v2 + v3 * atk).int}$percent] <{${index + 1}}$v2 + {${index + 2}}$v3 * 攻击力>"
-            } else if (v1.int == 0 && v2.int == 0) {
+            } else if (v1 == 0.0 && v2 == 0.0) {
                 "[${(v3 * atk).int}$percent] <{${index + 2}}$v3 * 攻击力>"
-            } else if (v1.int != 0 && v2.int != 0) {
+            } else if (v1 != 0.0 && v2 != 0.0) {
                 "[${(v1 + v2 * level + v3 * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级 + {${index + 2}}$v3 * 攻击力>"
             } else {
                 "?"
