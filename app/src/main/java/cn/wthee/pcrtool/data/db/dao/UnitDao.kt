@@ -92,7 +92,8 @@ interface UnitDao {
         CASE WHEN :sortType = 3 AND :asc = 'asc'  THEN weight_int END ASC,
         CASE WHEN :sortType = 3 AND :asc = 'desc'  THEN weight_int END DESC,
         CASE WHEN :sortType = 4 AND :asc = 'asc'  THEN unit_data.search_area_width END ASC,
-        CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC
+        CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC,
+        unit_profile.unit_id DESC
             """
     )
     suspend fun getInfoAndData(
@@ -126,7 +127,7 @@ interface UnitDao {
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
-        ORDER BY start_time DESC 
+        ORDER BY start_time DESC , unit_profile.unit_id DESC
         LIMIT 0, :limit
         """
     )
