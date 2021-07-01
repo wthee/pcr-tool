@@ -67,5 +67,5 @@ class CharacterViewModel @Inject constructor(
     /**
      * 角色站位
      */
-    suspend fun getPvpCharacterByIds(ids: ArrayList<Int>) = unitRepository.getCharacterByIds(ids)
+    suspend fun getPvpCharacterByIds(ids: List<Int>) = unitRepository.getCharacterByIds(ids)
 }

@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -127,9 +128,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val comingSoon = today.second(event.startTime) < 0 && (!preEvent)
 
     //标题
-    Row(
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-        verticalAlignment = Alignment.CenterVertically
+    FlowRow(
+        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
     ) {
         MainTitleText(
             text = type,

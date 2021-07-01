@@ -190,7 +190,7 @@ interface UnitDao {
      * @param unitIds 角色编号
      */
     @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE unit_id IN (:unitIds)  AND comment <> \"\" ORDER BY search_area_width")
-    suspend fun getCharacterByIds(unitIds: ArrayList<Int>): List<PvpCharacterData>
+    suspend fun getCharacterByIds(unitIds: List<Int>): List<PvpCharacterData>
 
     /**
      * 获取角色所需装备数据

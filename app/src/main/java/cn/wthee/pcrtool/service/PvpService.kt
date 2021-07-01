@@ -87,7 +87,7 @@ class PvpService : LifecycleService() {
             if (min) {
                 minSize
             } else {
-                mFloatingWindowHeight
+                mFloatingWindowHeight - Dimen.smallIconSize.value.dp2px
             }
         gravity = Gravity.START or Gravity.TOP
         //设置剧中屏幕显示
@@ -98,7 +98,7 @@ class PvpService : LifecycleService() {
     private fun setHeight() {
         val width = ScreenUtil.getWidth()
         val height = ScreenUtil.getHeight()
-        mFloatingWindowHeight = if (width > height) height - 48f.dp2px else width - 48f.dp2px
+        mFloatingWindowHeight = if (width > height) height else width
     }
 
 }

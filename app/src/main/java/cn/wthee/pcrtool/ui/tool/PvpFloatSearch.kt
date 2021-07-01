@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.FabMain
@@ -22,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 
@@ -30,7 +34,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @Composable
-fun PvpFloatSearch() {
+fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
@@ -45,7 +49,6 @@ fun PvpFloatSearch() {
                         MainActivity.navViewModel.floatSearchMin.postValue(!min)
                     },
                     shape = CircleShape,
-                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 0.dp),
                     backgroundColor = MaterialTheme.colors.background,
                     contentColor = MaterialTheme.colors.primary,
                     modifier = Modifier
@@ -70,6 +73,7 @@ fun PvpFloatSearch() {
                         iconType = MainIconType.PVP_SEARCH,
                         modifier = Modifier.padding(Dimen.smallPadding)
                     ) {
+                        pvpViewModel.pvpResult.postValue(null)
                         MainActivity.navViewModel.showResult.postValue(true)
                     }
                 }

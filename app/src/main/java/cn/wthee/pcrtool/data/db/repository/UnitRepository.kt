@@ -32,7 +32,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
     suspend fun getCharacterByPosition(start: Int, end: Int) =
         unitDao.getCharacterByPosition(start, end)
 
-    suspend fun getCharacterByIds(unitIds: ArrayList<Int>) = unitDao.getCharacterByIds(unitIds)
+    suspend fun getCharacterByIds(unitIds: List<Int>) = unitDao.getCharacterByIds(unitIds)
 
 
     suspend fun getEquipmentIds(unitId: Int, rank: Int) =

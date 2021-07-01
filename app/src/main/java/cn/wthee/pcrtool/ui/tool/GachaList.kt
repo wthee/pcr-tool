@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
+import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
@@ -103,9 +104,8 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     }
 
     //标题
-    Row(
+    FlowRow(
         modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-        verticalAlignment = Alignment.CenterVertically
     ) {
         MainTitleText(
             text = type,

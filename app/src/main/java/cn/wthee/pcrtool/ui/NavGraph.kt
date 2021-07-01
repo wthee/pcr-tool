@@ -597,12 +597,15 @@ class NavViewModel @Inject constructor() : ViewModel() {
     /**
      * 竞技场查询角色
      */
-    val selectedPvpData = MutableLiveData<List<PvpCharacterData>>()
-
-    /**
-     * 竞技场查询id
-     */
-    val idsFromFavorite = MutableLiveData<String>()
+    val selectedPvpData = MutableLiveData(
+        arrayListOf(
+            PvpCharacterData(),
+            PvpCharacterData(),
+            PvpCharacterData(),
+            PvpCharacterData(),
+            PvpCharacterData()
+        )
+    )
 
     /**
      * rank 选择，当前
@@ -638,5 +641,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * pvp 查询结果显示
      */
     val showResult = MutableLiveData(false)
+
 
 }

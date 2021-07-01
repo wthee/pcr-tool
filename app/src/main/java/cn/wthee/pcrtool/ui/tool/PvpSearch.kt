@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,11 +67,11 @@ import kotlin.math.round
 fun PvpSearchCompose(
     floatWindow: Boolean = false,
     toCharacter: (Int) -> Unit,
-    viewModel: CharacterViewModel = hiltViewModel(),
+    characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
     //获取数据
-    val data = viewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
+    val data = characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
@@ -84,32 +83,11 @@ fun PvpSearchCompose(
     val showResult = navViewModel.showResult.observeAsState().value ?: false
 
     //已选择的id
-    val navIds = navViewModel.selectedPvpData.value
-    val selectedIds = remember {
-        if (navIds != null && navIds.isNotEmpty()) {
-            mutableStateListOf(
-                navIds[0],
-                navIds[1],
-                navIds[2],
-                navIds[3],
-                navIds[4],
-            )
-        } else {
-            mutableStateListOf(
-                PvpCharacterData(),
-                PvpCharacterData(),
-                PvpCharacterData(),
-                PvpCharacterData(),
-                PvpCharacterData(),
-            )
-        }
-    }
-    navViewModel.selectedPvpData.postValue(selectedIds.subList(0, 5))
+    val selectedIds = navViewModel.selectedPvpData.observeAsState().value ?: arrayListOf()
 
     val research = remember {
         mutableStateOf(true)
     }
-    val idsFromFavorite = navViewModel.idsFromFavorite.observeAsState().value ?: ""
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
 
     if (showResult) {
@@ -127,32 +105,10 @@ fun PvpSearchCompose(
         navViewModel.showResult.postValue(false)
         research.value = false
         navViewModel.fabCloseClick.postValue(false)
-        navViewModel.idsFromFavorite.postValue("")
         pvpViewModel.requesting = false
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        //从收藏重新查询时，自动填充数据
-        if (idsFromFavorite != "" && research.value) {
-            val idList = arrayListOf<Int>()
-            for (id in idsFromFavorite.split("-")) {
-                if (id.isNotBlank()) {
-                    idList.add(id.toInt())
-                }
-            }
-            //获取带角色站位的数据
-            scope.launch {
-                val selectedData = viewModel.getPvpCharacterByIds(idList)
-                if (selectedData.isNotEmpty()) {
-                    for (i in 0..4) {
-                        selectedIds[i] = selectedData[4 - i]
-                    }
-                    navViewModel.showResult.postValue(true)
-                    research.value = false
-                }
-            }
-        }
-
         Column {
             //标题
             if (!floatWindow) {
@@ -333,7 +289,7 @@ fun PvpSearchCompose(
 @ExperimentalMaterialApi
 @Composable
 private fun PvpCharacterSelectPage(
-    selectedIds: SnapshotStateList<PvpCharacterData>,
+    selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
     data: List<PvpCharacterData>
 ) {
@@ -514,13 +470,17 @@ private fun PvpPositionIcon(iconId: Int) {
 
 @Composable
 fun PvpIconItem(
-    selectedIds: SnapshotStateList<PvpCharacterData>,
+    selectedIds: ArrayList<PvpCharacterData>,
     it: PvpCharacterData,
     floatWindow: Boolean,
     selectedEffect: Boolean = true
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
+    val newList = arrayListOf<PvpCharacterData>()
+    selectedIds.forEach {
+        newList.add(it)
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -539,23 +499,24 @@ fun PvpIconItem(
             //点击选择或取消选择
             if (selected) {
                 var cancelSelectIndex = 0
-                selectedIds.forEachIndexed { index, sel ->
+                newList.forEachIndexed { index, sel ->
                     if (it.position == sel.position) {
                         cancelSelectIndex = index
                     }
                 }
-                selectedIds[cancelSelectIndex] = PvpCharacterData()
+                newList[cancelSelectIndex] = PvpCharacterData()
             } else {
-                val unSelected = selectedIds.find { it.position == 999 }
+                val unSelected = newList.find { it.position == 999 }
                 if (unSelected == null) {
                     //选完了
                     ToastUtil.short(tipSelectLimit)
                 } else {
                     //可以选择
-                    selectedIds[0] = it
+                    newList[0] = it
                 }
             }
-            selectedIds.sortByDescending { it.position }
+            newList.sortByDescending { it.position }
+            navViewModel.selectedPvpData.postValue(newList)
         }
         //位置
         val text =
@@ -910,7 +871,8 @@ private fun PvpFavoriteItem(
     region: Int,
     itemData: PvpFavoriteData,
     floatWindow: Boolean,
-    pvpViewModel: PvpViewModel
+    pvpViewModel: PvpViewModel,
+    characterViewModel: CharacterViewModel = hiltViewModel(),
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -925,7 +887,15 @@ private fun PvpFavoriteItem(
         //搜索
         TextButton(onClick = {
             //重置页面
-            navViewModel.idsFromFavorite.postValue(itemData.defs)
+            scope.launch {
+                pvpViewModel.pvpResult.postValue(null)
+                val selectedData =
+                    characterViewModel.getPvpCharacterByIds(itemData.defs.intArrayList())
+                val selectedIds = selectedData as ArrayList<PvpCharacterData>?
+                selectedIds?.sortByDescending { it.position }
+                navViewModel.selectedPvpData.postValue(selectedIds)
+                navViewModel.showResult.postValue(true)
+            }
             VibrateUtil(context).single()
         }) {
             IconCompose(

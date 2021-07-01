@@ -34,6 +34,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -385,9 +386,8 @@ private fun CalendarItem(calendar: CalendarEvent) {
         }
     }
 
-    Row(
+    FlowRow(
         modifier = Modifier.padding(bottom = Dimen.mediuPadding),
-        verticalAlignment = Alignment.CenterVertically
     ) {
         //开始日期
         MainTitleText(

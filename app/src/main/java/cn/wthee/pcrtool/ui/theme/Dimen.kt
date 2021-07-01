@@ -58,6 +58,7 @@ object Dimen {
     val menuIconSize = 30.dp
 
     val menuItemSize = 64.dp
+
 }
 
 
