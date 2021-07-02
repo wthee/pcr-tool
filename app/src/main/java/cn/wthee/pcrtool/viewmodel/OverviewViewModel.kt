@@ -30,8 +30,8 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取角色列表
      */
-    fun getCharacterList() = flow {
-        emit(unitRepository.getInfoAndData(6))
+    fun getCharacterList(size: Int) = flow {
+        emit(unitRepository.getInfoAndData(size))
     }
 
     /**

@@ -608,6 +608,8 @@ private fun StarSelect(
     modifier: Modifier = Modifier,
     attrViewModel: CharacterAttrViewModel
 ) {
+    val context = LocalContext.current
+
     Row(modifier) {
         for (i in 1..max) {
             val iconId = when {
@@ -623,6 +625,7 @@ private fun StarSelect(
                     .size(Dimen.starIconSize)
                     .clip(CircleShape)
                     .clickable {
+                        VibrateUtil(context).single()
                         attrViewModel.currentValue.postValue(currentValue.update(rarity = i))
                     }
                     .padding(Dimen.smallPadding)
