@@ -393,8 +393,8 @@ private fun NewsItem(
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
     val today = getToday()
-    val sd = calendar.startTime.formatTime()
-    val ed = calendar.endTime.formatTime()
+    val sd = calendar.startTime.formatTime
+    val ed = calendar.endTime.formatTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
     val comingSoon = today.second(sd) < 0
 

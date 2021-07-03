@@ -35,10 +35,10 @@ data class CalendarEventData(
  * 排序
  */
 fun compare(today: String) = Comparator<CalendarEvent> { o1, o2 ->
-    val sd1 = o1.startTime.formatTime()
-    val ed1 = o1.endTime.formatTime()
-    val sd2 = o2.startTime.formatTime()
-    val ed2 = o2.endTime.formatTime()
+    val sd1 = o1.startTime.formatTime
+    val ed1 = o1.endTime.formatTime
+    val sd2 = o2.startTime.formatTime
+    val ed2 = o2.endTime.formatTime
     if (today.second(sd1) > 0 && ed1.second(today) > 0) {
         if (today.second(sd2) > 0 && ed2.second(today) > 0) {
             //都是进行中，比较结束时间

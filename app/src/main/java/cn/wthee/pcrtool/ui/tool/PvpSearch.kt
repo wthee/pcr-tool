@@ -890,7 +890,7 @@ private fun PvpFavoriteItem(
             scope.launch {
                 pvpViewModel.pvpResult.postValue(null)
                 val selectedData =
-                    characterViewModel.getPvpCharacterByIds(itemData.defs.intArrayList())
+                    characterViewModel.getPvpCharacterByIds(itemData.defs.intArrayList)
                 val selectedIds = selectedData as ArrayList<PvpCharacterData>?
                 selectedIds?.sortByDescending { it.position }
                 navViewModel.selectedPvpData.postValue(selectedIds)

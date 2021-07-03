@@ -92,8 +92,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val typeColor: Color
     var showDays = true
     val today = getToday()
-    val startDate = event.startTime.formatTime().substring(0, 10)
-    val endDate = event.endTime.formatTime().substring(0, 10)
+    val startDate = event.startTime.formatTime.substring(0, 10)
+    val endDate = event.endTime.formatTime.substring(0, 10)
     val preEvent = startDate == "2030/12/30"
     val days = endDate.days(startDate)
     if (days == "0" || days == "0天") {
@@ -193,7 +193,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             )
             //图标
             IconListCompose(
-                icons = event.unitIds.intArrayList(),
+                icons = event.unitIds.intArrayList,
                 toCharacterDetail
             )
             //结束日期

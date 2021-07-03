@@ -17,7 +17,7 @@ data class PvpFavoriteData(
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "region") val region: Int,
 ) {
-    fun getAtkIds() = atks.intArrayList()
+    fun getAtkIds() = atks.intArrayList
 
-    fun getDefIds() = defs.intArrayList()
+    fun getDefIds() = defs.intArrayList
 }

@@ -94,7 +94,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     val ed = gachaInfo.endTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
 
-    val icons = gachaInfo.unitIds.intArrayList()
+    val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
     val color = when {
         type == "PICK UP" -> colorResource(id = R.color.news_update)
@@ -112,7 +112,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             backgroundColor = color
         )
         MainTitleText(
-            text = gachaInfo.startTime.formatTime().substring(0, 10),
+            text = gachaInfo.startTime.formatTime.substring(0, 10),
             modifier = Modifier.padding(start = Dimen.smallPadding),
         )
         MainTitleText(
@@ -159,7 +159,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
 
             //结束日期
             CaptionText(
-                text = gachaInfo.endTime.formatTime(),
+                text = gachaInfo.endTime.formatTime,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = Dimen.mediuPadding)
