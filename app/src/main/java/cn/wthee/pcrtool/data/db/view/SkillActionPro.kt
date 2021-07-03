@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import cn.wthee.pcrtool.data.enums.SkillActionType
 import cn.wthee.pcrtool.data.enums.getAilment
 import cn.wthee.pcrtool.data.enums.toSkillActionType
+import cn.wthee.pcrtool.utils.format
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.utils.int
 import kotlin.math.abs
@@ -151,6 +152,7 @@ data class SkillActionPro(
         return target.replace("己方自身", "自身")
             .replace("自身己方", "自身")
             .replace("自身全体", "自身")
+            .replace("自身敌人", "自身")
     }
 
 
@@ -934,12 +936,13 @@ data class SkillActionPro(
     }
 
 
+
     /**
      * 持续时间
      */
     private fun getTimeText(v1: Double, v2: Double = 0.0): String {
         return if (v2 > 0)
-            "，持续 [${v1 + v2 * level}] <$v1 + $v2 * 技能等级> 秒"
+            "，持续 [${(v1 + v2 * level).format}] <$v1 + $v2 * 技能等级> 秒"
         else
             "，持续 [$v1] 秒"
     }
