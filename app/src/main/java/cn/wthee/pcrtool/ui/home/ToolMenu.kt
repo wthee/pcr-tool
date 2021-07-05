@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
@@ -57,6 +58,7 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.comic, MainIconType.COMIC),
         ToolMenuData(R.string.change_db, MainIconType.CHANGE_DATA),
         ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
+        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
     )
 
     VerticalGrid(
@@ -140,6 +142,11 @@ fun ToolMenu(actions: NavActions) {
                             MenuItem(coroutineScope, context, actions, it)
                         }
                     }
+                    MainIconType.SKILL_LOOP -> {
+                        if (BuildConfig.DEBUG) {
+                            MenuItem(coroutineScope, context, actions, it)
+                        }
+                    }
                     else -> {
                         MenuItem(coroutineScope, context, actions, it)
                     }
@@ -203,6 +210,9 @@ private fun getAction(
                 coroutineScope.launch {
                     DatabaseUpdater.checkDBVersion(0)
                 }
+            }
+            MainIconType.SKILL_LOOP -> {
+                actions.toAllSkillList()
             }
             else -> {
             }
