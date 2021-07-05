@@ -365,7 +365,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 77：特殊刻印：增益时叠加 圣诞哈哈剑
      */
-    IF_BUFF_SEAL(77, "刻印"),
+    IF_BUFF_SEAL(77, "被动刻印"),
 
     /**
      * 79：行动时，造成伤害

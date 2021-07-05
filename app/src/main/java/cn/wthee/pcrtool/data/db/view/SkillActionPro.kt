@@ -879,6 +879,16 @@ data class SkillActionPro(
                     else -> "?"
                 }
             }
+            SkillActionType.IF_BUFF_SEAL -> {
+                val time = getTimeText(3, action_value_3, action_value_4)
+                val lifeTime = getTimeText(5, action_value_5, action_value_6)
+                val effect = when (action_detail_1) {
+                    1 -> "BUFF"
+                    2 -> "伤害"
+                    else -> "?"
+                }
+                "被动效果：每当${getTarget()}受到${effect}时，为自身增加 [${action_detail_2}] 层标记，$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
+            }
             SkillActionType.ACTION_DOT -> {
                 "${getTarget()}行动时，受到${
                     getValueText(

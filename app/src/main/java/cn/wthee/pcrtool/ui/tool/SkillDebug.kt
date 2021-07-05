@@ -28,7 +28,16 @@ fun AllSkillList(
             skillViewModel.getCharacterSkills(201, 1000, ids)
         }
         items(skills.value ?: arrayListOf()) {
-            SkillItem(level = 201, skillDetail = it)
+            var error = false
+            it.getActionInfo().forEach { action ->
+                if (action.action.contains("?")) {
+                    error = true
+                    return@forEach
+                }
+            }
+            if (error) {
+                SkillItem(level = 201, skillDetail = it)
+            }
         }
     }
 }
