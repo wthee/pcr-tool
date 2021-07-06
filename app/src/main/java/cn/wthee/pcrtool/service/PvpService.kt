@@ -29,8 +29,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalAnimationApi
 class PvpService : LifecycleService() {
     private lateinit var windowManager: WindowManager
-    val activity = ActivityHelper.instance.currentActivity
-    var floatRootView: View? = null
+    private val activity = ActivityHelper.instance.currentActivity
+    private var floatRootView: View? = null
 
     override fun onCreate() {
         super.onCreate()

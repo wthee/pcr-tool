@@ -27,7 +27,6 @@ interface TweetDao {
 
     /**
      * 清空数据
-     * @param region 区服
      */
     @Query("DELETE FROM tweet")
     suspend fun clearAll()

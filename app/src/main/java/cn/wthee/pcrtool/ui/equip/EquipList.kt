@@ -132,7 +132,7 @@ fun EquipList(
                             navViewModel.resetClick.postValue(true)
                         }
                     }
-                    val count = equips?.size ?: 0
+                    val count = equips.size
                     // 数量显示&筛选按钮
                     FabCompose(
                         iconType = MainIconType.EQUIP,

@@ -50,8 +50,6 @@ class ClanViewModel @Inject constructor(
 
     /**
      * 获取 BOSS 属性，测试用
-     *
-     * @param enemyIds boss编号列表
      */
     fun getAllBossIds() = flow {
         val list = arrayListOf<Int>()

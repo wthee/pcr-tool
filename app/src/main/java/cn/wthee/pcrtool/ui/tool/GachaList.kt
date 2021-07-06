@@ -96,10 +96,10 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
 
     val icons = gachaInfo.unitIds.intArrayList
     val type = gachaInfo.getType()
-    val color = when {
-        type == "PICK UP" -> colorResource(id = R.color.news_update)
-        type == "复刻" -> colorResource(id = R.color.color_rank_7_10)
-        type == "公主庆典" -> colorResource(id = R.color.color_rank_21)
+    val color = when (type) {
+        "PICK UP" -> colorResource(id = R.color.news_update)
+        "复刻" -> colorResource(id = R.color.color_rank_7_10)
+        "公主庆典" -> colorResource(id = R.color.color_rank_21)
         else -> MaterialTheme.colors.primary
     }
 

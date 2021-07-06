@@ -99,6 +99,10 @@ fun PvpSearchCompose(
     val url = stringResource(id = R.string.pcrdfans_url)
     val urlTip = stringResource(id = R.string.pcrdfans_com)
     val pagerState = rememberPagerState(pageCount = 2)
+    val tabs = arrayListOf(
+        stringResource(id = R.string.character),
+        stringResource(id = R.string.title_love)
+    )
 
     //返回选择
     if (close) {
@@ -145,10 +149,6 @@ fun PvpSearchCompose(
                 }
             }
             //供选择列表
-            val tabs = arrayListOf(
-                stringResource(id = R.string.character),
-                stringResource(id = R.string.title_love)
-            )
             if (showResult) {
                 if (!research.value && selectedIds.contains(PvpCharacterData())) {
                     ToastUtil.short(tip)
@@ -300,152 +300,149 @@ private fun PvpCharacterSelectPage(
         mutableStateOf(2)
     }
     val scrollState = rememberLazyListState()
+    //选择页面
+    val character0 = data.filter {
+        it.position in 0..299
+    }
+    val character1 = data.filter {
+        it.position in 300..599
+    }
+    val character2 = data.filter {
+        it.position in 600..9999
+    }
+    val spanCount = 5
+    val showIcon = listOf(0, 0, 1, 0, 0)
+    //站位图标在列表中的位置
+    val positions = arrayListOf(0, 0, 0)
+    //中卫以上填充数
+    val filledCount1 =
+        (spanCount - character0.size % spanCount) % spanCount
+    positions[1] =
+        (spanCount + character0.size + filledCount1) / spanCount
+    //后卫以上填充数
+    val filledCount2 =
+        (spanCount - character1.size % spanCount) % spanCount
+    positions[0] =
+        ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
+    //滚动监听
+    when (scrollState.firstVisibleItemIndex) {
+        //后
+        positions[0] -> {
+            if (positionIndex.value != 0) {
+                positionIndex.value = 0
+            }
+        }
+        scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
+            if (scrollState.layoutInfo.totalItemsCount != 0) {
+                positionIndex.value = 0
+            }
+        }
+        //中
+        positions[1] -> {
+            if (positionIndex.value != 1) {
+                positionIndex.value = 1
+            }
+        }
+        //前
+        positions[2] -> {
+            if (positionIndex.value != 2) {
+                positionIndex.value = 2
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        //选择页面
-        val character0 = data.filter {
-            it.position in 0..299
-        }
-        val character1 = data.filter {
-            it.position in 300..599
-        }
-        val character2 = data.filter {
-            it.position in 600..9999
-        }
-        val spanCount = 5
-        val showIcon = listOf(0, 0, 1, 0, 0)
-        //站位图标在列表中的位置
-        val positions = arrayListOf(0, 0, 0)
-        //中卫以上填充数
-        val filledCount1 =
-            (spanCount - character0.size % spanCount) % spanCount
-        positions[1] =
-            (spanCount + character0.size + filledCount1) / spanCount
-        //后卫以上填充数
-        val filledCount2 =
-            (spanCount - character1.size % spanCount) % spanCount
-        positions[0] =
-            ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
-        //滚动监听
-        when (scrollState.firstVisibleItemIndex) {
-            //后
-            positions[0] -> {
-                if (positionIndex.value != 0) {
-                    positionIndex.value = 0
+        //供选择列表
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(spanCount),
+            state = scrollState
+        ) {
+            //前
+            itemsIndexed(showIcon) { index, _ ->
+                if (index == 2) {
+                    PvpPositionIcon(R.drawable.ic_position_0)
                 }
             }
-            scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
-                if (scrollState.layoutInfo.totalItemsCount != 0) {
-                    positionIndex.value = 0
-                }
+            items(character0) {
+                PvpIconItem(selectedIds, it, floatWindow)
             }
             //中
-            positions[1] -> {
-                if (positionIndex.value != 1) {
-                    positionIndex.value = 1
+            items(filledCount1) {
+                CommonSpacer()
+            }
+            itemsIndexed(showIcon) { index, _ ->
+                if (index == 2) {
+                    PvpPositionIcon(R.drawable.ic_position_1)
                 }
             }
-            //前
-            positions[2] -> {
-                if (positionIndex.value != 2) {
-                    positionIndex.value = 2
+            items(character1) {
+                PvpIconItem(selectedIds, it, floatWindow)
+            }
+            //后
+            items(filledCount2 % spanCount) {
+                CommonSpacer()
+            }
+            itemsIndexed(showIcon) { index, _ ->
+                if (index == 2) {
+                    PvpPositionIcon(R.drawable.ic_position_2)
                 }
             }
-
+            items(character2) {
+                PvpIconItem(selectedIds, it, floatWindow)
+            }
+            items(spanCount) {
+                Spacer(modifier = Modifier.height(Dimen.iconSize))
+            }
         }
-        Box {
-            //供选择列表
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(spanCount),
-                state = scrollState
-            ) {
-                //前
-                itemsIndexed(showIcon) { index, _ ->
-                    if (index == 2) {
-                        PvpPositionIcon(R.drawable.ic_position_0)
-                    }
-                }
-                items(character0) {
-                    PvpIconItem(selectedIds, it, floatWindow)
-                }
-                //中
-                items(filledCount1) {
-                    CommonSpacer()
-                }
-                itemsIndexed(showIcon) { index, _ ->
-                    if (index == 2) {
-                        PvpPositionIcon(R.drawable.ic_position_1)
-                    }
-                }
-                items(character1) {
-                    PvpIconItem(selectedIds, it, floatWindow)
-                }
-                //后
-                items(filledCount2 % spanCount) {
-                    CommonSpacer()
-                }
-                itemsIndexed(showIcon) { index, _ ->
-                    if (index == 2) {
-                        PvpPositionIcon(R.drawable.ic_position_2)
-                    }
-                }
-                items(character2) {
-                    PvpIconItem(selectedIds, it, floatWindow)
-                }
-                items(spanCount) {
-                    Spacer(modifier = Modifier.height(Dimen.iconSize))
-                }
-            }
-            //指示器
-            val modifier = if (floatWindow) {
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .navigationBarsPadding()
-                    .padding(bottom = Dimen.fabMargin, end = Dimen.smallPadding)
-            } else {
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .navigationBarsPadding()
-                    .padding(
-                        bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
-                        start = Dimen.mediuPadding,
-                        end = Dimen.fabMargin
-                    )
-            }
-            Row(modifier = modifier) {
-                val icons = arrayListOf(
-                    R.drawable.ic_position_2,
-                    R.drawable.ic_position_1,
-                    R.drawable.ic_position_0,
+        //指示器
+        val modifier = if (floatWindow) {
+            Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(bottom = Dimen.fabMargin, end = Dimen.smallPadding)
+        } else {
+            Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(
+                    bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.fabMargin
                 )
-                icons.forEachIndexed { index, it ->
-                    val selectModifier = if (positionIndex.value == index) {
-                        Modifier
-                            .padding(Dimen.smallPadding)
-                            .border(
-                                Dimen.border,
-                                MaterialTheme.colors.primary,
-                                CircleShape
-                            )
-                    } else {
-                        Modifier.padding(Dimen.smallPadding)
-                    }
-                    Image(painter = painterResource(id = it),
-                        contentDescription = null,
-                        modifier = selectModifier
-                            .clip(CircleShape)
-                            .size(Dimen.fabIconSize)
-                            .clickable {
-                                VibrateUtil(context).single()
-                                positionIndex.value = index
-                                scope.launch {
-                                    scrollState.scrollToItem(positions[index])
-                                }
-                            })
+        }
+        Row(modifier = modifier) {
+            val icons = arrayListOf(
+                R.drawable.ic_position_2,
+                R.drawable.ic_position_1,
+                R.drawable.ic_position_0,
+            )
+            icons.forEachIndexed { index, it ->
+                val selectModifier = if (positionIndex.value == index) {
+                    Modifier
+                        .padding(Dimen.smallPadding)
+                        .border(
+                            Dimen.border,
+                            MaterialTheme.colors.primary,
+                            CircleShape
+                        )
+                } else {
+                    Modifier.padding(Dimen.smallPadding)
                 }
+                Image(painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = selectModifier
+                        .clip(CircleShape)
+                        .size(Dimen.fabIconSize)
+                        .clickable {
+                            VibrateUtil(context).single()
+                            positionIndex.value = index
+                            scope.launch {
+                                scrollState.scrollToItem(positions[index])
+                            }
+                        })
             }
         }
     }
@@ -481,19 +478,19 @@ fun PvpIconItem(
     selectedIds.forEach {
         newList.add(it)
     }
+    val icon = if (it.unitId == 0) {
+        R.drawable.unknown_gray
+    } else {
+        CharacterIdUtil.getMaxIconUrl(
+            it.unitId,
+            MainActivity.r6Ids.contains(it.unitId)
+        )
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(Dimen.smallPadding)
     ) {
-        val icon = if (it.unitId == 0) {
-            R.drawable.unknown_gray
-        } else {
-            CharacterIdUtil.getMaxIconUrl(
-                it.unitId,
-                MainActivity.r6Ids.contains(it.unitId)
-            )
-        }
         //图标
         IconCompose(data = icon, wrapSize = floatWindow) {
             //点击选择或取消选择
