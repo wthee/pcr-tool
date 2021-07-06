@@ -56,6 +56,24 @@ interface ClanBattleDao {
     suspend fun getBossAttr(enemyId: Int): EnemyParameterPro
 
     /**
+     * 获取所有 Boss 信息，测试用
+     */
+    @SkipQueryVerification
+    @Query(
+        """
+        SELECT
+            enemy_parameter.*,
+            unit_enemy_data.normal_atk_cast_time,
+            COALESCE(unit_enemy_data.comment, "") AS comment
+        FROM
+            enemy_parameter
+            LEFT JOIN unit_enemy_data ON enemy_parameter.unit_id = unit_enemy_data.unit_id
+        WHERE enemy_id > 400000000
+        """
+    )
+    suspend fun getAllBossAttr(): List<EnemyParameterPro>
+
+    /**
      * 获取所有团队战信息
      */
     @Query("$query GROUP BY a.clan_battle_id ORDER BY a.start_time DESC")

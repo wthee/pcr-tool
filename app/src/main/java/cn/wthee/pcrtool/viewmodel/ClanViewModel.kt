@@ -49,6 +49,20 @@ class ClanViewModel @Inject constructor(
     }
 
     /**
+     * 获取 BOSS 属性，测试用
+     *
+     * @param enemyIds boss编号列表
+     */
+    fun getAllBossIds() = flow {
+        val list = arrayListOf<Int>()
+        val boss = clanRepository.getAllBossAttr()
+        boss.forEach {
+            list.add(it.unit_id)
+        }
+        emit(list)
+    }
+
+    /**
      * 获取多目标部位属性
      *
      * @param bossList boss 信息
