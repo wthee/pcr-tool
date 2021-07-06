@@ -16,5 +16,5 @@ data class EventData(
     @ColumnInfo(name = "unit_names") val unitNames: String,
 ) {
 
-    fun getEventTitle() = title.deleteSpace()
+    fun getEventTitle() = title.deleteSpace
 }

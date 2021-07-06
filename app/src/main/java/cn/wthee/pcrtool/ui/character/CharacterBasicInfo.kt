@@ -54,7 +54,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
     ) {
         //标题
         MainText(
-            text = info.catchCopy.deleteSpace(),
+            text = info.catchCopy.deleteSpace,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(Dimen.largePadding),

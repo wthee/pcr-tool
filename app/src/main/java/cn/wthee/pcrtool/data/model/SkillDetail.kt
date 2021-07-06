@@ -30,7 +30,7 @@ data class SkillDetail(
     fun getActionInfo(): ArrayList<SkillActionText> {
         val list = arrayListOf<SkillActionText>()
         actions.forEach {
-            it.getActionDesc()?.let { actionDesc ->
+            it.getActionDesc().let { actionDesc ->
                 list.add(actionDesc)
             }
         }
@@ -44,7 +44,7 @@ data class SkillDetail(
         val list = arrayListOf<ShowCoe>()
         try {
             actions.forEachIndexed { index, skillActionPro ->
-                skillActionPro.getActionDesc()?.let { actionDesc ->
+                skillActionPro.getActionDesc().let { actionDesc ->
                     if (actionDesc.showCoe) {
                         val coe = Regex("\\{.\\}").findAll(actionDesc.action).first().value
                         list.add(ShowCoe(index, 0, coe))

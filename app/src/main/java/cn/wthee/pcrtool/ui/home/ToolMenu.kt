@@ -18,15 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.compose.CaptionText
-import cn.wthee.pcrtool.ui.compose.IconCompose
-import cn.wthee.pcrtool.ui.compose.VerticalGrid
-import cn.wthee.pcrtool.ui.compose.defaultSpring
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
 import kotlinx.coroutines.CoroutineScope
@@ -57,8 +55,10 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_event, MainIconType.EVENT),
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
         ToolMenuData(R.string.tweet, MainIconType.TWEET),
-        ToolMenuData(R.string.change_db, MainIconType.CHANGE_DATA),
         ToolMenuData(R.string.comic, MainIconType.COMIC),
+        ToolMenuData(R.string.change_db, MainIconType.CHANGE_DATA),
+        ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
+        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
     )
 
     VerticalGrid(
@@ -137,6 +137,16 @@ fun ToolMenu(actions: NavActions) {
                             )
                         }
                     }
+                    MainIconType.DB_DOWNLOAD -> {
+                        FadeAnimation(downloadState == -2) {
+                            MenuItem(coroutineScope, context, actions, it)
+                        }
+                    }
+                    MainIconType.SKILL_LOOP -> {
+                        if (BuildConfig.DEBUG) {
+                            MenuItem(coroutineScope, context, actions, it)
+                        }
+                    }
                     else -> {
                         MenuItem(coroutineScope, context, actions, it)
                     }
@@ -200,6 +210,9 @@ private fun getAction(
                 coroutineScope.launch {
                     DatabaseUpdater.checkDBVersion(0)
                 }
+            }
+            MainIconType.SKILL_LOOP -> {
+                actions.toAllSkillList()
             }
             else -> {
             }

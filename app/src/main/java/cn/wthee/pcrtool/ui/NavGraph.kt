@@ -71,6 +71,7 @@ object Navigation {
     const val TWEET = "tweet"
     const val COMIC = "comic"
     const val COMIC_ID = "comicId"
+    const val ALL_SKILL = "allSkill"
 }
 
 @ExperimentalComposeUiApi
@@ -352,6 +353,7 @@ fun NavGraph(
             ComicList()
         }
 
+        //漫画跳转
         composable(
             "${Navigation.COMIC}/{${Navigation.COMIC_ID}}",
             arguments = listOf(navArgument(Navigation.COMIC_ID) {
@@ -360,6 +362,12 @@ fun NavGraph(
         ) {
             val arguments = requireNotNull(it.arguments)
             ComicList(arguments.getInt(Navigation.COMIC_ID))
+        }
+
+        //技能列表
+        composable(Navigation.ALL_SKILL) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            AllSkillList()
         }
     }
 }
@@ -531,6 +539,13 @@ class NavActions(navController: NavHostController) {
      */
     val toComicListIndex: (Int) -> Unit = { comicId ->
         navController.navigate("${Navigation.COMIC}/${comicId}")
+    }
+
+    /**
+     * 技能列表
+     */
+    val toAllSkillList = {
+        navController.navigate(Navigation.ALL_SKILL)
     }
 }
 

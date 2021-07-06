@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.data.enums
 /**
  * 技能效果枚举
  *
- * fixme 调整描述 [desc]
  * @param type action_type
  * @param desc 技能标签
  * @sample cn.wthee.pcrtool.data.db.entity.SkillAction.action_type
@@ -150,7 +149,6 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 28：特殊条件
      *
-     * fixme 优化判断
      */
     IF_FOR_ALL(28, ""),
 
@@ -235,7 +233,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     WAVE_START(44, "进场"),
 
     /**
-     * fixme 45：已使用技能数相关
+     * 45：已使用技能数相关
      */
     SKILL_COUNT(45, ""),
 
@@ -257,7 +255,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 49：移除增益
      */
-    DISPEL(49, "净化"),
+    DISPEL(49, "移除"),
 
     /**
      * 50：特殊状态：铃声响起时
@@ -265,7 +263,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANNEL(50, "持续动作"),
 
     /**
-     * fixme 51：分裂
+     * 51：分裂
      */
     DIVISION(51, ""),
 
@@ -365,7 +363,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 77：特殊刻印：增益时叠加 圣诞哈哈剑
      */
-    IF_BUFF_SEAL(77, "刻印"),
+    IF_BUFF_SEAL(77, "被动刻印"),
 
     /**
      * 79：行动时，造成伤害

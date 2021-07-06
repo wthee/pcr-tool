@@ -50,6 +50,24 @@ class SkillViewModel @Inject constructor(
     }
 
     /**
+     * 测试用，获取所有角色技能
+     */
+    fun getCharacterSkills(lv: Int, atk: Int, unitIds: List<Int>) {
+        viewModelScope.launch {
+            try {
+                val skillIds = arrayListOf<Int>()
+                unitIds.forEach {
+                    val data = skillRepository.getUnitSkill(it)
+                    skillIds.addAll(data.getAllSkillId())
+                }
+                getSkillInfo(skillIds, atk, arrayListOf(lv))
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    /**
      * 获取怪物技能信息
      *
      * @param list 怪物基本参数列表

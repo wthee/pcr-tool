@@ -5,8 +5,8 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "1.3.2"
-val code = 132
+val name = "1.3.3"
+val code = 133
 val sql = 132
 
 android {
@@ -111,7 +111,7 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     //Accompanist
-    val accompanistVersion = "0.12.0"
+    val accompanistVersion = "0.13.0"
     implementation("com.google.accompanist:accompanist-coil:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
@@ -137,11 +137,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.0")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha10")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha11")
 
     //Retrofit
     val retrofitVersion = "2.9.0"

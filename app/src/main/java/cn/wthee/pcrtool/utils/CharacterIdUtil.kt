@@ -76,11 +76,11 @@ object CharacterIdUtil {
      * 获取星级 [star] id
      */
     private fun getStarId(unitId: Int, star: Int): String {
-        try {
+        return try {
             val idStr = unitId.toString()
-            return idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
+            idStr.substring(0, 4) + star + idStr[idStr.lastIndex]
         } catch (e: Exception) {
-            return ""
+            ""
         }
     }
 

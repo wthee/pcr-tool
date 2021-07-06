@@ -126,7 +126,7 @@ object Constants {
     )
 
     // 异常
-    const val EXCEPTION = "异常"
+    private const val EXCEPTION = "异常"
     const val EXCEPTION_API = "接口$EXCEPTION"
     const val EXCEPTION_DOWNLOAD_DB = "数据库文件下载$EXCEPTION"
     const val EXCEPTION_SAVE_DB = "数据库文件保存$EXCEPTION"

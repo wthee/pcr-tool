@@ -27,9 +27,10 @@
     <string name="target_rank">目标</string>
     <string name="setting">设置</string>
     <string name="function">功能</string>
+    <string name="skill">技能</string>
 
     <!-- 设置页面   -->
-    <string name="redownload_db">强制更新</string>
+    <string name="redownload_db">数据重载</string>
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>

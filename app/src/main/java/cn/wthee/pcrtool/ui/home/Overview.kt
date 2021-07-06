@@ -14,9 +14,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +41,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
@@ -59,9 +60,12 @@ fun Overview(
     }
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
+    val characterSize = 6
     val characterList =
-        overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCharacterList(characterSize)
+            .collectAsState(initial = arrayListOf()).value
     val equipList = overviewViewModel.getEquipList().collectAsState(initial = arrayListOf()).value
     val inProgressEventList =
         overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
@@ -69,6 +73,9 @@ fun Overview(
         overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
     val newsList =
         overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
+
+    val pagerState =
+        rememberPagerState(pageCount = characterSize, initialOffscreenLimit = characterSize - 1)
 
     Column(
         modifier = Modifier
@@ -85,26 +92,45 @@ fun Overview(
                 actions.toCharacterList()
             }
         ) {
-            val pagerState =
-                rememberPagerState(pageCount = characterList.size)
-            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
+            ) { index ->
                 val id = characterList[index].id
                 Card(
                     modifier = Modifier
                         .padding(
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding,
                             top = Dimen.mediuPadding,
-                            bottom = Dimen.mediuPadding,
-                            end = Dimen.mediuPadding
+                            bottom = Dimen.mediuPadding
                         )
-                        .fillMaxWidth(0.90f),
+                        .fillMaxWidth(0.85f),
                     onClick = {
                         VibrateUtil(context).single()
-                        actions.toCharacterDetail(id)
+                        if (index == pagerState.currentPage) {
+                            actions.toCharacterDetail(id)
+                        } else {
+                            coroutineScope.launch {
+//                                if(index == pagerState.pageCount - 1 && pagerState.currentPage == 0){
+//                                    //从首个滚动到最后一个
+//                                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+//                                }else if(index == 0 && pagerState.currentPage == pagerState.pageCount - 1){
+//                                    //从最后一个滚动的首个
+//                                    pagerState.animateScrollToPage(pagerState.pageCount)
+//                                }else{
+//                                    pagerState.animateScrollToPage(index)
+//                                }
+                                pagerState.animateScrollToPage(index)
+                            }
+                        }
                     },
                     elevation = 0.dp
                 ) {
                     CharacterCard(CharacterIdUtil.getMaxCardUrl(id))
                 }
+
             }
         }
 
@@ -234,14 +260,12 @@ private fun Section(
 ) {
     val context = LocalContext.current
     val modifier = (if (onClick == null) {
-        Modifier.clip(MaterialTheme.shapes.small)
-    } else {
         Modifier
-            .clip(MaterialTheme.shapes.small)
-            .clickable(onClick = {
-                VibrateUtil(context).single()
-                onClick.invoke()
-            })
+    } else {
+        Modifier.clickable(onClick = {
+            VibrateUtil(context).single()
+            onClick.invoke()
+        })
     })
 
     Column(
@@ -369,8 +393,8 @@ private fun NewsItem(
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
     val today = getToday()
-    val sd = calendar.startTime.formatTime()
-    val ed = calendar.endTime.formatTime()
+    val sd = calendar.startTime.formatTime
+    val ed = calendar.endTime.formatTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
     val comingSoon = today.second(sd) < 0
 

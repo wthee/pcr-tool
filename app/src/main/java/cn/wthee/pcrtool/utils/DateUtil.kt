@@ -12,16 +12,17 @@ val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
 /**
  * 格式化时间 yyyy/MM/dd HH:mm:ss
  */
-fun String.formatTime(): String {
-    val list = this.split(" ")[0].split("/")
-    return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
-        var hms = this.substring(this.length - 8, this.length)
-        hms = hms.replace(' ', '0')
-        " $hms"
-    } else {
-        ""
+val String.formatTime: String
+    get() {
+        val list = this.split(" ")[0].split("/")
+        return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
+            var hms = this.substring(this.length - 8, this.length)
+            hms = hms.replace(' ', '0')
+            " $hms"
+        } else {
+            ""
+        }
     }
-}
 
 /**
  * 获取当天时间
@@ -41,8 +42,8 @@ fun getToday(): String {
  */
 fun String.days(str2: String): String {
     return try {
-        val d1 = df.parse(this.formatTime())!!
-        val d2 = df.parse(str2.formatTime())!!
+        val d1 = df.parse(this.formatTime)!!
+        val d2 = df.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
         "${time / (60 * 60 * 1000 * 24)}天"
@@ -56,8 +57,8 @@ fun String.days(str2: String): String {
  */
 fun String.dates(str2: String): String {
     return try {
-        val d1 = df1.parse(this.formatTime())!!
-        val d2 = df1.parse(str2.formatTime())!!
+        val d1 = df1.parse(this.formatTime)!!
+        val d2 = df1.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
         val day = time / (60 * 60 * 1000 * 24)
@@ -83,8 +84,8 @@ fun String.dates(str2: String): String {
  */
 fun String.second(str2: String): Long {
     return try {
-        val d1 = df1.parse(this.formatTime())!!
-        val d2 = df1.parse(str2.formatTime())!!
+        val d1 = df1.parse(this.formatTime)!!
+        val d2 = df1.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
         time / 1000

@@ -30,8 +30,8 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取角色列表
      */
-    fun getCharacterList() = flow {
-        emit(unitRepository.getInfoAndData(6))
+    fun getCharacterList(size: Int) = flow {
+        emit(unitRepository.getInfoAndData(size))
     }
 
     /**
@@ -51,14 +51,14 @@ class OverviewViewModel @Inject constructor(
         val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
         if (type == 0) {
             emit(data.filter {
-                val sd = it.startTime.formatTime()
-                val ed = it.endTime.formatTime()
+                val sd = it.startTime.formatTime
+                val ed = it.endTime.formatTime
                 val inProgress = today.second(sd) > 0 && ed.second(today) > 0
                 inProgress
             }.sortedWith(compare(today)))
         } else {
             emit(data.filter {
-                val sd = it.startTime.formatTime()
+                val sd = it.startTime.formatTime
                 val comingSoon = today.second(sd) < 0
                 comingSoon
             }.sortedWith(compare(today)))

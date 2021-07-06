@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cn.wthee.pcrtool.utils.deleteSpace
 
 /**
  * 推特信息
@@ -37,6 +38,6 @@ data class TweetData(
     }
 
     fun getFormatTweet(): String {
-        return tweet.substringBefore("http").replace("  ", "\n").substringBeforeLast("\n")
+        return tweet.substringBefore("http").deleteSpace.substringBeforeLast("\n")
     }
 }
