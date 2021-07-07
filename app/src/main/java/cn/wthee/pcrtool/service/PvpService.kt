@@ -4,7 +4,6 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -66,7 +65,7 @@ class PvpService : LifecycleService() {
     }
 
     private fun getParam(min: Boolean) = WindowManager.LayoutParams().apply {
-        setHeight()
+        mFloatingWindowHeight = getFloatWindowHeight()
         type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -77,28 +76,28 @@ class PvpService : LifecycleService() {
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         //位置大小设置
         val minSize = (Dimen.fabSize + Dimen.mediuPadding * 3).value.dp2px
+
         width =
             if (min) {
                 minSize
             } else {
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                (getFloatWindowHeight() * 0.618f).toInt() + minSize
             }
         height =
             if (min) {
                 minSize
             } else {
-                mFloatingWindowHeight - Dimen.smallIconSize.value.dp2px
+                getFloatWindowHeight()
             }
         gravity = Gravity.START or Gravity.TOP
         //设置剧中屏幕显示
         x = 0
         y = 0
     }
+}
 
-    private fun setHeight() {
-        val width = ScreenUtil.getWidth()
-        val height = ScreenUtil.getHeight()
-        mFloatingWindowHeight = if (width > height) height else width
-    }
-
+fun getFloatWindowHeight(): Int {
+    val width = ScreenUtil.getWidth()
+    val height = ScreenUtil.getHeight()
+    return (if (width > height) height else width) - Dimen.smallIconSize.value.dp2px
 }
