@@ -735,7 +735,7 @@ private fun PvpResultItem(
                         text = item.down.toString(),
                         color = colorResource(id = R.color.color_rank_18_20),
                         textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(if (floatWindow) 0.3f else 1f)
                     )
                 }
                 //队伍角色图标
