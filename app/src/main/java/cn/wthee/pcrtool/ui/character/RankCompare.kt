@@ -264,9 +264,10 @@ private fun StarCompose(
                 painter = rememberCoilPainter(request = iconId),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(start = Dimen.smallPadding, bottom = Dimen.smallPadding)
-                    .clip(CircleShape)
+                    .padding(Dimen.divLineHeight)
                     .size(Dimen.starIconSize)
+                    .clip(CircleShape)
+                    .padding(Dimen.smallPadding)
             )
         }
     }

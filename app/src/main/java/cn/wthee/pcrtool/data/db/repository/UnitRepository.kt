@@ -54,4 +54,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getMaxLevel() = unitDao.getMaxLevel()
 
+    suspend fun getRankBonus(rank: Int, unitId: Int) = unitDao.getRankBonus(rank, unitId)
+
 }

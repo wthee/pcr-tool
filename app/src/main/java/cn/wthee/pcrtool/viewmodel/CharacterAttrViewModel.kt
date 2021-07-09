@@ -72,6 +72,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             val rankData = unitRepository.getRankStatus(unitId, rank)
             val rarityData = unitRepository.getRarity(unitId, rarity)
+            val bonus = unitRepository.getRankBonus(rank, unitId)
             val ids = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
             //星级属性
             info.add(rarityData.attr)
@@ -80,6 +81,11 @@ class CharacterAttrViewModel @Inject constructor(
             //rank属性
             rankData?.let {
                 info.add(rankData.attr)
+            }
+            //奖励属性
+            bonus?.let {
+                info.add(it.attr)
+                allData.bonus = it
             }
             //装备
             val eqs = arrayListOf<EquipmentMaxData>()

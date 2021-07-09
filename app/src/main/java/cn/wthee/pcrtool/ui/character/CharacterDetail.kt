@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -190,11 +191,12 @@ fun CharacterDetail(
                                 )
                                 //RANK 装备
                                 CharacterEquip(
-                                    unitId,
+                                    unitId = unitId,
                                     rank = currentValue.rank,
-                                    allData.equips,
-                                    actions.toEquipDetail,
-                                    actions.toCharacteRankEquip,
+                                    maxRank = maxValue.rank,
+                                    equips = allData.equips,
+                                    toEquipDetail = actions.toEquipDetail,
+                                    toRankEquip = actions.toCharacteRankEquip,
                                     modifier = Modifier.align(Alignment.CenterHorizontally)
                                 )
                                 //显示专武
@@ -320,7 +322,6 @@ private fun AttrLists(
     allData: AllAttrData,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
-
     //等级
     Text(
         text = sliderLevel.value.toString(),
@@ -351,6 +352,18 @@ private fun AttrLists(
             )
     )
     AttrList(attrs = allData.stroyAttr.allNotZero())
+    //Rank 奖励
+    if (allData.bonus.attr.allNotZero().isNotEmpty()) {
+        MainText(
+            text = stringResource(id = R.string.title_rank_bonus),
+            modifier = Modifier.Companion
+                .padding(
+                    top = Dimen.largePadding,
+                    bottom = Dimen.smallPadding
+                )
+        )
+        AttrList(attrs = allData.bonus.attr.allNotZero())
+    }
 }
 
 /**
@@ -455,15 +468,19 @@ private fun CardImage(unitId: Int) {
  * @param rank 当前rank
  * @param equips 装备列表
  */
+@ExperimentalAnimationApi
 @Composable
 private fun CharacterEquip(
     unitId: Int,
     rank: Int,
+    maxRank: Int,
     equips: List<EquipmentMaxData>,
     toEquipDetail: (Int) -> Unit,
     toRankEquip: (Int) -> Unit,
     modifier: Modifier
 ) {
+    val context = LocalContext.current
+
     Column(modifier = modifier.fillMaxWidth(0.8f)) {
         //装备 6、 3
         Row(
@@ -496,23 +513,56 @@ private fun CharacterEquip(
             IconCompose(data = getEquipIconUrl(id5)) {
                 toEquipDetail(id5)
             }
-
-            //跳转至所有 RANK 装备列表
-            SubButton(
-                text = getFormatText(rank),
-                color = getRankColor(rank),
-                modifier = Modifier.padding(
-                    top = Dimen.largePadding * 2,
-                    bottom = Dimen.largePadding * 2,
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = MainIconType.BACK.icon,
+                    contentDescription = null,
+                    tint = if (rank < maxRank) {
+                        getRankColor(rank = rank + 1)
+                    } else {
+                        MaterialTheme.colors.background
+                    },
+                    modifier = Modifier
+                        .size(Dimen.fabIconSize)
+                        .clip(MaterialTheme.shapes.medium)
+                        .clickable(enabled = rank < maxRank) {
+                            VibrateUtil(context).single()
+                            navViewModel.selectRank.postValue(rank + 1)
+                        }
                 )
-            ) {
-                toRankEquip(unitId)
+                //跳转至所有 RANK 装备列表
+                SubButton(
+                    text = getFormatText(rank),
+                    color = getRankColor(rank),
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding * 2,
+                        bottom = Dimen.largePadding * 2,
+                    )
+                ) {
+                    toRankEquip(unitId)
+                }
+                Icon(
+                    imageVector = MainIconType.MORE.icon,
+                    contentDescription = null,
+                    tint = if (rank > 1) {
+                        getRankColor(rank = rank - 1)
+                    } else {
+                        MaterialTheme.colors.background
+                    },
+                    modifier = Modifier
+                        .size(Dimen.fabIconSize)
+                        .clip(MaterialTheme.shapes.medium)
+                        .clickable(enabled = rank > 1) {
+                            VibrateUtil(context).single()
+                            navViewModel.selectRank.postValue(rank - 1)
+                        }
+                )
             }
-
             val id2 = equips[3].equipmentId
             IconCompose(data = getEquipIconUrl(id2)) {
                 toEquipDetail(id2)
             }
+
         }
         //装备 4、 1
         Row(
