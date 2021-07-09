@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.UnitDao
+import cn.wthee.pcrtool.data.db.entity.GuildAdditionalMember
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import javax.inject.Inject
 
@@ -47,6 +48,8 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
     suspend fun getMaxRarity(unitId: Int) = unitDao.getMaxRarity(unitId)
 
     suspend fun getGuilds() = unitDao.getGuilds()
+
+    suspend fun getGuildAddMembers(guildId: Int) = unitDao.getGuildAddMembers(guildId)
 
     suspend fun getR6Ids() = unitDao.getR6Ids()
 

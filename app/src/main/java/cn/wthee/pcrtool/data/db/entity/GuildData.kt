@@ -46,7 +46,7 @@ data class GuildData(
     @ColumnInfo(name = "member30") val member30: Int
 ) {
 
-    fun getMemberIds() = arrayListOf(
+    fun getMemberIds() = mutableListOf<Int>(
         member1,
         member2,
         member3,

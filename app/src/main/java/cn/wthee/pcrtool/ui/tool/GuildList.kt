@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.GuildAllMember
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
@@ -48,7 +49,7 @@ fun GuildList(
                 contentPadding = PaddingValues(Dimen.largePadding)
             ) {
                 items(guilds) {
-                    GuildItem(it, toCharacterDetail)
+                    GuildItem(it, toCharacterDetail = toCharacterDetail)
                 }
                 item {
                     CommonSpacer()
@@ -82,7 +83,11 @@ fun GuildList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {
+private fun GuildItem(
+    guild: GuildAllMember,
+    toCharacterDetail: (Int) -> Unit
+) {
+
     MainTitleText(
         text = guild.guildName,
         modifier = Modifier.padding(bottom = Dimen.mediuPadding)
@@ -91,7 +96,7 @@ private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {
         Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //内容
             MainContentText(
-                text = guild.getDesc(),
+                text = guild.desc,
                 modifier = Modifier.padding(
                     top = Dimen.mediuPadding,
                     start = Dimen.mediuPadding,
@@ -101,9 +106,25 @@ private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {
             )
             //图标/描述
             IconListCompose(
-                guild.getMemberIds(),
+                guild.memberIds,
                 toCharacterDetail
             )
+            // 新加入的成员
+            if (guild.newMemberIds.isNotEmpty()) {
+                MainContentText(
+                    text = stringResource(R.string.new_member),
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding
+                    ),
+                    textAlign = TextAlign.Start
+                )
+                IconListCompose(
+                    guild.newMemberIds,
+                    toCharacterDetail
+                )
+            }
         }
     }
 }

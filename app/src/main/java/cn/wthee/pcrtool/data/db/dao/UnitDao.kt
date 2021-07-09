@@ -236,6 +236,12 @@ interface UnitDao {
     suspend fun getGuilds(): List<GuildData>
 
     /**
+     * 获取所有公会信息
+     */
+    @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
+    suspend fun getGuildAddMembers(guildId: Int): GuildAdditionalMember?
+
+    /**
      * 获取已六星角色 id 列表
      */
     @Transaction
