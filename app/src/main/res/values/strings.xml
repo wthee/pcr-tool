@@ -23,6 +23,8 @@
     <string name="title_room_comments">小屋</string>
     <string name="title_material">合成</string>
     <string name="title_story_attr">剧情属性</string>
+    <string name="title_rank_bonus">Rank 奖励属性</string>
+    <string name="no_rank_bonus">当前 Rank 无奖励属性</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
     <string name="setting">设置</string>
@@ -181,4 +183,5 @@
     <string name="issue_url">https://github.com/wthee/pcr-tool/issues/new/choose</string>
     <string name="issue_tip">前往 github.com ，添加 issue</string>
     <string name="no_event">暂无活动</string>
+    <string name="new_member">新加入成员</string>
 </resources>

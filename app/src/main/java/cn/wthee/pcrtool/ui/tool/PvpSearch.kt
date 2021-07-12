@@ -5,10 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,6 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
@@ -34,6 +32,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.service.PvpService
+import cn.wthee.pcrtool.service.getFloatWindowHeight
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.compose.*
@@ -284,6 +283,7 @@ fun PvpSearchCompose(
 /**
  * 角色选择
  */
+@ExperimentalPagerApi
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -295,11 +295,7 @@ private fun PvpCharacterSelectPage(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    //滚动状态
-    val positionIndex = remember {
-        mutableStateOf(2)
-    }
-    val scrollState = rememberLazyListState()
+    val scrollState = rememberScrollState()
     //选择页面
     val character0 = data.filter {
         it.position in 0..299
@@ -311,90 +307,45 @@ private fun PvpCharacterSelectPage(
         it.position in 600..9999
     }
     val spanCount = 5
-    val showIcon = listOf(0, 0, 1, 0, 0)
     //站位图标在列表中的位置
     val positions = arrayListOf(0, 0, 0)
-    //中卫以上填充数
-    val filledCount1 =
-        (spanCount - character0.size % spanCount) % spanCount
-    positions[1] =
-        (spanCount + character0.size + filledCount1) / spanCount
-    //后卫以上填充数
-    val filledCount2 =
-        (spanCount - character1.size % spanCount) % spanCount
-    positions[0] =
-        ((positions[1] + 1) * spanCount + character1.size + filledCount2) / spanCount
-    //滚动监听
-    when (scrollState.firstVisibleItemIndex) {
-        //后
-        positions[0] -> {
-            if (positionIndex.value != 0) {
-                positionIndex.value = 0
-            }
-        }
-        scrollState.layoutInfo.totalItemsCount - scrollState.layoutInfo.visibleItemsInfo.size -> {
-            if (scrollState.layoutInfo.totalItemsCount != 0) {
-                positionIndex.value = 0
-            }
-        }
-        //中
-        positions[1] -> {
-            if (positionIndex.value != 1) {
-                positionIndex.value = 1
-            }
-        }
-        //前
-        positions[2] -> {
-            if (positionIndex.value != 2) {
-                positionIndex.value = 2
-            }
-        }
+    val padding = (Dimen.smallPadding * 2).value.dp2px
+    val itemHeight = if (!floatWindow) {
+        ScreenUtil.getWidth() / 5
+    } else {
+        ((getFloatWindowHeight() * 0.618f / 5 - padding) / 0.618f + padding).toInt()
     }
+    val lines = arrayListOf(0, 0, 0)
+    lines[0] = getLine(character0, spanCount) + 1
+    lines[1] = getLine(character1, spanCount) + 1
+    lines[2] = getLine(character2, spanCount) + 1
+    //中卫以上填充数
+    positions[1] = lines[0] * itemHeight
+    //后卫以上填充数
+    positions[0] = (lines[0] + lines[1]) * itemHeight
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        //供选择列表
-        LazyVerticalGrid(
-            cells = GridCells.Fixed(spanCount),
-            state = scrollState
-        ) {
-            //前
-            itemsIndexed(showIcon) { index, _ ->
-                if (index == 2) {
-                    PvpPositionIcon(R.drawable.ic_position_0)
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            PvpPositionIcon(R.drawable.ic_position_0, itemHeight)
+            VerticalGrid(spanCount = spanCount) {
+                character0.forEach {
+                    PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            items(character0) {
-                PvpIconItem(selectedIds, it, floatWindow)
-            }
-            //中
-            items(filledCount1) {
-                CommonSpacer()
-            }
-            itemsIndexed(showIcon) { index, _ ->
-                if (index == 2) {
-                    PvpPositionIcon(R.drawable.ic_position_1)
+            PvpPositionIcon(R.drawable.ic_position_1, itemHeight)
+            VerticalGrid(spanCount = spanCount) {
+                character1.forEach {
+                    PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            items(character1) {
-                PvpIconItem(selectedIds, it, floatWindow)
-            }
-            //后
-            items(filledCount2 % spanCount) {
-                CommonSpacer()
-            }
-            itemsIndexed(showIcon) { index, _ ->
-                if (index == 2) {
-                    PvpPositionIcon(R.drawable.ic_position_2)
+            PvpPositionIcon(R.drawable.ic_position_2, itemHeight)
+            VerticalGrid(spanCount = spanCount) {
+                character2.forEach {
+                    PvpIconItem(selectedIds, it, floatWindow)
                 }
-            }
-            items(character2) {
-                PvpIconItem(selectedIds, it, floatWindow)
-            }
-            items(spanCount) {
-                Spacer(modifier = Modifier.height(Dimen.iconSize))
             }
         }
         //指示器
@@ -420,27 +371,16 @@ private fun PvpCharacterSelectPage(
                 R.drawable.ic_position_0,
             )
             icons.forEachIndexed { index, it ->
-                val selectModifier = if (positionIndex.value == index) {
-                    Modifier
-                        .padding(Dimen.smallPadding)
-                        .border(
-                            Dimen.border,
-                            MaterialTheme.colors.primary,
-                            CircleShape
-                        )
-                } else {
-                    Modifier.padding(Dimen.smallPadding)
-                }
                 Image(painter = painterResource(id = it),
                     contentDescription = null,
-                    modifier = selectModifier
+                    modifier = Modifier
+                        .padding(Dimen.smallPadding)
                         .clip(CircleShape)
                         .size(Dimen.fabIconSize)
                         .clickable {
                             VibrateUtil(context).single()
-                            positionIndex.value = index
                             scope.launch {
-                                scrollState.scrollToItem(positions[index])
+                                scrollState.animateScrollTo(positions[index])
                             }
                         })
             }
@@ -448,23 +388,39 @@ private fun PvpCharacterSelectPage(
     }
 }
 
+/**
+ * 获取行数
+ */
+private fun getLine(
+    list: List<PvpCharacterData>,
+    spanCount: Int
+) = if (list.size % spanCount == 0) {
+    list.size / spanCount
+} else {
+    list.size / spanCount + 1
+}
 
+/**
+ * 位置图标
+ */
 @Composable
-private fun PvpPositionIcon(iconId: Int) {
+private fun PvpPositionIcon(iconId: Int, height: Int) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(Dimen.iconSize),
+            .height(height.px2dp.dp),
         contentAlignment = Alignment.Center
     ) {
         IconCompose(
             data = iconId,
-            size = Dimen.fabIconSize
+            size = Dimen.fabIconSize,
         )
     }
 }
 
-
+/**
+ * 角色图标
+ */
 @Composable
 fun PvpIconItem(
     selectedIds: ArrayList<PvpCharacterData>,
@@ -489,7 +445,10 @@ fun PvpIconItem(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(Dimen.smallPadding)
+        modifier = Modifier
+            .padding(Dimen.smallPadding)
+            .fillMaxWidth()
+            .aspectRatio(if (floatWindow) 0.618f else 1f)
     ) {
         //图标
         IconCompose(data = icon, wrapSize = floatWindow) {
@@ -776,7 +735,7 @@ private fun PvpResultItem(
                         text = item.down.toString(),
                         color = colorResource(id = R.color.color_rank_18_20),
                         textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(if (floatWindow) 0.3f else 1f)
                     )
                 }
                 //队伍角色图标

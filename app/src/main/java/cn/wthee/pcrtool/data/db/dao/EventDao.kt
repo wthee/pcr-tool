@@ -83,7 +83,7 @@ interface EventDao {
             end_time,
             value 
         ORDER BY
-            start_time DESC 
+            campaign_schedule.id DESC 
         LIMIT 0,50
     """
     )
@@ -103,7 +103,7 @@ interface EventDao {
         FROM
             tower_schedule 
         ORDER BY
-            start_time DESC 
+            tower_schedule.tower_schedule_id DESC
             LIMIT 0,:limit
     """
     )

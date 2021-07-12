@@ -220,7 +220,7 @@ fun SubButton(
     val context = LocalContext.current
 
     OutlinedButton(
-        shape = MaterialTheme.shapes.large,
+        shape = MaterialTheme.shapes.medium,
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()

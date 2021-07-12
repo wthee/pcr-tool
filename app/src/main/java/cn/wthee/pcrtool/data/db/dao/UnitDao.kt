@@ -3,10 +3,7 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.entity.GuildData
-import cn.wthee.pcrtool.data.db.entity.UnitPromotion
-import cn.wthee.pcrtool.data.db.entity.UnitPromotionStatus
-import cn.wthee.pcrtool.data.db.entity.UnitRarity
+import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
@@ -239,6 +236,12 @@ interface UnitDao {
     suspend fun getGuilds(): List<GuildData>
 
     /**
+     * 获取所有公会信息
+     */
+    @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
+    suspend fun getGuildAddMembers(guildId: Int): GuildAdditionalMember?
+
+    /**
      * 获取已六星角色 id 列表
      */
     @Transaction
@@ -292,4 +295,10 @@ interface UnitDao {
      */
     @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
     suspend fun getMaxLevel(): Int
+
+    /**
+     * 获取角色 Rank 奖励
+     */
+    @Query("SELECT * FROM promotion_bonus WHERE unit_id = :unitId AND promotion_level = :rank")
+    suspend fun getRankBonus(rank: Int, unitId: Int): UnitPromotionBonus?
 }
