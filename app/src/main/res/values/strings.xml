@@ -23,7 +23,8 @@
     <string name="title_room_comments">小屋</string>
     <string name="title_material">合成</string>
     <string name="title_story_attr">剧情属性</string>
-    <string name="title_rank_bonus">Rank 奖励</string>
+    <string name="title_rank_bonus">Rank 奖励属性</string>
+    <string name="no_rank_bonus">当前 Rank 无奖励属性</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
     <string name="setting">设置</string>

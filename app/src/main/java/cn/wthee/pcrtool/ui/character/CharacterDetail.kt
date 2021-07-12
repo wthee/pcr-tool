@@ -314,6 +314,7 @@ fun CharacterDetail(
 /**
  * 属性
  */
+@ExperimentalAnimationApi
 @Composable
 private fun AttrLists(
     currentValue: CharacterProperty,
@@ -353,15 +354,16 @@ private fun AttrLists(
     )
     AttrList(attrs = allData.stroyAttr.allNotZero())
     //Rank 奖励
-    if (allData.bonus.attr.allNotZero().isNotEmpty()) {
-        MainText(
-            text = stringResource(id = R.string.title_rank_bonus),
-            modifier = Modifier.Companion
-                .padding(
-                    top = Dimen.largePadding,
-                    bottom = Dimen.smallPadding
-                )
-        )
+    val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
+    MainText(
+        text = stringResource(id = if (hasBonus) R.string.title_rank_bonus else R.string.no_rank_bonus),
+        modifier = Modifier.Companion
+            .padding(
+                top = Dimen.largePadding,
+                bottom = Dimen.smallPadding
+            )
+    )
+    SlideAnimation(visible = allData.bonus.attr.allNotZero().isNotEmpty()) {
         AttrList(attrs = allData.bonus.attr.allNotZero())
     }
 }
@@ -523,7 +525,7 @@ private fun CharacterEquip(
                         MaterialTheme.colors.background
                     },
                     modifier = Modifier
-                        .size(Dimen.fabIconSize)
+                        .size(Dimen.starIconSize)
                         .clip(MaterialTheme.shapes.medium)
                         .clickable(enabled = rank < maxRank) {
                             VibrateUtil(context).single()
@@ -550,7 +552,7 @@ private fun CharacterEquip(
                         MaterialTheme.colors.background
                     },
                     modifier = Modifier
-                        .size(Dimen.fabIconSize)
+                        .size(Dimen.starIconSize)
                         .clip(MaterialTheme.shapes.medium)
                         .clickable(enabled = rank > 1) {
                             VibrateUtil(context).single()
