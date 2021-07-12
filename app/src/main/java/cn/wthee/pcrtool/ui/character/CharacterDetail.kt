@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -355,16 +356,24 @@ private fun AttrLists(
     AttrList(attrs = allData.stroyAttr.allNotZero())
     //Rank 奖励
     val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
-    MainText(
-        text = stringResource(id = if (hasBonus) R.string.title_rank_bonus else R.string.no_rank_bonus),
-        modifier = Modifier.Companion
-            .padding(
-                top = Dimen.largePadding,
-                bottom = Dimen.smallPadding
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (hasBonus) {
+            MainText(
+                text = stringResource(id = R.string.title_rank_bonus),
+                modifier = Modifier.Companion
+                    .padding(
+                        top = Dimen.largePadding,
+                        bottom = Dimen.smallPadding
+                    ),
+                textAlign = TextAlign.Center
             )
-    )
-    SlideAnimation(visible = allData.bonus.attr.allNotZero().isNotEmpty()) {
-        AttrList(attrs = allData.bonus.attr.allNotZero())
+            AttrList(attrs = allData.bonus.attr.allNotZero())
+        }
     }
 }
 
