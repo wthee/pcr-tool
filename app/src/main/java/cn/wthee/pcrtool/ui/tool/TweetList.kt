@@ -36,6 +36,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -48,6 +49,7 @@ import kotlinx.coroutines.launch
 /**
  * 推特列表
  */
+@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalPagingApi
 @ExperimentalMaterialApi
@@ -126,6 +128,7 @@ fun TweetList(
 /**
  * 推特内容
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -206,10 +209,11 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
                 state = pagerState,
                 modifier = Modifier.padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
             ) { pageIndex ->
-                if (url == "") {
+                val isComic = url != ""
+                if (!isComic) {
                     url = photos[pageIndex]
                 }
-                ImageCompose(url)
+                ImageCompose(url, hasRatio = isComic)
             }
             if (pagerState.pageCount > 1) {
                 HorizontalPagerIndicator(pagerState = pagerState)
@@ -221,6 +225,7 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
 /**
  * 相关链接按钮
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun TweetButton(

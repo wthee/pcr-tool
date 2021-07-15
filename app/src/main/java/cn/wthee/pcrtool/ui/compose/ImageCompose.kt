@@ -26,13 +26,14 @@ const val RATIO = 1.78f
 
 // 741 * 1200
 const val RATIO_COMIC = 0.6175f
+const val RATIO_COMMON = 371 / 208f
 
 
 @ExperimentalCoilApi
 @Composable
 fun ImageCompose(url: String, hasRatio: Boolean = false) {
     val painter = rememberImagePainter(
-        data = url,
+        data = R.drawable.load,
         builder = {
             placeholder(R.drawable.load)
             error(R.drawable.error)
@@ -42,7 +43,9 @@ fun ImageCompose(url: String, hasRatio: Boolean = false) {
             .fillMaxWidth()
             .aspectRatio(RATIO_COMIC)
     } else {
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
+            .aspectRatio(RATIO_COMMON)
     }
     Image(
         painter = painter,
@@ -66,7 +69,7 @@ fun CharacterCardImage(
     val painter = rememberImagePainter(
         data = url,
         builder = {
-            placeholder(R.drawable.error)
+            placeholder(R.drawable.load)
             error(R.drawable.error)
             listener(onSuccess = { _, _ ->
                 onSuccess.invoke()
