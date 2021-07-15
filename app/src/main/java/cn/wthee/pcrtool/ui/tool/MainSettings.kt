@@ -34,19 +34,28 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.openWebView
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 
 /**
  * 设置页面
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
     val type = getDatabaseType()
     val sp = mainSP()
-    val painter = rememberCoilPainter(request = R.mipmap.ic_launcher_foreground)
+    val visibility = remember {
+        mutableStateOf(false)
+    }
+    val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground, builder = {
+        listener(onSuccess = { _, _ ->
+            visibility.value = true
+        })
+    })
+
     SideEffect {
         //自动删除历史数据
         val oldFileSize = FileUtil.getOldDatabaseSize()
@@ -58,10 +67,7 @@ fun MainSettings() {
             }
         }
     }
-    val visibility = remember {
-        mutableStateOf(false)
-    }
-    visibility.value = painter.loadState is ImageLoadState.Success
+
     //数据库版本
     val typeName = stringResource(
         id = if (type == 1) {
@@ -251,6 +257,7 @@ fun MainSettings() {
 
 }
 
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun SettingItem(

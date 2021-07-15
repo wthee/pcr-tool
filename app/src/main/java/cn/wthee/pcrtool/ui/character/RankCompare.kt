@@ -33,7 +33,8 @@ import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import kotlinx.coroutines.launch
 
 
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
  * @param rarity 角色星级
  * @param uniqueEquipLevel 角色专武等级
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -261,7 +263,7 @@ private fun StarCompose(
                 else -> R.drawable.ic_star
             }
             Image(
-                painter = rememberCoilPainter(request = iconId),
+                painter = rememberImagePainter(data = iconId),
                 contentDescription = null,
                 modifier = Modifier
                     .padding(Dimen.divLineHeight)

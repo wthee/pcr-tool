@@ -29,7 +29,8 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -38,6 +39,7 @@ import kotlinx.coroutines.launch
 /**
  * 推特列表
  */
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
 @ExperimentalPagingApi
@@ -141,6 +143,7 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
 /**
  * 漫画内容
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -172,7 +175,7 @@ private fun ComicItem(data: ComicData) {
 
         if (placeholder) {
             Image(
-                painter = rememberCoilPainter(request = R.drawable.load),
+                painter = rememberImagePainter(data = R.drawable.load),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()

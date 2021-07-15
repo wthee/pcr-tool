@@ -31,6 +31,7 @@ import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -74,6 +75,7 @@ object Navigation {
     const val ALL_SKILL = "allSkill"
 }
 
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalPagingApi
 @ExperimentalAnimationApi

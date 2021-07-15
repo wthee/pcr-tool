@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ScaleFactor
+import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -42,14 +44,12 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import coil.Coil
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 import kotlin.math.max
 
 /**
@@ -57,6 +57,7 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -380,6 +381,7 @@ private fun AttrLists(
 /**
  * 角色卡面图片
  */
+@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -392,7 +394,11 @@ private fun CardImage(unitId: Int) {
         loaded.add(false)
         drawables.add(null)
     }
-    val pagerState = rememberPagerState(pageCount = picUrls.size)
+    val pagerState = rememberPagerState(
+        pageCount = picUrls.size,
+        infiniteLoop = true,
+        initialOffscreenLimit = picUrls.size - 1
+    )
     val coroutineScope = rememberCoroutineScope()
 
     //权限
@@ -403,63 +409,79 @@ private fun CardImage(unitId: Int) {
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
 
     Box {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { pagerIndex ->
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
             val request = ImageRequest.Builder(context)
-                .data(picUrls[pagerIndex])
+                .data(picUrls[index])
                 .build()
             coroutineScope.launch {
                 val image = Coil.imageLoader(context).execute(request).drawable
-                drawables[pagerIndex] = image
+                drawables[index] = image
             }
-            val painter = rememberCoilPainter(request = picUrls[pagerIndex])
+            val infiniteLoopIndex =
+                if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
+                    //从首个滚动到最后一个
+                    pagerState.currentPage - 1
+                } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
+                    //从最后一个滚动的首个
+                    pagerState.pageCount
+                } else {
+                    index
+                }
             Card(
                 modifier = Modifier
-                    .padding(Dimen.largePadding),
+                    .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+                    .fillMaxWidth(0.8f)
+                    .graphicsLayer {
+                        val pageOffset =
+                            calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
+                        lerp(
+                            start = ScaleFactor(0.9f, 0.9f),
+                            stop = ScaleFactor(1f, 1f),
+                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                        ).also { scale ->
+                            scaleX = scale.scaleY
+                            scaleY = scale.scaleY
+                        }
+                    },
                 onClick = {
                     VibrateUtil(context).single()
                     //下载
-                    if (loaded[pagerIndex]) {
-                        //权限校验
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
-                                context,
-                                permissions
-                            )
-                        ) {
-                            ActivityCompat.requestPermissions(
-                                context as Activity,
-                                permissions,
-                                1
-                            )
-                        } else {
-                            drawables[pagerIndex]?.let {
-                                ImageDownloadHelper(context).saveBitmap(
-                                    bitmap = (it as BitmapDrawable).bitmap,
-                                    displayName = "${unitId}_${pagerIndex}.jpg"
+                    if (index == pagerState.currentPage) {
+                        if (loaded[index]) {
+                            //权限校验
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
+                                    context,
+                                    permissions
                                 )
-                                VibrateUtil(context).done()
+                            ) {
+                                ActivityCompat.requestPermissions(
+                                    context as Activity,
+                                    permissions,
+                                    1
+                                )
+                            } else {
+                                drawables[index]?.let {
+                                    ImageDownloadHelper(context).saveBitmap(
+                                        bitmap = (it as BitmapDrawable).bitmap,
+                                        displayName = "${unitId}_${index}.jpg"
+                                    )
+                                    VibrateUtil(context).done()
+                                }
                             }
+                        } else {
+                            ToastUtil.short(unLoadToast)
                         }
                     } else {
-                        ToastUtil.short(unLoadToast)
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(infiniteLoopIndex)
+                        }
                     }
                 },
                 shape = MaterialTheme.shapes.large,
             ) {
-                Box {
-                    //图片
-                    Image(
-                        painter = when (painter.loadState) {
-                            is ImageLoadState.Success -> {
-                                loaded[pagerIndex] = true
-                                painter
-                            }
-                            is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                            else -> rememberCoilPainter(request = R.drawable.load)
-                        },
-                        contentDescription = null,
-                        modifier = Modifier.aspectRatio(RATIO),
-                        contentScale = ContentScale.FillWidth
-                    )
+                //图片
+                CharacterCardImage(url = picUrls[index]) {
+                    loaded[index] = true
                 }
             }
         }
@@ -479,6 +501,7 @@ private fun CardImage(unitId: Int) {
  * @param rank 当前rank
  * @param equips 装备列表
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun CharacterEquip(
@@ -601,6 +624,7 @@ private fun CharacterEquip(
  * @param sliderState 等级滑动条状态
  * @param uniqueEquipmentMaxData 专武数值信息
  */
+@ExperimentalCoilApi
 @Composable
 private fun UniqueEquip(
     currentValue: CharacterProperty,
@@ -679,7 +703,7 @@ private fun StarSelect(
                 else -> R.drawable.ic_star
             }
             Image(
-                painter = rememberCoilPainter(request = iconId),
+                painter = rememberImagePainter(data = iconId),
                 contentDescription = null,
                 modifier = Modifier
                     .padding(Dimen.divLineHeight)

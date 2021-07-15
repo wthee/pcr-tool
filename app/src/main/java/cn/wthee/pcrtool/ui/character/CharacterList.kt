@@ -41,6 +41,7 @@ import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -164,6 +165,7 @@ fun CharacterList(
 /**
  * 角色列表项
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun CharacterItem(
@@ -182,7 +184,7 @@ fun CharacterItem(
         }) {
         Column {
             //图片
-            CharacterCard(
+            CharacterCardImage(
                 CharacterIdUtil.getMaxCardUrl(character.id)
             )
             //编号
@@ -240,6 +242,7 @@ private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
 /**
  * 角色筛选
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
