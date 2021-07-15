@@ -5,8 +5,8 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "1.3.4"
-val code = 134
+val name = "1.3.5"
+val code = 135
 val sql = 134
 
 android {
@@ -111,8 +111,7 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     //Accompanist
-    val accompanistVersion = "0.13.0"
-    implementation("com.google.accompanist:accompanist-coil:$accompanistVersion")
+    val accompanistVersion = "0.14.0"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -120,8 +119,10 @@ dependencies {
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
 
-    //coil-gif
-    implementation("io.coil-kt:coil-gif:1.2.2")
+    //Coil
+    val coilVersion = "1.3.0"
+    implementation("io.coil-kt:coil-gif:$coilVersion")
+    implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
