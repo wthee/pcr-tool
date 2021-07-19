@@ -456,7 +456,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
                     tint = color
                 )
                 MainContentText(
-                    text = stringResource(R.string.in_progress, ed.dates(today)),
+                    text = stringResource(R.string.progressing, ed.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = color

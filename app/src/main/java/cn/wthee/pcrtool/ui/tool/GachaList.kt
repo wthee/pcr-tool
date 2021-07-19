@@ -134,7 +134,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                     size = Dimen.smallIconSize,
                 )
                 MainContentText(
-                    text = stringResource(R.string.in_progress, gachaInfo.endTime.dates(today)),
+                    text = stringResource(R.string.progressing, gachaInfo.endTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colors.primary

@@ -161,7 +161,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     size = Dimen.smallIconSize,
                 )
                 MainContentText(
-                    text = stringResource(R.string.in_progress, event.endTime.dates(today)),
+                    text = stringResource(R.string.progressing, event.endTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colors.primary

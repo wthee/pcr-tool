@@ -160,7 +160,7 @@
     <string name="temple">神殿调查</string>
     <string name="dungeon">地下城玛那</string>
     <string name="drop_x">掉落量 * %s </string>
-    <string name="in_progress">%s</string>
+    <string name="progressing">%s</string>
     <string name="coming_soon">%s</string>
 
     <!--  异常提示-->
