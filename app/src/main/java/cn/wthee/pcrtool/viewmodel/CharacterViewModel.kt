@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.Constants.unuseIDs
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
@@ -30,7 +31,9 @@ class CharacterViewModel @Inject constructor(
                 unitRepository.getGuilds()[params.guild - 1].guildName
             else
                 "全部"
-            emit(unitRepository.getInfoAndData(params, guildName))
+            emit(unitRepository.getInfoAndData(params, guildName).filter {
+                !unuseIDs.contains(it.id)
+            })
         }
     }
 
@@ -54,7 +57,9 @@ class CharacterViewModel @Inject constructor(
      * 竞技场角色信息
      */
     fun getAllCharacter() = flow {
-        emit(unitRepository.getCharacterByPosition(0, 999))
+        emit(unitRepository.getCharacterByPosition(0, 999).filter {
+            !unuseIDs.contains(it.unitId)
+        })
     }
 
     /**

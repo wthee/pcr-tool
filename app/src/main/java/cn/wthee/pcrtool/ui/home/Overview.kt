@@ -81,10 +81,15 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
 
+    val pagerCount = if (characterList.isNotEmpty()) {
+        characterList.size
+    } else {
+        3
+    }
     val pagerState =
         rememberPagerState(
-            pageCount = characterSize,
-            initialOffscreenLimit = characterSize - 1,
+            pageCount = pagerCount,
+            initialOffscreenLimit = pagerCount - 1,
             infiniteLoop = true
         )
 

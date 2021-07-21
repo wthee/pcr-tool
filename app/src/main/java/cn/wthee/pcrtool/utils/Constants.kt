@@ -10,6 +10,7 @@ object Constants {
     //图片格式
     const val WEBP = ".webp"
     const val PNG = ".png"
+    const val FADE_TIME = 1000
 
     //图片资源地址
     private const val RESOURCE_URL = "https://wthee.xyz/resource/"
@@ -123,6 +124,15 @@ object Constants {
     //无现实图片角色
     val notExistsIDs = arrayListOf(
         109731, 109831, 109931, 109231, 109331, 109431
+    )
+
+    //未实装角色
+    val unuseIDs = arrayListOf(
+        106701,
+        106901,
+        107201,
+        107301,
+        110201
     )
 
     // 异常

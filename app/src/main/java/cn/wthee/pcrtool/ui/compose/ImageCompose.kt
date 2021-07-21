@@ -20,7 +20,11 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 
 const val RATIO = 1.78f
 
@@ -33,10 +37,9 @@ const val RATIO_COMMON = 371 / 208f
 @Composable
 fun ImageCompose(url: String, hasRatio: Boolean = false) {
     val painter = rememberImagePainter(
-        data = R.drawable.load,
+        data = url,
         builder = {
-            placeholder(R.drawable.load)
-            error(R.drawable.error)
+            crossfade(Constants.FADE_TIME)
         })
     val modifier = if (hasRatio) {
         Modifier
@@ -47,11 +50,16 @@ fun ImageCompose(url: String, hasRatio: Boolean = false) {
             .fillMaxWidth()
             .aspectRatio(RATIO_COMMON)
     }
+    val state = painter.state
+
     Image(
         painter = painter,
         contentDescription = null,
         contentScale = ContentScale.FillWidth,
-        modifier = modifier
+        modifier = modifier.placeholder(
+            visible = state is ImagePainter.State.Loading,
+            highlight = PlaceholderHighlight.shimmer()
+        ),
     )
 }
 
@@ -69,17 +77,22 @@ fun CharacterCardImage(
     val painter = rememberImagePainter(
         data = url,
         builder = {
-            placeholder(R.drawable.load)
-            error(R.drawable.error)
+            crossfade(Constants.FADE_TIME)
             listener(onSuccess = { _, _ ->
                 onSuccess.invoke()
             })
         })
 
+    val state = painter.state
     Image(
         painter = painter,
         contentDescription = null,
-        modifier = modifier.aspectRatio(RATIO),
+        modifier = modifier
+            .aspectRatio(RATIO)
+            .placeholder(
+                visible = state is ImagePainter.State.Loading,
+                highlight = PlaceholderHighlight.shimmer()
+            ),
         contentScale = ContentScale.FillWidth
     )
 }
@@ -133,6 +146,7 @@ fun IconCompose(
         mModifier = mModifier.size(size)
     }
 
+
     if (data is ImageVector) {
         Icon(
             imageVector = data,
@@ -144,15 +158,19 @@ fun IconCompose(
         val painter = rememberImagePainter(
             data = data,
             builder = {
-                placeholder(R.drawable.unknown_gray)
+                crossfade(Constants.FADE_TIME)
                 error(R.drawable.unknown_gray)
             }
         )
+        val state = painter.state
         Image(
             painter = painter,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
-            modifier = mModifier
+            modifier = mModifier.placeholder(
+                visible = state is ImagePainter.State.Loading,
+                highlight = PlaceholderHighlight.shimmer()
+            )
         )
     }
 }
