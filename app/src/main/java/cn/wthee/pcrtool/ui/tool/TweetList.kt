@@ -213,7 +213,7 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
                 if (!isComic) {
                     url = photos[pageIndex]
                 }
-                ImageCompose(url, hasRatio = isComic)
+                ImageCompose(url, ratio = if (isComic) RATIO_COMIC else RATIO_COMMON)
             }
             if (pagerState.pageCount > 1) {
                 HorizontalPagerIndicator(pagerState = pagerState)

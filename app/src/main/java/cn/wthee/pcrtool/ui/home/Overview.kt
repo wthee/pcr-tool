@@ -47,7 +47,6 @@ import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
-import java.util.*
 import kotlin.math.absoluteValue
 
 /**
@@ -152,7 +151,7 @@ fun Overview(
                     },
                     elevation = 0.dp,
                 ) {
-                    CharacterCardImage(CharacterIdUtil.getMaxCardUrl(id))
+                    ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
                 }
 
             }

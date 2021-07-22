@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.compose
 
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
@@ -20,11 +21,8 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
+import coil.drawable.ScaleDrawable
 
 const val RATIO = 1.78f
 
@@ -35,65 +33,34 @@ const val RATIO_COMMON = 371 / 208f
 
 @ExperimentalCoilApi
 @Composable
-fun ImageCompose(url: String, hasRatio: Boolean = false) {
-    val painter = rememberImagePainter(
-        data = url,
-        builder = {
-            crossfade(Constants.FADE_TIME)
-        })
-    val modifier = if (hasRatio) {
-        Modifier
-            .fillMaxWidth()
-            .aspectRatio(RATIO_COMIC)
-    } else {
-        Modifier
-            .fillMaxWidth()
-            .aspectRatio(RATIO_COMMON)
-    }
-    val state = painter.state
-
-    Image(
-        painter = painter,
-        contentDescription = null,
-        contentScale = ContentScale.FillWidth,
-        modifier = modifier.placeholder(
-            visible = state is ImagePainter.State.Loading,
-            highlight = PlaceholderHighlight.shimmer()
-        ),
-    )
-}
-
-/**
- * 角色卡面
- * 通过设置 aspectRatio, 使图片加载前时，有默认高度
- */
-@ExperimentalCoilApi
-@Composable
-fun CharacterCardImage(
+fun ImageCompose(
     url: String,
-    modifier: Modifier = Modifier,
+    ratio: Float,
     onSuccess: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+
     val painter = rememberImagePainter(
         data = url,
         builder = {
-            crossfade(Constants.FADE_TIME)
+            placeholder(
+                ScaleDrawable(
+                    AppCompatResources.getDrawable(context, R.drawable.load)!!
+                )
+            )
+            error(R.drawable.error)
             listener(onSuccess = { _, _ ->
                 onSuccess.invoke()
             })
         })
 
-    val state = painter.state
     Image(
         painter = painter,
         contentDescription = null,
-        modifier = modifier
-            .aspectRatio(RATIO)
-            .placeholder(
-                visible = state is ImagePainter.State.Loading,
-                highlight = PlaceholderHighlight.shimmer()
-            ),
-        contentScale = ContentScale.FillWidth
+        contentScale = ContentScale.FillBounds,
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(ratio),
     )
 }
 
@@ -158,19 +125,15 @@ fun IconCompose(
         val painter = rememberImagePainter(
             data = data,
             builder = {
-                crossfade(Constants.FADE_TIME)
+                placeholder(R.drawable.unknown_gray)
                 error(R.drawable.unknown_gray)
             }
         )
-        val state = painter.state
         Image(
             painter = painter,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
-            modifier = mModifier.placeholder(
-                visible = state is ImagePainter.State.Loading,
-                highlight = PlaceholderHighlight.shimmer()
-            )
+            modifier = mModifier
         )
     }
 }

@@ -483,7 +483,7 @@ private fun CardImage(unitId: Int) {
                 shape = MaterialTheme.shapes.large,
             ) {
                 //图片
-                CharacterCardImage(url = picUrls[index]) {
+                ImageCompose(url = picUrls[index], ratio = RATIO) {
                     loaded[index] = true
                 }
             }

@@ -10,7 +10,6 @@ object Constants {
     //图片格式
     const val WEBP = ".webp"
     const val PNG = ".png"
-    const val FADE_TIME = 1000
 
     //图片资源地址
     private const val RESOURCE_URL = "https://wthee.xyz/resource/"

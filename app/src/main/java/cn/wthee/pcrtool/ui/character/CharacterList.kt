@@ -184,8 +184,8 @@ fun CharacterItem(
         }) {
         Column {
             //图片
-            CharacterCardImage(
-                CharacterIdUtil.getMaxCardUrl(character.id)
+            ImageCompose(
+                CharacterIdUtil.getMaxCardUrl(character.id), RATIO
             )
             //编号
             if (BuildConfig.debug) {

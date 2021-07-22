@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.utils.ApiUtil
-import cn.wthee.pcrtool.utils.Constants.FADE_TIME
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -43,7 +42,6 @@ class MyApplication : Application(), ImageLoaderFactory {
                 }
             }
             .allowHardware(false)
-            .crossfade(FADE_TIME)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .networkCachePolicy(CachePolicy.ENABLED)
