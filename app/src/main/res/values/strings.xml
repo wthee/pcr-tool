@@ -183,4 +183,5 @@
     <string name="issue_tip">前往 github.com ，添加 issue</string>
     <string name="no_event">暂无活动</string>
     <string name="new_member">新加入成员</string>
+    <string name="save_image">保存图片</string>
 </resources>

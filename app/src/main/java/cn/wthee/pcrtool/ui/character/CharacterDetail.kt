@@ -384,6 +384,7 @@ private fun AttrLists(
 /**
  * 角色卡面图片
  */
+@ExperimentalAnimationApi
 @ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -410,81 +411,90 @@ private fun CardImage(unitId: Int) {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
+    val showConfirmLayout = remember {
+        mutableStateOf(false)
+    }
 
-    Box {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
-            val request = ImageRequest.Builder(context)
-                .data(picUrls[index])
-                .build()
-            coroutineScope.launch {
-                val image = Coil.imageLoader(context).execute(request).drawable
-                drawables[index] = image
+    HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
+        val request = ImageRequest.Builder(context)
+            .data(picUrls[index])
+            .build()
+        coroutineScope.launch {
+            val image = Coil.imageLoader(context).execute(request).drawable
+            drawables[index] = image
+        }
+        val infiniteLoopIndex =
+            if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
+                //从首个滚动到最后一个
+                pagerState.currentPage - 1
+            } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
+                //从最后一个滚动的首个
+                pagerState.pageCount
+            } else {
+                index
             }
-            val infiniteLoopIndex =
-                if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
-                    //从首个滚动到最后一个
-                    pagerState.currentPage - 1
-                } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
-                    //从最后一个滚动的首个
-                    pagerState.pageCount
-                } else {
-                    index
-                }
-            Card(
-                modifier = Modifier
-                    .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
-                    .fillMaxWidth(0.8f)
-                    .graphicsLayer {
-                        val pageOffset =
-                            calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
-                        lerp(
-                            start = ScaleFactor(0.9f, 0.9f),
-                            stop = ScaleFactor(1f, 1f),
-                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                        ).also { scale ->
-                            scaleX = scale.scaleY
-                            scaleY = scale.scaleY
-                        }
-                    },
-                onClick = {
-                    VibrateUtil(context).single()
-                    //下载
-                    if (index == pagerState.currentPage) {
-                        if (loaded[index]) {
-                            //权限校验
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
-                                    context,
-                                    permissions
-                                )
-                            ) {
-                                ActivityCompat.requestPermissions(
-                                    context as Activity,
-                                    permissions,
-                                    1
-                                )
-                            } else {
-                                drawables[index]?.let {
-                                    ImageDownloadHelper(context).saveBitmap(
-                                        bitmap = (it as BitmapDrawable).bitmap,
-                                        displayName = "${unitId}_${index}.jpg"
-                                    )
-                                    VibrateUtil(context).done()
-                                }
-                            }
-                        } else {
-                            ToastUtil.short(unLoadToast)
-                        }
-                    } else {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(infiniteLoopIndex)
-                        }
+        Card(
+            modifier = Modifier
+                .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+                .fillMaxWidth(0.8f)
+                .graphicsLayer {
+                    val pageOffset =
+                        calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
+                    lerp(
+                        start = ScaleFactor(0.9f, 0.9f),
+                        stop = ScaleFactor(1f, 1f),
+                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                    ).also { scale ->
+                        scaleX = scale.scaleY
+                        scaleY = scale.scaleY
                     }
                 },
-                shape = MaterialTheme.shapes.large,
-            ) {
+            onClick = {
+                VibrateUtil(context).single()
+                //下载
+                if (index == pagerState.currentPage) {
+                    if (loaded[index]) {
+                        //权限校验
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
+                                context,
+                                permissions
+                            )
+                        ) {
+                            ActivityCompat.requestPermissions(
+                                context as Activity,
+                                permissions,
+                                1
+                            )
+                        } else {
+                            showConfirmLayout.value = !showConfirmLayout.value
+                        }
+                    } else {
+                        ToastUtil.short(unLoadToast)
+                    }
+                } else {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(infiniteLoopIndex)
+                    }
+                }
+            },
+            shape = MaterialTheme.shapes.large,
+        ) {
+            Box(contentAlignment = Alignment.Center) {
                 //图片
                 ImageCompose(url = picUrls[index], ratio = RATIO) {
                     loaded[index] = true
+                }
+                FadeAnimation(visible = showConfirmLayout.value) {
+                    MainButton(text = stringResource(R.string.save_image)) {
+                        drawables[index]?.let {
+                            ImageDownloadHelper(context).saveBitmap(
+                                bitmap = (it as BitmapDrawable).bitmap,
+                                displayName = "${unitId}_${index}.jpg"
+                            )
+                            showConfirmLayout.value = false
+                            VibrateUtil(context).done()
+                        }
+                    }
                 }
             }
         }
