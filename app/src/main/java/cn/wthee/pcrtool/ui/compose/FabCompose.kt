@@ -18,11 +18,13 @@ import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 
 /**
  * 通用悬浮按钮
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 fun FabCompose(

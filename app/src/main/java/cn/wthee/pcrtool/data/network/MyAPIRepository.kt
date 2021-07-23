@@ -111,7 +111,7 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             if (e is CancellationException) {
                 return cancel()
             } else {
-                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + "$id")
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + id)
             }
         }
         return error()

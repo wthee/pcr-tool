@@ -38,12 +38,14 @@ import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
  * 装备列表
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -161,6 +163,7 @@ fun EquipList(
 /**
  * 装备
  */
+@ExperimentalCoilApi
 @Composable
 private fun EquipItem(
     filter: FilterEquipment,
@@ -193,6 +196,7 @@ private fun EquipItem(
 /**
  * 装备筛选
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable

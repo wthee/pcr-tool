@@ -43,8 +43,6 @@ object Dimen {
 
     val divLineHeight = 1.dp
 
-    val border = 3.dp
-
     val slideHeight = 28.dp
 
     val starIconSize = 32.dp

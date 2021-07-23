@@ -17,12 +17,14 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.theme.Dimen
+import coil.annotation.ExperimentalCoilApi
 
 
 /**
  * 顶部工具栏
  *
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 fun TopBarCompose(actions: NavActions) {

@@ -16,17 +16,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.GuildAllMember
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 
 /**
  * 角色公会
  */
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -80,6 +81,7 @@ fun GuildList(
 /**
  * 公会
  */
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable

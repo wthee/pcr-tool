@@ -20,11 +20,13 @@ import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.SlideLeftAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 
 /**
  * 菜单
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable

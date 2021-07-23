@@ -208,6 +208,30 @@ fun LineCompose(modifier: Modifier = Modifier) {
 }
 
 /**
+ * 主操作按钮
+ */
+@Composable
+fun MainButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Unspecified,
+    onClick: () -> Unit
+) {
+    val context = LocalContext.current
+
+    Button(
+        shape = MaterialTheme.shapes.medium,
+        modifier = modifier.padding(Dimen.smallPadding),
+        onClick = {
+            VibrateUtil(context).single()
+            onClick.invoke()
+        }
+    ) {
+        Text(text = text, color = color, style = MaterialTheme.typography.button)
+    }
+}
+
+/**
  * 次操作按钮
  */
 @Composable

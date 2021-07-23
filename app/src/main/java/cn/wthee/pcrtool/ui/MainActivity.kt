@@ -82,6 +82,7 @@ class MainActivity : ComponentActivity() {
         var r6Ids = listOf<Int>()
     }
 
+
     @ExperimentalComposeUiApi
     @ExperimentalPagingApi
     @ExperimentalAnimationApi
@@ -161,6 +162,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalPagingApi
@@ -217,6 +219,7 @@ fun Home(
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 fun FabMain(modifier: Modifier = Modifier) {

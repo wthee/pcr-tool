@@ -337,6 +337,7 @@ fun ClanBossInfoPager(
 /**
  * Boss 信息详情
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun ClanBossInfoPagerItem(
@@ -415,6 +416,7 @@ private fun ClanBossInfoPagerItem(
 }
 
 
+@ExperimentalCoilApi
 @Composable
 private fun BossSkillList(
     index: Int,

@@ -20,6 +20,7 @@ import cn.wthee.pcrtool.ui.tool.PvpFloatSearch
 import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.ScreenUtil
 import cn.wthee.pcrtool.utils.dp2px
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalFoundationApi
@@ -31,6 +32,7 @@ class PvpService : LifecycleService() {
     private val activity = ActivityHelper.instance.currentActivity
     private var floatRootView: View? = null
 
+    @ExperimentalCoilApi
     override fun onCreate() {
         super.onCreate()
         initWindow()
@@ -51,6 +53,7 @@ class PvpService : LifecycleService() {
         }
     }
 
+    @ExperimentalCoilApi
     private fun initWindow() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         floatRootView = ComposeView(this).apply {
@@ -90,7 +93,6 @@ class PvpService : LifecycleService() {
                 getFloatWindowHeight()
             }
         gravity = Gravity.START or Gravity.TOP
-        //设置剧中屏幕显示
         x = 0
         y = 0
     }

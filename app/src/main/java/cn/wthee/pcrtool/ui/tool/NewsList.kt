@@ -40,6 +40,7 @@ import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -242,6 +243,7 @@ private fun NewsItem(
 /**
  * 公告详情
  */
+@ExperimentalCoilApi
 @ExperimentalPagingApi
 @ExperimentalAnimationApi
 @SuppressLint("SetJavaScriptEnabled")

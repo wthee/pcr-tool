@@ -26,6 +26,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import coil.annotation.ExperimentalCoilApi
 
 
 /**
@@ -33,6 +34,7 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
  *
  * @param equipId 装备编号
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
@@ -116,6 +118,7 @@ fun EquipMainInfo(
  * @param equip 装备信息
  * @param filter 装备过滤
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable

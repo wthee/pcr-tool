@@ -48,6 +48,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色列表
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi

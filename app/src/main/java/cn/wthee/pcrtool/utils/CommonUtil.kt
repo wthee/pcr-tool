@@ -62,6 +62,5 @@ val Double.int: Int
 
 val Double.format: String
     get() {
-        val str: String = String.format("%.1f", this)
-        return str
+        return String.format("%.1f", this)
     }
