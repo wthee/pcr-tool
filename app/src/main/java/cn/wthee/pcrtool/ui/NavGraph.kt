@@ -55,6 +55,7 @@ object Navigation {
     const val TWEET = "tweet"
     const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
+    const val ATTR_COE = "attrCoe"
 
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
@@ -352,6 +353,12 @@ fun NavGraph(
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             AllSkillList()
         }
+
+        //战力系数
+        composable(Navigation.ATTR_COE) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            CharacterStatusCoeCompose()
+        }
     }
 }
 
@@ -529,6 +536,13 @@ class NavActions(navController: NavHostController) {
      */
     val toAllSkillList = {
         navController.navigate(Navigation.ALL_SKILL)
+    }
+
+    /**
+     * 战力系数
+     */
+    val toCoe = {
+        navController.navigate(Navigation.ATTR_COE)
     }
 }
 

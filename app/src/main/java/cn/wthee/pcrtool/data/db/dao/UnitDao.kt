@@ -301,4 +301,10 @@ interface UnitDao {
      */
     @Query("SELECT * FROM promotion_bonus WHERE unit_id = :unitId AND promotion_level = :rank")
     suspend fun getRankBonus(rank: Int, unitId: Int): UnitPromotionBonus?
+
+    /**
+     * 获取战力系数
+     */
+    @Query("SELECT * FROM unit_status_coefficient WHERE coefficient_id = 1")
+    suspend fun getCoefficient(): UnitStatusCoefficient
 }

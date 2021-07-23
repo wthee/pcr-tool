@@ -22,6 +22,9 @@
     <string name="title_comments">交流</string>
     <string name="title_room_comments">小屋</string>
     <string name="title_story_attr">剧情属性</string>
+    <string name="title_basic_coe">基本系数</string>
+    <string name="title_skill_coe">技能相关系数</string>
+    <string name="title_skill_basic_coe">技能基本系数</string>
     <string name="title_rank_bonus">Rank 奖励属性</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>
@@ -163,4 +166,10 @@
 
     <string name="new_member">新加入成员</string>
     <string name="save_image">保存图片</string>
+    <string name="title_ex_skill_add">EX+（额外提升）</string>
+    <string name="title_skill_1_add">技能1+（额外提升）</string>
+    <string name="title_skill_1_coe">技能1+ 系数</string>
+    <string name="title_ub_add">连结爆发+（额外提升）</string>
+    <string name="title_ub_coe">连结爆发+ 系数</string>
+    <string name="attr_all_value">战力</string>
 </resources>

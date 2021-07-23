@@ -58,4 +58,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getRankBonus(rank: Int, unitId: Int) = unitDao.getRankBonus(rank, unitId)
 
+    suspend fun getCoefficient() = unitDao.getCoefficient()
+
 }
