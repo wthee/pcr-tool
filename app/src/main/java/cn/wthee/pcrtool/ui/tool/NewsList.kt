@@ -7,7 +7,7 @@ import android.webkit.*
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -19,13 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
@@ -51,6 +53,7 @@ import kotlinx.coroutines.launch
 
 /**
  * 公告列表
+ * fixme 跳转后，回到顶部
  */
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
@@ -58,11 +61,29 @@ import kotlinx.coroutines.launch
 @ExperimentalPagingApi
 @Composable
 fun NewsList(
-    news0: LazyPagingItems<NewsTable>?,
-    news1: LazyPagingItems<NewsTable>?,
-    news2: LazyPagingItems<NewsTable>?,
-    toDetail: (String) -> Unit
+    scrollState0: LazyListState,
+    scrollState1: LazyListState,
+    scrollState2: LazyListState,
+    toDetail: (String) -> Unit,
+    newsViewModel: NewsViewModel = hiltViewModel()
 ) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    newsViewModel.getNews(2)
+    newsViewModel.getNews(3)
+    newsViewModel.getNews(4)
+    val flow0 = newsViewModel.newsPageList0
+    val flow1 = newsViewModel.newsPageList1
+    val flow2 = newsViewModel.newsPageList2
+    val news0 = remember(flow0, lifecycle) {
+        flow0?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news1 = remember(flow1, lifecycle) {
+        flow1?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news2 = remember(flow2, lifecycle) {
+        flow2?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val tab = arrayListOf(
@@ -70,10 +91,7 @@ fun NewsList(
         stringResource(id = R.string.db_tw),
         stringResource(id = R.string.db_jp)
     )
-    val pagerState = rememberPagerState(pageCount = 3)
-    val scrollState0 = rememberLazyListState()
-    val scrollState1 = rememberLazyListState()
-    val scrollState2 = rememberLazyListState()
+    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2)
 
     Box(
         modifier = Modifier
@@ -229,6 +247,11 @@ private fun NewsItem(
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
+    val loading = remember {
+        mutableStateOf(true)
+    }
+    val alpha = if (loading.value) 0f else 1f
+    navViewModel.loading.postValue(loading.value)
     val id = if (key.indexOf('-') != -1) {
         key.split("-")[1]
     } else {
@@ -236,13 +259,6 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
     }
     newsViewModel.getNewsDetail(id)
     val news = newsViewModel.newsDetail.observeAsState()
-
-
-    val loading = remember {
-        mutableStateOf(true)
-    }
-    val alpha = if (loading.value) 0f else 1f
-    navViewModel.loading.postValue(loading.value)
     val context = LocalContext.current
 
     if (news.value != null && news.value!!.data != null) {
@@ -317,61 +333,61 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                                         //取消内部滑动
                                         loadUrl(
                                             """
-                                javascript:
-                                $('#news-content').css('overflow','inherit');
-                                $('#news-content').css('margin-top','0');
-                                $('.news-detail').css('top','0');
-                                $('.news-detail').css('padding','0');
-                                $('.top').css('display','none');
-                                $('.header').css('display','none');
-                                $('.header').css('visibility','hidden');
-                                $('#news-content').css('margin-bottom','1rem');
-                            """.trimIndent()
+                                                javascript:
+                                                $('#news-content').css('overflow','inherit');
+                                                $('#news-content').css('margin-top','0');
+                                                $('.news-detail').css('top','0');
+                                                $('.news-detail').css('padding','0');
+                                                $('.top').css('display','none');
+                                                $('.header').css('display','none');
+                                                $('.header').css('visibility','hidden');
+                                                $('#news-content').css('margin-bottom','1rem');
+                                            """.trimIndent()
                                         )
                                     }
                                     if (region == 3) {
                                         loadUrl(
                                             """
-                                javascript:
-                                $('.menu').css('display','none');
-                                $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-                                $('.title').css('display','none');
-                                $('header').css('display','none');
-                                $('footer').css('display','none');
-                                $('aside').css('display','none');
-                                $('#pageTop').css('display','none');
-                                $('h2').css('display','none');
-                                $('h3').css('display','none');
-                                $('.paging').css('display','none');
-                                $('.news_con').css('margin','0px');
-                                $('.news_con').css('padding','0px');
-                                $('section').css('padding','0px');
-                                $('body').css('background-image','none');
-                                $('.news_con').css('box-shadow','none');
-                            """.trimIndent()
+                                                javascript:
+                                                $('.menu').css('display','none');
+                                                $('.story_container_m').css('display','none');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                $('.title').css('display','none');
+                                                $('header').css('display','none');
+                                                $('footer').css('display','none');
+                                                $('aside').css('display','none');
+                                                $('#pageTop').css('display','none');
+                                                $('h2').css('display','none');
+                                                $('h3').css('display','none');
+                                                $('.paging').css('display','none');
+                                                $('.news_con').css('margin','0px');
+                                                $('.news_con').css('padding','0px');
+                                                $('section').css('padding','0px');
+                                                $('body').css('background-image','none');
+                                                $('.news_con').css('box-shadow','none');
+                                            """.trimIndent()
                                         )
                                     }
                                     if (region == 4) {
                                         loadUrl(
                                             """
-                                javascript:
-                                $('#main_area').css('display','none');
-                                $('.bg-gray').css('display','none');
-                                $('.news_prev').css('display','none');
-                                $('.news_next').css('display','none');
-                                $('time').css('display','none');
-                                $('.post-categories').css('display','none');
-                                $('h3').css('display','none');
-                                $('header').css('display','none');
-                                $('.news_detail').css('box-shadow','none');
-                                $('footer').css('display','none');
-                                $('hr').css('display','none');
-                                $('#page').css('background-image','none');
-                                $('.news_detail_container').css('background-image','none');
-                                $('.news_detail').css('padding','0');
-                                $('.news_detail_container').css('width','100%');
-                                $('.meta-info').css('margin','0');
-                            """.trimIndent()
+                                                javascript:
+                                                $('#main_area').css('display','none');
+                                                $('.bg-gray').css('display','none');
+                                                $('.news_prev').css('display','none');
+                                                $('.news_next').css('display','none');
+                                                $('time').css('display','none');
+                                                $('.post-categories').css('display','none');
+                                                $('h3').css('display','none');
+                                                $('header').css('display','none');
+                                                $('.news_detail').css('box-shadow','none');
+                                                $('footer').css('display','none');
+                                                $('hr').css('display','none');
+                                                $('#page').css('background-image','none');
+                                                $('.news_detail_container').css('background-image','none');
+                                                $('.news_detail').css('padding','0');
+                                                $('.news_detail_container').css('width','100%');
+                                                $('.meta-info').css('margin','0');
+                                            """.trimIndent()
                                         )
                                     }
                                     loading.value = false

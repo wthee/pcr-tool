@@ -137,7 +137,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha05")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime:3.1.0-alpha03")
+    implementation("androidx.paging:paging-runtime:3.0.0")
     implementation("androidx.paging:paging-compose:1.0.0-alpha12")
 
     //Retrofit

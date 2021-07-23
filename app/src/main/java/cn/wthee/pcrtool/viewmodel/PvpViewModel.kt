@@ -79,7 +79,6 @@ class PvpViewModel @Inject constructor(
         viewModelScope.launch {
             if (pvpResult.value == null && !requesting) {
                 requesting = true
-                Log.e("DEBUG", ids.toString())
                 val data = apiRepository.getPVPData(ids)
                 pvpResult.postValue(data)
                 requesting = false
