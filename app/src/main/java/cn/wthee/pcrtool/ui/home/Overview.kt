@@ -68,7 +68,7 @@ fun Overview(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    val characterSize = 6
+    val characterSize = 10
     val characterList =
         overviewViewModel.getCharacterList(characterSize)
             .collectAsState(initial = arrayListOf()).value
@@ -80,11 +80,7 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
 
-    val pagerCount = if (characterList.isNotEmpty()) {
-        characterList.size
-    } else {
-        3
-    }
+    val pagerCount = 6
     val pagerState =
         rememberPagerState(
             pageCount = pagerCount,
