@@ -57,7 +57,7 @@ fun ImageCompose(
     Image(
         painter = painter,
         contentDescription = null,
-        contentScale = ContentScale.FillBounds,
+        contentScale = ContentScale.FillWidth,
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(ratio),
