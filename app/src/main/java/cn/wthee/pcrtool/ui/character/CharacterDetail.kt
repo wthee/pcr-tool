@@ -351,59 +351,59 @@ private fun AttrLists(
         modifier = Modifier
             .fillMaxWidth(0.618f)
     )
-    //TODO 测试战力计算
-    coe?.let {
-        val basic = allData.sumAttr.hp * it.hp_coefficient +
-                allData.sumAttr.atk * it.atk_coefficient +
-                allData.sumAttr.magicStr * it.magic_str_coefficient +
-                allData.sumAttr.def * it.def_coefficient +
-                allData.sumAttr.magicDef * it.magic_def_coefficient +
-                allData.sumAttr.physicalCritical * it.physical_critical_coefficient +
-                allData.sumAttr.magicCritical * it.magic_critical_coefficient +
-                allData.sumAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
-                allData.sumAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
-                allData.sumAttr.dodge * it.dodge_coefficient +
-                allData.sumAttr.physicalPenetrate * it.physical_penetrate_coefficient +
-                allData.sumAttr.magicPenetrate * it.magic_penetrate_coefficient +
-                allData.sumAttr.lifeSteal * it.life_steal_coefficient +
-                allData.sumAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
-                allData.sumAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
-                allData.sumAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
-                allData.sumAttr.accuracy * it.accuracy_coefficient
-
-        //默认加上被动技能和技能2
-        var skill = currentValue.level * it.skill_lv_coefficient * 2
-        //解锁专武，技能1系数提升
-        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-            skill += it.skill1_evolution_coefficient
-            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
-        } else {
-            skill += currentValue.level * it.skill_lv_coefficient
-        }
-        //不同星级处理
-        if (currentValue.rarity >= 5) {
-            //大于等于五星，技能 ex+
-            skill += it.exskill_evolution_coefficient
-            if (currentValue.rarity == 6) {
-                //六星，ub系数提升
-                skill += it.ub_evolution_coefficient
-                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
-            } else {
-                //五星
-                skill += currentValue.level * it.skill_lv_coefficient
-            }
-        } else {
-            //小于五星，ub 和 ex
-            skill += currentValue.level * it.skill_lv_coefficient * 2
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            MainText(text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString())
-            IconCompose(data = MainIconType.HELP.icon, size = Dimen.smallIconSize) {
-                actions.toCoe()
-            }
-        }
-
-    }
+    //fixme 暂时注释掉
+//    coe?.let {
+//        val basic = allData.sumAttr.hp * it.hp_coefficient +
+//                allData.sumAttr.atk * it.atk_coefficient +
+//                allData.sumAttr.magicStr * it.magic_str_coefficient +
+//                allData.sumAttr.def * it.def_coefficient +
+//                allData.sumAttr.magicDef * it.magic_def_coefficient +
+//                allData.sumAttr.physicalCritical * it.physical_critical_coefficient +
+//                allData.sumAttr.magicCritical * it.magic_critical_coefficient +
+//                allData.sumAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
+//                allData.sumAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
+//                allData.sumAttr.dodge * it.dodge_coefficient +
+//                allData.sumAttr.physicalPenetrate * it.physical_penetrate_coefficient +
+//                allData.sumAttr.magicPenetrate * it.magic_penetrate_coefficient +
+//                allData.sumAttr.lifeSteal * it.life_steal_coefficient +
+//                allData.sumAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
+//                allData.sumAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
+//                allData.sumAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
+//                allData.sumAttr.accuracy * it.accuracy_coefficient
+//
+//        //默认加上被动技能和技能2
+//        var skill = currentValue.level * it.skill_lv_coefficient * 2
+//        //解锁专武，技能1系数提升
+//        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+//            skill += it.skill1_evolution_coefficient
+//            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
+//        } else {
+//            skill += currentValue.level * it.skill_lv_coefficient
+//        }
+//        //不同星级处理
+//        if (currentValue.rarity >= 5) {
+//            //大于等于五星，技能 ex+
+//            skill += it.exskill_evolution_coefficient
+//            if (currentValue.rarity == 6) {
+//                //六星，ub系数提升
+//                skill += it.ub_evolution_coefficient
+//                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
+//            } else {
+//                //五星
+//                skill += currentValue.level * it.skill_lv_coefficient
+//            }
+//        } else {
+//            //小于五星，ub 和 ex
+//            skill += currentValue.level * it.skill_lv_coefficient * 2
+//        }
+//        Row(verticalAlignment = Alignment.CenterVertically) {
+//            MainText(text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString())
+//            IconCompose(data = MainIconType.HELP.icon, size = Dimen.smallIconSize) {
+//                actions.toCoe()
+//            }
+//        }
+//
+//    }
     //属性
     AttrList(attrs = allData.sumAttr.all())
     //剧情属性
