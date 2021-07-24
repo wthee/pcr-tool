@@ -40,6 +40,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -58,6 +59,7 @@ import kotlin.math.round
 /**
  * 竞技场查询
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -283,6 +285,7 @@ fun PvpSearchCompose(
 /**
  * 角色选择
  */
+@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
@@ -347,6 +350,7 @@ private fun PvpCharacterSelectPage(
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
+            CommonSpacer()
         }
         //指示器
         val modifier = if (floatWindow) {
@@ -403,6 +407,7 @@ private fun getLine(
 /**
  * 位置图标
  */
+@ExperimentalCoilApi
 @Composable
 private fun PvpPositionIcon(iconId: Int, height: Int) {
     Box(
@@ -421,6 +426,7 @@ private fun PvpPositionIcon(iconId: Int, height: Int) {
 /**
  * 角色图标
  */
+@ExperimentalCoilApi
 @Composable
 fun PvpIconItem(
     selectedIds: ArrayList<PvpCharacterData>,
@@ -488,6 +494,7 @@ fun PvpIconItem(
 /**
  * 查询结果页面
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -633,6 +640,7 @@ fun PvpSearchResult(
 /**
  * 查询结果 Item
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun PvpResultItem(
@@ -782,6 +790,7 @@ private fun PvpResultItem(
  * 已收藏数据
  *
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -820,6 +829,7 @@ fun PvpFavorites(
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun PvpFavoriteItem(

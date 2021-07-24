@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色排行
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -128,6 +130,7 @@ fun LeaderboardList(
 /**
  * 角色评价信息
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun LeaderboardItem(info: LeaderboardData) {

@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ScaleFactor
+import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -41,14 +44,15 @@ import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import coil.Coil
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 import kotlin.math.max
 
 /**
@@ -56,6 +60,7 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -187,7 +192,8 @@ fun CharacterDetail(
                                     currentValue,
                                     sliderLevel,
                                     maxValue,
-                                    allData
+                                    allData,
+                                    actions
                                 )
                                 //RANK 装备
                                 CharacterEquip(
@@ -314,6 +320,7 @@ fun CharacterDetail(
 /**
  * 属性
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun AttrLists(
@@ -321,8 +328,11 @@ private fun AttrLists(
     sliderLevel: MutableState<Int>,
     maxValue: CharacterProperty,
     allData: AllAttrData,
+    actions: NavActions,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
+    val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
+
     //等级
     Text(
         text = sliderLevel.value.toString(),
@@ -341,6 +351,59 @@ private fun AttrLists(
         modifier = Modifier
             .fillMaxWidth(0.618f)
     )
+    //fixme 暂时注释掉
+//    coe?.let {
+//        val basic = allData.sumAttr.hp * it.hp_coefficient +
+//                allData.sumAttr.atk * it.atk_coefficient +
+//                allData.sumAttr.magicStr * it.magic_str_coefficient +
+//                allData.sumAttr.def * it.def_coefficient +
+//                allData.sumAttr.magicDef * it.magic_def_coefficient +
+//                allData.sumAttr.physicalCritical * it.physical_critical_coefficient +
+//                allData.sumAttr.magicCritical * it.magic_critical_coefficient +
+//                allData.sumAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
+//                allData.sumAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
+//                allData.sumAttr.dodge * it.dodge_coefficient +
+//                allData.sumAttr.physicalPenetrate * it.physical_penetrate_coefficient +
+//                allData.sumAttr.magicPenetrate * it.magic_penetrate_coefficient +
+//                allData.sumAttr.lifeSteal * it.life_steal_coefficient +
+//                allData.sumAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
+//                allData.sumAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
+//                allData.sumAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
+//                allData.sumAttr.accuracy * it.accuracy_coefficient
+//
+//        //默认加上被动技能和技能2
+//        var skill = currentValue.level * it.skill_lv_coefficient * 2
+//        //解锁专武，技能1系数提升
+//        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+//            skill += it.skill1_evolution_coefficient
+//            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
+//        } else {
+//            skill += currentValue.level * it.skill_lv_coefficient
+//        }
+//        //不同星级处理
+//        if (currentValue.rarity >= 5) {
+//            //大于等于五星，技能 ex+
+//            skill += it.exskill_evolution_coefficient
+//            if (currentValue.rarity == 6) {
+//                //六星，ub系数提升
+//                skill += it.ub_evolution_coefficient
+//                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
+//            } else {
+//                //五星
+//                skill += currentValue.level * it.skill_lv_coefficient
+//            }
+//        } else {
+//            //小于五星，ub 和 ex
+//            skill += currentValue.level * it.skill_lv_coefficient * 2
+//        }
+//        Row(verticalAlignment = Alignment.CenterVertically) {
+//            MainText(text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString())
+//            IconCompose(data = MainIconType.HELP.icon, size = Dimen.smallIconSize) {
+//                actions.toCoe()
+//            }
+//        }
+//
+//    }
     //属性
     AttrList(attrs = allData.sumAttr.all())
     //剧情属性
@@ -355,22 +418,32 @@ private fun AttrLists(
     AttrList(attrs = allData.stroyAttr.allNotZero())
     //Rank 奖励
     val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
-    MainText(
-        text = stringResource(id = if (hasBonus) R.string.title_rank_bonus else R.string.no_rank_bonus),
-        modifier = Modifier.Companion
-            .padding(
-                top = Dimen.largePadding,
-                bottom = Dimen.smallPadding
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (hasBonus) {
+            MainText(
+                text = stringResource(id = R.string.title_rank_bonus),
+                modifier = Modifier.Companion
+                    .padding(
+                        top = Dimen.largePadding,
+                        bottom = Dimen.smallPadding
+                    ),
+                textAlign = TextAlign.Center
             )
-    )
-    SlideAnimation(visible = allData.bonus.attr.allNotZero().isNotEmpty()) {
-        AttrList(attrs = allData.bonus.attr.allNotZero())
+            AttrList(attrs = allData.bonus.attr.allNotZero())
+        }
     }
 }
 
 /**
  * 角色卡面图片
  */
+@ExperimentalAnimationApi
+@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -383,7 +456,11 @@ private fun CardImage(unitId: Int) {
         loaded.add(false)
         drawables.add(null)
     }
-    val pagerState = rememberPagerState(pageCount = picUrls.size)
+    val pagerState = rememberPagerState(
+        pageCount = picUrls.size,
+        infiniteLoop = true,
+        initialOffscreenLimit = picUrls.size - 1
+    )
     val coroutineScope = rememberCoroutineScope()
 
     //权限
@@ -392,24 +469,49 @@ private fun CardImage(unitId: Int) {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
+    val showConfirmLayout = remember {
+        mutableStateOf(false)
+    }
 
-    Box {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { pagerIndex ->
-            val request = ImageRequest.Builder(context)
-                .data(picUrls[pagerIndex])
-                .build()
-            coroutineScope.launch {
-                val image = Coil.imageLoader(context).execute(request).drawable
-                drawables[pagerIndex] = image
+    HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
+        val request = ImageRequest.Builder(context)
+            .data(picUrls[index])
+            .build()
+        coroutineScope.launch {
+            val image = Coil.imageLoader(context).execute(request).drawable
+            drawables[index] = image
+        }
+        val infiniteLoopIndex =
+            if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
+                //从首个滚动到最后一个
+                pagerState.currentPage - 1
+            } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
+                //从最后一个滚动的首个
+                pagerState.pageCount
+            } else {
+                index
             }
-            val painter = rememberCoilPainter(request = picUrls[pagerIndex])
-            Card(
-                modifier = Modifier
-                    .padding(Dimen.largePadding),
-                onClick = {
-                    VibrateUtil(context).single()
-                    //下载
-                    if (loaded[pagerIndex]) {
+        Card(
+            modifier = Modifier
+                .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
+                .fillMaxWidth(0.8f)
+                .graphicsLayer {
+                    val pageOffset =
+                        calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
+                    lerp(
+                        start = ScaleFactor(0.9f, 0.9f),
+                        stop = ScaleFactor(1f, 1f),
+                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                    ).also { scale ->
+                        scaleX = scale.scaleY
+                        scaleY = scale.scaleY
+                    }
+                },
+            onClick = {
+                VibrateUtil(context).single()
+                //下载
+                if (index == pagerState.currentPage) {
+                    if (loaded[index]) {
                         //权限校验
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
                                 context,
@@ -422,44 +524,38 @@ private fun CardImage(unitId: Int) {
                                 1
                             )
                         } else {
-                            drawables[pagerIndex]?.let {
-                                ImageDownloadHelper(context).saveBitmap(
-                                    bitmap = (it as BitmapDrawable).bitmap,
-                                    displayName = "${unitId}_${pagerIndex}.jpg"
-                                )
-                                VibrateUtil(context).done()
-                            }
+                            showConfirmLayout.value = !showConfirmLayout.value
                         }
                     } else {
                         ToastUtil.short(unLoadToast)
                     }
-                },
-                shape = MaterialTheme.shapes.large,
-            ) {
-                Box {
-                    //图片
-                    Image(
-                        painter = when (painter.loadState) {
-                            is ImageLoadState.Success -> {
-                                loaded[pagerIndex] = true
-                                painter
-                            }
-                            is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.error)
-                            else -> rememberCoilPainter(request = R.drawable.load)
-                        },
-                        contentDescription = null,
-                        modifier = Modifier.aspectRatio(RATIO),
-                        contentScale = ContentScale.FillWidth
-                    )
+                } else {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(infiniteLoopIndex)
+                    }
+                }
+            },
+            shape = MaterialTheme.shapes.large,
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                //图片
+                ImageCompose(url = picUrls[index], ratio = RATIO) {
+                    loaded[index] = true
+                }
+                FadeAnimation(visible = showConfirmLayout.value) {
+                    MainButton(text = stringResource(R.string.save_image)) {
+                        drawables[index]?.let {
+                            ImageDownloadHelper(context).saveBitmap(
+                                bitmap = (it as BitmapDrawable).bitmap,
+                                displayName = "${unitId}_${index}.jpg"
+                            )
+                            showConfirmLayout.value = false
+                            VibrateUtil(context).done()
+                        }
+                    }
                 }
             }
         }
-
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier.align(Alignment.BottomCenter),
-            activeColor = MaterialTheme.colors.primary
-        )
     }
 
 }
@@ -470,6 +566,7 @@ private fun CardImage(unitId: Int) {
  * @param rank 当前rank
  * @param equips 装备列表
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun CharacterEquip(
@@ -592,6 +689,7 @@ private fun CharacterEquip(
  * @param sliderState 等级滑动条状态
  * @param uniqueEquipmentMaxData 专武数值信息
  */
+@ExperimentalCoilApi
 @Composable
 private fun UniqueEquip(
     currentValue: CharacterProperty,
@@ -670,7 +768,7 @@ private fun StarSelect(
                 else -> R.drawable.ic_star
             }
             Image(
-                painter = rememberCoilPainter(request = iconId),
+                painter = rememberImagePainter(data = iconId),
                 contentDescription = null,
                 modifier = Modifier
                     .padding(Dimen.divLineHeight)

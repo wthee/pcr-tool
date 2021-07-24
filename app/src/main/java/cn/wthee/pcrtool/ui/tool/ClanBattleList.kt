@@ -21,7 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
+import cn.wthee.pcrtool.data.db.view.ClanBossTargetInfo
+import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
@@ -33,6 +35,7 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -45,6 +48,7 @@ import kotlinx.coroutines.launch
 /**
  * 每月 BOSS 信息列表
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -107,6 +111,7 @@ fun ClanBattleList(
  * 图标列表
  * type 0：点击查看详情， 1：点击切换 BOSS
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
@@ -182,6 +187,7 @@ private fun ClanBattleItem(
 /**
  * 团队战 BOSS 详情
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
@@ -331,6 +337,7 @@ fun ClanBossInfoPager(
 /**
  * Boss 信息详情
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun ClanBossInfoPagerItem(
@@ -409,6 +416,7 @@ private fun ClanBossInfoPagerItem(
 }
 
 
+@ExperimentalCoilApi
 @Composable
 private fun BossSkillList(
     index: Int,

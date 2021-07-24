@@ -8,10 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
+import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色图标列表
  */
+@ExperimentalCoilApi
 @Composable
 fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
     VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediuPadding * 2) {

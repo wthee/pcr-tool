@@ -27,6 +27,7 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -39,6 +40,7 @@ data class ToolMenuData(
 /**
  * 菜单
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -158,6 +160,7 @@ fun ToolMenu(actions: NavActions) {
     }
 }
 
+@ExperimentalCoilApi
 @Composable
 private fun MenuItem(
     coroutineScope: CoroutineScope,

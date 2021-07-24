@@ -266,4 +266,8 @@ enum class MainIconType(val icon: ImageVector) {
      */
     HIBIKI(Icons.Rounded.GraphicEq),
 
+    /**
+     * 帮助
+     */
+    HELP(Icons.Rounded.Help)
 }

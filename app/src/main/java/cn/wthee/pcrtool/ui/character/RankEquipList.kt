@@ -21,12 +21,14 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色 RANK 选择装备列表
  *
  * @param unitId 角色编号
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -62,6 +64,7 @@ fun RankEquipList(
 /**
  * RANK 装备图标列表
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun RankEquipListItem(

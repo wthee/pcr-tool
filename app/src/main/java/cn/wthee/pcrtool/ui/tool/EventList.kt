@@ -25,12 +25,14 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
 /**
  * 剧情活动
  */
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -83,6 +85,7 @@ fun EventList(
 /**
  * 剧情活动
  */
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -158,7 +161,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     size = Dimen.smallIconSize,
                 )
                 MainContentText(
-                    text = stringResource(R.string.in_progress, event.endTime.dates(today)),
+                    text = stringResource(R.string.progressing, event.endTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colors.primary
@@ -168,13 +171,13 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 IconCompose(
                     data = MainIconType.COUNTDOWN.icon,
                     size = Dimen.smallIconSize,
-                    tint = typeColor
+                    tint = colorResource(id = R.color.news_system)
                 )
                 MainContentText(
                     text = stringResource(R.string.coming_soon, event.startTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
-                    color = typeColor
+                    color = colorResource(id = R.color.news_system)
                 )
             }
         }

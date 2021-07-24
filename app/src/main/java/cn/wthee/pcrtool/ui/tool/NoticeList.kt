@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 /**
  * 通知列表
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable

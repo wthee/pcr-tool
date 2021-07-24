@@ -206,4 +206,12 @@ class CharacterAttrViewModel @Inject constructor(
         val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
         emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
     }
+
+    /**
+     * 获取战力系数
+     */
+    fun getCoefficient() = flow {
+        emit(unitRepository.getCoefficient())
+    }
+
 }

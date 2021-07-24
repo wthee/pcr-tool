@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.UnitDao
-import cn.wthee.pcrtool.data.db.entity.GuildAdditionalMember
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import javax.inject.Inject
 
@@ -58,5 +57,7 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
     suspend fun getMaxLevel() = unitDao.getMaxLevel()
 
     suspend fun getRankBonus(rank: Int, unitId: Int) = unitDao.getRankBonus(rank, unitId)
+
+    suspend fun getCoefficient() = unitDao.getCoefficient()
 
 }

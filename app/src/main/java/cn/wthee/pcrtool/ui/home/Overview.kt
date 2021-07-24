@@ -17,6 +17,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ScaleFactor
+import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -34,19 +37,22 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
-import java.util.*
+import kotlin.math.absoluteValue
 
 /**
  * 首页纵览
  */
+@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -62,7 +68,7 @@ fun Overview(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    val characterSize = 6
+    val characterSize = 10
     val characterList =
         overviewViewModel.getCharacterList(characterSize)
             .collectAsState(initial = arrayListOf()).value
@@ -74,8 +80,13 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
 
+    val pagerCount = 6
     val pagerState =
-        rememberPagerState(pageCount = characterSize, initialOffscreenLimit = characterSize - 1)
+        rememberPagerState(
+            pageCount = pagerCount,
+            initialOffscreenLimit = pagerCount - 1,
+            infiniteLoop = true
+        )
 
     Column(
         modifier = Modifier
@@ -95,40 +106,48 @@ fun Overview(
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.CenterHorizontally
             ) { index ->
                 val id = characterList[index].id
+                val infiniteLoopIndex =
+                    if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
+                        //从首个滚动到最后一个
+                        pagerState.currentPage - 1
+                    } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
+                        //从最后一个滚动的首个
+                        pagerState.pageCount
+                    } else {
+                        index
+                    }
                 Card(
                     modifier = Modifier
-                        .padding(
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding,
-                            top = Dimen.mediuPadding,
-                            bottom = Dimen.mediuPadding
-                        )
-                        .fillMaxWidth(0.85f),
+                        .padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
+                        .fillMaxWidth(0.8f)
+                        .graphicsLayer {
+                            val pageOffset =
+                                calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
+                            lerp(
+                                start = ScaleFactor(0.9f, 0.9f),
+                                stop = ScaleFactor(1f, 1f),
+                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                            ).also { scale ->
+                                scaleX = scale.scaleY
+                                scaleY = scale.scaleY
+                            }
+                        },
                     onClick = {
                         VibrateUtil(context).single()
                         if (index == pagerState.currentPage) {
                             actions.toCharacterDetail(id)
                         } else {
                             coroutineScope.launch {
-//                                if(index == pagerState.pageCount - 1 && pagerState.currentPage == 0){
-//                                    //从首个滚动到最后一个
-//                                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
-//                                }else if(index == 0 && pagerState.currentPage == pagerState.pageCount - 1){
-//                                    //从最后一个滚动的首个
-//                                    pagerState.animateScrollToPage(pagerState.pageCount)
-//                                }else{
-//                                    pagerState.animateScrollToPage(index)
-//                                }
-                                pagerState.animateScrollToPage(index)
+                                pagerState.animateScrollToPage(infiniteLoopIndex)
                             }
                         }
                     },
-                    elevation = 0.dp
+                    elevation = 0.dp,
                 ) {
-                    CharacterCard(CharacterIdUtil.getMaxCardUrl(id))
+                    ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
                 }
 
             }
@@ -250,6 +269,7 @@ fun Overview(
 /**
  * 标题
  */
+@ExperimentalCoilApi
 @Composable
 private fun Section(
     @StringRes titleId: Int,
@@ -389,6 +409,7 @@ private fun NewsItem(
 /**
  * 日历信息
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
@@ -435,7 +456,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
                     tint = color
                 )
                 MainContentText(
-                    text = stringResource(R.string.in_progress, ed.dates(today)),
+                    text = stringResource(R.string.progressing, ed.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = color

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.content.ContextCompat
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /**
  * 权限校验
@@ -57,11 +59,10 @@ val String.deleteSpace: String
  */
 val Double.int: Int
     get() {
-        return (this + 0.5).toInt()
+        return if (this * 10 % 10 > 1) ceil(this).toInt() else floor(this).toInt()
     }
 
 val Double.format: String
     get() {
-        val str: String = String.format("%.1f", this)
-        return str
+        return String.format("%.1f", this)
     }

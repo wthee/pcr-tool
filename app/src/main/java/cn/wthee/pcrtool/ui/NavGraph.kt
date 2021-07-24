@@ -6,20 +6,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -30,7 +25,7 @@ import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.tool.*
-import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -40,40 +35,43 @@ object Navigation {
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
-    const val UNIT_ID = "unitId"
     const val EQUIP_LIST = "equipList"
-    const val EQUIP_ID = "equipId"
     const val EQUIP_DETAIL = "equipDetail"
     const val RANK_EQUIP = "rankEquip"
     const val RANK_COMPARE = "rankCompare"
-    const val MAX_RANK = "maxRank"
-    const val LEVEL = "level"
-    const val RARITY = "rarity"
-    const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     const val EQUIP_COUNT = "equipCount"
     const val EQUIP_MATERIAL = "equipMaterial"
-
-    //工具
     const val TOOL_LEADER = "toolLeader"
     const val TOOL_GACHA = "toolGacha"
     const val TOOL_EVENT = "toolEvent"
     const val TOOL_GUILD = "toolGuild"
     const val TOOL_CLAN = "toolClanBattle"
     const val TOOL_CLAN_BOSS_INFO = "toolClanBattleInfo"
-    const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
-    const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_PVP = "toolPvpSearch"
     const val TOOL_NEWS = "toolNews"
     const val TOOL_NEWS_DETAIL = "toolNewsDetail"
-    const val TOOL_NEWS_KEY = "toolNewsKey"
     const val MAIN_SETTINGS = "mainSettings"
     const val APP_NOTICE = "appNotice"
     const val TWEET = "tweet"
     const val COMIC = "comic"
-    const val COMIC_ID = "comicId"
     const val ALL_SKILL = "allSkill"
+    const val ATTR_COE = "attrCoe"
+
+    const val UNIT_ID = "unitId"
+    const val EQUIP_ID = "equipId"
+    const val MAX_RANK = "maxRank"
+    const val LEVEL = "level"
+    const val RARITY = "rarity"
+    const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
+    const val COMIC_ID = "comicId"
+    const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
+    const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
+    const val TOOL_NEWS_KEY = "toolNewsKey"
+
 }
 
+
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalPagingApi
 @ExperimentalAnimationApi
@@ -84,26 +82,8 @@ object Navigation {
 fun NavGraph(
     navController: NavHostController,
     viewModel: NavViewModel,
-    actions: NavActions,
-    newsViewModel: NewsViewModel = hiltViewModel()
+    actions: NavActions
 ) {
-
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    newsViewModel.getNews(2)
-    newsViewModel.getNews(3)
-    newsViewModel.getNews(4)
-    val flow0 = newsViewModel.newsPageList0
-    val flow1 = newsViewModel.newsPageList1
-    val flow2 = newsViewModel.newsPageList2
-    val news0 = remember(flow0, lifecycle) {
-        flow0?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-    val news1 = remember(flow1, lifecycle) {
-        flow1?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-    val news2 = remember(flow2, lifecycle) {
-        flow2?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
 
     NavHost(navController, startDestination = Navigation.HOME) {
 
@@ -318,10 +298,13 @@ fun NavGraph(
         //公告
         composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val scrollState0 = rememberLazyListState()
+            val scrollState1 = rememberLazyListState()
+            val scrollState2 = rememberLazyListState()
             NewsList(
-                news0,
-                news1,
-                news2,
+                scrollState0,
+                scrollState1,
+                scrollState2,
                 actions.toNewsDetail
             )
         }
@@ -336,6 +319,7 @@ fun NavGraph(
             )
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
+
             val arguments = requireNotNull(it.arguments)
             NewsDetail(arguments.getString(Navigation.TOOL_NEWS_KEY) ?: "")
         }
@@ -368,6 +352,12 @@ fun NavGraph(
         composable(Navigation.ALL_SKILL) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             AllSkillList()
+        }
+
+        //战力系数
+        composable(Navigation.ATTR_COE) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            CharacterStatusCoeCompose()
         }
     }
 }
@@ -546,6 +536,13 @@ class NavActions(navController: NavHostController) {
      */
     val toAllSkillList = {
         navController.navigate(Navigation.ALL_SKILL)
+    }
+
+    /**
+     * 战力系数
+     */
+    val toCoe = {
+        navController.navigate(Navigation.ATTR_COE)
     }
 }
 

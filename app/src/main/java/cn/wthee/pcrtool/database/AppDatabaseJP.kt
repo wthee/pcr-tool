@@ -57,7 +57,8 @@ import cn.wthee.pcrtool.utils.Constants
         TowerSchedule::class,
         UnitEnemyData::class,
         UnitPromotionBonus::class,
-        GuildAdditionalMember::class
+        GuildAdditionalMember::class,
+        UnitStatusCoefficient::class,
     ],
     version = BuildConfig.SQLITE_VERSION,
     exportSchema = false

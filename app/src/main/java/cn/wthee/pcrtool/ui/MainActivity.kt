@@ -14,9 +14,14 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -38,9 +43,13 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ActivityHelper
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.UMengInitializer
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -65,11 +74,14 @@ class MainActivity : ComponentActivity() {
         lateinit var noticeViewModel: NoticeViewModel
         lateinit var actions: NavActions
         var mFloatingWindowHeight = 0
+
+        @SuppressLint("StaticFieldLeak")
         lateinit var navController: NavHostController
         var vibrateOn = true
         var animOn = true
         var r6Ids = listOf<Int>()
     }
+
 
     @ExperimentalComposeUiApi
     @ExperimentalPagingApi
@@ -77,6 +89,7 @@ class MainActivity : ComponentActivity() {
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
     @ExperimentalFoundationApi
+    @ExperimentalCoilApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -149,6 +162,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalPagingApi
 @ExperimentalAnimationApi
@@ -204,6 +219,7 @@ fun Home(
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 fun FabMain(modifier: Modifier = Modifier) {

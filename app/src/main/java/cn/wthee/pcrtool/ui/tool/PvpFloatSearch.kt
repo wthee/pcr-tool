@@ -26,9 +26,11 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -56,7 +58,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                         .size(Dimen.fabSize),
                 ) {
                     Image(
-                        painter = rememberCoilPainter(request = R.mipmap.ic_launcher_foreground),
+                        painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground),
                         contentDescription = null
                     )
                 }

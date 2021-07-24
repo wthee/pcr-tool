@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 
 /**
@@ -37,6 +38,7 @@ import kotlinx.coroutines.launch
  * @param unitId 角色编号
  * @param maxRank 角色最大rank
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -195,6 +197,7 @@ fun RankEquipCount(
 
 }
 
+@ExperimentalCoilApi
 @Composable
 private fun EquipCountItem(
     item: EquipmentMaterial,

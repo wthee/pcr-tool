@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色技能列表
@@ -33,6 +34,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  * @param level 等级
  * @param atk 攻击力
  */
+@ExperimentalCoilApi
 @Composable
 fun SkillCompose(
     unitId: Int,
@@ -57,6 +59,7 @@ fun SkillCompose(
 /**
  * 技能
  */
+@ExperimentalCoilApi
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(
@@ -274,6 +277,7 @@ fun SkillActionItem(skillAction: SkillActionText) {
 /**
  * 技能循环
  */
+@ExperimentalCoilApi
 @Composable
 fun SkillLoopList(
     loopData: List<AttackPattern>,
@@ -307,6 +311,7 @@ fun SkillLoopList(
 /**
  * 技能循环 item
  */
+@ExperimentalCoilApi
 @Composable
 private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
     Column {
@@ -318,6 +323,7 @@ private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
 /**
  * 技能循环图标列表
  */
+@ExperimentalCoilApi
 @Composable
 private fun SkillLoopIconList(
     iconList: List<Int>,
