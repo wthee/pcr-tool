@@ -350,6 +350,7 @@ private fun PvpCharacterSelectPage(
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
+            CommonSpacer()
         }
         //指示器
         val modifier = if (floatWindow) {

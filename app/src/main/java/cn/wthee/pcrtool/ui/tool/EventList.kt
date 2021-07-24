@@ -171,13 +171,13 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 IconCompose(
                     data = MainIconType.COUNTDOWN.icon,
                     size = Dimen.smallIconSize,
-                    tint = typeColor
+                    tint = colorResource(id = R.color.news_system)
                 )
                 MainContentText(
                     text = stringResource(R.string.coming_soon, event.startTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
-                    color = typeColor
+                    color = colorResource(id = R.color.news_system)
                 )
             }
         }
