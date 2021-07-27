@@ -415,7 +415,7 @@ private fun AttrLists(
                 bottom = Dimen.smallPadding
             )
     )
-    AttrList(attrs = allData.stroyAttr.allNotZero())
+    AttrList(attrs = allData.storyAttr.allNotZero())
     //Rank 奖励
     val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
     Column(

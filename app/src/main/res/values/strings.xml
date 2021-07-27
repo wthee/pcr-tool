@@ -23,8 +23,8 @@
     <string name="title_room_comments">小屋</string>
     <string name="title_story_attr">剧情属性</string>
     <string name="title_basic_coe">基本系数</string>
-    <string name="title_skill_coe">技能相关系数</string>
-    <string name="title_skill_basic_coe">技能基本系数</string>
+    <string name="title_skill_coe">技能基本系数</string>
+    <string name="title_skill_basic_coe">技能相关系数</string>
     <string name="title_rank_bonus">Rank 奖励属性</string>
     <string name="cur_rank">当前</string>
     <string name="target_rank">目标</string>

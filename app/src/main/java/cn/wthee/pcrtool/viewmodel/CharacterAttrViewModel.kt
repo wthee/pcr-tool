@@ -114,7 +114,7 @@ class CharacterAttrViewModel @Inject constructor(
             //故事剧情
             val storyAttr = getStoryAttrs(unitId)
             info.add(storyAttr)
-            allData.stroyAttr = storyAttr
+            allData.storyAttr = storyAttr
             //被动技能数值
             val skillActionData = getExSkillAttr(unitId, rarity, level)
             val skillAttr = Attr()
@@ -127,6 +127,7 @@ class CharacterAttrViewModel @Inject constructor(
                 5 -> skillAttr.magicDef = skillValue
             }
             info.add(skillAttr)
+            allData.exSkillAttr = skillAttr
             allData.sumAttr = info
         } catch (e: Exception) {
             if (e !is CancellationException) {
