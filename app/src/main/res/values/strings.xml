@@ -22,6 +22,7 @@
     <string name="looping">循环动作</string>
     <string name="title_comments">交流</string>
     <string name="title_room_comments">小屋</string>
+    <string name="title_character_attr">角色属性</string>
     <string name="title_story_attr">剧情属性</string>
     <string name="title_basic_coe">基本系数</string>
     <string name="title_skill_coe">技能基本系数</string>
@@ -173,4 +174,7 @@
     <string name="title_ub_add">连结爆发+（额外提升）</string>
     <string name="title_ub_coe">连结爆发+ 系数</string>
     <string name="attr_all_value">战力</string>
+    <string name="title_attr_tip">属性说明</string>
+    <string name="close">关闭</string>
+    <string name="attr_calc">角色属性 = 基本属性 + 剧情属性 + 被动技能 + Rank 奖励属性</string>
 </resources>

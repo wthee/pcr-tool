@@ -100,7 +100,7 @@ fun CharacterDetail(
             navViewModel.selectRank.postValue(maxValue.rank)
         }
     }
-    // dialog 状态
+    // bottomsheet 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
@@ -108,6 +108,8 @@ fun CharacterDetail(
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabCloseClick.postValue(false)
     }
+    val openDialog = remember { mutableStateOf(false) }
+
     //关闭监听
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     //收藏状态
@@ -203,6 +205,7 @@ fun CharacterDetail(
                                 AttrLists(
                                     currentValue,
                                     characterLevel,
+                                    openDialog = openDialog,
                                     maxValue,
                                     allData,
                                     actions
@@ -324,6 +327,25 @@ fun CharacterDetail(
                         }
                     }
                 }
+                //弹窗属性说明
+                if (openDialog.value) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            openDialog.value = false
+                        },
+                        title = {
+                            MainText(text = stringResource(R.string.title_attr_tip))
+                        },
+                        text = {
+                            Subtitle1(text = stringResource(R.string.attr_calc))
+                        },
+                        confirmButton = {
+                            MainButton(text = stringResource(R.string.close)) {
+                                openDialog.value = false
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -339,6 +361,7 @@ fun CharacterDetail(
 private fun AttrLists(
     currentValue: CharacterProperty,
     characterLevel: MutableState<Int>,
+    openDialog: MutableState<Boolean>,
     maxValue: CharacterProperty,
     allData: AllAttrData,
     actions: NavActions,
@@ -370,7 +393,6 @@ private fun AttrLists(
                     keyboardController?.show()
                 }
             }
-
     )
     //等级输入框
     val inputLevel = remember {
@@ -485,15 +507,32 @@ private fun AttrLists(
 //
 //    }
     //属性
+    Row(verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(
+                top = Dimen.mediuPadding,
+                bottom = Dimen.smallPadding
+            )
+            .clip(MaterialTheme.shapes.small)
+            .clickable {
+                openDialog.value = true
+
+            }
+    ) {
+        MainText(
+            text = stringResource(id = R.string.title_character_attr),
+        )
+        IconCompose(data = MainIconType.HELP.icon, size = Dimen.smallIconSize)
+    }
+    //属性
     AttrList(attrs = allData.sumAttr.all())
     //剧情属性
     MainText(
         text = stringResource(id = R.string.title_story_attr),
-        modifier = Modifier.Companion
-            .padding(
-                top = Dimen.largePadding,
-                bottom = Dimen.smallPadding
-            )
+        modifier = Modifier.padding(
+            top = Dimen.largePadding,
+            bottom = Dimen.smallPadding
+        )
     )
     AttrList(attrs = allData.storyAttr.allNotZero())
     //Rank 奖励
