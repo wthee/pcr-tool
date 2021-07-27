@@ -10,20 +10,30 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -47,6 +57,7 @@ import coil.Coil
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -60,6 +71,7 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -117,11 +129,11 @@ fun CharacterDetail(
     currentValueState.value?.let { currentValue ->
         val unknown = maxValue.level == -1
         //角色等级滑动条
-        val sliderLevel = remember {
+        val characterLevel = remember {
             mutableStateOf(currentValue.level)
         }
         //专武等级滑动条
-        val sliderUniqueEquipLevel = remember {
+        val uniqueEquipLevel = remember {
             mutableStateOf(currentValue.uniqueEquipmentLevel)
         }
         //Rank 选择
@@ -190,7 +202,7 @@ fun CharacterDetail(
                                 )
                                 AttrLists(
                                     currentValue,
-                                    sliderLevel,
+                                    characterLevel,
                                     maxValue,
                                     allData,
                                     actions
@@ -210,7 +222,7 @@ fun CharacterDetail(
                                     UniqueEquip(
                                         currentValue = currentValue,
                                         uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                                        sliderState = sliderUniqueEquipLevel,
+                                        uniqueEquipLevel = uniqueEquipLevel,
                                         uniqueEquipmentMaxData = allData.uniqueEquip
                                     )
                                 }
@@ -320,36 +332,104 @@ fun CharacterDetail(
 /**
  * 属性
  */
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun AttrLists(
     currentValue: CharacterProperty,
-    sliderLevel: MutableState<Int>,
+    characterLevel: MutableState<Int>,
     maxValue: CharacterProperty,
     allData: AllAttrData,
     actions: NavActions,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
-    val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
+//    val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+    val insets = LocalWindowInsets.current
 
     //等级
     Text(
-        text = sliderLevel.value.toString(),
+        text = characterLevel.value.toString(),
         color = MaterialTheme.colors.primary,
-        style = MaterialTheme.typography.h6
+        style = MaterialTheme.typography.h6,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .padding(Dimen.smallPadding)
+            .fillMaxWidth(0.3f)
+            .padding(Dimen.mediuPadding)
+            .clip(MaterialTheme.shapes.small)
+            .clickable {
+                if (insets.ime.isVisible) {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                } else {
+                    focusRequester.requestFocus()
+                    keyboardController?.show()
+                }
+            }
+
     )
-    Slider(
-        value = sliderLevel.value.toFloat(),
-        onValueChange = { sliderLevel.value = it.toInt() },
-        onValueChangeFinished = {
-            if (sliderLevel.value != 0) {
-                attrViewModel.currentValue.postValue(currentValue.update(level = sliderLevel.value))
+    //等级输入框
+    val inputLevel = remember {
+        mutableStateOf("")
+    }
+    OutlinedTextField(
+        value = inputLevel.value,
+        onValueChange = {
+            var filterStr = ""
+            it.forEach { ch ->
+                if (Regex("\\d").matches(ch.toString())) {
+                    filterStr += ch
+                }
+            }
+            inputLevel.value = when {
+                filterStr == "" -> ""
+                filterStr.toInt() < 1 -> "1"
+                filterStr.toInt() in 1..maxValue.level -> filterStr
+                else -> maxValue.level.toString()
             }
         },
-        valueRange = 1f..maxValue.level.toFloat(),
-        modifier = Modifier
-            .fillMaxWidth(0.618f)
+        textStyle = MaterialTheme.typography.body2,
+        trailingIcon = {
+            IconCompose(
+                data = MainIconType.OK.icon,
+                size = Dimen.fabIconSize
+            ) {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+                if (inputLevel.value != "") {
+                    characterLevel.value = inputLevel.value.toInt()
+                }
+                attrViewModel.currentValue.postValue(currentValue.update(level = characterLevel.value))
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Number
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+                if (inputLevel.value != "") {
+                    characterLevel.value = inputLevel.value.toInt()
+                }
+                attrViewModel.currentValue.postValue(currentValue.update(level = characterLevel.value))
+            }
+        ),
+        modifier = if (insets.ime.isVisible) {
+            Modifier
+                .focusRequester(focusRequester)
+                .padding(Dimen.smallPadding)
+        } else {
+            Modifier
+                .focusRequester(focusRequester)
+                .height(1.dp)
+                .alpha(0f)
+        }
     )
     //fixme 暂时注释掉
 //    coe?.let {
@@ -686,46 +766,123 @@ private fun CharacterEquip(
 /**
  * 专武信息
  * @param uniqueEquipLevelMax 最大等级
- * @param sliderState 等级滑动条状态
+ * @param uniqueEquipLevel 等级状态
  * @param uniqueEquipmentMaxData 专武数值信息
  */
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @Composable
 private fun UniqueEquip(
     currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
-    sliderState: MutableState<Int>,
+    uniqueEquipLevel: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
     val attrViewModel: CharacterAttrViewModel = hiltViewModel()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+    val insets = LocalWindowInsets.current
+
     uniqueEquipmentMaxData?.let {
         Column(
-            modifier = Modifier.padding(top = Dimen.largePadding)
+            modifier = Modifier.padding(top = Dimen.largePadding),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //名称
             MainText(
                 text = it.equipmentName,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
                 selectable = true
             )
             //专武等级
-            Subtitle1(
-                text = sliderState.value.toString(),
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                color = MaterialTheme.colors.primary
-            )
-            //专武等级选择
-            Slider(
-                value = sliderState.value.toFloat(),
-                onValueChange = { sliderState.value = it.toInt() },
-                onValueChangeFinished = {
-                    attrViewModel.currentValue.postValue(currentValue.update(uniqueEquipmentLevel = sliderState.value))
-                },
-                valueRange = 0f..uniqueEquipLevelMax.toFloat(),
+            Text(
+                text = uniqueEquipLevel.value.toString(),
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .fillMaxWidth(0.618f)
-                    .height(Dimen.slideHeight)
-                    .align(Alignment.CenterHorizontally)
+                    .padding(Dimen.smallPadding)
+                    .fillMaxWidth(0.3f)
+                    .padding(Dimen.mediuPadding)
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable {
+                        if (insets.ime.isVisible) {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        } else {
+                            focusRequester.requestFocus()
+                            keyboardController?.show()
+                        }
+                    }
+            )
+            //等级输入框
+            val inputLevel = remember {
+                mutableStateOf("")
+            }
+            OutlinedTextField(
+                value = inputLevel.value,
+                onValueChange = {
+                    var filterStr = ""
+                    it.forEach { ch ->
+                        if (Regex("\\d").matches(ch.toString())) {
+                            filterStr += ch
+                        }
+                    }
+                    inputLevel.value = when {
+                        filterStr == "" -> ""
+                        filterStr.toInt() < 1 -> "1"
+                        filterStr.toInt() in 1..uniqueEquipLevelMax -> filterStr
+                        else -> uniqueEquipLevelMax.toString()
+                    }
+                },
+                textStyle = MaterialTheme.typography.body2,
+                trailingIcon = {
+                    IconCompose(
+                        data = MainIconType.OK.icon,
+                        size = Dimen.fabIconSize
+                    ) {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        if (inputLevel.value != "") {
+                            uniqueEquipLevel.value = inputLevel.value.toInt()
+                        }
+                        attrViewModel.currentValue.postValue(
+                            currentValue.update(
+                                uniqueEquipmentLevel = uniqueEquipLevel.value
+                            )
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        if (inputLevel.value != "") {
+                            uniqueEquipLevel.value = inputLevel.value.toInt()
+                        }
+                        attrViewModel.currentValue.postValue(
+                            currentValue.update(
+                                uniqueEquipmentLevel = uniqueEquipLevel.value
+                            )
+                        )
+
+                    }
+                ),
+                modifier = if (insets.ime.isVisible) {
+                    Modifier
+                        .focusRequester(focusRequester)
+                        .padding(Dimen.smallPadding)
+                } else {
+                    Modifier
+                        .focusRequester(focusRequester)
+                        .height(1.dp)
+                        .alpha(0f)
+                }
             )
             //图标描述
             Row(
