@@ -101,6 +101,29 @@ data class Attr(
         return this
     }
 
+    /**
+     * 属性相减
+     */
+    fun sub(other: Attr): Attr {
+        this.hp -= other.hp
+        this.atk -= other.atk
+        this.magicStr -= other.magicStr
+        this.def -= other.def
+        this.magicDef -= other.magicDef
+        this.physicalCritical -= other.physicalCritical
+        this.magicCritical -= other.magicCritical
+        this.waveHpRecovery -= other.waveHpRecovery
+        this.waveEnergyRecovery -= other.waveEnergyRecovery
+        this.dodge -= other.dodge
+        this.physicalPenetrate -= other.physicalPenetrate
+        this.magicPenetrate -= other.magicPenetrate
+        this.lifeSteal -= other.lifeSteal
+        this.hpRecoveryRate -= other.hpRecoveryRate
+        this.energyRecoveryRate -= other.energyRecoveryRate
+        this.energyReduceRate -= other.energyReduceRate
+        this.accuracy -= other.accuracy
+        return this
+    }
 
     /**
      * 属性乘积

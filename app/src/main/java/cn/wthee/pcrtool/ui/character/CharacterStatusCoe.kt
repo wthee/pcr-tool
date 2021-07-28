@@ -11,13 +11,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.AttrValue
-import cn.wthee.pcrtool.ui.compose.MainContentText
-import cn.wthee.pcrtool.ui.compose.MainText
-import cn.wthee.pcrtool.ui.compose.MainTitleText
+import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 
+/**
+ * 属性说明
+ */
 @Composable
 fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewModel()) {
     val coeValue = attrViewModel.getCoefficient().collectAsState(initial = null).value
@@ -48,6 +49,22 @@ fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewMo
         }
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            //属性说明
+            MainText(
+                text = stringResource(R.string.title_attr_tip),
+                modifier = Modifier.padding(
+                    top = Dimen.largePadding,
+                    bottom = Dimen.smallPadding
+                )
+            )
+            Subtitle1(
+                text = stringResource(R.string.attr_calc),
+                modifier = Modifier.padding(
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+            )
+
             //基本系数
             MainText(
                 text = stringResource(id = R.string.title_basic_coe),
@@ -57,9 +74,7 @@ fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewMo
                         bottom = Dimen.smallPadding
                     )
             )
-            coeList.forEach {
-                CoeItem(it.title, it.value)
-            }
+            AttrList(attrs = coeList, toInt = false)
             //技能相关系数
             MainText(
                 text = stringResource(id = R.string.title_skill_basic_coe),
@@ -74,6 +89,14 @@ fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewMo
                 value = coe.skill_lv_coefficient
             )
             CoeItem(
+                title = stringResource(R.string.title_skill_1_coe),
+                value = coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
+            )
+            CoeItem(
+                title = stringResource(R.string.title_ub_coe),
+                value = coe.skill_lv_coefficient * coe.ub_evolution_slv_coefficient
+            )
+            CoeItem(
                 title = stringResource(R.string.title_ex_skill_add),
                 value = coe.exskill_evolution_coefficient.toDouble()
             )
@@ -82,16 +105,8 @@ fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewMo
                 value = coe.skill1_evolution_coefficient.toDouble()
             )
             CoeItem(
-                title = stringResource(R.string.title_skill_1_coe),
-                value = coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
-            )
-            CoeItem(
                 title = stringResource(R.string.title_ub_add),
                 value = coe.ub_evolution_coefficient.toDouble()
-            )
-            CoeItem(
-                title = stringResource(R.string.title_ub_coe),
-                value = coe.skill_lv_coefficient * coe.ub_evolution_slv_coefficient
             )
         }
     }

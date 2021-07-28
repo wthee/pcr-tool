@@ -108,8 +108,6 @@ fun CharacterDetail(
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabCloseClick.postValue(false)
     }
-    val openDialog = remember { mutableStateOf(false) }
-
     //关闭监听
     val close = navViewModel.fabCloseClick.observeAsState().value ?: false
     //收藏状态
@@ -183,7 +181,6 @@ fun CharacterDetail(
                     FadeAnimation(visible = maxValue.isInit() || unknown) {
                         CardImage(unitId)
                     }
-
                     //数据加载后，展示页面
                     val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
                     SlideAnimation(visible = visible) {
@@ -205,7 +202,6 @@ fun CharacterDetail(
                                 AttrLists(
                                     currentValue,
                                     characterLevel,
-                                    openDialog = openDialog,
                                     maxValue,
                                     allData,
                                     actions
@@ -327,25 +323,6 @@ fun CharacterDetail(
                         }
                     }
                 }
-                //弹窗属性说明
-                if (openDialog.value) {
-                    AlertDialog(
-                        onDismissRequest = {
-                            openDialog.value = false
-                        },
-                        title = {
-                            MainText(text = stringResource(R.string.title_attr_tip))
-                        },
-                        text = {
-                            Subtitle1(text = stringResource(R.string.attr_calc))
-                        },
-                        confirmButton = {
-                            MainButton(text = stringResource(R.string.close)) {
-                                openDialog.value = false
-                            }
-                        }
-                    )
-                }
             }
         }
     }
@@ -361,13 +338,12 @@ fun CharacterDetail(
 private fun AttrLists(
     currentValue: CharacterProperty,
     characterLevel: MutableState<Int>,
-    openDialog: MutableState<Boolean>,
     maxValue: CharacterProperty,
     allData: AllAttrData,
     actions: NavActions,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
-//    val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
+    val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -453,76 +429,67 @@ private fun AttrLists(
                 .alpha(0f)
         }
     )
-    //fixme 暂时注释掉
-//    coe?.let {
-//        val basic = allData.sumAttr.hp * it.hp_coefficient +
-//                allData.sumAttr.atk * it.atk_coefficient +
-//                allData.sumAttr.magicStr * it.magic_str_coefficient +
-//                allData.sumAttr.def * it.def_coefficient +
-//                allData.sumAttr.magicDef * it.magic_def_coefficient +
-//                allData.sumAttr.physicalCritical * it.physical_critical_coefficient +
-//                allData.sumAttr.magicCritical * it.magic_critical_coefficient +
-//                allData.sumAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
-//                allData.sumAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
-//                allData.sumAttr.dodge * it.dodge_coefficient +
-//                allData.sumAttr.physicalPenetrate * it.physical_penetrate_coefficient +
-//                allData.sumAttr.magicPenetrate * it.magic_penetrate_coefficient +
-//                allData.sumAttr.lifeSteal * it.life_steal_coefficient +
-//                allData.sumAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
-//                allData.sumAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
-//                allData.sumAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
-//                allData.sumAttr.accuracy * it.accuracy_coefficient
-//
-//        //默认加上被动技能和技能2
-//        var skill = currentValue.level * it.skill_lv_coefficient * 2
-//        //解锁专武，技能1系数提升
-//        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-//            skill += it.skill1_evolution_coefficient
-//            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
-//        } else {
-//            skill += currentValue.level * it.skill_lv_coefficient
-//        }
-//        //不同星级处理
-//        if (currentValue.rarity >= 5) {
-//            //大于等于五星，技能 ex+
-//            skill += it.exskill_evolution_coefficient
-//            if (currentValue.rarity == 6) {
-//                //六星，ub系数提升
-//                skill += it.ub_evolution_coefficient
-//                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
-//            } else {
-//                //五星
-//                skill += currentValue.level * it.skill_lv_coefficient
-//            }
-//        } else {
-//            //小于五星，ub 和 ex
-//            skill += currentValue.level * it.skill_lv_coefficient * 2
-//        }
-//        Row(verticalAlignment = Alignment.CenterVertically) {
-//            MainText(text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString())
-//            IconCompose(data = MainIconType.HELP.icon, size = Dimen.smallIconSize) {
-//                actions.toCoe()
-//            }
-//        }
-//
-//    }
-    //属性
-    Row(verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(
-                top = Dimen.mediuPadding,
-                bottom = Dimen.smallPadding
-            )
-            .clip(MaterialTheme.shapes.small)
-            .clickable {
-                openDialog.value = true
-
+    //战力计算 fixme 对比游戏内数值
+    coe?.let {
+        val basicAttr = allData.sumAttr.copy().sub(allData.exSkillAttr)
+        val basic = basicAttr.hp * it.hp_coefficient +
+                basicAttr.atk * it.atk_coefficient +
+                basicAttr.magicStr * it.magic_str_coefficient +
+                basicAttr.def * it.def_coefficient +
+                basicAttr.magicDef * it.magic_def_coefficient +
+                basicAttr.physicalCritical * it.physical_critical_coefficient +
+                basicAttr.magicCritical * it.magic_critical_coefficient +
+                basicAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
+                basicAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
+                basicAttr.dodge * it.dodge_coefficient +
+                basicAttr.physicalPenetrate * it.physical_penetrate_coefficient +
+                basicAttr.magicPenetrate * it.magic_penetrate_coefficient +
+                basicAttr.lifeSteal * it.life_steal_coefficient +
+                basicAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
+                basicAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
+                basicAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
+                basicAttr.accuracy * it.accuracy_coefficient
+        //技能2：默认加上技能2
+        var skill = currentValue.level * it.skill_lv_coefficient
+        //技能1：解锁专武，技能1系数提升
+        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+            skill += it.skill1_evolution_coefficient
+            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
+        } else {
+            skill += currentValue.level * it.skill_lv_coefficient
+        }
+        //不同星级处理
+        if (currentValue.rarity >= 5) {
+            //ex+:大于等于五星，技能 ex+
+            skill += it.exskill_evolution_coefficient
+            skill += currentValue.level * it.skill_lv_coefficient
+            if (currentValue.rarity == 6) {
+                //ub+
+                skill += it.ub_evolution_coefficient
+                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
+            } else {
+                //ub
+                skill += currentValue.level * it.skill_lv_coefficient
             }
-    ) {
-        MainText(
-            text = stringResource(id = R.string.title_character_attr),
-        )
-        IconCompose(data = MainIconType.HELP.icon, size = Dimen.smallIconSize)
+        } else {
+            //ub、ex
+            skill += currentValue.level * it.skill_lv_coefficient * 2
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(bottom = Dimen.smallPadding)
+        ) {
+            MainText(
+                text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString(),
+                modifier = Modifier.padding(end = Dimen.smallPadding)
+            )
+            IconCompose(
+                data = MainIconType.HELP.icon,
+                size = Dimen.smallIconSize
+            ) {
+                actions.toCoe()
+            }
+        }
     }
     //属性
     AttrList(attrs = allData.sumAttr.all())
