@@ -625,7 +625,7 @@ private fun CardImage(unitId: Int) {
         ) {
             Box(contentAlignment = Alignment.Center) {
                 //图片
-                ImageCompose(url = picUrls[index], ratio = RATIO) {
+                ImageCompose(data = picUrls[index], ratio = RATIO) {
                     loaded[index] = true
                 }
                 FadeAnimation(visible = showConfirmLayout.value) {

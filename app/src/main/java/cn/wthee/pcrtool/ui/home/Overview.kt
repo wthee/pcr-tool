@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -269,6 +268,7 @@ fun Overview(
 /**
  * 标题
  */
+@ExperimentalAnimationApi
 @ExperimentalCoilApi
 @Composable
 private fun Section(
@@ -284,7 +284,9 @@ private fun Section(
     } else {
         Modifier.clickable(onClick = {
             VibrateUtil(context).single()
-            onClick.invoke()
+            if (visible) {
+                onClick.invoke()
+            }
         })
     })
 
@@ -324,17 +326,8 @@ private fun Section(
                 )
             }
         }
-        if (!visible) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .size(Dimen.fabIconSize)
-                    .padding(Dimen.lineHeight)
-                    .align(Alignment.CenterHorizontally),
-                color = MaterialTheme.colors.primary,
-                strokeWidth = Dimen.lineHeight
-            )
-        } else {
+
+        FadeAnimation(visible = visible) {
             content.invoke()
         }
     }
