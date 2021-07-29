@@ -17,9 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
@@ -249,8 +249,17 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
 @Preview
 @Composable
 private fun Preview() {
-    PcrtoolcomposeTheme {
-        val scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
+    PreviewBox(1) {
+        CharacterInfoCompose(info = CharacterInfoPro(), scrollState = scrollState)
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewDark() {
+    val scrollState = rememberScrollState()
+    PreviewBox(2) {
         CharacterInfoCompose(info = CharacterInfoPro(), scrollState = scrollState)
     }
 }

@@ -10,8 +10,8 @@ import cn.wthee.pcrtool.utils.Constants
 data class UniqueEquipmentMaxData(
     @ColumnInfo(name = "unit_id") val unitId: Int = 0,
     @ColumnInfo(name = "equipment_id") val equipmentId: Int = Constants.UNKNOWN_EQUIP_ID,
-    @ColumnInfo(name = "equipment_name") val equipmentName: String = "？？？",
-    @ColumnInfo(name = "description") val description: String = "？？？",
+    @ColumnInfo(name = "equipment_name") val equipmentName: String = "?",
+    @ColumnInfo(name = "description") val description: String = "?",
     @Embedded var attr: Attr = Attr(),
 ) {
 

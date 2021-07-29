@@ -502,4 +502,3 @@ private fun FilterCharacterSheet(
         }
     }
 }
-

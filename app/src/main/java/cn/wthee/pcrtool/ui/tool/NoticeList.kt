@@ -16,11 +16,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AppNotice
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
@@ -178,5 +180,16 @@ private fun NoticeItem(data: AppNotice) {
             }
         }
 
+    }
+}
+
+@Preview
+@ExperimentalMaterialApi
+@Composable
+private fun NoticeItemPreview() {
+    PreviewBox {
+        Column {
+            NoticeItem(data = AppNotice(id = 0))
+        }
     }
 }

@@ -14,14 +14,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
@@ -94,7 +98,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val type: String
     val typeColor: Color
     var showDays = true
-    val today = getToday()
+    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 1))
     val startDate = event.startTime.formatTime.substring(0, 10)
     val endDate = event.endTime.formatTime.substring(0, 10)
     val preEvent = startDate == "2030/12/30"
@@ -213,3 +217,15 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     }
 }
 
+@Preview
+@ExperimentalCoilApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@Composable
+private fun EventItemPreview() {
+    PreviewBox {
+        Column {
+            EventItem(event = EventData(), toCharacterDetail = {})
+        }
+    }
+}

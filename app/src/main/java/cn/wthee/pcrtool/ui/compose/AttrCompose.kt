@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.data.model.AttrValue
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.int
 
@@ -62,5 +64,18 @@ fun AttrItem(index: Int, text: String, value: Double, toInt: Boolean, modifier: 
                 .padding(end = if (index % 2 == 1) Dimen.largePadding else 0.dp)
                 .weight(0.2f)
         )
+    }
+}
+
+
+/**
+ * 属性列表
+ */
+@Preview
+@Composable
+private fun AttrListPreview() {
+    val mockData = arrayListOf(AttrValue(), AttrValue(), AttrValue())
+    PreviewBox {
+        AttrList(attrs = mockData)
     }
 }

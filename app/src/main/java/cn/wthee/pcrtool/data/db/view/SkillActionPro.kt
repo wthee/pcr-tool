@@ -276,7 +276,7 @@ data class SkillActionPro(
                     9 -> "拘留"
                     10 -> "晕倒"
                     11 -> "时停"
-                    else -> "？"
+                    else -> "?"
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(3, action_value_3, action_value_4)

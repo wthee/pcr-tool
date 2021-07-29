@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.flowWithLifecycle
@@ -34,6 +35,7 @@ import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.getRegion
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
@@ -427,4 +429,16 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
     }
 
 
+}
+
+
+@Preview
+@ExperimentalMaterialApi
+@Composable
+private fun NewsItemPreview() {
+    PreviewBox {
+        Column {
+            NewsItem(news = NewsTable(title = "?"), toDetail = {})
+        }
+    }
 }

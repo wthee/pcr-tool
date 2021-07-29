@@ -9,14 +9,14 @@ import cn.wthee.pcrtool.utils.UMengLogUtil
  * 角色技能信息
  */
 data class SkillDetail(
-    val skillId: Int,
-    val name: String,
-    val desc: String,
-    val iconType: Int,
-    val castTime: Double,
-    val level: Int,
-    val atk: Int,
-    val bossUbCooltime: Double,
+    val skillId: Int = 1,
+    val name: String = "?",
+    val desc: String = "?",
+    val iconType: Int = 1,
+    val castTime: Double = 0.0,
+    val level: Int = 1,
+    val atk: Int = 100,
+    val bossUbCooltime: Double = 0.0,
 ) {
     /**
      * 角色技能效果

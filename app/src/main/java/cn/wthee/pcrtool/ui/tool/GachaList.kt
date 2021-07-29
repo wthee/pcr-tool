@@ -13,14 +13,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
@@ -92,7 +96,7 @@ fun GachaList(
 @ExperimentalMaterialApi
 @Composable
 private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
-    val today = getToday()
+    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 1))
     val sd = gachaInfo.startTime
     val ed = gachaInfo.endTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
@@ -173,3 +177,15 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
 
 }
 
+@Preview
+@ExperimentalCoilApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@Composable
+private fun GachaItemPreview() {
+    PreviewBox {
+        Column {
+            GachaItem(gachaInfo = GachaInfo(), toCharacterDetail = {})
+        }
+    }
+}

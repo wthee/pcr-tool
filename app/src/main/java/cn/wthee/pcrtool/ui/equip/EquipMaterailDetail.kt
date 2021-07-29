@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -151,16 +153,12 @@ fun EquipMaterialDeatil(
                                 else -> lists[2]
                             }
                         ) {
-                            Text(
-                                text = it.getNum(),
-                                style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(
-                                    start = Dimen.mediuPadding,
-                                    top = Dimen.mediuPadding
-                                ),
-                                color = colorResource(id = color[pagerIndex])
+                            AreaEquipList(
+                                equipId,
+                                it.getAllOdd(),
+                                it.getNum(),
+                                colorResource(id = color[pagerIndex])
                             )
-                            AreaEquipList(equipId, it.getAllOdd())
                         }
                         item {
                             CommonSpacer()
@@ -201,26 +199,55 @@ fun EquipMaterialDeatil(
 @Composable
 private fun AreaEquipList(
     selectedId: Int,
-    odds: ArrayList<EquipmentIdWithOdd>
+    odds: ArrayList<EquipmentIdWithOdd>,
+    num: String,
+    color: Color
 ) {
-    VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-        odds.forEach {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding,
-                        bottom = Dimen.largePadding
-                    ), horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val selected = selectedId == it.eid
-                IconCompose(data = getEquipIconUrl(it.eid))
-                SelectText(
-                    selected = selected,
-                    text = "${it.odd}%"
-                )
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = num,
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(
+                bottom = Dimen.mediuPadding,
+                top = Dimen.mediuPadding
+            ),
+            color = color
+        )
+        VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+            odds.forEach {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding,
+                            bottom = Dimen.largePadding
+                        ), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val selected = selectedId == it.eid
+                    IconCompose(data = getEquipIconUrl(it.eid))
+                    SelectText(
+                        selected = selected,
+                        text = "${it.odd}%"
+                    )
+                }
             }
         }
+    }
+
+}
+
+@Preview
+@ExperimentalCoilApi
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
+@Composable
+private fun AreaEquipListPreview() {
+    val mockData = arrayListOf<EquipmentIdWithOdd>()
+    for (i in 0..7) {
+        mockData.add(EquipmentIdWithOdd())
+    }
+    PreviewBox {
+        AreaEquipList(selectedId = 1, odds = mockData, num = "1", color = Color.Red)
     }
 }

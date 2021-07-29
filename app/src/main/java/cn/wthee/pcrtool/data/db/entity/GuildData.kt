@@ -83,5 +83,5 @@ data class GuildData(
         it * 100 + 1
     }
 
-    fun getDesc() = if (description.isBlank()) "？？？" else description
+    fun getDesc() = if (description.isBlank()) "?" else description
 }

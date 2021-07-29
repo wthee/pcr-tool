@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
@@ -20,6 +21,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.CardTopShape
@@ -216,5 +218,27 @@ private fun EquipCountItem(
             selected = loved,
             text = item.count.toString()
         )
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview
+@ExperimentalCoilApi
+@Composable
+private fun EquipCountItemPreview() {
+    val spanCount = 5
+    val rankEquipMaterials = arrayListOf<EquipmentMaterial>()
+    for (i in 0..11) {
+        rankEquipMaterials.add(EquipmentMaterial())
+    }
+    PreviewBox {
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(spanCount),
+            contentPadding = PaddingValues(Dimen.mediuPadding)
+        ) {
+            items(items = rankEquipMaterials) { item ->
+                EquipCountItem(item, FilterEquipment(), { })
+            }
+        }
     }
 }

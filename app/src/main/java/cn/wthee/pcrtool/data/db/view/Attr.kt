@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.db.entity.UnitRarity
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
+import kotlin.random.Random
 
 /**
  * 面板属性
@@ -200,6 +201,16 @@ data class Attr(
             compareValue.add(AttrValue(attrValue.title, attrValue.value - attrs1[index].value))
         }
         return compareValue
+    }
+
+    /**
+     * 随机
+     */
+    fun random(): Attr {
+        this.hp += Random(System.currentTimeMillis()).nextDouble()
+        this.atk += Random(System.currentTimeMillis()).nextDouble()
+        this.magicStr += Random(System.currentTimeMillis()).nextDouble()
+        return this
     }
 
 }

@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.annotation.ExperimentalCoilApi
@@ -74,4 +76,21 @@ fun FabCompose(
         }
     }
 
+}
+
+@ExperimentalCoilApi
+@ExperimentalAnimationApi
+@Preview
+@Composable
+private fun FabComposePreview() {
+    PreviewBox {
+        Row {
+            FabCompose(iconType = MainIconType.ANIMATION) {
+
+            }
+            FabCompose(iconType = MainIconType.ANIMATION, text = "fab") {
+
+            }
+        }
+    }
 }

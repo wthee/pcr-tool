@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import cn.wthee.pcrtool.database.getDatabaseType
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -27,9 +26,9 @@ val String.formatTime: String
 /**
  * 获取当天时间
  */
-fun getToday(): String {
+fun getToday(type: Int): String {
     var time = System.currentTimeMillis()
-    if (getDatabaseType() == 2) {
+    if (type == 2) {
         //日服时区
         time += 60 * 60 * 1000
     }

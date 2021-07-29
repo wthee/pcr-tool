@@ -17,10 +17,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
@@ -133,7 +135,7 @@ fun LeaderboardList(
 @ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
-fun LeaderboardItem(info: LeaderboardData) {
+private fun LeaderboardItem(info: LeaderboardData) {
     val placeholder = info.icon == ""
     val context = LocalContext.current
     val title = stringResource(id = R.string.visit_detail)
@@ -189,4 +191,16 @@ fun GradeText(grade: String, textAlign: TextAlign = TextAlign.Center, modifier: 
         fontWeight = FontWeight.Bold,
         modifier = modifier
     )
+}
+
+@Preview
+@ExperimentalCoilApi
+@ExperimentalMaterialApi
+@Composable
+private fun LeaderboardItemPreview() {
+    PreviewBox {
+        Column {
+            LeaderboardItem(info = LeaderboardData(icon = "?"))
+        }
+    }
 }

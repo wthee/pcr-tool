@@ -14,10 +14,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -64,6 +61,10 @@ import kotlinx.coroutines.launch
  */
 fun mainSP(): SharedPreferences =
     MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
+
+fun mainSP(context: Context): SharedPreferences =
+    context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -239,3 +240,32 @@ fun FabMain(modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * 预览
+ */
+@Composable
+fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
+    Column {
+        if (themeType == 0 || themeType == 1) {
+            PcrtoolcomposeTheme(darkTheme = false) {
+                Surface(
+                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    content = content
+                )
+            }
+        }
+        if (themeType == 0) {
+            Spacer(
+                modifier = Modifier.height(Dimen.largePadding)
+            )
+        }
+        if (themeType == 0 || themeType == 2) {
+            PcrtoolcomposeTheme(darkTheme = true) {
+                Surface(
+                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    content = content
+                )
+            }
+        }
+    }
+}
