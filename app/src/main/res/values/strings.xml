@@ -172,7 +172,8 @@
     <string name="title_skill_1_coe">技能1+ 系数</string>
     <string name="title_ub_add">连结爆发+ 额外数值</string>
     <string name="title_ub_coe">连结爆发+ 系数</string>
-    <string name="attr_all_value">战力 </string>
+    <string name="attr_all_value">战力：</string>
     <string name="title_attr_tip">属性说明</string>
     <string name="attr_calc">角色属性 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
+    <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
 </resources>

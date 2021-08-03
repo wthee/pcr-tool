@@ -3,6 +3,8 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -57,7 +59,19 @@ private fun StatusDesc(coe: UnitStatusCoefficient) {
         coeList.add(AttrValue(Constants.ATTR[i], value))
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.verticalScroll(
+            rememberScrollState()
+        )
+    ) {
+        //其它说明
+        CaptionText(
+            text = stringResource(R.string.tip_status_coe), modifier = Modifier.padding(
+                top = Dimen.largePadding,
+                bottom = Dimen.smallPadding
+            )
+        )
         //属性说明
         MainText(
             text = stringResource(R.string.title_attr_tip),
