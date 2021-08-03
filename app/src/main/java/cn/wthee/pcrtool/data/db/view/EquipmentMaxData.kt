@@ -27,7 +27,7 @@ data class EquipmentMaxData(
         fun unknown() =
             EquipmentMaxData(
                 UNKNOWN_EQUIP_ID,
-                "？？？",
+                "?",
                 "",
                 "",
                 0,

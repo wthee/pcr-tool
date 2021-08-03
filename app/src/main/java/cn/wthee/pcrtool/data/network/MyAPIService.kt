@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -42,6 +43,30 @@ interface MyAPIService {
      */
     @POST("news")
     suspend fun getNewsData(@Body body: RequestBody): ResponseData<List<NewsTable>>
+
+    /**
+     * 获取公告
+     */
+    @POST("news/overview")
+    suspend fun getNewsOverview(): ResponseData<List<NewsTable>>
+
+    /**
+     * 获取公告
+     */
+    @POST("news/detail")
+    suspend fun getNewsDetail(@Body body: RequestBody): ResponseData<NewsTable>
+
+    /**
+     * 获取推特
+     */
+    @POST("tweet")
+    suspend fun getTweetData(@Body body: RequestBody): ResponseData<List<TweetData>>
+
+    /**
+     * 获取漫画信息
+     */
+    @POST("comic")
+    suspend fun getComicData(): ResponseData<List<ComicData>>
 
     /**
      * 排行信息

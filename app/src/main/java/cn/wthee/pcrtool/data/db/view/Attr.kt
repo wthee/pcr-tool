@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.db.entity.UnitRarity
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
+import kotlin.random.Random
 
 /**
  * 面板属性
@@ -75,105 +76,142 @@ data class Attr(
         0.0,
         0.0,
     )
-}
 
-/**
- * 属性相加
- */
-fun Attr.add(other: Attr): Attr {
-    this.hp += other.hp
-    this.atk += other.atk
-    this.magicStr += other.magicStr
-    this.def += other.def
-    this.magicDef += other.magicDef
-    this.physicalCritical += other.physicalCritical
-    this.magicCritical += other.magicCritical
-    this.waveHpRecovery += other.waveHpRecovery
-    this.waveEnergyRecovery += other.waveEnergyRecovery
-    this.dodge += other.dodge
-    this.physicalPenetrate += other.physicalPenetrate
-    this.magicPenetrate += other.magicPenetrate
-    this.lifeSteal += other.lifeSteal
-    this.hpRecoveryRate += other.hpRecoveryRate
-    this.energyRecoveryRate += other.energyRecoveryRate
-    this.energyReduceRate += other.energyReduceRate
-    this.accuracy += other.accuracy
-    return this
-}
 
-/**
- * 属性乘积
- */
-fun Attr.multiply(mult: Double): Attr {
-    this.hp *= mult
-    this.atk *= mult
-    this.magicStr *= mult
-    this.def *= mult
-    this.magicDef *= mult
-    this.physicalCritical *= mult
-    this.magicCritical *= mult
-    this.waveHpRecovery *= mult
-    this.waveEnergyRecovery *= mult
-    this.dodge *= mult
-    this.physicalPenetrate *= mult
-    this.magicPenetrate *= mult
-    this.lifeSteal *= mult
-    this.hpRecoveryRate *= mult
-    this.energyRecoveryRate *= mult
-    this.energyReduceRate *= mult
-    this.accuracy *= mult
-    return this
-}
+    /**
+     * 属性相加
+     */
+    fun add(other: Attr): Attr {
+        this.hp += other.hp
+        this.atk += other.atk
+        this.magicStr += other.magicStr
+        this.def += other.def
+        this.magicDef += other.magicDef
+        this.physicalCritical += other.physicalCritical
+        this.magicCritical += other.magicCritical
+        this.waveHpRecovery += other.waveHpRecovery
+        this.waveEnergyRecovery += other.waveEnergyRecovery
+        this.dodge += other.dodge
+        this.physicalPenetrate += other.physicalPenetrate
+        this.magicPenetrate += other.magicPenetrate
+        this.lifeSteal += other.lifeSteal
+        this.hpRecoveryRate += other.hpRecoveryRate
+        this.energyRecoveryRate += other.energyRecoveryRate
+        this.energyReduceRate += other.energyReduceRate
+        this.accuracy += other.accuracy
+        return this
+    }
 
-/**
- * 全部属性
- */
-fun Attr.all(): ArrayList<AttrValue> {
-    val attrs = arrayListOf<AttrValue>()
-    for (i in 0..16) {
-        val value = when (i) {
-            0 -> this.hp
-            1 -> this.lifeSteal
-            2 -> this.atk
-            3 -> this.magicStr
-            4 -> this.def
-            5 -> this.magicDef
-            6 -> this.physicalCritical
-            7 -> this.magicCritical
+    /**
+     * 属性相减
+     */
+    fun sub(other: Attr): Attr {
+        this.hp -= other.hp
+        this.atk -= other.atk
+        this.magicStr -= other.magicStr
+        this.def -= other.def
+        this.magicDef -= other.magicDef
+        this.physicalCritical -= other.physicalCritical
+        this.magicCritical -= other.magicCritical
+        this.waveHpRecovery -= other.waveHpRecovery
+        this.waveEnergyRecovery -= other.waveEnergyRecovery
+        this.dodge -= other.dodge
+        this.physicalPenetrate -= other.physicalPenetrate
+        this.magicPenetrate -= other.magicPenetrate
+        this.lifeSteal -= other.lifeSteal
+        this.hpRecoveryRate -= other.hpRecoveryRate
+        this.energyRecoveryRate -= other.energyRecoveryRate
+        this.energyReduceRate -= other.energyReduceRate
+        this.accuracy -= other.accuracy
+        return this
+    }
+
+    /**
+     * 属性乘积
+     */
+    fun multiply(mult: Double): Attr {
+        this.hp *= mult
+        this.atk *= mult
+        this.magicStr *= mult
+        this.def *= mult
+        this.magicDef *= mult
+        this.physicalCritical *= mult
+        this.magicCritical *= mult
+        this.waveHpRecovery *= mult
+        this.waveEnergyRecovery *= mult
+        this.dodge *= mult
+        this.physicalPenetrate *= mult
+        this.magicPenetrate *= mult
+        this.lifeSteal *= mult
+        this.hpRecoveryRate *= mult
+        this.energyRecoveryRate *= mult
+        this.energyReduceRate *= mult
+        this.accuracy *= mult
+        return this
+    }
+
+    /**
+     * 全部属性
+     */
+    fun all(): ArrayList<AttrValue> {
+        val attrs = arrayListOf<AttrValue>()
+        for (i in 0..16) {
+            val value = when (i) {
+                0 -> this.hp
+                1 -> this.lifeSteal
+                2 -> this.atk
+                3 -> this.magicStr
+                4 -> this.def
+                5 -> this.magicDef
+                6 -> this.physicalCritical
+                7 -> this.magicCritical
 //            8 -> this.physicalPenetrate
 //            9 -> this.magicPenetrate
-            10 -> this.accuracy
-            11 -> this.dodge
-            12 -> this.waveHpRecovery
-            13 -> this.hpRecoveryRate
-            14 -> this.waveEnergyRecovery
-            15 -> this.energyRecoveryRate
-            16 -> this.energyReduceRate
-            else -> 0.0
+                10 -> this.accuracy
+                11 -> this.dodge
+                12 -> this.waveHpRecovery
+                13 -> this.hpRecoveryRate
+                14 -> this.waveEnergyRecovery
+                15 -> this.energyRecoveryRate
+                16 -> this.energyReduceRate
+                else -> 0.0
+            }
+            attrs.add(AttrValue(Constants.ATTR[i], value))
         }
-        attrs.add(AttrValue(Constants.ATTR[i], value))
+        return attrs
     }
-    return attrs
+
+    /**
+     * 非零属性
+     */
+    fun allNotZero(): List<AttrValue> {
+        val attrs = all()
+        attrs.removeAll { it.value == 0.0 }
+        return attrs
+    }
+
+    /**
+     * 属性对比差值
+     */
+    fun compare(attr1: Attr): List<AttrValue> {
+        val attrs = all()
+        val attrs1 = attr1.all()
+        val compareValue = arrayListOf<AttrValue>()
+        attrs.forEachIndexed { index, attrValue ->
+            compareValue.add(AttrValue(attrValue.title, attrValue.value - attrs1[index].value))
+        }
+        return compareValue
+    }
+
+    /**
+     * 随机
+     */
+    fun random(): Attr {
+        this.hp += Random(System.currentTimeMillis()).nextDouble()
+        this.atk += Random(System.currentTimeMillis()).nextDouble()
+        this.magicStr += Random(System.currentTimeMillis()).nextDouble()
+        return this
+    }
+
 }
 
-/**
- * 非零属性
- */
-fun Attr.allNotZero(): List<AttrValue> {
-    val attrs = all()
-    attrs.removeAll { it.value == 0.0 }
-    return attrs
-}
-
-/**
- * 属性对比差值
- */
-fun Attr.compare(attr1: Attr): List<AttrValue> {
-    val attrs = all()
-    val attrs1 = attr1.all()
-    val compareValue = arrayListOf<AttrValue>()
-    attrs.forEachIndexed { index, attrValue ->
-        compareValue.add(AttrValue(attrValue.title, attrValue.value - attrs1[index].value))
-    }
-    return compareValue
-}

@@ -2,33 +2,34 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.data.db.entity.GuildData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.GuildAllMember
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 
 /**
  * 角色公会
  */
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -38,27 +39,23 @@ fun GuildList(
     toCharacterDetail: (Int) -> Unit,
     guildViewModel: GuildViewModel = hiltViewModel()
 ) {
-    guildViewModel.getGuilds()
-    val guilds = guildViewModel.guilds.observeAsState()
+    val guilds = guildViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
     ) {
-        SlideAnimation(visible = guilds.value != null) {
-            guilds.value?.let { data ->
-                LazyColumn(
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
-                ) {
-                    items(data) {
-                        GuildItem(it, toCharacterDetail)
-                    }
-                    item {
-                        CommonSpacer()
-                    }
+        SlideAnimation(visible = guilds.isNotEmpty()) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(guilds) {
+                    GuildItem(it, toCharacterDetail = toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
                 }
             }
         }
@@ -72,7 +69,10 @@ fun GuildList(
                 .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin)
         ) {
             coroutineScope.launch {
-                scrollState.scrollToItem(0)
+                try {
+                    scrollState.scrollToItem(0)
+                } catch (e: Exception) {
+                }
             }
         }
     }
@@ -83,28 +83,65 @@ fun GuildList(
 /**
  * 公会
  */
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun GuildItem(guild: GuildData, toCharacterDetail: (Int) -> Unit) {
+private fun GuildItem(
+    guild: GuildAllMember,
+    toCharacterDetail: (Int) -> Unit
+) {
+
     MainTitleText(
         text = guild.guildName,
         modifier = Modifier.padding(bottom = Dimen.mediuPadding)
     )
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
             //内容
             MainContentText(
-                text = guild.getDesc(),
-                modifier = Modifier.padding(bottom = Dimen.smallPadding),
+                text = guild.desc,
+                modifier = Modifier.padding(
+                    top = Dimen.mediuPadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
+                ),
                 textAlign = TextAlign.Start
             )
             //图标/描述
             IconListCompose(
-                guild.getMemberIds(),
+                guild.memberIds,
                 toCharacterDetail
             )
+            // 新加入的成员
+            if (guild.newMemberIds.isNotEmpty()) {
+                MainContentText(
+                    text = stringResource(R.string.new_member),
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.mediuPadding,
+                        end = Dimen.mediuPadding
+                    ),
+                    textAlign = TextAlign.Start
+                )
+                IconListCompose(
+                    guild.newMemberIds,
+                    toCharacterDetail
+                )
+            }
         }
     }
 }
 
+@Preview
+@ExperimentalCoilApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@Composable
+private fun GuildItemPreview() {
+    PreviewBox {
+        Column {
+            GuildItem(guild = GuildAllMember(), toCharacterDetail = {})
+        }
+    }
+}

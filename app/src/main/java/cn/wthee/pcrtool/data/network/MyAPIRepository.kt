@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.network
 
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.data.db.entity.NewsTable
+import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.model.*
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.utils.Constants
@@ -82,6 +83,106 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
                 return cancel()
             } else {
                 UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + "$region/$page")
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 查询公告信息
+     * @param id
+     */
+    suspend fun getNewsDetail(id: String): ResponseData<NewsTable> {
+        //接口参数
+        val json = JsonObject()
+        json.addProperty("id", id)
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            json.toString()
+        )
+        //请求
+        try {
+            val response = service.getNewsDetail(body)
+            if (response.message == "failure" || response.data == null) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "news" + id)
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 最新公告
+     */
+    suspend fun getNewsOverview(): ResponseData<List<NewsTable>> {
+        //请求
+        try {
+            val response = service.getNewsOverview()
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 查询推特信息
+     * @param page 页码
+     */
+    suspend fun getTweet(page: Int): ResponseData<List<TweetData>> {
+        //接口参数
+        val json = JsonObject()
+        json.addProperty("page", page)
+        val body = RequestBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            json.toString()
+        )
+        //请求
+        try {
+            val response = service.getTweetData(body)
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet" + "$page")
+            }
+        }
+        return error()
+    }
+
+    /**
+     * 查询漫画信息
+     */
+    suspend fun getComic(): ResponseData<List<ComicData>> {
+        //请求
+        try {
+            val response = service.getComicData()
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "tweet")
             }
         }
         return error()

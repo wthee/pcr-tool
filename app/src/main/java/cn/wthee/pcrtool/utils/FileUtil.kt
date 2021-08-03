@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.utils
 
+import android.content.Context
 import android.os.Build
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
@@ -15,12 +16,13 @@ object FileUtil {
     /**
      * 数据库所在文件夹
      */
-    fun getDatabaseDir() = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-        MyApplication.context.dataDir.absolutePath
-    else {
-        val path = MyApplication.context.filesDir.absolutePath
-        path.substring(0, path.length - 6)
-    } + "/databases"
+    fun getDatabaseDir(context: Context = MyApplication.context) =
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+            context.dataDir.absolutePath
+        else {
+            val path = context.filesDir.absolutePath
+            path.substring(0, path.length - 6)
+        } + "/databases"
 
     /**
      * 数据库路径
@@ -110,8 +112,8 @@ object FileUtil {
     /**
      * 获取历史数据库文件列表
      */
-    private fun getOldList(): List<File>? {
-        val file = File(getDatabaseDir())
+    private fun getOldList(context: Context): List<File>? {
+        val file = File(getDatabaseDir(context))
         return file.listFiles()?.filter {
             try {
                 val code = it.name.split("r")[0].toInt()
@@ -123,47 +125,15 @@ object FileUtil {
     }
 
     /**
-     * 获取历史数据库文件大小
-     */
-    fun getOldDatabaseSize(): Long {
-        var size = 0f
-        getOldList()?.forEach {
-            size += it.length()
-        }
-        return size.toLong()
-    }
-
-
-    /**
      * 删除历史数据库文件
      */
-    fun deleteOldDatabase() {
-        getOldList()?.forEach {
-            it.delete()
-        }
-    }
+    fun deleteOldDatabase(context: Context) {
+        try {
+            getOldList(context)?.forEach {
+                it.delete()
+            }
+        } catch (e: Exception) {
 
-
-    /**
-     * 格式化文件大小格式
-     */
-    fun Long.convertFileSize(): String {
-        val kb: Long = 1024
-        val mb = kb * 1024
-        val gb = mb * 1024
-        return when {
-            this >= gb -> {
-                String.format("%.1f GB", this.toFloat() / gb)
-            }
-            this >= mb -> {
-                val f = this.toFloat() / mb
-                String.format(if (f > 100) "%.0f MB" else "%.1f MB", f)
-            }
-            this >= kb -> {
-                val f = this.toFloat() / kb
-                String.format(if (f > 100) "%.0f KB" else "%.1f KB", f)
-            }
-            else -> String.format("%d B", this)
         }
     }
 }

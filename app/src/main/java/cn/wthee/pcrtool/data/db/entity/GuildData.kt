@@ -46,7 +46,7 @@ data class GuildData(
     @ColumnInfo(name = "member30") val member30: Int
 ) {
 
-    fun getMemberIds() = arrayListOf(
+    fun getMemberIds() = mutableListOf(
         member1,
         member2,
         member3,
@@ -83,5 +83,5 @@ data class GuildData(
         it * 100 + 1
     }
 
-    fun getDesc() = if (description.isBlank()) "？？？" else description
+    fun getDesc() = if (description.isBlank()) "?" else description
 }

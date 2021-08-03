@@ -13,7 +13,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 向下折叠
      */
-    DOWN(Icons.Rounded.ExpandMore),
+    DOWN(Icons.Rounded.Remove),
 
     /**
      * 主菜单
@@ -41,9 +41,19 @@ enum class MainIconType(val icon: ImageVector) {
     RESET(Icons.Rounded.Refresh),
 
     /**
-     * 下载
+     * 回到顶部
      */
-    DWONLOAD(Icons.Rounded.Download),
+    TOP(Icons.Rounded.ExpandLess),
+
+    /**
+     * 更多
+     */
+    MORE(Icons.Rounded.NavigateNext),
+
+    /**
+     * 功能
+     */
+    FUNCTION(Icons.Rounded.Api),
 
     /**
      * 设置
@@ -128,7 +138,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 官网公告
      */
-    NEWS(Icons.Rounded.Campaign),
+    NEWS(Icons.Rounded.Public),
 
     /**
      * 更新通知
@@ -148,6 +158,7 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 日历
      */
+    CALENDAR_TODAY(Icons.Rounded.EventAvailable),
     CALENDAR(Icons.Rounded.EventNote),
 
     /**
@@ -161,9 +172,9 @@ enum class MainIconType(val icon: ImageVector) {
     APP_UPDATE(Icons.Rounded.Upcoming),
 
     /**
-     * 群
+     * 反馈
      */
-    GROUP(Icons.Rounded.GroupAdd),
+    ISSUE(Icons.Rounded.BugReport),
 
     /**
      * 友链
@@ -186,14 +197,19 @@ enum class MainIconType(val icon: ImageVector) {
     COUNTDOWN(Icons.Rounded.HourglassTop),
 
     /**
-     * 图片
-     */
-    IMAGE(Icons.Rounded.Image),
-
-    /**
      * 浏览器
      */
-    BROWSER(Icons.Rounded.OpenInBrowser),
+    BROWSER(Icons.Rounded.Explore),
+
+    /**
+     * 悬浮窗
+     */
+    FLOAT(Icons.Rounded.CloseFullscreen),
+
+    /**
+     * 悬浮窗关闭
+     */
+    FLOAT_CLOSE(Icons.Rounded.ExitToApp),
 
     /**
      * 静流笔记
@@ -224,4 +240,34 @@ enum class MainIconType(val icon: ImageVector) {
      * 数据来源
      */
     DATA_SOURCE(Icons.Rounded.DataUsage),
+
+    /**
+     * 推特信息
+     */
+    TWEET(Icons.Rounded.Timeline),
+
+    /**
+     * 漫画信息
+     */
+    COMIC(Icons.Rounded.Looks4),
+
+    /**
+     * 漫画目录
+     */
+    COMIC_NAV(Icons.Rounded.Toc),
+
+    /**
+     * 漫画目录
+     */
+    YOUTUBE(Icons.Rounded.SmartDisplay),
+
+    /**
+     * 推特信息
+     */
+    HIBIKI(Icons.Rounded.GraphicEq),
+
+    /**
+     * 帮助
+     */
+    HELP(Icons.Rounded.Help)
 }

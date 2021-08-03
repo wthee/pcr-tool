@@ -4,12 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
-import cn.wthee.pcrtool.data.db.entity.EnemyParameter
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
+import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +27,6 @@ class SkillViewModel @Inject constructor(
 
     var skills = MutableLiveData<List<SkillDetail>>()
     var allSkills = MutableLiveData<ArrayList<List<SkillDetail>>>()
-    var atkPattern = MutableLiveData<List<AttackPattern>>()
     var allAtkPattern = MutableLiveData<ArrayList<List<AttackPattern>>>()
     var iconTypes = MutableLiveData(hashMapOf<Int, Int>())
     var allIconTypes = MutableLiveData<ArrayList<HashMap<Int, Int>>>()
@@ -50,11 +50,29 @@ class SkillViewModel @Inject constructor(
     }
 
     /**
+     * 测试用，获取所有角色技能
+     */
+    fun getCharacterSkills(lv: Int, atk: Int, unitIds: List<Int>) {
+        viewModelScope.launch {
+            try {
+                val skillIds = arrayListOf<Int>()
+                unitIds.forEach {
+                    val data = skillRepository.getUnitSkill(it)
+                    skillIds.addAll(data.getAllSkillId())
+                }
+                getSkillInfo(skillIds, atk, arrayListOf(lv))
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    /**
      * 获取怪物技能信息
      *
      * @param list 怪物基本参数列表
      */
-    fun getAllEnemySkill(list: List<EnemyParameter>) {
+    fun getAllEnemySkill(list: List<EnemyParameterPro>) {
         viewModelScope.launch {
             try {
                 val allSkill = arrayListOf<List<SkillDetail>>()
@@ -123,7 +141,8 @@ class SkillViewModel @Inject constructor(
                     skill.icon_type,
                     skill.skill_cast_time,
                     lv,
-                    atk
+                    atk,
+                    skill.boss_ub_cool_time
                 )
                 val actions = skillRepository.getSkillActions(lv, atk, skill.getAllActionId())
                 val dependIds = skill.getSkillDependData()
@@ -144,12 +163,8 @@ class SkillViewModel @Inject constructor(
      *
      * @param unitId 角色编号
      */
-    fun getCharacterSkillLoops(unitId: Int) {
-        viewModelScope.launch {
-            //技能循环
-            val pattern = skillRepository.getAttackPattern(unitId)
-            atkPattern.postValue(pattern)
-        }
+    fun getCharacterSkillLoops(unitId: Int) = flow {
+        emit(skillRepository.getAttackPattern(unitId))
     }
 
     /**
@@ -157,7 +172,7 @@ class SkillViewModel @Inject constructor(
      *
      * @param list 怪物基本参数列表
      */
-    fun getAllSkillLoops(list: List<EnemyParameter>) {
+    fun getAllSkillLoops(list: List<EnemyParameterPro>) {
         viewModelScope.launch {
             //技能循环
             val allList = arrayListOf<List<AttackPattern>>()

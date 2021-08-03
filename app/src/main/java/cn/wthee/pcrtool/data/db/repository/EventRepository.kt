@@ -16,6 +16,6 @@ class EventRepository @Inject constructor(private val eventDao: EventDao) {
 
     suspend fun getDropEvent() = eventDao.getDropEvent()
 
-    suspend fun getTowerEvent() = eventDao.getTowerEvent()
+    suspend fun getTowerEvent(limit: Int) = eventDao.getTowerEvent(limit)
 
 }

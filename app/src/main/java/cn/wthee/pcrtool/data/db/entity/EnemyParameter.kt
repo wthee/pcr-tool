@@ -36,12 +36,4 @@ data class EnemyParameter(
 //    @ColumnInfo(name = "break_durability") val break_durability: Int,
 //    @ColumnInfo(name = "virtual_hp") val virtual_hp: Int,
     @Embedded var attr: AttrInt = AttrInt(),
-) {
-    fun getSkillLv(): ArrayList<Int> {
-        return arrayListOf(
-            union_burst_level,
-            main_skill_lv_1, main_skill_lv_2, main_skill_lv_3, main_skill_lv_4, main_skill_lv_5,
-            main_skill_lv_6, main_skill_lv_7, main_skill_lv_8, main_skill_lv_9, main_skill_lv_10,
-        )
-    }
-}
+)

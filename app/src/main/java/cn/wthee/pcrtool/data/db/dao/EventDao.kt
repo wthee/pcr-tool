@@ -83,8 +83,8 @@ interface EventDao {
             end_time,
             value 
         ORDER BY
-            start_time DESC 
-            LIMIT 50 OFFSET 0
+            campaign_schedule.id DESC 
+        LIMIT 0,50
     """
     )
     suspend fun getDropEvent(): List<CalendarEvent>
@@ -103,10 +103,10 @@ interface EventDao {
         FROM
             tower_schedule 
         ORDER BY
-            start_time DESC 
-            LIMIT 50 OFFSET 0
+            tower_schedule.tower_schedule_id DESC
+            LIMIT 0,:limit
     """
     )
-    suspend fun getTowerEvent(): List<CalendarEvent>
+    suspend fun getTowerEvent(limit: Int): List<CalendarEvent>
 
 }

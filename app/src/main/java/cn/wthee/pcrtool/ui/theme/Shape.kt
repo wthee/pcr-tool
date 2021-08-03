@@ -6,8 +6,8 @@ import androidx.compose.ui.unit.dp
 
 val Shapes = Shapes(
     small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(6.dp),
-    large = RoundedCornerShape(10.dp),
+    medium = RoundedCornerShape(8.dp),
+    large = RoundedCornerShape(12.dp),
 )
 
 /**
@@ -17,3 +17,5 @@ val CardTopShape = RoundedCornerShape(
     topStart = Dimen.cardRadius,
     topEnd = Dimen.cardRadius
 )
+
+val noShape = RoundedCornerShape(0)

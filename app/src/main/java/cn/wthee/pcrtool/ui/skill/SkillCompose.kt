@@ -13,17 +13,22 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
+import cn.wthee.pcrtool.data.db.view.SkillActionPro
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色技能列表
@@ -32,6 +37,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  * @param level 等级
  * @param atk 攻击力
  */
+@ExperimentalCoilApi
 @Composable
 fun SkillCompose(
     unitId: Int,
@@ -45,7 +51,7 @@ fun SkillCompose(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Dimen.mediuPadding)
+            .padding(Dimen.largePadding)
     ) {
         skillList.forEach {
             SkillItem(level = level, skillDetail = it)
@@ -56,6 +62,7 @@ fun SkillCompose(
 /**
  * 技能
  */
+@ExperimentalCoilApi
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(
@@ -111,14 +118,23 @@ fun SkillItem(
             color = colorResource(color),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = Dimen.largePadding)
+                .padding(top = Dimen.largePadding),
+            selectable = true
         )
         //技能类型
         if (!isClanBoss) {
-            Text(
+            CaptionText(
                 text = type,
                 color = colorResource(color),
-                style = MaterialTheme.typography.caption,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = Dimen.smallPadding)
+            )
+        }
+        //冷却时间
+        if (isClanBoss && skillDetail.bossUbCooltime > 0.0) {
+            CaptionText(
+                text = skillDetail.bossUbCooltime.toString(),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = Dimen.smallPadding)
@@ -144,7 +160,7 @@ fun SkillItem(
                     )
                 }
                 //描述
-                Subtitle2(text = skillDetail.desc)
+                Subtitle2(text = skillDetail.desc, selectable = true)
             }
 
         }
@@ -157,6 +173,9 @@ fun SkillItem(
         }
         //动作
         actionData.forEach {
+            if (BuildConfig.DEBUG) {
+                Text(it.actionId.toString())
+            }
             SkillActionItem(skillAction = it)
         }
     }
@@ -261,6 +280,7 @@ fun SkillActionItem(skillAction: SkillActionText) {
 /**
  * 技能循环
  */
+@ExperimentalCoilApi
 @Composable
 fun SkillLoopList(
     loopData: List<AttackPattern>,
@@ -294,6 +314,7 @@ fun SkillLoopList(
 /**
  * 技能循环 item
  */
+@ExperimentalCoilApi
 @Composable
 private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
     Column {
@@ -305,6 +326,7 @@ private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
 /**
  * 技能循环图标列表
  */
+@ExperimentalCoilApi
 @Composable
 private fun SkillLoopIconList(
     iconList: List<Int>,
@@ -414,3 +436,16 @@ private data class SkillIndex(
     var start: Int = 0,
     var end: Int = 0
 )
+
+
+@Preview
+@ExperimentalCoilApi
+@Suppress("RegExpRedundantEscape")
+@Composable
+fun SkillItemPreview() {
+    val mockData = SkillDetail()
+    mockData.actions = arrayListOf(SkillActionPro())
+    PreviewBox {
+        SkillItem(level = 1, skillDetail = mockData)
+    }
+}

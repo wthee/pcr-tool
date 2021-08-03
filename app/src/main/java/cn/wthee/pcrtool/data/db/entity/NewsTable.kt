@@ -9,11 +9,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "news")
 data class NewsTable(
     @PrimaryKey
-    val id: String,
-    val title: String,
-    val tags: String,
-    val url: String,
-    val date: String
+    val id: String = "2-1",
+    val title: String = "",
+    val tags: String = "???",
+    val url: String = "",
+    val date: String = "2021-01-01"
 ) {
 
     fun getTag(): String {
@@ -31,8 +31,22 @@ data class NewsTable(
         }
     }
 
-    fun getTrueId() = id.split("-")[1].toInt()
+
 }
 
-fun String.fix() = replace('/', '$')
 fun String.original() = replace('$', '/')
+
+fun String.getRegion() = when {
+    this.contains("bilibili") -> 2
+    this.contains(".tw") -> 3
+    else -> 4
+}
+
+fun String.urlGetId(): String {
+    val url = if (this.last() == '/') {
+        this.substring(0, this.length - 1)
+    } else {
+        this
+    }
+    return url.substringAfterLast("/")
+}

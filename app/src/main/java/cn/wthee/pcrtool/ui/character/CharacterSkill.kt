@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import cn.wthee.pcrtool.ui.compose.CommonSpacer
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
+import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色技能列表
@@ -16,6 +17,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
  * @param level 角色等级
  * @param atk 角色攻击力
  */
+@ExperimentalCoilApi
 @Composable
 fun CharacterSkill(
     unitId: Int,

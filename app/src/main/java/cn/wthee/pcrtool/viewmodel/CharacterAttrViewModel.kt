@@ -2,20 +2,22 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
-import cn.wthee.pcrtool.data.db.view.*
+import cn.wthee.pcrtool.data.db.view.Attr
+import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.SkillActionPro
+import cn.wthee.pcrtool.data.db.view.getAttr
 import cn.wthee.pcrtool.data.model.AllAttrData
-import cn.wthee.pcrtool.data.model.RankCompareData
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -32,31 +34,28 @@ class CharacterAttrViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    val allAttr = MutableLiveData<AllAttrData>()
-    val attrCompareData = MutableLiveData<List<RankCompareData>>()
-    val isUnknown = MutableLiveData<Boolean>()
-    val levelValue = MutableLiveData<Int>()
-    val rankValue = MutableLiveData<Int>()
-    val rarityValue = MutableLiveData<Int>()
-    val uniqueEquipLevelValue = MutableLiveData<Int>()
+    val currentValue = MutableLiveData<CharacterProperty>()
 
     /**
      * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]
      * @param unitId 角色编号
-     * @param level 角色等级
-     * @param rank 角色rank
-     * @param rarity 角色星级
-     * @param uniqueEquipLevel 角色专武等级
+     * @param property 角色属性
      */
-    fun getCharacterInfo(unitId: Int, level: Int, rank: Int, rarity: Int, uniqueEquipLevel: Int) {
-        //计算属性
-        viewModelScope.launch {
-            val attr = getAttrs(unitId, level, rank, rarity, uniqueEquipLevel)
-            allAttr.postValue(attr)
+    fun getCharacterInfo(unitId: Int, property: CharacterProperty?) =
+        flow {
+            if (property != null && property.isInit()) {
+                emit(
+                    getAttrs(
+                        unitId,
+                        property.level,
+                        property.rank,
+                        property.rarity,
+                        property.uniqueEquipmentLevel
+                    )
+                )
+            }
         }
-
-    }
 
     /**
      * 获取角色属性信息
@@ -73,6 +72,7 @@ class CharacterAttrViewModel @Inject constructor(
         try {
             val rankData = unitRepository.getRankStatus(unitId, rank)
             val rarityData = unitRepository.getRarity(unitId, rarity)
+            val bonus = unitRepository.getRankBonus(rank, unitId)
             val ids = unitRepository.getEquipmentIds(unitId, rank).getAllOrderIds()
             //星级属性
             info.add(rarityData.attr)
@@ -81,6 +81,11 @@ class CharacterAttrViewModel @Inject constructor(
             //rank属性
             rankData?.let {
                 info.add(rankData.attr)
+            }
+            //奖励属性
+            bonus?.let {
+                info.add(it.attr)
+                allData.bonus = it
             }
             //装备
             val eqs = arrayListOf<EquipmentMaxData>()
@@ -109,7 +114,7 @@ class CharacterAttrViewModel @Inject constructor(
             //故事剧情
             val storyAttr = getStoryAttrs(unitId)
             info.add(storyAttr)
-            allData.stroyAttr = storyAttr
+            allData.storyAttr = storyAttr
             //被动技能数值
             val skillActionData = getExSkillAttr(unitId, rarity, level)
             val skillAttr = Attr()
@@ -122,6 +127,7 @@ class CharacterAttrViewModel @Inject constructor(
                 5 -> skillAttr.magicDef = skillValue
             }
             info.add(skillAttr)
+            allData.exSkillAttr = skillAttr
             allData.sumAttr = info
         } catch (e: Exception) {
             if (e !is CancellationException) {
@@ -167,40 +173,19 @@ class CharacterAttrViewModel @Inject constructor(
     }
 
     /**
-     * 获取最大Rank和星级
-     * 0: level
-     * 1: rank
-     * 3: rarity
-     * 4: uniqueEquipLevel
+     * 获取最大Rank和星级等
      *
      * @param unitId 角色编号
      */
-    suspend fun getMaxRankAndRarity(unitId: Int): ArrayList<Int> {
+    fun getMaxRankAndRarity(unitId: Int) = flow {
         try {
             val rank = unitRepository.getMaxRank(unitId)
             val rarity = unitRepository.getMaxRarity(unitId)
             val level = unitRepository.getMaxLevel()
             val uniqueEquipLevel = equipmentRepository.getUniqueEquipMaxLv()
-            return arrayListOf(level, rank, rarity, uniqueEquipLevel)
+            emit(CharacterProperty(level, rank, rarity, uniqueEquipLevel))
         } catch (e: Exception) {
-
-        }
-        return arrayListOf()
-    }
-
-    /**
-     * 判断角色是否有技能等信息
-     *
-     * @param unitId 角色编号
-     */
-    fun isUnknown(unitId: Int) {
-        viewModelScope.launch {
-            val data = unitRepository.getRankStatus(unitId, 2)
-            if (data == null) {
-                isUnknown.postValue(true)
-            } else {
-                isUnknown.postValue(false)
-            }
+            emit(CharacterProperty(level = -1))
         }
     }
 
@@ -217,11 +202,17 @@ class CharacterAttrViewModel @Inject constructor(
         uniqueEquipLevel: Int,
         rank0: Int,
         rank1: Int
-    ) {
-        viewModelScope.launch {
-            val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
-            val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
-            attrCompareData.postValue(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
-        }
+    ) = flow {
+        val attr0 = getAttrs(unitId, level, rank0, rarity, uniqueEquipLevel)
+        val attr1 = getAttrs(unitId, level, rank1, rarity, uniqueEquipLevel)
+        emit(getRankCompareList(attr0.sumAttr, attr1.sumAttr))
     }
+
+    /**
+     * 获取战力系数
+     */
+    fun getCoefficient() = flow {
+        emit(unitRepository.getCoefficient())
+    }
+
 }

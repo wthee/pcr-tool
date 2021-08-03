@@ -6,12 +6,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
+import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色图标列表
  */
+@ExperimentalCoilApi
 @Composable
 fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
     VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediuPadding * 2) {
@@ -32,7 +36,7 @@ fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
                     .padding(
                         start = Dimen.mediuPadding,
                         end = Dimen.mediuPadding,
-                        bottom = Dimen.mediuPadding
+                        top = Dimen.mediuPadding
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -44,5 +48,19 @@ fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
             }
 
         }
+    }
+}
+
+
+@ExperimentalCoilApi
+@Preview
+@Composable
+private fun IconListComposePreview() {
+    val mockData = arrayListOf<Int>()
+    for (i in 0..10) {
+        mockData.add(i)
+    }
+    PreviewBox {
+        IconListCompose(icons = mockData, toCharacterDetail = {})
     }
 }

@@ -12,11 +12,11 @@ data class LeaderData(
  * 排行详情
  */
 data class LeaderboardData(
-    val icon: String,
-    val name: String,
-    val url: String,
-    val all: String,
-    val pvp: String,
-    val clan: String,
-    val tower: String,
+    val icon: String = "",
+    val name: String = "???",
+    val url: String = "",
+    val all: String = "?",
+    val pvp: String = "?",
+    val clan: String = "?",
+    val tower: String = "?",
 )

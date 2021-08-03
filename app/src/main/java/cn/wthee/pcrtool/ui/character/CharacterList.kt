@@ -1,8 +1,7 @@
-package cn.wthee.pcrtool.ui.home
+package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -13,22 +12,18 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -36,23 +31,24 @@ import cn.wthee.pcrtool.data.enums.getSortType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
  * 角色列表
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -63,7 +59,7 @@ fun CharacterList(
     toDetail: (Int) -> Unit,
     viewModel: CharacterViewModel = hiltViewModel(),
 ) {
-    val list = viewModel.characterList.observeAsState()
+
     //筛选状态
     val filter = navViewModel.filterCharacter.observeAsState()
     // dialog 状态
@@ -74,8 +70,8 @@ fun CharacterList(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     //关闭时监听
-    if (!state.isVisible) {
-        navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+    if (!state.isVisible && !state.isAnimationRunning) {
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         navViewModel.resetClick.postValue(false)
         keyboardController?.hide()
@@ -85,34 +81,31 @@ fun CharacterList(
         filterValue.starIds =
             GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_CHARACTER, ""))
                 ?: arrayListOf()
-        viewModel.getCharacters(filterValue)
     }
+    val list = viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
 
     ModalBottomSheetLayout(
         sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
+        sheetShape = if (state.offset.value == 0f) {
+            noShape
+        } else {
+            MaterialTheme.shapes.large
+        },
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
         }
     ) {
-        val marginTop: Dp = marginTopBar(scrollState)
-        coroutineScope.launch {
-            val r6Ids = viewModel.getR6Ids()
-            navViewModel.r6Ids.postValue(r6Ids)
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark))
-        ) {
-            TopBarCompose(scrollState = scrollState)
-            if (list.value != null) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            FadeAnimation(visible = list.isNotEmpty()) {
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
-                    modifier = Modifier.padding(top = marginTop)
+                    contentPadding = PaddingValues(Dimen.mediuPadding)
                 ) {
-                    items(list.value!!) {
-                        CharacterItem(it, filter.value!!, toDetail)
+                    items(list) {
+                        CharacterItem(it, filter.value!!, toDetail = toDetail)
                     }
                     items(2) {
                         CommonSpacer()
@@ -125,6 +118,16 @@ fun CharacterList(
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
                 horizontalArrangement = Arrangement.End
             ) {
+                FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
+                    FabCompose(
+                        iconType = MainIconType.TOP,
+                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    ) {
+                        coroutineScope.launch {
+                            scrollState.scrollToItem(0)
+                        }
+                    }
+                }
                 //重置筛选
                 if (filter.value != null && filter.value!!.isFilter()) {
                     FabCompose(
@@ -137,7 +140,7 @@ fun CharacterList(
                         navViewModel.resetClick.postValue(true)
                     }
                 }
-                val count = list.value?.size ?: 0
+                val count = list.size
                 // 数量显示&筛选按钮
                 FabCompose(
                     iconType = MainIconType.CHARACTER,
@@ -145,7 +148,7 @@ fun CharacterList(
                 ) {
                     coroutineScope.launch {
                         if (state.isVisible) {
-                            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+                            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                             state.hide()
                         } else {
                             navViewModel.fabMainIcon.postValue(MainIconType.OK)
@@ -163,31 +166,32 @@ fun CharacterList(
 /**
  * 角色列表项
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
-private fun CharacterItem(
+fun CharacterItem(
     character: CharacterInfo,
     filter: FilterCharacter,
+    modifier: Modifier = Modifier,
     toDetail: (Int) -> Unit,
 ) {
     val loved = filter.starIds.contains(character.id)
 
     MainCard(
-        modifier = Modifier.padding(Dimen.mediuPadding),
+        modifier = modifier.padding(Dimen.mediuPadding),
         onClick = {
             //跳转至详情
             toDetail(character.id)
         }) {
         Column {
             //图片
-            var id = character.id
-            id += if (MainActivity.r6Ids.contains(character.id)) 60 else 30
-            CharacterCard(
-                CharacterIdUtil.getMaxCardUrl(
-                    character.id,
-                    MainActivity.r6Ids.contains(character.id)
-                )
+            ImageCompose(
+                CharacterIdUtil.getMaxCardUrl(character.id), RATIO
             )
+            //编号
+            if (BuildConfig.debug) {
+                Text(text = character.id.toString())
+            }
             //名字、位置
             Row(
                 modifier = Modifier.padding(
@@ -239,6 +243,7 @@ private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
 /**
  * 角色筛选
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
@@ -289,15 +294,17 @@ private fun FilterCharacterSheet(
     filter.atk = atkIndex.value
 
     //公会
-    characterViewModel.getGuilds()
-    val guildList = characterViewModel.guilds.observeAsState().value ?: arrayListOf()
+    val guildList = characterViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
     val guildIndex = remember {
         mutableStateOf(filter.guild)
     }
-    if (!filter.isFilter()) {
-        guildIndex.value = 0
-    }
     filter.guild = guildIndex.value
+
+    //限定类型
+    val typeIndex = remember {
+        mutableStateOf(filter.type)
+    }
+    filter.type = typeIndex.value
 
     //确认操作
     val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
@@ -306,7 +313,7 @@ private fun FilterCharacterSheet(
     //选择状态
     Column(
         modifier = Modifier
-            .clip(CardTopShape)
+            .padding(start = Dimen.largePadding, end = Dimen.largePadding)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
@@ -320,6 +327,7 @@ private fun FilterCharacterSheet(
             positionIndex.value = 0
             atkIndex.value = 0
             guildIndex.value = 0
+            typeIndex.value = 0
             navViewModel.resetClick.postValue(false)
             navViewModel.filterCharacter.postValue(FilterCharacter())
         }
@@ -330,7 +338,7 @@ private fun FilterCharacterSheet(
             }
             navViewModel.filterCharacter.postValue(filter)
             navViewModel.fabOKCilck.postValue(false)
-            navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+            navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         }
         //角色名搜索
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -367,10 +375,7 @@ private fun FilterCharacterSheet(
                     style = MaterialTheme.typography.button
                 )
             },
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-                .fillMaxWidth()
-
+            modifier = Modifier.fillMaxWidth()
         )
         //排序类型
         MainText(
@@ -417,6 +422,22 @@ private fun FilterCharacterSheet(
             loveIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+        //类型
+        MainText(
+            text = stringResource(id = R.string.title_type),
+            modifier = Modifier.padding(top = Dimen.largePadding)
+        )
+        val typeChipData = arrayListOf(
+            ChipData(0, stringResource(id = R.string.all)),
+            ChipData(1, stringResource(id = R.string.type_normal)),
+            ChipData(2, stringResource(id = R.string.type_limit)),
+            ChipData(3, stringResource(id = R.string.type_event_limit)),
+        )
+        ChipGroup(
+            typeChipData,
+            typeIndex,
+            modifier = Modifier.padding(Dimen.smallPadding),
+        )
         //六星
         MainText(
             text = stringResource(id = R.string.title_rarity),
@@ -460,23 +481,24 @@ private fun FilterCharacterSheet(
         ChipGroup(
             atkChipData,
             atkIndex,
-            modifier = Modifier.padding(Dimen.smallPadding),
+            modifier = Modifier.padding(Dimen.smallPadding)
         )
         //公会名
-        MainText(
-            text = stringResource(id = R.string.title_guild),
-            modifier = Modifier.padding(top = Dimen.largePadding)
-        )
-
-        val guildChipData = arrayListOf(ChipData(0, stringResource(id = R.string.all)))
-        guildList.forEachIndexed { index, guildData ->
-            guildChipData.add(ChipData(index + 1, guildData.guildName))
+        if (guildList.isNotEmpty()) {
+            MainText(
+                text = stringResource(id = R.string.title_guild),
+                modifier = Modifier.padding(top = Dimen.largePadding)
+            )
+            val guildChipData = arrayListOf(ChipData(0, stringResource(id = R.string.all)))
+            guildList.forEachIndexed { index, guildData ->
+                guildChipData.add(ChipData(index + 1, guildData.guildName))
+            }
+            ChipGroup(
+                guildChipData,
+                guildIndex,
+                modifier = Modifier.padding(Dimen.smallPadding),
+            )
+            CommonSpacer()
         }
-        ChipGroup(
-            guildChipData,
-            guildIndex,
-            modifier = Modifier.padding(Dimen.smallPadding),
-        )
     }
 }
-

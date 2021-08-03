@@ -8,11 +8,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,13 +25,16 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import com.google.accompanist.coil.rememberCoilPainter
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import kotlinx.coroutines.launch
 
 
@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
  * @param rarity 角色星级
  * @param uniqueEquipLevel 角色专武等级
  */
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -74,21 +75,20 @@ fun RankCompare(
     if (targetRank != 0) {
         rank1.value = targetRank ?: maxRank
     }
-    attrViewModel.getUnitAttrCompare(
+    val attrCompareData = attrViewModel.getUnitAttrCompare(
         unitId,
         level,
         rarity,
         uniqueEquipLevel,
         rank0.value,
         rank1.value
-    )
-    val attrCompareData = attrViewModel.attrCompareData.observeAsState().value ?: arrayListOf()
+    ).collectAsState(initial = arrayListOf()).value
     // dialog 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
     val coroutineScope = rememberCoroutineScope()
-    if (!state.isVisible) {
+    if (!state.isVisible && !state.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
     }
@@ -97,6 +97,13 @@ fun RankCompare(
 
     ModalBottomSheetLayout(
         sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
+        sheetShape = if (state.offset.value == 0f) {
+            noShape
+        } else {
+            MaterialTheme.shapes.large
+        },
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel)
@@ -114,47 +121,66 @@ fun RankCompare(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = Dimen.mediuPadding)
+                    .padding(top = Dimen.largePadding)
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    //头像
-                    IconCompose(
-                        data = CharacterIdUtil.getMaxIconUrl(
-                            unitId,
-                            MainActivity.r6Ids.contains(unitId)
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(start = Dimen.largePadding)
+                    ) {
+                        //头像
+                        IconCompose(
+                            data = CharacterIdUtil.getMaxIconUrl(
+                                unitId,
+                                MainActivity.r6Ids.contains(unitId)
+                            ),
+                            size = Dimen.largeIconSize
                         )
-                    )
-                    //等级
-                    Text(
-                        text = "$level",
-                        color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h6
-                    )
-                    StarCompose(rarity)
-                    Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
-                        Spacer(modifier = Modifier.weight(0.3f))
-                        RankText(
-                            rank = rank0.value,
-                            style = MaterialTheme.typography.subtitle1,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier
-                                .weight(0.2f)
-                                .padding(0.dp)
-                        )
-                        RankText(
-                            rank = rank1.value,
-                            style = MaterialTheme.typography.subtitle1,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier.weight(0.2f)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.result),
-                            textAlign = TextAlign.End,
-                            style = MaterialTheme.typography.subtitle1,
-                            modifier = Modifier.weight(0.2f)
-                        )
+                        Column(modifier = Modifier.padding(start = Dimen.mediuPadding)) {
+                            //等级
+                            Text(
+                                text = "$level",
+                                color = MaterialTheme.colors.primary,
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier.padding(start = Dimen.smallPadding)
+                            )
+                            StarCompose(rarity)
+                        }
                     }
-                    AttrCompare(attrCompareData)
+                    Card(
+                        shape = CardTopShape,
+                        elevation = Dimen.cardElevation,
+                        modifier = Modifier
+                            .padding(top = Dimen.largePadding)
+                            .fillMaxSize()
+                    ) {
+                        Column {
+                            Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
+                                Spacer(modifier = Modifier.weight(0.3f))
+                                RankText(
+                                    rank = rank0.value,
+                                    style = MaterialTheme.typography.subtitle1,
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier
+                                        .weight(0.2f)
+                                        .padding(0.dp)
+                                )
+                                RankText(
+                                    rank = rank1.value,
+                                    style = MaterialTheme.typography.subtitle1,
+                                    textAlign = TextAlign.End,
+                                    modifier = Modifier.weight(0.2f)
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.result),
+                                    textAlign = TextAlign.End,
+                                    style = MaterialTheme.typography.subtitle1,
+                                    modifier = Modifier.weight(0.2f)
+                                )
+                            }
+                            AttrCompare(attrCompareData)
+                        }
+                    }
                 }
                 FabCompose(
                     iconType = MainIconType.RANK_SELECT,
@@ -237,12 +263,13 @@ private fun StarCompose(
                 else -> R.drawable.ic_star
             }
             Image(
-                painter = rememberCoilPainter(request = iconId),
+                painter = rememberImagePainter(data = iconId),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(start = Dimen.smallPadding, bottom = Dimen.smallPadding)
-                    .clip(CircleShape)
+                    .padding(Dimen.divLineHeight)
                     .size(Dimen.starIconSize)
+                    .clip(CircleShape)
+                    .padding(Dimen.smallPadding)
             )
         }
     }
@@ -251,8 +278,8 @@ private fun StarCompose(
 @Preview
 @Composable
 private fun Preview() {
-    PcrtoolcomposeTheme {
-        val data = listOf(RankCompareData(), RankCompareData(), RankCompareData())
+    val data = listOf(RankCompareData(), RankCompareData(), RankCompareData())
+    PreviewBox {
         AttrCompare(compareData = data)
     }
 }

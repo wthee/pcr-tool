@@ -10,26 +10,27 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
-import cn.wthee.pcrtool.ui.NavViewModel
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色 RANK 选择装备列表
  *
  * @param unitId 角色编号
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -37,19 +38,21 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 fun RankEquipList(
     unitId: Int,
     toEquipDetail: (Int) -> Unit,
-    navViewModel: NavViewModel,
     equipmentViewModel: EquipmentViewModel = hiltViewModel(),
 ) {
-    equipmentViewModel.getAllRankEquipList(unitId)
-    val allRankEquip = equipmentViewModel.allRankEquipList.observeAsState().value ?: arrayListOf()
+    val allRankEquip =
+        equipmentViewModel.getAllRankEquipList(unitId).collectAsState(initial = arrayListOf()).value
     val selectedRank = remember {
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
     val spanCount = 3
     SlideAnimation(visible = allRankEquip.isNotEmpty()) {
-        LazyVerticalGrid(cells = GridCells.Fixed(spanCount)) {
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(spanCount),
+            contentPadding = PaddingValues(Dimen.mediuPadding)
+        ) {
             items(allRankEquip) {
-                RankEquipListItem(it, selectedRank, toEquipDetail, navViewModel)
+                RankEquipListItem(it, selectedRank, toEquipDetail)
             }
             items(spanCount) {
                 CommonSpacer()
@@ -62,17 +65,17 @@ fun RankEquipList(
 /**
  * RANK 装备图标列表
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun RankEquipListItem(
     unitPromotion: UnitPromotion,
     selectedRank: MutableState<Int>,
-    toEquipDetail: (Int) -> Unit,
-    navViewModel: NavViewModel,
+    toEquipDetail: (Int) -> Unit
 ) {
     val colorAnim = animateColorAsState(
         targetValue = if (unitPromotion.promotionLevel == selectedRank.value)
-            MaterialTheme.colors.primary
+            colorResource(id = R.color.alpha_primary)
         else
             MaterialTheme.colors.surface,
         animationSpec = defaultSpring()
@@ -90,7 +93,7 @@ fun RankEquipListItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorAnim.value, Shapes.large),
+                .background(colorAnim.value, MaterialTheme.shapes.medium),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK
@@ -120,5 +123,32 @@ fun RankEquipListItem(
             }
         }
     }
+}
 
+@ExperimentalFoundationApi
+@ExperimentalCoilApi
+@Preview
+@ExperimentalMaterialApi
+@Composable
+private fun RankEquipListItemPreview() {
+    val selectedRank = remember {
+        mutableStateOf(2)
+    }
+    val allRankEquip = arrayListOf(
+        UnitPromotion(),
+        UnitPromotion(),
+        UnitPromotion(),
+        UnitPromotion()
+    )
+    PreviewBox {
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(3),
+            contentPadding = PaddingValues(Dimen.mediuPadding)
+        ) {
+            items(allRankEquip) {
+                RankEquipListItem(it, selectedRank) { }
+            }
+        }
+
+    }
 }

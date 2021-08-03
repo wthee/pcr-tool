@@ -6,9 +6,9 @@ import java.io.Serializable
  * 通用接口返回数据
  */
 class ResponseData<T>(
-    var status: Int = -1,
-    var data: T?,
-    var message: String
+    var status: Int = 1,
+    var data: T? = null,
+    var message: String = ""
 ) : Serializable
 
 /**

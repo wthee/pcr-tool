@@ -5,34 +5,39 @@ import cn.wthee.pcrtool.utils.fillZero
 
 
 data class ClanBattleInfo(
-    @ColumnInfo(name = "clan_battle_id") val clan_battle_id: Int,
-    @ColumnInfo(name = "release_month") val release_month: Int,
-    @ColumnInfo(name = "start_time") val start_time: String,
-    @ColumnInfo(name = "enemyIds") val enemyIds: String,
-    @ColumnInfo(name = "unitIds") val unitIds: String,
+    @ColumnInfo(name = "clan_battle_id") val clan_battle_id: Int = -1,
+    @ColumnInfo(name = "release_month") val release_month: Int = 12,
+    @ColumnInfo(name = "start_time") val start_time: String = "2021-01-01",
+    @ColumnInfo(name = "enemyIds") val enemyIds: String = "",
+    @ColumnInfo(name = "unitIds") val unitIds: String = "",
 ) {
 
     fun getUnitIdList(selectedSection: Int): List<ClanBossTargetInfo> {
-        val clanBossData = getAllBossInfo()[selectedSection]
-        val unitIds = clanBossData.unitIds
+        val bossList = getAllBossIds()
         val list = arrayListOf<ClanBossTargetInfo>()
+        if (bossList.isNotEmpty()) {
+            val clanBossData = bossList[selectedSection]
+            val unitIds = clanBossData.unitIds
 
-        unitIds.forEachIndexed { index, s ->
-            val findData = list.find {
-                it.unitId == s.toInt()
+            unitIds.forEachIndexed { index, s ->
+                val findData = list.find {
+                    it.unitId == s.toInt()
+                }
+                if (findData != null) {
+                    findData.partEnemyIds.add(clanBossData.enemyIds[index].toInt())
+                } else {
+                    val data =
+                        ClanBossTargetInfo(
+                            selectedSection,
+                            s.toInt(),
+                            clanBossData.enemyIds[index].toInt(),
+                            arrayListOf()
+                        )
+                    list.add(data)
+                }
             }
-            if (findData != null) {
-                findData.targetCount = findData.targetCount + 1
-            } else {
-                val data =
-                    ClanBossTargetInfo(
-                        selectedSection,
-                        s.toInt(),
-                        clanBossData.enemyIds[index].toInt(),
-                        1
-                    )
-                list.add(data)
-            }
+        } else {
+            list.add(ClanBossTargetInfo())
         }
         return list
     }
@@ -41,43 +46,45 @@ data class ClanBattleInfo(
     /**
      * 获取各阶段 Boss Id 信息
      */
-    fun getAllBossInfo(): List<ClanBossIdData> {
-        val enemyList = enemyIds.split("-")
-        val firstIndexs = arrayListOf<Int>()
-        enemyList.forEachIndexed { index, s ->
-            if (s.toInt() % 100 == 1) {
-                firstIndexs.add(index)
-            }
-        }
-        firstIndexs.add(enemyList.size)
+    fun getAllBossIds(): List<ClanBossIdData> {
         val list = arrayListOf<ClanBossIdData>()
-        if (clan_battle_id == 1004) {
-            list.add(
-                ClanBossIdData(
-                    0,
-                    listOf("302100", "302000", "300701", "304000", "302700"),
-                    listOf("401010401", "401010402", "401010403", "401010404", "401011401")
-                )
-            )
-            list.add(
-
-                ClanBossIdData(
-                    1,
-                    listOf("302100", "302000", "300701", "304000", "302700"),
-                    listOf("401011402", "401011403", "401011404", "401011405", "401011406")
-                )
-            )
-        } else {
-            for (i in 0..firstIndexs.size - 2) {
+        if (enemyIds != "") {
+            val enemyList = enemyIds.split("-")
+            val firstIndexs = arrayListOf<Int>()
+            enemyList.forEachIndexed { index, s ->
+                if (s.isNotEmpty() && s.toInt() % 100 == 1) {
+                    firstIndexs.add(index)
+                }
+            }
+            firstIndexs.add(enemyList.size)
+            if (clan_battle_id == 1004) {
                 list.add(
                     ClanBossIdData(
-                        i,
-                        unitIds.split("-").subList(firstIndexs[i], firstIndexs[i + 1]),
-                        enemyIds.split("-").subList(firstIndexs[i], firstIndexs[i + 1])
+                        0,
+                        listOf("302100", "302000", "300701", "304000", "302700"),
+                        listOf("401010401", "401010402", "401010403", "401010404", "401011401")
                     )
                 )
+                list.add(
+                    ClanBossIdData(
+                        1,
+                        listOf("302100", "302000", "300701", "304000", "302700"),
+                        listOf("401011402", "401011403", "401011404", "401011405", "401011406")
+                    )
+                )
+            } else {
+                for (i in 0..firstIndexs.size - 2) {
+                    list.add(
+                        ClanBossIdData(
+                            i,
+                            unitIds.split("-").subList(firstIndexs[i], firstIndexs[i + 1]),
+                            enemyIds.split("-").subList(firstIndexs[i], firstIndexs[i + 1])
+                        )
+                    )
+                }
             }
         }
+
         return list
     }
 
@@ -102,8 +109,8 @@ data class ClanBossIdData(
  * Boss 信息、目标数信息
  */
 data class ClanBossTargetInfo(
-    val section: Int,
-    val unitId: Int,
-    val enemyId: Int,
-    var targetCount: Int = 1
+    val section: Int = 0,
+    val unitId: Int = 0,
+    val enemyId: Int = 0,
+    var partEnemyIds: MutableList<Int> = arrayListOf()
 )

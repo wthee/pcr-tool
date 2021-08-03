@@ -1,11 +1,10 @@
 package cn.wthee.pcrtool.ui.compose
 
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,46 +16,51 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.Shapes
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.vibrate
-import com.google.accompanist.coil.rememberCoilPainter
-import com.google.accompanist.imageloading.ImageLoadState
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import coil.drawable.ScaleDrawable
 
 const val RATIO = 1.78f
-const val MOVE_SPEED_RATIO = 0.5
 
-/**
- * 角色卡面
- * 通过设置 aspectRatio, 使图片加载前时，有默认高度
- */
+// 741 * 1200
+const val RATIO_COMIC = 0.6175f
+const val RATIO_COMMON = 371 / 208f
+
+
+@ExperimentalCoilApi
 @Composable
-fun CharacterCard(
-    url: String,
-    scrollState: ScrollState? = null
+fun ImageCompose(
+    data: Any,
+    ratio: Float,
+    onSuccess: () -> Unit = {}
 ) {
+    val context = LocalContext.current
 
-    val modifier = Modifier
-        .aspectRatio(RATIO)
-        .fillMaxWidth()
-    if (scrollState != null) {
-        //滑动时，向上平移
-        val move = ((-scrollState.value) * MOVE_SPEED_RATIO).dp
-        modifier.offset(y = move)
-    }
-    val painter = rememberCoilPainter(request = url, previewPlaceholder = R.drawable.error)
+    val painter = rememberImagePainter(
+        data = data,
+        builder = {
+            placeholder(
+                ScaleDrawable(
+                    AppCompatResources.getDrawable(context, R.drawable.load)!!
+                )
+            )
+            error(R.drawable.error)
+            listener(onSuccess = { _, _ ->
+                onSuccess.invoke()
+            })
+        })
+
     Image(
-        painter = when (painter.loadState) {
-            is ImageLoadState.Success -> painter
-            is ImageLoadState.Loading -> rememberCoilPainter(request = R.drawable.load)
-            else -> rememberCoilPainter(request = R.drawable.error)
-        },
+        painter = painter,
         contentDescription = null,
-        modifier = modifier
+        contentScale = ContentScale.FillWidth,
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(ratio),
     )
 }
 
@@ -73,8 +77,8 @@ fun PositionIcon(position: Int) {
         else -> R.drawable.ic_position_2
     }
     Image(
-        painter = rememberCoilPainter(
-            request = positionIconId,
+        painter = rememberImagePainter(
+            data = positionIconId,
         ),
         contentDescription = null,
         modifier = Modifier.size(Dimen.smallIconSize)
@@ -84,29 +88,31 @@ fun PositionIcon(position: Int) {
 /**
  * 图标
  */
+@ExperimentalCoilApi
 @Composable
 fun IconCompose(
     data: Any,
     size: Dp = Dimen.iconSize,
     tint: Color = MaterialTheme.colors.primary,
     wrapSize: Boolean = false,
-    fade: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
 
     var mModifier = if (onClick != null) {
         Modifier
-            .clip(Shapes.small)
-            .clickable(onClick = onClick.vibrate {
+            .clip(MaterialTheme.shapes.small)
+            .clickable(onClick = {
                 VibrateUtil(context).single()
+                onClick.invoke()
             })
     } else {
-        Modifier.clip(Shapes.small)
+        Modifier.clip(MaterialTheme.shapes.small)
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)
     }
+
 
     if (data is ImageVector) {
         Icon(
@@ -116,18 +122,15 @@ fun IconCompose(
             modifier = mModifier
         )
     } else {
-        val painter = rememberCoilPainter(
-            request = data,
-            fadeIn = fade,
-            fadeInDurationMs = 400,
-            previewPlaceholder = R.mipmap.ic_logo
+        val painter = rememberImagePainter(
+            data = data,
+            builder = {
+                placeholder(R.drawable.unknown_gray)
+                error(R.drawable.unknown_gray)
+            }
         )
         Image(
-            painter = when (painter.loadState) {
-                is ImageLoadState.Success -> painter
-                is ImageLoadState.Error -> rememberCoilPainter(request = R.drawable.unknown_gray)
-                else -> rememberCoilPainter(request = R.drawable.unknown_gray)
-            },
+            painter = painter,
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = mModifier

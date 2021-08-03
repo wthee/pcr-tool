@@ -16,31 +16,32 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-    <string name="level">等级：%d</string>
+    <string name="level">角色等级</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
     <string name="title_comments">交流</string>
     <string name="title_room_comments">小屋</string>
-    <string name="title_material">合成</string>
     <string name="title_story_attr">剧情属性</string>
-
-    <!--功能-->
-    <string name="setting">设置</string>
+    <string name="title_basic_coe">基本系数</string>
+    <string name="title_skill_coe">技能基本系数</string>
+    <string name="title_skill_basic_coe">技能相关系数</string>
+    <string name="title_rank_bonus">Rank 奖励属性</string>
+    <string name="cur_rank">当前</string>
+    <string name="target_rank">目标</string>
+    <string name="function">功能</string>
+    <string name="skill">技能</string>
 
     <!-- 设置页面   -->
-    <string name="redownload_db">强制更新</string>
-    <string name="other_settings">其它</string>
+    <string name="redownload_db">数据重载</string>
+    <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
     <string name="animation">动画效果</string>
     <string name="vibrate_on">振动开启</string>
     <string name="animation_on">动画开启</string>
     <string name="vibrate_off">振动关闭</string>
     <string name="animation_off">动画关闭</string>
-    <string name="redownload_db_summary">重新下载最新数据</string>
-    <string name="data_version">数据版本：%s</string>
     <string name="app_sourcce">项目地址</string>
-    <string name="pvp_search_jp">竞技场数据</string>
     <string name="thanks">感谢</string>
     <string name="data_from">干炸里脊资源</string>
     <string name="data_from_hint">数据和图片来源</string>
@@ -59,9 +60,6 @@
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
     <string name="change_db">数据切换</string>
-    <string name="clean_database">删除历史数据文件</string>
-    <string name="clean_success">删除成功</string>
-    <string name="app_version">%s</string>
     <string name="app_notice">通知</string>
 
     <!--筛选  -->
@@ -84,32 +82,29 @@
     <string name="craft">装备</string>
     <string name="uncraft">素材</string>
     <string name="title_rarity">角色星级</string>
+    <string name="title_type">类型</string>
     <string name="six_unlock">六星</string>
+    <string name="type_normal">常驻</string>
+    <string name="type_limit">限定</string>
+    <string name="type_event_limit">活动限定</string>
     <string name="name">名字</string>
 
     <!--  工具  -->
-    <string name="download_pic">下载图片</string>
     <string name="tool_leader">排行</string>
-    <string name="calendar">日历</string>
-    <string name="tool_calendar">活动日历</string>
+    <string name="tool_calendar">进行中活动</string>
+    <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_pvp">竞技场</string>
-    <string name="tip_pvp_favorites">暂无收藏</string>
+    <string name="pvp_no_favorites">暂无收藏</string>
     <string name="tool_clan">团队战</string>
     <string name="tool_guild">角色公会</string>
-    <string name="favorite_count">已收藏： %d </string>
     <string name="character">角色</string>
     <string name="pvp_search">查询</string>
-    <string name="pvp_select">选择</string>
     <string name="pvp_research">前往查询</string>
-    <string name="pvp_info_add">添加</string>
     <string name="pvp_info_add_tip">添加对战记录</string>
     <string name="pvp_no_data">未查询到进攻队伍信息</string>
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
-    <string name="drop_info">掉落地区</string>
-    <string name="tool_news_cn">国服公告</string>
-    <string name="tool_news_tw">台服公告</string>
-    <string name="tool_news_jp">日服公告</string>
+    <string name="tool_news">公告</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
     <string name="jjc">竞技场</string>
@@ -124,9 +119,7 @@
     <string name="equip_name">装备名</string>
     <string name="love_equip">收藏装备</string>
     <string name="love_equip_material">收藏素材</string>
-    <string name="reset">重置</string>
-    <string name="ok">确认</string>
-    <string name="unselect">未选择</string>
+    <string name="unselect">?</string>
     <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="update_log">更新日志</string>
@@ -135,6 +128,14 @@
     <string name="compare">对比</string>
     <string name="count">统计</string>
     <string name="share">分享</string>
+    <string name="twitter">查看原文</string>
+    <string name="tweet">推文</string>
+    <string name="comic">漫画</string>
+    <string name="comic_nav">目录</string>
+    <string name="comic_order">第%s话</string>
+    <string name="youtube">YouTube</string>
+    <string name="hibiki">HiBiKi</string>
+    <string name="other">其它</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
@@ -145,26 +146,34 @@
     <string name="temple">神殿调查</string>
     <string name="dungeon">地下城玛那</string>
     <string name="drop_x">掉落量 * %s </string>
-    <string name="in_progress">%s</string>
+    <string name="progressing">%s</string>
     <string name="coming_soon">%s</string>
 
     <!--  异常提示-->
     <string name="check_db_error">数据版本校验失败~</string>
     <string name="data_get_error">数据获取失败</string>
     <string name="database_remote_backup">已启用远程备用数据~</string>
-    <string name="cur_rank">当前</string>
-    <string name="target_rank">目标</string>
+
 
     <!-- 下载相关-->
-    <string name="db_checking">数据校验中</string>
-    <string name="db_downloading">下载中 </string>
-    <string name="db_downloaded">数据已更新</string>
+    <string name="checking">校验中</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
 
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
     <string name="project_url">https://github.com/wthee/pcr-tool</string>
-    <string name="all_data_load">数据已全部加载</string>
-    <string name="feedback">反馈</string>
-    <string name="qq_group">1033289878</string>
-    <string name="copy_qq_tip">已复制反馈 QQ 群号，请加群反馈~</string>
+    <string name="issue">New issue</string>
+    <string name="issue_url">https://github.com/wthee/pcr-tool/issues/new/choose</string>
+    <string name="issue_tip">前往 github.com ，添加 issue</string>
+
+    <string name="new_member">新加入成员</string>
+    <string name="save_image">保存图片</string>
+    <string name="title_ex_skill_add">EX+ 额外数值</string>
+    <string name="title_skill_1_add">技能1+ 额外数值</string>
+    <string name="title_skill_1_coe">技能1+ 系数</string>
+    <string name="title_ub_add">连结爆发+ 额外数值</string>
+    <string name="title_ub_coe">连结爆发+ 系数</string>
+    <string name="attr_all_value">战力：</string>
+    <string name="title_attr_tip">属性说明</string>
+    <string name="attr_calc">角色属性 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
+    <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
 </resources>

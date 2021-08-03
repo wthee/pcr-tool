@@ -3,42 +3,11 @@ package cn.wthee.pcrtool.data.db.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import cn.wthee.pcrtool.data.db.entity.GuildData
-import cn.wthee.pcrtool.data.db.entity.UnitPromotion
-import cn.wthee.pcrtool.data.db.entity.UnitPromotionStatus
-import cn.wthee.pcrtool.data.db.entity.UnitRarity
+import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
 import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
-
-//角色筛选条件
-const val characterWhere =
-    """ 
-        WHERE 
-            unit_profile.unit_name like '%' || :unitName || '%'
-        AND (
-            (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
-            OR 
-            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
-        )
-        AND 1 = CASE
-            WHEN  0 = :r6  THEN 1
-            WHEN  rarity_6_quest_id != 0 AND 1 = :r6  THEN 1 
-        END
-        AND unit_profile.unit_id < 200000 
-        AND 1 = CASE
-            WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
-        END
-        AND 1 = CASE
-            WHEN  0 = :atkType  THEN 1
-            WHEN  unit_data.atk_type = :atkType  THEN 1 
-        END
-        AND 1 = CASE
-            WHEN  "全部" = :guild  THEN 1 
-            WHEN  unit_profile.guild = :guild  THEN 1 
-        END     
-    """
 
 /**
  * 角色数据 DAO
@@ -65,6 +34,8 @@ interface UnitDao {
         SELECT
             unit_profile.unit_id,
             unit_profile.unit_name,
+            unit_data.is_limited,
+            unit_data.rarity,
             COALESCE( unit_data.kana, "" ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
@@ -79,8 +50,36 @@ interface UnitDao {
             unit_profile
             LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
-
-        $characterWhere
+            LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
+        WHERE 
+            unit_profile.unit_name like '%' || :unitName || '%'
+        AND (
+            (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
+            OR 
+            (1 = CASE WHEN  1 = :showAll  THEN 1 END)
+        )
+        AND 1 = CASE
+            WHEN  0 = :r6  THEN 1
+            WHEN  rarity_6_quest_id != 0 AND 1 = :r6  THEN 1 
+        END
+        AND unit_profile.unit_id < 200000 
+        AND 1 = CASE
+            WHEN  unit_data.search_area_width >= :pos1 AND unit_data.search_area_width <= :pos2  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  0 = :atkType  THEN 1
+            WHEN  unit_data.atk_type = :atkType  THEN 1 
+        END
+        AND 1 = CASE
+            WHEN  "全部" = :guild  THEN 1 
+            WHEN  unit_profile.guild = :guild  THEN 1 
+        END     
+        AND 1 = CASE
+            WHEN  0 = :type  THEN 1
+            WHEN  1 = :type AND is_limited = 0 THEN 1 
+            WHEN  2 = :type AND is_limited = 1 AND rarity = 3 THEN 1 
+            WHEN  3 = :type AND is_limited = 1 AND rarity = 1 THEN 1 
+        END
         ORDER BY 
         CASE WHEN :sortType = 0 AND :asc = 'asc'  THEN start_time END ASC,
         CASE WHEN :sortType = 0 AND :asc = 'desc'  THEN start_time END DESC,
@@ -91,14 +90,47 @@ interface UnitDao {
         CASE WHEN :sortType = 3 AND :asc = 'asc'  THEN weight_int END ASC,
         CASE WHEN :sortType = 3 AND :asc = 'desc'  THEN weight_int END DESC,
         CASE WHEN :sortType = 4 AND :asc = 'asc'  THEN unit_data.search_area_width END ASC,
-        CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC
+        CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC,
+        gacha.exchange_id DESC, gacha.id
             """
     )
     suspend fun getInfoAndData(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
-        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>
+        atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>,
+        type: Int
     ): List<CharacterInfo>
 
+
+    /**
+     * 获取角色列表
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT
+            unit_profile.unit_id,
+            unit_profile.unit_name,
+            unit_data.is_limited,
+            unit_data.rarity,COALESCE( unit_data.kana, "" ) AS kana,
+            CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
+            unit_profile.guild,
+            unit_profile.race,
+            CAST((CASE WHEN unit_profile.height LIKE '%?%' OR  unit_profile.height LIKE '%？%' OR unit_profile.height = 0 THEN 999 ELSE unit_profile.height END) AS INTEGER) AS height_int,
+            CAST((CASE WHEN unit_profile.weight LIKE '%?%' OR  unit_profile.weight LIKE '%？%' OR unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
+            unit_data.search_area_width,
+            unit_data.atk_type,
+            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
+            COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
+            LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
+        ORDER BY start_time DESC, gacha.exchange_id DESC, gacha.id
+        LIMIT 0, :limit
+        """
+    )
+    suspend fun getInfoAndData(limit: Int): List<CharacterInfo>
 
     /**
      * 获取角色详情基本资料
@@ -157,7 +189,7 @@ interface UnitDao {
      * @param unitIds 角色编号
      */
     @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE unit_id IN (:unitIds)  AND comment <> \"\" ORDER BY search_area_width")
-    suspend fun getCharacterByIds(unitIds: ArrayList<Int>): List<PvpCharacterData>
+    suspend fun getCharacterByIds(unitIds: List<Int>): List<PvpCharacterData>
 
     /**
      * 获取角色所需装备数据
@@ -202,6 +234,12 @@ interface UnitDao {
      */
     @Query("SELECT * FROM guild")
     suspend fun getGuilds(): List<GuildData>
+
+    /**
+     * 获取所有公会信息
+     */
+    @Query("SELECT * FROM guild_additional_member WHERE guild_id = :guildId")
+    suspend fun getGuildAddMembers(guildId: Int): GuildAdditionalMember?
 
     /**
      * 获取已六星角色 id 列表
@@ -257,4 +295,16 @@ interface UnitDao {
      */
     @Query("SELECT MAX( unit_level ) - 1 FROM experience_unit")
     suspend fun getMaxLevel(): Int
+
+    /**
+     * 获取角色 Rank 奖励
+     */
+    @Query("SELECT * FROM promotion_bonus WHERE unit_id = :unitId AND promotion_level = :rank")
+    suspend fun getRankBonus(rank: Int, unitId: Int): UnitPromotionBonus?
+
+    /**
+     * 获取战力系数
+     */
+    @Query("SELECT * FROM unit_status_coefficient WHERE coefficient_id = 1")
+    suspend fun getCoefficient(): UnitStatusCoefficient
 }

@@ -1,13 +1,9 @@
 package cn.wthee.pcrtool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.data.model.LeaderData
-import cn.wthee.pcrtool.data.model.ResponseData
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -16,17 +12,17 @@ import javax.inject.Inject
  * @param apiRepository
  */
 @HiltViewModel
-class LeaderViewModel @Inject constructor(private val apiRepository: MyAPIRepository) :
-    ViewModel() {
+class LeaderViewModel @Inject constructor(
+    private val apiRepository: MyAPIRepository
+) : ViewModel() {
 
-    val leaderData = MutableLiveData<ResponseData<LeaderData>>()
-
-    fun getLeader() {
-        viewModelScope.launch {
-            if (leaderData.value == null || leaderData.value!!.status != 0) {
-                val data = apiRepository.getLeader()
-                leaderData.postValue(data)
-            }
+    /**
+     * 获取排行
+     */
+    fun getLeader() = flow {
+        val data = apiRepository.getLeader().data
+        data?.let {
+            emit(it.leader)
         }
     }
 

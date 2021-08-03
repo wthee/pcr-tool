@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import cn.wthee.pcrtool.database.getDatabaseType
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -12,23 +11,24 @@ val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
 /**
  * 格式化时间 yyyy/MM/dd HH:mm:ss
  */
-fun String.formatTime(): String {
-    val list = this.split(" ")[0].split("/")
-    return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
-        var hms = this.substring(this.length - 8, this.length)
-        hms = hms.replace(' ', '0')
-        " $hms"
-    } else {
-        ""
+val String.formatTime: String
+    get() {
+        val list = this.split(" ")[0].split("/")
+        return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
+            var hms = this.substring(this.length - 8, this.length)
+            hms = hms.replace(' ', '0')
+            " $hms"
+        } else {
+            ""
+        }
     }
-}
 
 /**
  * 获取当天时间
  */
-fun getToday(): String {
+fun getToday(type: Int): String {
     var time = System.currentTimeMillis()
-    if (getDatabaseType() == 2) {
+    if (type == 2) {
         //日服时区
         time += 60 * 60 * 1000
     }
@@ -41,8 +41,8 @@ fun getToday(): String {
  */
 fun String.days(str2: String): String {
     return try {
-        val d1 = df.parse(this.formatTime())!!
-        val d2 = df.parse(str2.formatTime())!!
+        val d1 = df.parse(this.formatTime)!!
+        val d2 = df.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
         "${time / (60 * 60 * 1000 * 24)}天"
@@ -56,8 +56,8 @@ fun String.days(str2: String): String {
  */
 fun String.dates(str2: String): String {
     return try {
-        val d1 = df1.parse(this.formatTime())!!
-        val d2 = df1.parse(str2.formatTime())!!
+        val d1 = df1.parse(this.formatTime)!!
+        val d2 = df1.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
         val day = time / (60 * 60 * 1000 * 24)
@@ -79,22 +79,32 @@ fun String.dates(str2: String): String {
 }
 
 /**
- * 相差的小时数
+ * 相差的秒数
  */
-fun String.hourInt(str2: String): Int {
+fun String.second(str2: String): Long {
     return try {
-        val d1 = df1.parse(this.formatTime())!!
-        val d2 = df1.parse(str2.formatTime())!!
+        val d1 = df1.parse(this.formatTime)!!
+        val d2 = df1.parse(str2.formatTime)!!
         // + 1s
         val time = d1.time - d2.time + 1000
-        (time / (60 * 60 * 1000.0)).int
+        time / 1000
     } catch (e: Exception) {
-        0
+        0L
     }
 }
 
 /**
  * 月份、天份补零
+ *
+ * @param toLength 最终字符长度
  */
-fun String.fillZero() = if (this.length == 1) "0$this" else this
+fun String.fillZero(toLength: Int = 2): String {
+    var temp = this
+    if (this.length < toLength) {
+        for (i in 0 until toLength - this.length) {
+            temp = "0$temp"
+        }
+    }
+    return temp
+}
 

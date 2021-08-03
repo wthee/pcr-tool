@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,20 +17,26 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.LeaderboardData
-import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
+import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
 /**
  * 角色排行
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -38,55 +44,51 @@ fun LeaderboardList(
     scrollState: LazyListState,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
-    leaderViewModel.getLeader()
-    val list = leaderViewModel.leaderData.observeAsState()
+    val list = leaderViewModel.getLeader().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (list.value == null || list.value!!.data == null || list.value!!.data!!.leader.isEmpty()) {
-            navViewModel.loading.postValue(true)
-        } else if (list.value!!.message != "success") {
-            navViewModel.loading.postValue(false)
-            MainText(
-                text = stringResource(id = R.string.data_get_error),
-                modifier = Modifier.align(Alignment.Center)
-            )
-        } else {
-            navViewModel.loading.postValue(false)
-            val info = list.value!!.data!!.leader
-            Column {
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.padding(
-                        top = Dimen.mediuPadding,
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding
-                    )
-                ) {
-                    Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
-                    MainText(
-                        text = stringResource(id = R.string.grade),
-                        modifier = Modifier.weight(0.25f)
-                    )
-                    MainText(
-                        text = stringResource(id = R.string.jjc),
-                        modifier = Modifier.weight(0.25f)
-                    )
-                    MainText(
-                        text = stringResource(id = R.string.clan),
-                        modifier = Modifier.weight(0.25f)
-                    )
-                    MainText(
-                        text = stringResource(id = R.string.tower),
-                        modifier = Modifier.weight(0.25f)
-                    )
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.mediuPadding,
+                    end = Dimen.mediuPadding
+                )
+            ) {
+                Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
+                MainText(
+                    text = stringResource(id = R.string.grade),
+                    modifier = Modifier.weight(0.25f)
+                )
+                MainText(
+                    text = stringResource(id = R.string.jjc),
+                    modifier = Modifier.weight(0.25f)
+                )
+                MainText(
+                    text = stringResource(id = R.string.clan),
+                    modifier = Modifier.weight(0.25f)
+                )
+                MainText(
+                    text = stringResource(id = R.string.tower),
+                    modifier = Modifier.weight(0.25f)
+                )
+            }
+            if (list.isEmpty()) {
+                //显示占位图
+                LazyColumn(contentPadding = PaddingValues(Dimen.largePadding)) {
+                    items(20) {
+                        LeaderboardItem(LeaderboardData())
+                    }
                 }
+            } else {
                 LazyColumn(
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.largePadding)
                 ) {
-                    items(info) {
+                    items(list) {
                         LeaderboardItem(it)
                     }
                     item {
@@ -95,6 +97,7 @@ fun LeaderboardList(
                 }
             }
         }
+
         Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -116,7 +119,10 @@ fun LeaderboardList(
                 text = stringResource(id = R.string.tool_leader)
             ) {
                 coroutineScope.launch {
-                    scrollState.scrollToItem(0)
+                    try {
+                        scrollState.scrollToItem(0)
+                    } catch (e: Exception) {
+                    }
                 }
             }
         }
@@ -126,21 +132,30 @@ fun LeaderboardList(
 /**
  * 角色评价信息
  */
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
-fun LeaderboardItem(info: LeaderboardData) {
+private fun LeaderboardItem(info: LeaderboardData) {
+    val placeholder = info.icon == ""
     val context = LocalContext.current
     val title = stringResource(id = R.string.visit_detail)
 
     //标题
     MainTitleText(
         text = info.name,
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+        modifier = Modifier
+            .padding(bottom = Dimen.mediuPadding)
+            .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
     )
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding), onClick = {
-        //打开浏览器
-        openWebView(context, info.url, title)
-    }) {
+    MainCard(modifier = Modifier
+        .padding(bottom = Dimen.largePadding)
+        .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer()),
+        onClick = {
+            //打开浏览器
+            if (!placeholder) {
+                openWebView(context, info.url, title)
+            }
+        }) {
         Row(
             modifier = Modifier.padding(Dimen.smallPadding),
             verticalAlignment = Alignment.CenterVertically
@@ -176,4 +191,16 @@ fun GradeText(grade: String, textAlign: TextAlign = TextAlign.Center, modifier: 
         fontWeight = FontWeight.Bold,
         modifier = modifier
     )
+}
+
+@Preview
+@ExperimentalCoilApi
+@ExperimentalMaterialApi
+@Composable
+private fun LeaderboardItemPreview() {
+    PreviewBox {
+        Column {
+            LeaderboardItem(info = LeaderboardData(icon = "?"))
+        }
+    }
 }

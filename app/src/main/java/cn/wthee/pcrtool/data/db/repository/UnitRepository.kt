@@ -21,15 +21,18 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         guildName,
         if (filter.all) 1 else 0,
         if (filter.r6) 1 else 0,
-        filter.starIds
+        filter.starIds,
+        filter.type
     )
+
+    suspend fun getInfoAndData(limit: Int) = unitDao.getInfoAndData(limit)
 
     suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
 
     suspend fun getCharacterByPosition(start: Int, end: Int) =
         unitDao.getCharacterByPosition(start, end)
 
-    suspend fun getCharacterByIds(unitIds: ArrayList<Int>) = unitDao.getCharacterByIds(unitIds)
+    suspend fun getCharacterByIds(unitIds: List<Int>) = unitDao.getCharacterByIds(unitIds)
 
 
     suspend fun getEquipmentIds(unitId: Int, rank: Int) =
@@ -45,10 +48,16 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getGuilds() = unitDao.getGuilds()
 
+    suspend fun getGuildAddMembers(guildId: Int) = unitDao.getGuildAddMembers(guildId)
+
     suspend fun getR6Ids() = unitDao.getR6Ids()
 
     suspend fun getCharacterStoryStatus(unitId: Int) = unitDao.getCharacterStoryStatus(unitId)
 
     suspend fun getMaxLevel() = unitDao.getMaxLevel()
+
+    suspend fun getRankBonus(rank: Int, unitId: Int) = unitDao.getRankBonus(rank, unitId)
+
+    suspend fun getCoefficient() = unitDao.getCoefficient()
 
 }

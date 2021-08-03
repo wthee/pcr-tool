@@ -9,13 +9,14 @@ import cn.wthee.pcrtool.utils.UMengLogUtil
  * 角色技能信息
  */
 data class SkillDetail(
-    val skillId: Int,
-    val name: String,
-    val desc: String,
-    val iconType: Int,
-    val castTime: Double,
-    val level: Int,
-    val atk: Int,
+    val skillId: Int = 1,
+    val name: String = "?",
+    val desc: String = "?",
+    val iconType: Int = 1,
+    val castTime: Double = 0.0,
+    val level: Int = 1,
+    val atk: Int = 100,
+    val bossUbCooltime: Double = 0.0,
 ) {
     /**
      * 角色技能效果
@@ -29,7 +30,7 @@ data class SkillDetail(
     fun getActionInfo(): ArrayList<SkillActionText> {
         val list = arrayListOf<SkillActionText>()
         actions.forEach {
-            it.getActionDesc()?.let { actionDesc ->
+            it.getActionDesc().let { actionDesc ->
                 list.add(actionDesc)
             }
         }
@@ -43,7 +44,7 @@ data class SkillDetail(
         val list = arrayListOf<ShowCoe>()
         try {
             actions.forEachIndexed { index, skillActionPro ->
-                skillActionPro.getActionDesc()?.let { actionDesc ->
+                skillActionPro.getActionDesc().let { actionDesc ->
                     if (actionDesc.showCoe) {
                         val coe = Regex("\\{.\\}").findAll(actionDesc.action).first().value
                         list.add(ShowCoe(index, 0, coe))

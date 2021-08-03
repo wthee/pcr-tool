@@ -8,7 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,9 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.utils.deleteSpace
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 
@@ -35,37 +35,35 @@ fun CharacterBasicInfo(
     unitId: Int,
     viewModel: CharacterViewModel = hiltViewModel()
 ) {
-    viewModel.getCharacter(unitId)
-    val data = viewModel.character.observeAsState().value
+    val data = viewModel.getCharacter(unitId).collectAsState(initial = null).value
 
     FadeAnimation(visible = data != null) {
         data?.let { info ->
             CharacterInfoCompose(info, scrollState)
         }
     }
-
 }
 
 @Composable
 private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollState) {
     Column(
         modifier = Modifier
-            .padding(Dimen.mediuPadding)
+            .padding(start = Dimen.largePadding, end = Dimen.largePadding)
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
         //标题
         MainText(
-            text = info.catchCopy.deleteSpace(),
+            text = info.catchCopy.deleteSpace,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(bottom = Dimen.mediuPadding)
+                .padding(Dimen.largePadding),
+            selectable = true
         )
         //介绍
         Text(
             info.getIntroText(),
             style = MaterialTheme.typography.subtitle2,
-            modifier = Modifier.padding(top = Dimen.mediuPadding)
         )
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
             MainTitleText(
@@ -160,7 +158,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 text = info.race,
                 modifier = Modifier
                     .weight(0.35f)
-                    .padding(end = Dimen.mediuPadding)
+                    .padding(end = Dimen.mediuPadding),
+                selectable = true
             )
             MainTitleText(
                 text = stringResource(id = R.string.cv),
@@ -168,7 +167,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             )
             MainContentText(
                 text = info.voice,
-                modifier = Modifier.weight(0.35f)
+                modifier = Modifier.weight(0.35f),
+                selectable = true
             )
         }
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
@@ -185,7 +185,8 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 start = Dimen.largePadding,
                 end = Dimen.largePadding
             ),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
             MainTitleText(
@@ -196,12 +197,9 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.favorite,
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            ),
-            textAlign = TextAlign.Start
+            modifier = Modifier.padding(Dimen.mediuPadding),
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         info.getSelf()?.let {
             Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
@@ -213,12 +211,9 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             }
             MainContentText(
                 text = it,
-                modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.largePadding,
-                    end = Dimen.largePadding
-                ),
-                textAlign = TextAlign.Start
+                modifier = Modifier.padding(Dimen.mediuPadding),
+                textAlign = TextAlign.Start,
+                selectable = true
             )
         }
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
@@ -230,12 +225,9 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.getCommentsText(),
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            ),
-            textAlign = TextAlign.Start
+            modifier = Modifier.padding(Dimen.mediuPadding),
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
             MainTitleText(
@@ -246,12 +238,9 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.getRoomCommentsText(),
-            modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            ),
-            textAlign = TextAlign.Start
+            modifier = Modifier.padding(Dimen.mediuPadding),
+            textAlign = TextAlign.Start,
+            selectable = true
         )
         CommonSpacer()
     }
@@ -260,8 +249,17 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
 @Preview
 @Composable
 private fun Preview() {
-    PcrtoolcomposeTheme {
-        val scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
+    PreviewBox(1) {
+        CharacterInfoCompose(info = CharacterInfoPro(), scrollState = scrollState)
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewDark() {
+    val scrollState = rememberScrollState()
+    PreviewBox(2) {
         CharacterInfoCompose(info = CharacterInfoPro(), scrollState = scrollState)
     }
 }

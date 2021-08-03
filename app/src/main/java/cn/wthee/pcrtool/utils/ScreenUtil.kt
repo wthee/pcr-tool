@@ -80,7 +80,7 @@ val Int.px2dp: Int
     }
 
 /**
- *  获取 像素 的dp
+ *  获取dp的像素
  */
 val Float.dp2px: Int
     get() {

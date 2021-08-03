@@ -9,6 +9,7 @@ object Constants {
 
     //图片格式
     const val WEBP = ".webp"
+    const val PNG = ".png"
 
     //图片资源地址
     private const val RESOURCE_URL = "https://wthee.xyz/resource/"
@@ -49,6 +50,7 @@ object Constants {
 
     //其它数据库
     const val DATABASE_NEWS = "news.db"
+    const val DATABASE_TWEET = "tweet.db"
     const val DATABASE_PVP = "pvp.db"
 
     //角色卡片接口
@@ -69,6 +71,9 @@ object Constants {
     //技能图标接口
     const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
 
+    //漫画地址
+    const val COMIC_URL = RESOURCE_URL + "comic/"
+
     //本地储存
     const val SP_DATABASE_TYPE = "database_type"
     const val SP_DATABASE_VERSION = "database_version"
@@ -77,32 +82,29 @@ object Constants {
     const val SP_STAR_EQUIP = "star_equip"
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
-    const val SP_PVP_TW = "pvp_region"
 
     //默认值
     const val NOTICE_TITLE = "正在下载数据"
-    const val NOTICE_TOAST_SUCCESS = "数据更新完成！"
-    const val NOTICE_TOAST_CHANGE_SUCCESS = "数据切换完成！"
     const val RANK_UPPER = "RANK"
 
     val ATTR = arrayListOf(
         "HP",
-        "HP吸收",
-        "物理攻击力",
-        "魔法攻击力",
-        "物理防御力",
-        "魔法防御力",
+        "HP 吸收",
+        "物理攻击",
+        "魔法攻击",
+        "物理防御",
+        "魔法防御",
         "物理暴击",
         "魔法暴击",
         "物理穿透",
         "魔法穿透",
-        "命中",
-        "回避",
-        "HP回复",
-        "回复量上升",
-        "TP回复",
-        "TP上升",
-        "TP消耗减少",
+        "命 中",
+        "回 避",
+        "HP 回复",
+        "回复上升",
+        "TP 回复",
+        "TP 上升",
+        "TP 减少",
     )
 
     //现实图片有误的角色编号
@@ -120,11 +122,21 @@ object Constants {
 
     //无现实图片角色
     val notExistsIDs = arrayListOf(
-        109731, 109831, 109931,
+        109731, 109831, 109931, 109231, 109331, 109431
+    )
+
+    //未实装角色
+    val unuseIDs = arrayListOf(
+        106701,
+        106901,
+        107201,
+        107301,
+        110201,
+        191301
     )
 
     // 异常
-    const val EXCEPTION = "异常"
+    private const val EXCEPTION = "异常"
     const val EXCEPTION_API = "接口$EXCEPTION"
     const val EXCEPTION_DOWNLOAD_DB = "数据库文件下载$EXCEPTION"
     const val EXCEPTION_SAVE_DB = "数据库文件保存$EXCEPTION"

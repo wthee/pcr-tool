@@ -9,12 +9,16 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.ChipData
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.getSectionTextColor
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -59,9 +63,9 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
         2 -> getSectionTextColor(index + 1)
         else -> {
             if (selectIndex.value == index)
-                MaterialTheme.colors.primary
+                MaterialTheme.colors.background
             else
-                MaterialTheme.colors.onBackground
+                MaterialTheme.colors.onSurface
         }
     }
     Box(
@@ -85,5 +89,20 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
                 bottom = Dimen.mediuPadding
             )
         )
+    }
+}
+
+@Preview
+@Composable
+private fun ChipGroupPreview() {
+    val mockData = arrayListOf<ChipData>()
+    val selectIndex = remember {
+        mutableStateOf(3)
+    }
+    for (i in 0..10) {
+        mockData.add(ChipData(i, "chip $i"))
+    }
+    PreviewBox {
+        ChipGroup(items = mockData, selectIndex = selectIndex)
     }
 }

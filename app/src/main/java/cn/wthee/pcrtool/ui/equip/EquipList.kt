@@ -12,16 +12,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -36,17 +33,19 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
+import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
  * 装备列表
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -58,7 +57,6 @@ fun EquipList(
     toEquipDetail: (Int) -> Unit,
     toEquipMaterial: (Int) -> Unit,
 ) {
-    val equips = viewModel.equips.observeAsState().value
     //筛选状态
     val filter = navViewModel.filterEquip.observeAsState()
     // dialog 状态
@@ -69,7 +67,7 @@ fun EquipList(
     val sp = mainSP()
     val keyboardController = LocalSoftwareKeyboardController.current
     //关闭时监听
-    if (!state.isVisible) {
+    if (!state.isVisible && !state.isAnimationRunning) {
         navViewModel.fabMainIcon.postValue(MainIconType.BACK)
         navViewModel.fabOKCilck.postValue(false)
         keyboardController?.hide()
@@ -77,22 +75,33 @@ fun EquipList(
     filter.value?.let { filterValue ->
         filterValue.starIds =
             GsonUtil.fromJson(sp.getString(Constants.SP_STAR_EQUIP, "")) ?: arrayListOf()
-        viewModel.getEquips(filterValue)
 
+        val equips = viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf()).value
         ModalBottomSheetLayout(
             sheetState = state,
+            scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+            sheetElevation = Dimen.sheetElevation,
+            sheetShape = if (state.offset.value == 0f) {
+                noShape
+            } else {
+                MaterialTheme.shapes.large
+            },
             sheetContent = {
                 FilterEquipSheet(navViewModel, coroutineScope, state)
             }
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 val spanCount = 4
-                if (equips != null) {
-                    LazyVerticalGrid(cells = GridCells.Fixed(spanCount), state = scrollState) {
-                        items(equips!!) { equip ->
+                FadeAnimation(visible = equips.isNotEmpty()) {
+                    LazyVerticalGrid(
+                        cells = GridCells.Fixed(spanCount),
+                        state = scrollState,
+                        contentPadding = PaddingValues(Dimen.mediuPadding)
+                    ) {
+                        items(equips) { equip ->
                             EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                         }
-                        items(4) {
+                        items(spanCount) {
                             CommonSpacer()
                         }
                     }
@@ -103,6 +112,16 @@ fun EquipList(
                         .align(Alignment.BottomEnd),
                     horizontalArrangement = Arrangement.End
                 ) {
+                    FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
+                        FabCompose(
+                            iconType = MainIconType.TOP,
+                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        ) {
+                            coroutineScope.launch {
+                                scrollState.scrollToItem(0)
+                            }
+                        }
+                    }
                     //重置筛选
                     if (filter.value != null && filter.value!!.isFilter()) {
                         FabCompose(
@@ -115,7 +134,7 @@ fun EquipList(
                             navViewModel.resetClick.postValue(true)
                         }
                     }
-                    val count = equips?.size ?: 0
+                    val count = equips.size
                     // 数量显示&筛选按钮
                     FabCompose(
                         iconType = MainIconType.EQUIP,
@@ -144,6 +163,7 @@ fun EquipList(
 /**
  * 装备
  */
+@ExperimentalCoilApi
 @Composable
 private fun EquipItem(
     filter: FilterEquipment,
@@ -155,7 +175,7 @@ private fun EquipItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = Dimen.mediuPadding),
+            .padding(Dimen.mediuPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(data = getEquipIconUrl(equip.equipmentId)) {
@@ -176,6 +196,7 @@ private fun EquipItem(
 /**
  * 装备筛选
  */
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
@@ -200,8 +221,7 @@ private fun FilterEquipSheet(
     }
     filter.all = loveIndex.value == 0
     //装备类型
-    equipmentViewModel.getTypes()
-    val typeList = equipmentViewModel.equipTypes.observeAsState().value ?: arrayListOf()
+    val typeList = equipmentViewModel.getTypes().collectAsState(initial = arrayListOf()).value
     val typeIndex = remember {
         mutableStateOf(filter.type)
     }
@@ -214,7 +234,7 @@ private fun FilterEquipSheet(
     //选择状态
     Column(
         modifier = Modifier
-            .clip(CardTopShape)
+            .padding(start = Dimen.largePadding, end = Dimen.largePadding)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
@@ -270,9 +290,7 @@ private fun FilterEquipSheet(
                     style = MaterialTheme.typography.button
                 )
             },
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         )
         //装备类型
         MainText(
@@ -317,6 +335,7 @@ private fun FilterEquipSheet(
             typeIndex,
             modifier = Modifier.padding(Dimen.smallPadding),
         )
+        CommonSpacer()
     }
 }
 

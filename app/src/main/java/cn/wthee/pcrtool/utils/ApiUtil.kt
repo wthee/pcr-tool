@@ -75,8 +75,8 @@ object ApiUtil {
     fun getClient(second: Long): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
-            .connectTimeout(second, TimeUnit.SECONDS)
             .cache(CoilUtils.createDefaultCache(MyApplication.context))
+            .connectTimeout(second, TimeUnit.SECONDS)
             .writeTimeout(second, TimeUnit.SECONDS)
             .readTimeout(second, TimeUnit.SECONDS)
             .addInterceptor(RetryInterceptor(3))
