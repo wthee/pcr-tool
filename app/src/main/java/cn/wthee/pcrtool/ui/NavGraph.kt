@@ -175,8 +175,7 @@ fun NavGraph(
             val arguments = requireNotNull(it.arguments)
             RankEquipList(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                toEquipDetail = actions.toEquipDetail,
-                navViewModel = viewModel
+                toEquipDetail = actions.toEquipDetail
             )
         }
 

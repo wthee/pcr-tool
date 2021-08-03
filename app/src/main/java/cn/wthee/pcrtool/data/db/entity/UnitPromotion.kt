@@ -17,14 +17,14 @@ import androidx.room.Index
     primaryKeys = ["unit_id", "promotion_level"]
 )
 data class UnitPromotion(
-    @ColumnInfo(name = "unit_id") val unitId: Int,
-    @ColumnInfo(name = "promotion_level") val promotionLevel: Int,
-    @ColumnInfo(name = "equip_slot_1") val equipSlot1: Int,
-    @ColumnInfo(name = "equip_slot_2") val equipSlot2: Int,
-    @ColumnInfo(name = "equip_slot_3") val equipSlot3: Int,
-    @ColumnInfo(name = "equip_slot_4") val equipSlot4: Int,
-    @ColumnInfo(name = "equip_slot_5") val equipSlot5: Int,
-    @ColumnInfo(name = "equip_slot_6") val equipSlot6: Int
+    @ColumnInfo(name = "unit_id") val unitId: Int = 100101,
+    @ColumnInfo(name = "promotion_level") val promotionLevel: Int = 10,
+    @ColumnInfo(name = "equip_slot_1") val equipSlot1: Int = 0,
+    @ColumnInfo(name = "equip_slot_2") val equipSlot2: Int = 0,
+    @ColumnInfo(name = "equip_slot_3") val equipSlot3: Int = 0,
+    @ColumnInfo(name = "equip_slot_4") val equipSlot4: Int = 0,
+    @ColumnInfo(name = "equip_slot_5") val equipSlot5: Int = 0,
+    @ColumnInfo(name = "equip_slot_6") val equipSlot6: Int = 0
 ) {
 
     fun getAllOrderIds(): ArrayList<Int> {

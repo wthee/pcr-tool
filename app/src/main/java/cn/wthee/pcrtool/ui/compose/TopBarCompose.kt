@@ -12,10 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import coil.annotation.ExperimentalCoilApi
 
@@ -81,5 +83,50 @@ fun TopBarCompose(actions: NavActions) {
             }
         }
 
+    }
+}
+
+
+@ExperimentalCoilApi
+@ExperimentalAnimationApi
+@Preview
+@Composable
+private fun TopBarComposePreview() {
+    PreviewBox {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.h6,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.primary,
+            )
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconCompose(
+                    data = MainIconType.NOTICE.icon,
+                    tint = MaterialTheme.colors.onSurface,
+                    size = Dimen.fabIconSize
+                )
+                Spacer(modifier = Modifier.width(Dimen.largePadding))
+                IconCompose(
+                    data = MainIconType.SETTING.icon,
+                    tint = MaterialTheme.colors.onSurface,
+                    size = Dimen.fabIconSize
+                )
+            }
+        }
     }
 }

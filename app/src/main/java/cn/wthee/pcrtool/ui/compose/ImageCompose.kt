@@ -34,14 +34,14 @@ const val RATIO_COMMON = 371 / 208f
 @ExperimentalCoilApi
 @Composable
 fun ImageCompose(
-    url: String,
+    data: Any,
     ratio: Float,
     onSuccess: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
     val painter = rememberImagePainter(
-        data = url,
+        data = data,
         builder = {
             placeholder(
                 ScaleDrawable(

@@ -10,7 +10,8 @@ import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
  */
 data class AllAttrData(
     var sumAttr: Attr = Attr(),
-    var stroyAttr: Attr = Attr(),
+    var exSkillAttr: Attr = Attr(),
+    var storyAttr: Attr = Attr(),
     var equips: List<EquipmentMaxData> = arrayListOf(),
     var uniqueEquip: UniqueEquipmentMaxData = UniqueEquipmentMaxData(),
     var bonus: UnitPromotionBonus = UnitPromotionBonus()

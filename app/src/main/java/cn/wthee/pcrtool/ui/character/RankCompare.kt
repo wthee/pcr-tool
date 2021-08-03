@@ -25,10 +25,10 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.int
@@ -278,8 +278,8 @@ private fun StarCompose(
 @Preview
 @Composable
 private fun Preview() {
-    PcrtoolcomposeTheme {
-        val data = listOf(RankCompareData(), RankCompareData(), RankCompareData())
+    val data = listOf(RankCompareData(), RankCompareData(), RankCompareData())
+    PreviewBox {
         AttrCompare(compareData = data)
     }
 }

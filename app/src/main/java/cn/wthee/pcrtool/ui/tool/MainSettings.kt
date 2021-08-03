@@ -19,14 +19,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -45,21 +46,14 @@ import coil.compose.rememberImagePainter
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
-    val type = getDatabaseType()
-    val sp = mainSP()
+    val sp = mainSP(context)
+    val type = sp.getInt(Constants.SP_DATABASE_TYPE, 1)
 
     val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground)
 
     SideEffect {
         //自动删除历史数据
-        val oldFileSize = FileUtil.getOldDatabaseSize()
-        if (oldFileSize > 0) {
-            try {
-                FileUtil.deleteOldDatabase()
-            } catch (e: Exception) {
-
-            }
-        }
+        FileUtil.deleteOldDatabase(context)
     }
 
     //数据库版本
@@ -301,4 +295,24 @@ private fun SummaryText(text: String) {
         color = colorResource(id = R.color.gray),
         modifier = Modifier.padding(top = Dimen.mediuPadding)
     )
+}
+
+@Preview
+@ExperimentalCoilApi
+@ExperimentalAnimationApi
+@Composable
+private fun MainSettingsPreview() {
+    PreviewBox(1) {
+        MainSettings()
+    }
+}
+
+@Preview
+@ExperimentalCoilApi
+@ExperimentalAnimationApi
+@Composable
+private fun MainSettingsDarkPreview() {
+    PreviewBox(2) {
+        MainSettings()
+    }
 }

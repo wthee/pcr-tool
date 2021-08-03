@@ -33,7 +33,7 @@ fun MainTitleText(
 ) {
     Text(
         text = text,
-        color = MaterialTheme.colors.onPrimary,
+        color = Color.White,
         style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
             .background(color = backgroundColor, shape = MaterialTheme.shapes.small)

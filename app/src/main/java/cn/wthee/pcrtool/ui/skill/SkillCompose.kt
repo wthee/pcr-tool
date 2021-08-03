@@ -13,14 +13,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
+import cn.wthee.pcrtool.data.db.view.SkillActionPro
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
@@ -433,3 +436,16 @@ private data class SkillIndex(
     var start: Int = 0,
     var end: Int = 0
 )
+
+
+@Preview
+@ExperimentalCoilApi
+@Suppress("RegExpRedundantEscape")
+@Composable
+fun SkillItemPreview() {
+    val mockData = SkillDetail()
+    mockData.actions = arrayListOf(SkillActionPro())
+    PreviewBox {
+        SkillItem(level = 1, skillDetail = mockData)
+    }
+}

@@ -35,11 +35,7 @@ object CharacterIdUtil {
         if (MainActivity.r6Ids.contains(unitId)) {
             return Constants.CHARACTER_FULL_URL + getStarId(unitId, 6) + Constants.WEBP
         }
-        return if (unitId == 106701) {
-            Constants.CHARACTER_URL + getStarId(unitId, 1)
-        } else {
-            Constants.CHARACTER_FULL_URL + getStarId(unitId, 3)
-        } + Constants.WEBP
+        return Constants.CHARACTER_FULL_URL + getStarId(unitId, 3) + Constants.WEBP
     }
 
     /**

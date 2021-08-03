@@ -5,21 +5,21 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -40,12 +40,26 @@ import coil.annotation.ExperimentalCoilApi
 @Composable
 fun EquipMainInfo(
     equipId: Int,
-    toEquipMaterial: (Int) -> Unit, equipmentViewModel: EquipmentViewModel = hiltViewModel()
+    toEquipMaterial: (Int) -> Unit,
+    equipmentViewModel: EquipmentViewModel = hiltViewModel()
 ) {
     val equipMaxData =
         equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
     //收藏状态
     val filter = navViewModel.filterEquip.observeAsState()
+    EquipDetail(filter, equipId, equipMaxData, toEquipMaterial)
+}
+
+@ExperimentalCoilApi
+@ExperimentalFoundationApi
+@ExperimentalAnimationApi
+@Composable
+private fun EquipDetail(
+    filter: State<FilterEquipment?>,
+    equipId: Int,
+    equipMaxData: EquipmentMaxData,
+    toEquipMaterial: (Int) -> Unit
+) {
     val loved = remember {
         mutableStateOf(filter.value?.starIds?.contains(equipId) ?: false)
     }
@@ -163,5 +177,23 @@ private fun EquipMaterialList(
                 }
             }
         }
+    }
+}
+
+@Preview
+@ExperimentalCoilApi
+@ExperimentalFoundationApi
+@ExperimentalAnimationApi
+@Composable
+private fun EquipDetailPreview() {
+    val filter = remember {
+        mutableStateOf(null)
+    }
+    PreviewBox {
+        EquipDetail(
+            filter = filter,
+            equipId = 0,
+            equipMaxData = EquipmentMaxData(1, "?", "", "?", 1, attr = Attr().random()),
+            toEquipMaterial = {})
     }
 }

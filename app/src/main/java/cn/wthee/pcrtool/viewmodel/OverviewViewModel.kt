@@ -7,6 +7,7 @@ import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.database.getDatabaseType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.formatTime
@@ -50,7 +51,7 @@ class OverviewViewModel @Inject constructor(
      * @param type 0：进行中 1：预告
      */
     fun getCalendarEventList(type: Int) = flow {
-        val today = getToday()
+        val today = getToday(getDatabaseType())
         val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
         if (type == 0) {
             emit(data.filter {

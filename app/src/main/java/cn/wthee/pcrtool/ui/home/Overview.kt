@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -34,6 +33,7 @@ import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
@@ -269,6 +269,7 @@ fun Overview(
 /**
  * 标题
  */
+@ExperimentalAnimationApi
 @ExperimentalCoilApi
 @Composable
 private fun Section(
@@ -284,7 +285,9 @@ private fun Section(
     } else {
         Modifier.clickable(onClick = {
             VibrateUtil(context).single()
-            onClick.invoke()
+            if (visible) {
+                onClick.invoke()
+            }
         })
     })
 
@@ -324,17 +327,8 @@ private fun Section(
                 )
             }
         }
-        if (!visible) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .size(Dimen.fabIconSize)
-                    .padding(Dimen.lineHeight)
-                    .align(Alignment.CenterHorizontally),
-                color = MaterialTheme.colors.primary,
-                strokeWidth = Dimen.lineHeight
-            )
-        } else {
+
+        FadeAnimation(visible = visible) {
             content.invoke()
         }
     }
@@ -413,7 +407,7 @@ private fun NewsItem(
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
-    val today = getToday()
+    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 1))
     val sd = calendar.startTime.formatTime
     val ed = calendar.endTime.formatTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0

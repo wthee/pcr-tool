@@ -10,20 +10,30 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -47,6 +57,7 @@ import coil.Coil
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -60,6 +71,7 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -88,7 +100,7 @@ fun CharacterDetail(
             navViewModel.selectRank.postValue(maxValue.rank)
         }
     }
-    // dialog 状态
+    // bottomsheet 状态
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden
     )
@@ -117,11 +129,11 @@ fun CharacterDetail(
     currentValueState.value?.let { currentValue ->
         val unknown = maxValue.level == -1
         //角色等级滑动条
-        val sliderLevel = remember {
+        val characterLevel = remember {
             mutableStateOf(currentValue.level)
         }
         //专武等级滑动条
-        val sliderUniqueEquipLevel = remember {
+        val uniqueEquipLevel = remember {
             mutableStateOf(currentValue.uniqueEquipmentLevel)
         }
         //Rank 选择
@@ -169,7 +181,6 @@ fun CharacterDetail(
                     FadeAnimation(visible = maxValue.isInit() || unknown) {
                         CardImage(unitId)
                     }
-
                     //数据加载后，展示页面
                     val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
                     SlideAnimation(visible = visible) {
@@ -190,7 +201,7 @@ fun CharacterDetail(
                                 )
                                 AttrLists(
                                     currentValue,
-                                    sliderLevel,
+                                    characterLevel,
                                     maxValue,
                                     allData,
                                     actions
@@ -210,7 +221,7 @@ fun CharacterDetail(
                                     UniqueEquip(
                                         currentValue = currentValue,
                                         uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                                        sliderState = sliderUniqueEquipLevel,
+                                        uniqueEquipLevel = uniqueEquipLevel,
                                         uniqueEquipmentMaxData = allData.uniqueEquip
                                     )
                                 }
@@ -320,102 +331,177 @@ fun CharacterDetail(
 /**
  * 属性
  */
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
 private fun AttrLists(
     currentValue: CharacterProperty,
-    sliderLevel: MutableState<Int>,
+    characterLevel: MutableState<Int>,
     maxValue: CharacterProperty,
     allData: AllAttrData,
     actions: NavActions,
     attrViewModel: CharacterAttrViewModel = hiltViewModel()
 ) {
     val coe = attrViewModel.getCoefficient().collectAsState(initial = null).value
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+    val insets = LocalWindowInsets.current
 
     //等级
     Text(
-        text = sliderLevel.value.toString(),
+        text = characterLevel.value.toString(),
         color = MaterialTheme.colors.primary,
-        style = MaterialTheme.typography.h6
+        style = MaterialTheme.typography.h6,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .padding(Dimen.smallPadding)
+            .fillMaxWidth(0.3f)
+            .padding(Dimen.mediuPadding)
+            .clip(MaterialTheme.shapes.small)
+            .clickable {
+                if (insets.ime.isVisible) {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                } else {
+                    focusRequester.requestFocus()
+                    keyboardController?.show()
+                }
+            }
     )
-    Slider(
-        value = sliderLevel.value.toFloat(),
-        onValueChange = { sliderLevel.value = it.toInt() },
-        onValueChangeFinished = {
-            if (sliderLevel.value != 0) {
-                attrViewModel.currentValue.postValue(currentValue.update(level = sliderLevel.value))
+    //等级输入框
+    val inputLevel = remember {
+        mutableStateOf("")
+    }
+    OutlinedTextField(
+        value = inputLevel.value,
+        onValueChange = {
+            var filterStr = ""
+            it.forEach { ch ->
+                if (Regex("\\d").matches(ch.toString())) {
+                    filterStr += ch
+                }
+            }
+            inputLevel.value = when {
+                filterStr == "" -> ""
+                filterStr.toInt() < 1 -> "1"
+                filterStr.toInt() in 1..maxValue.level -> filterStr
+                else -> maxValue.level.toString()
             }
         },
-        valueRange = 1f..maxValue.level.toFloat(),
-        modifier = Modifier
-            .fillMaxWidth(0.618f)
+        textStyle = MaterialTheme.typography.body2,
+        trailingIcon = {
+            IconCompose(
+                data = MainIconType.OK.icon,
+                size = Dimen.fabIconSize
+            ) {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+                if (inputLevel.value != "") {
+                    characterLevel.value = inputLevel.value.toInt()
+                }
+                attrViewModel.currentValue.postValue(currentValue.update(level = characterLevel.value))
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Number
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+                if (inputLevel.value != "") {
+                    characterLevel.value = inputLevel.value.toInt()
+                }
+                attrViewModel.currentValue.postValue(currentValue.update(level = characterLevel.value))
+            }
+        ),
+        modifier = if (insets.ime.isVisible) {
+            Modifier
+                .focusRequester(focusRequester)
+                .padding(Dimen.smallPadding)
+        } else {
+            Modifier
+                .focusRequester(focusRequester)
+                .height(1.dp)
+                .alpha(0f)
+        }
     )
-    //fixme 暂时注释掉
-//    coe?.let {
-//        val basic = allData.sumAttr.hp * it.hp_coefficient +
-//                allData.sumAttr.atk * it.atk_coefficient +
-//                allData.sumAttr.magicStr * it.magic_str_coefficient +
-//                allData.sumAttr.def * it.def_coefficient +
-//                allData.sumAttr.magicDef * it.magic_def_coefficient +
-//                allData.sumAttr.physicalCritical * it.physical_critical_coefficient +
-//                allData.sumAttr.magicCritical * it.magic_critical_coefficient +
-//                allData.sumAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
-//                allData.sumAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
-//                allData.sumAttr.dodge * it.dodge_coefficient +
-//                allData.sumAttr.physicalPenetrate * it.physical_penetrate_coefficient +
-//                allData.sumAttr.magicPenetrate * it.magic_penetrate_coefficient +
-//                allData.sumAttr.lifeSteal * it.life_steal_coefficient +
-//                allData.sumAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
-//                allData.sumAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
-//                allData.sumAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
-//                allData.sumAttr.accuracy * it.accuracy_coefficient
-//
-//        //默认加上被动技能和技能2
-//        var skill = currentValue.level * it.skill_lv_coefficient * 2
-//        //解锁专武，技能1系数提升
-//        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-//            skill += it.skill1_evolution_coefficient
-//            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
-//        } else {
-//            skill += currentValue.level * it.skill_lv_coefficient
-//        }
-//        //不同星级处理
-//        if (currentValue.rarity >= 5) {
-//            //大于等于五星，技能 ex+
-//            skill += it.exskill_evolution_coefficient
-//            if (currentValue.rarity == 6) {
-//                //六星，ub系数提升
-//                skill += it.ub_evolution_coefficient
-//                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
-//            } else {
-//                //五星
-//                skill += currentValue.level * it.skill_lv_coefficient
-//            }
-//        } else {
-//            //小于五星，ub 和 ex
-//            skill += currentValue.level * it.skill_lv_coefficient * 2
-//        }
-//        Row(verticalAlignment = Alignment.CenterVertically) {
-//            MainText(text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString())
-//            IconCompose(data = MainIconType.HELP.icon, size = Dimen.smallIconSize) {
-//                actions.toCoe()
-//            }
-//        }
-//
-//    }
+    //战力计算 fixme 对比游戏内数值
+    coe?.let {
+        val basicAttr = allData.sumAttr.copy().sub(allData.exSkillAttr)
+        val basic = basicAttr.hp * it.hp_coefficient +
+                basicAttr.atk * it.atk_coefficient +
+                basicAttr.magicStr * it.magic_str_coefficient +
+                basicAttr.def * it.def_coefficient +
+                basicAttr.magicDef * it.magic_def_coefficient +
+                basicAttr.physicalCritical * it.physical_critical_coefficient +
+                basicAttr.magicCritical * it.magic_critical_coefficient +
+                basicAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
+                basicAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
+                basicAttr.dodge * it.dodge_coefficient +
+                basicAttr.physicalPenetrate * it.physical_penetrate_coefficient +
+                basicAttr.magicPenetrate * it.magic_penetrate_coefficient +
+                basicAttr.lifeSteal * it.life_steal_coefficient +
+                basicAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
+                basicAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
+                basicAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
+                basicAttr.accuracy * it.accuracy_coefficient
+        //技能2：默认加上技能2
+        var skill = currentValue.level * it.skill_lv_coefficient
+        //技能1：解锁专武，技能1系数提升
+        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+            skill += it.skill1_evolution_coefficient
+            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
+        } else {
+            skill += currentValue.level * it.skill_lv_coefficient
+        }
+        //不同星级处理
+        if (currentValue.rarity >= 5) {
+            //ex+:大于等于五星，技能 ex+
+            skill += it.exskill_evolution_coefficient
+            skill += currentValue.level * it.skill_lv_coefficient
+            if (currentValue.rarity == 6) {
+                //ub+
+                skill += it.ub_evolution_coefficient
+                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
+            } else {
+                //ub
+                skill += currentValue.level * it.skill_lv_coefficient
+            }
+        } else {
+            //ub、ex
+            skill += currentValue.level * it.skill_lv_coefficient * 2
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(bottom = Dimen.smallPadding)
+        ) {
+            MainText(
+                text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString(),
+                modifier = Modifier.padding(end = Dimen.smallPadding)
+            )
+            IconCompose(
+                data = MainIconType.HELP.icon,
+                size = Dimen.smallIconSize
+            ) {
+                actions.toCoe()
+            }
+        }
+    }
     //属性
     AttrList(attrs = allData.sumAttr.all())
     //剧情属性
     MainText(
         text = stringResource(id = R.string.title_story_attr),
-        modifier = Modifier.Companion
-            .padding(
-                top = Dimen.largePadding,
-                bottom = Dimen.smallPadding
-            )
+        modifier = Modifier.padding(
+            top = Dimen.largePadding,
+            bottom = Dimen.smallPadding
+        )
     )
-    AttrList(attrs = allData.stroyAttr.allNotZero())
+    AttrList(attrs = allData.storyAttr.allNotZero())
     //Rank 奖励
     val hasBonus = allData.bonus.attr.allNotZero().isNotEmpty()
     Column(
@@ -539,7 +625,7 @@ private fun CardImage(unitId: Int) {
         ) {
             Box(contentAlignment = Alignment.Center) {
                 //图片
-                ImageCompose(url = picUrls[index], ratio = RATIO) {
+                ImageCompose(data = picUrls[index], ratio = RATIO) {
                     loaded[index] = true
                 }
                 FadeAnimation(visible = showConfirmLayout.value) {
@@ -686,46 +772,123 @@ private fun CharacterEquip(
 /**
  * 专武信息
  * @param uniqueEquipLevelMax 最大等级
- * @param sliderState 等级滑动条状态
+ * @param uniqueEquipLevel 等级状态
  * @param uniqueEquipmentMaxData 专武数值信息
  */
+@ExperimentalComposeUiApi
 @ExperimentalCoilApi
 @Composable
 private fun UniqueEquip(
     currentValue: CharacterProperty,
     uniqueEquipLevelMax: Int,
-    sliderState: MutableState<Int>,
+    uniqueEquipLevel: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
     val attrViewModel: CharacterAttrViewModel = hiltViewModel()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+    val insets = LocalWindowInsets.current
+
     uniqueEquipmentMaxData?.let {
         Column(
-            modifier = Modifier.padding(top = Dimen.largePadding)
+            modifier = Modifier.padding(top = Dimen.largePadding),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //名称
             MainText(
                 text = it.equipmentName,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
                 selectable = true
             )
             //专武等级
-            Subtitle1(
-                text = sliderState.value.toString(),
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                color = MaterialTheme.colors.primary
-            )
-            //专武等级选择
-            Slider(
-                value = sliderState.value.toFloat(),
-                onValueChange = { sliderState.value = it.toInt() },
-                onValueChangeFinished = {
-                    attrViewModel.currentValue.postValue(currentValue.update(uniqueEquipmentLevel = sliderState.value))
-                },
-                valueRange = 0f..uniqueEquipLevelMax.toFloat(),
+            Text(
+                text = uniqueEquipLevel.value.toString(),
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h6,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .fillMaxWidth(0.618f)
-                    .height(Dimen.slideHeight)
-                    .align(Alignment.CenterHorizontally)
+                    .padding(Dimen.smallPadding)
+                    .fillMaxWidth(0.3f)
+                    .padding(Dimen.mediuPadding)
+                    .clip(MaterialTheme.shapes.small)
+                    .clickable {
+                        if (insets.ime.isVisible) {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        } else {
+                            focusRequester.requestFocus()
+                            keyboardController?.show()
+                        }
+                    }
+            )
+            //等级输入框
+            val inputLevel = remember {
+                mutableStateOf("")
+            }
+            OutlinedTextField(
+                value = inputLevel.value,
+                onValueChange = {
+                    var filterStr = ""
+                    it.forEach { ch ->
+                        if (Regex("\\d").matches(ch.toString())) {
+                            filterStr += ch
+                        }
+                    }
+                    inputLevel.value = when {
+                        filterStr == "" -> ""
+                        filterStr.toInt() < 1 -> "1"
+                        filterStr.toInt() in 1..uniqueEquipLevelMax -> filterStr
+                        else -> uniqueEquipLevelMax.toString()
+                    }
+                },
+                textStyle = MaterialTheme.typography.body2,
+                trailingIcon = {
+                    IconCompose(
+                        data = MainIconType.OK.icon,
+                        size = Dimen.fabIconSize
+                    ) {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        if (inputLevel.value != "") {
+                            uniqueEquipLevel.value = inputLevel.value.toInt()
+                        }
+                        attrViewModel.currentValue.postValue(
+                            currentValue.update(
+                                uniqueEquipmentLevel = uniqueEquipLevel.value
+                            )
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        if (inputLevel.value != "") {
+                            uniqueEquipLevel.value = inputLevel.value.toInt()
+                        }
+                        attrViewModel.currentValue.postValue(
+                            currentValue.update(
+                                uniqueEquipmentLevel = uniqueEquipLevel.value
+                            )
+                        )
+
+                    }
+                ),
+                modifier = if (insets.ime.isVisible) {
+                    Modifier
+                        .focusRequester(focusRequester)
+                        .padding(Dimen.smallPadding)
+                } else {
+                    Modifier
+                        .focusRequester(focusRequester)
+                        .height(1.dp)
+                        .alpha(0f)
+                }
             )
             //图标描述
             Row(

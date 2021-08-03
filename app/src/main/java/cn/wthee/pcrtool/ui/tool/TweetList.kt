@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
@@ -31,6 +32,7 @@ import cn.wthee.pcrtool.data.db.entity.TweetData
 import cn.wthee.pcrtool.data.db.entity.urlGetId
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.TweetButtonData
+import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
@@ -295,4 +297,15 @@ private fun getComicId(title: String): String {
     }
 }
 
+@Preview
+@ExperimentalCoilApi
+@ExperimentalAnimationApi
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
+@Composable
+private fun TweetItemPreview() {
+    PreviewBox() {
+        TweetItem(data = TweetData(id = "?"), toDetail = {}, toComic = {})
+    }
+}
 

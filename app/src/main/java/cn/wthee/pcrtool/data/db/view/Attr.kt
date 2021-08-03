@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.data.db.entity.UnitRarity
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.utils.Constants
+import kotlin.random.Random
 
 /**
  * 面板属性
@@ -101,6 +102,29 @@ data class Attr(
         return this
     }
 
+    /**
+     * 属性相减
+     */
+    fun sub(other: Attr): Attr {
+        this.hp -= other.hp
+        this.atk -= other.atk
+        this.magicStr -= other.magicStr
+        this.def -= other.def
+        this.magicDef -= other.magicDef
+        this.physicalCritical -= other.physicalCritical
+        this.magicCritical -= other.magicCritical
+        this.waveHpRecovery -= other.waveHpRecovery
+        this.waveEnergyRecovery -= other.waveEnergyRecovery
+        this.dodge -= other.dodge
+        this.physicalPenetrate -= other.physicalPenetrate
+        this.magicPenetrate -= other.magicPenetrate
+        this.lifeSteal -= other.lifeSteal
+        this.hpRecoveryRate -= other.hpRecoveryRate
+        this.energyRecoveryRate -= other.energyRecoveryRate
+        this.energyReduceRate -= other.energyReduceRate
+        this.accuracy -= other.accuracy
+        return this
+    }
 
     /**
      * 属性乘积
@@ -177,6 +201,16 @@ data class Attr(
             compareValue.add(AttrValue(attrValue.title, attrValue.value - attrs1[index].value))
         }
         return compareValue
+    }
+
+    /**
+     * 随机
+     */
+    fun random(): Attr {
+        this.hp += Random(System.currentTimeMillis()).nextDouble()
+        this.atk += Random(System.currentTimeMillis()).nextDouble()
+        this.magicStr += Random(System.currentTimeMillis()).nextDouble()
+        return this
     }
 
 }
