@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.*
-import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME
-import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
+import cn.wthee.pcrtool.data.db.entityjp.*
+import cn.wthee.pcrtool.utils.Constants
 
 
 @Database(
@@ -17,12 +17,12 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
         UnitProfile::class,
         Unit6Star::class,
         ActualUnitBackground::class,
-        UnitData::class,
+        UnitDataJP::class,
         UnitPromotion::class,
         UnitPromotionStatus::class,
         ExperienceUnit::class,
         UnitRarity::class,
-        UnitSkillData::class,
+        UnitSkillDataJP::class,
         EnemyRewardData::class,
         EquipmentCraft::class,
         EquipmentData::class,
@@ -31,29 +31,29 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
         UniqueEquipmentData::class,
         UniqueEquipmentEnhanceData::class,
         UniqueEquipmentEnhanceRate::class,
-        QuestData::class,
+        QuestDataJP::class,
         SkillAction::class,
-        SkillData::class,
-        WaveGroupData::class,
+        SkillDataJP::class,
+        WaveGroupDataJP::class,
         AttackPattern::class,
         GuildData::class,
         UnitComments::class,
-        GachaData::class,
-        GachaExchange::class,
-        ItemData::class,
+        GachaDataJP::class,
+        GachaExchangeJP::class,
+        ItemDataJP::class,
         CharaStoryStatus::class,
         CharacterType::class,
         EventStoryData::class,
         EventStoryDetail::class,
-        EventTopAdv::class,
+        EventTopAdvJP::class,
         OddsNameData::class,
-        HatsuneSchedule::class,
-        CampaignSchedule::class,
+        HatsuneScheduleJP::class,
+        CampaignScheduleJP::class,
         RoomUnitComments::class,
         AilmentData::class,
-        ClanBattleBossData::class,
+        ClanBattleBossDataJP::class,
         ClanBattleSchedule::class,
-        EnemyParameter::class,
+        EnemyParameterJP::class,
         TowerSchedule::class,
         UnitEnemyData::class,
         UnitPromotionBonus::class,
@@ -64,9 +64,9 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
     exportSchema = false
 )
 /**
- * 国服版本数据库
+ * 台服版本数据库
  */
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabaseTW : RoomDatabase() {
 
     abstract fun getUnitDao(): UnitDao
     abstract fun getSkillDao(): SkillDao
@@ -75,22 +75,21 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getEventDao(): EventDao
     abstract fun getClanDao(): ClanBattleDao
 
-
     companion object {
 
         @Volatile
-        private var instance: AppDatabase? = null
+        private var instance: AppDatabaseTW? = null
 
         /**
          * 自动获取数据库、远程备份数据
          */
-        fun getInstance(): AppDatabase {
+        fun getInstance(): AppDatabaseTW {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(
                     if (MyApplication.backupMode) {
-                        DATABASE_BACKUP_NAME
+                        Constants.DATABASE_BACKUP_NAME_TW
                     } else {
-                        DATABASE_NAME
+                        Constants.DATABASE_NAME_TW
                     }
                 ).also { instance = it }
             }
@@ -108,12 +107,11 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-
         @SuppressLint("UnsafeOptInUsageError")
-        fun buildDatabase(name: String): AppDatabase {
+        fun buildDatabase(name: String): AppDatabaseTW {
             return Room.databaseBuilder(
                 MyApplication.context,
-                AppDatabase::class.java,
+                AppDatabaseTW::class.java,
                 name
             ).fallbackToDestructiveMigration()
                 .build()

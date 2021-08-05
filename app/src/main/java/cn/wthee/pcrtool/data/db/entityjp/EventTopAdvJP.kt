@@ -27,7 +27,8 @@ data class EventTopAdvJP(
     @ColumnInfo(name = "story_id") val story_id: Int,
     @ColumnInfo(name = "character_id") val character_id: Int,
     @ColumnInfo(name = "condition_type") val condition_type: Int,
-    @ColumnInfo(name = "condition_story_id") val condition_story_id: Int,
     @ColumnInfo(name = "start_time") val start_time: String,
     @ColumnInfo(name = "end_time") val end_time: String,
+    //jp
+    @ColumnInfo(name = "condition_story_id") val condition_story_id: Int,
 )

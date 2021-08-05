@@ -23,7 +23,7 @@ interface EventDao {
                 event.*,
                 c.title,
                 COALESCE( GROUP_CONCAT( f.value, '-' ), "-" ) AS unit_ids,
-                COALESCE( GROUP_CONCAT( f.item_name, '-' ), "-" ) AS unit_names 
+                COALESCE( GROUP_CONCAT( e.name, '-' ), "-" ) AS unit_names 
             FROM
                 (
                 SELECT

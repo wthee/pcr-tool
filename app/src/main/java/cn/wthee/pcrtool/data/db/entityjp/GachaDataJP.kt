@@ -42,9 +42,8 @@ data class GachaDataJP(
     @ColumnInfo(name = "prizegacha_id") var prizegacha_id: Int = 0,
     @ColumnInfo(name = "gacha_bonus_id") var gacha_bonus_id: Int = 0,
     @ColumnInfo(name = "gacha_times_limit10") var gacha_times_limit10: Int = 0,
-//jp
+    //jp
     @ColumnInfo(name = "pick_up_chara_text") var pick_up_chara_text: String = "",
-
     @ColumnInfo(name = "parallel_id") var parallel_id: Int = 0,
     @ColumnInfo(name = "pickup_badge") var pickup_badge: Int = 0,
 

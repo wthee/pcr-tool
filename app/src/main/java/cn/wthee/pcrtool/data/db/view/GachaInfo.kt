@@ -23,9 +23,9 @@ data class GachaInfo(
      * 获取卡池类型
      */
     fun getType() = when (gachaName) {
-        "ピックアップガチャ" -> "PICK UP"
-        "プライズガチャ" -> "复刻扭蛋"
-        "プリンセスフェス" -> "公主庆典"
+        "ピックアップガチャ", "精選轉蛋" -> "PICK UP"
+        "プライズガチャ", "獎勵轉蛋", "附奖扭蛋" -> "复刻扭蛋"
+        "プリンセスフェス", "公主祭典" -> "公主庆典"
         else -> gachaName
-    }.replace("ガチャ", "").replace("扭蛋", "")
+    }.replace("ガチャ", "").replace("扭蛋", "").replace("轉蛋", "")
 }

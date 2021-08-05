@@ -204,9 +204,8 @@ private fun getAction(
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
             MainIconType.CHANGE_DATA -> {
-                coroutineScope.launch {
-                    DatabaseUpdater.changeType()
-                }
+                //TODO 显示弹窗
+                MainActivity.navViewModel.openChangeDataDialog.postValue(true)
             }
             MainIconType.COMIC -> actions.toComicList()
             MainIconType.DB_DOWNLOAD -> {

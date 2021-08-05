@@ -11,7 +11,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,13 +18,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.compose.SlideLeftAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import coil.annotation.ExperimentalCoilApi
-import kotlinx.coroutines.launch
 
 /**
  * 菜单
@@ -36,7 +33,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MoreFabCompose(viewModel: NavViewModel) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val color =
         colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black)
@@ -65,17 +61,6 @@ fun MoreFabCompose(viewModel: NavViewModel) {
                 defaultPadding = false
             ) {
                 openWebView(context, issueUrl, issueTip)
-            }
-
-            //数据版本切换
-            FabCompose(
-                iconType = MainIconType.CHANGE_DATA,
-                text = stringResource(id = R.string.change_db)
-            ) {
-                coroutineScope.launch {
-                    viewModel.fabMainIcon.postValue(MainIconType.MAIN)
-                    DatabaseUpdater.changeType()
-                }
             }
         }
     }

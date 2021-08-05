@@ -7,12 +7,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -31,6 +31,9 @@ import cn.wthee.pcrtool.data.db.entity.getRegion
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.database.DatabaseUpdater
+import cn.wthee.pcrtool.database.getRegion
+import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
@@ -46,6 +49,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
@@ -67,6 +71,7 @@ fun Overview(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
 
     val characterSize = 10
     val characterList =
@@ -264,6 +269,54 @@ fun Overview(
         }
         CommonSpacer()
     }
+
+    //数据切换选择弹窗
+    val region = getRegion()
+    ChangeDbDialog(openDialog, region, coroutineScope)
+}
+
+//数据切换选择弹窗
+@ExperimentalCoilApi
+@Composable
+private fun ChangeDbDialog(openDialog: Boolean, region: Int, coroutineScope: CoroutineScope) {
+    val context = LocalContext.current
+    val menuTexts = arrayListOf(
+        stringResource(id = R.string.db_cn),
+        stringResource(id = R.string.db_tw),
+        stringResource(id = R.string.db_jp),
+    )
+    DropdownMenu(
+        offset = DpOffset(x = Dimen.largePadding, y = 0.dp),
+        expanded = openDialog,
+        onDismissRequest = { MainActivity.navViewModel.openChangeDataDialog.postValue(false) }
+    ) {
+        for (i in 0..2) {
+            DropdownMenuItem(
+                enabled = region != i + 2,
+                onClick = {
+                    VibrateUtil(context).single()
+                    MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+                    coroutineScope.launch {
+                        DatabaseUpdater.changeRegion(i + 2)
+                    }
+                }) {
+                val textColor =
+                    if (region == i + 2) MaterialTheme.colors.primary else MaterialTheme.colors.primaryVariant
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(menuTexts[i], color = textColor, modifier = Modifier.weight(1f))
+                    if (region == i + 2) {
+                        IconCompose(
+                            data = MainIconType.BACK.icon,
+                            size = Dimen.smallIconSize
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -407,7 +460,7 @@ private fun NewsItem(
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
-    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 1))
+    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
     val sd = calendar.startTime.formatTime
     val ed = calendar.endTime.formatTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0

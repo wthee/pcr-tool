@@ -654,4 +654,8 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val showResult = MutableLiveData(false)
 
 
+    /**
+     * 数据切换弹窗显示
+     */
+    val openChangeDataDialog = MutableLiveData(false)
 }
