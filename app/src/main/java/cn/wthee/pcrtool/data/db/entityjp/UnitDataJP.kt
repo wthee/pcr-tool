@@ -35,4 +35,5 @@ data class UnitDataJP(
     @ColumnInfo(name = "cutin2_star6") var cutin2Star6: Int = 0,
     //jp
     @ColumnInfo(name = "prefab_id_battle") var prefabIdBattle: Int = 0,
-) : Serializable
+    @ColumnInfo(name = "original_unit_id") var originalUnitId: Int = 0,
+    ) : Serializable

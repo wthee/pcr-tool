@@ -37,4 +37,8 @@ data class EnemyParameterJP(
     @ColumnInfo(name = "unique_equipment_flag_1") val unique_equipment_flag_1: Int,
     @ColumnInfo(name = "break_durability") val break_durability: Int,
     @ColumnInfo(name = "virtual_hp") val virtual_hp: Int,
+
+    @ColumnInfo(name = "resist_variation_id") val resist_variation_id: Int,
+
+
 )
