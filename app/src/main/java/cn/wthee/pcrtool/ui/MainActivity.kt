@@ -39,7 +39,7 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
+import cn.wthee.pcrtool.ui.theme.PcrtoolComposeTheme
 import cn.wthee.pcrtool.utils.ActivityHelper
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ScreenUtil
@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            PcrtoolcomposeTheme {
+            PcrtoolComposeTheme {
                 ProvideWindowInsets {
                     //状态栏、导航栏适配
                     val ui = rememberSystemUiController()
@@ -247,7 +247,7 @@ fun FabMain(modifier: Modifier = Modifier) {
 fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
     Column {
         if (themeType == 0 || themeType == 1) {
-            PcrtoolcomposeTheme(darkTheme = false) {
+            PcrtoolComposeTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier.background(MaterialTheme.colors.background),
                     content = content
@@ -260,7 +260,7 @@ fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
             )
         }
         if (themeType == 0 || themeType == 2) {
-            PcrtoolcomposeTheme(darkTheme = true) {
+            PcrtoolComposeTheme(darkTheme = true) {
                 Surface(
                     modifier = Modifier.background(MaterialTheme.colors.background),
                     content = content

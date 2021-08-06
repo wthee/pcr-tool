@@ -6,6 +6,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -22,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -72,6 +72,15 @@ fun Overview(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val downloadState = MainActivity.navViewModel.downloadProgress.observeAsState().value ?: -1
+    val close = MainActivity.navViewModel.fabCloseClick.observeAsState().value ?: false
+    //切换数据关闭监听
+    if (close) {
+        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+        MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
+        MainActivity.navViewModel.fabCloseClick.postValue(false)
+    }
+
 
     val characterSize = 10
     val characterList =
@@ -93,224 +102,290 @@ fun Overview(
             infiniteLoop = true
         )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-    ) {
-        TopBarCompose(actions)
-        //角色
-        Section(
-            titleId = R.string.character,
-            iconType = MainIconType.CHARACTER,
-            visible = characterList.isNotEmpty(),
-            onClick = {
-                actions.toCharacterList()
-            }
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) { index ->
-                val id = characterList[index].id
-                val infiniteLoopIndex =
-                    if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
-                        //从首个滚动到最后一个
-                        pagerState.currentPage - 1
-                    } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
-                        //从最后一个滚动的首个
-                        pagerState.pageCount
-                    } else {
-                        index
-                    }
-                Card(
-                    modifier = Modifier
-                        .padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
-                        .fillMaxWidth(0.8f)
-                        .graphicsLayer {
-                            val pageOffset =
-                                calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
-                            lerp(
-                                start = ScaleFactor(0.9f, 0.9f),
-                                stop = ScaleFactor(1f, 1f),
-                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                            ).also { scale ->
-                                scaleX = scale.scaleY
-                                scaleY = scale.scaleY
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            TopBarCompose(actions)
+            //角色
+            Section(
+                titleId = R.string.character,
+                iconType = MainIconType.CHARACTER,
+                visible = characterList.isNotEmpty(),
+                onClick = {
+                    actions.toCharacterList()
+                }
+            ) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) { index ->
+                    val id = characterList[index].id
+                    val infiniteLoopIndex =
+                        if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
+                            //从首个滚动到最后一个
+                            pagerState.currentPage - 1
+                        } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
+                            //从最后一个滚动的首个
+                            pagerState.pageCount
+                        } else {
+                            index
+                        }
+                    Card(
+                        modifier = Modifier
+                            .padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
+                            .fillMaxWidth(0.8f)
+                            .graphicsLayer {
+                                val pageOffset =
+                                    calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
+                                lerp(
+                                    start = ScaleFactor(0.9f, 0.9f),
+                                    stop = ScaleFactor(1f, 1f),
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                ).also { scale ->
+                                    scaleX = scale.scaleY
+                                    scaleY = scale.scaleY
+                                }
+                            },
+                        onClick = {
+                            VibrateUtil(context).single()
+                            if (index == pagerState.currentPage) {
+                                actions.toCharacterDetail(id)
+                            } else {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(infiniteLoopIndex)
+                                }
                             }
                         },
-                    onClick = {
-                        VibrateUtil(context).single()
-                        if (index == pagerState.currentPage) {
-                            actions.toCharacterDetail(id)
-                        } else {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(infiniteLoopIndex)
+                        elevation = 0.dp,
+                    ) {
+                        ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                    }
+
+                }
+            }
+
+            //装备
+            Section(
+                titleId = R.string.tool_equip,
+                iconType = MainIconType.EQUIP,
+                visible = equipList.isNotEmpty(),
+                onClick = {
+                    actions.toEquipList()
+                }
+            ) {
+                VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+                    equipList.forEach {
+                        Box(
+                            modifier = Modifier
+                                .padding(Dimen.mediuPadding)
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            IconCompose(data = getEquipIconUrl(it.equipmentId)) {
+                                actions.toEquipDetail(it.equipmentId)
                             }
                         }
-                    },
-                    elevation = 0.dp,
-                ) {
-                    ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                    }
                 }
-
             }
-        }
 
-        //装备
-        Section(
-            titleId = R.string.tool_equip,
-            iconType = MainIconType.EQUIP,
-            visible = equipList.isNotEmpty(),
-            onClick = {
-                actions.toEquipList()
+            //更多功能
+            Section(
+                titleId = R.string.function,
+                iconType = MainIconType.FUNCTION
+            ) {
+                ToolMenu(actions = actions)
             }
-        ) {
-            VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                equipList.forEach {
-                    Box(
-                        modifier = Modifier
-                            .padding(Dimen.mediuPadding)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        IconCompose(data = getEquipIconUrl(it.equipmentId)) {
-                            actions.toEquipDetail(it.equipmentId)
+
+            //新闻
+            Section(
+                titleId = R.string.tool_news,
+                iconType = MainIconType.NEWS,
+                onClick = {
+                    actions.toNews()
+                }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            top = Dimen.mediuPadding,
+                            start = Dimen.largePadding,
+                            end = Dimen.largePadding
+                        )
+                ) {
+                    if (newsList.isNotEmpty()) {
+                        newsList.forEach {
+                            NewsItem(
+                                region = it.url.getRegion(),
+                                news = it,
+                                toDetail = actions.toNewsDetail
+                            )
+                        }
+                    } else {
+                        for (i in 0..2) {
+                            NewsItem(
+                                region = 2,
+                                news = NewsTable(),
+                                toDetail = actions.toNewsDetail
+                            )
                         }
                     }
                 }
             }
+            //日历
+            if (inProgressEventList.isNotEmpty()) {
+                Section(
+                    titleId = R.string.tool_calendar,
+                    iconType = MainIconType.CALENDAR_TODAY
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                top = Dimen.mediuPadding,
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding
+                            )
+                            .fillMaxWidth()
+                    ) {
+                        inProgressEventList.forEach {
+                            CalendarItem(it)
+                        }
+                    }
+                }
+            }
+            if (comingSoonEventList.isNotEmpty()) {
+                Section(
+                    titleId = R.string.tool_calendar_comming,
+                    iconType = MainIconType.CALENDAR
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(
+                                top = Dimen.mediuPadding,
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding
+                            )
+                            .fillMaxWidth()
+                    ) {
+                        comingSoonEventList.forEach {
+                            CalendarItem(it)
+                        }
+                    }
+                }
+            }
+            CommonSpacer()
         }
 
-        //更多功能
-        Section(
-            titleId = R.string.function,
-            iconType = MainIconType.FUNCTION
-        ) {
-            ToolMenu(actions = actions)
-        }
-
-        //新闻
-        Section(
-            titleId = R.string.tool_news,
-            iconType = MainIconType.NEWS,
-            onClick = {
-                actions.toNews()
-            }
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        top = Dimen.mediuPadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
-            ) {
-                if (newsList.isNotEmpty()) {
-                    newsList.forEach {
-                        NewsItem(
-                            region = it.url.getRegion(),
-                            news = it,
-                            toDetail = actions.toNewsDetail
-                        )
-                    }
-                } else {
-                    for (i in 0..2) {
-                        NewsItem(
-                            region = 2,
-                            news = NewsTable(),
-                            toDetail = actions.toNewsDetail
-                        )
-                    }
-                }
-            }
-        }
-        //日历
-        if (inProgressEventList.isNotEmpty()) {
-            Section(
-                titleId = R.string.tool_calendar,
-                iconType = MainIconType.CALENDAR_TODAY
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            top = Dimen.mediuPadding,
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding
-                        )
-                        .fillMaxWidth()
-                ) {
-                    inProgressEventList.forEach {
-                        CalendarItem(it)
-                    }
-                }
-            }
-        }
-        if (comingSoonEventList.isNotEmpty()) {
-            Section(
-                titleId = R.string.tool_calendar_comming,
-                iconType = MainIconType.CALENDAR
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            top = Dimen.mediuPadding,
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding
-                        )
-                        .fillMaxWidth()
-                ) {
-                    comingSoonEventList.forEach {
-                        CalendarItem(it)
-                    }
-                }
-            }
-        }
-        CommonSpacer()
+        //数据切换功能
+        ChangeDbCompose(
+            openDialog,
+            downloadState,
+            coroutineScope,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+        )
     }
-
-    //数据切换选择弹窗
-    val region = getRegion()
-    ChangeDbDialog(openDialog, region, coroutineScope)
 }
 
 //数据切换选择弹窗
 @ExperimentalCoilApi
 @Composable
-private fun ChangeDbDialog(openDialog: Boolean, region: Int, coroutineScope: CoroutineScope) {
+private fun ChangeDbCompose(
+    openDialog: Boolean,
+    downloadState: Int,
+    coroutineScope: CoroutineScope,
+    modifier: Modifier
+) {
     val context = LocalContext.current
+    val region = getRegion()
     val menuTexts = arrayListOf(
         stringResource(id = R.string.db_cn),
         stringResource(id = R.string.db_tw),
         stringResource(id = R.string.db_jp),
     )
-    DropdownMenu(
-        offset = DpOffset(x = Dimen.largePadding, y = 0.dp),
-        expanded = openDialog,
-        onDismissRequest = { MainActivity.navViewModel.openChangeDataDialog.postValue(false) }
+
+    //数据切换
+    FloatingActionButton(
+        modifier = modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                end = Dimen.fabMarginEnd,
+                start = Dimen.fabMargin,
+                top = Dimen.fabMargin,
+                bottom = Dimen.fabMargin,
+            )
+            .defaultMinSize(
+                minWidth = Dimen.fabSize,
+                minHeight = Dimen.fabSize
+            ),
+        onClick = {
+            VibrateUtil(context).single()
+            if (!openDialog) {
+                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                MainActivity.navViewModel.openChangeDataDialog.postValue(true)
+            } else {
+                MainActivity.navViewModel.fabCloseClick.postValue(true)
+            }
+        },
+        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
+        backgroundColor = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.primary,
     ) {
-        for (i in 0..2) {
-            DropdownMenuItem(
-                enabled = region != i + 2,
-                onClick = {
-                    VibrateUtil(context).single()
-                    MainActivity.navViewModel.openChangeDataDialog.postValue(false)
-                    coroutineScope.launch {
-                        DatabaseUpdater.changeRegion(i + 2)
+        if (openDialog) {
+            Column(
+                modifier = Modifier.width(Dimen.dataChangeWidth),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //版本
+                for (i in 0..2) {
+                    val mModifier = if (region == i + 2) {
+                        Modifier.fillMaxWidth()
+                    } else {
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                VibrateUtil(context).single()
+                                MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+                                if (region != i + 2) {
+                                    coroutineScope.launch {
+                                        DatabaseUpdater.changeRegion(i + 2)
+                                    }
+                                }
+                            }
                     }
-                }) {
-                val textColor =
-                    if (region == i + 2) MaterialTheme.colors.primary else MaterialTheme.colors.primaryVariant
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(menuTexts[i], color = textColor, modifier = Modifier.weight(1f))
-                    if (region == i + 2) {
-                        IconCompose(
-                            data = MainIconType.BACK.icon,
-                            size = Dimen.smallIconSize
+                    SelectText(
+                        selected = region == i + 2,
+                        text = menuTexts[i],
+                        style = MaterialTheme.typography.h6,
+                        modifier = mModifier.padding(Dimen.mediuPadding)
+                    )
+                }
+            }
+        } else {
+            if (downloadState == -2) {
+                IconCompose(
+                    data = MainIconType.CHANGE_DATA.icon,
+                    tint = MaterialTheme.colors.primary,
+                    size = Dimen.menuIconSize
+                )
+            } else {
+                Box(contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(Dimen.menuIconSize)
+                            .padding(Dimen.smallPadding),
+                        color = MaterialTheme.colors.primary,
+                        strokeWidth = 2.dp
+                    )
+                    //显示下载进度
+                    if (downloadState in 1..99) {
+                        Text(
+                            text = downloadState.toString(),
+                            color = MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.overline
                         )
                     }
                 }
