@@ -8,6 +8,8 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.*
+import cn.wthee.pcrtool.data.db.entityTW.EnemyParameterTW
+import cn.wthee.pcrtool.data.db.entityTW.UnitDataTW
 import cn.wthee.pcrtool.data.db.entityjp.*
 import cn.wthee.pcrtool.utils.Constants
 
@@ -17,7 +19,7 @@ import cn.wthee.pcrtool.utils.Constants
         UnitProfile::class,
         Unit6Star::class,
         ActualUnitBackground::class,
-        UnitDataJP::class,
+        UnitDataTW::class,
         UnitPromotion::class,
         UnitPromotionStatus::class,
         ExperienceUnit::class,
@@ -53,7 +55,7 @@ import cn.wthee.pcrtool.utils.Constants
         AilmentData::class,
         ClanBattleBossDataJP::class,
         ClanBattleSchedule::class,
-        EnemyParameterJP::class,
+        EnemyParameterTW::class,
         TowerSchedule::class,
         UnitEnemyData::class,
         UnitPromotionBonus::class,
