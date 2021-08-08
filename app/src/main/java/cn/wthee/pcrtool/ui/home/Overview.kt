@@ -74,11 +74,15 @@ fun Overview(
     val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val downloadState = MainActivity.navViewModel.downloadProgress.observeAsState().value ?: -1
     val close = MainActivity.navViewModel.fabCloseClick.observeAsState().value ?: false
+    val mainIcon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
     //切换数据关闭监听
     if (close) {
         MainActivity.navViewModel.openChangeDataDialog.postValue(false)
         MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.MAIN)
         MainActivity.navViewModel.fabCloseClick.postValue(false)
+    }
+    if (mainIcon == MainIconType.MAIN) {
+        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
     }
 
 

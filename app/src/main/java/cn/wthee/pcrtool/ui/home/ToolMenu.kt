@@ -57,7 +57,7 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tweet, MainIconType.TWEET),
         ToolMenuData(R.string.comic, MainIconType.COMIC),
 //        ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
-        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
+//        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
     )
 
     VerticalGrid(
