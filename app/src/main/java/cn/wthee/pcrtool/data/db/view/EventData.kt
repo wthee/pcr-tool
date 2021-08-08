@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.view
 
 import androidx.room.ColumnInfo
 import cn.wthee.pcrtool.utils.deleteSpace
+import cn.wthee.pcrtool.utils.intArrayList
 
 /**
  *  剧情活动视图
@@ -17,4 +18,24 @@ data class EventData(
 ) {
 
     fun getEventTitle() = title.deleteSpace
+
+    fun getUnitNameList(): ArrayList<String> {
+        val newList = arrayListOf<String>()
+        unitNames.split('-').forEach {
+            newList.add(it.split('的')[0].split('の')[0].split('（')[0].split('(')[0])
+        }
+        return newList
+    }
+
+    fun getUnitIdList(): ArrayList<Int> {
+        val list = unitIds.intArrayList
+        val newList = arrayListOf<Int>()
+        newList.addAll(list)
+        if (list.size < getUnitNameList().size) {
+            for (i in 0 until getUnitNameList().size - list.size) {
+                newList.add(0)
+            }
+        }
+        return newList
+    }
 }

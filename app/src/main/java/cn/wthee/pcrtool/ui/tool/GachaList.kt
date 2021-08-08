@@ -96,7 +96,7 @@ fun GachaList(
 @ExperimentalMaterialApi
 @Composable
 private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
-    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 1))
+    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
     val sd = gachaInfo.startTime
     val ed = gachaInfo.endTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
@@ -161,7 +161,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                     textAlign = TextAlign.Start
                 )
             } else {
-                IconListCompose(icons, toCharacterDetail)
+                IconListCompose(icons = icons, toCharacterDetail = toCharacterDetail)
             }
 
             //结束日期

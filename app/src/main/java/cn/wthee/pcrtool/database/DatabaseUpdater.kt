@@ -32,12 +32,10 @@ object DatabaseUpdater {
     /**
      * 切换版本
      */
-    suspend fun changeType() {
-        val type = getDatabaseType()
+    suspend fun changeRegion(region: Int) {
         sp.edit {
-            putInt(Constants.SP_DATABASE_TYPE, if (type == 1) 2 else 1)
+            putInt(Constants.SP_DATABASE_TYPE, region)
         }
-        MainActivity.navViewModel.downloadProgress.postValue(-1)
         checkDBVersion(1)
     }
 
@@ -78,42 +76,54 @@ object DatabaseUpdater {
         ver: DatabaseVersion,
         from: Int = -1,
     ) {
-        val databaseType = getDatabaseType()
-        val localVersion = sp.getString(
-            if (databaseType == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-            ""
-        )
+        val region = getRegion()
+        val localVersionKey = when (region) {
+            2 -> Constants.SP_DATABASE_VERSION_CN
+            3 -> Constants.SP_DATABASE_VERSION_TW
+            else -> Constants.SP_DATABASE_VERSION_JP
+        }
+        val localVersion = sp.getString(localVersionKey, "")
         //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
         val remoteBackupMode = MyApplication.backupMode
         //正常下载
         val toDownload = localVersion != ver.toString()  //版本号hash远程不一致
                 || from == 0
-                || (from == -1 && (FileUtil.needUpdate(databaseType) || localVersion == "0"))  //打开应用，数据库wal被清空
-                || (from == 1 && !File(FileUtil.getDatabasePath(databaseType)).exists()) //切换数据库时，数据库文件不存在时更新
+                || (from == -1 && (FileUtil.needUpdate(region) || localVersion == "0"))  //打开应用，数据库wal被清空
+                || (from == 1 && !File(FileUtil.getDatabasePath(region)).exists()) //切换数据库时，数据库文件不存在时更新
         //下载远程备份
         val toDownloadRemoteBackup =
-            remoteBackupMode && File(FileUtil.getDatabaseBackupPath(databaseType)).length() < 1024 * 1024
+            remoteBackupMode && File(FileUtil.getDatabaseBackupPath(region)).length() < 1024 * 1024
         if (toDownload || toDownloadRemoteBackup) {
             //远程备份时
-            var fileName = if (databaseType == 1) {
-                if (remoteBackupMode) {
-                    Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP
-                } else {
-                    Constants.DATABASE_DOWNLOAD_FILE_NAME
+            var fileName = when (region) {
+                2 -> {
+                    if (remoteBackupMode) {
+                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_CN
+                    } else {
+                        Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
+                    }
                 }
-            } else {
-                if (remoteBackupMode) {
-                    Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP
-                } else {
-                    Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
+                3 -> {
+                    if (remoteBackupMode) {
+                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_TW
+                    } else {
+                        Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
+                    }
+                }
+                else -> {
+                    if (remoteBackupMode) {
+                        Constants.DATABASE_DOWNLOAD_FILE_NAME_BACKUP_JP
+                    } else {
+                        Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
+                    }
                 }
             }
             //强制更新时
             if (from == 0) {
-                fileName = if (databaseType == 1) {
-                    Constants.DATABASE_DOWNLOAD_FILE_NAME
-                } else {
-                    Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
+                fileName = when (region) {
+                    2 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
+                    3 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
+                    else -> Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
                 }
             }
             //开始下载
@@ -121,7 +131,7 @@ object DatabaseUpdater {
                 val data = Data.Builder()
                     .putString(DatabaseDownloadWorker.KEY_VERSION, ver.toString())
                     .putString(DatabaseDownloadWorker.KEY_FILE, fileName)
-                    .putInt(DatabaseDownloadWorker.KEY_VERSION_TYPE, databaseType)
+                    .putInt(DatabaseDownloadWorker.KEY_REGION, region)
                     .putInt(DatabaseDownloadWorker.KEY_FROM, from)
                     .build()
                 val uploadWorkRequest =
@@ -154,19 +164,21 @@ object DatabaseUpdater {
     /**
      * 获取数据库文件名
      */
-    private fun getVersionFileName() =
-        if (getDatabaseType() == 1) Constants.DATABASE_VERSION_URL else Constants.DATABASE_VERSION_URL_JP
-
+    private fun getVersionFileName() = when (getRegion()) {
+        2 -> Constants.DATABASE_VERSION_URL_CN
+        3 -> Constants.DATABASE_VERSION_URL_TW
+        else -> Constants.DATABASE_VERSION_URL_JP
+    }
 
 }
 
 /**
  * 获取数据库版本
- * 1: 国服 2：日服
+ * 2: 国服 3：台服 4:日服
  */
-fun getDatabaseType(): Int {
+fun getRegion(): Int {
     val sp = mainSP()
-    return sp.getInt(Constants.SP_DATABASE_TYPE, 1)
+    return sp.getInt(Constants.SP_DATABASE_TYPE, 2)
 }
 
 
@@ -174,14 +186,14 @@ fun getDatabaseType(): Int {
  * 更新本地数据库版本、哈希值
  */
 fun updateLocalDataBaseVersion(ver: String) {
-    val type = getDatabaseType()
     val sp = mainSP()
-
+    val key = when (getRegion()) {
+        2 -> Constants.SP_DATABASE_VERSION_CN
+        3 -> Constants.SP_DATABASE_VERSION_TW
+        else -> Constants.SP_DATABASE_VERSION_JP
+    }
     sp.edit {
-        putString(
-            if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
-            ver
-        )
+        putString(key, ver)
     }
 }
 
@@ -191,38 +203,44 @@ fun updateLocalDataBaseVersion(ver: String) {
  * 1：正常打开  0：启用备用数据库
  */
 fun tryOpenDatabase(): Int {
-    if (getDatabaseType() == 1) {
-        try {
-            //尝试打开数据库
-            if (File(FileUtil.getDatabasePath(1)).exists()) {
-                openDatabase(AppDatabase.buildDatabase(Constants.DATABASE_NAME).openHelper)
+    val region = getRegion()
+    val msg: String
+    val open: () -> Unit
+    when (getRegion()) {
+        2 -> {
+            msg = "更新国服数据结构！！！"
+            open = {
+                openDatabase(AppDatabaseCN.buildDatabase(Constants.DATABASE_NAME_CN).openHelper)
             }
-        } catch (e: Exception) {
-            //启用远程备份数据库
-            MainScope().launch {
-                ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-                UMCrash.generateCustomLog("OpenDatabaseException", "更新国服数据结构！！！")
-            }
-            return 0
         }
-        //正常打开
-        return 1
-    } else {
-        try {
-            //尝试打开数据库
-            if (File(FileUtil.getDatabasePath(2)).exists()) {
+        3 -> {
+            msg = "更新台服数据结构！！!"
+            open = {
+                openDatabase(AppDatabaseTW.buildDatabase(Constants.DATABASE_NAME_TW).openHelper)
+            }
+        }
+        else -> {
+            msg = "更新日服数据结构！！！"
+            open = {
                 openDatabase(AppDatabaseJP.buildDatabase(Constants.DATABASE_NAME_JP).openHelper)
             }
-        } catch (e: Exception) {
-            //启用远程备份数据库
-            MainScope().launch {
-                ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
-                UMCrash.generateCustomLog("OpenDatabaseException", "更新日服数据结构！！！")
-            }
-            return 0
         }
-        return 1
     }
+    try {
+        //尝试打开数据库
+        if (File(FileUtil.getDatabasePath(region)).exists()) {
+            open.invoke()
+        }
+    } catch (e: Exception) {
+        //启用远程备份数据库
+        MainScope().launch {
+            ToastUtil.short(ResourcesUtil.getString(R.string.database_remote_backup))
+            UMCrash.generateCustomLog("OpenDatabaseException", msg)
+        }
+        return 0
+    }
+    //正常打开
+    return 1
 }
 
 /**
@@ -233,8 +251,3 @@ fun openDatabase(helper: SupportSQLiteOpenHelper) {
         it.readableDatabase
     }
 }
-
-/**
- * 获取已选择的游戏版本
- */
-fun getRegion() = if (getDatabaseType() == 1) 2 else 4

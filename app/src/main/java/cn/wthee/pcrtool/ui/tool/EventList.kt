@@ -98,7 +98,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val type: String
     val typeColor: Color
     var showDays = true
-    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 1))
+    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
     val startDate = event.startTime.formatTime.substring(0, 10)
     val endDate = event.endTime.formatTime.substring(0, 10)
     val preEvent = startDate == "2030/12/30"
@@ -200,8 +200,9 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             )
             //图标
             IconListCompose(
-                icons = event.unitIds.intArrayList,
-                toCharacterDetail
+                icons = event.getUnitIdList(),
+                texts = event.getUnitNameList(),
+                toCharacterDetail = toCharacterDetail
             )
             //结束日期
             if (event.eventId / 10000 != 2) {

@@ -110,8 +110,8 @@ private fun GuildItem(
             )
             //图标/描述
             IconListCompose(
-                guild.memberIds,
-                toCharacterDetail
+                icons = guild.memberIds,
+                toCharacterDetail = toCharacterDetail
             )
             // 新加入的成员
             if (guild.newMemberIds.isNotEmpty()) {
@@ -125,8 +125,8 @@ private fun GuildItem(
                     textAlign = TextAlign.Start
                 )
                 IconListCompose(
-                    guild.newMemberIds,
-                    toCharacterDetail
+                    icons = guild.newMemberIds,
+                    toCharacterDetail = toCharacterDetail
                 )
             }
         }

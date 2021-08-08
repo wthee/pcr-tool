@@ -23,7 +23,7 @@ import cn.wthee.pcrtool.ui.FabMain
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.compose.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolcomposeTheme
+import cn.wthee.pcrtool.ui.theme.PcrtoolComposeTheme
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import coil.annotation.ExperimentalCoilApi
@@ -42,7 +42,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
 
 
-    PcrtoolcomposeTheme {
+    PcrtoolComposeTheme {
         Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
             Column {
                 FloatingActionButton(

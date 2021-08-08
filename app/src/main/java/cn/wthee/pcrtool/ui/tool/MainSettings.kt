@@ -47,7 +47,7 @@ import coil.compose.rememberImagePainter
 fun MainSettings() {
     val context = LocalContext.current
     val sp = mainSP(context)
-    val type = sp.getInt(Constants.SP_DATABASE_TYPE, 1)
+    val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
 
     val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground)
 
@@ -58,14 +58,18 @@ fun MainSettings() {
 
     //数据库版本
     val typeName = stringResource(
-        id = if (type == 1) {
-            R.string.db_cn
-        } else {
-            R.string.db_jp
+        id = when (region) {
+            2 -> R.string.db_cn
+            3 -> R.string.db_tw
+            else -> R.string.db_jp
         }
     )
     val localVersion = sp.getString(
-        if (type == 1) Constants.SP_DATABASE_VERSION else Constants.SP_DATABASE_VERSION_JP,
+        when (region) {
+            2 -> Constants.SP_DATABASE_VERSION_CN
+            3 -> Constants.SP_DATABASE_VERSION_TW
+            else -> Constants.SP_DATABASE_VERSION_JP
+        },
         ""
     )
     val dbVersionGroup = if (localVersion != null) {

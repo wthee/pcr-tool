@@ -27,32 +27,52 @@ object FileUtil {
     /**
      * 数据库路径
      */
-    fun getDatabasePath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_NAME else Constants.DATABASE_NAME_JP
+    fun getDatabasePath(region: Int) =
+        getDatabaseDir() + "/" + when (region) {
+            2 -> Constants.DATABASE_NAME_CN
+            3 -> Constants.DATABASE_NAME_TW
+            else -> Constants.DATABASE_NAME_JP
+        }
 
     /**
      * 数据库备份路径
      */
-    fun getDatabaseBackupPath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_BACKUP_NAME else Constants.DATABASE_BACKUP_NAME_JP
+    fun getDatabaseBackupPath(region: Int) =
+        getDatabaseDir() + "/" + when (region) {
+            2 -> Constants.DATABASE_BACKUP_NAME_CN
+            3 -> Constants.DATABASE_BACKUP_NAME_TW
+            else -> Constants.DATABASE_BACKUP_NAME_JP
+        }
 
     /**
      * wal 文件路径
      */
-    fun getDatabaseWalPath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_WAL else Constants.DATABASE_WAL_JP
+    fun getDatabaseWalPath(region: Int) =
+        getDatabaseDir() + "/" + when (region) {
+            2 -> Constants.DATABASE_WAL_CN
+            3 -> Constants.DATABASE_WAL_TW
+            else -> Constants.DATABASE_WAL_JP
+        }
 
     /**
      * 备份 wal 文件路径
      */
-    fun getDatabaseBackupWalPath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_WAL_BACKUP else Constants.DATABASE_WAL_JP_BACKUP
+    fun getDatabaseBackupWalPath(region: Int) =
+        getDatabaseDir() + "/" + when (region) {
+            2 -> Constants.DATABASE_WAL_BACKUP_CN
+            3 -> Constants.DATABASE_WAL_BACKUP_TW
+            else -> Constants.DATABASE_WAL_BACKUP_JP
+        }
 
     /**
      * shm 文件路径
      */
-    private fun getDatabaseShmPath(type: Int) =
-        getDatabaseDir() + "/" + if (type == 1) Constants.DATABASE_SHM else Constants.DATABASE_SHM_JP
+    private fun getDatabaseShmPath(region: Int) =
+        getDatabaseDir() + "/" + when (region) {
+            2 -> Constants.DATABASE_SHM_CN
+            3 -> Constants.DATABASE_SHM_TW
+            else -> Constants.DATABASE_SHM_JP
+        }
 
 
     /**

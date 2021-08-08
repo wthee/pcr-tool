@@ -42,7 +42,7 @@ class DatabaseDownloadWorker(
     companion object {
         const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
-        const val KEY_VERSION_TYPE = "KEY_VERSION_TYPE"
+        const val KEY_REGION = "KEY_REGION"
         const val KEY_FROM = "KEY_FROM"
 
         lateinit var service: Call<ResponseBody>
@@ -52,11 +52,11 @@ class DatabaseDownloadWorker(
         val inputData: Data = inputData
         //版本号
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
-        val type = inputData.getInt(KEY_VERSION_TYPE, 1)
+        val region = inputData.getInt(KEY_REGION, 2)
         val fileName = inputData.getString(KEY_FILE)
         val from = inputData.getInt(KEY_FROM, -1)
         setForegroundAsync(createForegroundInfo())
-        val result = download(version, type, fileName ?: "")
+        val result = download(version, region, fileName ?: "")
         if (result == Result.success()) {
             //通知更新数据
             handler.sendEmptyMessage(from)
@@ -65,7 +65,7 @@ class DatabaseDownloadWorker(
     }
 
 
-    private fun download(version: String, type: Int, fileName: String): Result {
+    private fun download(version: String, region: Int, fileName: String): Result {
         var response: Response<ResponseBody>? = null
         try {
             //创建Retrofit服务
@@ -100,19 +100,21 @@ class DatabaseDownloadWorker(
             val db = File(dbZipPath)
             if (db.exists()) {
                 //删除已有数据库文件
-                FileUtil.deleteMainDatabase(type)
+                FileUtil.deleteMainDatabase(region)
             }
             //保存
             FileUtil.save(response!!.body()!!.byteStream(), db)
             //删除旧的wal
             FileUtil.apply {
-                delete(getDatabaseBackupWalPath(1))
                 delete(getDatabaseBackupWalPath(2))
-                delete(getDatabaseWalPath(1))
+                delete(getDatabaseBackupWalPath(3))
+                delete(getDatabaseBackupWalPath(4))
                 delete(getDatabaseWalPath(2))
+                delete(getDatabaseWalPath(3))
+                delete(getDatabaseWalPath(4))
             }
             //关闭数据库
-            AppDatabase.close()
+            AppDatabaseCN.close()
             AppDatabaseJP.close()
             //加压缩
             UnzippedUtil.deCompress(db, true)

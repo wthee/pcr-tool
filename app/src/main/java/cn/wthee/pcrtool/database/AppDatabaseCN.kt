@@ -8,8 +8,8 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.*
-import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME
-import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
+import cn.wthee.pcrtool.utils.Constants.DATABASE_BACKUP_NAME_CN
+import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME_CN
 
 
 @Database(
@@ -66,7 +66,7 @@ import cn.wthee.pcrtool.utils.Constants.DATABASE_NAME
 /**
  * 国服版本数据库
  */
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabaseCN : RoomDatabase() {
 
     abstract fun getUnitDao(): UnitDao
     abstract fun getSkillDao(): SkillDao
@@ -79,18 +79,18 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
 
         @Volatile
-        private var instance: AppDatabase? = null
+        private var instance: AppDatabaseCN? = null
 
         /**
          * 自动获取数据库、远程备份数据
          */
-        fun getInstance(): AppDatabase {
+        fun getInstance(): AppDatabaseCN {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(
                     if (MyApplication.backupMode) {
-                        DATABASE_BACKUP_NAME
+                        DATABASE_BACKUP_NAME_CN
                     } else {
-                        DATABASE_NAME
+                        DATABASE_NAME_CN
                     }
                 ).also { instance = it }
             }
@@ -110,10 +110,10 @@ abstract class AppDatabase : RoomDatabase() {
 
 
         @SuppressLint("UnsafeOptInUsageError")
-        fun buildDatabase(name: String): AppDatabase {
+        fun buildDatabase(name: String): AppDatabaseCN {
             return Room.databaseBuilder(
                 MyApplication.context,
-                AppDatabase::class.java,
+                AppDatabaseCN::class.java,
                 name
             ).fallbackToDestructiveMigration()
                 .build()

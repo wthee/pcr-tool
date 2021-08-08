@@ -351,6 +351,7 @@ private fun PvpCharacterSelectPage(
                 }
             }
             CommonSpacer()
+            CommonSpacer()
         }
         //指示器
         val modifier = if (floatWindow) {

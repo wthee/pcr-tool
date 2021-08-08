@@ -6,10 +6,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,9 +56,8 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
         ToolMenuData(R.string.tweet, MainIconType.TWEET),
         ToolMenuData(R.string.comic, MainIconType.COMIC),
-        ToolMenuData(R.string.change_db, MainIconType.CHANGE_DATA),
-        ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
-        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
+//        ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
+//        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
     )
 
     VerticalGrid(
@@ -81,64 +78,6 @@ fun ToolMenu(actions: NavActions) {
                 contentAlignment = Alignment.Center
             ) {
                 when (it.iconType) {
-                    MainIconType.CHANGE_DATA -> {
-                        val modifier = if (downloadState == -2) {
-                            Modifier
-                                .clip(MaterialTheme.shapes.medium)
-                                .clickable(
-                                    onClick = getAction(
-                                        coroutineScope,
-                                        context,
-                                        actions,
-                                        it
-                                    )
-                                )
-
-                        } else {
-                            Modifier.clip(MaterialTheme.shapes.medium)
-                        }
-                        Column(
-                            modifier = modifier
-                                .defaultMinSize(minWidth = Dimen.menuItemSize)
-                                .padding(Dimen.smallPadding),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            if (downloadState == -2) {
-                                IconCompose(
-                                    data = MainIconType.CHANGE_DATA.icon,
-                                    tint = MaterialTheme.colors.primary,
-                                    size = Dimen.menuIconSize
-                                )
-                            } else {
-                                Box(contentAlignment = Alignment.Center) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier
-                                            .size(Dimen.menuIconSize)
-                                            .padding(Dimen.smallPadding),
-                                        color = MaterialTheme.colors.primary,
-                                        strokeWidth = Dimen.lineHeight
-                                    )
-                                    //显示下载进度
-                                    if (downloadState in 1..99) {
-                                        Text(
-                                            text = downloadState.toString(),
-                                            color = MaterialTheme.colors.primary,
-                                            style = MaterialTheme.typography.overline
-                                        )
-                                    }
-                                }
-                            }
-                            CaptionText(
-                                text = stringResource(
-                                    id = when (downloadState) {
-                                        -2 -> R.string.change_db
-                                        else -> R.string.checking
-                                    }
-                                ),
-                                modifier = Modifier.padding(top = Dimen.mediuPadding)
-                            )
-                        }
-                    }
                     MainIconType.DB_DOWNLOAD -> {
                         FadeAnimation(downloadState == -2) {
                             MenuItem(coroutineScope, context, actions, it)
@@ -204,9 +143,8 @@ private fun getAction(
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
             MainIconType.CHANGE_DATA -> {
-                coroutineScope.launch {
-                    DatabaseUpdater.changeType()
-                }
+                //TODO 显示弹窗
+                MainActivity.navViewModel.openChangeDataDialog.postValue(true)
             }
             MainIconType.COMIC -> actions.toComicList()
             MainIconType.DB_DOWNLOAD -> {

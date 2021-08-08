@@ -3,9 +3,14 @@ package cn.wthee.pcrtool.ui.compose
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -17,9 +22,13 @@ import coil.annotation.ExperimentalCoilApi
  */
 @ExperimentalCoilApi
 @Composable
-fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
+fun IconListCompose(
+    icons: List<Int>,
+    texts: List<String>? = null,
+    toCharacterDetail: (Int) -> Unit
+) {
     VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediuPadding * 2) {
-        icons.forEach {
+        icons.forEachIndexed { index, it ->
             val unitId: Int
             val iconId: Int
             if (it / 10000 == 3) {
@@ -45,8 +54,18 @@ fun IconListCompose(icons: List<Int>, toCharacterDetail: (Int) -> Unit) {
                 ) {
                     toCharacterDetail(unitId)
                 }
+                texts?.let { text ->
+                    SelectionContainer {
+                        Text(
+                            text = text[index],
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.caption,
+                        )
+                    }
+                }
             }
-
         }
     }
 }
