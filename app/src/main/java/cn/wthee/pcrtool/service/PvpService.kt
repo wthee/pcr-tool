@@ -78,7 +78,7 @@ class PvpService : LifecycleService() {
         flags =
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         //位置大小设置
-        val minSize = (Dimen.fabSize + Dimen.mediuPadding * 3).value.dp2px
+        val minSize = (Dimen.fabSize + Dimen.mediumPadding * 3).value.dp2px
 
         width =
             if (min) {

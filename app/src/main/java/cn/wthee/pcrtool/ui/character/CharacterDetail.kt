@@ -155,8 +155,8 @@ fun CharacterDetail(
                 SkillLoopList(
                     loopData, iconTypes, Modifier.padding(
                         top = Dimen.largePadding,
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding,
                     )
                 )
             }
@@ -196,7 +196,7 @@ fun CharacterDetail(
                                 StarSelect(
                                     currentValue = currentValue,
                                     max = maxValue.rarity,
-                                    modifier = Modifier.padding(top = Dimen.mediuPadding),
+                                    modifier = Modifier.padding(top = Dimen.mediumPadding),
                                     attrViewModel = attrViewModel
                                 )
                                 AttrLists(
@@ -358,7 +358,7 @@ private fun AttrLists(
         modifier = Modifier
             .padding(Dimen.smallPadding)
             .fillMaxWidth(0.3f)
-            .padding(Dimen.mediuPadding)
+            .padding(Dimen.mediumPadding)
             .clip(MaterialTheme.shapes.small)
             .clickable {
                 if (insets.ime.isVisible) {
@@ -692,7 +692,7 @@ private fun CharacterEquip(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = Dimen.mediuPadding)
+                .padding(top = Dimen.mediumPadding)
         ) {
             val id5 = equips[2].equipmentId
             IconCompose(data = getEquipIconUrl(id5)) {
@@ -755,7 +755,7 @@ private fun CharacterEquip(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = Dimen.mediuPadding)
+                .padding(top = Dimen.mediumPadding)
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
@@ -810,7 +810,7 @@ private fun UniqueEquip(
                 modifier = Modifier
                     .padding(Dimen.smallPadding)
                     .fillMaxWidth(0.3f)
-                    .padding(Dimen.mediuPadding)
+                    .padding(Dimen.mediumPadding)
                     .clip(MaterialTheme.shapes.small)
                     .clickable {
                         if (insets.ime.isVisible) {
@@ -899,7 +899,7 @@ private fun UniqueEquip(
                 IconCompose(getEquipIconUrl(it.equipmentId))
                 Subtitle2(
                     text = it.getDesc(),
-                    modifier = Modifier.padding(start = Dimen.mediuPadding),
+                    modifier = Modifier.padding(start = Dimen.mediumPadding),
                     selectable = true
                 )
             }

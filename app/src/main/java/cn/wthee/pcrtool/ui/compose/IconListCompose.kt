@@ -27,7 +27,7 @@ fun IconListCompose(
     texts: List<String>? = null,
     toCharacterDetail: (Int) -> Unit
 ) {
-    VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediuPadding * 2) {
+    VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2) {
         icons.forEachIndexed { index, it ->
             val unitId: Int
             val iconId: Int
@@ -43,9 +43,9 @@ fun IconListCompose(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding,
-                        top = Dimen.mediuPadding
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding,
+                        top = Dimen.mediumPadding
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

@@ -96,7 +96,7 @@ fun EquipList(
                     LazyVerticalGrid(
                         cells = GridCells.Fixed(spanCount),
                         state = scrollState,
-                        contentPadding = PaddingValues(Dimen.mediuPadding)
+                        contentPadding = PaddingValues(Dimen.mediumPadding)
                     ) {
                         items(equips) { equip ->
                             EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
@@ -175,7 +175,7 @@ private fun EquipItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimen.mediuPadding),
+            .padding(Dimen.mediumPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(data = getEquipIconUrl(equip.equipmentId)) {

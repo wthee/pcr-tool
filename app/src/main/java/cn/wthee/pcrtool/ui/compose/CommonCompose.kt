@@ -37,7 +37,7 @@ fun MainTitleText(
         style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
         modifier = modifier
             .background(color = backgroundColor, shape = MaterialTheme.shapes.small)
-            .padding(start = Dimen.mediuPadding, end = Dimen.mediuPadding)
+            .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
     )
 }
 
@@ -86,8 +86,8 @@ fun MainText(
     if (selectable) {
         SelectionContainer(
             modifier = modifier.padding(
-                start = Dimen.mediuPadding,
-                end = Dimen.mediuPadding
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding
             )
         ) {
             Text(

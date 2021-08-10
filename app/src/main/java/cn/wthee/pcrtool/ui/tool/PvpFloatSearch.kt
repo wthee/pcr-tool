@@ -43,7 +43,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
 
 
     PcrtoolComposeTheme {
-        Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
             Column {
                 FloatingActionButton(
                     onClick = {

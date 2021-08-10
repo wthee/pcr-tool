@@ -162,7 +162,7 @@ fun RankEquipCount(
                             navViewModel.loading.postValue(false)
                             LazyVerticalGrid(
                                 cells = GridCells.Fixed(spanCount),
-                                contentPadding = PaddingValues(Dimen.mediuPadding)
+                                contentPadding = PaddingValues(Dimen.mediumPadding)
                             ) {
                                 items(items = rankEquipMaterials) { item ->
                                     EquipCountItem(item, filterValue, toEquipMaterial)
@@ -209,7 +209,7 @@ private fun EquipCountItem(
     val loved = filter.starIds.contains(item.id)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(Dimen.mediuPadding),
+        modifier = Modifier.padding(Dimen.mediumPadding),
     ) {
         IconCompose(data = getEquipIconUrl(item.id)) {
             toEquipMaterial(item.id)
@@ -234,7 +234,7 @@ private fun EquipCountItemPreview() {
     PreviewBox {
         LazyVerticalGrid(
             cells = GridCells.Fixed(spanCount),
-            contentPadding = PaddingValues(Dimen.mediuPadding)
+            contentPadding = PaddingValues(Dimen.mediumPadding)
         ) {
             items(items = rankEquipMaterials) { item ->
                 EquipCountItem(item, FilterEquipment(), { })

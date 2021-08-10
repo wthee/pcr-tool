@@ -158,7 +158,7 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
             color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.subtitle1,
             modifier = Modifier
-                .padding(start = Dimen.mediuPadding)
+                .padding(start = Dimen.mediumPadding)
                 .placeholder(
                     visible = placeholder,
                     highlight = PlaceholderHighlight.shimmer()
@@ -210,7 +210,7 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
         if (photos.isNotEmpty()) {
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
+                modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
             ) { pageIndex ->
                 val isComic = url != ""
                 if (!isComic) {

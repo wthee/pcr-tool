@@ -92,7 +92,7 @@ private fun EquipDetail(
                     IconCompose(data = getEquipIconUrl(equipId))
                     Subtitle2(
                         text = equipMaxData.getDesc(),
-                        modifier = Modifier.padding(start = Dimen.mediuPadding),
+                        modifier = Modifier.padding(start = Dimen.mediumPadding),
                         selectable = true
                     )
                 }

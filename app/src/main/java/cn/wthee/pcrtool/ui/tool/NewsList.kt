@@ -204,7 +204,7 @@ private fun NewsItem(
         else -> R.color.colorPrimary
     }
     //标题
-    Row(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+    Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
         MainTitleText(
             text = tag,
             backgroundColor = colorResource(id = colorId),
@@ -236,7 +236,7 @@ private fun NewsItem(
         //内容
         Subtitle1(
             text = news.title,
-            modifier = Modifier.padding(Dimen.mediuPadding),
+            modifier = Modifier.padding(Dimen.mediumPadding),
             selectable = true
         )
     }
@@ -275,12 +275,12 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimen.mediuPadding),
+                    .padding(Dimen.mediumPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 MainText(
                     text = originalTitle,
-                    modifier = Modifier.padding(Dimen.mediuPadding),
+                    modifier = Modifier.padding(Dimen.mediumPadding),
                     selectable = true
                 )
                 Subtitle2(text = date)
@@ -288,7 +288,7 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
                     modifier = Modifier
                         .alpha(alpha)
                         .padding(
-                            top = Dimen.mediuPadding,
+                            top = Dimen.mediumPadding,
                             start = Dimen.largePadding,
                             end = Dimen.largePadding
                         ),

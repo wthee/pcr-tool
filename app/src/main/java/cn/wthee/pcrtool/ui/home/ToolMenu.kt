@@ -70,9 +70,9 @@ fun ToolMenu(actions: NavActions) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        top = Dimen.mediuPadding,
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding,
+                        top = Dimen.mediumPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding,
                         bottom = Dimen.largePadding
                     ),
                 contentAlignment = Alignment.Center
@@ -118,7 +118,7 @@ private fun MenuItem(
         IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)
         CaptionText(
             text = stringResource(id = it.titleId),
-            modifier = Modifier.padding(top = Dimen.mediuPadding)
+            modifier = Modifier.padding(top = Dimen.mediumPadding)
         )
     }
 }

@@ -107,7 +107,7 @@ fun SkillItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = Dimen.mediuPadding, bottom = Dimen.largePadding)
+            .padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
     ) {
         //技能名
         val type = getSkillType(skillDetail.skillId)
@@ -149,7 +149,7 @@ fun SkillItem(
             val url = Constants.SKILL_ICON_URL + skillDetail.iconType + Constants.WEBP
             //技能图标
             IconCompose(data = url)
-            Column(modifier = Modifier.padding(start = Dimen.mediuPadding)) {
+            Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
                 //等级
                 if (isClanBoss) {
                     Text(
@@ -189,7 +189,7 @@ fun SkillActionTag(skillTag: String) {
     MainTitleText(
         text = skillTag,
         small = true,
-        modifier = Modifier.padding(end = Dimen.smallPadding, top = Dimen.mediuPadding)
+        modifier = Modifier.padding(end = Dimen.smallPadding, top = Dimen.mediumPadding)
     )
 }
 
@@ -250,9 +250,9 @@ fun SkillActionItem(skillAction: SkillActionText) {
         ),
         color = colorResource(id = R.color.gray),
         modifier = Modifier.padding(
-            top = Dimen.mediuPadding,
-            start = Dimen.mediuPadding,
-            end = Dimen.mediuPadding
+            top = Dimen.mediumPadding,
+            start = Dimen.mediumPadding,
+            end = Dimen.mediumPadding
         ),
         text = buildAnnotatedString {
             skillAction.action.forEachIndexed { index, c ->
@@ -333,7 +333,7 @@ private fun SkillLoopIconList(
     iconTypes: HashMap<Int, Int>
 ) {
     VerticalGrid(
-        modifier = Modifier.padding(top = Dimen.mediuPadding),
+        modifier = Modifier.padding(top = Dimen.mediumPadding),
         maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
     ) {
         iconList.forEach {
@@ -341,9 +341,9 @@ private fun SkillLoopIconList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding,
-                        bottom = Dimen.mediuPadding
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding,
+                        bottom = Dimen.mediumPadding
                     ), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val type: String

@@ -136,7 +136,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
 
     //标题
     FlowRow(
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+        modifier = Modifier.padding(bottom = Dimen.mediumPadding)
     ) {
         MainTitleText(
             text = type,
@@ -187,14 +187,14 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
     }
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
             //内容
             MainContentText(
                 text = event.getEventTitle(),
                 modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.mediuPadding,
-                    end = Dimen.mediuPadding
+                    top = Dimen.mediumPadding,
+                    start = Dimen.mediumPadding,
+                    end = Dimen.mediumPadding
                 ),
                 textAlign = TextAlign.Start
             )
@@ -210,7 +210,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     text = event.endTime,
                     modifier = Modifier
                         .align(Alignment.End)
-                        .padding(end = Dimen.mediuPadding)
+                        .padding(end = Dimen.mediumPadding)
                 )
             }
 

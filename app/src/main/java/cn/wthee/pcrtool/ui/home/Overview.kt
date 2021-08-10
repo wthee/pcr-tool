@@ -138,7 +138,7 @@ fun Overview(
                         }
                     Card(
                         modifier = Modifier
-                            .padding(top = Dimen.mediuPadding, bottom = Dimen.mediuPadding)
+                            .padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
                             .fillMaxWidth(0.8f)
                             .graphicsLayer {
                                 val pageOffset =
@@ -183,7 +183,7 @@ fun Overview(
                     equipList.forEach {
                         Box(
                             modifier = Modifier
-                                .padding(Dimen.mediuPadding)
+                                .padding(Dimen.mediumPadding)
                                 .fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ) {
@@ -214,7 +214,7 @@ fun Overview(
                 Column(
                     modifier = Modifier
                         .padding(
-                            top = Dimen.mediuPadding,
+                            top = Dimen.mediumPadding,
                             start = Dimen.largePadding,
                             end = Dimen.largePadding
                         )
@@ -247,7 +247,7 @@ fun Overview(
                     Column(
                         modifier = Modifier
                             .padding(
-                                top = Dimen.mediuPadding,
+                                top = Dimen.mediumPadding,
                                 start = Dimen.largePadding,
                                 end = Dimen.largePadding
                             )
@@ -267,7 +267,7 @@ fun Overview(
                     Column(
                         modifier = Modifier
                             .padding(
-                                top = Dimen.mediuPadding,
+                                top = Dimen.mediumPadding,
                                 start = Dimen.largePadding,
                                 end = Dimen.largePadding
                             )
@@ -364,7 +364,7 @@ private fun ChangeDbCompose(
                         selected = region == i + 2,
                         text = menuTexts[i],
                         style = MaterialTheme.typography.h6,
-                        modifier = mModifier.padding(Dimen.mediuPadding)
+                        modifier = mModifier.padding(Dimen.mediumPadding)
                     )
                 }
             }
@@ -432,8 +432,8 @@ private fun Section(
             modifier = modifier.padding(
                 start = Dimen.largePadding,
                 end = Dimen.largePadding,
-                top = Dimen.mediuPadding,
-                bottom = Dimen.mediuPadding
+                top = Dimen.mediumPadding,
+                bottom = Dimen.mediumPadding
             ),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -446,7 +446,7 @@ private fun Section(
                 text = stringResource(id = titleId),
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = Dimen.mediuPadding),
+                    .padding(start = Dimen.mediumPadding),
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colors.onSurface
             )
@@ -488,7 +488,7 @@ private fun NewsItem(
     //标题
     Row(
         modifier = Modifier
-            .padding(bottom = Dimen.mediuPadding)
+            .padding(bottom = Dimen.mediumPadding)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -525,7 +525,7 @@ private fun NewsItem(
         //内容
         Subtitle1(
             text = news.title,
-            modifier = Modifier.padding(Dimen.mediuPadding),
+            modifier = Modifier.padding(Dimen.mediumPadding),
             selectable = true
         )
     }
@@ -558,7 +558,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
     }
 
     FlowRow(
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
     ) {
         //开始日期
         MainTitleText(
@@ -605,7 +605,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
     }
 
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(Dimen.mediuPadding)) {
+        Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
             //内容
             getTypeData(calendar).forEach {
                 Subtitle1(text = it.title + it.info)

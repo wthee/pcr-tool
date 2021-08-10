@@ -132,7 +132,7 @@ private fun NoticeItem(data: AppNotice) {
     val context = LocalContext.current
 
     Row(
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         MainTitleText(
@@ -175,7 +175,7 @@ private fun NoticeItem(data: AppNotice) {
                 MainContentText(
                     text = stringResource(id = R.string.to_update),
                     color = colorResource(id = R.color.color_rank_21),
-                    modifier = Modifier.padding(top = Dimen.mediuPadding)
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
                 )
             }
         }

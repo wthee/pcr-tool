@@ -49,7 +49,7 @@ fun RankEquipList(
     SlideAnimation(visible = allRankEquip.isNotEmpty()) {
         LazyVerticalGrid(
             cells = GridCells.Fixed(spanCount),
-            contentPadding = PaddingValues(Dimen.mediuPadding)
+            contentPadding = PaddingValues(Dimen.mediumPadding)
         ) {
             items(allRankEquip) {
                 RankEquipListItem(it, selectedRank, toEquipDetail)
@@ -83,7 +83,7 @@ fun RankEquipListItem(
 
 
     MainCard(
-        modifier = Modifier.padding(Dimen.mediuPadding),
+        modifier = Modifier.padding(Dimen.mediumPadding),
         onClick = {
             selectedRank.value = unitPromotion.promotionLevel
             navViewModel.selectRank.postValue(unitPromotion.promotionLevel)
@@ -100,7 +100,7 @@ fun RankEquipListItem(
             RankText(
                 rank = unitPromotion.promotionLevel,
                 style = MaterialTheme.typography.h6,
-                modifier = Modifier.padding(Dimen.mediuPadding)
+                modifier = Modifier.padding(Dimen.mediumPadding)
             )
             val allIds = unitPromotion.getAllOrderIds()
             allIds.forEachIndexed { index, _ ->
@@ -143,7 +143,7 @@ private fun RankEquipListItemPreview() {
     PreviewBox {
         LazyVerticalGrid(
             cells = GridCells.Fixed(3),
-            contentPadding = PaddingValues(Dimen.mediuPadding)
+            contentPadding = PaddingValues(Dimen.mediumPadding)
         ) {
             items(allRankEquip) {
                 RankEquipListItem(it, selectedRank) { }

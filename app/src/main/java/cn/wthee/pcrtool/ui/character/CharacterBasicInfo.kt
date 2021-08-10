@@ -65,21 +65,21 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             info.getIntroText(),
             style = MaterialTheme.typography.subtitle2,
         )
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.character),
                 modifier = Modifier.weight(0.15f)
             )
             MainContentText(text = info.name, modifier = Modifier.weight(0.85f))
         }
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.name),
                 modifier = Modifier.weight(0.15f)
             )
             MainContentText(text = info.actualName, modifier = Modifier.weight(0.85f))
         }
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_height),
                 modifier = Modifier.weight(0.15f)
@@ -88,7 +88,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 text = info.getFixedHeight() + " CM",
                 modifier = Modifier
                     .weight(0.35f)
-                    .padding(end = Dimen.mediuPadding)
+                    .padding(end = Dimen.mediumPadding)
             )
             MainTitleText(
                 text = stringResource(id = R.string.title_weight),
@@ -99,7 +99,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 modifier = Modifier.weight(0.35f)
             )
         }
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_birth),
                 modifier = Modifier.weight(0.15f)
@@ -112,7 +112,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 ),
                 modifier = Modifier
                     .weight(0.35f)
-                    .padding(end = Dimen.mediuPadding)
+                    .padding(end = Dimen.mediumPadding)
             )
             MainTitleText(
                 text = stringResource(id = R.string.age),
@@ -123,7 +123,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 modifier = Modifier.weight(0.35f)
             )
         }
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_blood),
                 modifier = Modifier.weight(0.15f)
@@ -132,7 +132,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 text = info.bloodType,
                 modifier = Modifier
                     .weight(0.35f)
-                    .padding(end = Dimen.mediuPadding)
+                    .padding(end = Dimen.mediumPadding)
             )
             MainTitleText(
                 text = stringResource(id = R.string.title_position),
@@ -149,7 +149,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 )
             }
         }
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_race),
                 modifier = Modifier.weight(0.15f)
@@ -158,7 +158,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 text = info.race,
                 modifier = Modifier
                     .weight(0.35f)
-                    .padding(end = Dimen.mediuPadding),
+                    .padding(end = Dimen.mediumPadding),
                 selectable = true
             )
             MainTitleText(
@@ -171,7 +171,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
                 selectable = true
             )
         }
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_guild),
                 modifier = Modifier.weight(0.15f)
@@ -181,14 +181,14 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         MainContentText(
             text = info.guild,
             modifier = Modifier.padding(
-                top = Dimen.mediuPadding,
+                top = Dimen.mediumPadding,
                 start = Dimen.largePadding,
                 end = Dimen.largePadding
             ),
             textAlign = TextAlign.Start,
             selectable = true
         )
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_fav),
                 modifier = Modifier.weight(0.15f)
@@ -197,12 +197,12 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.favorite,
-            modifier = Modifier.padding(Dimen.mediuPadding),
+            modifier = Modifier.padding(Dimen.mediumPadding),
             textAlign = TextAlign.Start,
             selectable = true
         )
         info.getSelf()?.let {
-            Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+            Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
                 MainTitleText(
                     text = stringResource(id = R.string.title_self),
                     modifier = Modifier.weight(0.15f)
@@ -211,12 +211,12 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
             }
             MainContentText(
                 text = it,
-                modifier = Modifier.padding(Dimen.mediuPadding),
+                modifier = Modifier.padding(Dimen.mediumPadding),
                 textAlign = TextAlign.Start,
                 selectable = true
             )
         }
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_comments),
                 modifier = Modifier.weight(0.15f)
@@ -225,11 +225,11 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.getCommentsText(),
-            modifier = Modifier.padding(Dimen.mediuPadding),
+            modifier = Modifier.padding(Dimen.mediumPadding),
             textAlign = TextAlign.Start,
             selectable = true
         )
-        Row(modifier = Modifier.padding(top = Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(
                 text = stringResource(id = R.string.title_room_comments),
                 modifier = Modifier.weight(0.15f)
@@ -238,7 +238,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         }
         MainContentText(
             text = info.getRoomCommentsText(),
-            modifier = Modifier.padding(Dimen.mediuPadding),
+            modifier = Modifier.padding(Dimen.mediumPadding),
             textAlign = TextAlign.Start,
             selectable = true
         )

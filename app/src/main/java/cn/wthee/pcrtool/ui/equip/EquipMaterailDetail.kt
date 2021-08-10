@@ -108,7 +108,7 @@ fun EquipMaterialDeatil(
                 //Tab
                 TabRow(
                     modifier = Modifier
-                        .padding(top = Dimen.mediuPadding)
+                        .padding(top = Dimen.mediumPadding)
                         .fillMaxWidth(0.8f),
                     selectedTabIndex = pagerState.currentPage,
                     backgroundColor = Color.Transparent,
@@ -143,7 +143,7 @@ fun EquipMaterialDeatil(
                 HorizontalPager(state = pagerState) { pagerIndex ->
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        contentPadding = PaddingValues(top = Dimen.mediuPadding),
+                        contentPadding = PaddingValues(top = Dimen.mediumPadding),
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(
@@ -208,8 +208,8 @@ private fun AreaEquipList(
             text = num,
             style = MaterialTheme.typography.h6,
             modifier = Modifier.padding(
-                bottom = Dimen.mediuPadding,
-                top = Dimen.mediuPadding
+                bottom = Dimen.mediumPadding,
+                top = Dimen.mediumPadding
             ),
             color = color
         )

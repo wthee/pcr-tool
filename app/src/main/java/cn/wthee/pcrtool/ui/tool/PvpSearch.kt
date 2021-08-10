@@ -75,7 +75,7 @@ fun PvpSearchCompose(
     val data = characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
     val serviceIntent = Intent(context, PvpService::class.java)
     val tip = stringResource(id = R.string.tip_select_5)
 
@@ -184,7 +184,7 @@ fun PvpSearchCompose(
                 SlideAnimation(visible = data.isNotEmpty()) {
                     HorizontalPager(
                         state = pagerState,
-                        modifier = Modifier.padding(top = mediuPadding)
+                        modifier = Modifier.padding(top = mediumPadding)
                     ) { pageIndex ->
                         when (pageIndex) {
                             0 -> PvpCharacterSelectPage(
@@ -364,8 +364,8 @@ private fun PvpCharacterSelectPage(
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
                 .padding(
-                    bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
-                    start = Dimen.mediuPadding,
+                    bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediumPadding,
+                    start = Dimen.mediumPadding,
                     end = Dimen.fabMargin
                 )
         }
@@ -524,7 +524,7 @@ fun PvpSearchResult(
     val vibrated = remember {
         mutableStateOf(false)
     }
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     if (favorites.value != null) {
         SideEffect {
@@ -556,8 +556,8 @@ fun PvpSearchResult(
                                 //展示查询结果
                                 LazyColumn(
                                     contentPadding = PaddingValues(
-                                        start = mediuPadding,
-                                        end = mediuPadding
+                                        start = mediumPadding,
+                                        end = mediumPadding
                                     )
                                 ) {
                                     itemsIndexed(items = list) { index, item ->
@@ -594,7 +594,7 @@ fun PvpSearchResult(
                         )
                         SubButton(
                             text = "重新查询",
-                            modifier = Modifier.padding(top = Dimen.mediuPadding)
+                            modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
                             pvpViewModel.pvpResult.postValue(null)
                             pvpViewModel.getPVPData(idArray)
@@ -612,8 +612,8 @@ fun PvpSearchResult(
                     //展示查询结果
                     LazyColumn(
                         contentPadding = PaddingValues(
-                            start = mediuPadding,
-                            end = mediuPadding
+                            start = mediumPadding,
+                            end = mediumPadding
                         )
                     ) {
                         items(10) {
@@ -658,18 +658,18 @@ private fun PvpResultItem(
         mutableStateOf(favoritesList.contains(item.atk))
     }
 
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(mediuPadding)
+            .padding(mediumPadding)
     ) {
         Row {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
                 modifier = Modifier
-                    .padding(bottom = mediuPadding)
+                    .padding(bottom = mediumPadding)
                     .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -720,8 +720,8 @@ private fun PvpResultItem(
             }
             Column(
                 modifier = Modifier.padding(
-                    start = mediuPadding,
-                    end = mediuPadding
+                    start = mediumPadding,
+                    end = mediumPadding
                 )
             ) {
                 //点赞信息
@@ -751,7 +751,7 @@ private fun PvpResultItem(
                 //进攻
                 Row(
                     modifier = Modifier
-                        .padding(bottom = mediuPadding)
+                        .padding(bottom = mediumPadding)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -807,7 +807,7 @@ fun PvpFavorites(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value != null && list.value!!.isNotEmpty()) {
-            LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.mediuPadding)) {
+            LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.mediumPadding)) {
                 items(list.value!!) { data ->
                     PvpFavoriteItem(
                         toCharacter,
@@ -843,11 +843,11 @@ private fun PvpFavoriteItem(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Row(
         modifier = Modifier
-            .padding(start = mediuPadding, end = mediuPadding)
+            .padding(start = mediumPadding, end = mediumPadding)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -884,12 +884,12 @@ private fun PvpFavoriteItem(
         }
     }
 
-    MainCard(modifier = Modifier.padding((mediuPadding))) {
+    MainCard(modifier = Modifier.padding((mediumPadding))) {
         //队伍角色图标
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = mediuPadding, bottom = mediuPadding)
+                .padding(top = mediumPadding, bottom = mediumPadding)
         ) {
             //进攻
             Row(

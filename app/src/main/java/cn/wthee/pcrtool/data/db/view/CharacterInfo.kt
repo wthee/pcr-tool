@@ -34,7 +34,7 @@ data class CharacterInfo(
     fun getFixedHeight() = if (height == "999") "?" else height
 
     /**
-     * 格式划体重
+     * 格式化体重
      */
     fun getFixedWeight() = if (weight == "999") "?" else weight
 

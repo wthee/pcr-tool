@@ -277,7 +277,7 @@ private fun SettingItem(
             TitleText(text = title)
             SummaryText(text = summary)
         }
-        Spacer(modifier = Modifier.width(Dimen.mediuPadding))
+        Spacer(modifier = Modifier.width(Dimen.mediumPadding))
     }
 }
 
@@ -297,7 +297,7 @@ private fun SummaryText(text: String) {
         text = text,
         style = MaterialTheme.typography.body1,
         color = colorResource(id = R.color.gray),
-        modifier = Modifier.padding(top = Dimen.mediuPadding)
+        modifier = Modifier.padding(top = Dimen.mediumPadding)
     )
 }
 
