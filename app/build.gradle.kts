@@ -107,7 +107,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_version"]}")
 
     //Accompanist
-    val accompanistVersion = "0.16.0"
+    val accompanistVersion = "0.16.1"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")

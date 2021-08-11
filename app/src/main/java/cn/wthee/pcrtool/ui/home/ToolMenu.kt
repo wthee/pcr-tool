@@ -56,9 +56,11 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
         ToolMenuData(R.string.tweet, MainIconType.TWEET),
         ToolMenuData(R.string.comic, MainIconType.COMIC),
-//        ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
-//        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
     )
+    if (BuildConfig.debug) {
+        list.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
+        list.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
+    }
 
     VerticalGrid(
         maxColumnWidth = Dimen.toolMenuWidth,
@@ -143,7 +145,6 @@ private fun getAction(
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
             MainIconType.CHANGE_DATA -> {
-                //TODO 显示弹窗
                 MainActivity.navViewModel.openChangeDataDialog.postValue(true)
             }
             MainIconType.COMIC -> actions.toComicList()

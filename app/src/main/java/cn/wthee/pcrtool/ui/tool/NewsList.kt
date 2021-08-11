@@ -19,16 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
@@ -46,8 +44,8 @@ import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -56,7 +54,6 @@ import kotlinx.coroutines.launch
 
 /**
  * 公告列表
- * fixme 跳转后，回到顶部
  */
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
@@ -64,29 +61,15 @@ import kotlinx.coroutines.launch
 @ExperimentalPagingApi
 @Composable
 fun NewsList(
+    pagerState: PagerState,
     scrollState0: LazyListState,
     scrollState1: LazyListState,
     scrollState2: LazyListState,
+    news0: LazyPagingItems<NewsTable>?,
+    news1: LazyPagingItems<NewsTable>?,
+    news2: LazyPagingItems<NewsTable>?,
     toDetail: (String) -> Unit,
-    newsViewModel: NewsViewModel = hiltViewModel()
 ) {
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    newsViewModel.getNews(2)
-    newsViewModel.getNews(3)
-    newsViewModel.getNews(4)
-    val flow0 = newsViewModel.newsPageList0
-    val flow1 = newsViewModel.newsPageList1
-    val flow2 = newsViewModel.newsPageList2
-    val news0 = remember(flow0, lifecycle) {
-        flow0?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-    val news1 = remember(flow1, lifecycle) {
-        flow1?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-    val news2 = remember(flow2, lifecycle) {
-        flow2?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val tab = arrayListOf(
@@ -94,12 +77,8 @@ fun NewsList(
         stringResource(id = R.string.db_tw),
         stringResource(id = R.string.db_jp)
     )
-    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2)
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { pagerIndex ->
             val scrollState = when (pagerIndex) {
                 0 -> scrollState0
