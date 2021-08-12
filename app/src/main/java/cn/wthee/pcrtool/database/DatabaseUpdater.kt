@@ -55,7 +55,7 @@ object DatabaseUpdater {
             val service = ApiUtil.create(
                 MyAPIService::class.java,
                 API_URL,
-                5
+                10
             )
             val version = service.getDbVersion(getVersionFileName())
             //更新判断
