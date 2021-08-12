@@ -14,28 +14,13 @@ data class EventData(
     @ColumnInfo(name = "end_time") val endTime: String = "2020/01/07 00:00:00",
     @ColumnInfo(name = "title") val title: String = "???",
     @ColumnInfo(name = "unit_ids") val unitIds: String = "100101",
-    @ColumnInfo(name = "unit_names") val unitNames: String = "?",
 ) {
 
     fun getEventTitle() = title.deleteSpace
 
-    fun getUnitNameList(): ArrayList<String> {
-        val newList = arrayListOf<String>()
-        unitNames.split('-').forEach {
-            newList.add(it.split('的')[0].split('の')[0].split('（')[0].split('(')[0])
-        }
-        return newList
-    }
 
-    fun getUnitIdList(): ArrayList<Int> {
+    fun getUnitIdList(): List<Int> {
         val list = unitIds.intArrayList
-        val newList = arrayListOf<Int>()
-        newList.addAll(list)
-        if (list.size < getUnitNameList().size) {
-            for (i in 0 until getUnitNameList().size - list.size) {
-                newList.add(0)
-            }
-        }
-        return newList
+        return list.subList(1, 3)
     }
 }

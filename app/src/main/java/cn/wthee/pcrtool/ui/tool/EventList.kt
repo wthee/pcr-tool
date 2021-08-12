@@ -201,7 +201,6 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             //图标
             IconListCompose(
                 icons = event.getUnitIdList(),
-                texts = event.getUnitNameList(),
                 toCharacterDetail = toCharacterDetail
             )
             //结束日期
