@@ -116,7 +116,6 @@ fun CharacterDetail(
         mutableStateOf(filter.value?.starIds?.contains(unitId) ?: false)
     }
     //技能循环
-
     val loopData =
         skillViewModel.getCharacterSkillLoops(unitId).collectAsState(initial = arrayListOf()).value
     val iconTypes = skillViewModel.iconTypes.observeAsState().value ?: hashMapOf()
@@ -178,12 +177,12 @@ fun CharacterDetail(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     //角色卡面
-                    FadeAnimation(visible = maxValue.isInit() || unknown) {
+                    SlideAnimation(visible = maxValue.isInit() || unknown) {
                         CardImage(unitId)
                     }
                     //数据加载后，展示页面
                     val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
-                    SlideAnimation(visible = visible) {
+                    FadeAnimation(visible = visible) {
                         if (visible) {
                             //页面
                             Column(

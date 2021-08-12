@@ -460,7 +460,7 @@ private fun Section(
             }
         }
 
-        FadeAnimation(visible = visible) {
+        SlideAnimation(visible = visible) {
             content.invoke()
         }
     }
