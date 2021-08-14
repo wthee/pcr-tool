@@ -66,7 +66,7 @@ fun RankSelectCompose(
             .padding(
                 bottom = Dimen.sheetMarginBottom,
                 top = Dimen.largePadding,
-                start = Dimen.mediuPadding,
+                start = Dimen.mediumPadding,
             )
     ) {
         //RANK 选择

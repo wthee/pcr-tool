@@ -6,15 +6,20 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
@@ -25,8 +30,11 @@ import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.Overview
 import cn.wthee.pcrtool.ui.tool.*
+import cn.wthee.pcrtool.viewmodel.NewsViewModel
+import cn.wthee.pcrtool.viewmodel.TweetViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -82,8 +90,40 @@ object Navigation {
 fun NavGraph(
     navController: NavHostController,
     viewModel: NavViewModel,
-    actions: NavActions
+    actions: NavActions,
+    newsViewModel: NewsViewModel = hiltViewModel(),
+    tweetViewModel: TweetViewModel = hiltViewModel(),
 ) {
+    //fixme 公告页面、推文分页数据在此处加载，跳转后不会返回顶部
+    val scrollState0 = rememberLazyListState()
+    val scrollState1 = rememberLazyListState()
+    val scrollState2 = rememberLazyListState()
+    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    newsViewModel.getNews(2)
+    newsViewModel.getNews(3)
+    newsViewModel.getNews(4)
+    val flow0 = newsViewModel.newsPageList0
+    val flow1 = newsViewModel.newsPageList1
+    val flow2 = newsViewModel.newsPageList2
+    val news0 = remember(flow0, lifecycle) {
+        flow0?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news1 = remember(flow1, lifecycle) {
+        flow1?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+    val news2 = remember(flow2, lifecycle) {
+        flow2?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+
+    //推文
+    val tweetScrollState = rememberLazyListState()
+    tweetViewModel.getTweet()
+    val flow = tweetViewModel.tweetPageList
+    val tweet = remember(flow, lifecycle) {
+        flow?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+
 
     NavHost(navController, startDestination = Navigation.HOME) {
 
@@ -297,13 +337,14 @@ fun NavGraph(
         //公告
         composable(Navigation.TOOL_NEWS) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            val scrollState0 = rememberLazyListState()
-            val scrollState1 = rememberLazyListState()
-            val scrollState2 = rememberLazyListState()
             NewsList(
+                pagerState,
                 scrollState0,
                 scrollState1,
                 scrollState2,
+                news0,
+                news1,
+                news2,
                 actions.toNewsDetail
             )
         }
@@ -325,9 +366,8 @@ fun NavGraph(
 
         //推特信息
         composable(Navigation.TWEET) {
-            val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            TweetList(scrollState, actions.toNewsDetail, actions.toComicListIndex)
+            TweetList(tweet, tweetScrollState, actions.toNewsDetail, actions.toComicListIndex)
         }
 
         //漫画信息

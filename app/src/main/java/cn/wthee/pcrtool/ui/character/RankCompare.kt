@@ -136,7 +136,7 @@ fun RankCompare(
                             ),
                             size = Dimen.largeIconSize
                         )
-                        Column(modifier = Modifier.padding(start = Dimen.mediuPadding)) {
+                        Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
                             //等级
                             Text(
                                 text = "$level",
@@ -155,7 +155,7 @@ fun RankCompare(
                             .fillMaxSize()
                     ) {
                         Column {
-                            Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
+                            Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
                                 Spacer(modifier = Modifier.weight(0.3f))
                                 RankText(
                                     rank = rank0.value,
@@ -212,7 +212,7 @@ fun RankCompare(
 fun AttrCompare(compareData: List<RankCompareData>) {
     Column(
         modifier = Modifier
-            .padding(Dimen.mediuPadding)
+            .padding(Dimen.mediumPadding)
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {

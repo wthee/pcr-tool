@@ -42,10 +42,7 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -67,6 +64,10 @@ import kotlin.math.round
 @Composable
 fun PvpSearchCompose(
     floatWindow: Boolean = false,
+    pagerState: PagerState = rememberPagerState(pageCount = 2),
+    selectListState: ScrollState = rememberScrollState(),
+    resultListState: LazyListState = rememberLazyListState(),
+    favoritesListState: LazyListState = rememberLazyListState(),
     toCharacter: (Int) -> Unit,
     characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -75,7 +76,7 @@ fun PvpSearchCompose(
     val data = characterViewModel.getAllCharacter().collectAsState(initial = arrayListOf()).value
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
     val serviceIntent = Intent(context, PvpService::class.java)
     val tip = stringResource(id = R.string.tip_select_5)
 
@@ -99,7 +100,6 @@ fun PvpSearchCompose(
 
     val url = stringResource(id = R.string.pcrdfans_url)
     val urlTip = stringResource(id = R.string.pcrdfans_com)
-    val pagerState = rememberPagerState(pageCount = 2)
     val tabs = arrayListOf(
         stringResource(id = R.string.character),
         stringResource(id = R.string.title_love)
@@ -155,7 +155,7 @@ fun PvpSearchCompose(
                     ToastUtil.short(tip)
                     navViewModel.showResult.postValue(false)
                 } else {
-                    PvpSearchResult(selectedIds, floatWindow)
+                    PvpSearchResult(resultListState, selectedIds, floatWindow)
                 }
             } else {
                 TabRow(
@@ -174,6 +174,7 @@ fun PvpSearchCompose(
                     tabs.forEachIndexed { index, s ->
                         Tab(selected = pagerState.currentPage == index, onClick = {
                             scope.launch {
+                                VibrateUtil(context).single()
                                 pagerState.scrollToPage(index)
                             }
                         }) {
@@ -181,25 +182,24 @@ fun PvpSearchCompose(
                         }
                     }
                 }
-                SlideAnimation(visible = data.isNotEmpty()) {
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier.padding(top = mediuPadding)
-                    ) { pageIndex ->
-                        when (pageIndex) {
-                            0 -> PvpCharacterSelectPage(
-                                selectedIds = selectedIds,
-                                floatWindow = floatWindow,
-                                data = data,
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.padding(top = mediumPadding)
+                ) { pageIndex ->
+                    when (pageIndex) {
+                        0 -> PvpCharacterSelectPage(
+                            selectListState = selectListState,
+                            selectedIds = selectedIds,
+                            floatWindow = floatWindow,
+                            data = data,
+                        )
+                        else -> {
+                            PvpFavorites(
+                                favoritesListState = favoritesListState,
+                                toCharacter = toCharacter,
+                                pvpViewModel = pvpViewModel,
+                                floatWindow = floatWindow
                             )
-                            else -> {
-                                PvpFavorites(
-                                    scrollState = rememberLazyListState(),
-                                    toCharacter = toCharacter,
-                                    pvpViewModel = pvpViewModel,
-                                    floatWindow = floatWindow
-                                )
-                            }
                         }
                     }
                 }
@@ -292,13 +292,13 @@ fun PvpSearchCompose(
 @ExperimentalMaterialApi
 @Composable
 private fun PvpCharacterSelectPage(
+    selectListState: ScrollState,
     selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
     data: List<PvpCharacterData>
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
     //选择页面
     val character0 = data.filter {
         it.position in 0..299
@@ -331,7 +331,7 @@ private fun PvpCharacterSelectPage(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Column(modifier = Modifier.verticalScroll(scrollState)) {
+        Column(modifier = Modifier.verticalScroll(selectListState)) {
             PvpPositionIcon(R.drawable.ic_position_0, itemHeight)
             VerticalGrid(spanCount = spanCount) {
                 character0.forEach {
@@ -364,8 +364,8 @@ private fun PvpCharacterSelectPage(
                 .align(Alignment.BottomEnd)
                 .navigationBarsPadding()
                 .padding(
-                    bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediuPadding,
-                    start = Dimen.mediuPadding,
+                    bottom = Dimen.fabSize + Dimen.fabMargin + Dimen.mediumPadding,
+                    start = Dimen.mediumPadding,
                     end = Dimen.fabMargin
                 )
         }
@@ -385,7 +385,7 @@ private fun PvpCharacterSelectPage(
                         .clickable {
                             VibrateUtil(context).single()
                             scope.launch {
-                                scrollState.animateScrollTo(positions[index])
+                                selectListState.animateScrollTo(positions[index])
                             }
                         })
             }
@@ -500,6 +500,7 @@ fun PvpIconItem(
 @ExperimentalAnimationApi
 @Composable
 fun PvpSearchResult(
+    resultListState: LazyListState,
     selectedIds: List<PvpCharacterData>,
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -524,7 +525,7 @@ fun PvpSearchResult(
     val vibrated = remember {
         mutableStateOf(false)
     }
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     if (favorites.value != null) {
         SideEffect {
@@ -556,9 +557,10 @@ fun PvpSearchResult(
                                 //展示查询结果
                                 LazyColumn(
                                     contentPadding = PaddingValues(
-                                        start = mediuPadding,
-                                        end = mediuPadding
-                                    )
+                                        start = mediumPadding,
+                                        end = mediumPadding
+                                    ),
+                                    state = resultListState
                                 ) {
                                     itemsIndexed(items = list) { index, item ->
                                         PvpResultItem(
@@ -594,7 +596,7 @@ fun PvpSearchResult(
                         )
                         SubButton(
                             text = "重新查询",
-                            modifier = Modifier.padding(top = Dimen.mediuPadding)
+                            modifier = Modifier.padding(top = Dimen.mediumPadding)
                         ) {
                             pvpViewModel.pvpResult.postValue(null)
                             pvpViewModel.getPVPData(idArray)
@@ -612,8 +614,8 @@ fun PvpSearchResult(
                     //展示查询结果
                     LazyColumn(
                         contentPadding = PaddingValues(
-                            start = mediuPadding,
-                            end = mediuPadding
+                            start = mediumPadding,
+                            end = mediumPadding
                         )
                     ) {
                         items(10) {
@@ -658,18 +660,18 @@ private fun PvpResultItem(
         mutableStateOf(favoritesList.contains(item.atk))
     }
 
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(mediuPadding)
+            .padding(mediumPadding)
     ) {
         Row {
             MainTitleText(
                 text = stringResource(id = R.string.team_no, i.toString().fillZero()),
                 modifier = Modifier
-                    .padding(bottom = mediuPadding)
+                    .padding(bottom = mediumPadding)
                     .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -720,8 +722,8 @@ private fun PvpResultItem(
             }
             Column(
                 modifier = Modifier.padding(
-                    start = mediuPadding,
-                    end = mediuPadding
+                    start = mediumPadding,
+                    end = mediumPadding
                 )
             ) {
                 //点赞信息
@@ -751,7 +753,7 @@ private fun PvpResultItem(
                 //进攻
                 Row(
                     modifier = Modifier
-                        .padding(bottom = mediuPadding)
+                        .padding(bottom = mediumPadding)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -796,7 +798,7 @@ private fun PvpResultItem(
 @ExperimentalAnimationApi
 @Composable
 fun PvpFavorites(
-    scrollState: LazyListState,
+    favoritesListState: LazyListState,
     toCharacter: (Int) -> Unit,
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel
@@ -807,7 +809,10 @@ fun PvpFavorites(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value != null && list.value!!.isNotEmpty()) {
-            LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.mediuPadding)) {
+            LazyColumn(
+                state = favoritesListState,
+                contentPadding = PaddingValues(Dimen.mediumPadding)
+            ) {
                 items(list.value!!) { data ->
                     PvpFavoriteItem(
                         toCharacter,
@@ -843,11 +848,11 @@ private fun PvpFavoriteItem(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val mediuPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediuPadding
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Row(
         modifier = Modifier
-            .padding(start = mediuPadding, end = mediuPadding)
+            .padding(start = mediumPadding, end = mediumPadding)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -884,12 +889,12 @@ private fun PvpFavoriteItem(
         }
     }
 
-    MainCard(modifier = Modifier.padding((mediuPadding))) {
+    MainCard(modifier = Modifier.padding((mediumPadding))) {
         //队伍角色图标
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = mediuPadding, bottom = mediuPadding)
+                .padding(top = mediumPadding, bottom = mediumPadding)
         ) {
             //进攻
             Row(
@@ -919,7 +924,9 @@ private fun PvpFavoriteItem(
                                 MainActivity.r6Ids.contains(it)
                             )
                         ) {
-                            toCharacter(it)
+                            if (!floatWindow) {
+                                toCharacter(it)
+                            }
                         }
                     }
                 }

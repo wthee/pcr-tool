@@ -56,9 +56,11 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
         ToolMenuData(R.string.tweet, MainIconType.TWEET),
         ToolMenuData(R.string.comic, MainIconType.COMIC),
-//        ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD),
-//        ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP)
     )
+    if (BuildConfig.debug) {
+        list.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
+        list.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
+    }
 
     VerticalGrid(
         maxColumnWidth = Dimen.toolMenuWidth,
@@ -70,9 +72,9 @@ fun ToolMenu(actions: NavActions) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        top = Dimen.mediuPadding,
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding,
+                        top = Dimen.mediumPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding,
                         bottom = Dimen.largePadding
                     ),
                 contentAlignment = Alignment.Center
@@ -118,7 +120,7 @@ private fun MenuItem(
         IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)
         CaptionText(
             text = stringResource(id = it.titleId),
-            modifier = Modifier.padding(top = Dimen.mediuPadding)
+            modifier = Modifier.padding(top = Dimen.mediumPadding)
         )
     }
 }
@@ -143,7 +145,6 @@ private fun getAction(
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
             MainIconType.CHANGE_DATA -> {
-                //TODO 显示弹窗
                 MainActivity.navViewModel.openChangeDataDialog.postValue(true)
             }
             MainIconType.COMIC -> actions.toComicList()

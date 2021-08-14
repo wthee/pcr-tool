@@ -20,7 +20,7 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 350, easing = FastOutLinearInEasing)
+    return tween(durationMillis = 200, easing = FastOutLinearInEasing)
 }
 
 /**
@@ -71,36 +71,5 @@ fun FadeAnimation(
         exit = fadeOut(),
         content = content,
         modifier = modifier
-    )
-}
-
-
-/**
- * 页面进入动画
- */
-@ExperimentalAnimationApi
-@Composable
-fun SlideLeftAnimation(
-    visible: Boolean,
-    content: @Composable AnimatedVisibilityScope.() -> Unit
-) {
-
-    AnimatedVisibility(
-        visible = visible,
-        enter = if (animOn) {
-            slideInHorizontally(initialOffsetX = {
-                40
-            }, defaultSpring()) + fadeIn(0f)
-        } else {
-            fadeIn(1f)
-        },
-        exit = if (animOn) {
-            slideOutHorizontally(targetOffsetX = {
-                40
-            }, defaultSpring()) + fadeOut(0f)
-        } else {
-            fadeOut(0f)
-        },
-        content = content,
     )
 }

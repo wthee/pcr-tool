@@ -94,17 +94,17 @@ private fun GuildItem(
 
     MainTitleText(
         text = guild.guildName,
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding)
+        modifier = Modifier.padding(bottom = Dimen.mediumPadding)
     )
     MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(bottom = Dimen.mediuPadding)) {
+        Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
             //内容
             MainContentText(
                 text = guild.desc,
                 modifier = Modifier.padding(
-                    top = Dimen.mediuPadding,
-                    start = Dimen.mediuPadding,
-                    end = Dimen.mediuPadding
+                    top = Dimen.mediumPadding,
+                    start = Dimen.mediumPadding,
+                    end = Dimen.mediumPadding
                 ),
                 textAlign = TextAlign.Start
             )
@@ -119,8 +119,8 @@ private fun GuildItem(
                     text = stringResource(R.string.new_member),
                     modifier = Modifier.padding(
                         top = Dimen.largePadding,
-                        start = Dimen.mediuPadding,
-                        end = Dimen.mediuPadding
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding
                     ),
                     textAlign = TextAlign.Start
                 )

@@ -127,7 +127,7 @@ private fun ClanBattleItem(
 
     //标题
     Row(
-        modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         MainTitleText(
@@ -162,7 +162,7 @@ private fun ClanBattleItem(
     ) {
         //图标
         Row(
-            modifier = Modifier.padding(Dimen.mediuPadding),
+            modifier = Modifier.padding(Dimen.mediumPadding),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             list.forEachIndexed { index, it ->
@@ -238,7 +238,7 @@ fun ClanBossInfoPager(
                 //标题
                 MainText(
                     text = clanValue.getDate(),
-                    modifier = Modifier.padding(top = Dimen.mediuPadding)
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
                 )
                 //阶段选择
                 Row(
@@ -296,7 +296,7 @@ fun ClanBossInfoPager(
                 ) {
                     for (tabIndex in 0 until 5) {
                         Tab(
-                            modifier = Modifier.padding(bottom = Dimen.mediuPadding),
+                            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
                             icon = {
                                 val it = list[tabIndex]
                                 Box {
@@ -357,7 +357,7 @@ private fun ClanBossInfoPagerItem(
         shape = CardTopShape,
         elevation = Dimen.cardElevation,
         modifier = Modifier
-            .padding(top = Dimen.mediuPadding)
+            .padding(top = Dimen.mediumPadding)
             .fillMaxSize()
     ) {
         Column(
@@ -372,7 +372,7 @@ private fun ClanBossInfoPagerItem(
                 style = MaterialTheme.typography.subtitle2,
                 modifier = Modifier
                     .animateContentSize()
-                    .padding(Dimen.mediuPadding)
+                    .padding(Dimen.mediumPadding)
                     .clickable {
                         expanded.value = !expanded.value
                     }
@@ -382,7 +382,7 @@ private fun ClanBossInfoPagerItem(
                 text = bossDataValue.name,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.mediuPadding),
+                    .padding(top = Dimen.mediumPadding),
                 selectable = true
             )
             //等级

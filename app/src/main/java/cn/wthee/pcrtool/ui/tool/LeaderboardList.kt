@@ -54,8 +54,8 @@ fun LeaderboardList(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.padding(
                     top = Dimen.largePadding,
-                    start = Dimen.mediuPadding,
-                    end = Dimen.mediuPadding
+                    start = Dimen.mediumPadding,
+                    end = Dimen.mediumPadding
                 )
             ) {
                 Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
@@ -144,7 +144,7 @@ private fun LeaderboardItem(info: LeaderboardData) {
     MainTitleText(
         text = info.name,
         modifier = Modifier
-            .padding(bottom = Dimen.mediuPadding)
+            .padding(bottom = Dimen.mediumPadding)
             .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
     )
     MainCard(modifier = Modifier

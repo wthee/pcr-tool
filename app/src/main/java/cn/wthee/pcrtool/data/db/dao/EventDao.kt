@@ -22,32 +22,40 @@ interface EventDao {
             SELECT
                 event.*,
                 c.title,
-                COALESCE( GROUP_CONCAT( f.value, '-' ), "-" ) AS unit_ids,
-                COALESCE( GROUP_CONCAT( e.name, '-' ), "-" ) AS unit_names 
+                e.unit_ids
             FROM
                 (
-                SELECT
-                    a.event_id,
-                (( CASE WHEN a.original_event_id = 0 THEN a.event_id ELSE a.original_event_id END ) % 10000 + 5000 ) AS story_id,
-                a.start_time AS start_time,
-                a.end_time AS end_time 
-            FROM
-                hatsune_schedule AS a UNION
-            SELECT
-                b.event_id,
-                b.story_id / 1000 AS story_id,
-                b.start_time AS start_time,
-                b.end_time AS end_time 
-            FROM
-                event_top_adv AS b 
-            WHERE
-                b.event_id > 20000 
-            GROUP BY
-                b.event_id 
+                    SELECT
+                        a.event_id,
+                        (( CASE WHEN a.original_event_id = 0 THEN a.event_id ELSE a.original_event_id END ) % 10000 + 5000 ) AS story_id,
+                        a.start_time AS start_time,
+                        a.end_time AS end_time 
+                    FROM
+                        hatsune_schedule AS a UNION
+                    SELECT
+                        b.event_id,
+                        b.story_id / 1000 AS story_id,
+                        b.start_time AS start_time,
+                        b.end_time AS end_time 
+                    FROM
+                        event_top_adv AS b 
+                    WHERE
+                        b.event_id > 20000 
+                    GROUP BY
+                        b.event_id 
+                        
                 ) AS event
                 LEFT JOIN event_story_data AS c ON c.story_group_id = event.story_id
-                LEFT JOIN odds_name_data AS e ON event.event_id % 10000 = e.odds_file / 100000 % 10000
-                LEFT JOIN item_data AS f ON e.name = f.item_name 
+                LEFT JOIN 
+                (
+                    SELECT
+                        d.story_group_id,
+                        GROUP_CONCAT( d.reward_id_2, '-' ) AS unit_ids
+                    FROM
+                        event_story_detail AS d 
+                    GROUP BY
+                        d.story_group_id
+                ) as e ON c.story_group_id = e.story_group_id
             GROUP BY event.start_time
             ORDER BY event.start_time DESC     
         """

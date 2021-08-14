@@ -115,6 +115,7 @@ class DatabaseDownloadWorker(
             }
             //关闭数据库
             AppDatabaseCN.close()
+            AppDatabaseTW.close()
             AppDatabaseJP.close()
             //加压缩
             UnzippedUtil.deCompress(db, true)

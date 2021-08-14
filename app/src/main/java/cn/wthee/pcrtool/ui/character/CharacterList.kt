@@ -102,7 +102,7 @@ fun CharacterList(
                 LazyVerticalGrid(
                     cells = GridCells.Fixed(2),
                     state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediuPadding)
+                    contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {
                     items(list) {
                         CharacterItem(it, filter.value!!, toDetail = toDetail)
@@ -178,7 +178,7 @@ fun CharacterItem(
     val loved = filter.starIds.contains(character.id)
 
     MainCard(
-        modifier = modifier.padding(Dimen.mediuPadding),
+        modifier = modifier.padding(Dimen.mediumPadding),
         onClick = {
             //跳转至详情
             toDetail(character.id)

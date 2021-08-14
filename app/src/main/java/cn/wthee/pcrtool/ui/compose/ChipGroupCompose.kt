@@ -70,7 +70,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
     }
     Box(
         modifier = Modifier
-            .padding(Dimen.mediuPadding)
+            .padding(Dimen.mediumPadding)
             .clip(CircleShape)
             .background(backgroundColor, CircleShape)
             .clickable {
@@ -85,8 +85,8 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
             modifier = Modifier.padding(
                 start = Dimen.largePadding,
                 end = Dimen.largePadding,
-                top = Dimen.mediuPadding,
-                bottom = Dimen.mediuPadding
+                top = Dimen.mediumPadding,
+                bottom = Dimen.mediumPadding
             )
         )
     }

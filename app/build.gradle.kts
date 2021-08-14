@@ -5,9 +5,10 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val name = "2.0.0"
-val code = 200
-val sql = 200
+val composeVersion = "1.0.1"
+val name = "2.0.1"
+val code = 201
+val sql = 201
 
 android {
 
@@ -85,7 +86,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = rootProject.extra["compose_version"] as String
+        kotlinCompilerExtensionVersion = composeVersion
     }
 }
 
@@ -96,18 +97,18 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
     implementation("androidx.preference:preference-ktx:1.1.1")
     //compose
-    implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.material:material:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.foundation:foundation:${rootProject.extra["compose_version"]}")
-    implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_version"]}")
+    implementation("androidx.compose.runtime:runtime:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.foundation:foundation:$composeVersion")
+    implementation("androidx.compose.compiler:compiler:$composeVersion")
     //icon
-    implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["compose_version"]}")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.16.0"
+    val accompanistVersion = "0.16.1"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")

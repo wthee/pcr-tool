@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -29,6 +32,7 @@ import cn.wthee.pcrtool.viewmodel.PvpViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 
 @ExperimentalCoilApi
 @ExperimentalFoundationApi
@@ -40,10 +44,14 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
+    val pagerState = rememberPagerState(pageCount = 2)
+    val selectListState = rememberScrollState()
+    val resultListState = rememberLazyListState()
+    val favoritesListState = rememberLazyListState()
 
 
     PcrtoolComposeTheme {
-        Row(modifier = Modifier.padding(Dimen.mediuPadding)) {
+        Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
             Column {
                 FloatingActionButton(
                     onClick = {
@@ -83,13 +91,21 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                     FabMain(modifier = Modifier.padding(Dimen.smallPadding))
                 }
             }
-            if (!min) {
-                Card {
-                    PvpSearchCompose(
-                        floatWindow = true,
-                        toCharacter = MainActivity.actions.toCharacterDetail
-                    )
-                }
+            val modifier = if (min) {
+                Modifier.size(0.dp)
+            } else {
+                Modifier
+            }
+
+            Card(modifier = modifier) {
+                PvpSearchCompose(
+                    floatWindow = true,
+                    pagerState = pagerState,
+                    selectListState = selectListState,
+                    resultListState = resultListState,
+                    favoritesListState = favoritesListState,
+                    toCharacter = MainActivity.actions.toCharacterDetail
+                )
             }
         }
     }

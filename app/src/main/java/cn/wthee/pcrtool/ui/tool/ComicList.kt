@@ -201,7 +201,7 @@ private fun SelectPager(
     LazyColumn(
         state = scrollState,
         modifier = Modifier.padding(
-            top = Dimen.mediuPadding,
+            top = Dimen.mediumPadding,
             start = Dimen.largePadding,
             end = Dimen.largePadding
         )
@@ -247,7 +247,7 @@ private fun TocItem(
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.h6,
         )
-        SelectionContainer(modifier = Modifier.padding(start = Dimen.mediuPadding)) {
+        SelectionContainer(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
             Text(
                 text = it.title,
                 color = textColor,
