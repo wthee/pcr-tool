@@ -41,6 +41,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -559,6 +560,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
 
     FlowRow(
         modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+        crossAxisAlignment = FlowCrossAxisAlignment.Center
     ) {
         //开始日期
         MainTitleText(

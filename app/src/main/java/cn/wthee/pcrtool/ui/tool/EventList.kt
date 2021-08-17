@@ -30,6 +30,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
@@ -136,7 +137,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
 
     //标题
     FlowRow(
-        modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+        crossAxisAlignment = FlowCrossAxisAlignment.Center
     ) {
         MainTitleText(
             text = type,

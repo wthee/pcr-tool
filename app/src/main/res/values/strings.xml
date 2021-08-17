@@ -31,6 +31,7 @@
     <string name="target_rank">目标</string>
     <string name="function">功能</string>
     <string name="skill">技能</string>
+    <string name="unknown_area">暂无掉落信息</string>
 
     <!-- 设置页面   -->
     <string name="redownload_db">数据重载</string>
