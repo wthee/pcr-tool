@@ -1,7 +1,12 @@
 ## PCRTool
-- [下载地址](https://www.coolapk.com/apk/273453)
-
+- 下载地址：[酷安](https://www.coolapk.com/apk/273453) | [Release](https://github.com/wthee/pcr-tool/releases)
 - 数据来源：[干炸里脊资源站](https://redive.estertion.win/)
+- 竞技场查询数据：[公主连结Re: Dive Fan Club](https://pcrdfans.com)
+- 排行榜数据：[AppMedia](https://appmedia.jp/priconne-redive/1642761#b)
+- 感谢大佬的开源项目！[静流笔记|ShizuruNotes](https://github.com/MalitsPlus/ShizuruNotes)
+
+
+> 发现问题或者有任何建议，欢迎 [New Issue](https://github.com/wthee/pcr-tool/issues/new/choose)
 
 ## 更新记录
 
