@@ -124,6 +124,9 @@ object Constants {
         "TP 减少",
     )
 
+    val UNKNOWN = "?"
+
+
     //现实图片有误的角色编号
     val errorIDs = arrayListOf(
         101001,

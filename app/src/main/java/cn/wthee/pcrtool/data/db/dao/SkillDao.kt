@@ -19,7 +19,7 @@ interface SkillDao {
      */
     @SkipQueryVerification
     @Query("SELECT * FROM unit_skill_data  WHERE unit_id = :unitId")
-    suspend fun getUnitSkill(unitId: Int): UnitSkillData
+    suspend fun getUnitSkill(unitId: Int): UnitSkillData?
 
     /**
      * 获取技能数值数据
