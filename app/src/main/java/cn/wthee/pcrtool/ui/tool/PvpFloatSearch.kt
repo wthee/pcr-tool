@@ -16,6 +16,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 @ExperimentalCoilApi
 @ExperimentalFoundationApi
@@ -42,6 +44,7 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
     val pagerState = rememberPagerState(pageCount = 2)
@@ -83,6 +86,10 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                         iconType = MainIconType.PVP_SEARCH,
                         modifier = Modifier.padding(Dimen.smallPadding)
                     ) {
+                        coroutineScope.launch {
+                            resultListState.scrollToItem(0)
+                            favoritesListState.scrollToItem(0)
+                        }
                         pvpViewModel.pvpResult.postValue(null)
                         MainActivity.navViewModel.showResult.postValue(true)
                     }

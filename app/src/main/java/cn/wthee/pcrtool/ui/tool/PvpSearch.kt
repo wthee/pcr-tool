@@ -267,6 +267,8 @@ fun PvpSearchCompose(
                 ) {
                     //查询
                     scope.launch {
+                        resultListState.scrollToItem(0)
+                        favoritesListState.scrollToItem(0)
                         if (selectedIds.contains(PvpCharacterData())) {
                             ToastUtil.short(tip)
                         } else {
