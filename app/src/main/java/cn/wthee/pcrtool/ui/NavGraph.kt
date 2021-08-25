@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
@@ -98,7 +99,7 @@ fun NavGraph(
     val scrollState0 = rememberLazyListState()
     val scrollState1 = rememberLazyListState()
     val scrollState2 = rememberLazyListState()
-    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2)
+    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2, initialPage = getRegion() - 2)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     newsViewModel.getNews(2)
     newsViewModel.getNews(3)

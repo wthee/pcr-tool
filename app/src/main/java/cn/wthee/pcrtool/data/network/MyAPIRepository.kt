@@ -138,6 +138,34 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         return error()
     }
 
+
+    /**
+     * 最新公告
+     */
+    suspend fun getNewsOverviewByRegion(region: Int): ResponseData<List<NewsTable>> {
+        //请求
+        try {
+            val json = JsonObject()
+            json.addProperty("region", region)
+            val body = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    json.toString()
+            )
+            val response = service.getNewsOverviewByRegion(body)
+            if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
+                return error()
+            }
+            return response
+        } catch (e: Exception) {
+            if (e is CancellationException) {
+                return cancel()
+            } else {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_API + "newsoverview")
+            }
+        }
+        return error()
+    }
+
     /**
      * 查询推特信息
      * @param page 页码

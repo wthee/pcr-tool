@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.entity.getRegion
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -69,6 +68,7 @@ fun Overview(
     SideEffect {
         overviewViewModel.getR6Ids()
     }
+    val region = getRegion()
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -97,7 +97,7 @@ fun Overview(
     val comingSoonEventList =
         overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
     val newsList =
-        overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
+            overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
     val pagerCount = 6
     val pagerState =
