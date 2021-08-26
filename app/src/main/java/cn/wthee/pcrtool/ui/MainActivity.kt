@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
+import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -121,6 +122,11 @@ class MainActivity : ComponentActivity() {
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        WorkManager.getInstance(MyApplication.context).cancelAllWork()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
