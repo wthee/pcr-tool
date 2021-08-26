@@ -30,7 +30,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.entity.getRegion
+import cn.wthee.pcrtool.data.db.entity.region
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -171,7 +171,7 @@ fun NewsList(
  */
 @ExperimentalMaterialApi
 @Composable
-private fun NewsItem(
+fun NewsItem(
     news: NewsTable,
     toDetail: (String) -> Unit,
 ) {
@@ -248,7 +248,7 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
         val originalUrl = news.value!!.data!!.url
         val originalTitle = news.value!!.data!!.title
         val date = news.value!!.data!!.date
-        val region = originalUrl.getRegion()
+        val region = originalUrl.region
 
         Box(modifier = Modifier.fillMaxSize()) {
             Column(

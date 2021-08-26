@@ -36,11 +36,14 @@ data class NewsTable(
 
 fun String.original() = replace('$', '/')
 
-fun String.getRegion() = when {
-    this.contains("bilibili") -> 2
-    this.contains(".tw") -> 3
-    else -> 4
-}
+val String.region: Int
+    get() {
+        return when {
+            this.contains("bilibili") -> 2
+            this.contains(".tw") -> 3
+            else -> 4
+        }
+    }
 
 fun String.urlGetId(): String {
     val url = if (this.last() == '/') {
