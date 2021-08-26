@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
-import cn.wthee.pcrtool.data.db.entity.getRegion
 import cn.wthee.pcrtool.data.db.view.CalendarEvent
 import cn.wthee.pcrtool.data.db.view.CalendarEventData
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -38,17 +37,16 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -68,6 +66,7 @@ fun Overview(
     SideEffect {
         overviewViewModel.getR6Ids()
     }
+    val region = getRegion()
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -96,7 +95,7 @@ fun Overview(
     val comingSoonEventList =
         overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
     val newsList =
-        overviewViewModel.getNewsOverview().collectAsState(initial = arrayListOf()).value
+            overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
     val pagerCount = 6
     val pagerState =
@@ -222,7 +221,6 @@ fun Overview(
                     if (newsList.isNotEmpty()) {
                         newsList.forEach {
                             NewsItem(
-                                region = it.url.getRegion(),
                                 news = it,
                                 toDetail = actions.toNewsDetail
                             )
@@ -230,7 +228,6 @@ fun Overview(
                     } else {
                         for (i in 0..2) {
                             NewsItem(
-                                region = 2,
                                 news = NewsTable(),
                                 toDetail = actions.toNewsDetail
                             )
@@ -467,70 +464,6 @@ private fun Section(
 
 }
 
-@ExperimentalMaterialApi
-@Composable
-private fun NewsItem(
-    region: Int,
-    news: NewsTable,
-    toDetail: (String) -> Unit,
-) {
-    val placeholder = news.title == ""
-    val tag = when (region) {
-        2 -> R.string.db_cn
-        3 -> R.string.db_tw
-        else -> R.string.db_jp
-    }
-    val colorId = when (region) {
-        2 -> R.color.news_update
-        3 -> R.color.news_system
-        else -> R.color.colorPrimary
-    }
-    //标题
-    Row(
-        modifier = Modifier
-            .padding(bottom = Dimen.mediumPadding)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        MainTitleText(
-            text = stringResource(id = tag),
-            backgroundColor = colorResource(id = colorId),
-            modifier = Modifier.placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
-        )
-        MainTitleText(
-            text = news.date,
-            modifier = Modifier
-                .padding(start = Dimen.smallPadding)
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                ),
-        )
-    }
-    MainCard(modifier = Modifier
-        .padding(bottom = Dimen.largePadding)
-        .placeholder(
-            visible = placeholder,
-            highlight = PlaceholderHighlight.shimmer()
-        ),
-        onClick = {
-            if (!placeholder) {
-                toDetail(news.id)
-            }
-        }
-    ) {
-        //内容
-        Subtitle1(
-            text = news.title,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            selectable = true
-        )
-    }
-}
-
 
 /**
  * 日历信息
@@ -559,6 +492,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
 
     FlowRow(
         modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+        crossAxisAlignment = FlowCrossAxisAlignment.Center
     ) {
         //开始日期
         MainTitleText(

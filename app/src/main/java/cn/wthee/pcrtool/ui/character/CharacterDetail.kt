@@ -428,7 +428,7 @@ private fun AttrLists(
                 .alpha(0f)
         }
     )
-    //战力计算 fixme 对比游戏内数值
+    //战力计算
     coe?.let {
         val basicAttr = allData.sumAttr.copy().sub(allData.exSkillAttr)
         val basic = basicAttr.hp * it.hp_coefficient +

@@ -6,8 +6,8 @@ plugins {
 }
 
 val composeVersion = "1.0.1"
-val name = "2.0.1"
-val code = 201
+val name = "2.0.2"
+val code = 202
 val sql = 201
 
 android {
@@ -108,7 +108,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.16.1"
+    val accompanistVersion = "0.17.0"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -157,9 +157,9 @@ dependencies {
     implementation("androidx.startup:startup-runtime:1.0.0")
 
     //umeng
-    implementation("com.umeng.umsdk:common:9.4.0")
-    implementation("com.umeng.umsdk:asms:1.4.0")
-    implementation("com.umeng.umsdk:apm:1.4.1")
+    implementation("com.umeng.umsdk:common:9.4.2")
+    implementation("com.umeng.umsdk:asms:1.4.1")
+    implementation("com.umeng.umsdk:apm:1.4.2")
 
     //Work
     val workVersion = "2.7.0-alpha05"

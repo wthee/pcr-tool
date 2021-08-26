@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,7 +43,9 @@ class SkillViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val data = skillRepository.getUnitSkill(unitId)
-                getSkillInfo(data.getAllSkillId(), atk, arrayListOf(lv))
+                data?.let {
+                    getSkillInfo(data.getAllSkillId(), atk, arrayListOf(lv))
+                }
             } catch (e: Exception) {
                 UMengLogUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
             }
@@ -58,11 +61,13 @@ class SkillViewModel @Inject constructor(
                 val skillIds = arrayListOf<Int>()
                 unitIds.forEach {
                     val data = skillRepository.getUnitSkill(it)
-                    skillIds.addAll(data.getAllSkillId())
+                    if (data != null) {
+                        skillIds.addAll(data.getAllSkillId())
+                    }
                 }
                 getSkillInfo(skillIds, atk, arrayListOf(lv))
             } catch (e: Exception) {
-
+                Log.e("DEBUG", e.message ?: "")
             }
         }
     }
@@ -77,15 +82,17 @@ class SkillViewModel @Inject constructor(
             try {
                 val allSkill = arrayListOf<List<SkillDetail>>()
                 val allIcon = arrayListOf<HashMap<Int, Int>>()
-                list.forEach {
-                    val data = skillRepository.getUnitSkill(it.unit_id)
-                    val (infos, map) = getSkill(
-                        data.getEnemySkillId(),
-                        it.getSkillLv(),
-                        it.attr.atk
-                    )
-                    allSkill.add(infos)
-                    allIcon.add(map)
+                list.forEach { enemy ->
+                    val data = skillRepository.getUnitSkill(enemy.unit_id)
+                    data?.let {
+                        val (infos, map) = getSkill(
+                            data.getEnemySkillId(),
+                            enemy.getSkillLv(),
+                            enemy.attr.atk
+                        )
+                        allSkill.add(infos)
+                        allIcon.add(map)
+                    }
                 }
                 allSkills.postValue(allSkill)
                 allIconTypes.postValue(allIcon)

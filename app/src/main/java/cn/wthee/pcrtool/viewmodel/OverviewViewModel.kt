@@ -72,8 +72,8 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取新闻
      */
-    fun getNewsOverview() = flow {
-        val data = apiRepository.getNewsOverview().data
+    fun getNewsOverview(region: Int) = flow {
+        val data = apiRepository.getNewsOverviewByRegion(region).data
         data?.let {
             emit(it)
         }

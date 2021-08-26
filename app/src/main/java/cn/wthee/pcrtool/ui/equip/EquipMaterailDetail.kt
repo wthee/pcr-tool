@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -51,7 +52,7 @@ fun EquipMaterialDeatil(
 ) {
 
     val dropInfoList =
-        equipmentViewModel.getDropInfos(equipId).collectAsState(initial = arrayListOf()).value
+        equipmentViewModel.getDropInfos(equipId).collectAsState(initial = null).value
     val basicInfo =
         equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
     val filter = navViewModel.filterEquip.observeAsState()
@@ -60,7 +61,7 @@ fun EquipMaterialDeatil(
     }
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip_material)
     val scope = rememberCoroutineScope()
-    navViewModel.loading.postValue(dropInfoList.isEmpty())
+    navViewModel.loading.postValue(dropInfoList == null)
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -69,102 +70,115 @@ fun EquipMaterialDeatil(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (dropInfoList.isNotEmpty()) {
-            var pagerCount = 0
-            val lists = arrayListOf(
-                dropInfoList.filter { it.questId / 1000000 == 11 },
-                dropInfoList.filter { it.questId / 1000000 == 12 },
-                dropInfoList.filter { it.questId / 1000000 == 13 },
-            )
-            val tabs = arrayListOf<String>()
-            //颜色
-            val color = listOf(R.color.color_map_n, R.color.color_map_h, R.color.color_map_vh)
-            lists.forEachIndexed { index, it ->
-                if (it.isNotEmpty()) {
-                    pagerCount++
-                    tabs.add(
-                        when (index) {
-                            0 -> "Normal"
-                            1 -> "Hard"
-                            2 -> "Very Hard"
-                            else -> "？"
-                        }
-                    )
-                }
-            }
-            val pagerState = rememberPagerState(pageCount = pagerCount)
-            //按照地图难度分类
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                MainText(
-                    text = basicInfo.equipmentName,
-                    modifier = Modifier
-                        .padding(top = Dimen.largePadding),
-                    color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
-                    selectable = true
+        dropInfoList?.let {
+            if (dropInfoList.isNotEmpty()) {
+                var pagerCount = 0
+                val lists = arrayListOf(
+                    dropInfoList.filter { it.questId / 1000000 == 11 },
+                    dropInfoList.filter { it.questId / 1000000 == 12 },
+                    dropInfoList.filter { it.questId / 1000000 == 13 },
                 )
-                //Tab
-                TabRow(
-                    modifier = Modifier
-                        .padding(top = Dimen.mediumPadding)
-                        .fillMaxWidth(0.8f),
-                    selectedTabIndex = pagerState.currentPage,
-                    backgroundColor = Color.Transparent,
-                    contentColor = MaterialTheme.colors.primary,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                val tabs = arrayListOf<String>()
+                //颜色
+                val color = listOf(R.color.color_map_n, R.color.color_map_h, R.color.color_map_vh)
+                lists.forEachIndexed { index, it ->
+                    if (it.isNotEmpty()) {
+                        pagerCount++
+                        tabs.add(
+                            when (index) {
+                                0 -> "Normal"
+                                1 -> "Hard"
+                                2 -> "Very Hard"
+                                else -> "？"
+                            }
                         )
-                    },
-                    divider = {
-                        TabRowDefaults.Divider(color = Color.Transparent)
                     }
+                }
+                val pagerState = rememberPagerState(pageCount = pagerCount)
+                //按照地图难度分类
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    tabs.forEachIndexed { index, s ->
-                        Tab(
-                            selected = index == pagerState.currentPage,
-                            onClick = {
-                                scope.launch {
-                                    pagerState.scrollToPage(index)
-                                }
-                            }
-                        ) {
-                            Text(
-                                text = s,
-                                color = colorResource(id = color[index]),
-                                modifier = Modifier.padding(bottom = Dimen.smallPadding)
+                    MainText(
+                        text = basicInfo.equipmentName,
+                        modifier = Modifier
+                            .padding(top = Dimen.largePadding),
+                        color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
+                        selectable = true
+                    )
+                    //Tab
+                    TabRow(
+                        modifier = Modifier
+                            .padding(top = Dimen.mediumPadding)
+                            .fillMaxWidth(0.8f),
+                        selectedTabIndex = pagerState.currentPage,
+                        backgroundColor = Color.Transparent,
+                        contentColor = MaterialTheme.colors.primary,
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
                             )
+                        },
+                        divider = {
+                            TabRowDefaults.Divider(color = Color.Transparent)
                         }
-                    }
-                }
-                //pager
-                HorizontalPager(state = pagerState) { pagerIndex ->
-                    LazyColumn(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        contentPadding = PaddingValues(top = Dimen.mediumPadding),
-                        modifier = Modifier.fillMaxSize()
                     ) {
-                        items(
-                            when (tabs[pagerIndex]) {
-                                "Normal" -> lists[0]
-                                "Hard" -> lists[1]
-                                else -> lists[2]
+                        tabs.forEachIndexed { index, s ->
+                            Tab(
+                                selected = index == pagerState.currentPage,
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.scrollToPage(index)
+                                    }
+                                }
+                            ) {
+                                Text(
+                                    text = s,
+                                    color = colorResource(id = color[index]),
+                                    modifier = Modifier.padding(bottom = Dimen.smallPadding)
+                                )
                             }
-                        ) {
-                            AreaEquipList(
-                                equipId,
-                                it.getAllOdd(),
-                                it.getNum(),
-                                colorResource(id = color[pagerIndex])
-                            )
                         }
-                        item {
-                            CommonSpacer()
+                    }
+                    //pager
+                    HorizontalPager(state = pagerState) { pagerIndex ->
+                        LazyColumn(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            contentPadding = PaddingValues(top = Dimen.mediumPadding),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(
+                                when (tabs[pagerIndex]) {
+                                    "Normal" -> lists[0]
+                                    "Hard" -> lists[1]
+                                    else -> lists[2]
+                                }
+                            ) {
+                                AreaEquipList(
+                                    equipId,
+                                    it.getAllOdd(),
+                                    it.getNum(),
+                                    colorResource(id = color[pagerIndex])
+                                )
+                            }
+                            item {
+                                CommonSpacer()
+                            }
                         }
                     }
                 }
+            } else {
+                //暂无掉落信息
+                Text(
+                    text = stringResource(R.string.unknown_area),
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h6,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(Dimen.largePadding)
+                )
             }
         }
 

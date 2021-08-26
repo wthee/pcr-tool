@@ -9,11 +9,13 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.DatabaseService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_ERROR
 import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -28,6 +30,7 @@ class DatabaseDownloadWorker(
     @NonNull parameters: WorkerParameters?,
 ) : CoroutineWorker(context, parameters!!) {
 
+
     //通知栏
     private val notificationManager: NotificationManager =
         context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -35,17 +38,15 @@ class DatabaseDownloadWorker(
     private val noticeId = 0
     private lateinit var notification: NotificationCompat.Builder
 
-
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
+    lateinit var service: Call<ResponseBody>
 
     companion object {
         const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_REGION = "KEY_REGION"
         const val KEY_FROM = "KEY_FROM"
-
-        lateinit var service: Call<ResponseBody>
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -60,6 +61,9 @@ class DatabaseDownloadWorker(
         if (result == Result.success()) {
             //通知更新数据
             handler.sendEmptyMessage(from)
+        } else if (result == Result.failure()) {
+            ToastUtil.short(DOWNLOAD_ERROR)
+            WorkManager.getInstance(MyApplication.context).cancelAllWork()
         }
         return@coroutineScope result
     }
@@ -76,11 +80,18 @@ class DatabaseDownloadWorker(
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         //更新下载进度
                         MainActivity.navViewModel.downloadProgress.postValue(progress)
+                        //更新下载进度
+                        notification.setProgress(100, progress, false)
+                            .setContentTitle(
+                                "${Constants.NOTICE_TITLE} ${currSize / 1024}  / ${totalSize / 1024}"
+                            )
+                        notificationManager.notify(noticeId, notification.build())
                     }
 
                     override fun onFinish() {
                         //下载完成
                         MainActivity.navViewModel.downloadProgress.postValue(100)
+                        notificationManager.cancelAll()
                     }
                 })
             ).getDb(fileName)
@@ -117,7 +128,7 @@ class DatabaseDownloadWorker(
             AppDatabaseCN.close()
             AppDatabaseTW.close()
             AppDatabaseJP.close()
-            //加压缩
+            //解压
             UnzippedUtil.deCompress(db, true)
             //更新数据库版本号
             updateLocalDataBaseVersion(version)

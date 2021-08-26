@@ -144,6 +144,7 @@ object DatabaseUpdater {
                     uploadWorkRequest
                 )
             } catch (e: Exception) {
+                WorkManager.getInstance(MyApplication.context).cancelAllWork()
                 UMengLogUtil.upload(e, Constants.EXCEPTION_DOWNLOAD_DB)
             }
         } else {

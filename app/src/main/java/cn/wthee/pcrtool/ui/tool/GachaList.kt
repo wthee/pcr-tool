@@ -29,6 +29,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
 
@@ -113,6 +114,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
     //标题
     FlowRow(
         modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+        crossAxisAlignment = FlowCrossAxisAlignment.Center
     ) {
         MainTitleText(
             text = type,

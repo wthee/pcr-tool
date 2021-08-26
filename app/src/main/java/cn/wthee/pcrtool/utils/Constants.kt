@@ -102,6 +102,7 @@ object Constants {
 
     //默认值
     const val NOTICE_TITLE = "正在下载数据"
+    const val DOWNLOAD_ERROR = "下载数据出现未知错误~"
     const val RANK_UPPER = "RANK"
 
     val ATTR = arrayListOf(
@@ -123,6 +124,9 @@ object Constants {
         "TP 上升",
         "TP 减少",
     )
+
+    val UNKNOWN = "?"
+
 
     //现实图片有误的角色编号
     val errorIDs = arrayListOf(
