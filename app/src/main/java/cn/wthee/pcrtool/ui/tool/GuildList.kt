@@ -42,21 +42,16 @@ fun GuildList(
     val guilds = guildViewModel.getGuilds().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        SlideAnimation(visible = guilds.isNotEmpty()) {
-            LazyColumn(
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
-            ) {
-                items(guilds) {
-                    GuildItem(it, toCharacterDetail = toCharacterDetail)
-                }
-                item {
-                    CommonSpacer()
-                }
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = scrollState,
+            contentPadding = PaddingValues(Dimen.largePadding)
+        ) {
+            items(guilds) {
+                GuildItem(it, toCharacterDetail = toCharacterDetail)
+            }
+            item {
+                CommonSpacer()
             }
         }
 

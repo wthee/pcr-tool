@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -97,19 +98,21 @@ fun CharacterList(
             FilterCharacterSheet(navViewModel, coroutineScope, state)
         }
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            FadeAnimation(visible = list.isNotEmpty()) {
-                LazyVerticalGrid(
-                    cells = GridCells.Fixed(2),
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.mediumPadding)
-                ) {
-                    items(list) {
-                        CharacterItem(it, filter.value!!, toDetail = toDetail)
-                    }
-                    items(2) {
-                        CommonSpacer()
-                    }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
+            LazyVerticalGrid(
+                cells = GridCells.Fixed(2),
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.mediumPadding)
+            ) {
+                items(list) {
+                    CharacterItem(it, filter.value!!, toDetail = toDetail)
+                }
+                items(2) {
+                    CommonSpacer()
                 }
             }
             Row(

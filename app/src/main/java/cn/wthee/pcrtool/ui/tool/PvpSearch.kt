@@ -113,7 +113,11 @@ fun PvpSearchCompose(
         pvpViewModel.requesting = false
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
         Column {
             //标题
             if (!floatWindow) {

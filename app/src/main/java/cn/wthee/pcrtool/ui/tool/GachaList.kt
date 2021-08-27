@@ -49,21 +49,16 @@ fun GachaList(
     val gachas = gachaViewModel.getGachaHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        SlideAnimation(visible = gachas.isNotEmpty()) {
-            LazyColumn(
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
-            ) {
-                items(gachas) {
-                    GachaItem(it, toCharacterDetail)
-                }
-                item {
-                    CommonSpacer()
-                }
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = scrollState,
+            contentPadding = PaddingValues(Dimen.largePadding)
+        ) {
+            items(gachas) {
+                GachaItem(it, toCharacterDetail)
+            }
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部

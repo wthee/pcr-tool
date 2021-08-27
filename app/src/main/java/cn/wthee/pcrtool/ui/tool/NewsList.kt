@@ -244,13 +244,13 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
     val news = newsViewModel.newsDetail.observeAsState()
     val context = LocalContext.current
 
-    if (news.value != null && news.value!!.data != null) {
-        val originalUrl = news.value!!.data!!.url
-        val originalTitle = news.value!!.data!!.title
-        val date = news.value!!.data!!.date
-        val region = originalUrl.region
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (news.value != null && news.value!!.data != null) {
+            val originalUrl = news.value!!.data!!.url
+            val originalTitle = news.value!!.data!!.title
+            val date = news.value!!.data!!.date
+            val region = originalUrl.region
 
-        Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

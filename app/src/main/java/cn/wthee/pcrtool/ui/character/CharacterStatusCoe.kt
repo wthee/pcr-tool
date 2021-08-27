@@ -1,8 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -27,8 +25,10 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 @Composable
 fun CharacterStatusCoeCompose(attrViewModel: CharacterAttrViewModel = hiltViewModel()) {
     val coeValue = attrViewModel.getCoefficient().collectAsState(initial = null).value
-    coeValue?.let {
-        StatusDesc(it)
+    Box(modifier = Modifier.fillMaxSize()) {
+        coeValue?.let {
+            StatusDesc(it)
+        }
     }
 }
 
@@ -61,9 +61,11 @@ private fun StatusDesc(coe: UnitStatusCoefficient) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.verticalScroll(
-            rememberScrollState()
-        )
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(
+                rememberScrollState()
+            )
     ) {
         //其它说明
         CaptionText(

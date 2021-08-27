@@ -50,21 +50,16 @@ fun EventList(
     val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        SlideAnimation(visible = events.isNotEmpty()) {
-            LazyColumn(
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
-            ) {
-                items(events) {
-                    EventItem(it, toCharacterDetail)
-                }
-                item {
-                    CommonSpacer()
-                }
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = scrollState,
+            contentPadding = PaddingValues(Dimen.largePadding)
+        ) {
+            items(events) {
+                EventItem(it, toCharacterDetail)
+            }
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部

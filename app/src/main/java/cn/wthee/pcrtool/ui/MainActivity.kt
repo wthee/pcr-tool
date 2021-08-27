@@ -26,7 +26,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
@@ -51,6 +50,7 @@ import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -182,7 +182,7 @@ fun Home(
     mNavViewModel: NavViewModel = hiltViewModel(),
     mNoticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
-    navController = rememberNavController()
+    navController = rememberAnimatedNavController()
     actions = remember(navController) { NavActions(navController) }
     navViewModel = mNavViewModel
     noticeViewModel = mNoticeViewModel

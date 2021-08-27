@@ -1,6 +1,8 @@
 package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -15,8 +17,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -26,6 +26,9 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.character.*
+import cn.wthee.pcrtool.ui.compose.defaultTween
+import cn.wthee.pcrtool.ui.compose.fadeIn
+import cn.wthee.pcrtool.ui.compose.fadeOut
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
@@ -34,6 +37,8 @@ import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import cn.wthee.pcrtool.viewmodel.TweetViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -99,7 +104,8 @@ fun NavGraph(
     val scrollState0 = rememberLazyListState()
     val scrollState1 = rememberLazyListState()
     val scrollState2 = rememberLazyListState()
-    val pagerState = rememberPagerState(pageCount = 3, initialOffscreenLimit = 2, initialPage = getRegion() - 2)
+    val pagerState =
+        rememberPagerState(pageCount = 3, initialOffscreenLimit = 2, initialPage = getRegion() - 2)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     newsViewModel.getNews(2)
     newsViewModel.getNews(3)
@@ -126,16 +132,27 @@ fun NavGraph(
     }?.collectAsLazyPagingItems()
 
 
-    NavHost(navController, startDestination = Navigation.HOME) {
+    AnimatedNavHost(navController, startDestination = Navigation.HOME) {
 
         //首页
-        composable(Navigation.HOME) {
+        composable(
+            route = Navigation.HOME,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut(animationSpec = defaultTween()) },
+            popEnterTransition = { _, _ -> fadeIn }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.MAIN)
             Overview(actions = actions)
         }
 
         //角色列表
-        composable(Navigation.CHARACTER_LIST) {
+        composable(
+            route = Navigation.CHARACTER_LIST,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             CharacterList(scrollState, actions.toCharacterDetail)
@@ -143,10 +160,14 @@ fun NavGraph(
 
         //角色属性详情
         composable(
-            "${Navigation.CHARACTER_DETAIL}/{${Navigation.UNIT_ID}}",
+            route = "${Navigation.CHARACTER_DETAIL}/{${Navigation.UNIT_ID}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -157,15 +178,18 @@ fun NavGraph(
                 actions,
                 viewModel
             )
-
         }
 
         //角色资料
         composable(
-            "${Navigation.CHARACTER_BASIC_INFO}/{${Navigation.UNIT_ID}}",
+            route = "${Navigation.CHARACTER_BASIC_INFO}/{${Navigation.UNIT_ID}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             val scrollState = rememberScrollState()
@@ -173,7 +197,13 @@ fun NavGraph(
         }
 
         //装备列表
-        composable(Navigation.EQUIP_LIST) {
+        composable(
+            route = Navigation.EQUIP_LIST,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             EquipList(
@@ -185,10 +215,14 @@ fun NavGraph(
 
         //装备详情
         composable(
-            "${Navigation.EQUIP_DETAIL}/{${Navigation.EQUIP_ID}}",
+            route = "${Navigation.EQUIP_DETAIL}/{${Navigation.EQUIP_ID}}",
             arguments = listOf(navArgument(Navigation.EQUIP_ID) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
@@ -197,10 +231,14 @@ fun NavGraph(
 
         //装备素材详情
         composable(
-            "${Navigation.EQUIP_MATERIAL}/{${Navigation.EQUIP_ID}}",
+            route = "${Navigation.EQUIP_MATERIAL}/{${Navigation.EQUIP_ID}}",
             arguments = listOf(navArgument(Navigation.EQUIP_ID) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             EquipMaterialDeatil(arguments.getInt(Navigation.EQUIP_ID))
@@ -208,10 +246,14 @@ fun NavGraph(
 
         //角色 RANK 装备
         composable(
-            "${Navigation.RANK_EQUIP}/{${Navigation.UNIT_ID}}",
+            route = "${Navigation.RANK_EQUIP}/{${Navigation.UNIT_ID}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             RankEquipList(
@@ -222,7 +264,7 @@ fun NavGraph(
 
         //角色 RANK 对比
         composable(
-            "${Navigation.RANK_COMPARE}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}/{${Navigation.LEVEL}}/{${Navigation.RARITY}}/{${Navigation.UNIQUE_EQUIP_LEVEL}}",
+            route = "${Navigation.RANK_COMPARE}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}/{${Navigation.LEVEL}}/{${Navigation.RARITY}}/{${Navigation.UNIQUE_EQUIP_LEVEL}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }, navArgument(Navigation.MAX_RANK) {
@@ -233,7 +275,11 @@ fun NavGraph(
                 type = NavType.IntType
             }, navArgument(Navigation.UNIQUE_EQUIP_LEVEL) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             RankCompare(
@@ -248,12 +294,16 @@ fun NavGraph(
 
         //角色装备统计
         composable(
-            "${Navigation.EQUIP_COUNT}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}",
+            route = "${Navigation.EQUIP_COUNT}/{${Navigation.UNIT_ID}}/{${Navigation.MAX_RANK}}",
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }, navArgument(Navigation.MAX_RANK) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             RankEquipCount(
@@ -265,35 +315,65 @@ fun NavGraph(
         }
 
         //角色排行
-        composable(Navigation.TOOL_LEADER) {
+        composable(
+            route = Navigation.TOOL_LEADER,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             LeaderboardList(scrollState)
         }
 
         //角色卡池
-        composable(Navigation.TOOL_GACHA) {
+        composable(
+            route = Navigation.TOOL_GACHA,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             GachaList(scrollState, actions.toCharacterDetail)
         }
 
         //剧情活动
-        composable(Navigation.TOOL_EVENT) {
+        composable(
+            route = Navigation.TOOL_EVENT,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             EventList(scrollState, actions.toCharacterDetail)
         }
 
         //角色公会
-        composable(Navigation.TOOL_GUILD) {
+        composable(
+            route = Navigation.TOOL_GUILD,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
             GuildList(scrollState, actions.toCharacterDetail)
         }
 
         //团队战
-        composable(Navigation.TOOL_CLAN) {
+        composable(
+            route = Navigation.TOOL_CLAN,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             ClanBattleList(scrollState, actions.toClanBossInfo)
@@ -301,12 +381,16 @@ fun NavGraph(
 
         //团队战详情
         composable(
-            "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_BOSS_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}",
+            route = "${Navigation.TOOL_CLAN_BOSS_INFO}/{${Navigation.TOOL_CLAN_BOSS_ID}}/{${Navigation.TOOL_CLAN_BOSS_INDEX}}",
             arguments = listOf(navArgument(Navigation.TOOL_CLAN_BOSS_ID) {
                 type = NavType.IntType
             }, navArgument(Navigation.TOOL_CLAN_BOSS_INDEX) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             ClanBossInfoPager(
@@ -316,27 +400,51 @@ fun NavGraph(
         }
 
         //竞技场查询
-        composable(Navigation.TOOL_PVP) {
+        composable(
+            route = Navigation.TOOL_PVP,
+            enterTransition = { _, _ -> fadeIn(1f) },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             PvpSearchCompose(
                 toCharacter = actions.toCharacterDetail
             )
         }
 
         //设置页面
-        composable(Navigation.MAIN_SETTINGS) {
+        composable(
+            route = Navigation.MAIN_SETTINGS,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             MainSettings()
         }
 
         //更新通知
-        composable(Navigation.APP_NOTICE) {
+        composable(
+            route = Navigation.APP_NOTICE,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             NoticeList(scrollState)
         }
 
         //公告
-        composable(Navigation.TOOL_NEWS) {
+        composable(
+            route = Navigation.TOOL_NEWS,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             NewsList(
                 pagerState,
@@ -352,50 +460,81 @@ fun NavGraph(
 
         //公告详情
         composable(
-            "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_KEY}}",
+            route = "${Navigation.TOOL_NEWS_DETAIL}/{${Navigation.TOOL_NEWS_KEY}}",
             arguments = listOf(
                 navArgument(Navigation.TOOL_NEWS_KEY) {
                     type = NavType.StringType
                 },
-            )
+            ),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-
             val arguments = requireNotNull(it.arguments)
             NewsDetail(arguments.getString(Navigation.TOOL_NEWS_KEY) ?: "")
         }
 
         //推特信息
-        composable(Navigation.TWEET) {
+        composable(
+            route = Navigation.TWEET,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             TweetList(tweet, tweetScrollState, actions.toNewsDetail, actions.toComicListIndex)
         }
 
         //漫画信息
-        composable(Navigation.COMIC) {
+        composable(
+            route = Navigation.COMIC,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             ComicList()
         }
 
         //漫画跳转
         composable(
-            "${Navigation.COMIC}/{${Navigation.COMIC_ID}}",
+            route = "${Navigation.COMIC}/{${Navigation.COMIC_ID}}",
             arguments = listOf(navArgument(Navigation.COMIC_ID) {
                 type = NavType.IntType
-            })
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             ComicList(arguments.getInt(Navigation.COMIC_ID))
         }
 
         //技能列表
-        composable(Navigation.ALL_SKILL) {
+        composable(
+            route = Navigation.ALL_SKILL,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             AllSkillList()
         }
 
         //战力系数
-        composable(Navigation.ATTR_COE) {
+        composable(
+            route = Navigation.ATTR_COE,
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             CharacterStatusCoeCompose()
         }

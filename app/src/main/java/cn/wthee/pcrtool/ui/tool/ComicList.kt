@@ -67,7 +67,8 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
 
     //关闭监听
     val ok = MainActivity.navViewModel.fabOKCilck.observeAsState().value ?: false
-    Box {
+
+    Box(modifier = Modifier.fillMaxSize()) {
         FadeAnimation(visible = visible) {
             val pagerState = rememberPagerState(
                 pageCount = comicList.size,

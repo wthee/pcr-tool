@@ -95,7 +95,7 @@ fun Overview(
     val comingSoonEventList =
         overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
     val newsList =
-            overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
     val pagerCount = 6
     val pagerState =
@@ -421,9 +421,14 @@ private fun Section(
     })
 
     Column(
-        modifier = Modifier
-            .padding(top = Dimen.largePadding)
-            .animateContentSize(defaultSpring())
+        modifier = if (MainActivity.animOn) {
+            Modifier
+                .padding(top = Dimen.largePadding)
+                .animateContentSize(defaultSpring())
+        } else {
+            Modifier
+                .padding(top = Dimen.largePadding)
+        }
     ) {
         Row(
             modifier = modifier.padding(
