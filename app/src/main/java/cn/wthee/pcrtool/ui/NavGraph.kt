@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -26,7 +25,6 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.compose.defaultTween
 import cn.wthee.pcrtool.ui.compose.fadeIn
 import cn.wthee.pcrtool.ui.compose.fadeOut
 import cn.wthee.pcrtool.ui.equip.EquipList
@@ -143,7 +141,7 @@ fun NavGraph(
         composable(
             route = Navigation.HOME,
             enterTransition = { _, _ -> fadeIn },
-            exitTransition = { _, _ -> fadeOut(animationSpec = defaultTween()) },
+            exitTransition = { _, _ -> fadeOut },
             popEnterTransition = { _, _ -> fadeIn }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.MAIN)

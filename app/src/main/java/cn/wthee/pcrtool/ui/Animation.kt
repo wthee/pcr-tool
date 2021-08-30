@@ -20,19 +20,19 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 200, easing = FastOutSlowInEasing)
+    return tween(durationMillis = 300, easing = FastOutSlowInEasing)
+}
+
+fun <T> fastTween(): TweenSpec<T> {
+    return tween(durationMillis = 100, easing = LinearEasing)
 }
 
 
 //页面退出动画
 @ExperimentalAnimationApi
-val fadeOut = if (animOn) {
-    fadeOut(animationSpec = tween(durationMillis = 100, easing = FastOutLinearInEasing))
-} else {
-    fadeOut(targetAlpha = 1f)
-}
+val fadeOut = fadeOut(animationSpec = fastTween())
 
-//页面进入动画：从小向上滚动
+//页面进入动画：从下向上滚动
 @ExperimentalAnimationApi
 val slideIn = if (animOn) {
     slideInVertically(
@@ -40,7 +40,7 @@ val slideIn = if (animOn) {
         animationSpec = defaultTween()
     )
 } else {
-    fadeIn(initialAlpha = 1f)
+    fadeIn(animationSpec = fastTween())
 }
 
 //页面进入动画：渐入
@@ -48,7 +48,7 @@ val slideIn = if (animOn) {
 val fadeIn = if (animOn) {
     fadeIn(animationSpec = defaultTween())
 } else {
-    fadeIn(initialAlpha = 1f)
+    fadeIn(animationSpec = fastTween())
 }
 
 /**
