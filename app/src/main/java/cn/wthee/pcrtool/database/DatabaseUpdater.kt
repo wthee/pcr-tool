@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.MyAPIService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
-import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
 import com.umeng.umcrash.UMCrash
@@ -27,7 +27,7 @@ import java.io.File
  */
 object DatabaseUpdater {
 
-    val sp = mainSP()
+    val sp = settingSP()
 
     /**
      * 切换版本
@@ -178,7 +178,7 @@ object DatabaseUpdater {
  * 2: 国服 3：台服 4:日服
  */
 fun getRegion(): Int {
-    val sp = mainSP()
+    val sp = settingSP()
     return sp.getInt(Constants.SP_DATABASE_TYPE, 2)
 }
 
@@ -187,7 +187,7 @@ fun getRegion(): Int {
  * 更新本地数据库版本、哈希值
  */
 fun updateLocalDataBaseVersion(ver: String) {
-    val sp = mainSP()
+    val sp = settingSP()
     val key = when (getRegion()) {
         2 -> Constants.SP_DATABASE_VERSION_CN
         3 -> Constants.SP_DATABASE_VERSION_TW

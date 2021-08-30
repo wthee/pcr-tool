@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.data.db.view.GachaInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
-import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
@@ -92,7 +92,7 @@ fun GachaList(
 @ExperimentalMaterialApi
 @Composable
 private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
-    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
+    val today = getToday(settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
     val sd = gachaInfo.startTime
     val ed = gachaInfo.endTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0

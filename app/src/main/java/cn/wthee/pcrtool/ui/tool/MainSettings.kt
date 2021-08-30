@@ -29,7 +29,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
-import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.FileUtil
@@ -46,7 +46,7 @@ import coil.compose.rememberImagePainter
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
-    val sp = mainSP(context)
+    val sp = settingSP(context)
     val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
 
     val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground)

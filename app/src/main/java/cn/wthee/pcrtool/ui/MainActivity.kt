@@ -58,13 +58,19 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
- * 本地存储
+ * 本地存储：收藏信息
  */
 fun mainSP(): SharedPreferences =
     MyApplication.context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
 
-fun mainSP(context: Context): SharedPreferences =
-    context.getSharedPreferences("main", Context.MODE_PRIVATE)!!
+/**
+ * 本地存储：版本、设置信息
+ */
+fun settingSP(): SharedPreferences =
+    MyApplication.context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
+
+fun settingSP(context: Context): SharedPreferences =
+    context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 
 @AndroidEntryPoint
@@ -116,7 +122,7 @@ class MainActivity : ComponentActivity() {
         //设置 handler
         setHandler()
         UMengInitializer().create(this)
-        val sp = mainSP()
+        val sp = settingSP()
         vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
         animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
         MainScope().launch {
