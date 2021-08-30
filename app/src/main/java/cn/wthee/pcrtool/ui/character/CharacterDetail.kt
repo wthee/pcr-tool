@@ -1,10 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
-import android.Manifest
-import android.app.Activity
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -34,7 +31,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
@@ -552,11 +548,6 @@ private fun CardImage(unitId: Int) {
     )
     val coroutineScope = rememberCoroutineScope()
 
-    //权限
-    val permissions = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
     val showConfirmLayout = remember {
         mutableStateOf(false)
@@ -602,17 +593,7 @@ private fun CardImage(unitId: Int) {
                 if (index == pagerState.currentPage) {
                     if (loaded[index]) {
                         //权限校验
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
-                                context,
-                                permissions
-                            )
-                        ) {
-                            ActivityCompat.requestPermissions(
-                                context as Activity,
-                                permissions,
-                                1
-                            )
-                        } else {
+                        checkPermissions(context) {
                             showConfirmLayout.value = !showConfirmLayout.value
                         }
                     } else {
@@ -634,7 +615,7 @@ private fun CardImage(unitId: Int) {
                 FadeAnimation(visible = showConfirmLayout.value) {
                     MainButton(text = stringResource(R.string.save_image)) {
                         drawables[index]?.let {
-                            ImageDownloadHelper(context).saveBitmap(
+                            FileSaveHelper(context).saveBitmap(
                                 bitmap = (it as BitmapDrawable).bitmap,
                                 displayName = "${unitId}_${index}.jpg"
                             )

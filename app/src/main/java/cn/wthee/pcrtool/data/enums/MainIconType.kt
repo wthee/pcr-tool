@@ -269,5 +269,16 @@ enum class MainIconType(val icon: ImageVector) {
     /**
      * 帮助
      */
-    HELP(Icons.Rounded.Help)
+    HELP(Icons.Rounded.Help),
+
+    /**
+     * 导入
+     */
+    IMPORT(Icons.Rounded.Download),
+
+    /**
+     * 导出
+     */
+    EXPORT(Icons.Rounded.Upload),
+
 }

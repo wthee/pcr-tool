@@ -62,7 +62,11 @@
     <string name="db_jp">日服</string>
     <string name="change_db">数据切换</string>
     <string name="app_notice">通知</string>
-
+    <string name="data_backup">备份</string>
+    <string name="data_export">数据导出</string>
+    <string name="data_export_hint">导出收藏数据到本地</string>
+    <string name="data_import">数据导入</string>
+    <string name="data_import_hint">导入本地收藏数据文件</string>
     <!--筛选  -->
     <string name="title_sort">排序类型</string>
     <string name="sort_date">登场日期</string>

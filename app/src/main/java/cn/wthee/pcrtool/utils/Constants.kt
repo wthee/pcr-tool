@@ -165,4 +165,6 @@ object Constants {
     const val EXCEPTION_UNIT_NULL = "角色信息空值$EXCEPTION"
     const val EXCEPTION_SKILL = "角色技能$EXCEPTION"
     const val EXCEPTION_PVP_SERVICE = "竞技场查询服务$EXCEPTION"
+    const val EXCEPTION_DATA_EXPORT = "数据导出$EXCEPTION"
+    const val EXCEPTION_DATA_IMPORT = "数据导入$EXCEPTION"
 }
