@@ -87,8 +87,16 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                         modifier = Modifier.padding(Dimen.smallPadding)
                     ) {
                         coroutineScope.launch {
-                            resultListState.scrollToItem(0)
-                            favoritesListState.scrollToItem(0)
+                            try {
+                                resultListState.scrollToItem(0)
+                            } catch (ignore: Exception) {
+
+                            }
+                            try {
+                                favoritesListState.scrollToItem(0)
+                            } catch (ignore: Exception) {
+
+                            }
                         }
                         pvpViewModel.pvpResult.postValue(null)
                         MainActivity.navViewModel.showResult.postValue(true)
