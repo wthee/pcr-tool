@@ -104,8 +104,13 @@ fun NavGraph(
     val scrollState0 = rememberLazyListState()
     val scrollState1 = rememberLazyListState()
     val scrollState2 = rememberLazyListState()
+    //公告默认显示页
+    var initialPage = 0
+    if (getRegion() - 2 == 0) {
+        initialPage = getRegion() - 2
+    }
     val pagerState =
-        rememberPagerState(pageCount = 3, initialOffscreenLimit = 2, initialPage = getRegion() - 2)
+        rememberPagerState(pageCount = 3, initialOffscreenLimit = 2, initialPage = initialPage)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     newsViewModel.getNews(2)
     newsViewModel.getNews(3)
