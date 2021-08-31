@@ -199,33 +199,34 @@ fun MainSettings() {
         }
         LineCompose()
         //收藏、竞技场数据本地数据备份
-        MainText(
-            text = stringResource(id = R.string.data_backup),
-            modifier = Modifier.padding(Dimen.largePadding)
-        )
-        //导出收藏数据
-        SettingItem(
-            MainIconType.EXPORT,
-            stringResource(id = R.string.data_export),
-            stringResource(id = R.string.data_export_hint),
-        ) {
-            //导出文件
-            checkPermissions(context) {
-                exportUserFile(context)
+        if (BuildConfig.DEBUG) {
+            MainText(
+                text = stringResource(id = R.string.data_backup),
+                modifier = Modifier.padding(Dimen.largePadding)
+            )
+            //导出收藏数据
+            SettingItem(
+                MainIconType.EXPORT,
+                stringResource(id = R.string.data_export),
+                stringResource(id = R.string.data_export_hint),
+            ) {
+                //导出文件
+                checkPermissions(context) {
+                    exportUserFile(context)
+                }
             }
-        }
-        //导入收藏数据
-        SettingItem(
-            MainIconType.IMPORT,
-            stringResource(id = R.string.data_import),
-            stringResource(id = R.string.data_import_hint),
-        ) {
-            checkPermissions(context) {
-                importUserFile(context)
+            //导入收藏数据
+            SettingItem(
+                MainIconType.IMPORT,
+                stringResource(id = R.string.data_import),
+                stringResource(id = R.string.data_import_hint),
+            ) {
+                checkPermissions(context) {
+                    importUserFile(context)
+                }
             }
+            LineCompose()
         }
-
-        LineCompose()
         //感谢友链
         MainText(
             text = stringResource(id = R.string.thanks),
