@@ -22,7 +22,7 @@ interface EventDao {
             SELECT
                 event.*,
                 c.title,
-                e.unit_ids
+                COALESCE(e.unit_ids, "") as unit_ids
             FROM
                 (
                     SELECT

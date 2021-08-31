@@ -6,13 +6,13 @@ plugins {
 }
 
 val composeVersion = "1.0.1"
-val name = "2.0.2"
-val code = 202
+val name = "2.1.0"
+val code = 210
 val sql = 201
 
 android {
 
-    compileSdk = 30
+    compileSdk = 31
     buildToolsVersion = "31.0.0"
     flavorDimensions("version")
 
@@ -115,6 +115,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
     val coilVersion = "1.3.2"
@@ -135,7 +136,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha05")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha07")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.0")

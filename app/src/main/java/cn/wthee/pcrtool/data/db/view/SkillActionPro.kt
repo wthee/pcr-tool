@@ -310,13 +310,13 @@ data class SkillActionPro(
             }
             SkillActionType.AURA -> {
                 tag = if (action_detail_1 % 10 == 0) "BUFF" else "DEBUFF"
-                val aura = getAura(action_detail_1)
                 val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
+                val aura = getAura(action_detail_1, value)
                 val time = getTimeText(4, action_value_4, action_value_5)
                 if (action_detail_2 == 2) {
-                    "BREAK 期间，${getTarget()}${aura} $value"
+                    "BREAK 期间，${getTarget()}${aura}"
                 } else {
-                    "${getTarget()}${aura} $value $time"
+                    "${getTarget()}${aura}$time"
                 }
 
             }
@@ -693,7 +693,9 @@ data class SkillActionPro(
             SkillActionType.AURA_FIELD -> {
                 val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
                 val time = getTimeText(3, action_value_3, action_value_4)
-                "${getTarget()}展开半径为 [${action_value_5.toInt()}] 的领域，${getAura(action_detail_1)} ${value}$time"
+                "${getTarget()}展开半径为 [${action_value_5.toInt()}] 的领域，${
+                    getAura(action_detail_1, value)
+                }$time"
             }
             SkillActionType.DOT_FIELD -> {
                 val time = getTimeText(1, action_value_1, action_value_2)
@@ -765,8 +767,8 @@ data class SkillActionPro(
             SkillActionType.CHANNEL -> {
                 val time = getTimeText(4, action_value_4, action_value_5)
                 val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
-                val aura = getAura(action_detail_1)
-                "${getTarget()}${aura} $value ${time}，受到 [${action_detail_3}] 次伤害时中断"
+                val aura = getAura(action_detail_1, value)
+                "${getTarget()}${aura}${time}，受到 [${action_detail_3}] 次伤害时中断"
             }
             SkillActionType.CHANGE_WIDTH -> {
                 "将模型的宽度变为[${action_value_1}]"
@@ -977,7 +979,7 @@ data class SkillActionPro(
             } else if (v1 != 0.0 && v2 != 0.0) {
                 "[${(v1 + v2 * level).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级>"
             } else {
-                "{$index}"
+                "{$index}$percent"
             }
         } else {
             if (v1 == 0.0 && v2 != 0.0) {
@@ -987,7 +989,7 @@ data class SkillActionPro(
             } else if (v1 != 0.0 && v2 != 0.0) {
                 "[${(v1 + v2 * level + v3 * atk).int}$percent] <{${index}}$v1 + {${index + 1}}$v2 * 技能等级 + {${index + 2}}$v3 * 攻击力>"
             } else {
-                "{$index}"
+                "{$index}$percent"
             }
         }
         return if (hideIndex) {
@@ -1000,7 +1002,7 @@ data class SkillActionPro(
     /**
      * 效果
      */
-    private fun getAura(v: Int): String {
+    private fun getAura(v: Int, valueText: String): String {
         val action = if (v == 1) {
             "HP最大值"
         } else {
@@ -1022,9 +1024,9 @@ data class SkillActionPro(
                 else -> UNKNOWN
             }
         }
-        var type = if (v % 10 == 0) "提升" else "减少"
+        var type = (if (v % 10 == 0) "提升" else "减少") + " " + valueText
         if (v / 10 == 14) {
-            type = "百分比" + if (v % 10 == 0) "减少" else "提升"
+            type = (if (v % 10 == 0) "减少" else "提升") + " " + valueText + "%"
         }
         return action + type
     }

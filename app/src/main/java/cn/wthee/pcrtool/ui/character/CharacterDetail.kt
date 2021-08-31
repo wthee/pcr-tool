@@ -1,10 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
-import android.Manifest
-import android.app.Activity
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -34,7 +31,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
@@ -124,42 +120,44 @@ fun CharacterDetail(
         .collectAsState(initial = AllAttrData()).value
 
 
-    //加载数据并显示
-    currentValueState.value?.let { currentValue ->
-        val unknown = maxValue.level == -1
-        //角色等级滑动条
-        val characterLevel = remember {
-            mutableStateOf(currentValue.level)
-        }
-        //专武等级滑动条
-        val uniqueEquipLevel = remember {
-            mutableStateOf(currentValue.uniqueEquipmentLevel)
-        }
-        //Rank 选择
-        if (selectRank != 0 && selectRank != currentValue.rank) {
-            attrViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
-        }
-
-        //页面
-        ModalBottomSheetLayout(
-            sheetState = state,
-            scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
-            sheetElevation = Dimen.sheetElevation,
-            sheetShape = if (state.offset.value == 0f) {
-                noShape
-            } else {
-                MaterialTheme.shapes.large
-            },
-            sheetContent = {
-                SkillLoopList(
-                    loopData, iconTypes, Modifier.padding(
-                        top = Dimen.largePadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
-                    )
+    //页面
+    ModalBottomSheetLayout(
+        sheetState = state,
+        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        sheetElevation = Dimen.sheetElevation,
+        sheetShape = if (state.offset.value == 0f) {
+            noShape
+        } else {
+            MaterialTheme.shapes.large
+        },
+        sheetContent = {
+            SkillLoopList(
+                loopData,
+                iconTypes,
+                Modifier.padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.mediumPadding,
+                    end = Dimen.mediumPadding,
                 )
+            )
+        }
+    ) {
+        currentValueState.value?.let { currentValue ->
+            val unknown = maxValue.level == -1
+            //角色等级滑动条
+            val characterLevel = remember {
+                mutableStateOf(currentValue.level)
             }
-        ) {
+            //专武等级滑动条
+            val uniqueEquipLevel = remember {
+                mutableStateOf(currentValue.uniqueEquipmentLevel)
+            }
+            //Rank 选择
+            if (selectRank != 0 && selectRank != currentValue.rank) {
+                attrViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
+            }
+
+
             //关闭
             if (close) {
                 coroutineScope.launch {
@@ -170,6 +168,7 @@ fun CharacterDetail(
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
+
                 Column(
                     modifier = Modifier
                         .verticalScroll(scrollState)
@@ -177,66 +176,62 @@ fun CharacterDetail(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     //角色卡面
-                    SlideAnimation(visible = maxValue.isInit() || unknown) {
-                        CardImage(unitId)
-                    }
+                    CardImage(unitId)
                     //数据加载后，展示页面
                     val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
-                    FadeAnimation(visible = visible) {
-                        if (visible) {
-                            //页面
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(MaterialTheme.colors.background),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                //星级
-                                StarSelect(
+                    if (visible) {
+                        //页面
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colors.background),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            //星级
+                            StarSelect(
+                                currentValue = currentValue,
+                                max = maxValue.rarity,
+                                modifier = Modifier.padding(top = Dimen.mediumPadding),
+                                attrViewModel = attrViewModel
+                            )
+                            AttrLists(
+                                currentValue,
+                                characterLevel,
+                                maxValue,
+                                allData,
+                                actions
+                            )
+                            //RANK 装备
+                            CharacterEquip(
+                                unitId = unitId,
+                                rank = currentValue.rank,
+                                maxRank = maxValue.rank,
+                                equips = allData.equips,
+                                toEquipDetail = actions.toEquipDetail,
+                                toRankEquip = actions.toCharacteRankEquip,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                            //显示专武
+                            if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                                UniqueEquip(
                                     currentValue = currentValue,
-                                    max = maxValue.rarity,
-                                    modifier = Modifier.padding(top = Dimen.mediumPadding),
-                                    attrViewModel = attrViewModel
-                                )
-                                AttrLists(
-                                    currentValue,
-                                    characterLevel,
-                                    maxValue,
-                                    allData,
-                                    actions
-                                )
-                                //RANK 装备
-                                CharacterEquip(
-                                    unitId = unitId,
-                                    rank = currentValue.rank,
-                                    maxRank = maxValue.rank,
-                                    equips = allData.equips,
-                                    toEquipDetail = actions.toEquipDetail,
-                                    toRankEquip = actions.toCharacteRankEquip,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                                )
-                                //显示专武
-                                if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-                                    UniqueEquip(
-                                        currentValue = currentValue,
-                                        uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                                        uniqueEquipLevel = uniqueEquipLevel,
-                                        uniqueEquipmentMaxData = allData.uniqueEquip
-                                    )
-                                }
-                                //技能
-                                CharacterSkill(
-                                    unitId = unitId,
-                                    level = currentValue.level,
-                                    atk = max(
-                                        allData.sumAttr.atk.int,
-                                        allData.sumAttr.magicStr.int
-                                    )
+                                    uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
+                                    uniqueEquipLevel = uniqueEquipLevel,
+                                    uniqueEquipmentMaxData = allData.uniqueEquip
                                 )
                             }
+                            //技能
+                            CharacterSkill(
+                                unitId = unitId,
+                                level = currentValue.level,
+                                atk = max(
+                                    allData.sumAttr.atk.int,
+                                    allData.sumAttr.magicStr.int
+                                )
+                            )
                         }
                     }
-                    SlideAnimation(visible = unknown) {
+                    if (unknown) {
                         //未知角色占位页面
                         Text(
                             text = stringResource(R.string.unknown_character),
@@ -429,65 +424,70 @@ private fun AttrLists(
         }
     )
     //战力计算
-    coe?.let {
-        val basicAttr = allData.sumAttr.copy().sub(allData.exSkillAttr)
-        val basic = basicAttr.hp * it.hp_coefficient +
-                basicAttr.atk * it.atk_coefficient +
-                basicAttr.magicStr * it.magic_str_coefficient +
-                basicAttr.def * it.def_coefficient +
-                basicAttr.magicDef * it.magic_def_coefficient +
-                basicAttr.physicalCritical * it.physical_critical_coefficient +
-                basicAttr.magicCritical * it.magic_critical_coefficient +
-                basicAttr.waveHpRecovery * it.wave_hp_recovery_coefficient +
-                basicAttr.waveEnergyRecovery * it.wave_energy_recovery_coefficient +
-                basicAttr.dodge * it.dodge_coefficient +
-                basicAttr.physicalPenetrate * it.physical_penetrate_coefficient +
-                basicAttr.magicPenetrate * it.magic_penetrate_coefficient +
-                basicAttr.lifeSteal * it.life_steal_coefficient +
-                basicAttr.hpRecoveryRate * it.hp_recovery_rate_coefficient +
-                basicAttr.energyRecoveryRate * it.energy_recovery_rate_coefficient +
-                basicAttr.energyReduceRate * it.energy_reduce_rate_coefficient +
-                basicAttr.accuracy * it.accuracy_coefficient
-        //技能2：默认加上技能2
-        var skill = currentValue.level * it.skill_lv_coefficient
-        //技能1：解锁专武，技能1系数提升
-        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-            skill += it.skill1_evolution_coefficient
-            skill += currentValue.level * it.skill_lv_coefficient * it.skill1_evolution_slv_coefficient
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(bottom = Dimen.smallPadding)
+    ) {
+        val value = if (coe == null) {
+            ""
         } else {
-            skill += currentValue.level * it.skill_lv_coefficient
-        }
-        //不同星级处理
-        if (currentValue.rarity >= 5) {
-            //ex+:大于等于五星，技能 ex+
-            skill += it.exskill_evolution_coefficient
-            skill += currentValue.level * it.skill_lv_coefficient
-            if (currentValue.rarity == 6) {
-                //ub+
-                skill += it.ub_evolution_coefficient
-                skill += currentValue.level * it.skill_lv_coefficient * it.ub_evolution_slv_coefficient
+            val basicAttr = allData.sumAttr.copy().sub(allData.exSkillAttr)
+            val basic = basicAttr.hp * coe.hp_coefficient +
+                    basicAttr.atk * coe.atk_coefficient +
+                    basicAttr.magicStr * coe.magic_str_coefficient +
+                    basicAttr.def * coe.def_coefficient +
+                    basicAttr.magicDef * coe.magic_def_coefficient +
+                    basicAttr.physicalCritical * coe.physical_critical_coefficient +
+                    basicAttr.magicCritical * coe.magic_critical_coefficient +
+                    basicAttr.waveHpRecovery * coe.wave_hp_recovery_coefficient +
+                    basicAttr.waveEnergyRecovery * coe.wave_energy_recovery_coefficient +
+                    basicAttr.dodge * coe.dodge_coefficient +
+                    basicAttr.physicalPenetrate * coe.physical_penetrate_coefficient +
+                    basicAttr.magicPenetrate * coe.magic_penetrate_coefficient +
+                    basicAttr.lifeSteal * coe.life_steal_coefficient +
+                    basicAttr.hpRecoveryRate * coe.hp_recovery_rate_coefficient +
+                    basicAttr.energyRecoveryRate * coe.energy_recovery_rate_coefficient +
+                    basicAttr.energyReduceRate * coe.energy_reduce_rate_coefficient +
+                    basicAttr.accuracy * coe.accuracy_coefficient
+            //技能2：默认加上技能2
+            var skill = currentValue.level * coe.skill_lv_coefficient
+            //技能1：解锁专武，技能1系数提升
+            if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                skill += coe.skill1_evolution_coefficient
+                skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
             } else {
-                //ub
-                skill += currentValue.level * it.skill_lv_coefficient
+                skill += currentValue.level * coe.skill_lv_coefficient
             }
-        } else {
-            //ub、ex
-            skill += currentValue.level * it.skill_lv_coefficient * 2
+            //不同星级处理
+            if (currentValue.rarity >= 5) {
+                //ex+:大于等于五星，技能 ex+
+                skill += coe.exskill_evolution_coefficient
+                skill += currentValue.level * coe.skill_lv_coefficient
+                if (currentValue.rarity == 6) {
+                    //ub+
+                    skill += coe.ub_evolution_coefficient
+                    skill += currentValue.level * coe.skill_lv_coefficient * coe.ub_evolution_slv_coefficient
+                } else {
+                    //ub
+                    skill += currentValue.level * coe.skill_lv_coefficient
+                }
+            } else {
+                //ub、ex
+                skill += currentValue.level * coe.skill_lv_coefficient * 2
+            }
+            (basic + skill).int.toString()
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(bottom = Dimen.smallPadding)
+        MainText(
+            text = stringResource(R.string.attr_all_value) + value,
+            modifier = Modifier
+                .padding(end = Dimen.smallPadding)
+                .animateContentSize(defaultSpring())
+        )
+        IconCompose(
+            data = MainIconType.HELP.icon,
+            size = Dimen.smallIconSize
         ) {
-            MainText(
-                text = stringResource(R.string.attr_all_value) + (basic + skill).int.toString(),
-                modifier = Modifier.padding(end = Dimen.smallPadding)
-            )
-            IconCompose(
-                data = MainIconType.HELP.icon,
-                size = Dimen.smallIconSize
-            ) {
-                actions.toCoe()
-            }
+            actions.toCoe()
         }
     }
     //属性
@@ -548,11 +548,6 @@ private fun CardImage(unitId: Int) {
     )
     val coroutineScope = rememberCoroutineScope()
 
-    //权限
-    val permissions = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    )
     val unLoadToast = stringResource(id = R.string.wait_pic_load)
     val showConfirmLayout = remember {
         mutableStateOf(false)
@@ -598,17 +593,7 @@ private fun CardImage(unitId: Int) {
                 if (index == pagerState.currentPage) {
                     if (loaded[index]) {
                         //权限校验
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(
-                                context,
-                                permissions
-                            )
-                        ) {
-                            ActivityCompat.requestPermissions(
-                                context as Activity,
-                                permissions,
-                                1
-                            )
-                        } else {
+                        checkPermissions(context) {
                             showConfirmLayout.value = !showConfirmLayout.value
                         }
                     } else {
@@ -630,7 +615,7 @@ private fun CardImage(unitId: Int) {
                 FadeAnimation(visible = showConfirmLayout.value) {
                     MainButton(text = stringResource(R.string.save_image)) {
                         drawables[index]?.let {
-                            ImageDownloadHelper(context).saveBitmap(
+                            FileSaveHelper(context).saveBitmap(
                                 bitmap = (it as BitmapDrawable).bitmap,
                                 displayName = "${unitId}_${index}.jpg"
                             )

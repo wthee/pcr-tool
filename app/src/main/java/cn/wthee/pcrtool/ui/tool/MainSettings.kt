@@ -29,12 +29,11 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
-import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.FileUtil
-import cn.wthee.pcrtool.utils.VibrateUtil
-import cn.wthee.pcrtool.utils.openWebView
+import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.FileUtil.exportUserFile
+import cn.wthee.pcrtool.utils.FileUtil.importUserFile
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 
@@ -46,9 +45,8 @@ import coil.compose.rememberImagePainter
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
-    val sp = mainSP(context)
+    val sp = settingSP(context)
     val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
-
     val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground)
 
     SideEffect {
@@ -200,6 +198,35 @@ fun MainSettings() {
             Spacer(modifier = Modifier.width(Dimen.largePadding))
         }
         LineCompose()
+        //收藏、竞技场数据本地数据备份
+        if (BuildConfig.DEBUG) {
+            MainText(
+                text = stringResource(id = R.string.data_backup),
+                modifier = Modifier.padding(Dimen.largePadding)
+            )
+            //导出收藏数据
+            SettingItem(
+                MainIconType.EXPORT,
+                stringResource(id = R.string.data_export),
+                stringResource(id = R.string.data_export_hint),
+            ) {
+                //导出文件
+                checkPermissions(context) {
+                    exportUserFile(context)
+                }
+            }
+            //导入收藏数据
+            SettingItem(
+                MainIconType.IMPORT,
+                stringResource(id = R.string.data_import),
+                stringResource(id = R.string.data_import_hint),
+            ) {
+                checkPermissions(context) {
+                    importUserFile(context)
+                }
+            }
+            LineCompose()
+        }
         //感谢友链
         MainText(
             text = stringResource(id = R.string.thanks),

@@ -113,7 +113,11 @@ fun PvpSearchCompose(
         pvpViewModel.requesting = false
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
         Column {
             //标题
             if (!floatWindow) {
@@ -267,8 +271,17 @@ fun PvpSearchCompose(
                 ) {
                     //查询
                     scope.launch {
-                        resultListState.scrollToItem(0)
-                        favoritesListState.scrollToItem(0)
+                        try {
+                            resultListState.scrollToItem(0)
+                        } catch (ignore: Exception) {
+
+                        }
+                        try {
+                            favoritesListState.scrollToItem(0)
+                        } catch (ignore: Exception) {
+
+                        }
+
                         if (selectedIds.contains(PvpCharacterData())) {
                             ToastUtil.short(tip)
                         } else {

@@ -20,7 +20,35 @@ fun <T> defaultSpring(): SpringSpec<T> {
  * 持续时间
  */
 fun <T> defaultTween(): TweenSpec<T> {
-    return tween(durationMillis = 200, easing = FastOutLinearInEasing)
+    return tween(durationMillis = 300, easing = FastOutSlowInEasing)
+}
+
+fun <T> fastTween(): TweenSpec<T> {
+    return tween(durationMillis = 100, easing = LinearEasing)
+}
+
+
+//页面退出动画
+@ExperimentalAnimationApi
+val fadeOut = fadeOut(animationSpec = fastTween())
+
+//页面进入动画：从下向上滚动
+@ExperimentalAnimationApi
+val slideIn = if (animOn) {
+    slideInVertically(
+        initialOffsetY = { 30 },
+        animationSpec = defaultTween()
+    )
+} else {
+    fadeIn(animationSpec = fastTween())
+}
+
+//页面进入动画：渐入
+@ExperimentalAnimationApi
+val fadeIn = if (animOn) {
+    fadeIn(animationSpec = defaultTween())
+} else {
+    fadeIn(animationSpec = fastTween())
 }
 
 /**
@@ -33,18 +61,10 @@ fun SlideAnimation(
     visible: Boolean,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
-
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        enter = if (animOn) {
-            slideInVertically(
-                initialOffsetY = { 30 },
-                animationSpec = defaultTween()
-            )
-        } else {
-            fadeIn(1f)
-        },
+        enter = slideIn,
         exit = fadeOut(),
         content = content,
     )
@@ -60,14 +80,9 @@ fun FadeAnimation(
     modifier: Modifier = Modifier,
     content: @Composable AnimatedVisibilityScope.() -> Unit
 ) {
-
     AnimatedVisibility(
         visible = visible,
-        enter = if (animOn) {
-            fadeIn(animationSpec = defaultTween())
-        } else {
-            fadeIn(1f)
-        },
+        enter = fadeIn,
         exit = fadeOut(),
         content = content,
         modifier = modifier

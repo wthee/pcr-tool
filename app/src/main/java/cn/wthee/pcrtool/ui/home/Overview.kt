@@ -35,7 +35,7 @@ import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.compose.*
-import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
@@ -95,7 +95,7 @@ fun Overview(
     val comingSoonEventList =
         overviewViewModel.getCalendarEventList(1).collectAsState(initial = arrayListOf()).value
     val newsList =
-            overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
     val pagerCount = 6
     val pagerState =
@@ -421,9 +421,14 @@ private fun Section(
     })
 
     Column(
-        modifier = Modifier
-            .padding(top = Dimen.largePadding)
-            .animateContentSize(defaultSpring())
+        modifier = if (MainActivity.animOn) {
+            Modifier
+                .padding(top = Dimen.largePadding)
+                .animateContentSize(defaultSpring())
+        } else {
+            Modifier
+                .padding(top = Dimen.largePadding)
+        }
     ) {
         Row(
             modifier = modifier.padding(
@@ -472,7 +477,7 @@ private fun Section(
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
-    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
+    val today = getToday(settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
     val sd = calendar.startTime.formatTime
     val ed = calendar.endTime.formatTime
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0

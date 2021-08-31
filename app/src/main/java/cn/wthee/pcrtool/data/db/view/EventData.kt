@@ -21,6 +21,10 @@ data class EventData(
 
     fun getUnitIdList(): List<Int> {
         val list = unitIds.intArrayList
-        return list.subList(1, 3)
+        return if (list.size > 3) {
+            list.subList(1, 3)
+        } else {
+            arrayListOf()
+        }
     }
 }

@@ -25,7 +25,7 @@ import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.compose.*
-import cn.wthee.pcrtool.ui.mainSP
+import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
@@ -50,21 +50,16 @@ fun EventList(
     val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        SlideAnimation(visible = events.isNotEmpty()) {
-            LazyColumn(
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
-            ) {
-                items(events) {
-                    EventItem(it, toCharacterDetail)
-                }
-                item {
-                    CommonSpacer()
-                }
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = scrollState,
+            contentPadding = PaddingValues(Dimen.largePadding)
+        ) {
+            items(events) {
+                EventItem(it, toCharacterDetail)
+            }
+            item {
+                CommonSpacer()
             }
         }
         //回到顶部
@@ -99,7 +94,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val type: String
     val typeColor: Color
     var showDays = true
-    val today = getToday(mainSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
+    val today = getToday(settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
     val startDate = event.startTime.formatTime.substring(0, 10)
     val endDate = event.endTime.formatTime.substring(0, 10)
     val preEvent = startDate == "2030/12/30"

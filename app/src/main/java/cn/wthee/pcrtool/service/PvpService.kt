@@ -17,9 +17,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.PvpFloatSearch
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.dp2px
+import cn.wthee.pcrtool.utils.*
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 
@@ -40,16 +38,20 @@ class PvpService : LifecycleService() {
     }
 
     private fun initObserve() {
-        MainActivity.navViewModel.apply {
-            floatServiceRun.observe(this@PvpService) {
-                if (it == false) {
-                    windowManager.removeView(floatRootView)
-                    this@PvpService.stopSelf()
+        try {
+            MainActivity.navViewModel.apply {
+                floatServiceRun.observe(this@PvpService) {
+                    if (it == false) {
+                        windowManager.removeView(floatRootView)
+                        this@PvpService.stopSelf()
+                    }
+                }
+                floatSearchMin.observe(this@PvpService) {
+                    windowManager.updateViewLayout(floatRootView, getParam(it ?: false))
                 }
             }
-            floatSearchMin.observe(this@PvpService) {
-                windowManager.updateViewLayout(floatRootView, getParam(it ?: false))
-            }
+        } catch (e: Exception) {
+            UMengLogUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
         }
     }
 

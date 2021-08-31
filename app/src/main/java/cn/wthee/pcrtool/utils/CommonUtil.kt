@@ -1,9 +1,13 @@
 package cn.wthee.pcrtool.utils
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -11,10 +15,30 @@ import kotlin.math.floor
 /**
  * 权限校验
  */
-fun hasPermissions(context: Context, permissions: Array<String>) = permissions.all {
+private fun hasPermissions(context: Context, permissions: Array<String>) = permissions.all {
     ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
 }
 
+/**
+ * 存储权限
+ */
+fun checkPermissions(context: Context, action: () -> Unit) {
+    //权限
+    val permissions = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+    //权限校验
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(context, permissions)) {
+        ActivityCompat.requestPermissions(
+            context as Activity,
+            permissions,
+            1
+        )
+    } else {
+        action.invoke()
+    }
+}
 
 /**
  * 在浏览器中打开 [url]

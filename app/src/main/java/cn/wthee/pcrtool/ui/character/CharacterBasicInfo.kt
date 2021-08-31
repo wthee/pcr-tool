@@ -37,11 +37,12 @@ fun CharacterBasicInfo(
 ) {
     val data = viewModel.getCharacter(unitId).collectAsState(initial = null).value
 
-    FadeAnimation(visible = data != null) {
+    Box(modifier = Modifier.fillMaxSize()) {
         data?.let { info ->
             CharacterInfoCompose(info, scrollState)
         }
     }
+
 }
 
 @Composable

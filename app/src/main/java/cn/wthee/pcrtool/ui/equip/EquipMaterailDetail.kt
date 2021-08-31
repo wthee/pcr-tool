@@ -81,8 +81,8 @@ fun EquipMaterialDeatil(
                 val tabs = arrayListOf<String>()
                 //颜色
                 val color = listOf(R.color.color_map_n, R.color.color_map_h, R.color.color_map_vh)
-                lists.forEachIndexed { index, it ->
-                    if (it.isNotEmpty()) {
+                lists.forEachIndexed { index, data ->
+                    if (data.isNotEmpty()) {
                         pagerCount++
                         tabs.add(
                             when (index) {
