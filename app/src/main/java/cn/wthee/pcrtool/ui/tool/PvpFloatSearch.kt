@@ -92,11 +92,6 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                             } catch (ignore: Exception) {
 
                             }
-                            try {
-                                favoritesListState.scrollToItem(0)
-                            } catch (ignore: Exception) {
-
-                            }
                         }
                         pvpViewModel.pvpResult.postValue(null)
                         MainActivity.navViewModel.showResult.postValue(true)

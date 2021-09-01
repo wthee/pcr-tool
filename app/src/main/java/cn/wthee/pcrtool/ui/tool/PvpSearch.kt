@@ -276,11 +276,6 @@ fun PvpSearchCompose(
                         } catch (ignore: Exception) {
 
                         }
-                        try {
-                            favoritesListState.scrollToItem(0)
-                        } catch (ignore: Exception) {
-
-                        }
 
                         if (selectedIds.contains(PvpCharacterData())) {
                             ToastUtil.short(tip)
