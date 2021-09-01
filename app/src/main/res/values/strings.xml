@@ -66,7 +66,7 @@
     <string name="data_export">数据导出</string>
     <string name="data_export_hint">导出收藏数据到本地</string>
     <string name="data_import">数据导入</string>
-    <string name="data_import_hint">导入本地收藏数据文件</string>
+    <string name="data_import_hint">从本地导入收藏数据</string>
     <!--筛选  -->
     <string name="title_sort">排序类型</string>
     <string name="sort_date">登场日期</string>
@@ -182,4 +182,5 @@
     <string name="attr_calc">角色属性 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
     <string name="close">关闭</string>
+    <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
 </resources>
