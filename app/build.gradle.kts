@@ -5,9 +5,9 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.0.1"
-val name = "2.1.0"
-val code = 210
+val composeVersion = "1.0.2"
+val name = "2.2.0"
+val code = 220
 val sql = 201
 
 android {
@@ -136,7 +136,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha07")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha08")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.0")
@@ -163,7 +163,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.4.2")
 
     //Work
-    val workVersion = "2.7.0-alpha05"
+    val workVersion = "2.7.0-beta01"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 
