@@ -124,7 +124,7 @@ fun Overview(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { index ->
-                    val id = characterList[index].id
+                    val id = if (characterList.isEmpty()) 0 else characterList[index].id
                     val infiniteLoopIndex =
                         if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
                             //从首个滚动到最后一个
