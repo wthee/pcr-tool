@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
+import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.repository.PvpRepository
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.data.model.ResponseData
@@ -26,6 +27,7 @@ class PvpViewModel @Inject constructor(
 ) : ViewModel() {
 
     var allFavorites = MutableLiveData<List<PvpFavoriteData>>()
+    var history = MutableLiveData<List<PvpHistoryData>>()
     var favorites = MutableLiveData<List<PvpFavoriteData>>()
     val pvpResult = MutableLiveData<ResponseData<List<PvpResultData>>>()
     var requesting = false
@@ -68,6 +70,26 @@ class PvpViewModel @Inject constructor(
             pvpRepository.delete(atks, defs, region)
             getAllFavorites(region)
             getFavoritesList(defs, region)
+        }
+    }
+
+
+    /**
+     * 根据游戏版本 [region]，获取搜索历史信息
+     */
+    fun getHistory(region: Int) {
+        viewModelScope.launch {
+            val data = pvpRepository.getHistory(region)
+            history.postValue(data)
+        }
+    }
+
+    /**
+     * 新增搜索信息
+     */
+    fun insert(data: PvpHistoryData) {
+        viewModelScope.launch {
+            pvpRepository.insert(data)
         }
     }
 

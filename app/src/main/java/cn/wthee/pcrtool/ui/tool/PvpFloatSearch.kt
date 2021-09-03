@@ -47,10 +47,11 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
-    val pagerState = rememberPagerState(pageCount = 2)
+    val pagerState = rememberPagerState(pageCount = 3)
     val selectListState = rememberScrollState()
     val resultListState = rememberLazyListState()
     val favoritesListState = rememberLazyListState()
+    val historyListState = rememberLazyListState()
 
 
     PcrtoolComposeTheme {
@@ -114,6 +115,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                     selectListState = selectListState,
                     resultListState = resultListState,
                     favoritesListState = favoritesListState,
+                    historyListState = historyListState,
                     toCharacter = MainActivity.actions.toCharacterDetail
                 )
             }

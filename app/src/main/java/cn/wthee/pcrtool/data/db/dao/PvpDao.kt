@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.dao
 
 import androidx.room.*
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
+import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 
 /**
  * 竞技场收藏 DAO
@@ -24,6 +25,21 @@ interface PvpDao {
      */
     @Query("SELECT * FROM pvp_like WHERE atks = :atks AND defs = :defs AND region = :region")
     suspend fun getLiked(atks: String, defs: String, region: Int): PvpFavoriteData?
+
+    /**
+     * 获取搜索历史信息
+     * @param region 区服版本
+     */
+    @Query("SELECT * FROM pvp_history WHERE defs LIKE '' || :region || '@%' ORDER BY date DESC LIMIT 0,10")
+    suspend fun getHistory(region: Int): List<PvpHistoryData>
+
+    /**
+     * 插入数据
+     * @param data 搜索历史信息
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(data: PvpHistoryData)
+
 
     /**
      * 获取收藏列表

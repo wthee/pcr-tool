@@ -78,6 +78,7 @@
     <string name="magic">魔法</string>
     <string name="all">全部</string>
     <string name="title_love">收藏</string>
+    <string name="title_history">历史</string>
     <string name="loved">已收藏</string>
     <string name="sort_asc_desc">排序方式</string>
     <string name="sort_desc">降序</string>
@@ -100,6 +101,7 @@
     <string name="tool_calendar_comming">活动预告</string>
     <string name="tool_pvp">竞技场</string>
     <string name="pvp_no_favorites">暂无收藏</string>
+    <string name="pvp_no_history">暂无搜索历史</string>
     <string name="tool_clan">团队战</string>
     <string name="tool_guild">角色公会</string>
     <string name="character">角色</string>

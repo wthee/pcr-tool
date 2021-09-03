@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.data.db.repository
 
 import cn.wthee.pcrtool.data.db.dao.PvpDao
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
+import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import javax.inject.Inject
 
 /**
@@ -17,6 +18,10 @@ class PvpRepository @Inject constructor(private val pvpDao: PvpDao) {
         pvpDao.getLikedList(defs, region)
 
     suspend fun insert(data: PvpFavoriteData) = pvpDao.insert(data)
+
+    suspend fun getHistory(region: Int) = pvpDao.getHistory(region)
+
+    suspend fun insert(data: PvpHistoryData) = pvpDao.insert(data)
 
     suspend fun delete(atks: String, defs: String, region: Int) = pvpDao.delete(atks, defs, region)
 
