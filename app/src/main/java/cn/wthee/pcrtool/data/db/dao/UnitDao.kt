@@ -307,4 +307,10 @@ interface UnitDao {
      */
     @Query("SELECT * FROM unit_status_coefficient WHERE coefficient_id = 1")
     suspend fun getCoefficient(): UnitStatusCoefficient
+
+    /**
+     * 获取特殊六星 id
+     */
+    @Query("SELECT cutin1_star6 FROM unit_data WHERE cutin_1 = :unitId AND cutin1_star6 <> :unitId")
+    suspend fun getCutinId(unitId: Int): Int?
 }
