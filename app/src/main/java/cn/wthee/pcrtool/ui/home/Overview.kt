@@ -43,6 +43,7 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -286,6 +287,7 @@ fun Overview(
             coroutineScope,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
         )
     }
 }

@@ -46,8 +46,13 @@ abstract class AppPvpDatabase : RoomDatabase() {
             val MIGRATION_100_101 = object : Migration(100, 101) {
                 override fun migrate(database: SupportSQLiteDatabase) {
                     database.execSQL(
-                        "CREATE TABLE `pvp_history` (`date` TEXT, `defs` TEXT, " +
-                                "PRIMARY KEY(`defs`))"
+                        """
+                        CREATE TABLE "pvp_history" (
+                          "defs" TEXT NOT NULL,
+                          "date" TEXT NOT NULL,
+                          PRIMARY KEY ("defs")
+                        );
+                        """.trimIndent()
                     )
                 }
             }
