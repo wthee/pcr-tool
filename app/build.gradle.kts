@@ -5,9 +5,9 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.0.1"
-val name = "2.1.0"
-val code = 210
+val composeVersion = "1.0.2"
+val name = "2.1.1"
+val code = 211
 val sql = 201
 
 android {
@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "cn.wthee.pcrtool"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 30
         versionCode = code
         versionName = name
@@ -108,7 +108,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.17.0"
+    val accompanistVersion = "0.18.0"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -136,10 +136,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha07")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha08")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime:3.0.0")
+    implementation("androidx.paging:paging-runtime:3.0.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha12")
 
     //Retrofit
@@ -155,7 +155,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
 
     //startup
-    implementation("androidx.startup:startup-runtime:1.0.0")
+    implementation("androidx.startup:startup-runtime:1.1.0")
 
     //umeng
     implementation("com.umeng.umsdk:common:9.4.2")
@@ -163,7 +163,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.4.2")
 
     //Work
-    val workVersion = "2.7.0-alpha05"
+    val workVersion = "2.7.0-beta01"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 

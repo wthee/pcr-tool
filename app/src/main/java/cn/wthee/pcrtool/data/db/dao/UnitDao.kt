@@ -33,7 +33,7 @@ interface UnitDao {
         """
         SELECT
             unit_profile.unit_id,
-            unit_profile.unit_name,
+            unit_data.unit_name,
             unit_data.is_limited,
             unit_data.rarity,
             COALESCE( unit_data.kana, "" ) AS kana,
@@ -52,7 +52,7 @@ interface UnitDao {
             LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
             LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
         WHERE 
-            unit_profile.unit_name like '%' || :unitName || '%'
+            unit_data.unit_name like '%' || :unitName || '%'
         AND (
             (unit_profile.unit_id IN (:starIds) AND  1 = CASE WHEN  0 = :showAll  THEN 1 END) 
             OR 
@@ -109,7 +109,7 @@ interface UnitDao {
         """
         SELECT
             unit_profile.unit_id,
-            unit_profile.unit_name,
+            unit_data.unit_name,
             unit_data.is_limited,
             unit_data.rarity,COALESCE( unit_data.kana, "" ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
@@ -141,7 +141,7 @@ interface UnitDao {
         """
         SELECT
             unit_profile.unit_id,
-            unit_profile.unit_name,
+            unit_data.unit_name,
             COALESCE( unit_data.kana, "" ) AS kana,
             CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
             unit_profile.guild,
@@ -307,4 +307,10 @@ interface UnitDao {
      */
     @Query("SELECT * FROM unit_status_coefficient WHERE coefficient_id = 1")
     suspend fun getCoefficient(): UnitStatusCoefficient
+
+    /**
+     * 获取特殊六星 id
+     */
+    @Query("SELECT cutin1_star6 FROM unit_data WHERE cutin_1 = :unitId AND cutin1_star6 <> :unitId")
+    suspend fun getCutinId(unitId: Int): Int?
 }

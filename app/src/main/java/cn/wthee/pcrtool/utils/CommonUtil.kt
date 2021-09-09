@@ -26,7 +26,7 @@ fun checkPermissions(context: Context, action: () -> Unit) {
     //权限
     val permissions = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
     )
     //权限校验
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !hasPermissions(context, permissions)) {

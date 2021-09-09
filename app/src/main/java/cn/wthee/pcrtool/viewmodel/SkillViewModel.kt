@@ -38,13 +38,27 @@ class SkillViewModel @Inject constructor(
      * @param lv 技能能级
      * @param atk 基础攻击力
      * @param unitId 角色编号
+     * @param unitId 角色特殊编号
      */
-    fun getCharacterSkills(lv: Int, atk: Int, unitId: Int) {
+    fun getCharacterSkills(lv: Int, atk: Int, unitId: Int, cutinId: Int) {
         viewModelScope.launch {
             try {
                 val data = skillRepository.getUnitSkill(unitId)
-                data?.let {
-                    getSkillInfo(data.getAllSkillId(), atk, arrayListOf(lv))
+                val spData = skillRepository.getUnitSkill(cutinId)
+                if (data != null && spData != null) {
+                    getSkillInfo(
+                        data.joinCutinSkillId(spData),
+                        atk,
+                        arrayListOf(lv)
+                    )
+                } else {
+                    data?.let {
+                        getSkillInfo(
+                            data.getAllSkillId(),
+                            atk,
+                            arrayListOf(lv)
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 UMengLogUtil.upload(e, Constants.EXCEPTION_SKILL + "unit_id:$unitId")
@@ -114,7 +128,6 @@ class SkillViewModel @Inject constructor(
             iconTypes.postValue(map)
             skills.postValue(infos)
         }
-
     }
 
     /**

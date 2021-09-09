@@ -34,6 +34,7 @@ import coil.annotation.ExperimentalCoilApi
  * 角色技能列表
  *
  * @param unitId 角色编号
+ * @param unitId 角色特殊编号
  * @param level 等级
  * @param atk 攻击力
  */
@@ -41,11 +42,12 @@ import coil.annotation.ExperimentalCoilApi
 @Composable
 fun SkillCompose(
     unitId: Int,
+    cutinId: Int,
     level: Int = 0,
     atk: Int,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    skillViewModel.getCharacterSkills(level, atk, unitId)
+    skillViewModel.getCharacterSkills(level, atk, unitId, cutinId)
     val skillList = skillViewModel.skills.observeAsState().value ?: listOf()
 
     Column(
@@ -124,7 +126,7 @@ fun SkillItem(
         //技能类型
         if (!isClanBoss) {
             CaptionText(
-                text = type,
+                text = type + if (skillDetail.isCutin) "(六星)" else "",
                 color = colorResource(color),
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)

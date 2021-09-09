@@ -1,5 +1,7 @@
 package cn.wthee.pcrtool.utils
 
+import android.annotation.SuppressLint
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
@@ -82,32 +84,98 @@ class FileSaveHelper(private val context: Context) {
      * 保存文件
      */
     fun saveFile(toSaveFile: File, displayName: String): Boolean {
-        val path = getDocPath()
         try {
             //保存属性
+            getDocPath()
             val contentValues = ContentValues()
             contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
             contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "text/*")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 contentValues.put(
                     MediaStore.MediaColumns.RELATIVE_PATH,
-                    Environment.DIRECTORY_DOCUMENTS
+                    Environment.DIRECTORY_DOCUMENTS + back_folder
                 )
             }
-            // 判断是否已存在
-            val folder = File(path)
-            if (!folder.exists()) {
-                folder.mkdir()
+            val resolver = context.contentResolver
+            val contentUri: Uri = MediaStore.Files.getContentUri("external")
+            val uri = query(displayName) ?: resolver.insert(contentUri, contentValues)
+            val outputStream = resolver.openOutputStream(uri!!)
+            outputStream?.use {
+                it.write(toSaveFile.inputStream().readBytes())
             }
-            val file = File("$path/$displayName")
-            FileUtil.save(toSaveFile.inputStream(), file)
             return true
         } catch (e: Exception) {
             return false
         }
     }
 
+
+    /**
+     * 导入文件
+     */
+    fun readFile(writeFile: File): Boolean {
+        try {
+            val uri = query(writeFile.name) ?: return false
+            val resolver = context.contentResolver
+            val inputStream = resolver.openInputStream(uri)!!
+            FileUtil.save(inputStream, writeFile)
+            inputStream.close()
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+
+    /**
+     * 文件查找
+     */
+    @SuppressLint("Recycle")
+    private fun query(fileName: String): Uri? {
+        lateinit var uri: Uri
+
+        try {
+            val contentUri: Uri = MediaStore.Files.getContentUri("external")
+            val resolver = context.contentResolver
+            val selection =
+                "${MediaStore.MediaColumns.DISPLAY_NAME}='${fileName}' " +
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            "AND ${MediaStore.MediaColumns.RELATIVE_PATH}='${Environment.DIRECTORY_DOCUMENTS}$back_folder'"
+
+                        } else {
+                            ""
+                        }
+            val cursor = resolver.query(contentUri, null, selection, null, null)!!
+
+            if (cursor.count == 0) {
+                return null
+            } else {
+                while (cursor.moveToNext()) {
+                    var displayNameIndex =
+                        cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)
+                    if (displayNameIndex < 0) {
+                        displayNameIndex = 0
+                    }
+                    var idNameIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID)
+                    if (idNameIndex < 0) {
+                        idNameIndex = 0
+                    }
+                    val findFileName = cursor.getString(displayNameIndex)
+                    if (findFileName.equals(fileName)) {
+                        val id = cursor.getLong(idNameIndex)
+                        uri = ContentUris.withAppendedId(contentUri, id)
+                        break
+                    }
+                }
+            }
+        } catch (e: Exception) {
+        }
+        return uri
+    }
+
     companion object {
+        val back_folder = "/pcr_tool_backup/"
+
         /**
          * 获取图片保存路径
          */
@@ -122,7 +190,10 @@ class FileSaveHelper(private val context: Context) {
          */
         fun getDocPath(): String {
             var path: String = Environment.DIRECTORY_DOCUMENTS
-            path = "/storage/emulated/0" + File.separator + path
+            path = "/storage/emulated/0/$path$back_folder"
+            if (!File(path).exists()) {
+                File(path).mkdir()
+            }
             return path
         }
     }

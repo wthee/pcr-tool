@@ -171,14 +171,14 @@ object FileUtil {
         }
     }
 
-    private fun getBackupFiles(context: Context): ArrayList<String> {
+    private fun getNeedBackupFiles(context: Context): ArrayList<String> {
         val dbPath = getDatabaseDir(context)
 
         return arrayListOf(
             "$dbPath/pvp.db",
             "$dbPath/pvp.db-shm",
             "$dbPath/pvp.db-wal",
-            "${getAppDir(context) + "/shared_prefs"}/main.xml"
+            "${getAppDir(context)}/shared_prefs/main.xml"
         )
     }
 
@@ -188,33 +188,36 @@ object FileUtil {
     fun exportUserFile(context: Context) {
         try {
             AppPvpDatabase.getInstance().close()
-            val files = getBackupFiles(context)
+            val files = getNeedBackupFiles(context)
             val externalPath = context.getExternalFilesDir("")!!.path + "/pcr-tool"
             val folder = File(externalPath)
             if (!folder.exists()) {
                 folder.mkdir()
             }
-            var msg = ""
-            var error = ""
+            var success = 0
+            var error = 0
+            var count = 0
             files.forEachIndexed { index, path ->
-                val saved = FileSaveHelper(context).saveFile(File(path), toBackupFileNames[index])
-                if (saved) {
-                    msg += toBackupFileNames[index] + "\n"
-                } else {
-                    error += toBackupFileNames[index] + "\n"
+                if (File(path).exists()) {
+                    val saved =
+                        FileSaveHelper(context).saveFile(File(path), toBackupFileNames[index])
+                    count++
+                    if (saved) {
+                        success++
+                    } else {
+                        error++
+                    }
                 }
             }
-            ToastUtil.long(
-                if (msg != "") {
-                    "备份成功：\n$msg"
+            if (count > 0) {
+                if (success > 0) {
+                    ToastUtil.short("导出成功：$success/$count")
                 } else {
-                    ""
-                } + if (error != "") {
-                    "\n\n备份失败：\n$error"
-                } else {
-                    ""
+                    ToastUtil.short("导出失败：$error/$count")
                 }
-            )
+            } else {
+                ToastUtil.short("没有找到可导出的文件")
+            }
         } catch (e: Exception) {
             UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_EXPORT)
             ToastUtil.short(Constants.EXCEPTION_DATA_EXPORT)
@@ -224,10 +227,10 @@ object FileUtil {
     /**
      * 导入收藏等数据
      */
-    fun importUserFile(context: Context) {
+    fun importUserFile(context: Context): Boolean {
         try {
             AppPvpDatabase.getInstance().close()
-            val files = getBackupFiles(context)
+            val files = getNeedBackupFiles(context)
             val externalPath = FileSaveHelper.getDocPath()
             val pvpImportFiles = arrayListOf(
                 "$externalPath/pvp.db",
@@ -239,30 +242,33 @@ object FileUtil {
             if (!folder.exists()) {
                 folder.mkdir()
             }
-            var msg = ""
-            var error = ""
+            var success = 0
+            var error = 0
+            var count = 0
             pvpImportFiles.forEachIndexed { index, path ->
-                try {
-                    File(path).copyTo(File(files[index]), true)
-                    msg += toBackupFileNames[index] + "\n"
-                } catch (e: Exception) {
-                    error += toBackupFileNames[index] + "\n"
+                if (File(path).exists()) {
+                    val saved = FileSaveHelper(context).readFile(File(files[index]))
+                    count++
+                    if (saved) {
+                        success++
+                    } else {
+                        error++
+                    }
                 }
             }
-            ToastUtil.long(
-                if (msg != "") {
-                    "加载成功：\n$msg"
+            if (count > 0) {
+                if (success > 0) {
+                    return true
                 } else {
-                    ""
-                } + if (error != "") {
-                    "\n\n加载失败：\n$error"
-                } else {
-                    ""
+                    ToastUtil.short("导入失败：$error/$count")
                 }
-            )
+            } else {
+                ToastUtil.short("没有找到可导入的文件")
+            }
         } catch (e: Exception) {
             UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_IMPORT)
             ToastUtil.short(Constants.EXCEPTION_DATA_IMPORT)
         }
+        return false
     }
 }

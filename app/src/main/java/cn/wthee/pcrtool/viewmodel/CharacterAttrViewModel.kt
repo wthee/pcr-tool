@@ -215,4 +215,12 @@ class CharacterAttrViewModel @Inject constructor(
         emit(unitRepository.getCoefficient())
     }
 
+    /**
+     * 获取特殊六星 id
+     *
+     * @param unitId 角色编号
+     */
+    fun getCutinId(unitId: Int) = flow {
+        emit(unitRepository.getCutinId(unitId) ?: 0)
+    }
 }

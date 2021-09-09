@@ -118,7 +118,8 @@ fun CharacterDetail(
     //角色属性
     val allData = attrViewModel.getCharacterInfo(unitId, currentValueState.value)
         .collectAsState(initial = AllAttrData()).value
-
+    //角色特殊六星id
+    val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
 
     //页面
     ModalBottomSheetLayout(
@@ -223,6 +224,7 @@ fun CharacterDetail(
                             //技能
                             CharacterSkill(
                                 unitId = unitId,
+                                cutinId = cutinId,
                                 level = currentValue.level,
                                 atk = max(
                                     allData.sumAttr.atk.int,

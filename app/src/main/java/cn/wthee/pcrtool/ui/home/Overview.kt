@@ -43,6 +43,7 @@ import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -124,7 +125,7 @@ fun Overview(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { index ->
-                    val id = characterList[index].id
+                    val id = if (characterList.isEmpty()) 0 else characterList[index].id
                     val infiniteLoopIndex =
                         if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
                             //从首个滚动到最后一个
@@ -286,6 +287,7 @@ fun Overview(
             coroutineScope,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
         )
     }
 }

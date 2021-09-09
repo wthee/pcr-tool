@@ -17,6 +17,7 @@ data class SkillDetail(
     val level: Int = 1,
     val atk: Int = 100,
     val bossUbCooltime: Double = 0.0,
+    var isCutin: Boolean = false
 ) {
     /**
      * 角色技能效果

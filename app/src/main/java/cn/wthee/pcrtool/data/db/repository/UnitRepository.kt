@@ -60,4 +60,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getCoefficient() = unitDao.getCoefficient()
 
+    suspend fun getCutinId(unitId: Int) = unitDao.getCutinId(unitId)
+
 }

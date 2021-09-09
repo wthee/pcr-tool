@@ -9,10 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +33,9 @@ import cn.wthee.pcrtool.utils.FileUtil.exportUserFile
 import cn.wthee.pcrtool.utils.FileUtil.importUserFile
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 /**
  * 设置页面
@@ -48,6 +48,8 @@ fun MainSettings() {
     val sp = settingSP(context)
     val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
     val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground)
+    val coroutineScope = rememberCoroutineScope()
+    val reloadImportDataTip = stringResource(R.string.reload_import_data)
 
     SideEffect {
         //自动删除历史数据
@@ -198,8 +200,8 @@ fun MainSettings() {
             Spacer(modifier = Modifier.width(Dimen.largePadding))
         }
         LineCompose()
-        //收藏、竞技场数据本地数据备份
         if (BuildConfig.DEBUG) {
+            //收藏、竞技场数据本地数据备份
             MainText(
                 text = stringResource(id = R.string.data_backup),
                 modifier = Modifier.padding(Dimen.largePadding)
@@ -222,7 +224,14 @@ fun MainSettings() {
                 stringResource(id = R.string.data_import_hint),
             ) {
                 checkPermissions(context) {
-                    importUserFile(context)
+                    if (importUserFile(context)) {
+                        //重新读取导入的文件，刷新数据
+                        ToastUtil.short(reloadImportDataTip)
+                        coroutineScope.launch {
+                            delay(3000)
+                            exitProcess(0)
+                        }
+                    }
                 }
             }
             LineCompose()

@@ -19,6 +19,7 @@ import cn.wthee.pcrtool.ui.compose.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import coil.annotation.ExperimentalCoilApi
+import com.google.accompanist.insets.navigationBarsPadding
 
 /**
  * 菜单
@@ -37,7 +38,8 @@ fun MoreFabCompose(viewModel: NavViewModel) {
                     bottom = Dimen.fabMarginEnd,
                     end = Dimen.fabMargin
                 )
-                .fillMaxSize(),
+                .fillMaxSize()
+                .navigationBarsPadding(),
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Bottom
         ) {

@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
+import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -64,10 +65,11 @@ import kotlin.math.round
 @Composable
 fun PvpSearchCompose(
     floatWindow: Boolean = false,
-    pagerState: PagerState = rememberPagerState(pageCount = 2),
+    pagerState: PagerState = rememberPagerState(pageCount = 3),
     selectListState: ScrollState = rememberScrollState(),
     resultListState: LazyListState = rememberLazyListState(),
     favoritesListState: LazyListState = rememberLazyListState(),
+    historyListState: LazyListState = rememberLazyListState(),
     toCharacter: (Int) -> Unit,
     characterViewModel: CharacterViewModel = hiltViewModel(),
     pvpViewModel: PvpViewModel = hiltViewModel()
@@ -102,7 +104,8 @@ fun PvpSearchCompose(
     val urlTip = stringResource(id = R.string.pcrdfans_com)
     val tabs = arrayListOf(
         stringResource(id = R.string.character),
-        stringResource(id = R.string.title_love)
+        stringResource(id = R.string.title_love),
+        stringResource(id = R.string.title_history),
     )
 
     //返回选择
@@ -197,9 +200,17 @@ fun PvpSearchCompose(
                             floatWindow = floatWindow,
                             data = data,
                         )
-                        else -> {
+                        1 -> {
                             PvpFavorites(
                                 favoritesListState = favoritesListState,
+                                toCharacter = toCharacter,
+                                pvpViewModel = pvpViewModel,
+                                floatWindow = floatWindow
+                            )
+                        }
+                        else -> {
+                            PvpSearchHistory(
+                                historyListState = historyListState,
                                 toCharacter = toCharacter,
                                 pvpViewModel = pvpViewModel,
                                 floatWindow = floatWindow
@@ -273,11 +284,6 @@ fun PvpSearchCompose(
                     scope.launch {
                         try {
                             resultListState.scrollToItem(0)
-                        } catch (ignore: Exception) {
-
-                        }
-                        try {
-                            favoritesListState.scrollToItem(0)
                         } catch (ignore: Exception) {
 
                         }
@@ -391,7 +397,8 @@ private fun PvpCharacterSelectPage(
                 R.drawable.ic_position_0,
             )
             icons.forEachIndexed { index, it ->
-                Image(painter = painterResource(id = it),
+                Image(
+                    painter = painterResource(id = it),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(Dimen.smallPadding)
@@ -520,6 +527,7 @@ fun PvpSearchResult(
     floatWindow: Boolean,
     pvpViewModel: PvpViewModel = hiltViewModel()
 ) {
+
     val defIds = selectedIds.subList(0, 5).getIdStr()
     //展示搜索结果
     val idArray = JsonArray()
@@ -535,7 +543,20 @@ fun PvpSearchResult(
     //收藏信息
     val favorites = pvpViewModel.favorites.observeAsState()
     val favoritesList = arrayListOf<String>()
-
+    //添加搜索记录
+    LaunchedEffect(null) {
+        var unSplitDefIds = ""
+        for (sel in selectedIds.subList(0, 5)) {
+            idArray.add(sel.unitId)
+            unSplitDefIds += "${sel.unitId}-"
+        }
+        pvpViewModel.insert(
+            PvpHistoryData(
+                "$region@" + unSplitDefIds,
+                getToday(-1),
+            )
+        )
+    }
     val context = LocalContext.current
     val vibrated = remember {
         mutableStateOf(false)
@@ -877,7 +898,7 @@ private fun PvpFavoriteItem(
             scope.launch {
                 pvpViewModel.pvpResult.postValue(null)
                 val selectedData =
-                    characterViewModel.getPvpCharacterByIds(itemData.defs.intArrayList)
+                    characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
                 val selectedIds = selectedData as ArrayList<PvpCharacterData>?
                 selectedIds?.sortByDescending { it.position }
                 navViewModel.selectedPvpData.postValue(selectedIds)
@@ -978,5 +999,143 @@ private fun PvpFavoriteItem(
             }
         }
     }
+}
 
+
+/**
+ * 搜索历史
+ */
+@ExperimentalCoilApi
+@ExperimentalMaterialApi
+@Composable
+private fun PvpSearchHistory(
+    historyListState: LazyListState,
+    toCharacter: (Int) -> Unit,
+    floatWindow: Boolean,
+    pvpViewModel: PvpViewModel
+) {
+    val region = getRegion()
+    pvpViewModel.getHistory(region)
+    val list = pvpViewModel.history.observeAsState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (list.value != null && list.value!!.isNotEmpty()) {
+            LazyColumn(
+                state = historyListState,
+                contentPadding = PaddingValues(Dimen.mediumPadding)
+            ) {
+                items(list.value!!) { data ->
+                    PvpHistoryItem(
+                        toCharacter,
+                        data,
+                        floatWindow,
+                        pvpViewModel
+                    )
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        } else {
+            MainText(
+                text = stringResource(id = R.string.pvp_no_history),
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
+/**
+ * 搜索历史项
+ */
+@ExperimentalCoilApi
+@ExperimentalMaterialApi
+@Composable
+private fun PvpHistoryItem(
+    toCharacter: (Int) -> Unit,
+    itemData: PvpHistoryData,
+    floatWindow: Boolean,
+    pvpViewModel: PvpViewModel,
+    characterViewModel: CharacterViewModel = hiltViewModel(),
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
+
+    Row(
+        modifier = Modifier
+            .padding(start = mediumPadding, end = mediumPadding)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        //搜索
+        TextButton(onClick = {
+            //重置页面
+            scope.launch {
+                pvpViewModel.pvpResult.postValue(null)
+                val selectedData =
+                    characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
+                val selectedIds = selectedData as ArrayList<PvpCharacterData>?
+                selectedIds?.sortByDescending { it.position }
+                navViewModel.selectedPvpData.postValue(selectedIds)
+                navViewModel.showResult.postValue(true)
+            }
+            VibrateUtil(context).single()
+        }) {
+            IconCompose(
+                data = MainIconType.PVP_SEARCH.icon,
+                size = Dimen.fabIconSize
+            )
+            MainContentText(text = stringResource(id = R.string.pvp_research))
+        }
+        Spacer(modifier = Modifier.weight(1f))
+    }
+
+    MainCard(modifier = Modifier.padding((mediumPadding))) {
+        //队伍角色图标
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = mediumPadding, bottom = mediumPadding)
+        ) {
+            //日期
+            CaptionText(
+                text = itemData.date,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = mediumPadding, end = mediumPadding),
+                textAlign = TextAlign.Start
+            )
+            //防守
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                val modifier = if (!floatWindow) {
+                    Modifier
+                        .weight(1f)
+                        .padding(Dimen.smallPadding)
+                } else {
+                    Modifier
+                        .weight(1f)
+                        .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
+                }
+                itemData.getDefIds().forEachIndexed { _, it ->
+                    Box(
+                        modifier = modifier,
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconCompose(
+                            data = CharacterIdUtil.getMaxIconUrl(
+                                it,
+                                MainActivity.r6Ids.contains(it)
+                            )
+                        ) {
+                            toCharacter(it)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
