@@ -6,8 +6,8 @@ plugins {
 }
 
 val composeVersion = "1.0.2"
-val name = "2.2.0"
-val code = 220
+val name = "2.1.1"
+val code = 211
 val sql = 201
 
 android {
@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "cn.wthee.pcrtool"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 30
         versionCode = code
         versionName = name
@@ -139,7 +139,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha08")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime:3.0.0")
+    implementation("androidx.paging:paging-runtime:3.0.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha12")
 
     //Retrofit
@@ -155,7 +155,7 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
 
     //startup
-    implementation("androidx.startup:startup-runtime:1.0.0")
+    implementation("androidx.startup:startup-runtime:1.1.0")
 
     //umeng
     implementation("com.umeng.umsdk:common:9.4.2")
