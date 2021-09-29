@@ -103,24 +103,28 @@ fun CharacterList(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
         ) {
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.mediumPadding)
-            ) {
-                items(list) {
-                    CharacterItem(it, filter.value!!, toDetail = toDetail)
-                }
-                items(2) {
-                    CommonSpacer()
+            if (list.isNotEmpty()) {
+                LazyVerticalGrid(
+                    cells = GridCells.Fixed(2),
+                    state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediumPadding)
+                ) {
+                    items(list) {
+                        CharacterItem(it, filter.value!!, toDetail = toDetail)
+                    }
+                    items(2) {
+                        CommonSpacer()
+                    }
                 }
             }
+
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
                 horizontalArrangement = Arrangement.End
             ) {
+                //回到顶部
                 FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
                     FabCompose(
                         iconType = MainIconType.TOP,

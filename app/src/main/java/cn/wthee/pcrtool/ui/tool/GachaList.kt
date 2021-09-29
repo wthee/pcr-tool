@@ -50,15 +50,17 @@ fun GachaList(
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            state = scrollState,
-            contentPadding = PaddingValues(Dimen.largePadding)
-        ) {
-            items(gachas) {
-                GachaItem(it, toCharacterDetail)
-            }
-            item {
-                CommonSpacer()
+        if (gachas.isNotEmpty()) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(gachas) {
+                    GachaItem(it, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
+                }
             }
         }
         //回到顶部

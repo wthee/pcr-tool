@@ -43,18 +43,19 @@ fun GuildList(
     val coroutineScope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            state = scrollState,
-            contentPadding = PaddingValues(Dimen.largePadding)
-        ) {
-            items(guilds) {
-                GuildItem(it, toCharacterDetail = toCharacterDetail)
-            }
-            item {
-                CommonSpacer()
+        if (guilds.isNotEmpty()) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(guilds) {
+                    GuildItem(it, toCharacterDetail = toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
+                }
             }
         }
-
         //回到顶部
         FabCompose(
             iconType = MainIconType.GUILD,
