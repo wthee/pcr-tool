@@ -17,6 +17,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.joinQQGroup
 import cn.wthee.pcrtool.utils.openWebView
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
@@ -45,7 +46,16 @@ fun MoreFabCompose(viewModel: NavViewModel) {
         ) {
             val issueUrl = stringResource(R.string.issue_url)
             val issueTip = stringResource(R.string.issue_tip)
-            //群
+            //反馈交流
+            FabCompose(
+                iconType = MainIconType.SUPPORT,
+                text = stringResource(R.string.qq_group),
+                modifier = Modifier.padding(bottom = Dimen.fabSmallMarginEnd),
+                defaultPadding = false
+            ) {
+                joinQQGroup(context)
+            }
+            //GitHub
             FabCompose(
                 iconType = MainIconType.ISSUE,
                 text = stringResource(R.string.issue),

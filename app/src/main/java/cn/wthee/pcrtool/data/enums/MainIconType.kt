@@ -177,6 +177,11 @@ enum class MainIconType(val icon: ImageVector) {
     ISSUE(Icons.Rounded.BugReport),
 
     /**
+     * 反馈交流群
+     */
+    SUPPORT(Icons.Rounded.ContactSupport),
+
+    /**
      * 友链
      */
     FRIEND_LINK(Icons.Rounded.Link),
