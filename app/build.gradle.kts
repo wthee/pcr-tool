@@ -6,8 +6,8 @@ plugins {
 }
 
 val composeVersion = "1.0.2"
-val name = "2.1.1"
-val code = 211
+val name = "2.1.2"
+val code = 212
 val sql = 201
 
 android {

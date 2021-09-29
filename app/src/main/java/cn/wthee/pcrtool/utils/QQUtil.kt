@@ -18,12 +18,12 @@ import android.net.Uri
 fun joinQQGroup(context: Context) {
     val intent = Intent()
     intent.data =
-        Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3DF5P739Sbo-Y5Rg90oK4ZMoDaV2tMYf0h")
+        Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3DZd7PrbHQ2vKCf2NQsoGWuqHrl54MJErV")
     try {
         context.startActivity(intent)
     } catch (e: Exception) {
         //复制群号
-        val qqGroup = "214141356"
+        val qqGroup = "775966246"
         val clipboardManager =
             context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val mClipData = ClipData.newPlainText("OcrText", qqGroup)
