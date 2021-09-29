@@ -6,8 +6,8 @@ plugins {
 }
 
 val composeVersion = "1.0.2"
-val name = "2.1.1"
-val code = 211
+val name = "2.1.2"
+val code = 212
 val sql = 201
 
 android {
@@ -128,12 +128,12 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
 
     //Lifecycle
-    val lifecycleVersion = "2.4.0-alpha02"
+    val lifecycleVersion = "2.4.0-beta01"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha08")

@@ -24,7 +24,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -50,16 +50,19 @@ fun EventList(
     val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
 
+
     Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            state = scrollState,
-            contentPadding = PaddingValues(Dimen.largePadding)
-        ) {
-            items(events) {
-                EventItem(it, toCharacterDetail)
-            }
-            item {
-                CommonSpacer()
+        if (events.isNotEmpty()) {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(Dimen.largePadding)
+            ) {
+                items(events) {
+                    EventItem(it, toCharacterDetail)
+                }
+                item {
+                    CommonSpacer()
+                }
             }
         }
         //回到顶部

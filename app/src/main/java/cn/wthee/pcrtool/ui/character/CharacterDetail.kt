@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -19,9 +17,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -38,28 +33,21 @@ import cn.wthee.pcrtool.data.db.view.UniqueEquipmentMaxData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import coil.Coil
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 import kotlin.math.max
 
 /**
@@ -121,6 +109,7 @@ fun CharacterDetail(
     //角色特殊六星id
     val cutinId = attrViewModel.getCutinId(unitId).collectAsState(initial = 0).value
 
+
     //页面
     ModalBottomSheetLayout(
         sheetState = state,
@@ -169,7 +158,6 @@ fun CharacterDetail(
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
-
                 Column(
                     modifier = Modifier
                         .verticalScroll(scrollState)
@@ -177,7 +165,23 @@ fun CharacterDetail(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     //角色卡面
-                    CardImage(unitId)
+                    Card(
+                        modifier = Modifier
+                            .padding(
+                                top = Dimen.mediumPadding,
+                                bottom = Dimen.mediumPadding,
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding
+                            )
+                            .fillMaxWidth(),
+                        onClick = {
+                            //角色全部图片
+                            actions.toCharacterPics(unitId)
+                        },
+                        elevation = 0.dp,
+                    ) {
+                        ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
+                    }
                     //数据加载后，展示页面
                     val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
                     if (visible) {
@@ -524,112 +528,6 @@ private fun AttrLists(
             AttrList(attrs = allData.bonus.attr.allNotZero())
         }
     }
-}
-
-/**
- * 角色卡面图片
- */
-@ExperimentalAnimationApi
-@ExperimentalCoilApi
-@ExperimentalPagerApi
-@ExperimentalMaterialApi
-@Composable
-private fun CardImage(unitId: Int) {
-    val context = LocalContext.current
-    val picUrls = CharacterIdUtil.getAllPicUrl(unitId, MainActivity.r6Ids.contains(unitId))
-    val loaded = arrayListOf<Boolean>()
-    val drawables = arrayListOf<Drawable?>()
-    picUrls.forEach { _ ->
-        loaded.add(false)
-        drawables.add(null)
-    }
-    val pagerState = rememberPagerState(
-        pageCount = picUrls.size,
-        infiniteLoop = true,
-        initialOffscreenLimit = picUrls.size - 1
-    )
-    val coroutineScope = rememberCoroutineScope()
-
-    val unLoadToast = stringResource(id = R.string.wait_pic_load)
-    val showConfirmLayout = remember {
-        mutableStateOf(false)
-    }
-
-    HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
-        val request = ImageRequest.Builder(context)
-            .data(picUrls[index])
-            .build()
-        coroutineScope.launch {
-            val image = Coil.imageLoader(context).execute(request).drawable
-            drawables[index] = image
-        }
-        val infiniteLoopIndex =
-            if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
-                //从首个滚动到最后一个
-                pagerState.currentPage - 1
-            } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
-                //从最后一个滚动的首个
-                pagerState.pageCount
-            } else {
-                index
-            }
-        Card(
-            modifier = Modifier
-                .padding(top = Dimen.largePadding, bottom = Dimen.largePadding)
-                .fillMaxWidth(0.8f)
-                .graphicsLayer {
-                    val pageOffset =
-                        calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
-                    lerp(
-                        start = ScaleFactor(0.9f, 0.9f),
-                        stop = ScaleFactor(1f, 1f),
-                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                    ).also { scale ->
-                        scaleX = scale.scaleY
-                        scaleY = scale.scaleY
-                    }
-                },
-            onClick = {
-                VibrateUtil(context).single()
-                //下载
-                if (index == pagerState.currentPage) {
-                    if (loaded[index]) {
-                        //权限校验
-                        checkPermissions(context) {
-                            showConfirmLayout.value = !showConfirmLayout.value
-                        }
-                    } else {
-                        ToastUtil.short(unLoadToast)
-                    }
-                } else {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(infiniteLoopIndex)
-                    }
-                }
-            },
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                //图片
-                ImageCompose(data = picUrls[index], ratio = RATIO) {
-                    loaded[index] = true
-                }
-                FadeAnimation(visible = showConfirmLayout.value) {
-                    MainButton(text = stringResource(R.string.save_image)) {
-                        drawables[index]?.let {
-                            FileSaveHelper(context).saveBitmap(
-                                bitmap = (it as BitmapDrawable).bitmap,
-                                displayName = "${unitId}_${index}.jpg"
-                            )
-                            showConfirmLayout.value = false
-                            VibrateUtil(context).done()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 }
 
 /**

@@ -16,14 +16,18 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.layout.lerp
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
@@ -34,7 +38,7 @@ import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.tool.NewsItem
@@ -46,11 +50,9 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 /**
  * 首页纵览
@@ -69,7 +71,6 @@ fun Overview(
     }
     val region = getRegion()
     val scrollState = rememberScrollState()
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val downloadState = MainActivity.navViewModel.downloadProgress.observeAsState().value ?: -1
@@ -85,11 +86,8 @@ fun Overview(
         MainActivity.navViewModel.openChangeDataDialog.postValue(false)
     }
 
-
-    val characterSize = 10
     val characterList =
-        overviewViewModel.getCharacterList(characterSize)
-            .collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
     val equipList = overviewViewModel.getEquipList().collectAsState(initial = arrayListOf()).value
     val inProgressEventList =
         overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
@@ -98,75 +96,49 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
-    val pagerCount = 6
-    val pagerState =
-        rememberPagerState(
-            pageCount = pagerCount,
-            initialOffscreenLimit = pagerCount - 1,
-            infiniteLoop = true
-        )
-
-
     Box(modifier = Modifier.fillMaxSize()) {
-
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             TopBarCompose(actions)
             //角色
             Section(
                 titleId = R.string.character,
                 iconType = MainIconType.CHARACTER,
+                hintText = characterList.size.toString(),
                 visible = characterList.isNotEmpty(),
                 onClick = {
                     actions.toCharacterList()
                 }
             ) {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { index ->
-                    val id = if (characterList.isEmpty()) 0 else characterList[index].id
-                    val infiniteLoopIndex =
-                        if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
-                            //从首个滚动到最后一个
-                            pagerState.currentPage - 1
-                        } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
-                            //从最后一个滚动的首个
-                            pagerState.pageCount
-                        } else {
-                            index
-                        }
-                    Card(
-                        modifier = Modifier
-                            .padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
-                            .fillMaxWidth(0.8f)
-                            .graphicsLayer {
-                                val pageOffset =
-                                    calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
-                                lerp(
-                                    start = ScaleFactor(0.9f, 0.9f),
-                                    stop = ScaleFactor(1f, 1f),
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                ).also { scale ->
-                                    scaleX = scale.scaleY
-                                    scaleY = scale.scaleY
-                                }
-                            },
-                        onClick = {
-                            VibrateUtil(context).single()
-                            if (index == pagerState.currentPage) {
+                if (characterList.isNotEmpty()) {
+                    HorizontalPager(
+                        state = rememberPagerState(
+                            pageCount = characterList.size,
+                            initialOffscreenLimit = 2
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) { index ->
+                        val id = if (characterList.isEmpty()) 0 else characterList[index].id
+                        Card(
+                            modifier = Modifier
+                                .padding(
+                                    top = Dimen.mediumPadding,
+                                    bottom = Dimen.mediumPadding,
+                                    start = Dimen.largePadding,
+//                                    end = Dimen.largePadding
+                                )
+                                .fillMaxWidth(0.618f)
+                                .heightIn(
+                                    min = Dimen.characterCardMinHeight
+                                ),
+                            onClick = {
                                 actions.toCharacterDetail(id)
-                            } else {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(infiniteLoopIndex)
-                                }
-                            }
-                        },
-                        elevation = 0.dp,
-                    ) {
-                        ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                            },
+                            elevation = 0.dp,
+                        ) {
+                            ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                        }
                     }
-
                 }
             }
 
@@ -174,21 +146,24 @@ fun Overview(
             Section(
                 titleId = R.string.tool_equip,
                 iconType = MainIconType.EQUIP,
+                hintText = equipList.size.toString(),
                 visible = equipList.isNotEmpty(),
                 onClick = {
                     actions.toEquipList()
                 }
             ) {
                 VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                    equipList.forEach {
-                        Box(
-                            modifier = Modifier
-                                .padding(Dimen.mediumPadding)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            IconCompose(data = getEquipIconUrl(it.equipmentId)) {
-                                actions.toEquipDetail(it.equipmentId)
+                    if (equipList.size > 0) {
+                        equipList.subList(0, 10).forEach {
+                            Box(
+                                modifier = Modifier
+                                    .padding(Dimen.mediumPadding)
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                IconCompose(data = getEquipIconUrl(it.equipmentId)) {
+                                    actions.toEquipDetail(it.equipmentId)
+                                }
                             }
                         }
                     }
@@ -406,6 +381,7 @@ private fun ChangeDbCompose(
 private fun Section(
     @StringRes titleId: Int,
     iconType: MainIconType,
+    @StringRes hintText: String = "",
     visible: Boolean = true,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
@@ -454,13 +430,36 @@ private fun Section(
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colors.onSurface
             )
+            //点击跳转
             if (onClick != null) {
-                IconCompose(
-                    data = MainIconType.MORE.icon,
-                    size = Dimen.fabIconSize,
-                    onClick = onClick,
-                    tint = MaterialTheme.colors.onSurface
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .clip(MaterialTheme.shapes.small)
+                        .clickable { onClick.invoke() }
+                        .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (hintText != "") {
+                        Text(text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    baselineShift = BaselineShift(+0.2f),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            ) {
+                                append(hintText)
+                            }
+                        })
+                    }
+                    IconCompose(
+                        data = MainIconType.MORE.icon,
+                        size = Dimen.fabIconSize,
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                }
+
             }
         }
 

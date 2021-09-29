@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.compose
+package cn.wthee.pcrtool.ui.common
 
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image

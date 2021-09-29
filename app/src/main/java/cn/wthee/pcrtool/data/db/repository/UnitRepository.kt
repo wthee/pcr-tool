@@ -25,8 +25,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
         filter.type
     )
 
-    suspend fun getInfoAndData(limit: Int) = unitDao.getInfoAndData(limit)
-
     suspend fun getInfoPro(unitId: Int) = unitDao.getInfoPro(unitId)
 
     suspend fun getCharacterByPosition(start: Int, end: Int) =

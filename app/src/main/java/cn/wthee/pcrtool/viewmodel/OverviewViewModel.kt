@@ -6,6 +6,8 @@ import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
 import cn.wthee.pcrtool.data.db.view.compare
+import cn.wthee.pcrtool.data.model.FilterCharacter
+import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
@@ -32,8 +34,8 @@ class OverviewViewModel @Inject constructor(
     /**
      * 获取角色列表
      */
-    fun getCharacterList(size: Int) = flow {
-        emit(unitRepository.getInfoAndData(size).filter {
+    fun getCharacterList() = flow {
+        emit(unitRepository.getInfoAndData(FilterCharacter(), "全部").filter {
             !Constants.unuseIDs.contains(it.id)
         })
     }
@@ -42,7 +44,7 @@ class OverviewViewModel @Inject constructor(
      * 获取装备列表
      */
     fun getEquipList() = flow {
-        emit(equipmentRepository.getEquipments(10))
+        emit(equipmentRepository.getEquipments(FilterEquipment(), "全部"))
     }
 
     /**

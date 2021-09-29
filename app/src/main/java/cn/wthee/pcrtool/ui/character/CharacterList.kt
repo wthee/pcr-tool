@@ -34,7 +34,7 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.isFilter
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.noShape
@@ -103,24 +103,28 @@ fun CharacterList(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
         ) {
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(2),
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.mediumPadding)
-            ) {
-                items(list) {
-                    CharacterItem(it, filter.value!!, toDetail = toDetail)
-                }
-                items(2) {
-                    CommonSpacer()
+            if (list.isNotEmpty()) {
+                LazyVerticalGrid(
+                    cells = GridCells.Fixed(2),
+                    state = scrollState,
+                    contentPadding = PaddingValues(Dimen.mediumPadding)
+                ) {
+                    items(list) {
+                        CharacterItem(it, filter.value!!, toDetail = toDetail)
+                    }
+                    items(2) {
+                        CommonSpacer()
+                    }
                 }
             }
+
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(end = Dimen.fabMarginEnd, bottom = Dimen.fabMargin),
                 horizontalArrangement = Arrangement.End
             ) {
+                //回到顶部
                 FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
                     FabCompose(
                         iconType = MainIconType.TOP,
