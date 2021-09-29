@@ -126,7 +126,7 @@
     <string name="equip_name">装备名</string>
     <string name="love_equip">收藏装备</string>
     <string name="love_equip_material">收藏素材</string>
-    <string name="unselect">?</string>
+    <string name="unselect">-</string>
     <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="update_log">更新日志</string>
@@ -143,6 +143,8 @@
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
     <string name="other">其它</string>
+    <string name="more">更多</string>
+    <string name="cancel">取消</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
@@ -174,6 +176,8 @@
 
     <string name="new_member">新加入成员</string>
     <string name="save_image">保存图片</string>
+    <string name="ask_save_image">是否要保存图片？</string>
+
     <string name="title_ex_skill_add">EX+ 额外数值</string>
     <string name="title_skill_1_add">技能1+ 额外数值</string>
     <string name="title_skill_1_coe">技能1+ 系数</string>

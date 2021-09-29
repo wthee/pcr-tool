@@ -16,9 +16,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ScaleFactor
-import androidx.compose.ui.layout.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -46,11 +43,9 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.absoluteValue
 
 /**
  * 首页纵览
@@ -69,7 +64,6 @@ fun Overview(
     }
     val region = getRegion()
     val scrollState = rememberScrollState()
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
     val downloadState = MainActivity.navViewModel.downloadProgress.observeAsState().value ?: -1
@@ -98,13 +92,8 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
-    val pagerCount = 6
-    val pagerState =
-        rememberPagerState(
-            pageCount = pagerCount,
-            initialOffscreenLimit = pagerCount - 1,
-            infiniteLoop = true
-        )
+    val pagerCount = 5
+    val pagerState = rememberPagerState(pageCount = pagerCount, initialOffscreenLimit = 2)
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -126,47 +115,25 @@ fun Overview(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { index ->
                     val id = if (characterList.isEmpty()) 0 else characterList[index].id
-                    val infiniteLoopIndex =
-                        if (index == pagerState.pageCount - 1 && pagerState.currentPage == 0) {
-                            //从首个滚动到最后一个
-                            pagerState.currentPage - 1
-                        } else if (index == 0 && pagerState.currentPage == pagerState.pageCount - 1) {
-                            //从最后一个滚动的首个
-                            pagerState.pageCount
-                        } else {
-                            index
-                        }
                     Card(
                         modifier = Modifier
-                            .padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
-                            .fillMaxWidth(0.8f)
-                            .graphicsLayer {
-                                val pageOffset =
-                                    calculateCurrentOffsetForPage(infiniteLoopIndex).absoluteValue
-                                lerp(
-                                    start = ScaleFactor(0.9f, 0.9f),
-                                    stop = ScaleFactor(1f, 1f),
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                ).also { scale ->
-                                    scaleX = scale.scaleY
-                                    scaleY = scale.scaleY
-                                }
-                            },
+                            .padding(
+                                top = Dimen.mediumPadding,
+                                bottom = Dimen.mediumPadding,
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding
+                            )
+                            .fillMaxWidth()
+                            .heightIn(
+                                min = Dimen.characterCardMinHeight
+                            ),
                         onClick = {
-                            VibrateUtil(context).single()
-                            if (index == pagerState.currentPage) {
-                                actions.toCharacterDetail(id)
-                            } else {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(infiniteLoopIndex)
-                                }
-                            }
+                            actions.toCharacterDetail(id)
                         },
                         elevation = 0.dp,
                     ) {
                         ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
                     }
-
                 }
             }
 

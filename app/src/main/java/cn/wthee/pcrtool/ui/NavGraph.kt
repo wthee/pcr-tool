@@ -46,6 +46,7 @@ object Navigation {
     const val HOME = "home"
     const val CHARACTER_LIST = "characterList"
     const val CHARACTER_DETAIL = "characterDetail"
+    const val CHARACTER_PICS = "characterPics"
     const val CHARACTER_BASIC_INFO = "characterBasicInfo"
     const val EQUIP_LIST = "equipList"
     const val EQUIP_DETAIL = "equipDetail"
@@ -181,6 +182,22 @@ fun NavGraph(
                 actions,
                 viewModel
             )
+        }
+
+        //角色图片详情
+        composable(
+            route = "${Navigation.CHARACTER_PICS}/{${Navigation.UNIT_ID}}",
+            arguments = listOf(navArgument(Navigation.UNIT_ID) {
+                type = NavType.IntType
+            }),
+            enterTransition = { _, _ -> fadeIn },
+            exitTransition = { _, _ -> fadeOut },
+            popEnterTransition = { _, _ -> fadeIn },
+            popExitTransition = { _, _ -> fadeOut }
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            CharacterAllPics(arguments.getInt(Navigation.UNIT_ID))
         }
 
         //角色资料
@@ -561,6 +578,13 @@ class NavActions(navController: NavHostController) {
      */
     val toCharacterDetail: (Int) -> Unit = { unitId: Int ->
         navController.navigate("${Navigation.CHARACTER_DETAIL}/${unitId}")
+    }
+
+    /**
+     * 角色图片详情
+     */
+    val toCharacterPics: (Int) -> Unit = { unitId: Int ->
+        navController.navigate("${Navigation.CHARACTER_PICS}/${unitId}")
     }
 
     /**
