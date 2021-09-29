@@ -26,7 +26,7 @@ import cn.wthee.pcrtool.data.model.RankCompareData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.noShape

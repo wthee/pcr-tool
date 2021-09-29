@@ -25,8 +25,8 @@ import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.character.*
-import cn.wthee.pcrtool.ui.compose.fadeIn
-import cn.wthee.pcrtool.ui.compose.fadeOut
+import cn.wthee.pcrtool.ui.common.fadeIn
+import cn.wthee.pcrtool.ui.common.fadeOut
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil

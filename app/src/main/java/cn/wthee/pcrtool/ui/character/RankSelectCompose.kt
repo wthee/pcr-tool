@@ -20,8 +20,8 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ChipData
 import cn.wthee.pcrtool.ui.NavViewModel
-import cn.wthee.pcrtool.ui.compose.ChipGroup
-import cn.wthee.pcrtool.ui.compose.MainText
+import cn.wthee.pcrtool.ui.common.ChipGroup
+import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

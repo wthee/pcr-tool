@@ -20,7 +20,7 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.GuildAllMember
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.compose.*
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
 import coil.annotation.ExperimentalCoilApi

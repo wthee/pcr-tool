@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.compose
+package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.compose
+package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

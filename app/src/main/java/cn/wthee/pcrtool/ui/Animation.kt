@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.compose
+package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
