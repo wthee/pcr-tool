@@ -16,11 +16,18 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
@@ -79,11 +86,8 @@ fun Overview(
         MainActivity.navViewModel.openChangeDataDialog.postValue(false)
     }
 
-
-    val characterSize = 10
     val characterList =
-        overviewViewModel.getCharacterList(characterSize)
-            .collectAsState(initial = arrayListOf()).value
+        overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
     val equipList = overviewViewModel.getEquipList().collectAsState(initial = arrayListOf()).value
     val inProgressEventList =
         overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
@@ -92,47 +96,48 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
-    val pagerCount = 5
-    val pagerState = rememberPagerState(pageCount = pagerCount, initialOffscreenLimit = 2)
-
-
     Box(modifier = Modifier.fillMaxSize()) {
-
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             TopBarCompose(actions)
             //角色
             Section(
                 titleId = R.string.character,
                 iconType = MainIconType.CHARACTER,
+                hintText = characterList.size.toString(),
                 visible = characterList.isNotEmpty(),
                 onClick = {
                     actions.toCharacterList()
                 }
             ) {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { index ->
-                    val id = if (characterList.isEmpty()) 0 else characterList[index].id
-                    Card(
-                        modifier = Modifier
-                            .padding(
-                                top = Dimen.mediumPadding,
-                                bottom = Dimen.mediumPadding,
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding
-                            )
-                            .fillMaxWidth()
-                            .heightIn(
-                                min = Dimen.characterCardMinHeight
-                            ),
-                        onClick = {
-                            actions.toCharacterDetail(id)
-                        },
-                        elevation = 0.dp,
-                    ) {
-                        ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                if (characterList.isNotEmpty()) {
+                    HorizontalPager(
+                        state = rememberPagerState(
+                            pageCount = characterList.size,
+                            initialOffscreenLimit = 2
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) { index ->
+                        val id = if (characterList.isEmpty()) 0 else characterList[index].id
+                        Card(
+                            modifier = Modifier
+                                .padding(
+                                    top = Dimen.mediumPadding,
+                                    bottom = Dimen.mediumPadding,
+                                    start = Dimen.largePadding,
+//                                    end = Dimen.largePadding
+                                )
+                                .fillMaxWidth(0.618f)
+                                .heightIn(
+                                    min = Dimen.characterCardMinHeight
+                                ),
+                            onClick = {
+                                actions.toCharacterDetail(id)
+                            },
+                            elevation = 0.dp,
+                        ) {
+                            ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                        }
                     }
                 }
             }
@@ -141,21 +146,24 @@ fun Overview(
             Section(
                 titleId = R.string.tool_equip,
                 iconType = MainIconType.EQUIP,
+                hintText = equipList.size.toString(),
                 visible = equipList.isNotEmpty(),
                 onClick = {
                     actions.toEquipList()
                 }
             ) {
                 VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                    equipList.forEach {
-                        Box(
-                            modifier = Modifier
-                                .padding(Dimen.mediumPadding)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            IconCompose(data = getEquipIconUrl(it.equipmentId)) {
-                                actions.toEquipDetail(it.equipmentId)
+                    if (equipList.size > 0) {
+                        equipList.subList(0, 10).forEach {
+                            Box(
+                                modifier = Modifier
+                                    .padding(Dimen.mediumPadding)
+                                    .fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                IconCompose(data = getEquipIconUrl(it.equipmentId)) {
+                                    actions.toEquipDetail(it.equipmentId)
+                                }
                             }
                         }
                     }
@@ -373,6 +381,7 @@ private fun ChangeDbCompose(
 private fun Section(
     @StringRes titleId: Int,
     iconType: MainIconType,
+    @StringRes hintText: String = "",
     visible: Boolean = true,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
@@ -421,13 +430,36 @@ private fun Section(
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colors.onSurface
             )
+            //点击跳转
             if (onClick != null) {
-                IconCompose(
-                    data = MainIconType.MORE.icon,
-                    size = Dimen.fabIconSize,
-                    onClick = onClick,
-                    tint = MaterialTheme.colors.onSurface
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .clip(MaterialTheme.shapes.small)
+                        .clickable { onClick.invoke() }
+                        .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (hintText != "") {
+                        Text(text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    baselineShift = BaselineShift(+0.2f),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            ) {
+                                append(hintText)
+                            }
+                        })
+                    }
+                    IconCompose(
+                        data = MainIconType.MORE.icon,
+                        size = Dimen.fabIconSize,
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                }
+
             }
         }
 
