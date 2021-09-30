@@ -5,9 +5,9 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.0.2"
-val name = "2.1.1"
-val code = 211
+val composeVersion = "1.0.3"
+val appVersionCode = 211
+val appVersionName = "2.1.1"
 val sql = 201
 
 android {
@@ -20,8 +20,8 @@ android {
         applicationId = "cn.wthee.pcrtool"
         minSdk = 23
         targetSdk = 30
-        versionCode = code
-        versionName = name
+        versionCode = appVersionCode
+        versionName = appVersionName
 
 
         buildConfigField("int", "SQLITE_VERSION", sql.toString())
@@ -128,7 +128,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
 
     //Lifecycle
-    val lifecycleVersion = "2.4.0-beta01"
+    val lifecycleVersion = "2.4.0-rc01"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -140,7 +140,7 @@ dependencies {
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha12")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha13")
 
     //Retrofit
     val retrofitVersion = "2.9.0"
@@ -148,7 +148,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0-alpha04"
+    val roomVersion = "2.4.0-alpha05"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
@@ -163,7 +163,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.4.2")
 
     //Work
-    val workVersion = "2.7.0-beta01"
+    val workVersion = "2.7.0-rc01"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 
