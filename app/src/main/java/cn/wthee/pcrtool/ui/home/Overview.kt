@@ -69,6 +69,7 @@ fun Overview(
     SideEffect {
         overviewViewModel.getR6Ids()
     }
+    val context = LocalContext.current
     val region = getRegion()
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
@@ -125,13 +126,13 @@ fun Overview(
                                     top = Dimen.mediumPadding,
                                     bottom = Dimen.mediumPadding,
                                     start = Dimen.largePadding,
-//                                    end = Dimen.largePadding
                                 )
                                 .fillMaxWidth(0.618f)
                                 .heightIn(
                                     min = Dimen.characterCardMinHeight
                                 ),
                             onClick = {
+                                VibrateUtil(context).single()
                                 actions.toCharacterDetail(id)
                             },
                             elevation = 0.dp,
@@ -436,7 +437,10 @@ private fun Section(
                     modifier = Modifier
                         .fillMaxHeight()
                         .clip(MaterialTheme.shapes.small)
-                        .clickable { onClick.invoke() }
+                        .clickable {
+                            VibrateUtil(context).single()
+                            onClick.invoke()
+                        }
                         .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

@@ -13,7 +13,10 @@ val df1: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
  */
 val String.formatTime: String
     get() {
-        val list = this.split(" ")[0].split("/")
+        var list = this.split(" ")[0].split("/")
+        if (list.size == 1) {
+            list = this.split(" ")[0].split("-")
+        }
         return "${list[0]}/${list[1].fillZero()}/${list[2].fillZero()}" + if (this.length > 12) {
             var hms = this.substring(this.length - 8, this.length)
             hms = hms.replace(' ', '0')

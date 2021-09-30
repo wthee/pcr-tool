@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.character
 
+import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -70,6 +71,7 @@ fun CharacterDetail(
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     //最大值
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
@@ -147,7 +149,6 @@ fun CharacterDetail(
                 attrViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
             }
 
-
             //关闭
             if (close) {
                 coroutineScope.launch {
@@ -158,86 +159,73 @@ fun CharacterDetail(
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(scrollState)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    //角色卡面
-                    Card(
+                //数据加载后，展示页面
+                val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
+                FadeAnimation(visible) {
+                    //页面
+                    Column(
                         modifier = Modifier
-                            .padding(
-                                top = Dimen.mediumPadding,
-                                bottom = Dimen.mediumPadding,
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding
-                            )
-                            .fillMaxWidth(),
-                        onClick = {
-                            //角色全部图片
-                            actions.toCharacterPics(unitId)
-                        },
-                        elevation = 0.dp,
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .background(MaterialTheme.colors.background),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
-                    }
-                    //数据加载后，展示页面
-                    val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
-                    if (visible) {
-                        //页面
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(MaterialTheme.colors.background),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            //星级
-                            StarSelect(
+                        //角色卡面
+                        CharacterCard(context, actions, unitId)
+                        //星级
+                        StarSelect(
+                            currentValue = currentValue,
+                            max = maxValue.rarity,
+                            modifier = Modifier.padding(top = Dimen.mediumPadding),
+                            attrViewModel = attrViewModel
+                        )
+                        AttrLists(
+                            currentValue,
+                            characterLevel,
+                            maxValue,
+                            allData,
+                            actions
+                        )
+                        //RANK 装备
+                        CharacterEquip(
+                            unitId = unitId,
+                            rank = currentValue.rank,
+                            maxRank = maxValue.rank,
+                            equips = allData.equips,
+                            toEquipDetail = actions.toEquipDetail,
+                            toRankEquip = actions.toCharacteRankEquip,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                        //显示专武
+                        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                            UniqueEquip(
                                 currentValue = currentValue,
-                                max = maxValue.rarity,
-                                modifier = Modifier.padding(top = Dimen.mediumPadding),
-                                attrViewModel = attrViewModel
-                            )
-                            AttrLists(
-                                currentValue,
-                                characterLevel,
-                                maxValue,
-                                allData,
-                                actions
-                            )
-                            //RANK 装备
-                            CharacterEquip(
-                                unitId = unitId,
-                                rank = currentValue.rank,
-                                maxRank = maxValue.rank,
-                                equips = allData.equips,
-                                toEquipDetail = actions.toEquipDetail,
-                                toRankEquip = actions.toCharacteRankEquip,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            )
-                            //显示专武
-                            if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-                                UniqueEquip(
-                                    currentValue = currentValue,
-                                    uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                                    uniqueEquipLevel = uniqueEquipLevel,
-                                    uniqueEquipmentMaxData = allData.uniqueEquip
-                                )
-                            }
-                            //技能
-                            CharacterSkill(
-                                unitId = unitId,
-                                cutinId = cutinId,
-                                level = currentValue.level,
-                                atk = max(
-                                    allData.sumAttr.atk.int,
-                                    allData.sumAttr.magicStr.int
-                                )
+                                uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
+                                uniqueEquipLevel = uniqueEquipLevel,
+                                uniqueEquipmentMaxData = allData.uniqueEquip
                             )
                         }
+                        //技能
+                        CharacterSkill(
+                            unitId = unitId,
+                            cutinId = cutinId,
+                            level = currentValue.level,
+                            atk = max(
+                                allData.sumAttr.atk.int,
+                                allData.sumAttr.magicStr.int
+                            )
+                        )
                     }
-                    if (unknown) {
+                }
+                if (unknown) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(scrollState)
+                            .background(MaterialTheme.colors.background),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CharacterCard(context, actions, unitId)
                         //未知角色占位页面
                         Text(
                             text = stringResource(R.string.unknown_character),
@@ -248,6 +236,7 @@ fun CharacterDetail(
                                 .padding(Dimen.largePadding)
                         )
                     }
+
                 }
                 //悬浮按钮
                 Column(
@@ -325,6 +314,33 @@ fun CharacterDetail(
                 }
             }
         }
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun CharacterCard(
+    context: Context,
+    actions: NavActions,
+    unitId: Int
+) {
+    Card(
+        modifier = Modifier
+            .padding(
+                top = Dimen.mediumPadding,
+                bottom = Dimen.mediumPadding,
+                start = Dimen.largePadding,
+                end = Dimen.largePadding
+            )
+            .fillMaxWidth(),
+        onClick = {
+            //角色全部图片
+            VibrateUtil(context).single()
+            actions.toCharacterPics(unitId)
+        },
+        elevation = 0.dp,
+    ) {
+        ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
     }
 }
 

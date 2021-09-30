@@ -38,6 +38,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import coil.annotation.ExperimentalCoilApi
@@ -193,7 +194,7 @@ fun NewsItem(
             )
         )
         MainTitleText(
-            text = news.date,
+            text = news.date.formatTime,
             modifier = Modifier
                 .padding(start = Dimen.smallPadding)
                 .placeholder(
