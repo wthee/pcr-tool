@@ -40,12 +40,8 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PcrtoolComposeTheme
-import cn.wthee.pcrtool.utils.ActivityHelper
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.ScreenUtil
-import cn.wthee.pcrtool.utils.UMengInitializer
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
-import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -162,14 +158,18 @@ class MainActivity : ComponentActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-    //刷新页面
+    //刷新页面 fixme 偶尔闪退
     @SuppressLint("RestrictedApi")
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
-            savedStateRegistry.unregisterSavedStateProvider(OverviewViewModel::class.java.name)
-            viewModelStore.clear()
-            recreate()
+            try {
+                navController.popBackStack()
+                viewModelStore.clear()
+                recreate()
+            } catch (e: Exception) {
+                UMengLogUtil.upload(e, Constants.EXCEPTION_DATA_CHANGE)
+            }
             return@Callback true
         })
     }

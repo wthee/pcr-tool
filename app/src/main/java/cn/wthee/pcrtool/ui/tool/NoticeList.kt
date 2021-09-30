@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.data.model.AppNotice
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import coil.annotation.ExperimentalCoilApi
@@ -142,6 +143,12 @@ private fun NoticeItem(data: AppNotice) {
                 highlight = PlaceholderHighlight.shimmer()
             )
         )
+        if (data.date != "") {
+            MainTitleText(
+                text = data.date.formatTime.substring(0, 10),
+                modifier = Modifier.padding(start = Dimen.smallPadding)
+            )
+        }
         if (exTitle != "") {
             MainTitleText(
                 text = exTitle,

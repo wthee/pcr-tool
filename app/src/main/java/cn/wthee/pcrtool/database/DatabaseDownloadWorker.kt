@@ -134,6 +134,7 @@ class DatabaseDownloadWorker(
             updateLocalDataBaseVersion(version)
             return Result.success()
         } catch (e: Exception) {
+            ToastUtil.short("数据解析失败，请关闭应用后重试")
             UMengLogUtil.upload(e, Constants.EXCEPTION_SAVE_DB)
             return Result.failure()
         }

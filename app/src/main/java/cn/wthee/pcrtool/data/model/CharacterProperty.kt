@@ -7,7 +7,7 @@ package cn.wthee.pcrtool.data.model
  */
 data class CharacterProperty(
     var level: Int = 0,
-    var rank: Int = 1,
+    var rank: Int = 0,
     var rarity: Int = 5,
     var uniqueEquipmentLevel: Int = 0
 ) {
