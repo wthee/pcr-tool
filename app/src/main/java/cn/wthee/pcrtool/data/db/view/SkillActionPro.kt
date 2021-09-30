@@ -200,6 +200,7 @@ data class SkillActionPro(
 
                 val value = getValueText(1, action_value_1, action_value_2, action_value_3)
                 "对${getTarget()}造成 $value 的${atkType}伤害" + if (action_value_6 > 0) {
+                    //暴伤倍率
                     val multiple = if (action_value_6 > 1) {
                         "[1 ~ ${action_value_6}]"
                     } else {
@@ -571,7 +572,7 @@ data class SkillActionPro(
                 }
                 val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
                 val commonDesc =
-                    "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $commonExpr"
+                    "动作(${action_detail_1 % 10})的{${action_detail_2}}增加 $commonExpr"
 
                 val additive = when (action_value_1.toInt()) {
                     2 -> {
@@ -586,7 +587,7 @@ data class SkillActionPro(
                                 "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
                             }
                         }
-                        "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
+                        "动作(${action_detail_1 % 10})的{${action_detail_2}}增加$expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [剩余的HP]"
                     1 -> "$commonDesc * [损失的HP]"
@@ -594,6 +595,7 @@ data class SkillActionPro(
                     5 -> "$commonDesc * [受到伤害的目标数量]"
                     6 -> "$commonDesc * [造成的伤害]"
                     12 -> "$commonDesc * [后方${getTarget()}数量]"
+                    13 -> "$commonDesc * [${getTarget()}剩余的HP比例]"
                     102 -> "$commonDesc * [小眼球数量]"
                     in 200 until 300 -> "$commonDesc * [标记层数]"
                     in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
@@ -612,7 +614,7 @@ data class SkillActionPro(
             SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
                 val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
                 val commonDesc =
-                    "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $commonExpr"
+                    "动作(${action_detail_1 % 10}的{${action_detail_2}}增加$commonExpr"
 
                 when (action_value_1.toInt()) {
                     2 -> {
@@ -627,7 +629,7 @@ data class SkillActionPro(
                                 "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
                             }
                         }
-                        "动作(${action_detail_1 % 10}) 的{${action_detail_2}} 增加 $expr * [击杀数量]"
+                        "动作(${action_detail_1 % 10})的{${action_detail_2}}增加$expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [HP]"
                     1 -> "$commonDesc * [损失的HP]"
