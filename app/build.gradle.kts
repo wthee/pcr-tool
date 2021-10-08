@@ -8,7 +8,7 @@ plugins {
 val composeVersion = "1.0.3"
 val appVersionCode = 213
 val appVersionName = "2.1.3"
-val sql = 201
+val sql = 214
 
 android {
 
@@ -118,7 +118,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "1.3.2"
+    val coilVersion = "1.4.0"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
