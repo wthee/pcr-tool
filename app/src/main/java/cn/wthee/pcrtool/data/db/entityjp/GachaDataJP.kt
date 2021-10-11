@@ -2,12 +2,20 @@ package cn.wthee.pcrtool.data.db.entityjp
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
  * 卡池信息
  */
-@Entity(tableName = "gacha_data")
+@Entity(
+    tableName = "gacha_data",
+    indices = [Index(
+        value = arrayOf("exchange_id"),
+        unique = false,
+        name = "gacha_data_0_exchange_id"
+    )]
+)
 data class GachaDataJP(
     @PrimaryKey
     @ColumnInfo(name = "gacha_id") var gacha_id: Int = 0,
