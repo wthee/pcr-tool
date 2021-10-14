@@ -29,7 +29,9 @@ class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        backupMode = tryOpenDatabase() == 0
+        if (!BuildConfig.DEBUG) {
+            backupMode = tryOpenDatabase() == 0
+        }
     }
 
     override fun newImageLoader(): ImageLoader {
