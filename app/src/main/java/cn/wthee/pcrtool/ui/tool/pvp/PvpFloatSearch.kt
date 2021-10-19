@@ -47,7 +47,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
-    val pagerState = rememberPagerState(pageCount = 3)
+    val pagerState = rememberPagerState()
     val selectListState = rememberScrollState()
     val resultListState = rememberLazyListState()
     val favoritesListState = rememberLazyListState()

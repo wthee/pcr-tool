@@ -112,12 +112,9 @@ fun Overview(
             ) {
                 if (characterList.isNotEmpty()) {
                     HorizontalPager(
-                        state = rememberPagerState(
-                            pageCount = characterList.size,
-                            initialOffscreenLimit = 2
-                        ),
+                        count = characterList.size,
+                        state = rememberPagerState(),
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.Start
                     ) { index ->
                         val id = if (characterList.isEmpty()) 0 else characterList[index].id
                         Card(
@@ -126,8 +123,8 @@ fun Overview(
                                     top = Dimen.mediumPadding,
                                     bottom = Dimen.mediumPadding,
                                     start = Dimen.largePadding,
+                                    end = Dimen.largePadding
                                 )
-                                .fillMaxWidth(0.618f)
                                 .heightIn(
                                     min = Dimen.characterCardMinHeight
                                 ),
@@ -338,7 +335,7 @@ private fun ChangeDbCompose(
                     SelectText(
                         selected = region == i + 2,
                         text = menuTexts[i],
-                        style = MaterialTheme.typography.h6,
+                        textStyle = MaterialTheme.typography.h6,
                         modifier = mModifier.padding(Dimen.mediumPadding)
                     )
                 }
@@ -382,7 +379,7 @@ private fun ChangeDbCompose(
 private fun Section(
     @StringRes titleId: Int,
     iconType: MainIconType,
-    @StringRes hintText: String = "",
+    hintText: String = "",
     visible: Boolean = true,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
@@ -623,4 +620,3 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
 
     return events
 }
-

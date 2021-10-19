@@ -69,7 +69,7 @@ fun ImageCompose(
  * 角色位置图标
  */
 @Composable
-fun PositionIcon(position: Int) {
+fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.smallIconSize) {
     val positionIconId = when (position) {
         in 0..299 -> R.drawable.ic_position_0
         in 300..599 -> R.drawable.ic_position_1
@@ -81,7 +81,7 @@ fun PositionIcon(position: Int) {
             data = positionIconId,
         ),
         contentDescription = null,
-        modifier = Modifier.size(Dimen.smallIconSize)
+        modifier = modifier.size(size)
     )
 }
 

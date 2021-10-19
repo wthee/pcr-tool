@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.navArgument
+import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
@@ -109,7 +109,7 @@ fun NavGraph(
         initialPage = getRegion() - 2
     }
     val pagerState =
-        rememberPagerState(pageCount = 3, initialOffscreenLimit = 2, initialPage = initialPage)
+        rememberPagerState(initialPage = initialPage)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     newsViewModel.getNews(2)
     newsViewModel.getNews(3)

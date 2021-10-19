@@ -268,7 +268,7 @@ data class SkillActionPro(
             SkillActionType.CHOOSE_ENEMY -> {
                 "锁定${getTarget()}"
             }
-            SkillActionType.CHANGE_ACTION_SPEED -> {
+            SkillActionType.CHANGE_ACTION_SPEED, SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED -> {
                 //判断异常状态
                 tag = when (action_detail_1) {
                     1 -> "减速"
@@ -289,6 +289,11 @@ data class SkillActionPro(
                 val main = when (action_detail_1) {
                     1, 2 -> "${tag}${getTarget()}，速度 * ${value}$time"
                     else -> "使${getTarget()}进入${tag}状态$time"
+                } + if (action_type == SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED.type) {
+                    tag += "(可叠加)"
+                    "（可与其它相同效果叠加）"
+                } else {
+                    ""
                 }
                 if (action_detail_2 == 1) {
                     "$main，本效果将会在受到伤害时解除"
@@ -949,8 +954,7 @@ data class SkillActionPro(
     /**
      * 获取 %
      */
-    private fun getPercent() = if (action_detail_1 == 2) "%" else ""
-
+    private fun getPercent() = if (action_detail_1 == 2 || action_value_1.toInt() == 2) "%" else ""
 
     /**
      * 持续时间

@@ -92,7 +92,7 @@
     <string name="six_unlock">六星</string>
     <string name="type_normal">常驻</string>
     <string name="type_limit">限定</string>
-    <string name="type_event_limit">活动限定</string>
+    <string name="type_event_limit">活动</string>
     <string name="name">名字</string>
 
     <!--  工具  -->

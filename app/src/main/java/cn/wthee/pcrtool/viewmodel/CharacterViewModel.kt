@@ -37,6 +37,16 @@ class CharacterViewModel @Inject constructor(
         }
     }
 
+
+    /**
+     * 获取角色基本信息
+     *
+     * @param unitId 角色编号
+     */
+    fun getCharacterBasicInfo(unitId: Int) = flow {
+        emit(unitRepository.getInfoAndData(unitId))
+    }
+
     /**
      * 获取角色基本资料
      *

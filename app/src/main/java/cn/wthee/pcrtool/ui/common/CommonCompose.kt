@@ -10,12 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
@@ -28,13 +31,13 @@ import com.google.accompanist.insets.navigationBarsPadding
 fun MainTitleText(
     modifier: Modifier = Modifier,
     text: String,
-    small: Boolean = false,
-    backgroundColor: Color = MaterialTheme.colors.primary
+    backgroundColor: Color = MaterialTheme.colors.primary,
+    textStyle: TextStyle = MaterialTheme.typography.body2
 ) {
     Text(
         text = text,
         color = Color.White,
-        style = if (small) MaterialTheme.typography.caption else MaterialTheme.typography.body2,
+        style = textStyle,
         modifier = modifier
             .background(color = backgroundColor, shape = MaterialTheme.shapes.small)
             .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
@@ -354,24 +357,92 @@ fun SelectText(
     text: String,
     selectedColor: Color = MaterialTheme.colors.primary,
     textColor: Color = Color.Unspecified,
-    style: TextStyle = MaterialTheme.typography.body2,
-    padding: Dp = Dimen.smallPadding
+    textStyle: TextStyle = MaterialTheme.typography.body2,
+    padding: Dp = Dimen.smallPadding,
+    margin: Dp = Dimen.smallPadding,
+    textAlign: TextAlign = TextAlign.Center
 ) {
     val mModifier = if (selected) {
         modifier
-            .padding(top = padding)
+            .padding(top = margin)
             .background(color = selectedColor, shape = MaterialTheme.shapes.small)
             .padding(start = padding, end = padding)
     } else {
-        modifier.padding(top = padding)
+        modifier.padding(top = margin)
     }
     Text(
         text = text,
         color = if (selected) MaterialTheme.colors.onPrimary else textColor,
-        style = style,
+        style = textStyle,
         maxLines = 1,
-        textAlign = TextAlign.Center,
+        textAlign = textAlign,
         overflow = TextOverflow.Ellipsis,
         modifier = mModifier
+    )
+}
+
+
+/**
+ * 角色限定类型文本样式
+ */
+@Composable
+fun CharacterLimitText(
+    modifier: Modifier = Modifier,
+    characterInfo: CharacterInfo,
+    textStyle: TextStyle = MaterialTheme.typography.body2
+) {
+    val color: Color
+    val type: String
+    when (characterInfo.isLimited) {
+        1 -> {
+            if (characterInfo.rarity == 1) {
+                type = stringResource(id = R.string.type_event_limit)
+                color = colorResource(id = R.color.color_rank_21)
+            } else {
+                type = stringResource(id = R.string.type_limit)
+                color = colorResource(id = R.color.color_rank_18_20)
+            }
+        }
+        else -> {
+            type = stringResource(id = R.string.type_normal)
+            color = colorResource(id = R.color.color_rank_7_10)
+        }
+    }
+    MainTitleText(modifier = modifier, text = type, backgroundColor = color, textStyle = textStyle)
+
+}
+
+
+/**
+ * 角色站位文本样式
+ */
+@Composable
+fun CharacterPositionText(
+    modifier: Modifier = Modifier,
+    selected: Boolean = false,
+    position: Int,
+    padding: Dp = 0.dp,
+    colorful: Boolean = true,
+    textAlign: TextAlign = TextAlign.Center,
+    textStyle: TextStyle = MaterialTheme.typography.body2
+) {
+    var color = colorResource(
+        id = when (position) {
+            in 1..299 -> R.color.color_rank_18_20
+            in 300..599 -> R.color.color_rank_7_10
+            in 600..9999 -> R.color.colorPrimary
+            else -> R.color.black
+        }
+    )
+    color = if (colorful) color else Color.Unspecified
+
+    Text(
+        text = position.toString(),
+        color = if (selected) Color.White else color,
+        style = textStyle,
+        maxLines = 1,
+        textAlign = textAlign,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier.padding(top = padding)
     )
 }

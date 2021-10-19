@@ -80,7 +80,11 @@ fun NewsList(
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { pagerIndex ->
+        HorizontalPager(
+            count = 3,
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+        ) { pagerIndex ->
             val scrollState = when (pagerIndex) {
                 0 -> scrollState0
                 1 -> scrollState1

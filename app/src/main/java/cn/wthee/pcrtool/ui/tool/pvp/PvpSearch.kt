@@ -56,7 +56,7 @@ import java.util.*
 @Composable
 fun PvpSearchCompose(
     floatWindow: Boolean = false,
-    pagerState: PagerState = rememberPagerState(pageCount = 3),
+    pagerState: PagerState = rememberPagerState(),
     selectListState: ScrollState = rememberScrollState(),
     resultListState: LazyListState = rememberLazyListState(),
     favoritesListState: LazyListState = rememberLazyListState(),
@@ -176,11 +176,12 @@ fun PvpSearchCompose(
                                 pagerState.scrollToPage(index)
                             }
                         }) {
-                            Subtitle2(text = s, modifier = Modifier.padding(Dimen.smallPadding))
+                            Subtitle1(text = s, modifier = Modifier.padding(Dimen.smallPadding))
                         }
                     }
                 }
                 HorizontalPager(
+                    count = 3,
                     state = pagerState,
                     modifier = Modifier.padding(top = mediumPadding)
                 ) { pageIndex ->
@@ -440,6 +441,7 @@ private fun PvpPositionIcon(iconId: Int, height: Int) {
 /**
  * 角色图标
  */
+@ExperimentalMaterialApi
 @ExperimentalCoilApi
 @Composable
 fun PvpIconItem(
@@ -495,12 +497,12 @@ fun PvpIconItem(
             navViewModel.selectedPvpData.postValue(newList)
         }
         //位置
-        val text =
-            if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
-        SelectText(
+        val position = if (it != PvpCharacterData()) it.position else 0
+        CharacterPositionText(
             selected = selected && selectedEffect,
-            text = text,
-            padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
+            position = position,
+            padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding,
+            colorful = !selectedEffect
         )
     }
 }

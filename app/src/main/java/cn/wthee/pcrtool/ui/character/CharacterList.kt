@@ -23,6 +23,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
@@ -192,43 +194,57 @@ fun CharacterItem(
         }) {
         Column {
             //图片
-            ImageCompose(
-                CharacterIdUtil.getMaxCardUrl(character.id), RATIO
-            )
-            //编号
-            if (BuildConfig.debug) {
-                Text(text = character.id.toString())
+            Box(contentAlignment = Alignment.BottomEnd) {
+                ImageCompose(
+                    CharacterIdUtil.getMaxCardUrl(character.id), RATIO
+                )
+
+                //位置
+                PositionIcon(modifier = Modifier.padding(Dimen.smallPadding), character.position)
             }
-            //名字、位置
+
             Row(
                 modifier = Modifier.padding(
                     start = Dimen.smallPadding,
                     end = Dimen.smallPadding,
-                    top = Dimen.divLineHeight
+                    top = Dimen.smallPadding
                 ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                //限定类型
+                CharacterLimitText(
+                    characterInfo = character,
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                )
+                //名字
                 SelectText(
                     selected = loved,
-                    text = character.getNameF()
+                    text = character.getNameF(),
+                    textAlign = TextAlign.Start,
+                    margin = 0.dp,
+                    padding = Dimen.smallPadding,
                 )
-                Spacer(modifier = Modifier.weight(1f))
-                PositionIcon(character.position)
             }
             //其它属性
             Row(
                 modifier = Modifier
-                    .padding(
-                        start = Dimen.smallPadding,
-                        end = Dimen.smallPadding,
-                        bottom = Dimen.smallPadding
-                    )
-                    .fillMaxWidth()
+                    .padding(Dimen.smallPadding)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 CharacterNumberText(character.getFixedAge())
                 CharacterNumberText(character.getFixedHeight() + "CM")
                 CharacterNumberText(character.getFixedWeight() + "KG")
-                CharacterNumberText(character.position.toString(), modifier = Modifier.weight(1f))
+                CharacterPositionText(
+                    position = character.position,
+                    textAlign = TextAlign.End,
+                    textStyle = MaterialTheme.typography.caption
+                )
+
+            }
+            //编号
+            if (BuildConfig.debug) {
+                Text(text = character.id.toString())
             }
         }
     }
@@ -243,7 +259,8 @@ private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
         text = text,
         color = MaterialTheme.colors.primaryVariant,
         style = MaterialTheme.typography.caption,
-        modifier = modifier.padding(end = Dimen.smallPadding)
+        modifier = modifier.padding(end = Dimen.smallPadding),
+        textAlign = TextAlign.End
     )
 }
 
