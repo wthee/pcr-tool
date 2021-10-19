@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
@@ -197,39 +198,37 @@ fun CharacterItem(
                 ImageCompose(
                     CharacterIdUtil.getMaxCardUrl(character.id), RATIO
                 )
-                //限定类型
-                CharacterLimitText(
-                    modifier = Modifier.padding(Dimen.smallPadding),
-                    characterInfo = character
-                )
+
+                //位置
+                PositionIcon(modifier = Modifier.padding(Dimen.smallPadding), character.position)
             }
 
             Row(
                 modifier = Modifier.padding(
                     start = Dimen.smallPadding,
                     end = Dimen.smallPadding,
-                    top = Dimen.divLineHeight
+                    top = Dimen.smallPadding
                 ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                //限定类型
+                CharacterLimitText(
+                    characterInfo = character,
+                    modifier = Modifier.padding(end = Dimen.smallPadding)
+                )
                 //名字
                 SelectText(
                     selected = loved,
                     text = character.getNameF(),
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
+                    margin = 0.dp,
+                    padding = Dimen.smallPadding,
                 )
-                //位置
-                PositionIcon(character.position)
             }
             //其它属性
             Row(
                 modifier = Modifier
-                    .padding(
-                        start = Dimen.smallPadding,
-                        end = Dimen.smallPadding,
-                        bottom = Dimen.smallPadding
-                    )
+                    .padding(Dimen.smallPadding)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -239,8 +238,9 @@ fun CharacterItem(
                 CharacterPositionText(
                     position = character.position,
                     textAlign = TextAlign.End,
-                    modifier = Modifier.weight(1f)
+                    textStyle = MaterialTheme.typography.caption
                 )
+
             }
             //编号
             if (BuildConfig.debug) {
@@ -258,7 +258,7 @@ private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         color = MaterialTheme.colors.primaryVariant,
-        style = MaterialTheme.typography.body2,
+        style = MaterialTheme.typography.caption,
         modifier = modifier.padding(end = Dimen.smallPadding),
         textAlign = TextAlign.End
     )

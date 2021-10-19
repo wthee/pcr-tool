@@ -357,22 +357,23 @@ fun SelectText(
     text: String,
     selectedColor: Color = MaterialTheme.colors.primary,
     textColor: Color = Color.Unspecified,
-    style: TextStyle = MaterialTheme.typography.body2,
+    textStyle: TextStyle = MaterialTheme.typography.body2,
     padding: Dp = Dimen.smallPadding,
+    margin: Dp = Dimen.smallPadding,
     textAlign: TextAlign = TextAlign.Center
 ) {
     val mModifier = if (selected) {
         modifier
-            .padding(top = padding)
+            .padding(top = margin)
             .background(color = selectedColor, shape = MaterialTheme.shapes.small)
             .padding(start = padding, end = padding)
     } else {
-        modifier.padding(top = padding)
+        modifier.padding(top = margin)
     }
     Text(
         text = text,
         color = if (selected) MaterialTheme.colors.onPrimary else textColor,
-        style = style,
+        style = textStyle,
         maxLines = 1,
         textAlign = textAlign,
         overflow = TextOverflow.Ellipsis,
@@ -422,7 +423,8 @@ fun CharacterPositionText(
     position: Int,
     padding: Dp = 0.dp,
     colorful: Boolean = true,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    textStyle: TextStyle = MaterialTheme.typography.body2
 ) {
     var color = colorResource(
         id = when (position) {
@@ -437,7 +439,7 @@ fun CharacterPositionText(
     Text(
         text = position.toString(),
         color = if (selected) Color.White else color,
-        style = MaterialTheme.typography.body2,
+        style = textStyle,
         maxLines = 1,
         textAlign = textAlign,
         overflow = TextOverflow.Ellipsis,

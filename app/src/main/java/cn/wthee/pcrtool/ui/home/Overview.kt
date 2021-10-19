@@ -134,24 +134,7 @@ fun Overview(
                             },
                             elevation = 0.dp,
                         ) {
-                            Box(contentAlignment = Alignment.BottomEnd) {
-                                ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
-                                if (id != 0) {
-                                    Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
-                                        MainTitleText(
-                                            text = characterList[index].name,
-                                            textStyle = MaterialTheme.typography.subtitle1,
-                                            modifier = Modifier.padding(end = Dimen.mediumPadding)
-                                        )
-                                        //限定类型
-                                        CharacterLimitText(
-                                            characterInfo = characterList[index],
-                                            textStyle = MaterialTheme.typography.subtitle1
-                                        )
-                                    }
-
-                                }
-                            }
+                            ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
                         }
                     }
                 }
@@ -352,7 +335,7 @@ private fun ChangeDbCompose(
                     SelectText(
                         selected = region == i + 2,
                         text = menuTexts[i],
-                        style = MaterialTheme.typography.h6,
+                        textStyle = MaterialTheme.typography.h6,
                         modifier = mModifier.padding(Dimen.mediumPadding)
                     )
                 }
@@ -396,7 +379,7 @@ private fun ChangeDbCompose(
 private fun Section(
     @StringRes titleId: Int,
     iconType: MainIconType,
-    @StringRes hintText: String = "",
+    hintText: String = "",
     visible: Boolean = true,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit

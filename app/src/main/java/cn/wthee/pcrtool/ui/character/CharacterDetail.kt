@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -26,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -43,6 +45,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
+import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -171,7 +174,7 @@ fun CharacterDetail(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         //角色卡面
-                        CharacterCard(context, actions, unitId)
+                        CharacterCard(context, loved.value, actions, unitId)
                         //星级
                         StarSelect(
                             currentValue = currentValue,
@@ -225,7 +228,7 @@ fun CharacterDetail(
                             .background(MaterialTheme.colors.background),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CharacterCard(context, actions, unitId)
+                        CharacterCard(context, loved.value, actions, unitId)
                         //未知角色占位页面
                         Text(
                             text = stringResource(R.string.unknown_character),
@@ -321,9 +324,15 @@ fun CharacterDetail(
 @Composable
 private fun CharacterCard(
     context: Context,
+    loved: Boolean,
     actions: NavActions,
-    unitId: Int
+    unitId: Int,
+    characterViewModel: CharacterViewModel = hiltViewModel()
 ) {
+    //基本信息
+    val basicInfo =
+        characterViewModel.getCharacterBasicInfo(unitId).collectAsState(initial = null).value
+
     Card(
         modifier = Modifier
             .padding(
@@ -340,7 +349,47 @@ private fun CharacterCard(
         },
         elevation = 0.dp,
     ) {
-        ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
+        Box(contentAlignment = Alignment.BottomStart) {
+            ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
+            if (basicInfo != null) {
+                Row(
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    //限定类型
+                    CharacterLimitText(
+                        modifier = Modifier.padding(end = Dimen.mediumPadding),
+                        characterInfo = basicInfo,
+                        textStyle = MaterialTheme.typography.subtitle1
+                    )
+                    //名字
+                    Text(
+                        text = basicInfo.name,
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 1,
+                        color = Color.White,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .background(
+                                color = if (loved) {
+                                    MaterialTheme.colors.primary
+                                } else {
+                                    MaterialTheme.colors.primaryVariant
+                                },
+                                shape = MaterialTheme.shapes.small
+                            )
+                            .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    //位置
+                    PositionIcon(
+                        modifier = Modifier.padding(Dimen.smallPadding),
+                        position = basicInfo.position,
+                        size = Dimen.fabIconSize
+                    )
+                }
+            }
+        }
     }
 }
 

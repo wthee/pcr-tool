@@ -100,6 +100,35 @@ interface UnitDao {
         type: Int
     ): List<CharacterInfo>
 
+    @Transaction
+    @Query(
+        """
+        SELECT
+            unit_profile.unit_id,
+            unit_data.unit_name,
+            unit_data.is_limited,
+            unit_data.rarity,
+            COALESCE( unit_data.kana, "" ) AS kana,
+            CAST((CASE WHEN unit_profile.age LIKE '%?%' OR  unit_profile.age LIKE '%？%' OR unit_profile.age = 0 THEN 999 ELSE unit_profile.age END) AS INTEGER) AS age_int,
+            unit_profile.guild,
+            unit_profile.race,
+            CAST((CASE WHEN unit_profile.height LIKE '%?%' OR  unit_profile.height LIKE '%？%' OR unit_profile.height = 0 THEN 999 ELSE unit_profile.height END) AS INTEGER) AS height_int,
+            CAST((CASE WHEN unit_profile.weight LIKE '%?%' OR  unit_profile.weight LIKE '%？%' OR unit_profile.weight = 0 THEN 999 ELSE unit_profile.weight END) AS INTEGER) AS weight_int,
+            unit_data.search_area_width,
+            unit_data.atk_type,
+            COALESCE( rarity_6_quest_data.rarity_6_quest_id, 0 ) AS rarity_6_quest_id,
+            COALESCE(SUBSTR( unit_data.start_time, 0, 11), "2015/04/01") AS start_time
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
+            LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
+        WHERE 
+            unit_data.unit_id = :unitId
+        """
+    )
+    suspend fun getInfoAndData(unitId:Int): CharacterInfo
+
     /**
      * 获取角色详情基本资料
      * @param unitId 角色编号

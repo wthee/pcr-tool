@@ -465,15 +465,16 @@ fun PvpIconItem(
         )
     }
 
-    Card(
-        modifier = Modifier.padding(1.dp),
-        backgroundColor = if (selected && selectedEffect) {
-            MaterialTheme.colors.primary
-        } else {
-            Color.Transparent
-        },
-        elevation = 0.dp,
-        onClick = {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(Dimen.smallPadding)
+            .fillMaxWidth()
+            .aspectRatio(if (floatWindow) 0.618f else 1f)
+    ) {
+        //图标
+        IconCompose(data = icon, wrapSize = floatWindow) {
+            //点击选择或取消选择
             if (selected) {
                 var cancelSelectIndex = 0
                 newList.forEachIndexed { index, sel ->
@@ -494,25 +495,15 @@ fun PvpIconItem(
             }
             newList.sortByDescending { it.position }
             navViewModel.selectedPvpData.postValue(newList)
-        }) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(Dimen.smallPadding)
-                .fillMaxWidth()
-                .aspectRatio(if (floatWindow) 0.618f else 1f)
-        ) {
-            //图标
-            IconCompose(data = icon, wrapSize = floatWindow)
-            //位置
-            val position = if (it != PvpCharacterData()) it.position else 0
-            CharacterPositionText(
-                selected = selected && selectedEffect,
-                position = position,
-                padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding,
-                colorful = !selectedEffect
-            )
         }
+        //位置
+        val position = if (it != PvpCharacterData()) it.position else 0
+        CharacterPositionText(
+            selected = selected && selectedEffect,
+            position = position,
+            padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding,
+            colorful = !selectedEffect
+        )
     }
 }
 
