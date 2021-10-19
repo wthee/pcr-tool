@@ -349,46 +349,38 @@ private fun CharacterCard(
         },
         elevation = 0.dp,
     ) {
-        Box(contentAlignment = Alignment.BottomStart) {
+        Box(contentAlignment = Alignment.BottomEnd) {
             ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
             if (basicInfo != null) {
-                Row(
+                //位置
+                PositionIcon(
                     modifier = Modifier.padding(Dimen.smallPadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //限定类型
-                    CharacterLimitText(
-                        modifier = Modifier.padding(end = Dimen.mediumPadding),
-                        characterInfo = basicInfo,
-                        textStyle = MaterialTheme.typography.subtitle1
-                    )
-                    //名字
-                    Text(
-                        text = basicInfo.name,
-                        style = MaterialTheme.typography.subtitle1,
-                        maxLines = 1,
-                        color = Color.White,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .background(
-                                color = if (loved) {
-                                    MaterialTheme.colors.primary
-                                } else {
-                                    MaterialTheme.colors.primaryVariant
-                                },
-                                shape = MaterialTheme.shapes.small
-                            )
-                            .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    //位置
-                    PositionIcon(
-                        modifier = Modifier.padding(Dimen.smallPadding),
-                        position = basicInfo.position,
-                        size = Dimen.fabIconSize
-                    )
-                }
+                    position = basicInfo.position,
+                    size = Dimen.fabIconSize
+                )
             }
+        }
+    }
+    if (basicInfo != null) {
+        Row(
+            modifier = Modifier.padding(start = Dimen.largePadding).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //限定类型
+            CharacterLimitText(
+                modifier = Modifier.padding(end = Dimen.mediumPadding),
+                characterInfo = basicInfo,
+                textStyle = MaterialTheme.typography.subtitle1
+            )
+            //名字
+            SelectText(
+                selected = loved,
+                text = basicInfo.name,
+                textAlign = TextAlign.Start,
+                margin = 0.dp,
+                padding = Dimen.smallPadding,
+                textStyle = MaterialTheme.typography.subtitle1
+            )
         }
     }
 }
