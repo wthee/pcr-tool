@@ -371,6 +371,11 @@ enum class SkillActionType(val type: Int, val desc: String) {
     ACTION_DOT(79, "行动伤害"),
 
     /**
+     * 83：可叠加加/减速
+     */
+    SUPERIMPOSE_CHANGE_ACTION_SPEED(83, ""),
+
+    /**
      * 90：EX被动
      */
     EX(90, "被动"),
