@@ -5,7 +5,7 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.0.3"
+val composeVersion = "1.0.4"
 val appVersionCode = 215
 val appVersionName = "2.1.5"
 val sql = 215
@@ -94,7 +94,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.fragment:fragment:1.3.6")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation("androidx.preference:preference-ktx:1.1.1")
     //compose
     implementation("androidx.compose.runtime:runtime:$composeVersion")
@@ -108,7 +108,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.18.0"
+    val accompanistVersion = "0.20.0"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -136,11 +136,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha08")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha13")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
     //Retrofit
     val retrofitVersion = "2.9.0"
@@ -148,7 +148,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0-alpha05"
+    val roomVersion = "2.4.0-beta01"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
@@ -163,7 +163,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.4.2")
 
     //Work
-    val workVersion = "2.7.0-rc01"
+    val workVersion = "2.7.0"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 
