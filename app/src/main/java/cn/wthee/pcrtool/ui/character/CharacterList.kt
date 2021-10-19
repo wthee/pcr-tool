@@ -23,6 +23,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
@@ -192,14 +193,17 @@ fun CharacterItem(
         }) {
         Column {
             //图片
-            ImageCompose(
-                CharacterIdUtil.getMaxCardUrl(character.id), RATIO
-            )
-            //编号
-            if (BuildConfig.debug) {
-                Text(text = character.id.toString())
+            Box(contentAlignment = Alignment.BottomEnd) {
+                ImageCompose(
+                    CharacterIdUtil.getMaxCardUrl(character.id), RATIO
+                )
+                //限定类型
+                CharacterLimitText(
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    characterInfo = character
+                )
             }
-            //名字、位置
+
             Row(
                 modifier = Modifier.padding(
                     start = Dimen.smallPadding,
@@ -208,11 +212,14 @@ fun CharacterItem(
                 ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                //名字
                 SelectText(
                     selected = loved,
-                    text = character.getNameF()
+                    text = character.getNameF(),
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Start
                 )
-                Spacer(modifier = Modifier.weight(1f))
+                //位置
                 PositionIcon(character.position)
             }
             //其它属性
@@ -223,12 +230,21 @@ fun CharacterItem(
                         end = Dimen.smallPadding,
                         bottom = Dimen.smallPadding
                     )
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 CharacterNumberText(character.getFixedAge())
                 CharacterNumberText(character.getFixedHeight() + "CM")
                 CharacterNumberText(character.getFixedWeight() + "KG")
-                CharacterNumberText(character.position.toString(), modifier = Modifier.weight(1f))
+                CharacterPositionText(
+                    position = character.position,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            //编号
+            if (BuildConfig.debug) {
+                Text(text = character.id.toString())
             }
         }
     }
@@ -242,8 +258,9 @@ private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         color = MaterialTheme.colors.primaryVariant,
-        style = MaterialTheme.typography.caption,
-        modifier = modifier.padding(end = Dimen.smallPadding)
+        style = MaterialTheme.typography.body2,
+        modifier = modifier.padding(end = Dimen.smallPadding),
+        textAlign = TextAlign.End
     )
 }
 

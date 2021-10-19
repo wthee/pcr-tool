@@ -94,7 +94,7 @@ fun EquipMaterialDeatil(
                         )
                     }
                 }
-                val pagerState = rememberPagerState(pageCount = pagerCount)
+                val pagerState = rememberPagerState()
                 //按照地图难度分类
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -142,7 +142,7 @@ fun EquipMaterialDeatil(
                         }
                     }
                     //pager
-                    HorizontalPager(state = pagerState) { pagerIndex ->
+                    HorizontalPager(count = pagerCount, state = pagerState) { pagerIndex ->
                         LazyColumn(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             contentPadding = PaddingValues(top = Dimen.mediumPadding),

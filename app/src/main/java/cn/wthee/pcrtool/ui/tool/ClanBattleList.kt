@@ -198,7 +198,7 @@ fun ClanBossInfoPager(
     val clanInfo =
         clanViewModel.getClanInfo(clanId).collectAsState(initial = null).value
     val pagerState =
-        rememberPagerState(pageCount = 5, initialPage = index, initialOffscreenLimit = 4)
+        rememberPagerState(initialPage = index)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -317,7 +317,7 @@ fun ClanBossInfoPager(
                 }
                 //BOSS信息
                 val visible = bossDataList.isNotEmpty()
-                HorizontalPager(state = pagerState) { pagerIndex ->
+                HorizontalPager(count = 5, state = pagerState) { pagerIndex ->
                     if (visible) {
                         ClanBossInfoPagerItem(bossDataList, pagerIndex, list, partEnemyMap)
                     }

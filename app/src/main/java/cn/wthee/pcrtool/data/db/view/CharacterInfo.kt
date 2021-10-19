@@ -52,7 +52,7 @@ data class CharacterInfo(
     }
 
     /**
-     * 获取限定类型
+     * 获取限定活动类型
      */
     fun getNameL(): String {
         val index = this.name.indexOf("（")

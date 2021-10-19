@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
@@ -92,35 +93,6 @@ private fun PvpHistoryItem(
     val context = LocalContext.current
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
-    Row(
-        modifier = Modifier
-            .padding(start = mediumPadding, end = mediumPadding)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        //搜索
-        TextButton(onClick = {
-            //重置页面
-            scope.launch {
-                pvpViewModel.pvpResult.postValue(null)
-                val selectedData =
-                    characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
-                val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                selectedIds?.sortByDescending { it.position }
-                MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
-                MainActivity.navViewModel.showResult.postValue(true)
-            }
-            VibrateUtil(context).single()
-        }) {
-            IconCompose(
-                data = MainIconType.PVP_SEARCH.icon,
-                size = Dimen.fabIconSize
-            )
-            MainContentText(text = stringResource(id = R.string.pvp_research))
-        }
-        Spacer(modifier = Modifier.weight(1f))
-    }
-
     MainCard(modifier = Modifier.padding((mediumPadding))) {
         //队伍角色图标
         Column(
@@ -128,14 +100,50 @@ private fun PvpHistoryItem(
                 .fillMaxWidth()
                 .padding(top = mediumPadding, bottom = mediumPadding)
         ) {
-            //日期
-            CaptionText(
-                text = itemData.date,
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = mediumPadding, end = mediumPadding),
-                textAlign = TextAlign.Start
-            )
+                    .padding(start = mediumPadding, end = mediumPadding)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //搜索
+                TextButton(
+                    contentPadding = PaddingValues(
+                        top = if (floatWindow) 0.dp else Dimen.mediumPadding,
+                        bottom = if (floatWindow) 0.dp else Dimen.mediumPadding,
+                        start = Dimen.smallPadding,
+                        end = Dimen.smallPadding
+                    ), onClick = {
+                        //重置页面
+                        scope.launch {
+                            pvpViewModel.pvpResult.postValue(null)
+                            val selectedData =
+                                characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
+                            val selectedIds = selectedData as ArrayList<PvpCharacterData>?
+                            selectedIds?.sortByDescending { it.position }
+                            MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
+                            MainActivity.navViewModel.showResult.postValue(true)
+                        }
+                        VibrateUtil(context).single()
+                    }) {
+                    IconCompose(
+                        data = MainIconType.PVP_SEARCH.icon,
+                        size = Dimen.fabIconSize
+                    )
+                    if (!floatWindow) {
+                        MainContentText(text = stringResource(id = R.string.pvp_research))
+                    }
+                }
+                //日期
+                CaptionText(
+                    text = itemData.date,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = mediumPadding, end = mediumPadding),
+                    textAlign = TextAlign.End
+                )
+            }
+
             //防守
             Row(
                 modifier = Modifier.fillMaxWidth(),

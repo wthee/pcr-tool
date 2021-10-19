@@ -56,7 +56,7 @@ import java.util.*
 @Composable
 fun PvpSearchCompose(
     floatWindow: Boolean = false,
-    pagerState: PagerState = rememberPagerState(pageCount = 3),
+    pagerState: PagerState = rememberPagerState(),
     selectListState: ScrollState = rememberScrollState(),
     resultListState: LazyListState = rememberLazyListState(),
     favoritesListState: LazyListState = rememberLazyListState(),
@@ -176,11 +176,12 @@ fun PvpSearchCompose(
                                 pagerState.scrollToPage(index)
                             }
                         }) {
-                            Subtitle2(text = s, modifier = Modifier.padding(Dimen.smallPadding))
+                            Subtitle1(text = s, modifier = Modifier.padding(Dimen.smallPadding))
                         }
                     }
                 }
                 HorizontalPager(
+                    count = 3,
                     state = pagerState,
                     modifier = Modifier.padding(top = mediumPadding)
                 ) { pageIndex ->
@@ -440,6 +441,7 @@ private fun PvpPositionIcon(iconId: Int, height: Int) {
 /**
  * 角色图标
  */
+@ExperimentalMaterialApi
 @ExperimentalCoilApi
 @Composable
 fun PvpIconItem(
@@ -463,16 +465,15 @@ fun PvpIconItem(
         )
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(Dimen.smallPadding)
-            .fillMaxWidth()
-            .aspectRatio(if (floatWindow) 0.618f else 1f)
-    ) {
-        //图标
-        IconCompose(data = icon, wrapSize = floatWindow) {
-            //点击选择或取消选择
+    Card(
+        modifier = Modifier.padding(1.dp),
+        backgroundColor = if (selected && selectedEffect) {
+            MaterialTheme.colors.primary
+        } else {
+            Color.Transparent
+        },
+        elevation = 0.dp,
+        onClick = {
             if (selected) {
                 var cancelSelectIndex = 0
                 newList.forEachIndexed { index, sel ->
@@ -493,15 +494,25 @@ fun PvpIconItem(
             }
             newList.sortByDescending { it.position }
             navViewModel.selectedPvpData.postValue(newList)
+        }) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(Dimen.smallPadding)
+                .fillMaxWidth()
+                .aspectRatio(if (floatWindow) 0.618f else 1f)
+        ) {
+            //图标
+            IconCompose(data = icon, wrapSize = floatWindow)
+            //位置
+            val position = if (it != PvpCharacterData()) it.position else 0
+            CharacterPositionText(
+                selected = selected && selectedEffect,
+                position = position,
+                padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding,
+                colorful = !selectedEffect
+            )
         }
-        //位置
-        val text =
-            if (it != PvpCharacterData()) it.position.toString() else stringResource(id = R.string.unselect)
-        SelectText(
-            selected = selected && selectedEffect,
-            text = text,
-            padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding
-        )
     }
 }
 

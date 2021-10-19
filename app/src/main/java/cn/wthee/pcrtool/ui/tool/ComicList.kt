@@ -71,7 +71,6 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
     Box(modifier = Modifier.fillMaxSize()) {
         FadeAnimation(visible = visible) {
             val pagerState = rememberPagerState(
-                pageCount = comicList.size,
                 initialPage = if (comicId != -1) comicList.size - comicId else 0
             )
             ModalBottomSheetLayout(
@@ -105,7 +104,7 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    HorizontalPager(state = pagerState) { pageIndex ->
+                    HorizontalPager(count = comicList.size, state = pagerState) { pageIndex ->
                         if (comicList.isNotEmpty()) {
                             ComicItem(data = comicList[pageIndex])
                         }

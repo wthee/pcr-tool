@@ -190,7 +190,7 @@ fun SkillItem(
 fun SkillActionTag(skillTag: String) {
     MainTitleText(
         text = skillTag,
-        small = true,
+        textStyle = MaterialTheme.typography.caption,
         modifier = Modifier.padding(end = Dimen.smallPadding, top = Dimen.mediumPadding)
     )
 }

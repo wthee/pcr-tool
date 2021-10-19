@@ -112,12 +112,9 @@ fun Overview(
             ) {
                 if (characterList.isNotEmpty()) {
                     HorizontalPager(
-                        state = rememberPagerState(
-                            pageCount = characterList.size,
-                            initialOffscreenLimit = 2
-                        ),
+                        count = characterList.size,
+                        state = rememberPagerState(),
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.Start
                     ) { index ->
                         val id = if (characterList.isEmpty()) 0 else characterList[index].id
                         Card(
@@ -126,8 +123,8 @@ fun Overview(
                                     top = Dimen.mediumPadding,
                                     bottom = Dimen.mediumPadding,
                                     start = Dimen.largePadding,
+                                    end = Dimen.largePadding
                                 )
-                                .fillMaxWidth(0.618f)
                                 .heightIn(
                                     min = Dimen.characterCardMinHeight
                                 ),
@@ -137,7 +134,24 @@ fun Overview(
                             },
                             elevation = 0.dp,
                         ) {
-                            ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                            Box(contentAlignment = Alignment.BottomEnd) {
+                                ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                                if (id != 0) {
+                                    Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                                        MainTitleText(
+                                            text = characterList[index].name,
+                                            textStyle = MaterialTheme.typography.subtitle1,
+                                            modifier = Modifier.padding(end = Dimen.mediumPadding)
+                                        )
+                                        //限定类型
+                                        CharacterLimitText(
+                                            characterInfo = characterList[index],
+                                            textStyle = MaterialTheme.typography.subtitle1
+                                        )
+                                    }
+
+                                }
+                            }
                         }
                     }
                 }
@@ -623,4 +637,3 @@ private fun getTypeData(data: CalendarEvent): ArrayList<CalendarEventData> {
 
     return events
 }
-
