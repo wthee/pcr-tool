@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
@@ -18,7 +17,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -27,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -43,7 +40,10 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.noShape
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.getFormatText
+import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
@@ -174,50 +174,68 @@ fun CharacterDetail(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         //角色卡面
-                        CharacterCard(context, loved.value, actions, unitId)
-                        //星级
-                        StarSelect(
-                            currentValue = currentValue,
-                            max = maxValue.rarity,
-                            modifier = Modifier.padding(top = Dimen.mediumPadding),
-                            attrViewModel = attrViewModel
-                        )
-                        AttrLists(
-                            currentValue,
-                            characterLevel,
-                            maxValue,
-                            allData,
-                            actions
-                        )
-                        //RANK 装备
-                        CharacterEquip(
-                            unitId = unitId,
-                            rank = currentValue.rank,
-                            maxRank = maxValue.rank,
-                            equips = allData.equips,
-                            toEquipDetail = actions.toEquipDetail,
-                            toRankEquip = actions.toCharacteRankEquip,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
-                        //显示专武
-                        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
-                            UniqueEquip(
-                                currentValue = currentValue,
-                                uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
-                                uniqueEquipLevel = uniqueEquipLevel,
-                                uniqueEquipmentMaxData = allData.uniqueEquip
+                        CharacterCard(loved.value, actions, unitId)
+                        MainCard(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                //星级
+                                StarSelect(
+                                    currentValue = currentValue,
+                                    max = maxValue.rarity,
+                                    modifier = Modifier.padding(top = Dimen.mediumPadding),
+                                    attrViewModel = attrViewModel
+                                )
+                                AttrLists(
+                                    currentValue,
+                                    characterLevel,
+                                    maxValue,
+                                    allData,
+                                    actions
+                                )
+                            }
+                        }
+                        MainCard(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                //RANK 装备
+                                CharacterEquip(
+                                    unitId = unitId,
+                                    rank = currentValue.rank,
+                                    maxRank = maxValue.rank,
+                                    equips = allData.equips,
+                                    toEquipDetail = actions.toEquipDetail,
+                                    toRankEquip = actions.toCharacteRankEquip,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                                //显示专武
+                                if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                                    UniqueEquip(
+                                        currentValue = currentValue,
+                                        uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
+                                        uniqueEquipLevel = uniqueEquipLevel,
+                                        uniqueEquipmentMaxData = allData.uniqueEquip
+                                    )
+                                }
+                            }
+                        }
+                        MainCard(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                            //技能
+                            CharacterSkill(
+                                unitId = unitId,
+                                cutinId = cutinId,
+                                level = currentValue.level,
+                                atk = max(
+                                    allData.sumAttr.atk.int,
+                                    allData.sumAttr.magicStr.int
+                                )
                             )
                         }
-                        //技能
-                        CharacterSkill(
-                            unitId = unitId,
-                            cutinId = cutinId,
-                            level = currentValue.level,
-                            atk = max(
-                                allData.sumAttr.atk.int,
-                                allData.sumAttr.magicStr.int
-                            )
-                        )
+                        CommonSpacer()
+                        Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
                     }
                 }
                 if (unknown) {
@@ -228,7 +246,7 @@ fun CharacterDetail(
                             .background(MaterialTheme.colors.background),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CharacterCard(context, loved.value, actions, unitId)
+                        CharacterCard(loved.value, actions, unitId)
                         //未知角色占位页面
                         Text(
                             text = stringResource(R.string.unknown_character),
@@ -320,10 +338,10 @@ fun CharacterDetail(
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun CharacterCard(
-    context: Context,
     loved: Boolean,
     actions: NavActions,
     unitId: Int,
@@ -332,55 +350,15 @@ private fun CharacterCard(
     //基本信息
     val basicInfo =
         characterViewModel.getCharacterBasicInfo(unitId).collectAsState(initial = null).value
-
-    Card(
-        modifier = Modifier
-            .padding(
-                top = Dimen.mediumPadding,
-                bottom = Dimen.mediumPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            )
-            .fillMaxWidth(),
-        onClick = {
-            //角色全部图片
-            VibrateUtil(context).single()
-            actions.toCharacterPics(unitId)
-        },
-        elevation = 0.dp,
-    ) {
-        Box(contentAlignment = Alignment.BottomEnd) {
-            ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
-            if (basicInfo != null) {
-                //位置
-                PositionIcon(
-                    modifier = Modifier.padding(Dimen.smallPadding),
-                    position = basicInfo.position,
-                    size = Dimen.fabIconSize
-                )
-            }
-        }
-    }
     if (basicInfo != null) {
-        Row(
-            modifier = Modifier.padding(start = Dimen.largePadding).fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        CharacterItem(
+            basicInfo,
+            loved,
+            modifier = Modifier
+                .padding(Dimen.mediumPadding)
+                .fillMaxWidth()
         ) {
-            //限定类型
-            CharacterLimitText(
-                modifier = Modifier.padding(end = Dimen.mediumPadding),
-                characterInfo = basicInfo,
-                textStyle = MaterialTheme.typography.subtitle1
-            )
-            //名字
-            SelectText(
-                selected = loved,
-                text = basicInfo.name,
-                textAlign = TextAlign.Start,
-                margin = 0.dp,
-                padding = Dimen.smallPadding,
-                textStyle = MaterialTheme.typography.subtitle1
-            )
+            actions.toCharacterPics(unitId)
         }
     }
 }
@@ -696,7 +674,7 @@ private fun CharacterEquip(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = Dimen.mediumPadding)
+                .padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId

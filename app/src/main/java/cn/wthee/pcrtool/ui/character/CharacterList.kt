@@ -112,7 +112,12 @@ fun CharacterList(
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {
                     items(list) {
-                        CharacterItem(it, filter.value!!, toDetail = toDetail)
+                        CharacterItem(
+                            it,
+                            filter.value!!.starIds.contains(it.id)
+                        ) {
+                            toDetail(it.id)
+                        }
                     }
                     items(2) {
                         CommonSpacer()
@@ -180,25 +185,20 @@ fun CharacterList(
 @Composable
 fun CharacterItem(
     character: CharacterInfo,
-    filter: FilterCharacter,
+    loved: Boolean,
     modifier: Modifier = Modifier,
-    toDetail: (Int) -> Unit,
+    onClick: () -> Unit
 ) {
-    val loved = filter.starIds.contains(character.id)
-
     MainCard(
         modifier = modifier.padding(Dimen.mediumPadding),
-        onClick = {
-            //跳转至详情
-            toDetail(character.id)
-        }) {
+        onClick = onClick
+    ) {
         Column {
             //图片
             Box(contentAlignment = Alignment.BottomEnd) {
                 ImageCompose(
                     CharacterIdUtil.getMaxCardUrl(character.id), RATIO
                 )
-
                 //位置
                 PositionIcon(modifier = Modifier.padding(Dimen.smallPadding), character.position)
             }
