@@ -175,7 +175,13 @@ fun CharacterDetail(
                     ) {
                         //角色卡面
                         CharacterCard(loved.value, actions, unitId)
-                        MainCard(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                        MainCard(
+                            modifier = Modifier.padding(
+                                top = Dimen.largePadding,
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding
+                            )
+                        ) {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -194,9 +200,16 @@ fun CharacterDetail(
                                     allData,
                                     actions
                                 )
+                                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
                             }
                         }
-                        MainCard(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                        MainCard(
+                            modifier = Modifier.padding(
+                                top = Dimen.largePadding,
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding
+                            )
+                        ) {
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -220,9 +233,16 @@ fun CharacterDetail(
                                         uniqueEquipmentMaxData = allData.uniqueEquip
                                     )
                                 }
+                                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
                             }
                         }
-                        MainCard(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                        MainCard(
+                            modifier = Modifier.padding(
+                                top = Dimen.largePadding,
+                                start = Dimen.largePadding,
+                                end = Dimen.largePadding
+                            )
+                        ) {
                             //技能
                             CharacterSkill(
                                 unitId = unitId,
@@ -241,6 +261,7 @@ fun CharacterDetail(
                 if (unknown) {
                     Column(
                         modifier = Modifier
+                            .padding(Dimen.largePadding)
                             .fillMaxSize()
                             .verticalScroll(scrollState)
                             .background(MaterialTheme.colors.background),
@@ -253,8 +274,7 @@ fun CharacterDetail(
                             color = MaterialTheme.colors.primary,
                             style = MaterialTheme.typography.h6,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .padding(Dimen.largePadding)
+                            modifier = Modifier.padding(Dimen.largePadding)
                         )
                     }
 
@@ -355,8 +375,14 @@ private fun CharacterCard(
             basicInfo,
             loved,
             modifier = Modifier
-                .padding(Dimen.mediumPadding)
-                .fillMaxWidth()
+                .padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+                .fillMaxWidth(),
+            numberStyle = MaterialTheme.typography.body2,
+            size = Dimen.fabIconSize
         ) {
             actions.toCharacterPics(unitId)
         }
@@ -727,7 +753,7 @@ private fun UniqueEquip(
                 style = MaterialTheme.typography.h6,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(Dimen.smallPadding)
+                    .padding(top = Dimen.smallPadding)
                     .fillMaxWidth(0.3f)
                     .padding(Dimen.mediumPadding)
                     .clip(MaterialTheme.shapes.small)
@@ -812,7 +838,11 @@ private fun UniqueEquip(
             //图标描述
             Row(
                 modifier = Modifier
-                    .padding(Dimen.largePadding)
+                    .padding(
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding,
+                        bottom = Dimen.mediumPadding
+                    )
                     .fillMaxWidth()
             ) {
                 IconCompose(getEquipIconUrl(it.equipmentId))

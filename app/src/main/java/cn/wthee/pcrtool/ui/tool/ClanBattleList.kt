@@ -30,7 +30,6 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
-import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -186,6 +185,7 @@ private fun ClanBattleItem(
 /**
  * 团队战 BOSS 详情
  */
+@ExperimentalMaterialApi
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
@@ -227,111 +227,125 @@ fun ClanBossInfoPager(
             //Boss 部位信息
             val partEnemyMap = clanViewModel.getPartEnemyAttr(bossInfoList)
                 .collectAsState(initial = hashMapOf()).value
-
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                //标题
-                MainText(
-                    text = clanValue.getDate(),
-                    modifier = Modifier.padding(top = Dimen.mediumPadding)
-                )
-                //阶段选择
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = Dimen.largePadding, end = Dimen.largePadding),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    MainText(text = stringResource(id = R.string.title_section))
-                    TabRow(
-                        selectedTabIndex = section.value,
-                        backgroundColor = Color.Transparent,
-                        contentColor = MaterialTheme.colors.primary,
-                        indicator = {
-                            TabRowDefaults.Indicator(color = Color.Transparent)
-                        },
-                        divider = {
-                            TabRowDefaults.Divider(color = Color.Transparent)
-                        },
-                    ) {
-                        tabs.forEachIndexed { index, title ->
-                            Tab(
-                                text = {
-                                    SelectText(
-                                        selected = section.value == index,
-                                        text = title,
-                                        selectedColor = getSectionTextColor(section = index + 1)
-                                    )
-                                },
-                                selected = section.value == index,
-                                onClick = {
-                                    section.value = index
-                                    VibrateUtil(context).single()
-                                },
-                            )
-                        }
-                    }
-                }
-                //图标列表
-                val list = clanValue.getUnitIdList(0)
+            //图标列表
+            val list = clanValue.getUnitIdList(0)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
                 //图标
-                TabRow(
-                    modifier = Modifier.fillMaxWidth(0.95f),
-                    selectedTabIndex = pagerState.currentPage,
-                    backgroundColor = Color.Transparent,
-                    contentColor = MaterialTheme.colors.primary,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                        )
-                    },
-                    divider = {
-                        TabRowDefaults.Divider(color = Color.Transparent)
-                    },
+                MainCard(
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding
+                    )
                 ) {
-                    for (tabIndex in 0 until 5) {
-                        Tab(
-                            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-                            icon = {
-                                val it = list[tabIndex]
-                                Box {
-                                    IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP)
-                                    //多目标提示
-                                    if (it.partEnemyIds.isNotEmpty()) {
-                                        MainTitleText(
-                                            text = it.partEnemyIds.size.toString(),
-                                            modifier = Modifier.align(Alignment.BottomEnd)
-                                        )
-                                    }
-                                }
-                            },
-                            selected = pagerState.currentPage == tabIndex,
-                            onClick = {
-                                scope.launch {
-                                    pagerState.scrollToPage(tabIndex)
-                                }
-                                VibrateUtil(context).single()
-                            },
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        //标题
+                        MainText(
+                            text = clanValue.getDate(),
+                            modifier = Modifier.padding(top = Dimen.mediumPadding)
                         )
+                        //阶段选择
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = Dimen.largePadding, end = Dimen.largePadding),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            MainText(text = stringResource(id = R.string.title_section))
+                            TabRow(
+                                selectedTabIndex = section.value,
+                                backgroundColor = Color.Transparent,
+                                contentColor = MaterialTheme.colors.primary,
+                                indicator = {
+                                    TabRowDefaults.Indicator(color = Color.Transparent)
+                                },
+                                divider = {
+                                    TabRowDefaults.Divider(color = Color.Transparent)
+                                },
+                            ) {
+                                tabs.forEachIndexed { index, title ->
+                                    Tab(
+                                        text = {
+                                            SelectText(
+                                                selected = section.value == index,
+                                                text = title,
+                                                selectedColor = getSectionTextColor(section = index + 1)
+                                            )
+                                        },
+                                        selected = section.value == index,
+                                        onClick = {
+                                            section.value = index
+                                            VibrateUtil(context).single()
+                                        },
+                                    )
+                                }
+                            }
+                        }
+
+                        TabRow(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            selectedTabIndex = pagerState.currentPage,
+                            backgroundColor = Color.Transparent,
+                            contentColor = MaterialTheme.colors.primary,
+                            indicator = { tabPositions ->
+                                TabRowDefaults.Indicator(
+                                    Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                                )
+                            },
+                            divider = {
+                                TabRowDefaults.Divider(color = Color.Transparent)
+                            },
+                        ) {
+                            for (tabIndex in 0 until 5) {
+                                Tab(
+                                    modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+                                    icon = {
+                                        val it = list[tabIndex]
+                                        Box {
+                                            IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP)
+                                            //多目标提示
+                                            if (it.partEnemyIds.isNotEmpty()) {
+                                                MainTitleText(
+                                                    text = it.partEnemyIds.size.toString(),
+                                                    modifier = Modifier.align(Alignment.BottomEnd)
+                                                )
+                                            }
+                                        }
+                                    },
+                                    selected = pagerState.currentPage == tabIndex,
+                                    onClick = {
+                                        scope.launch {
+                                            pagerState.scrollToPage(tabIndex)
+                                        }
+                                        VibrateUtil(context).single()
+                                    },
+                                )
+                            }
+                        }
                     }
                 }
                 //BOSS信息
                 val visible = bossDataList.isNotEmpty()
-                HorizontalPager(count = 5, state = pagerState) { pagerIndex ->
+                HorizontalPager(
+                    count = 5,
+                    state = pagerState
+                ) { pagerIndex ->
                     if (visible) {
                         ClanBossInfoPagerItem(bossDataList, pagerIndex, list, partEnemyMap)
                     }
                 }
             }
         }
-
-
     }
 }
 
 /**
  * Boss 信息详情
  */
+@ExperimentalMaterialApi
 @ExperimentalCoilApi
 @ExperimentalAnimationApi
 @Composable
@@ -346,67 +360,81 @@ private fun ClanBossInfoPagerItem(
         mutableStateOf(false)
     }
 
-    Card(
-        shape = CardTopShape,
-        elevation = Dimen.cardElevation,
-        modifier = Modifier
-            .padding(top = Dimen.mediumPadding)
-            .fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
+    Column(modifier = Modifier.fillMaxWidth()) {
+        MainCard(
+            modifier = Modifier
+                .padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+                .fillMaxWidth()
         ) {
-            //描述
-            val desc = bossDataValue.getDesc()
-            Text(
-                text = desc,
-                maxLines = if (expanded.value) Int.MAX_VALUE else 2,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.subtitle2,
-                modifier = Modifier
-                    .animateContentSize()
-                    .padding(Dimen.mediumPadding)
-                    .clickable {
-                        expanded.value = !expanded.value
-                    }
-            )
-            //名称
-            MainText(
-                text = bossDataValue.name,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.mediumPadding),
-                selectable = true
-            )
-            //等级
-            CaptionText(
-                text = bossDataValue.level.toString(),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            //属性
-            val attr = if (list[pagerIndex].partEnemyIds.isNotEmpty()) {
-                bossDataValue.attr.multiplePartEnemy()
-            } else {
-                bossDataValue.attr.enemy()
-            }
-            AttrList(attrs = attr)
-            //多目标部位属性
-            partEnemyMap[bossDataValue.unit_id]?.forEach {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                //描述
+                val desc = bossDataValue.getDesc()
+                Text(
+                    text = desc,
+                    maxLines = if (expanded.value) Int.MAX_VALUE else 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.subtitle2,
+                    modifier = Modifier
+                        .animateContentSize()
+                        .padding(Dimen.mediumPadding)
+                        .clickable {
+                            expanded.value = !expanded.value
+                        }
+                )
                 //名称
                 MainText(
-                    text = it.name,
+                    text = bossDataValue.name,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(top = Dimen.largePadding),
+                        .padding(top = Dimen.mediumPadding),
                     selectable = true
                 )
+                //等级
+                CaptionText(
+                    text = bossDataValue.level.toString(),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
                 //属性
-                AttrList(attrs = it.attr.enemy())
+                val attr = if (list[pagerIndex].partEnemyIds.isNotEmpty()) {
+                    bossDataValue.attr.multiplePartEnemy()
+                } else {
+                    bossDataValue.attr.enemy()
+                }
+                AttrList(attrs = attr)
+                //多目标部位属性
+                partEnemyMap[bossDataValue.unit_id]?.forEach {
+                    //名称
+                    MainText(
+                        text = it.name,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(top = Dimen.largePadding),
+                        selectable = true
+                    )
+                    //属性
+                    AttrList(attrs = it.attr.enemy())
+                }
+                Spacer(modifier = Modifier.height(Dimen.mediumPadding))
             }
+        }
+        MainCard(
+            modifier = Modifier
+                .padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+                .fillMaxWidth()
+        ) {
             //技能
             BossSkillList(pagerIndex, bossDataList)
-            CommonSpacer()
         }
+        CommonSpacer()
+
     }
 }
 

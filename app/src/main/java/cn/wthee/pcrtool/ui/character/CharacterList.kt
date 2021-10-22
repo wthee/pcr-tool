@@ -21,12 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -114,7 +115,8 @@ fun CharacterList(
                     items(list) {
                         CharacterItem(
                             it,
-                            filter.value!!.starIds.contains(it.id)
+                            filter.value!!.starIds.contains(it.id),
+                            modifier = Modifier.padding(Dimen.mediumPadding)
                         ) {
                             toDetail(it.id)
                         }
@@ -187,10 +189,12 @@ fun CharacterItem(
     character: CharacterInfo,
     loved: Boolean,
     modifier: Modifier = Modifier,
+    numberStyle: TextStyle = MaterialTheme.typography.caption,
+    size: Dp = Dimen.smallPadding,
     onClick: () -> Unit
 ) {
     MainCard(
-        modifier = modifier.padding(Dimen.mediumPadding),
+        modifier = modifier,
         onClick = onClick
     ) {
         Column {
@@ -200,7 +204,11 @@ fun CharacterItem(
                     CharacterIdUtil.getMaxCardUrl(character.id), RATIO
                 )
                 //位置
-                PositionIcon(modifier = Modifier.padding(Dimen.smallPadding), character.position)
+                PositionIcon(
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    character.position,
+                    size = size
+                )
             }
 
             Row(
@@ -232,19 +240,14 @@ fun CharacterItem(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CharacterNumberText(character.getFixedAge())
-                CharacterNumberText(character.getFixedHeight() + "CM")
-                CharacterNumberText(character.getFixedWeight() + "KG")
+                CharacterNumberText(text = character.getFixedAge(), style = numberStyle)
+                CharacterNumberText(text = character.getFixedHeight() + "CM", style = numberStyle)
+                CharacterNumberText(text = character.getFixedWeight() + "KG", style = numberStyle)
                 CharacterPositionText(
                     position = character.position,
                     textAlign = TextAlign.End,
-                    textStyle = MaterialTheme.typography.caption
+                    textStyle = numberStyle
                 )
-
-            }
-            //编号
-            if (BuildConfig.debug) {
-                Text(text = character.id.toString())
             }
         }
     }
@@ -254,11 +257,15 @@ fun CharacterItem(
  * 蓝色字体
  */
 @Composable
-private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
+private fun CharacterNumberText(
+    modifier: Modifier = Modifier,
+    text: String,
+    style: TextStyle = MaterialTheme.typography.caption,
+) {
     Text(
         text = text,
         color = MaterialTheme.colors.primaryVariant,
-        style = MaterialTheme.typography.caption,
+        style = style,
         modifier = modifier.padding(end = Dimen.smallPadding),
         textAlign = TextAlign.End
     )

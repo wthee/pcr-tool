@@ -65,12 +65,7 @@ fun CharacterAllPics(unitId: Int) {
             }
             Card(
                 modifier = Modifier
-                    .padding(
-                        top = Dimen.mediumPadding,
-                        bottom = Dimen.mediumPadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
+                    .padding(Dimen.largePadding)
                     .fillMaxWidth(),
                 onClick = {
                     VibrateUtil(context).single()

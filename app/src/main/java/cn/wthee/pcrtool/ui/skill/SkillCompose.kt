@@ -53,7 +53,7 @@ fun SkillCompose(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Dimen.largePadding)
+            .padding(Dimen.mediumPadding)
     ) {
         skillList.forEach {
             SkillItem(level = level, skillDetail = it)

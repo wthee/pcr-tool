@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import coil.annotation.ExperimentalCoilApi
@@ -21,9 +20,5 @@ fun CharacterSkill(
     level: Int,
     atk: Int,
 ) {
-    Column {
-        SkillCompose(unitId = unitId, cutinId = cutinId, level = level, atk = atk)
-//        CommonSpacer()
-//        Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
-    }
+    SkillCompose(unitId = unitId, cutinId = cutinId, level = level, atk = atk)
 }
