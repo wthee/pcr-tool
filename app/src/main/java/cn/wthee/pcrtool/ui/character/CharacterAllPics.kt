@@ -76,7 +76,7 @@ fun CharacterAllPics(unitId: Int) {
                         ToastUtil.short(unLoadToast)
                     }
                 },
-                shape = Shape.large,
+                shape = Shape.medium,
             ) {
                 //图片
                 ImageCompose(data = picUrls[index], ratio = RATIO) {

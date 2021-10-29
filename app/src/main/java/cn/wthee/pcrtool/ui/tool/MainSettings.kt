@@ -27,6 +27,7 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.switchColors
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.exportUserFile
 import cn.wthee.pcrtool.utils.FileUtil.importUserFile
@@ -148,7 +149,7 @@ fun MainSettings() {
                 TitleText(text = stringResource(id = R.string.vibrate))
                 SummaryText(text = vibrateSummary)
             }
-            Switch(checked = vibrateState.value, onCheckedChange = {
+            Switch(checked = vibrateState.value, colors = switchColors(), onCheckedChange = {
                 vibrateState.value = it
                 sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
                 VibrateUtil(context).single()
@@ -188,7 +189,7 @@ fun MainSettings() {
                 TitleText(text = stringResource(id = R.string.animation))
                 SummaryText(text = animSummary)
             }
-            Switch(checked = animState.value, onCheckedChange = {
+            Switch(checked = animState.value, colors = switchColors(), onCheckedChange = {
                 animState.value = it
                 sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
                 VibrateUtil(context).single()

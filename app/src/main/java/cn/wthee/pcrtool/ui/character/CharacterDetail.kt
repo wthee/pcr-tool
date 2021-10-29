@@ -394,6 +394,7 @@ private fun AttrLists(
     }
     OutlinedTextField(
         value = inputLevel.value,
+        colors = outlinedTextFieldColors(),
         onValueChange = {
             var filterStr = ""
             it.forEach { ch ->
@@ -727,6 +728,7 @@ private fun UniqueEquip(
             }
             OutlinedTextField(
                 value = inputLevel.value,
+                colors = outlinedTextFieldColors(),
                 onValueChange = {
                     var filterStr = ""
                     it.forEach { ch ->
@@ -793,8 +795,8 @@ private fun UniqueEquip(
             Row(
                 modifier = Modifier
                     .padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding,
                         bottom = Dimen.mediumPadding
                     )
                     .fillMaxWidth()

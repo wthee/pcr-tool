@@ -226,7 +226,8 @@ fun Home(
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(Dimen.fabIconSize)
-                    .align(Alignment.Center)
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary,
             )
         }
     }

@@ -12,7 +12,6 @@ private val DarkColorPalette = darkColorScheme(
     primary = colorPrimaryDark,
     secondary = colorPrimaryDark,
     surfaceVariant = colorAccentDark,
-    surface = colorPrimaryDark,
     background = Color.Black
 )
 
@@ -20,7 +19,6 @@ private val LightColorPalette = lightColorScheme(
     primary = colorPrimary,
     secondary = colorPrimary,
     surfaceVariant = colorAccent,
-    surface = colorPrimary,
     background = Color.White
 )
 
