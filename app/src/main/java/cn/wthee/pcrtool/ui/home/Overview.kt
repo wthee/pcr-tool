@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.home
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -41,10 +41,12 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.SlideAnimation
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.insets.navigationBarsPadding
@@ -57,9 +59,7 @@ import kotlinx.coroutines.launch
 /**
  * 首页纵览
  */
-@ExperimentalCoilApi
 @ExperimentalPagerApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun Overview(
@@ -266,7 +266,6 @@ fun Overview(
 }
 
 //数据切换选择弹窗
-@ExperimentalCoilApi
 @Composable
 private fun ChangeDbCompose(
     openDialog: Boolean,
@@ -305,10 +304,10 @@ private fun ChangeDbCompose(
                 MainActivity.navViewModel.fabCloseClick.postValue(true)
             }
         },
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
+        shape = if (openDialog) Shape.medium else CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.primary,
+        backgroundColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         if (openDialog) {
             Column(
@@ -335,7 +334,7 @@ private fun ChangeDbCompose(
                     SelectText(
                         selected = region == i + 2,
                         text = menuTexts[i],
-                        textStyle = MaterialTheme.typography.h6,
+                        textStyle = MaterialTheme.typography.titleLarge,
                         modifier = mModifier.padding(Dimen.mediumPadding)
                     )
                 }
@@ -344,7 +343,7 @@ private fun ChangeDbCompose(
             if (downloadState == -2) {
                 IconCompose(
                     data = MainIconType.CHANGE_DATA.icon,
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                     size = Dimen.menuIconSize
                 )
             } else {
@@ -353,15 +352,15 @@ private fun ChangeDbCompose(
                         modifier = Modifier
                             .size(Dimen.menuIconSize)
                             .padding(Dimen.smallPadding),
-                        color = MaterialTheme.colors.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
                     )
                     //显示下载进度
                     if (downloadState in 1..99) {
                         Text(
                             text = downloadState.toString(),
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.overline
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 }
@@ -373,8 +372,6 @@ private fun ChangeDbCompose(
 /**
  * 标题
  */
-@ExperimentalAnimationApi
-@ExperimentalCoilApi
 @Composable
 private fun Section(
     @StringRes titleId: Int,
@@ -418,7 +415,7 @@ private fun Section(
             IconCompose(
                 data = iconType.icon,
                 size = Dimen.fabIconSize,
-                tint = MaterialTheme.colors.onSurface
+                tint = MaterialTheme.colorScheme.onSurface
             )
             MainText(
                 text = stringResource(id = titleId),
@@ -426,14 +423,14 @@ private fun Section(
                     .weight(1f)
                     .padding(start = Dimen.mediumPadding),
                 textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
             //点击跳转
             if (onClick != null) {
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .clip(MaterialTheme.shapes.small)
+                        .clip(Shape.small)
                         .clickable {
                             VibrateUtil(context).single()
                             onClick.invoke()
@@ -457,7 +454,7 @@ private fun Section(
                     IconCompose(
                         data = MainIconType.MORE.icon,
                         size = Dimen.fabIconSize,
-                        tint = MaterialTheme.colors.onSurface
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -475,7 +472,6 @@ private fun Section(
 /**
  * 日历信息
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
@@ -487,7 +483,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
 
     val color = when {
         inProgress -> {
-            MaterialTheme.colors.primary
+            MaterialTheme.colorScheme.primary
         }
         comingSoon -> {
             colorResource(id = R.color.news_system)

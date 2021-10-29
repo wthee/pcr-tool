@@ -28,7 +28,6 @@ import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -36,7 +35,6 @@ import java.util.*
 /**
  * 搜索历史
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun PvpSearchHistory(
@@ -79,7 +77,6 @@ fun PvpSearchHistory(
 /**
  * 搜索历史项
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun PvpHistoryItem(

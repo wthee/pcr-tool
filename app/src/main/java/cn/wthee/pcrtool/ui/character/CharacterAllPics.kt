@@ -2,14 +2,12 @@ package cn.wthee.pcrtool.ui.character
 
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,9 +20,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.*
 import coil.Coil
-import coil.annotation.ExperimentalCoilApi
 import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -32,9 +30,8 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色卡面图片
+ * fixme 优化图片下载方法
  */
-@ExperimentalAnimationApi
-@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -79,7 +76,7 @@ fun CharacterAllPics(unitId: Int) {
                         ToastUtil.short(unLoadToast)
                     }
                 },
-                shape = MaterialTheme.shapes.large,
+                shape = Shape.large,
             ) {
                 //图片
                 ImageCompose(data = picUrls[index], ratio = RATIO) {

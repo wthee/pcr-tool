@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.theme
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -29,12 +29,10 @@ fun <T> fastTween(): TweenSpec<T> {
 
 
 //页面退出动画
-@ExperimentalAnimationApi
 val fadeOut = fadeOut(animationSpec = fastTween())
 
 //页面进入动画：从下向上滚动
-@ExperimentalAnimationApi
-val slideIn = if (animOn) {
+val mySlideIn = if (animOn) {
     slideInVertically(
         initialOffsetY = { 30 },
         animationSpec = defaultTween()
@@ -44,8 +42,7 @@ val slideIn = if (animOn) {
 }
 
 //页面进入动画：渐入
-@ExperimentalAnimationApi
-val fadeIn = if (animOn) {
+val myFadeIn = if (animOn) {
     fadeIn(animationSpec = defaultTween())
 } else {
     fadeIn(animationSpec = fastTween())
@@ -54,7 +51,6 @@ val fadeIn = if (animOn) {
 /**
  * 页面进入动画
  */
-@ExperimentalAnimationApi
 @Composable
 fun SlideAnimation(
     modifier: Modifier = Modifier,
@@ -64,7 +60,7 @@ fun SlideAnimation(
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        enter = slideIn,
+        enter = mySlideIn,
         exit = fadeOut(),
         content = content,
     )
@@ -73,7 +69,6 @@ fun SlideAnimation(
 /**
  * 页面淡入动画
  */
-@ExperimentalAnimationApi
 @Composable
 fun FadeAnimation(
     visible: Boolean,
@@ -82,7 +77,7 @@ fun FadeAnimation(
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn,
+        enter = myFadeIn,
         exit = fadeOut(),
         content = content,
         modifier = modifier

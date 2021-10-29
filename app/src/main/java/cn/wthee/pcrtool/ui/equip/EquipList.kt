@@ -1,7 +1,7 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -34,20 +35,19 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
  * 装备列表
  */
-@ExperimentalCoilApi
 @ExperimentalComposeUiApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
@@ -79,12 +79,12 @@ fun EquipList(
         val equips = viewModel.getEquips(filterValue).collectAsState(initial = arrayListOf()).value
         ModalBottomSheetLayout(
             sheetState = state,
-            scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+            scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
             sheetElevation = Dimen.sheetElevation,
             sheetShape = if (state.offset.value == 0f) {
                 noShape
             } else {
-                MaterialTheme.shapes.large
+                Shape.large
             },
             sheetContent = {
                 FilterEquipSheet(navViewModel, coroutineScope, state)
@@ -163,7 +163,6 @@ fun EquipList(
 /**
  * 装备
  */
-@ExperimentalCoilApi
 @Composable
 private fun EquipItem(
     filter: FilterEquipment,
@@ -196,7 +195,6 @@ private fun EquipItem(
 /**
  * 装备筛选
  */
-@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
@@ -260,7 +258,7 @@ private fun FilterEquipSheet(
         OutlinedTextField(
             value = textState.value,
             onValueChange = { textState.value = it },
-            textStyle = MaterialTheme.typography.button,
+            textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
                     data = MainIconType.EQUIP.icon,
@@ -287,7 +285,7 @@ private fun FilterEquipSheet(
             label = {
                 Text(
                     text = stringResource(id = R.string.equip_name),
-                    style = MaterialTheme.typography.button
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             modifier = Modifier.fillMaxWidth()

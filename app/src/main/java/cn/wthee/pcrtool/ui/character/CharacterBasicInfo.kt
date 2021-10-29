@@ -1,12 +1,11 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -28,7 +27,6 @@ import cn.wthee.pcrtool.viewmodel.CharacterViewModel
  *
  * @param unitId 角色编号
  */
-@ExperimentalAnimationApi
 @Composable
 fun CharacterBasicInfo(
     scrollState: ScrollState,
@@ -64,7 +62,7 @@ private fun CharacterInfoCompose(info: CharacterInfoPro, scrollState: ScrollStat
         //介绍
         Text(
             info.getIntroText(),
-            style = MaterialTheme.typography.subtitle2,
+            style = MaterialTheme.typography.titleSmall,
         )
         Row(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
             MainTitleText(

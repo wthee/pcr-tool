@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +41,6 @@ import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -52,12 +51,10 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import kotlinx.coroutines.launch
 
-
 /**
  * 公告列表
  */
 @ExperimentalPagerApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagingApi
 @Composable
@@ -134,8 +131,8 @@ fun NewsList(
         ) {
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
-                backgroundColor = MaterialTheme.colors.background,
-                contentColor = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.primary,
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
                         Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -229,9 +226,7 @@ fun NewsItem(
 /**
  * 公告详情
  */
-@ExperimentalCoilApi
 @ExperimentalPagingApi
-@ExperimentalAnimationApi
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {

@@ -55,13 +55,13 @@ fun AttrItem(index: Int, text: String, value: Double, toInt: Boolean, modifier: 
     ) {
         MainTitleText(
             text = text, modifier = Modifier
-                .padding(start = Dimen.mediumPadding)
+                .padding(start = Dimen.largePadding)
                 .weight(0.3f)
         )
         MainContentText(
             text = valueText,
             modifier = Modifier
-                .padding(end = if (index % 2 == 1) Dimen.mediumPadding else 0.dp)
+                .padding(end = if (index % 2 == 1) Dimen.largePadding else 0.dp)
                 .weight(0.2f)
         )
     }

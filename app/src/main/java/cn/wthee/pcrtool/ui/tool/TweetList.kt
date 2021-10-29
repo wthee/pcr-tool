@@ -1,15 +1,14 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -31,9 +30,9 @@ import cn.wthee.pcrtool.data.model.TweetButtonData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.openWebView
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
@@ -46,11 +45,9 @@ import kotlinx.coroutines.launch
 /**
  * 推特列表
  */
-@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalPagingApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun TweetList(
     tweet: LazyPagingItems<TweetData>?,
@@ -114,8 +111,6 @@ fun TweetList(
 /**
  * 推特内容
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -138,8 +133,8 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
     ) {
         Text(
             text = data.date,
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.subtitle1,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .padding(start = Dimen.mediumPadding)
                 .placeholder(
@@ -212,8 +207,6 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
 /**
  * 相关链接按钮
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 private fun TweetButton(
     url: String,
@@ -282,13 +275,11 @@ private fun getComicId(title: String): String {
 }
 
 @Preview
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
 private fun TweetItemPreview() {
-    PreviewBox() {
+    PreviewBox {
         TweetItem(data = TweetData(id = "?"), toDetail = {}, toComic = {})
     }
 }

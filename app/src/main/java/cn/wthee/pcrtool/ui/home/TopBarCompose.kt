@@ -1,10 +1,9 @@
-package cn.wthee.pcrtool.ui.common
+package cn.wthee.pcrtool.ui.home
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -18,16 +17,14 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.PreviewBox
+import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
-import coil.annotation.ExperimentalCoilApi
 
 
 /**
  * 顶部工具栏
  *
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 fun TopBarCompose(actions: NavActions) {
     val updateApp = MainActivity.noticeViewModel.updateApp.observeAsState().value ?: -1
@@ -45,9 +42,9 @@ fun TopBarCompose(actions: NavActions) {
     ) {
         Text(
             text = stringResource(id = R.string.app_name),
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
         )
         Row(
             modifier = Modifier.weight(1f),
@@ -58,7 +55,7 @@ fun TopBarCompose(actions: NavActions) {
             if (updateApp != -1) {
                 IconCompose(
                     data = if (updateApp == 1) MainIconType.APP_UPDATE.icon else MainIconType.NOTICE.icon,
-                    tint = if (updateApp == 1) colorResource(id = R.color.color_rank_21) else MaterialTheme.colors.onSurface,
+                    tint = if (updateApp == 1) colorResource(id = R.color.color_rank_21) else MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 ) {
                     actions.toNotice()
@@ -68,7 +65,7 @@ fun TopBarCompose(actions: NavActions) {
                     modifier = Modifier
                         .size(Dimen.fabIconSize)
                         .padding(Dimen.lineHeight),
-                    color = MaterialTheme.colors.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     strokeWidth = Dimen.lineHeight
                 )
             }
@@ -76,7 +73,7 @@ fun TopBarCompose(actions: NavActions) {
             //设置
             IconCompose(
                 data = MainIconType.SETTING.icon,
-                tint = MaterialTheme.colors.onSurface,
+                tint = MaterialTheme.colorScheme.onSurface,
                 size = Dimen.fabIconSize
             ) {
                 actions.toSetting()
@@ -87,8 +84,6 @@ fun TopBarCompose(actions: NavActions) {
 }
 
 
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Preview
 @Composable
 private fun TopBarComposePreview() {
@@ -106,9 +101,9 @@ private fun TopBarComposePreview() {
         ) {
             Text(
                 text = stringResource(id = R.string.app_name),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colorScheme.primary,
             )
             Row(
                 modifier = Modifier.weight(1f),
@@ -117,13 +112,13 @@ private fun TopBarComposePreview() {
             ) {
                 IconCompose(
                     data = MainIconType.NOTICE.icon,
-                    tint = MaterialTheme.colors.onSurface,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 )
                 Spacer(modifier = Modifier.width(Dimen.largePadding))
                 IconCompose(
                     data = MainIconType.SETTING.icon,
-                    tint = MaterialTheme.colors.onSurface,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     size = Dimen.fabIconSize
                 )
             }

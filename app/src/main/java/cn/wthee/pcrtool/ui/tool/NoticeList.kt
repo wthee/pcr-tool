@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -28,7 +27,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -37,9 +35,7 @@ import kotlinx.coroutines.launch
 /**
  * 通知列表
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun NoticeList(
     scrollState: LazyListState,

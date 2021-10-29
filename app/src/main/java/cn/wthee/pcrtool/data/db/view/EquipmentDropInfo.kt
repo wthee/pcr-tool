@@ -17,8 +17,6 @@ data class EquipmentDropInfo(
 ) {
     fun getNum() = questName.split(" ")[1]
 
-    fun getName() = questName.split(" ")[0]
-
     fun getOddOfEquip(eid: String): String {
         val list1 = rewards.split('-')
         val list2 = odds.split('-')

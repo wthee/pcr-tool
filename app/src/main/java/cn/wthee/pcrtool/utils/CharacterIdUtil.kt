@@ -52,23 +52,6 @@ object CharacterIdUtil {
     }
 
     /**
-     * 获取角色图片 urls
-     */
-    fun getAllIconUrl(unitId: Int, r6Id: Boolean): ArrayList<String> {
-        val list = arrayListOf<String>()
-
-        if (r6Id) {
-            list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 6) + Constants.WEBP)
-        }
-        list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 3) + Constants.WEBP)
-        list.add(Constants.UNIT_ICON_URL + getStarId(unitId, 1) + Constants.WEBP)
-        if (!Constants.notExistsIDs.contains(getFixedId(unitId))) {
-            list.add(Constants.UNKNOWN_EQUIPMENT_ICON)
-        }
-        return list
-    }
-
-    /**
      * 获取星级 [star] id
      */
     private fun getStarId(unitId: Int, star: Int): String {

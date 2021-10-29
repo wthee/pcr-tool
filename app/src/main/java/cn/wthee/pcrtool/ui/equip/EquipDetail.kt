@@ -1,10 +1,8 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -23,10 +21,10 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import coil.annotation.ExperimentalCoilApi
 
 
 /**
@@ -34,8 +32,6 @@ import coil.annotation.ExperimentalCoilApi
  *
  * @param equipId 装备编号
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun EquipMainInfo(
@@ -50,9 +46,7 @@ fun EquipMainInfo(
     EquipDetail(filter, equipId, equipMaxData, toEquipMaterial)
 }
 
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
-@ExperimentalAnimationApi
 @Composable
 private fun EquipDetail(
     filter: State<FilterEquipment?>,
@@ -80,7 +74,7 @@ private fun EquipDetail(
             if (equipMaxData.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
                 MainText(
                     text = equipMaxData.equipmentName,
-                    color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
+                    color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     selectable = true
                 )
@@ -132,8 +126,6 @@ private fun EquipDetail(
  * @param equip 装备信息
  * @param filter 装备过滤
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 private fun EquipMaterialList(
@@ -146,14 +138,7 @@ private fun EquipMaterialList(
         equipmentViewModel.getEquipInfos(equip).collectAsState(initial = arrayListOf()).value
 
     Column {
-        Spacer(
-            modifier = Modifier
-                .padding(Dimen.largePadding)
-                .width(Dimen.smallIconSize)
-                .height(Dimen.lineHeight)
-                .background(MaterialTheme.colors.primary)
-                .align(Alignment.CenterHorizontally)
-        )
+        DivCompose(Modifier.align(Alignment.CenterHorizontally))
         //装备合成素材
         VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
             materialList.forEach { material ->
@@ -181,9 +166,7 @@ private fun EquipMaterialList(
 }
 
 @Preview
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
-@ExperimentalAnimationApi
 @Composable
 private fun EquipDetailPreview() {
     val filter = remember {

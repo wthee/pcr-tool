@@ -136,6 +136,11 @@ enum class MainIconType(val icon: ImageVector) {
     CLAN(Icons.Rounded.Security),
 
     /**
+     * 团队战阶段
+     */
+    CLAN_SECTION(Icons.Rounded.SignalCellularAlt),
+
+    /**
      * 官网公告
      */
     NEWS(Icons.Rounded.Public),

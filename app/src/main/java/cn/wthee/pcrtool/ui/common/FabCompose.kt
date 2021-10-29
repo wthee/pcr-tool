@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -8,8 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.FloatingActionButtonDefaults
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,15 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.defaultTween
 import cn.wthee.pcrtool.utils.VibrateUtil
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 
 /**
  * 通用悬浮按钮
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 fun FabCompose(
     iconType: MainIconType,
@@ -50,8 +47,8 @@ fun FabCompose(
         },
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.primary,
+        backgroundColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.primary,
         modifier = mModifier.defaultMinSize(minWidth = Dimen.fabSize, minHeight = Dimen.fabSize),
     ) {
         Row(
@@ -65,7 +62,7 @@ fun FabCompose(
             IconCompose(iconType.icon, size = Dimen.fabIconSize)
             Text(
                 text = text,
-                style = MaterialTheme.typography.subtitle2,
+                style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center,
                 modifier = if (text != "") {
                     Modifier.padding(start = Dimen.mediumPadding, end = Dimen.largePadding)
@@ -78,8 +75,6 @@ fun FabCompose(
 
 }
 
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Preview
 @Composable
 private fun FabComposePreview() {

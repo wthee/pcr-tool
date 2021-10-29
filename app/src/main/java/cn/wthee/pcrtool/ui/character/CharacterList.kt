@@ -1,18 +1,15 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -40,21 +37,20 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
  * 角色列表
  */
-@ExperimentalCoilApi
 @ExperimentalComposeUiApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
@@ -90,12 +86,12 @@ fun CharacterList(
 
     ModalBottomSheetLayout(
         sheetState = state,
-        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
         sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
             noShape
         } else {
-            MaterialTheme.shapes.large
+            Shape.large
         },
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
@@ -104,7 +100,7 @@ fun CharacterList(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colorScheme.background)
         ) {
             if (list.isNotEmpty()) {
                 LazyVerticalGrid(
@@ -182,14 +178,13 @@ fun CharacterList(
 /**
  * 角色列表项
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun CharacterItem(
     character: CharacterInfo,
     loved: Boolean,
     modifier: Modifier = Modifier,
-    numberStyle: TextStyle = MaterialTheme.typography.caption,
+    numberStyle: TextStyle = MaterialTheme.typography.bodySmall,
     size: Dp = Dimen.smallPadding,
     onClick: () -> Unit
 ) {
@@ -260,11 +255,11 @@ fun CharacterItem(
 private fun CharacterNumberText(
     modifier: Modifier = Modifier,
     text: String,
-    style: TextStyle = MaterialTheme.typography.caption,
+    style: TextStyle = MaterialTheme.typography.bodySmall,
 ) {
     Text(
         text = text,
-        color = MaterialTheme.colors.primaryVariant,
+        color = MaterialTheme.colorScheme.surfaceVariant,
         style = style,
         modifier = modifier.padding(end = Dimen.smallPadding),
         textAlign = TextAlign.End
@@ -274,7 +269,6 @@ private fun CharacterNumberText(
 /**
  * 角色筛选
  */
-@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
@@ -376,7 +370,7 @@ private fun FilterCharacterSheet(
         OutlinedTextField(
             value = textState.value,
             onValueChange = { textState.value = it },
-            textStyle = MaterialTheme.typography.button,
+            textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
                     data = MainIconType.CHARACTER.icon,
@@ -403,7 +397,7 @@ private fun FilterCharacterSheet(
             label = {
                 Text(
                     text = stringResource(id = R.string.character_name),
-                    style = MaterialTheme.typography.button
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             modifier = Modifier.fillMaxWidth()

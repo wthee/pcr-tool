@@ -14,10 +14,8 @@ import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 
-@ExperimentalCoilApi
 @ExperimentalPagerApi
 @Composable
 fun AllSkillList(

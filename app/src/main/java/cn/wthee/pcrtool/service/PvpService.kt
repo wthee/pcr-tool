@@ -5,7 +5,6 @@ import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ComposeView
@@ -16,21 +15,18 @@ import androidx.savedstate.ViewTreeSavedStateRegistryOwner
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.PvpFloatSearch
+import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatSearch
 import cn.wthee.pcrtool.utils.*
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
-@ExperimentalAnimationApi
 class PvpService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private val activity = ActivityHelper.instance.currentActivity
     private var floatRootView: View? = null
 
-    @ExperimentalCoilApi
     override fun onCreate() {
         super.onCreate()
         initWindow()
@@ -55,7 +51,6 @@ class PvpService : LifecycleService() {
         }
     }
 
-    @ExperimentalCoilApi
     private fun initWindow() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         floatRootView = ComposeView(this).apply {

@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -27,7 +26,6 @@ import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -36,9 +34,7 @@ import java.util.*
  * 已收藏数据
  *
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun PvpFavorites(
     favoritesListState: LazyListState,
@@ -78,7 +74,6 @@ fun PvpFavorites(
     }
 }
 
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun PvpFavoriteItem(

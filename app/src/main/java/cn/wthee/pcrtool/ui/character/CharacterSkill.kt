@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.runtime.Composable
 import cn.wthee.pcrtool.ui.skill.SkillCompose
-import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色技能列表
@@ -12,7 +11,6 @@ import coil.annotation.ExperimentalCoilApi
  * @param level 角色等级
  * @param atk 角色攻击力
  */
-@ExperimentalCoilApi
 @Composable
 fun CharacterSkill(
     unitId: Int,

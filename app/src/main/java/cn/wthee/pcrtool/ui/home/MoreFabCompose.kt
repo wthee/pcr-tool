@@ -1,6 +1,5 @@
-package cn.wthee.pcrtool.ui
+package cn.wthee.pcrtool.ui.home
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,20 +13,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.FabCompose
-import cn.wthee.pcrtool.ui.common.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.joinQQGroup
 import cn.wthee.pcrtool.utils.openWebView
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 
 /**
  * 菜单
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun MoreFabCompose(viewModel: NavViewModel) {
     val fabMainIcon = viewModel.fabMainIcon.observeAsState().value ?: MainIconType.OK

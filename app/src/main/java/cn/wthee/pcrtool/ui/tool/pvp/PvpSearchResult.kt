@@ -1,12 +1,11 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -27,12 +26,12 @@ import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -46,9 +45,7 @@ import kotlin.math.round
 /**
  * 查询结果页面
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun PvpSearchResult(
     resultListState: LazyListState,
@@ -208,7 +205,6 @@ fun PvpSearchResult(
 /**
  * 查询结果 Item
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun PvpResultItem(
@@ -297,7 +293,7 @@ private fun PvpResultItem(
                 ) {
                     MainContentText(
                         text = "${upRatio}%",
-                        color = MaterialTheme.colors.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Start,
                         modifier = Modifier.weight(0.3f)
                     )

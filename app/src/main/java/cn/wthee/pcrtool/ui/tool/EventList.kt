@@ -1,13 +1,12 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,7 +28,6 @@ import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.EventViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
@@ -37,10 +35,8 @@ import kotlinx.coroutines.launch
 /**
  * 剧情活动
  */
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun EventList(
     scrollState: LazyListState,
@@ -88,7 +84,6 @@ fun EventList(
 /**
  * 剧情活动
  */
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -168,7 +163,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     text = stringResource(R.string.progressing, event.endTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
             if (comingSoon) {
@@ -218,7 +213,6 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
 }
 
 @Preview
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable

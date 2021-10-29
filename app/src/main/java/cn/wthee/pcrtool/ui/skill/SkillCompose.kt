@@ -1,10 +1,11 @@
 package cn.wthee.pcrtool.ui.skill
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -28,7 +29,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色技能列表
@@ -38,7 +38,6 @@ import coil.annotation.ExperimentalCoilApi
  * @param level 等级
  * @param atk 攻击力
  */
-@ExperimentalCoilApi
 @Composable
 fun SkillCompose(
     unitId: Int,
@@ -53,7 +52,7 @@ fun SkillCompose(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Dimen.mediumPadding)
+            .padding(Dimen.largePadding)
     ) {
         skillList.forEach {
             SkillItem(level = level, skillDetail = it)
@@ -64,7 +63,6 @@ fun SkillCompose(
 /**
  * 技能
  */
-@ExperimentalCoilApi
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(
@@ -156,9 +154,9 @@ fun SkillItem(
                 if (isClanBoss) {
                     Text(
                         text = stringResource(id = R.string.skill_level, level),
-                        color = MaterialTheme.colors.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.subtitle2
+                        style = MaterialTheme.typography.titleSmall
                     )
                 }
                 //描述
@@ -190,7 +188,7 @@ fun SkillItem(
 fun SkillActionTag(skillTag: String) {
     MainTitleText(
         text = skillTag,
-        textStyle = MaterialTheme.typography.caption,
+        textStyle = MaterialTheme.typography.bodySmall,
         modifier = Modifier.padding(end = Dimen.smallPadding, top = Dimen.mediumPadding)
     )
 }
@@ -208,7 +206,7 @@ fun SkillActionItem(skillAction: SkillActionText) {
     val colors =
         arrayListOf(
             R.color.color_rank_21,
-            if (MaterialTheme.colors.isLight) R.color.black else R.color.alpha_white,
+            if (isSystemInDarkTheme()) R.color.alpha_white else R.color.black,
             R.color.color_rank_11_17,
             R.color.colorPrimary
         )
@@ -282,7 +280,6 @@ fun SkillActionItem(skillAction: SkillActionText) {
 /**
  * 技能循环
  */
-@ExperimentalCoilApi
 @Composable
 fun SkillLoopList(
     loopData: List<AttackPattern>,
@@ -316,7 +313,6 @@ fun SkillLoopList(
 /**
  * 技能循环 item
  */
-@ExperimentalCoilApi
 @Composable
 private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
     Column {
@@ -328,7 +324,6 @@ private fun SkillLoopItem(loop: SkillLoop, iconTypes: HashMap<Int, Int>) {
 /**
  * 技能循环图标列表
  */
-@ExperimentalCoilApi
 @Composable
 private fun SkillLoopIconList(
     iconList: List<Int>,
@@ -374,7 +369,7 @@ private fun SkillLoopIconList(
                 Text(
                     text = type,
                     color = colorResource(getSkillColor(type = type)),
-                    style = MaterialTheme.typography.caption,
+                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = Dimen.smallPadding)
@@ -441,7 +436,6 @@ private data class SkillIndex(
 
 
 @Preview
-@ExperimentalCoilApi
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItemPreview() {

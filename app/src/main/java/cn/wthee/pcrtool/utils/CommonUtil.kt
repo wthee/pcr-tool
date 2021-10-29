@@ -85,8 +85,3 @@ val Double.int: Int
     get() {
         return if (this * 10 % 10 > 1) ceil(this).toInt() else floor(this).toInt()
     }
-
-val Double.format: String
-    get() {
-        return String.format("%.1f", this)
-    }

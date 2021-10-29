@@ -14,7 +14,7 @@ import java.io.InputStream
  */
 object FileUtil {
 
-    val toBackupFileNames = arrayListOf(
+    private val toBackupFileNames = arrayListOf(
         "pvp.db",
         "pvp.db-shm",
         "pvp.db-wal",

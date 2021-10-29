@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,12 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
-import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色图标列表
  */
-@ExperimentalCoilApi
 @Composable
 fun IconListCompose(
     icons: List<Int>,
@@ -61,7 +59,7 @@ fun IconListCompose(
                             textAlign = TextAlign.Center,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.caption,
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
@@ -71,7 +69,6 @@ fun IconListCompose(
 }
 
 
-@ExperimentalCoilApi
 @Preview
 @Composable
 private fun IconListComposePreview() {

@@ -13,8 +13,6 @@ data class CharacterProperty(
 ) {
     fun isInit() = level != 0
 
-    fun isNotInit() = !isInit()
-
     fun update(
         level: Int = this.level,
         rank: Int = this.rank,

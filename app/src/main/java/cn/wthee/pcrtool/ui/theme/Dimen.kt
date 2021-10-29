@@ -1,9 +1,6 @@
 package cn.wthee.pcrtool.ui.theme
 
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import cn.wthee.pcrtool.MyApplication
 
 object Dimen {
 
@@ -39,7 +36,6 @@ object Dimen {
 
     val sheetMarginBottom = 60.dp
 
-    val lineHeight = 3.dp
 
     val divLineHeight = 1.dp
 
@@ -59,17 +55,8 @@ object Dimen {
 
     val dataChangeWidth = 120.dp
 
+    val lineWidth = 32.dp
+
+    val lineHeight = 3.dp
+
 }
-
-
-/**
- * sp to dp
- */
-val Float.sp2dp: Dp
-    get() {
-        val scale: Float = MyApplication.context.resources.displayMetrics.density
-        val px = this.sp.value * scale
-        val dpInt = (px / scale + 0.5f).toInt()
-        return dpInt.dp
-    }
-

@@ -1,16 +1,18 @@
-package cn.wthee.pcrtool.ui.tool
+package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -32,13 +34,9 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.pvp.PvpFavorites
-import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchHistory
-import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchResult
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
@@ -48,8 +46,6 @@ import java.util.*
 /**
  * 竞技场查询
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
@@ -110,7 +106,7 @@ fun PvpSearchCompose(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column {
             //标题
@@ -164,7 +160,7 @@ fun PvpSearchCompose(
                         )
                     },
                     backgroundColor = Color.Transparent,
-                    contentColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .fillMaxWidth(0.618f)
                         .align(Alignment.CenterHorizontally)
@@ -229,25 +225,18 @@ fun PvpSearchCompose(
                 ) {
                     val homeIntent = Intent(Intent.ACTION_MAIN)
                     homeIntent.addCategory(Intent.CATEGORY_HOME)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(context)) {
-                            //启动悬浮服务
-                            navViewModel.floatServiceRun.postValue(true)
-                            context.startService(serviceIntent)
-                            context.startActivity(homeIntent)
-                        } else {
-                            val intent = Intent(
-                                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                Uri.parse("package:${MyApplication.context.packageName}")
-                            )
-                            context.startActivity(intent)
-                        }
-                    } else {
+                    if (Settings.canDrawOverlays(context)) {
+                        //启动悬浮服务
                         navViewModel.floatServiceRun.postValue(true)
                         context.startService(serviceIntent)
                         context.startActivity(homeIntent)
+                    } else {
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${MyApplication.context.packageName}")
+                        )
+                        context.startActivity(intent)
                     }
-
                 }
                 //跳转
                 FabCompose(
@@ -298,10 +287,8 @@ fun PvpSearchCompose(
 /**
  * 角色选择
  */
-@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 private fun PvpCharacterSelectPage(
@@ -422,7 +409,6 @@ private fun getLine(
 /**
  * 位置图标
  */
-@ExperimentalCoilApi
 @Composable
 private fun PvpPositionIcon(iconId: Int, height: Int) {
     Box(
@@ -442,7 +428,6 @@ private fun PvpPositionIcon(iconId: Int, height: Int) {
  * 角色图标
  */
 @ExperimentalMaterialApi
-@ExperimentalCoilApi
 @Composable
 fun PvpIconItem(
     selectedIds: ArrayList<PvpCharacterData>,

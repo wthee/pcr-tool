@@ -51,17 +51,4 @@ data class CharacterInfo(
         }
     }
 
-    /**
-     * 获取限定活动类型
-     */
-    fun getNameL(): String {
-        val index = this.name.indexOf("（")
-        return if (index == -1) {
-            kana
-        } else {
-            val sp = this.name.split("（")
-            sp[1].substring(0, sp[1].lastIndex)
-        }
-    }
-
 }

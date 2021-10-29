@@ -1,17 +1,14 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -30,9 +27,10 @@ import cn.wthee.pcrtool.data.model.ComicData
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.viewmodel.ComicViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -41,12 +39,10 @@ import kotlinx.coroutines.launch
 /**
  * 推特列表
  */
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
 @ExperimentalPagingApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
@@ -75,12 +71,12 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
             )
             ModalBottomSheetLayout(
                 sheetState = state,
-                scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+                scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
                 sheetElevation = Dimen.sheetElevation,
                 sheetShape = if (state.offset.value == 0f) {
                     noShape
                 } else {
-                    MaterialTheme.shapes.large
+                    Shape.large
                 },
                 sheetContent = {
                     //章节选择
@@ -145,8 +141,6 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
 /**
  * 漫画内容
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -171,7 +165,7 @@ private fun ComicItem(data: ComicData) {
             )
             Text(
                 text = data.title,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleLarge,
             )
         }
 
@@ -226,7 +220,7 @@ private fun TocItem(
     it: ComicData,
 ) {
     val textColor = if (selectIndex.value == index) {
-        MaterialTheme.colors.primary
+        MaterialTheme.colorScheme.primary
     } else {
         Color.Unspecified
     }
@@ -235,7 +229,7 @@ private fun TocItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(Dimen.smallPadding)
-            .clip(MaterialTheme.shapes.small)
+            .clip(Shape.small)
             .clickable {
                 selectIndex.value = index
             },
@@ -245,14 +239,14 @@ private fun TocItem(
             text = it.id.toString(),
             color = textColor,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.titleLarge,
         )
         SelectionContainer(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
             Text(
                 text = it.title,
                 color = textColor,
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.subtitle1,
+                style = MaterialTheme.typography.titleMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

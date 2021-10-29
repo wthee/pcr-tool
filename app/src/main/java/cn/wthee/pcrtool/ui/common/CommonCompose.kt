@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import com.google.accompanist.insets.navigationBarsPadding
@@ -31,15 +33,15 @@ import com.google.accompanist.insets.navigationBarsPadding
 fun MainTitleText(
     modifier: Modifier = Modifier,
     text: String,
-    backgroundColor: Color = MaterialTheme.colors.primary,
-    textStyle: TextStyle = MaterialTheme.typography.body2
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     Text(
         text = text,
         color = Color.White,
         style = textStyle,
         modifier = modifier
-            .background(color = backgroundColor, shape = MaterialTheme.shapes.small)
+            .background(color = backgroundColor, shape = Shape.small)
             .padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding)
     )
 }
@@ -61,7 +63,7 @@ fun MainContentText(
                 text = text,
                 textAlign = textAlign,
                 color = color,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
             )
         }
     } else {
@@ -69,7 +71,7 @@ fun MainContentText(
             text = text,
             textAlign = textAlign,
             color = color,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             modifier = modifier
         )
     }
@@ -83,7 +85,7 @@ fun MainText(
     modifier: Modifier = Modifier,
     text: String,
     textAlign: TextAlign = TextAlign.Center,
-    color: Color = MaterialTheme.colors.primary,
+    color: Color = MaterialTheme.colorScheme.primary,
     selectable: Boolean = false
 ) {
     if (selectable) {
@@ -96,7 +98,7 @@ fun MainText(
             Text(
                 text = text,
                 color = color,
-                style = MaterialTheme.typography.subtitle1,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = textAlign,
                 fontWeight = FontWeight.Black,
             )
@@ -105,7 +107,7 @@ fun MainText(
         Text(
             text = text,
             color = color,
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = textAlign,
             fontWeight = FontWeight.Black,
             modifier = modifier
@@ -130,7 +132,7 @@ fun Subtitle1(
                 text = text,
                 color = color,
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.subtitle1,
+                style = MaterialTheme.typography.titleMedium,
             )
         }
     } else {
@@ -138,7 +140,7 @@ fun Subtitle1(
             text = text,
             color = color,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.titleMedium,
             modifier = modifier
         )
     }
@@ -160,7 +162,7 @@ fun Subtitle2(
                 text = text,
                 color = color,
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.subtitle2,
+                style = MaterialTheme.typography.titleSmall,
             )
         }
     } else {
@@ -168,7 +170,7 @@ fun Subtitle2(
             text = text,
             color = color,
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.subtitle2,
+            style = MaterialTheme.typography.titleSmall,
             modifier = modifier
         )
     }
@@ -188,7 +190,7 @@ fun CaptionText(
         text = text,
         textAlign = textAlign,
         color = color,
-        style = MaterialTheme.typography.caption,
+        style = MaterialTheme.typography.bodySmall,
         modifier = modifier
     )
 }
@@ -211,6 +213,20 @@ fun LineCompose(modifier: Modifier = Modifier) {
 }
 
 /**
+ * 分割线
+ */
+@Composable
+fun DivCompose(modifier: Modifier = Modifier) {
+    Spacer(
+        modifier = modifier
+            .padding(Dimen.largePadding)
+            .width(Dimen.lineWidth)
+            .height(Dimen.lineHeight)
+            .background(MaterialTheme.colorScheme.primary)
+    )
+}
+
+/**
  * 主操作按钮
  */
 @Composable
@@ -223,14 +239,14 @@ fun MainButton(
     val context = LocalContext.current
 
     Button(
-        shape = MaterialTheme.shapes.medium,
+        shape = Shape.medium,
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
             onClick.invoke()
         }
     ) {
-        Text(text = text, color = color, style = MaterialTheme.typography.button)
+        Text(text = text, color = color, style = MaterialTheme.typography.labelLarge)
     }
 }
 
@@ -247,14 +263,14 @@ fun SubButton(
     val context = LocalContext.current
 
     OutlinedButton(
-        shape = MaterialTheme.shapes.medium,
+        shape = Shape.medium,
         modifier = modifier.padding(Dimen.smallPadding),
         onClick = {
             VibrateUtil(context).single()
             onClick.invoke()
         }
     ) {
-        Text(text = text, color = color, style = MaterialTheme.typography.button)
+        Text(text = text, color = color, style = MaterialTheme.typography.labelLarge)
     }
 }
 
@@ -313,7 +329,7 @@ fun CommonSpacer() {
 @Composable
 fun MainCard(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.background,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
@@ -332,14 +348,16 @@ fun MainCard(
                 onClick.invoke()
             },
             backgroundColor = backgroundColor,
-            elevation = Dimen.cardElevation
+            elevation = Dimen.cardElevation,
+            shape = Shape.medium,
         )
     } else {
         Card(
             modifier = mModifier,
             content = content,
             backgroundColor = backgroundColor,
-            elevation = Dimen.cardElevation
+            elevation = Dimen.cardElevation,
+            shape = Shape.medium,
         )
     }
 
@@ -355,9 +373,9 @@ fun SelectText(
     modifier: Modifier = Modifier,
     selected: Boolean,
     text: String,
-    selectedColor: Color = MaterialTheme.colors.primary,
+    selectedColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = Color.Unspecified,
-    textStyle: TextStyle = MaterialTheme.typography.body2,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     padding: Dp = Dimen.smallPadding,
     margin: Dp = Dimen.smallPadding,
     textAlign: TextAlign = TextAlign.Center
@@ -365,14 +383,14 @@ fun SelectText(
     val mModifier = if (selected) {
         modifier
             .padding(top = margin)
-            .background(color = selectedColor, shape = MaterialTheme.shapes.small)
+            .background(color = selectedColor, shape = Shape.small)
             .padding(start = padding, end = padding)
     } else {
         modifier.padding(top = margin)
     }
     Text(
         text = text,
-        color = if (selected) MaterialTheme.colors.onPrimary else textColor,
+        color = if (selected) MaterialTheme.colorScheme.onPrimary else textColor,
         style = textStyle,
         maxLines = 1,
         textAlign = textAlign,
@@ -389,7 +407,7 @@ fun SelectText(
 fun CharacterLimitText(
     modifier: Modifier = Modifier,
     characterInfo: CharacterInfo,
-    textStyle: TextStyle = MaterialTheme.typography.body2
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     val color: Color
     val type: String
@@ -424,7 +442,7 @@ fun CharacterPositionText(
     padding: Dp = 0.dp,
     colorful: Boolean = true,
     textAlign: TextAlign = TextAlign.Center,
-    textStyle: TextStyle = MaterialTheme.typography.body2
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     var color = colorResource(
         id = when (position) {
@@ -438,7 +456,7 @@ fun CharacterPositionText(
 
     Text(
         text = position.toString(),
-        color = if (selected) Color.White else color,
+        color = if (selected) Color.Unspecified else color,
         style = textStyle,
         maxLines = 1,
         textAlign = textAlign,

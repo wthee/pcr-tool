@@ -5,9 +5,9 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.0.4"
-val appVersionCode = 220
-val appVersionName = "2.2.0"
+val composeVersion = "1.1.0-beta01"
+val appVersionCode = 221
+val appVersionName = "2.2.1"
 val sql = 215
 
 android {
@@ -93,7 +93,7 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("androidx.fragment:fragment:1.3.6")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlin_version"]}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation("androidx.preference:preference-ktx:1.1.1")
     //compose
@@ -101,14 +101,15 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material:material:$composeVersion")
+//    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha01")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.compiler:compiler:$composeVersion")
     //icon
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.20.0"
+    val accompanistVersion = "0.21.0-beta"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -123,12 +124,12 @@ dependencies {
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt
-    implementation("com.google.dagger:hilt-android:${rootProject.extra["hilt_version"]}")
-    kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hilt_version"]}")
+    implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
+    kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
 
     //Lifecycle
-    val lifecycleVersion = "2.4.0-rc01"
+    val lifecycleVersion = "2.4.0"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
@@ -136,7 +137,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
+    implementation("androidx.navigation:navigation-compose:2.4.0-beta01")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.0.1")
@@ -158,9 +159,9 @@ dependencies {
     implementation("androidx.startup:startup-runtime:1.1.0")
 
     //umeng
-    implementation("com.umeng.umsdk:common:9.4.2")
+    implementation("com.umeng.umsdk:common:9.4.4")
     implementation("com.umeng.umsdk:asms:1.4.1")
-    implementation("com.umeng.umsdk:apm:1.4.2")
+    implementation("com.umeng.umsdk:apm:1.5.2")
 
     //Work
     val workVersion = "2.7.0"

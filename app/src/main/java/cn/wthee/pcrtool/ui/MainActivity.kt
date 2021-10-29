@@ -13,8 +13,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -38,11 +40,11 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.home.MoreFabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.PcrtoolComposeTheme
+import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.NoticeViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -87,28 +89,27 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    @ExperimentalAnimationApi
     @ExperimentalComposeUiApi
     @ExperimentalPagingApi
-    @ExperimentalAnimationApi
     @ExperimentalMaterialApi
     @ExperimentalPagerApi
     @ExperimentalFoundationApi
-    @ExperimentalCoilApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            PcrtoolComposeTheme {
+            PCRToolComposeTheme {
                 ProvideWindowInsets {
                     //状态栏、导航栏适配
                     val ui = rememberSystemUiController()
-                    val isLight = MaterialTheme.colors.isLight
+                    val isLight = !isSystemInDarkTheme()
                     ui.setNavigationBarColor(
                         colorResource(id = if (isLight) R.color.alpha_white else R.color.alpha_black),
                         darkIcons = isLight
                     )
-                    ui.setStatusBarColor(MaterialTheme.colors.background, darkIcons = isLight)
-                    Surface(modifier = Modifier.background(MaterialTheme.colors.background)) {
+                    ui.setStatusBarColor(MaterialTheme.colorScheme.background, darkIcons = isLight)
+                    Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
                         Home()
                     }
                 }
@@ -176,10 +177,9 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@ExperimentalCoilApi
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @ExperimentalPagingApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
@@ -232,8 +232,6 @@ fun Home(
     }
 }
 
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 fun FabMain(modifier: Modifier = Modifier) {
     val icon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.MAIN
@@ -259,9 +257,9 @@ fun FabMain(modifier: Modifier = Modifier) {
 fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
     Column {
         if (themeType == 0 || themeType == 1) {
-            PcrtoolComposeTheme(darkTheme = false) {
+            PCRToolComposeTheme(darkTheme = false) {
                 Surface(
-                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     content = content
                 )
             }
@@ -272,9 +270,9 @@ fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
             )
         }
         if (themeType == 0 || themeType == 2) {
-            PcrtoolComposeTheme(darkTheme = true) {
+            PCRToolComposeTheme(darkTheme = true) {
                 Surface(
-                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     content = content
                 )
             }
