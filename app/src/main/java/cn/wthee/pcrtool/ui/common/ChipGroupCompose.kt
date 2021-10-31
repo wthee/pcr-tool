@@ -2,11 +2,12 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -54,18 +55,18 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
     val context = LocalContext.current
     //背景色
     val backgroundColor = if (selectIndex.value == index)
-        colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_primary else R.color.alpha_primary_dark)
+        colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_primary_dark else R.color.alpha_primary)
     else
-        colorResource(id = if (MaterialTheme.colors.isLight) R.color.bg_gray else R.color.bg_gray_dark)
+        colorResource(id = if (isSystemInDarkTheme()) R.color.bg_gray_dark else R.color.bg_gray)
     //字体颜色
     val textColor = when (type) {
         1 -> getRankColor(size - index)
         2 -> getSectionTextColor(index + 1)
         else -> {
             if (selectIndex.value == index)
-                MaterialTheme.colors.background
+                MaterialTheme.colorScheme.surface
             else
-                MaterialTheme.colors.onSurface
+                MaterialTheme.colorScheme.onSurface
         }
     }
     Box(
@@ -81,7 +82,7 @@ fun ChipItem(item: ChipData, selectIndex: MutableState<Int>, size: Int, index: I
         Text(
             text = item.text,
             color = textColor,
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(
                 start = Dimen.largePadding,
                 end = Dimen.largePadding,

@@ -16,7 +16,6 @@
     <string name="cv">CV</string>
     <string name="title_self">介绍</string>
     <string name="title_position">位置</string>
-    <string name="level">角色等级</string>
     <string name="skill_level">技能等级：%d</string>
     <string name="before_loop">初始动作</string>
     <string name="looping">循环动作</string>
@@ -60,7 +59,6 @@
     <string name="db_cn">国服</string>
     <string name="db_tw">台服</string>
     <string name="db_jp">日服</string>
-    <string name="change_db">数据切换</string>
     <string name="app_notice">通知</string>
     <string name="data_backup">备份</string>
     <string name="data_export">数据导出</string>
@@ -126,7 +124,6 @@
     <string name="equip_name">装备名</string>
     <string name="love_equip">收藏装备</string>
     <string name="love_equip_material">收藏素材</string>
-    <string name="unselect">-</string>
     <string name="tip_select_limit">已选择 5 名角色~</string>
     <string name="tip_select_5">请选择 5 名角色~</string>
     <string name="update_log">更新日志</string>
@@ -143,7 +140,6 @@
     <string name="youtube">YouTube</string>
     <string name="hibiki">HiBiKi</string>
     <string name="other">其它</string>
-    <string name="more">更多</string>
     <string name="cancel">取消</string>
 
     <!--  活动相关-->
@@ -165,7 +161,6 @@
 
 
     <!-- 下载相关-->
-    <string name="checking">校验中</string>
     <string name="wait_pic_load">请等待图片加载完成</string>
 
     <string name="readme">https://github.com/wthee/pcr-tool/blob/master/README.md</string>
@@ -188,6 +183,5 @@
     <string name="title_attr_tip">属性说明</string>
     <string name="attr_calc">角色属性 = 基本属性 + 剧情属性 + 被动技能（不计算到战力） + Rank 奖励属性</string>
     <string name="tip_status_coe">※ 应用中数值与游戏数值可能存在一定误差，请以游戏内为准</string>
-    <string name="close">关闭</string>
     <string name="reload_import_data">为重新加载导入数据\n应用将在 3 秒后关闭</string>
 </resources>

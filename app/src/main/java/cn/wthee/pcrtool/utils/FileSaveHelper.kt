@@ -174,7 +174,7 @@ class FileSaveHelper(private val context: Context) {
     }
 
     companion object {
-        val back_folder = "/pcr_tool_backup/"
+        const val back_folder = "/pcr_tool_backup/"
 
         /**
          * 获取图片保存路径

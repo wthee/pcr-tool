@@ -6,8 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,9 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.drawable.ScaleDrawable
 
@@ -31,7 +31,6 @@ const val RATIO_COMIC = 0.6175f
 const val RATIO_COMMON = 371 / 208f
 
 
-@ExperimentalCoilApi
 @Composable
 fun ImageCompose(
     data: Any,
@@ -88,12 +87,11 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
 /**
  * 图标
  */
-@ExperimentalCoilApi
 @Composable
 fun IconCompose(
     data: Any,
     size: Dp = Dimen.iconSize,
-    tint: Color = MaterialTheme.colors.primary,
+    tint: Color = MaterialTheme.colorScheme.primary,
     wrapSize: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
@@ -101,13 +99,13 @@ fun IconCompose(
 
     var mModifier = if (onClick != null) {
         Modifier
-            .clip(MaterialTheme.shapes.small)
+            .clip(Shape.small)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick.invoke()
             })
     } else {
-        Modifier.clip(MaterialTheme.shapes.small)
+        Modifier.clip(Shape.small)
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)

@@ -1,14 +1,13 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,10 +27,10 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.switchColors
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.exportUserFile
 import cn.wthee.pcrtool.utils.FileUtil.importUserFile
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -40,14 +39,12 @@ import kotlin.system.exitProcess
 /**
  * 设置页面
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
     val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
-    val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground)
+    val painter = rememberImagePainter(data = R.mipmap.ic_launcher_round)
     val coroutineScope = rememberCoroutineScope()
     val reloadImportDataTip = stringResource(R.string.reload_import_data)
 
@@ -90,9 +87,9 @@ fun MainSettings() {
         ) {
             Text(
                 text = stringResource(id = R.string.app_name) + " " + BuildConfig.VERSION_NAME,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = Dimen.smallPadding)
             )
             //- 查看项目地址
@@ -106,11 +103,13 @@ fun MainSettings() {
             Image(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(Dimen.largePadding)
             )
             Subtitle2(
                 text = "${typeName}：${dbVersionGroup}",
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colorScheme.primary
             )
         }
         //其它设置
@@ -152,7 +151,7 @@ fun MainSettings() {
                 TitleText(text = stringResource(id = R.string.vibrate))
                 SummaryText(text = vibrateSummary)
             }
-            Switch(checked = vibrateState.value, onCheckedChange = {
+            Switch(checked = vibrateState.value, colors = switchColors(), onCheckedChange = {
                 vibrateState.value = it
                 sp.edit().putBoolean(Constants.SP_VIBRATE_STATE, it).apply()
                 VibrateUtil(context).single()
@@ -192,7 +191,7 @@ fun MainSettings() {
                 TitleText(text = stringResource(id = R.string.animation))
                 SummaryText(text = animSummary)
             }
-            Switch(checked = animState.value, onCheckedChange = {
+            Switch(checked = animState.value, colors = switchColors(), onCheckedChange = {
                 animState.value = it
                 sp.edit().putBoolean(Constants.SP_ANIM_STATE, it).apply()
                 VibrateUtil(context).single()
@@ -282,8 +281,6 @@ fun MainSettings() {
 
 }
 
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 private fun SettingItem(
     iconType: MainIconType,
@@ -321,7 +318,7 @@ private fun SettingItem(
 private fun TitleText(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.h6,
+        style = MaterialTheme.typography.titleLarge,
         fontSize = 18.sp,
         fontWeight = FontWeight.Normal
     )
@@ -331,15 +328,13 @@ private fun TitleText(text: String) {
 private fun SummaryText(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
         color = colorResource(id = R.color.gray),
         modifier = Modifier.padding(top = Dimen.mediumPadding)
     )
 }
 
 @Preview
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 private fun MainSettingsPreview() {
     PreviewBox(1) {
@@ -348,8 +343,6 @@ private fun MainSettingsPreview() {
 }
 
 @Preview
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 private fun MainSettingsDarkPreview() {
     PreviewBox(2) {

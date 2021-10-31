@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -9,7 +8,7 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,17 +21,16 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import coil.annotation.ExperimentalCoilApi
 
 /**
  * 角色 RANK 选择装备列表
  *
  * @param unitId 角色编号
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun RankEquipList(
@@ -62,7 +60,6 @@ fun RankEquipList(
 /**
  * RANK 装备图标列表
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun RankEquipListItem(
@@ -74,7 +71,7 @@ fun RankEquipListItem(
         targetValue = if (unitPromotion.promotionLevel == selectedRank.value)
             colorResource(id = R.color.alpha_primary)
         else
-            MaterialTheme.colors.surface,
+            MaterialTheme.colorScheme.surface,
         animationSpec = defaultSpring()
     )
 
@@ -90,13 +87,13 @@ fun RankEquipListItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorAnim.value, MaterialTheme.shapes.medium),
+                .background(colorAnim.value, Shape.medium),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //RANK
             RankText(
                 rank = unitPromotion.promotionLevel,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(Dimen.mediumPadding)
             )
             val allIds = unitPromotion.getAllOrderIds()
@@ -123,7 +120,6 @@ fun RankEquipListItem(
 }
 
 @ExperimentalFoundationApi
-@ExperimentalCoilApi
 @Preview
 @ExperimentalMaterialApi
 @Composable

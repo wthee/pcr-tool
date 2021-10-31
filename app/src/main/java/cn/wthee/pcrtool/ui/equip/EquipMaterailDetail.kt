@@ -1,11 +1,14 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -28,7 +31,6 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -41,9 +43,7 @@ import kotlinx.coroutines.launch
  *
  * @param equipId 装备编号
  */
-@ExperimentalCoilApi
 @ExperimentalPagerApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun EquipMaterialDeatil(
@@ -104,7 +104,7 @@ fun EquipMaterialDeatil(
                         text = basicInfo.equipmentName,
                         modifier = Modifier
                             .padding(top = Dimen.largePadding),
-                        color = if (loved.value) MaterialTheme.colors.primary else Color.Unspecified,
+                        color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
                         selectable = true
                     )
                     //Tab
@@ -114,7 +114,7 @@ fun EquipMaterialDeatil(
                             .fillMaxWidth(0.8f),
                         selectedTabIndex = pagerState.currentPage,
                         backgroundColor = Color.Transparent,
-                        contentColor = MaterialTheme.colors.primary,
+                        contentColor = MaterialTheme.colorScheme.primary,
                         indicator = { tabPositions ->
                             TabRowDefaults.Indicator(
                                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -172,8 +172,8 @@ fun EquipMaterialDeatil(
                 //暂无掉落信息
                 Text(
                     text = stringResource(R.string.unknown_area),
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -207,8 +207,6 @@ fun EquipMaterialDeatil(
  *
  *  @param selectedId 选择的装备
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 private fun AreaEquipList(
@@ -220,7 +218,7 @@ private fun AreaEquipList(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = num,
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(
                 bottom = Dimen.mediumPadding,
                 top = Dimen.mediumPadding
@@ -252,8 +250,6 @@ private fun AreaEquipList(
 }
 
 @Preview
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 private fun AreaEquipListPreview() {

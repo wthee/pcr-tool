@@ -1,8 +1,7 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
@@ -13,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -21,12 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.CharacterInfo
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -38,22 +39,18 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.noShape
+import cn.wthee.pcrtool.ui.theme.*
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
  * 角色列表
  */
-@ExperimentalCoilApi
 @ExperimentalComposeUiApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
@@ -89,21 +86,21 @@ fun CharacterList(
 
     ModalBottomSheetLayout(
         sheetState = state,
-        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
         sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
             noShape
         } else {
-            MaterialTheme.shapes.large
+            Shape.large
         },
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background)
         ) {
             if (list.isNotEmpty()) {
                 LazyVerticalGrid(
@@ -112,7 +109,13 @@ fun CharacterList(
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {
                     items(list) {
-                        CharacterItem(it, filter.value!!, toDetail = toDetail)
+                        CharacterItem(
+                            it,
+                            filter.value!!.starIds.contains(it.id),
+                            modifier = Modifier.padding(Dimen.mediumPadding)
+                        ) {
+                            toDetail(it.id)
+                        }
                     }
                     items(2) {
                         CommonSpacer()
@@ -129,8 +132,7 @@ fun CharacterList(
                 //回到顶部
                 FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
                     FabCompose(
-                        iconType = MainIconType.TOP,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        iconType = MainIconType.TOP
                     ) {
                         coroutineScope.launch {
                             scrollState.scrollToItem(0)
@@ -140,8 +142,7 @@ fun CharacterList(
                 //重置筛选
                 if (filter.value != null && filter.value!!.isFilter()) {
                     FabCompose(
-                        iconType = MainIconType.RESET,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        iconType = MainIconType.RESET
                     ) {
                         coroutineScope.launch {
                             state.hide()
@@ -175,32 +176,32 @@ fun CharacterList(
 /**
  * 角色列表项
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun CharacterItem(
     character: CharacterInfo,
-    filter: FilterCharacter,
+    loved: Boolean,
     modifier: Modifier = Modifier,
-    toDetail: (Int) -> Unit,
+    numberStyle: TextStyle = MaterialTheme.typography.bodySmall,
+    size: Dp = Dimen.smallIconSize,
+    onClick: () -> Unit
 ) {
-    val loved = filter.starIds.contains(character.id)
-
     MainCard(
-        modifier = modifier.padding(Dimen.mediumPadding),
-        onClick = {
-            //跳转至详情
-            toDetail(character.id)
-        }) {
+        modifier = modifier,
+        onClick = onClick
+    ) {
         Column {
             //图片
             Box(contentAlignment = Alignment.BottomEnd) {
                 ImageCompose(
                     CharacterIdUtil.getMaxCardUrl(character.id), RATIO
                 )
-
                 //位置
-                PositionIcon(modifier = Modifier.padding(Dimen.smallPadding), character.position)
+                PositionIcon(
+                    modifier = Modifier.padding(Dimen.smallPadding),
+                    character.position,
+                    size = size
+                )
             }
 
             Row(
@@ -232,19 +233,14 @@ fun CharacterItem(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CharacterNumberText(character.getFixedAge())
-                CharacterNumberText(character.getFixedHeight() + "CM")
-                CharacterNumberText(character.getFixedWeight() + "KG")
+                CharacterNumberText(text = character.getFixedAge(), style = numberStyle)
+                CharacterNumberText(text = character.getFixedHeight() + "CM", style = numberStyle)
+                CharacterNumberText(text = character.getFixedWeight() + "KG", style = numberStyle)
                 CharacterPositionText(
                     position = character.position,
                     textAlign = TextAlign.End,
-                    textStyle = MaterialTheme.typography.caption
+                    textStyle = numberStyle
                 )
-
-            }
-            //编号
-            if (BuildConfig.debug) {
-                Text(text = character.id.toString())
             }
         }
     }
@@ -254,11 +250,15 @@ fun CharacterItem(
  * 蓝色字体
  */
 @Composable
-private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
+private fun CharacterNumberText(
+    modifier: Modifier = Modifier,
+    text: String,
+    style: TextStyle = MaterialTheme.typography.bodySmall,
+) {
     Text(
         text = text,
-        color = MaterialTheme.colors.primaryVariant,
-        style = MaterialTheme.typography.caption,
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        style = style,
         modifier = modifier.padding(end = Dimen.smallPadding),
         textAlign = TextAlign.End
     )
@@ -267,7 +267,6 @@ private fun CharacterNumberText(text: String, modifier: Modifier = Modifier) {
 /**
  * 角色筛选
  */
-@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
@@ -368,8 +367,10 @@ private fun FilterCharacterSheet(
         val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
             value = textState.value,
+            shape = Shape.medium,
+            colors = outlinedTextFieldColors(),
             onValueChange = { textState.value = it },
-            textStyle = MaterialTheme.typography.button,
+            textStyle = MaterialTheme.typography.labelLarge,
             leadingIcon = {
                 IconCompose(
                     data = MainIconType.CHARACTER.icon,
@@ -396,7 +397,7 @@ private fun FilterCharacterSheet(
             label = {
                 Text(
                     text = stringResource(id = R.string.character_name),
-                    style = MaterialTheme.typography.button
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             modifier = Modifier.fillMaxWidth()

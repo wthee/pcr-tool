@@ -1,12 +1,13 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -26,12 +27,12 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 
 /**
@@ -40,8 +41,6 @@ import kotlinx.coroutines.launch
  * @param unitId 角色编号
  * @param maxRank 角色最大rank
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -87,17 +86,18 @@ fun RankEquipCount(
 
     ModalBottomSheetLayout(
         sheetState = state,
-        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
         sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
             noShape
         } else {
-            MaterialTheme.shapes.large
+            Shape.large
         },
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel, 1)
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
 
         if (ok) {
@@ -135,12 +135,12 @@ fun RankEquipCount(
                             MainTitleText(text = stringResource(id = R.string.cur_rank))
                             RankText(
                                 rank = rank0.value,
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.titleMedium,
                             )
                             MainTitleText(text = stringResource(id = R.string.target_rank))
                             RankText(
                                 rank = rank1.value,
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.titleMedium,
                             )
                         }
                     }
@@ -151,7 +151,8 @@ fun RankEquipCount(
                     elevation = Dimen.cardElevation,
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    backgroundColor = MaterialTheme.colorScheme.surface
                 ) {
                     val spanCount = 5
                     filter.value?.let { filterValue ->
@@ -199,7 +200,6 @@ fun RankEquipCount(
 
 }
 
-@ExperimentalCoilApi
 @Composable
 private fun EquipCountItem(
     item: EquipmentMaterial,
@@ -223,7 +223,6 @@ private fun EquipCountItem(
 
 @ExperimentalFoundationApi
 @Preview
-@ExperimentalCoilApi
 @Composable
 private fun EquipCountItemPreview() {
     val spanCount = 5
@@ -237,7 +236,7 @@ private fun EquipCountItemPreview() {
             contentPadding = PaddingValues(Dimen.mediumPadding)
         ) {
             items(items = rankEquipMaterials) { item ->
-                EquipCountItem(item, FilterEquipment(), { })
+                EquipCountItem(item, FilterEquipment()) { }
             }
         }
     }

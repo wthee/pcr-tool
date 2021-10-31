@@ -125,7 +125,7 @@ object Constants {
         "TP 减少",
     )
 
-    val UNKNOWN = "?"
+    const val UNKNOWN = "?"
 
 
     //现实图片有误的角色编号
@@ -144,16 +144,6 @@ object Constants {
     //无现实图片角色
     val notExistsIDs = arrayListOf(
         109731, 109831, 109931, 109231, 109331, 109431
-    )
-
-    //未实装角色
-    val unuseIDs = arrayListOf(
-        106701,
-        106901,
-        107201,
-        107301,
-        110201,
-        191301
     )
 
     // 异常

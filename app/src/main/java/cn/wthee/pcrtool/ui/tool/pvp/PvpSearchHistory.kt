@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.TextButton
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,7 +28,6 @@ import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -36,7 +35,6 @@ import java.util.*
 /**
  * 搜索历史
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun PvpSearchHistory(
@@ -79,7 +77,6 @@ fun PvpSearchHistory(
 /**
  * 搜索历史项
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun PvpHistoryItem(
@@ -113,7 +110,8 @@ private fun PvpHistoryItem(
                         bottom = if (floatWindow) 0.dp else Dimen.mediumPadding,
                         start = Dimen.smallPadding,
                         end = Dimen.smallPadding
-                    ), onClick = {
+                    ),
+                    onClick = {
                         //重置页面
                         scope.launch {
                             pvpViewModel.pvpResult.postValue(null)

@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.ui.character
 
-import android.content.Context
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,6 +7,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -27,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -41,13 +39,14 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
-import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.noShape
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.VibrateUtil
+import cn.wthee.pcrtool.utils.getFormatText
+import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -60,8 +59,6 @@ import kotlin.math.max
  * @param unitId 角色编号
  */
 @ExperimentalComposeUiApi
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
@@ -74,7 +71,6 @@ fun CharacterDetail(
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     //最大值
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
@@ -118,12 +114,12 @@ fun CharacterDetail(
     //页面
     ModalBottomSheetLayout(
         sheetState = state,
-        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
         sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
             noShape
         } else {
-            MaterialTheme.shapes.large
+            Shape.large
         },
         sheetContent = {
             SkillLoopList(
@@ -135,7 +131,8 @@ fun CharacterDetail(
                     end = Dimen.mediumPadding,
                 )
             )
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         currentValueState.value?.let { currentValue ->
             val unknown = maxValue.level == -1
@@ -169,12 +166,11 @@ fun CharacterDetail(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .background(MaterialTheme.colors.background),
+                            .verticalScroll(scrollState),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         //角色卡面
-                        CharacterCard(context, loved.value, actions, unitId)
+                        CharacterCard(loved.value, actions, unitId)
                         //星级
                         StarSelect(
                             currentValue = currentValue,
@@ -182,6 +178,7 @@ fun CharacterDetail(
                             modifier = Modifier.padding(top = Dimen.mediumPadding),
                             attrViewModel = attrViewModel
                         )
+                        //属性
                         AttrLists(
                             currentValue,
                             characterLevel,
@@ -218,25 +215,26 @@ fun CharacterDetail(
                                 allData.sumAttr.magicStr.int
                             )
                         )
+                        CommonSpacer()
+                        Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
                     }
                 }
                 if (unknown) {
                     Column(
                         modifier = Modifier
+                            .padding(Dimen.largePadding)
                             .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .background(MaterialTheme.colors.background),
+                            .verticalScroll(scrollState),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CharacterCard(context, loved.value, actions, unitId)
+                        CharacterCard(loved.value, actions, unitId)
                         //未知角色占位页面
                         Text(
                             text = stringResource(R.string.unknown_character),
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.h6,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.titleLarge,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .padding(Dimen.largePadding)
+                            modifier = Modifier.padding(Dimen.largePadding)
                         )
                     }
 
@@ -255,8 +253,7 @@ fun CharacterDetail(
                         //收藏
                         FabCompose(
                             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
-                            defaultPadding = unknown
+                            hasNavBarPadding = unknown
                         ) {
                             filter.value?.addOrRemove(unitId)
                             loved.value = !loved.value
@@ -264,15 +261,14 @@ fun CharacterDetail(
                         //跳转至角色资料
                         FabCompose(
                             iconType = MainIconType.CHARACTER_INTRO,
-                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
-                            defaultPadding = unknown
+                            hasNavBarPadding = unknown
                         ) {
                             actions.toCharacterBasicInfo(unitId)
                         }
                         //技能循环
                         FabCompose(
                             iconType = MainIconType.SKILL_LOOP,
-                            defaultPadding = unknown,
+                            hasNavBarPadding = unknown,
                             modifier = Modifier.alpha(if (unknown) 0f else 1f)
                         ) {
                             coroutineScope.launch {
@@ -295,7 +291,6 @@ fun CharacterDetail(
                             FabCompose(
                                 iconType = MainIconType.RANK_COMPARE,
                                 text = stringResource(id = R.string.compare),
-                                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
                             ) {
                                 actions.toCharacteRankCompare(
                                     unitId,
@@ -323,7 +318,6 @@ fun CharacterDetail(
 @ExperimentalMaterialApi
 @Composable
 private fun CharacterCard(
-    context: Context,
     loved: Boolean,
     actions: NavActions,
     unitId: Int,
@@ -332,55 +326,21 @@ private fun CharacterCard(
     //基本信息
     val basicInfo =
         characterViewModel.getCharacterBasicInfo(unitId).collectAsState(initial = null).value
-
-    Card(
-        modifier = Modifier
-            .padding(
-                top = Dimen.mediumPadding,
-                bottom = Dimen.mediumPadding,
-                start = Dimen.largePadding,
-                end = Dimen.largePadding
-            )
-            .fillMaxWidth(),
-        onClick = {
-            //角色全部图片
-            VibrateUtil(context).single()
-            actions.toCharacterPics(unitId)
-        },
-        elevation = 0.dp,
-    ) {
-        Box(contentAlignment = Alignment.BottomEnd) {
-            ImageCompose(CharacterIdUtil.getMaxCardUrl(unitId), ratio = RATIO)
-            if (basicInfo != null) {
-                //位置
-                PositionIcon(
-                    modifier = Modifier.padding(Dimen.smallPadding),
-                    position = basicInfo.position,
-                    size = Dimen.fabIconSize
-                )
-            }
-        }
-    }
     if (basicInfo != null) {
-        Row(
-            modifier = Modifier.padding(start = Dimen.largePadding).fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        CharacterItem(
+            basicInfo,
+            loved,
+            modifier = Modifier
+                .padding(
+                    top = Dimen.largePadding,
+                    start = Dimen.largePadding,
+                    end = Dimen.largePadding
+                )
+                .fillMaxWidth(),
+            numberStyle = MaterialTheme.typography.bodyMedium,
+            size = Dimen.fabIconSize
         ) {
-            //限定类型
-            CharacterLimitText(
-                modifier = Modifier.padding(end = Dimen.mediumPadding),
-                characterInfo = basicInfo,
-                textStyle = MaterialTheme.typography.subtitle1
-            )
-            //名字
-            SelectText(
-                selected = loved,
-                text = basicInfo.name,
-                textAlign = TextAlign.Start,
-                margin = 0.dp,
-                padding = Dimen.smallPadding,
-                textStyle = MaterialTheme.typography.subtitle1
-            )
+            actions.toCharacterPics(unitId)
         }
     }
 }
@@ -389,8 +349,6 @@ private fun CharacterCard(
  * 属性
  */
 @ExperimentalComposeUiApi
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 private fun AttrLists(
     currentValue: CharacterProperty,
@@ -405,19 +363,21 @@ private fun AttrLists(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val insets = LocalWindowInsets.current
+    val context = LocalContext.current
 
     //等级
     Text(
         text = characterLevel.value.toString(),
-        color = MaterialTheme.colors.primary,
-        style = MaterialTheme.typography.h6,
+        color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.titleLarge,
         textAlign = TextAlign.Center,
         modifier = Modifier
             .padding(Dimen.smallPadding)
             .fillMaxWidth(0.3f)
             .padding(Dimen.mediumPadding)
-            .clip(MaterialTheme.shapes.small)
+            .clip(Shape.small)
             .clickable {
+                VibrateUtil(context).single()
                 if (insets.ime.isVisible) {
                     focusManager.clearFocus()
                     keyboardController?.hide()
@@ -433,6 +393,7 @@ private fun AttrLists(
     }
     OutlinedTextField(
         value = inputLevel.value,
+        colors = outlinedTextFieldColors(),
         onValueChange = {
             var filterStr = ""
             it.forEach { ch ->
@@ -447,7 +408,7 @@ private fun AttrLists(
                 else -> maxValue.level.toString()
             }
         },
-        textStyle = MaterialTheme.typography.body2,
+        textStyle = MaterialTheme.typography.bodyMedium,
         trailingIcon = {
             IconCompose(
                 data = MainIconType.OK.icon,
@@ -593,8 +554,6 @@ private fun AttrLists(
  * @param rank 当前rank
  * @param equips 装备列表
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @Composable
 private fun CharacterEquip(
     unitId: Int,
@@ -646,11 +605,11 @@ private fun CharacterEquip(
                     tint = if (rank < maxRank) {
                         getRankColor(rank = rank + 1)
                     } else {
-                        MaterialTheme.colors.background
+                        MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
                         .size(Dimen.starIconSize)
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(Shape.medium)
                         .clickable(enabled = rank < maxRank) {
                             VibrateUtil(context).single()
                             navViewModel.selectRank.postValue(rank + 1)
@@ -673,11 +632,11 @@ private fun CharacterEquip(
                     tint = if (rank > 1) {
                         getRankColor(rank = rank - 1)
                     } else {
-                        MaterialTheme.colors.background
+                        MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
                         .size(Dimen.starIconSize)
-                        .clip(MaterialTheme.shapes.medium)
+                        .clip(Shape.medium)
                         .clickable(enabled = rank > 1) {
                             VibrateUtil(context).single()
                             navViewModel.selectRank.postValue(rank - 1)
@@ -696,7 +655,7 @@ private fun CharacterEquip(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = Dimen.mediumPadding)
+                .padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
@@ -717,7 +676,6 @@ private fun CharacterEquip(
  * @param uniqueEquipmentMaxData 专武数值信息
  */
 @ExperimentalComposeUiApi
-@ExperimentalCoilApi
 @Composable
 private fun UniqueEquip(
     currentValue: CharacterProperty,
@@ -731,6 +689,7 @@ private fun UniqueEquip(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val insets = LocalWindowInsets.current
+    val context = LocalContext.current
 
     uniqueEquipmentMaxData?.let {
         Column(
@@ -745,15 +704,16 @@ private fun UniqueEquip(
             //专武等级
             Text(
                 text = uniqueEquipLevel.value.toString(),
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(Dimen.smallPadding)
+                    .padding(top = Dimen.smallPadding)
                     .fillMaxWidth(0.3f)
                     .padding(Dimen.mediumPadding)
-                    .clip(MaterialTheme.shapes.small)
+                    .clip(Shape.small)
                     .clickable {
+                        VibrateUtil(context).single()
                         if (insets.ime.isVisible) {
                             focusManager.clearFocus()
                             keyboardController?.hide()
@@ -769,6 +729,8 @@ private fun UniqueEquip(
             }
             OutlinedTextField(
                 value = inputLevel.value,
+                shape = Shape.medium,
+                colors = outlinedTextFieldColors(),
                 onValueChange = {
                     var filterStr = ""
                     it.forEach { ch ->
@@ -783,7 +745,7 @@ private fun UniqueEquip(
                         else -> uniqueEquipLevelMax.toString()
                     }
                 },
-                textStyle = MaterialTheme.typography.body2,
+                textStyle = MaterialTheme.typography.bodyMedium,
                 trailingIcon = {
                     IconCompose(
                         data = MainIconType.OK.icon,
@@ -834,7 +796,11 @@ private fun UniqueEquip(
             //图标描述
             Row(
                 modifier = Modifier
-                    .padding(Dimen.largePadding)
+                    .padding(
+                        start = Dimen.largePadding,
+                        end = Dimen.largePadding,
+                        bottom = Dimen.mediumPadding
+                    )
                     .fillMaxWidth()
             ) {
                 IconCompose(getEquipIconUrl(it.equipmentId))

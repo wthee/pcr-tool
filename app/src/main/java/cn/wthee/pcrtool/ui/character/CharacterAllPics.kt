@@ -2,19 +2,19 @@ package cn.wthee.pcrtool.ui.character
 
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,9 +22,9 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.*
 import coil.Coil
-import coil.annotation.ExperimentalCoilApi
 import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -32,9 +32,8 @@ import kotlinx.coroutines.launch
 
 /**
  * 角色卡面图片
+ * fixme 优化图片下载方法
  */
-@ExperimentalAnimationApi
-@ExperimentalCoilApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -65,12 +64,7 @@ fun CharacterAllPics(unitId: Int) {
             }
             Card(
                 modifier = Modifier
-                    .padding(
-                        top = Dimen.mediumPadding,
-                        bottom = Dimen.mediumPadding,
-                        start = Dimen.largePadding,
-                        end = Dimen.largePadding
-                    )
+                    .padding(Dimen.largePadding)
                     .fillMaxWidth(),
                 onClick = {
                     VibrateUtil(context).single()
@@ -84,7 +78,7 @@ fun CharacterAllPics(unitId: Int) {
                         ToastUtil.short(unLoadToast)
                     }
                 },
-                shape = MaterialTheme.shapes.large,
+                shape = Shape.medium,
             ) {
                 //图片
                 ImageCompose(data = picUrls[index], ratio = RATIO) {
@@ -105,32 +99,28 @@ fun CharacterAllPics(unitId: Int) {
             onDismissRequest = {
                 clickedIndex.value = -1
             },
-            buttons = {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Spacer(modifier = Modifier.padding(top = Dimen.largePadding * 2))
-                    Row(
-                        modifier = Modifier
-                            .padding(Dimen.largePadding)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom
-                    ) {
-                        //取消
-                        SubButton(text = stringResource(id = R.string.cancel)) {
-                            clickedIndex.value = -1
-                        }
-                        //确认下载
-                        MainButton(text = stringResource(R.string.save_image)) {
-                            drawables[index]?.let {
-                                FileSaveHelper(context).saveBitmap(
-                                    bitmap = (it as BitmapDrawable).bitmap,
-                                    displayName = "${unitId}_${index}.jpg"
-                                )
-                                clickedIndex.value = -1
-                                VibrateUtil(context).done()
-                            }
-                        }
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = Shape.medium,
+            confirmButton = {
+                //确认下载
+                MainButton(text = stringResource(R.string.save_image)) {
+                    drawables[index]?.let {
+                        FileSaveHelper(context).saveBitmap(
+                            bitmap = (it as BitmapDrawable).bitmap,
+                            displayName = "${unitId}_${index}.jpg"
+                        )
+                        clickedIndex.value = -1
+                        VibrateUtil(context).done()
                     }
+                }
+            },
+            dismissButton = {
+                //取消
+                SubButton(
+                    text = stringResource(id = R.string.cancel),
+                    color = MaterialTheme.colorScheme.primary
+                ) {
+                    clickedIndex.value = -1
                 }
             })
     }

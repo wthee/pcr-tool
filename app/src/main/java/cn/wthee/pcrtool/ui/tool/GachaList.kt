@@ -1,13 +1,12 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,7 +27,6 @@ import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.GachaViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import kotlinx.coroutines.launch
@@ -36,10 +34,8 @@ import kotlinx.coroutines.launch
 /**
  * 角色卡池页面
  */
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun GachaList(
     scrollState: LazyListState,
@@ -89,7 +85,6 @@ fun GachaList(
 /**
  * 单个卡池
  */
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -105,7 +100,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
         "PICK UP" -> colorResource(id = R.color.news_update)
         "复刻" -> colorResource(id = R.color.color_rank_7_10)
         "公主庆典" -> colorResource(id = R.color.color_rank_21)
-        else -> MaterialTheme.colors.primary
+        else -> MaterialTheme.colorScheme.primary
     }
 
     //标题
@@ -140,7 +135,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                     text = stringResource(R.string.progressing, gachaInfo.endTime.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -177,7 +172,6 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
 }
 
 @Preview
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable

@@ -1,14 +1,18 @@
 package cn.wthee.pcrtool.ui.home
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -41,10 +45,12 @@ import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.SlideAnimation
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.insets.navigationBarsPadding
@@ -57,9 +63,7 @@ import kotlinx.coroutines.launch
 /**
  * 首页纵览
  */
-@ExperimentalCoilApi
 @ExperimentalPagerApi
-@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun Overview(
@@ -133,6 +137,7 @@ fun Overview(
                                 actions.toCharacterDetail(id)
                             },
                             elevation = 0.dp,
+                            shape = Shape.medium
                         ) {
                             ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
                         }
@@ -151,7 +156,7 @@ fun Overview(
                 }
             ) {
                 VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                    if (equipList.size > 0) {
+                    if (equipList.isNotEmpty()) {
                         equipList.subList(0, 10).forEach {
                             Box(
                                 modifier = Modifier
@@ -266,7 +271,6 @@ fun Overview(
 }
 
 //数据切换选择弹窗
-@ExperimentalCoilApi
 @Composable
 private fun ChangeDbCompose(
     openDialog: Boolean,
@@ -283,7 +287,7 @@ private fun ChangeDbCompose(
     )
 
     //数据切换
-    FloatingActionButton(
+    SmallFloatingActionButton(
         modifier = modifier
             .animateContentSize(defaultSpring())
             .padding(
@@ -291,11 +295,8 @@ private fun ChangeDbCompose(
                 start = Dimen.fabMargin,
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
-            )
-            .defaultMinSize(
-                minWidth = Dimen.fabSize,
-                minHeight = Dimen.fabSize
             ),
+        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -305,10 +306,7 @@ private fun ChangeDbCompose(
                 MainActivity.navViewModel.fabCloseClick.postValue(true)
             }
         },
-        shape = if (openDialog) MaterialTheme.shapes.medium else CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colors.background,
-        contentColor = MaterialTheme.colors.primary,
+        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         if (openDialog) {
             Column(
@@ -335,7 +333,7 @@ private fun ChangeDbCompose(
                     SelectText(
                         selected = region == i + 2,
                         text = menuTexts[i],
-                        textStyle = MaterialTheme.typography.h6,
+                        textStyle = MaterialTheme.typography.titleLarge,
                         modifier = mModifier.padding(Dimen.mediumPadding)
                     )
                 }
@@ -344,8 +342,8 @@ private fun ChangeDbCompose(
             if (downloadState == -2) {
                 IconCompose(
                     data = MainIconType.CHANGE_DATA.icon,
-                    tint = MaterialTheme.colors.primary,
-                    size = Dimen.menuIconSize
+                    tint = MaterialTheme.colorScheme.primary,
+                    size = Dimen.fabIconSize
                 )
             } else {
                 Box(contentAlignment = Alignment.Center) {
@@ -353,15 +351,15 @@ private fun ChangeDbCompose(
                         modifier = Modifier
                             .size(Dimen.menuIconSize)
                             .padding(Dimen.smallPadding),
-                        color = MaterialTheme.colors.primary,
+                        color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
                     )
                     //显示下载进度
                     if (downloadState in 1..99) {
                         Text(
                             text = downloadState.toString(),
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.overline
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 }
@@ -373,8 +371,6 @@ private fun ChangeDbCompose(
 /**
  * 标题
  */
-@ExperimentalAnimationApi
-@ExperimentalCoilApi
 @Composable
 private fun Section(
     @StringRes titleId: Int,
@@ -388,12 +384,14 @@ private fun Section(
     val modifier = (if (onClick == null) {
         Modifier
     } else {
-        Modifier.clickable(onClick = {
-            VibrateUtil(context).single()
-            if (visible) {
-                onClick.invoke()
-            }
-        })
+        Modifier
+            .clip(Shape.medium)
+            .clickable(onClick = {
+                VibrateUtil(context).single()
+                if (visible) {
+                    onClick.invoke()
+                }
+            })
     })
 
     Column(
@@ -404,21 +402,16 @@ private fun Section(
         } else {
             Modifier
                 .padding(top = Dimen.largePadding)
-        }
+        }.padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
     ) {
         Row(
-            modifier = modifier.padding(
-                start = Dimen.largePadding,
-                end = Dimen.largePadding,
-                top = Dimen.mediumPadding,
-                bottom = Dimen.mediumPadding
-            ),
+            modifier = modifier.padding(Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconCompose(
                 data = iconType.icon,
                 size = Dimen.fabIconSize,
-                tint = MaterialTheme.colors.onSurface
+                tint = MaterialTheme.colorScheme.onSurface
             )
             MainText(
                 text = stringResource(id = titleId),
@@ -426,18 +419,13 @@ private fun Section(
                     .weight(1f)
                     .padding(start = Dimen.mediumPadding),
                 textAlign = TextAlign.Start,
-                color = MaterialTheme.colors.onSurface
+                color = MaterialTheme.colorScheme.onSurface
             )
             //点击跳转
             if (onClick != null) {
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .clip(MaterialTheme.shapes.small)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            onClick.invoke()
-                        }
                         .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -457,7 +445,7 @@ private fun Section(
                     IconCompose(
                         data = MainIconType.MORE.icon,
                         size = Dimen.fabIconSize,
-                        tint = MaterialTheme.colors.onSurface
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -475,7 +463,6 @@ private fun Section(
 /**
  * 日历信息
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
@@ -487,7 +474,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
 
     val color = when {
         inProgress -> {
-            MaterialTheme.colors.primary
+            MaterialTheme.colorScheme.primary
         }
         comingSoon -> {
             colorResource(id = R.color.news_system)

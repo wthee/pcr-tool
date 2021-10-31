@@ -2,12 +2,10 @@ package cn.wthee.pcrtool.ui.home
 
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,10 +20,14 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CaptionText
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.VerticalGrid
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.Shape
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -38,9 +40,7 @@ data class ToolMenuData(
 /**
  * 菜单
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun ToolMenu(actions: NavActions) {
     val context = LocalContext.current
@@ -101,7 +101,6 @@ fun ToolMenu(actions: NavActions) {
     }
 }
 
-@ExperimentalCoilApi
 @Composable
 private fun MenuItem(
     coroutineScope: CoroutineScope,
@@ -111,7 +110,7 @@ private fun MenuItem(
 ) {
     Column(
         modifier = Modifier
-            .clip(MaterialTheme.shapes.medium)
+            .clip(Shape.medium)
             .clickable(onClick = getAction(coroutineScope, context, actions, it))
             .defaultMinSize(minWidth = Dimen.menuItemSize)
             .padding(Dimen.smallPadding),

@@ -1,13 +1,11 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -29,11 +27,11 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import kotlinx.coroutines.launch
 
@@ -47,8 +45,6 @@ import kotlinx.coroutines.launch
  * @param rarity 角色星级
  * @param uniqueEquipLevel 角色专武等级
  */
-@ExperimentalCoilApi
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -97,17 +93,18 @@ fun RankCompare(
 
     ModalBottomSheetLayout(
         sheetState = state,
-        scrimColor = colorResource(id = if (MaterialTheme.colors.isLight) R.color.alpha_white else R.color.alpha_black),
+        scrimColor = colorResource(id = if (isSystemInDarkTheme()) R.color.alpha_black else R.color.alpha_white),
         sheetElevation = Dimen.sheetElevation,
         sheetShape = if (state.offset.value == 0f) {
             noShape
         } else {
-            MaterialTheme.shapes.large
+            Shape.large
         },
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel)
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
 
         if (ok) {
@@ -139,8 +136,8 @@ fun RankCompare(
                         //等级
                         Text(
                             text = "$level",
-                            color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.h6,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(start = Dimen.smallPadding)
                         )
                         StarCompose(rarity)
@@ -151,14 +148,15 @@ fun RankCompare(
                     elevation = Dimen.cardElevation,
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    backgroundColor = MaterialTheme.colorScheme.surface
                 ) {
                     Column {
                         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
                             Spacer(modifier = Modifier.weight(0.3f))
                             RankText(
                                 rank = rank0.value,
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier
                                     .weight(0.2f)
@@ -166,14 +164,14 @@ fun RankCompare(
                             )
                             RankText(
                                 rank = rank1.value,
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier.weight(0.2f)
                             )
                             Text(
                                 text = stringResource(id = R.string.result),
                                 textAlign = TextAlign.End,
-                                style = MaterialTheme.typography.subtitle1,
+                                style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.weight(0.2f)
                             )
                         }
@@ -237,7 +235,7 @@ fun AttrCompare(compareData: List<RankCompareData>) {
                     text = it.attrCompare.int.toString(),
                     color = color,
                     textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(0.2f)
                 )
             }

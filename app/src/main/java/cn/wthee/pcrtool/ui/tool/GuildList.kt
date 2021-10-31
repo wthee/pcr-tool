@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,16 +22,13 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.viewmodel.GuildViewModel
-import coil.annotation.ExperimentalCoilApi
 import kotlinx.coroutines.launch
 
 /**
  * 角色公会
  */
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun GuildList(
     scrollState: LazyListState,
@@ -79,7 +75,6 @@ fun GuildList(
 /**
  * 公会
  */
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -130,7 +125,6 @@ private fun GuildItem(
 }
 
 @Preview
-@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable

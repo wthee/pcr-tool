@@ -1,12 +1,11 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,7 +26,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -36,9 +34,7 @@ import kotlinx.coroutines.launch
 /**
  * 角色排行
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
-@ExperimentalAnimationApi
 @Composable
 fun LeaderboardList(
     scrollState: LazyListState,
@@ -107,8 +103,7 @@ fun LeaderboardList(
             val url = stringResource(id = R.string.leader_source_url)
             val tip = stringResource(id = R.string.visit_detail)
             FabCompose(
-                iconType = MainIconType.FRIEND_LINK,
-                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                iconType = MainIconType.FRIEND_LINK
             ) {
                 //打开网页
                 openWebView(context, url, tip)
@@ -132,7 +127,6 @@ fun LeaderboardList(
 /**
  * 角色评价信息
  */
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun LeaderboardItem(info: LeaderboardData) {
@@ -194,7 +188,6 @@ fun GradeText(grade: String, textAlign: TextAlign = TextAlign.Center, modifier: 
 }
 
 @Preview
-@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun LeaderboardItemPreview() {
