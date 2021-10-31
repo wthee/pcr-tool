@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Switch
-import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +44,7 @@ fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
     val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
-    val painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground)
+    val painter = rememberImagePainter(data = R.mipmap.ic_launcher_round)
     val coroutineScope = rememberCoroutineScope()
     val reloadImportDataTip = stringResource(R.string.reload_import_data)
 
@@ -103,7 +103,9 @@ fun MainSettings() {
             Image(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(Dimen.largePadding)
             )
             Subtitle2(
                 text = "${typeName}：${dbVersionGroup}",

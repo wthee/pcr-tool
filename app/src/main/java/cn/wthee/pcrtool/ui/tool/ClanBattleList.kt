@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -33,12 +35,16 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
-import cn.wthee.pcrtool.ui.theme.*
+import cn.wthee.pcrtool.ui.theme.CardTopShape
+import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.FadeAnimation
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -306,7 +312,9 @@ fun ClanBossInfoPager(
                 openDialog = openDialog,
                 coroutineScope = scope,
                 maxSection = maxSection,
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .navigationBarsPadding()
             )
         }
     }
@@ -331,7 +339,7 @@ private fun SelectSectionCompose(
     val sectionColor = getSectionTextColor(section = section.value + 1)
 
     //数据切换
-    FloatingActionButton(
+    SmallFloatingActionButton(
         modifier = modifier
             .animateContentSize(defaultSpring())
             .padding(
@@ -339,11 +347,8 @@ private fun SelectSectionCompose(
                 start = Dimen.fabMargin,
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
-            )
-            .defaultMinSize(
-                minWidth = Dimen.fabSize,
-                minHeight = Dimen.fabSize
             ),
+        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -353,9 +358,6 @@ private fun SelectSectionCompose(
                 MainActivity.navViewModel.fabCloseClick.postValue(true)
             }
         },
-        shape = if (openDialog) Shape.medium else CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primary,
     ) {
         if (openDialog) {
@@ -434,6 +436,7 @@ private fun ClanBossInfoPagerItem(
     Card(
         shape = CardTopShape,
         elevation = Dimen.cardElevation,
+        backgroundColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier
             .padding(top = Dimen.mediumPadding)
             .fillMaxSize()

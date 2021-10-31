@@ -11,7 +11,6 @@ import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
 import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.formatTime
 import cn.wthee.pcrtool.utils.getToday
 import cn.wthee.pcrtool.utils.second
@@ -35,9 +34,7 @@ class OverviewViewModel @Inject constructor(
      * 获取角色列表
      */
     fun getCharacterList() = flow {
-        emit(unitRepository.getInfoAndData(FilterCharacter(), "全部").filter {
-            !Constants.unuseIDs.contains(it.id)
-        })
+        emit(unitRepository.getInfoAndData(FilterCharacter(), "全部"))
     }
 
     /**

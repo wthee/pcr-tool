@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.TextButton
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -110,7 +110,8 @@ private fun PvpHistoryItem(
                         bottom = if (floatWindow) 0.dp else Dimen.mediumPadding,
                         start = Dimen.smallPadding,
                         end = Dimen.smallPadding
-                    ), onClick = {
+                    ),
+                    onClick = {
                         //重置页面
                         scope.launch {
                             pvpViewModel.pvpResult.postValue(null)

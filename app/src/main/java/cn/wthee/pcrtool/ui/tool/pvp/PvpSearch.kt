@@ -106,7 +106,7 @@ fun PvpSearchCompose(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Column {
             //标题
@@ -220,8 +220,7 @@ fun PvpSearchCompose(
             ) {
                 //悬浮窗
                 FabCompose(
-                    iconType = MainIconType.FLOAT,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    iconType = MainIconType.FLOAT
                 ) {
                     val homeIntent = Intent(Intent.ACTION_MAIN)
                     homeIntent.addCategory(Intent.CATEGORY_HOME)
@@ -240,8 +239,7 @@ fun PvpSearchCompose(
                 }
                 //跳转
                 FabCompose(
-                    iconType = MainIconType.FRIEND_LINK,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    iconType = MainIconType.FRIEND_LINK
                 ) {
                     //打开网页
                     openWebView(context, url, urlTip)
@@ -250,8 +248,7 @@ fun PvpSearchCompose(
                 val addUrl = stringResource(id = R.string.pcrdfans_upload_url)
                 val addTip = stringResource(id = R.string.pvp_info_add_tip)
                 FabCompose(
-                    iconType = MainIconType.PVP_ADD,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    iconType = MainIconType.PVP_ADD
                 ) {
                     //打开网页
                     openWebView(context, addUrl, addTip)

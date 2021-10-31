@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -133,6 +137,7 @@ fun Overview(
                                 actions.toCharacterDetail(id)
                             },
                             elevation = 0.dp,
+                            shape = Shape.medium
                         ) {
                             ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
                         }
@@ -151,7 +156,7 @@ fun Overview(
                 }
             ) {
                 VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
-                    if (equipList.size > 0) {
+                    if (equipList.isNotEmpty()) {
                         equipList.subList(0, 10).forEach {
                             Box(
                                 modifier = Modifier
@@ -282,7 +287,7 @@ private fun ChangeDbCompose(
     )
 
     //数据切换
-    FloatingActionButton(
+    SmallFloatingActionButton(
         modifier = modifier
             .animateContentSize(defaultSpring())
             .padding(
@@ -290,11 +295,8 @@ private fun ChangeDbCompose(
                 start = Dimen.fabMargin,
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
-            )
-            .defaultMinSize(
-                minWidth = Dimen.fabSize,
-                minHeight = Dimen.fabSize
             ),
+        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
@@ -304,9 +306,6 @@ private fun ChangeDbCompose(
                 MainActivity.navViewModel.fabCloseClick.postValue(true)
             }
         },
-        shape = if (openDialog) Shape.medium else CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primary,
     ) {
         if (openDialog) {
@@ -344,7 +343,7 @@ private fun ChangeDbCompose(
                 IconCompose(
                     data = MainIconType.CHANGE_DATA.icon,
                     tint = MaterialTheme.colorScheme.primary,
-                    size = Dimen.menuIconSize
+                    size = Dimen.fabIconSize
                 )
             } else {
                 Box(contentAlignment = Alignment.Center) {
@@ -385,12 +384,14 @@ private fun Section(
     val modifier = (if (onClick == null) {
         Modifier
     } else {
-        Modifier.clickable(onClick = {
-            VibrateUtil(context).single()
-            if (visible) {
-                onClick.invoke()
-            }
-        })
+        Modifier
+            .clip(Shape.medium)
+            .clickable(onClick = {
+                VibrateUtil(context).single()
+                if (visible) {
+                    onClick.invoke()
+                }
+            })
     })
 
     Column(
@@ -401,15 +402,10 @@ private fun Section(
         } else {
             Modifier
                 .padding(top = Dimen.largePadding)
-        }
+        }.padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
     ) {
         Row(
-            modifier = modifier.padding(
-                start = Dimen.largePadding,
-                end = Dimen.largePadding,
-                top = Dimen.mediumPadding,
-                bottom = Dimen.mediumPadding
-            ),
+            modifier = modifier.padding(Dimen.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconCompose(
@@ -430,11 +426,6 @@ private fun Section(
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .clip(Shape.small)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            onClick.invoke()
-                        }
                         .padding(start = Dimen.smallPadding, end = Dimen.smallPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

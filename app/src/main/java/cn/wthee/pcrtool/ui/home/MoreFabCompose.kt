@@ -48,7 +48,7 @@ fun MoreFabCompose(viewModel: NavViewModel) {
                 iconType = MainIconType.SUPPORT,
                 text = stringResource(R.string.qq_group),
                 modifier = Modifier.padding(bottom = Dimen.fabSmallMarginEnd),
-                defaultPadding = false
+                hasNavBarPadding = false
             ) {
                 joinQQGroup(context)
             }
@@ -57,7 +57,7 @@ fun MoreFabCompose(viewModel: NavViewModel) {
                 iconType = MainIconType.ISSUE,
                 text = stringResource(R.string.issue),
                 modifier = Modifier.padding(bottom = Dimen.fabSmallMarginEnd),
-                defaultPadding = false
+                hasNavBarPadding = false
             ) {
                 openWebView(context, issueUrl, issueTip)
             }

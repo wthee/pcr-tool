@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -103,8 +103,7 @@ fun LeaderboardList(
             val url = stringResource(id = R.string.leader_source_url)
             val tip = stringResource(id = R.string.visit_detail)
             FabCompose(
-                iconType = MainIconType.FRIEND_LINK,
-                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                iconType = MainIconType.FRIEND_LINK
             ) {
                 //打开网页
                 openWebView(context, url, tip)

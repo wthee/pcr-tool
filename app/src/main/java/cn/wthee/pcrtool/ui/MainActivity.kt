@@ -12,11 +12,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,14 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.actions
@@ -89,12 +88,12 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    @ExperimentalAnimationApi
-    @ExperimentalComposeUiApi
-    @ExperimentalPagingApi
-    @ExperimentalMaterialApi
-    @ExperimentalPagerApi
     @ExperimentalFoundationApi
+    @ExperimentalPagerApi
+    @ExperimentalMaterialApi
+    @ExperimentalPagingApi
+    @ExperimentalComposeUiApi
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -105,11 +104,11 @@ class MainActivity : ComponentActivity() {
                     val ui = rememberSystemUiController()
                     val isLight = !isSystemInDarkTheme()
                     ui.setNavigationBarColor(
-                        colorResource(id = if (isLight) R.color.alpha_white else R.color.alpha_black),
+                        MaterialTheme.colorScheme.surface,
                         darkIcons = isLight
                     )
-                    ui.setStatusBarColor(MaterialTheme.colorScheme.background, darkIcons = isLight)
-                    Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+                    ui.setStatusBarColor(MaterialTheme.colorScheme.surface, darkIcons = isLight)
+                    Surface {
                         Home()
                     }
                 }
@@ -260,7 +259,6 @@ fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
         if (themeType == 0 || themeType == 1) {
             PCRToolComposeTheme(darkTheme = false) {
                 Surface(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     content = content
                 )
             }
@@ -273,7 +271,6 @@ fun PreviewBox(themeType: Int = 0, content: @Composable () -> Unit) {
         if (themeType == 0 || themeType == 2) {
             PCRToolComposeTheme(darkTheme = true) {
                 Surface(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                     content = content
                 )
             }

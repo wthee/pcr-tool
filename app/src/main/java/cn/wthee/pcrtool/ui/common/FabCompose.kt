@@ -2,13 +2,12 @@ package cn.wthee.pcrtool.ui.common
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.FloatingActionButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,29 +26,32 @@ import com.google.accompanist.insets.navigationBarsPadding
  */
 @Composable
 fun FabCompose(
-    iconType: MainIconType,
+    iconType: Any,
     modifier: Modifier = Modifier,
     text: String = "",
-    defaultPadding: Boolean = true,
+    hasNavBarPadding: Boolean = true,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val mModifier = if (defaultPadding) {
+    var mModifier = if (hasNavBarPadding) {
         modifier.navigationBarsPadding()
     } else {
         modifier
     }
 
-    FloatingActionButton(
+    if (text != "") {
+        mModifier = mModifier.padding(start = Dimen.textfabMargin, end = Dimen.textfabMargin)
+    }
+
+    SmallFloatingActionButton(
         onClick = {
             VibrateUtil(context).single()
             onClick.invoke()
         },
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        backgroundColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primary,
-        modifier = mModifier.defaultMinSize(minWidth = Dimen.fabSize, minHeight = Dimen.fabSize),
+        modifier = mModifier,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -59,7 +61,10 @@ fun FabCompose(
                 Modifier
             }
         ) {
-            IconCompose(iconType.icon, size = Dimen.fabIconSize)
+            IconCompose(
+                if (iconType is MainIconType) iconType.icon else iconType,
+                size = Dimen.fabIconSize,
+            )
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleSmall,

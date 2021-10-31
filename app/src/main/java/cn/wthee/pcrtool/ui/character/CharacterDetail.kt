@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -130,7 +131,8 @@ fun CharacterDetail(
                     end = Dimen.mediumPadding,
                 )
             )
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         currentValueState.value?.let { currentValue ->
             val unknown = maxValue.level == -1
@@ -164,8 +166,7 @@ fun CharacterDetail(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .background(MaterialTheme.colorScheme.background),
+                            .verticalScroll(scrollState),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         //角色卡面
@@ -223,8 +224,7 @@ fun CharacterDetail(
                         modifier = Modifier
                             .padding(Dimen.largePadding)
                             .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .background(MaterialTheme.colorScheme.background),
+                            .verticalScroll(scrollState),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CharacterCard(loved.value, actions, unitId)
@@ -253,8 +253,7 @@ fun CharacterDetail(
                         //收藏
                         FabCompose(
                             iconType = if (loved.value) MainIconType.LOVE_FILL else MainIconType.LOVE_LINE,
-                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
-                            defaultPadding = unknown
+                            hasNavBarPadding = unknown
                         ) {
                             filter.value?.addOrRemove(unitId)
                             loved.value = !loved.value
@@ -262,15 +261,14 @@ fun CharacterDetail(
                         //跳转至角色资料
                         FabCompose(
                             iconType = MainIconType.CHARACTER_INTRO,
-                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd),
-                            defaultPadding = unknown
+                            hasNavBarPadding = unknown
                         ) {
                             actions.toCharacterBasicInfo(unitId)
                         }
                         //技能循环
                         FabCompose(
                             iconType = MainIconType.SKILL_LOOP,
-                            defaultPadding = unknown,
+                            hasNavBarPadding = unknown,
                             modifier = Modifier.alpha(if (unknown) 0f else 1f)
                         ) {
                             coroutineScope.launch {
@@ -293,7 +291,6 @@ fun CharacterDetail(
                             FabCompose(
                                 iconType = MainIconType.RANK_COMPARE,
                                 text = stringResource(id = R.string.compare),
-                                modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
                             ) {
                                 actions.toCharacteRankCompare(
                                     unitId,
@@ -366,6 +363,7 @@ private fun AttrLists(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val insets = LocalWindowInsets.current
+    val context = LocalContext.current
 
     //等级
     Text(
@@ -379,6 +377,7 @@ private fun AttrLists(
             .padding(Dimen.mediumPadding)
             .clip(Shape.small)
             .clickable {
+                VibrateUtil(context).single()
                 if (insets.ime.isVisible) {
                     focusManager.clearFocus()
                     keyboardController?.hide()
@@ -606,7 +605,7 @@ private fun CharacterEquip(
                     tint = if (rank < maxRank) {
                         getRankColor(rank = rank + 1)
                     } else {
-                        MaterialTheme.colorScheme.background
+                        MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
                         .size(Dimen.starIconSize)
@@ -633,7 +632,7 @@ private fun CharacterEquip(
                     tint = if (rank > 1) {
                         getRankColor(rank = rank - 1)
                     } else {
-                        MaterialTheme.colorScheme.background
+                        MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
                         .size(Dimen.starIconSize)
@@ -690,6 +689,7 @@ private fun UniqueEquip(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val insets = LocalWindowInsets.current
+    val context = LocalContext.current
 
     uniqueEquipmentMaxData?.let {
         Column(
@@ -713,6 +713,7 @@ private fun UniqueEquip(
                     .padding(Dimen.mediumPadding)
                     .clip(Shape.small)
                     .clickable {
+                        VibrateUtil(context).single()
                         if (insets.ime.isVisible) {
                             focusManager.clearFocus()
                             keyboardController?.hide()
@@ -728,6 +729,7 @@ private fun UniqueEquip(
             }
             OutlinedTextField(
                 value = inputLevel.value,
+                shape = Shape.medium,
                 colors = outlinedTextFieldColors(),
                 onValueChange = {
                     var filterStr = ""

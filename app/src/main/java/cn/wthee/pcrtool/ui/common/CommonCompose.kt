@@ -3,8 +3,12 @@ package cn.wthee.pcrtool.ui.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -233,7 +237,7 @@ fun DivCompose(modifier: Modifier = Modifier) {
 fun MainButton(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Unspecified,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -246,7 +250,11 @@ fun MainButton(
             onClick.invoke()
         }
     ) {
-        Text(text = text, color = color, style = MaterialTheme.typography.labelLarge)
+        Text(
+            text = text,
+            color = color,
+            style = MaterialTheme.typography.labelLarge
+        )
     }
 }
 

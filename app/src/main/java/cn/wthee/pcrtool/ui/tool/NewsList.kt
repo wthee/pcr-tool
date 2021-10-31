@@ -8,8 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -120,14 +124,14 @@ fun NewsList(
             }
         }
 
-        Card(
+        SmallFloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth(0.618f)
                 .padding(bottom = Dimen.fabMargin)
                 .navigationBarsPadding(),
             shape = CircleShape,
-            elevation = Dimen.cardElevation,
+            onClick = {}
         ) {
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
@@ -389,8 +393,7 @@ fun NewsDetail(key: String, newsViewModel: NewsViewModel = hiltViewModel()) {
             ) {
                 //浏览器打开
                 FabCompose(
-                    iconType = MainIconType.BROWSER,
-                    modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                    iconType = MainIconType.BROWSER
                 ) {
                     openWebView(context, originalUrl)
                 }

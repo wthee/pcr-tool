@@ -10,6 +10,8 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorPalette = darkColorScheme(
     primary = colorPrimaryDark,
+    primaryContainer = Color.Black,
+    onPrimaryContainer = colorPrimaryDark,
     secondary = colorPrimaryDark,
     surfaceVariant = colorAccentDark,
     background = Color.Black
@@ -17,6 +19,8 @@ private val DarkColorPalette = darkColorScheme(
 
 private val LightColorPalette = lightColorScheme(
     primary = colorPrimary,
+    primaryContainer = Color.White,
+    onPrimaryContainer = colorPrimary,
     secondary = colorPrimary,
     surfaceVariant = colorAccent,
     background = Color.White

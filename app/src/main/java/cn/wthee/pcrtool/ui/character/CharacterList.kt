@@ -1,13 +1,16 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -92,12 +95,12 @@ fun CharacterList(
         },
         sheetContent = {
             FilterCharacterSheet(navViewModel, coroutineScope, state)
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
         ) {
             if (list.isNotEmpty()) {
                 LazyVerticalGrid(
@@ -129,8 +132,7 @@ fun CharacterList(
                 //回到顶部
                 FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
                     FabCompose(
-                        iconType = MainIconType.TOP,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        iconType = MainIconType.TOP
                     ) {
                         coroutineScope.launch {
                             scrollState.scrollToItem(0)
@@ -140,8 +142,7 @@ fun CharacterList(
                 //重置筛选
                 if (filter.value != null && filter.value!!.isFilter()) {
                     FabCompose(
-                        iconType = MainIconType.RESET,
-                        modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                        iconType = MainIconType.RESET
                     ) {
                         coroutineScope.launch {
                             state.hide()
@@ -182,7 +183,7 @@ fun CharacterItem(
     loved: Boolean,
     modifier: Modifier = Modifier,
     numberStyle: TextStyle = MaterialTheme.typography.bodySmall,
-    size: Dp = Dimen.smallPadding,
+    size: Dp = Dimen.smallIconSize,
     onClick: () -> Unit
 ) {
     MainCard(
@@ -366,6 +367,7 @@ private fun FilterCharacterSheet(
         val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
             value = textState.value,
+            shape = Shape.medium,
             colors = outlinedTextFieldColors(),
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.labelLarge,

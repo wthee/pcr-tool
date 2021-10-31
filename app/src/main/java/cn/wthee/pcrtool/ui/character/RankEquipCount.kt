@@ -96,7 +96,8 @@ fun RankEquipCount(
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel, 1)
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
 
         if (ok) {
@@ -150,7 +151,8 @@ fun RankEquipCount(
                     elevation = Dimen.cardElevation,
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    backgroundColor = MaterialTheme.colorScheme.surface
                 ) {
                     val spanCount = 5
                     filter.value?.let { filterValue ->

@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -85,7 +86,8 @@ fun EquipList(
             },
             sheetContent = {
                 FilterEquipSheet(navViewModel, coroutineScope, state)
-            }
+            },
+            sheetBackgroundColor = MaterialTheme.colorScheme.surface
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 val spanCount = 4
@@ -109,10 +111,10 @@ fun EquipList(
                         .align(Alignment.BottomEnd),
                     horizontalArrangement = Arrangement.End
                 ) {
+                    //回到顶部
                     FadeAnimation(visible = scrollState.firstVisibleItemIndex != 0) {
                         FabCompose(
-                            iconType = MainIconType.TOP,
-                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                            iconType = MainIconType.TOP
                         ) {
                             coroutineScope.launch {
                                 scrollState.scrollToItem(0)
@@ -122,8 +124,7 @@ fun EquipList(
                     //重置筛选
                     if (filter.value != null && filter.value!!.isFilter()) {
                         FabCompose(
-                            iconType = MainIconType.RESET,
-                            modifier = Modifier.padding(end = Dimen.fabSmallMarginEnd)
+                            iconType = MainIconType.RESET
                         ) {
                             coroutineScope.launch {
                                 state.hide()
@@ -254,6 +255,7 @@ private fun FilterEquipSheet(
         val keyboardController = LocalSoftwareKeyboardController.current
         OutlinedTextField(
             value = textState.value,
+            shape = Shape.medium,
             colors = outlinedTextFieldColors(),
             onValueChange = { textState.value = it },
             textStyle = MaterialTheme.typography.labelLarge,

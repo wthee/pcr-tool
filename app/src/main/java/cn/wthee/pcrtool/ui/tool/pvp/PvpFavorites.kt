@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.TextButton
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -95,24 +95,27 @@ private fun PvpFavoriteItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         //搜索
-        TextButton(onClick = {
-            //重置页面
-            scope.launch {
-                pvpViewModel.pvpResult.postValue(null)
-                val selectedData =
-                    characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
-                val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                selectedIds?.sortByDescending { it.position }
-                MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
-                MainActivity.navViewModel.showResult.postValue(true)
-            }
-            VibrateUtil(context).single()
-        }) {
+        TextButton(
+            onClick = {
+                //重置页面
+                scope.launch {
+                    pvpViewModel.pvpResult.postValue(null)
+                    val selectedData =
+                        characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
+                    val selectedIds = selectedData as ArrayList<PvpCharacterData>?
+                    selectedIds?.sortByDescending { it.position }
+                    MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
+                    MainActivity.navViewModel.showResult.postValue(true)
+                }
+                VibrateUtil(context).single()
+            }) {
             IconCompose(
                 data = MainIconType.PVP_SEARCH.icon,
                 size = Dimen.fabIconSize
             )
-            MainContentText(text = stringResource(id = R.string.pvp_research))
+            if (!floatWindow) {
+                MainContentText(text = stringResource(id = R.string.pvp_research))
+            }
         }
         Spacer(modifier = Modifier.weight(1f))
         //取消收藏

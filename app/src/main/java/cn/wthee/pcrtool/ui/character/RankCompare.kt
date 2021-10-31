@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -102,7 +103,8 @@ fun RankCompare(
         sheetContent = {
             //RANK 选择
             RankSelectCompose(rank0, rank1, maxRank, coroutineScope, state, navViewModel)
-        }
+        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.surface
     ) {
 
         if (ok) {
@@ -146,7 +148,8 @@ fun RankCompare(
                     elevation = Dimen.cardElevation,
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
-                        .fillMaxSize()
+                        .fillMaxSize(),
+                    backgroundColor = MaterialTheme.colorScheme.surface
                 ) {
                     Column {
                         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {

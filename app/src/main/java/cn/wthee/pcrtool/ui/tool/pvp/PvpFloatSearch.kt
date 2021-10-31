@@ -1,18 +1,14 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,9 +23,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
-import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
-import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
@@ -53,35 +47,21 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     PCRToolComposeTheme {
         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
             Column {
-                FloatingActionButton(
-                    onClick = {
-                        VibrateUtil(context).single()
-                        MainActivity.navViewModel.floatSearchMin.postValue(!min)
-                    },
-                    shape = CircleShape,
-                    backgroundColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .padding(Dimen.smallPadding)
-                        .size(Dimen.fabSize),
+                FabCompose(
+                    iconType = R.mipmap.ic_launcher_foreground
                 ) {
-                    Image(
-                        painter = rememberImagePainter(data = R.mipmap.ic_launcher_foreground),
-                        contentDescription = null
-                    )
+                    MainActivity.navViewModel.floatSearchMin.postValue(!min)
                 }
                 if (!min) {
                     FabCompose(
-                        iconType = MainIconType.FLOAT_CLOSE,
-                        modifier = Modifier.padding(Dimen.smallPadding)
+                        iconType = MainIconType.FLOAT_CLOSE
                     ) {
                         MainActivity.navViewModel.floatServiceRun.postValue(false)
                     }
                 }
                 if (!min && !showResult) {
                     FabCompose(
-                        iconType = MainIconType.PVP_SEARCH,
-                        modifier = Modifier.padding(Dimen.smallPadding)
+                        iconType = MainIconType.PVP_SEARCH
                     ) {
                         coroutineScope.launch {
                             try {
@@ -95,7 +75,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                     }
                 }
                 if (!min && showResult) {
-                    FabMain(modifier = Modifier.padding(Dimen.smallPadding))
+                    FabMain()
                 }
             }
             val modifier = if (min) {
