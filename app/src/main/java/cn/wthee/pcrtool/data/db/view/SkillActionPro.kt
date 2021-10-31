@@ -186,6 +186,7 @@ data class SkillActionPro(
             512 -> "中毒或猛毒状态"
             710 -> "BREAK 状态"
             1400 -> "变身状态"
+            721, 6107 -> "龙眼状态"
             else -> UNKNOWN
         }
 
@@ -340,7 +341,7 @@ data class SkillActionPro(
             SkillActionType.BLIND -> {
                 val chance = getValueText(3, action_value_3, action_value_4, 0.0, "%")
                 val time = getTimeText(1, action_value_1, action_value_2)
-                "以 $chance 的概率使${getTarget()}进入${toSkillActionType(action_type).desc}状态${time}；对象进行物理攻击时有 [${100 - action_detail_1}%] 的概率miss"
+                "以 $chance 的概率使${getTarget()}进入${toSkillActionType(action_type).desc}状态${time}；对象进行物理攻击时有 [${100 - action_detail_1}%] 的概率被回避"
             }
             SkillActionType.SILENCE -> {
                 val chance = getValueText(3, action_value_3, action_value_4, 0.0, "%")
@@ -422,7 +423,7 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
             }
-            SkillActionType.IF_FOR_CHILDREN -> {
+            SkillActionType.IF_STATUS -> {
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
                 if (action_detail_2 != 0) {
@@ -460,20 +461,7 @@ data class SkillActionPro(
                     }
                 }
                 //条件
-                if (action_detail_1 == 100 || action_detail_1 == 101 || action_detail_1 == 200 || action_detail_1 == 300 || action_detail_1 == 500 || action_detail_1 == 501
-                    || action_detail_1 == 502 || action_detail_1 == 503 || action_detail_1 == 512
-                    || (action_detail_1 in 600..899) || (action_detail_1 in 901..999)
-                    || action_detail_1 == 1300 || action_detail_1 == 1400
-                ) {
-                    if (trueClause != UNKNOWN && falseClause != UNKNOWN)
-                        "条件：${trueClause}；${falseClause}"
-                    else if (trueClause != UNKNOWN)
-                        "条件：${trueClause}"
-                    else if (falseClause != UNKNOWN)
-                        "条件：${falseClause}"
-                    else
-                        UNKNOWN
-                } else if (action_detail_1 in 0..99) {
+                if (action_detail_1 in 0..99) {
                     if (action_detail_2 != 0 && action_detail_3 != 0) {
                         "随机事件：[${action_detail_1}%] 的概率使用动作(${action_detail_2 % 10})，否则使用动作(${action_detail_3 % 10})"
                     } else if (action_detail_2 != 0) {
@@ -484,15 +472,22 @@ data class SkillActionPro(
                         UNKNOWN
                     }
                 } else {
-                    UNKNOWN
+                    if (trueClause != UNKNOWN && falseClause != UNKNOWN)
+                        "条件：${trueClause}；${falseClause}"
+                    else if (trueClause != UNKNOWN)
+                        "条件：${trueClause}"
+                    else if (falseClause != UNKNOWN)
+                        "条件：${falseClause}"
+                    else
+                        UNKNOWN
                 }
             }
-            SkillActionType.IF_FOR_ALL -> {
+            SkillActionType.IF_SP_STATUS -> {
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
                 if (action_detail_2 != 0 || (action_detail_2 == 0 && action_detail_3 == 0)) {
                     trueClause =
-                        if (action_detail_1 == 710 || action_detail_1 == 100 || action_detail_1 in 500..512) {
+                        if (action_detail_1 == 710 || action_detail_1 == 100 || action_detail_1 in 500..512 || action_detail_1 == 721) {
                             if (status != UNKNOWN)
                                 "当${getTarget()}在[${status}]时，使用动作(${action_detail_2 % 100})"
                             else
@@ -523,34 +518,35 @@ data class SkillActionPro(
                 }
 
                 if (action_detail_3 != 0) {
-                    falseClause = if (action_detail_1 == 710 || action_detail_1 in 500..512) {
-                        if (status != UNKNOWN)
-                            "当${getTarget()}不在[${status}]时，使用动作(${action_detail_3 % 100})"
-                        else
+                    falseClause =
+                        if (action_detail_1 == 710 || action_detail_1 in 500..512 || action_detail_1 == 721) {
+                            if (status != UNKNOWN)
+                                "当${getTarget()}不在[${status}]时，使用动作(${action_detail_3 % 100})"
+                            else
+                                UNKNOWN
+                        } else if (action_detail_1 in 0..99) {
+                            "以 [${100 - action_detail_1}%] 的概率使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 == 599) {
+                            "${getTarget()}身上没有持续伤害时，使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 in 600..699) {
+                            "${getTarget()}的标记层数不足 [${action_value_3.toInt()}] 时，使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 == 700) {
+                            "${getTarget()}是不是单独时，使用 [${action_detail_3 % 10}]"
+                        } else if (action_detail_1 in 701..709) {
+                            "排除潜伏状态的单位，${getTarget()}的数量不是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 == 720) {
+                            "排除潜伏状态的单位，${getTarget()}中不存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 in 901..999) {
+                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以上时，使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 == 1000) {
+                            "上一个动作未击杀单位时，使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 == 1001) {
+                            "本技能未触发暴击时，使用动作(${action_detail_3 % 10})"
+                        } else if (action_detail_1 in 1200..1299) {
+                            "[计数器 ${action_detail_1 % 100 / 10}] 的数量不足 [${action_detail_1 % 10}] 时，使用动作(${action_detail_3 % 10})"
+                        } else {
                             UNKNOWN
-                    } else if (action_detail_1 in 0..99) {
-                        "以 [${100 - action_detail_1}%] 的概率使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 == 599) {
-                        "${getTarget()}身上没有持续伤害时，使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 in 600..699) {
-                        "${getTarget()}的标记层数不足 [${action_value_3.toInt()}] 时，使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 == 700) {
-                        "${getTarget()}是不是单独时，使用 [${action_detail_3 % 10}]"
-                    } else if (action_detail_1 in 701..709) {
-                        "排除潜伏状态的单位，${getTarget()}的数量不是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 == 720) {
-                        "排除潜伏状态的单位，${getTarget()}中不存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 in 901..999) {
-                        "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以上时，使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 == 1000) {
-                        "上一个动作未击杀单位时，使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 == 1001) {
-                        "本技能未触发暴击时，使用动作(${action_detail_3 % 10})"
-                    } else if (action_detail_1 in 1200..1299) {
-                        "[计数器 ${action_detail_1 % 100 / 10}] 的数量不足 [${action_detail_1 % 10}] 时，使用动作(${action_detail_3 % 10})"
-                    } else {
-                        UNKNOWN
-                    }
+                        }
                 }
 
                 //条件
@@ -799,8 +795,8 @@ data class SkillActionPro(
                 val value = getValueText(2, action_value_2, action_value_3)
                 val time = getTimeText(2, action_value_2, action_value_3)
                 when (action_value_1.toInt()) {
-                    1 -> "使${getTarget()}的物理攻击必定miss$time"
-                    2 -> "使${getTarget()}的下 $value 次物理攻击必定miss"
+                    1 -> "使${getTarget()}的物理攻击必定被回避$time"
+                    2 -> "使${getTarget()}的下 $value 次物理攻击必定被回避"
                     else -> UNKNOWN
                 }
             }
@@ -954,7 +950,17 @@ data class SkillActionPro(
     /**
      * 获取 %
      */
-    private fun getPercent() = if (action_detail_1 == 2 || action_value_1.toInt() == 2) "%" else ""
+    private fun getPercent() = when (toSkillActionType(action_type)) {
+        SkillActionType.AURA, SkillActionType.HEAL_DOWN -> {
+            if (action_value_1.int == 2 || action_detail_1 / 10 == 14 || action_detail_1 / 10 == 17) {
+                "%"
+            } else {
+                ""
+            }
+        }
+        SkillActionType.HEAL_FIELD, SkillActionType.AURA_FIELD -> if (action_detail_2 == 2) "%" else ""
+        else -> ""
+    }
 
     /**
      * 持续时间
@@ -1027,12 +1033,13 @@ data class SkillActionPro(
                 12 -> "魔法暴击伤害"
                 13 -> "命中"
                 14 -> "受到的暴击伤害"
+                17 -> "受到的魔法伤害"
                 else -> UNKNOWN
             }
         }
         var type = (if (v % 10 == 0) "提升" else "减少") + " " + valueText
-        if (v / 10 == 14) {
-            type = (if (v % 10 == 0) "减少" else "提升") + " " + valueText + "%"
+        if (v / 10 == 14 || v / 10 == 17) {
+            type = (if (v % 10 == 0) "减少" else "提升") + " " + valueText
         }
         return action + type
     }

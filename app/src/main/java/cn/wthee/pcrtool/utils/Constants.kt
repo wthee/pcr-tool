@@ -146,16 +146,6 @@ object Constants {
         109731, 109831, 109931, 109231, 109331, 109431
     )
 
-    //未实装角色
-    val unuseIDs = arrayListOf(
-//        106701,
-//        106901,
-//        107201,
-//        107301,
-        110201,
-//        191301
-    )
-
     // 异常
     private const val EXCEPTION = "异常"
     const val EXCEPTION_API = "接口$EXCEPTION"

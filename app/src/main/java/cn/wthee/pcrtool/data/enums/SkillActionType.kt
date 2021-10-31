@@ -124,7 +124,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 23：判定对象状态
      */
-    IF_FOR_CHILDREN(23, ""),
+    IF_STATUS(23, ""),
 
     /**
      * 24：复活
@@ -150,7 +150,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
      * 28：特殊条件
      *
      */
-    IF_FOR_ALL(28, ""),
+    IF_SP_STATUS(28, ""),
 
     /**
      * 29：变更攻击区域？
