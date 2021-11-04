@@ -35,6 +35,7 @@ const val RATIO_COMMON = 371 / 208f
 fun ImageCompose(
     data: Any,
     ratio: Float,
+    modifier: Modifier = Modifier.fillMaxWidth(),
     onSuccess: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -57,8 +58,7 @@ fun ImageCompose(
         painter = painter,
         contentDescription = null,
         contentScale = ContentScale.FillWidth,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .aspectRatio(ratio),
     )
 }
