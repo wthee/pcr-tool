@@ -5,7 +5,7 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.1.0-beta01"
+val composeVersion = "1.1.0-beta02"
 val appVersionCode = 230
 val appVersionName = "2.3.0"
 val sql = 215
@@ -137,10 +137,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-beta01")
+    implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime:3.0.1")
+    implementation("androidx.paging:paging-runtime:3.1.0-rc01")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
     //Retrofit
