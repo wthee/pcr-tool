@@ -27,14 +27,28 @@ val String.formatTime: String
     }
 
 /**
+ * 小时 - 1
+ */
+fun fixJpTime(date: String, type: Int): String = if (date != "") {
+    if (type == 4) {
+        try {
+            val d = df1.parse(date)!!.time - 60 * 60 * 1000
+            df1.format(Date(d))
+        } catch (e: Exception) {
+            date
+        }
+    } else {
+        date
+    }
+} else {
+    ""
+}
+
+/**
  * 获取当天时间
  */
-fun getToday(type: Int): String {
-    var time = System.currentTimeMillis()
-    if (type == 2) {
-        //日服时区
-        time += 60 * 60 * 1000
-    }
+fun getToday(): String {
+    val time = System.currentTimeMillis()
     val date = Date(time)
     return df1.format(date)
 }

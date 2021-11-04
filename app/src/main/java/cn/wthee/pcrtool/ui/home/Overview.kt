@@ -469,9 +469,10 @@ private fun Section(
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
-    val today = getToday(settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
-    val sd = calendar.startTime.formatTime
-    val ed = calendar.endTime.formatTime
+    val regionType = settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2)
+    val today = getToday()
+    val sd = fixJpTime(calendar.startTime.formatTime, regionType)
+    val ed = fixJpTime(calendar.endTime.formatTime, regionType)
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
     val comingSoon = today.second(sd) < 0
 

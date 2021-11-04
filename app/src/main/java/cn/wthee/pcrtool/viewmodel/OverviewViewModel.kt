@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
@@ -9,11 +10,9 @@ import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
-import cn.wthee.pcrtool.utils.formatTime
-import cn.wthee.pcrtool.utils.getToday
-import cn.wthee.pcrtool.utils.second
+import cn.wthee.pcrtool.ui.settingSP
+import cn.wthee.pcrtool.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -50,18 +49,20 @@ class OverviewViewModel @Inject constructor(
      * @param type 0：进行中 1：预告
      */
     fun getCalendarEventList(type: Int) = flow {
-        val today = getToday(getRegion())
+        val regionType = settingSP(MyApplication.context).getInt(Constants.SP_DATABASE_TYPE, 2)
+        val today = getToday()
         val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
+
         if (type == 0) {
             emit(data.filter {
-                val sd = it.startTime.formatTime
-                val ed = it.endTime.formatTime
+                val sd = fixJpTime(it.startTime.formatTime, regionType)
+                val ed = fixJpTime(it.endTime.formatTime, regionType)
                 val inProgress = today.second(sd) > 0 && ed.second(today) > 0
                 inProgress
             }.sortedWith(compare(today)))
         } else {
             emit(data.filter {
-                val sd = it.startTime.formatTime
+                val sd = fixJpTime(it.startTime.formatTime, regionType)
                 val comingSoon = today.second(sd) < 0
                 comingSoon
             }.sortedWith(compare(today)))

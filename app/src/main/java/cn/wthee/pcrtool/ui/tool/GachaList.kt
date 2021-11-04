@@ -89,9 +89,10 @@ fun GachaList(
 @ExperimentalMaterialApi
 @Composable
 private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
-    val today = getToday(settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
-    val sd = gachaInfo.startTime
-    val ed = gachaInfo.endTime
+    val regionType = settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2)
+    val today = getToday()
+    val sd = fixJpTime(gachaInfo.startTime, regionType)
+    val ed = fixJpTime(gachaInfo.endTime, regionType)
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
 
     val icons = gachaInfo.unitIds.intArrayList
@@ -113,11 +114,11 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
             backgroundColor = color
         )
         MainTitleText(
-            text = gachaInfo.startTime.formatTime.substring(0, 10),
+            text = sd.substring(0, 10),
             modifier = Modifier.padding(start = Dimen.smallPadding),
         )
         MainTitleText(
-            text = gachaInfo.endTime.days(gachaInfo.startTime),
+            text = ed.days(sd),
             modifier = Modifier.padding(start = Dimen.smallPadding)
         )
 
@@ -132,7 +133,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                     size = Dimen.smallIconSize,
                 )
                 MainContentText(
-                    text = stringResource(R.string.progressing, gachaInfo.endTime.dates(today)),
+                    text = stringResource(R.string.progressing, ed.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.primary
@@ -160,7 +161,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
 
             //结束日期
             CaptionText(
-                text = gachaInfo.endTime.formatTime,
+                text = ed,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = Dimen.mediumPadding)
