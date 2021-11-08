@@ -88,15 +88,15 @@ fun EventList(
 @ExperimentalMaterialApi
 @Composable
 private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
-
     val type: String
     val typeColor: Color
     var showDays = true
-    val today = getToday(settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
-    val startDate = event.startTime.formatTime.substring(0, 10)
-    val endDate = event.endTime.formatTime.substring(0, 10)
-    val preEvent = startDate == "2030/12/30"
-    val days = endDate.days(startDate)
+    val regionType = settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2)
+    val today = getToday()
+    val sd = fixJpTime(event.startTime.formatTime, regionType)
+    val ed = fixJpTime(event.endTime.formatTime, regionType)
+    val preEvent = sd.substring(0, 10) == "2030/12/30"
+    val days = ed.days(sd)
     if (days == "0" || days == "0天") {
         showDays = false
     }
@@ -114,7 +114,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             typeColor = colorResource(id = R.color.color_rank_7_10)
         }
         //预告
-        event.startTime.second(today) > 0 || preEvent -> {
+        sd.second(today) > 0 || preEvent -> {
             type = "预告"
             typeColor = colorResource(id = R.color.news_system)
         }
@@ -125,8 +125,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
     }
     val inProgress =
-        today.second(event.startTime) > 0 && event.endTime.second(today) > 0 && event.eventId / 10000 != 2
-    val comingSoon = today.second(event.startTime) < 0 && (!preEvent)
+        today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
+    val comingSoon = today.second(sd) < 0 && (!preEvent)
 
     //标题
     FlowRow(
@@ -139,7 +139,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         )
         if (!preEvent) {
             MainTitleText(
-                text = startDate,
+                text = sd.substring(0, 10),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
             )
         }
@@ -160,7 +160,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     size = Dimen.smallIconSize,
                 )
                 MainContentText(
-                    text = stringResource(R.string.progressing, event.endTime.dates(today)),
+                    text = stringResource(R.string.progressing, ed.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.primary
@@ -173,7 +173,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                     tint = colorResource(id = R.color.news_system)
                 )
                 MainContentText(
-                    text = stringResource(R.string.coming_soon, event.startTime.dates(today)),
+                    text = stringResource(R.string.coming_soon, sd.dates(today)),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
                     textAlign = TextAlign.Start,
                     color = colorResource(id = R.color.news_system)
@@ -201,7 +201,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
             //结束日期
             if (event.eventId / 10000 != 2) {
                 CaptionText(
-                    text = event.endTime,
+                    text = ed,
                     modifier = Modifier
                         .align(Alignment.End)
                         .padding(end = Dimen.mediumPadding)

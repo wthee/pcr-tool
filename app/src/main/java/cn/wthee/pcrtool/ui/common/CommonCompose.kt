@@ -445,26 +445,28 @@ fun CharacterLimitText(
 @Composable
 fun CharacterPositionText(
     modifier: Modifier = Modifier,
-    selected: Boolean = false,
+    showColor: Boolean = true,
     position: Int,
     padding: Dp = 0.dp,
-    colorful: Boolean = true,
     textAlign: TextAlign = TextAlign.Center,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
-    var color = colorResource(
-        id = when (position) {
-            in 1..299 -> R.color.color_rank_18_20
-            in 300..599 -> R.color.color_rank_7_10
-            in 600..9999 -> R.color.colorPrimary
-            else -> R.color.black
-        }
-    )
-    color = if (colorful) color else Color.Unspecified
+    val color = if (showColor) {
+        colorResource(
+            id = when (position) {
+                in 1..299 -> R.color.color_rank_18_20
+                in 300..599 -> R.color.color_rank_7_10
+                in 600..9999 -> R.color.colorPrimary
+                else -> R.color.black
+            }
+        )
+    } else {
+        Color.Unspecified
+    }
 
     Text(
         text = position.toString(),
-        color = if (selected) Color.Unspecified else color,
+        color = color,
         style = textStyle,
         maxLines = 1,
         textAlign = textAlign,

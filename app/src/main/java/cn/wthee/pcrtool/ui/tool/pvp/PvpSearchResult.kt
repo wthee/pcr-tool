@@ -79,7 +79,7 @@ fun PvpSearchResult(
         pvpViewModel.insert(
             PvpHistoryData(
                 "$region@$unSplitDefIds",
-                getToday(-1),
+                getToday(),
             )
         )
     }

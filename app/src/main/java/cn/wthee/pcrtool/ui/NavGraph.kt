@@ -139,9 +139,9 @@ fun NavGraph(
         //首页
         composable(
             route = Navigation.HOME,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.MAIN)
             Overview(actions = actions)
@@ -150,10 +150,10 @@ fun NavGraph(
         //角色列表
         composable(
             route = Navigation.CHARACTER_LIST,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
@@ -166,10 +166,10 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> null },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> null },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { null },
+            exitTransition = { fadeOut },
+            popEnterTransition = { null },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -188,10 +188,10 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -204,10 +204,10 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             val scrollState = rememberScrollState()
@@ -217,10 +217,10 @@ fun NavGraph(
         //装备列表
         composable(
             route = Navigation.EQUIP_LIST,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -237,10 +237,10 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.EQUIP_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
@@ -253,10 +253,10 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.EQUIP_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             EquipMaterialDeatil(arguments.getInt(Navigation.EQUIP_ID))
@@ -268,10 +268,10 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             RankEquipList(
@@ -294,10 +294,10 @@ fun NavGraph(
             }, navArgument(Navigation.UNIQUE_EQUIP_LEVEL) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             RankCompare(
@@ -318,10 +318,10 @@ fun NavGraph(
             }, navArgument(Navigation.MAX_RANK) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             RankEquipCount(
@@ -335,10 +335,10 @@ fun NavGraph(
         //角色排行
         composable(
             route = Navigation.TOOL_LEADER,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
@@ -348,10 +348,10 @@ fun NavGraph(
         //角色卡池
         composable(
             route = Navigation.TOOL_GACHA,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
@@ -361,10 +361,10 @@ fun NavGraph(
         //剧情活动
         composable(
             route = Navigation.TOOL_EVENT,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
@@ -374,10 +374,10 @@ fun NavGraph(
         //角色公会
         composable(
             route = Navigation.TOOL_GUILD,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val scrollState = rememberLazyListState()
@@ -387,10 +387,10 @@ fun NavGraph(
         //团队战
         composable(
             route = Navigation.TOOL_CLAN,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -405,10 +405,10 @@ fun NavGraph(
             }, navArgument(Navigation.TOOL_CLAN_BOSS_INDEX) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             ClanBossInfoPager(
@@ -420,10 +420,10 @@ fun NavGraph(
         //竞技场查询
         composable(
             route = Navigation.TOOL_PVP,
-            enterTransition = { _, _ -> fadeIn(initialAlpha = 1f) },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { fadeIn(initialAlpha = 1f) },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             PvpSearchCompose(
                 toCharacter = actions.toCharacterDetail
@@ -433,10 +433,10 @@ fun NavGraph(
         //设置页面
         composable(
             route = Navigation.MAIN_SETTINGS,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             MainSettings()
@@ -445,10 +445,10 @@ fun NavGraph(
         //更新通知
         composable(
             route = Navigation.APP_NOTICE,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val scrollState = rememberLazyListState()
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
@@ -458,10 +458,10 @@ fun NavGraph(
         //公告
         composable(
             route = Navigation.TOOL_NEWS,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             NewsList(
@@ -484,10 +484,10 @@ fun NavGraph(
                     type = NavType.StringType
                 },
             ),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             val arguments = requireNotNull(it.arguments)
@@ -497,10 +497,10 @@ fun NavGraph(
         //推特信息
         composable(
             route = Navigation.TWEET,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             TweetList(tweet, tweetScrollState, actions.toNewsDetail, actions.toComicListIndex)
@@ -509,10 +509,10 @@ fun NavGraph(
         //漫画信息
         composable(
             route = Navigation.COMIC,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             ComicList()
@@ -524,10 +524,10 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.COMIC_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
             ComicList(arguments.getInt(Navigation.COMIC_ID))
@@ -536,10 +536,10 @@ fun NavGraph(
         //技能列表
         composable(
             route = Navigation.ALL_SKILL,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             AllSkillList()
@@ -548,10 +548,10 @@ fun NavGraph(
         //战力系数
         composable(
             route = Navigation.ATTR_COE,
-            enterTransition = { _, _ -> myFadeIn },
-            exitTransition = { _, _ -> fadeOut },
-            popEnterTransition = { _, _ -> myFadeIn },
-            popExitTransition = { _, _ -> fadeOut }
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             CharacterStatusCoeCompose()

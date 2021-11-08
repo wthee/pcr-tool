@@ -45,6 +45,7 @@ import java.util.*
 
 /**
  * 竞技场查询
+ * fixme 卡顿优化
  */
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -137,8 +138,7 @@ fun PvpSearchCompose(
                         PvpIconItem(
                             selectedIds = selectedIds,
                             it = it,
-                            floatWindow = floatWindow,
-                            selectedEffect = false
+                            floatWindow = floatWindow
                         )
                     }
                 }
@@ -429,8 +429,7 @@ private fun PvpPositionIcon(iconId: Int, height: Int) {
 fun PvpIconItem(
     selectedIds: ArrayList<PvpCharacterData>,
     it: PvpCharacterData,
-    floatWindow: Boolean,
-    selectedEffect: Boolean = true
+    floatWindow: Boolean
 ) {
     val tipSelectLimit = stringResource(id = R.string.tip_select_limit)
     val selected = selectedIds.contains(it)
@@ -481,10 +480,9 @@ fun PvpIconItem(
         //位置
         val position = if (it != PvpCharacterData()) it.position else 0
         CharacterPositionText(
-            selected = selected && selectedEffect,
+            showColor = selected,
             position = position,
             padding = if (floatWindow) Dimen.divLineHeight else Dimen.smallPadding,
-            colorful = !selectedEffect
         )
     }
 }

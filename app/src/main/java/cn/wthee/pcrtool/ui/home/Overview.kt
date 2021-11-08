@@ -115,20 +115,19 @@ fun Overview(
                 }
             ) {
                 if (characterList.isNotEmpty()) {
+                    //fixme 限制最大宽度，使横屏时显示图片不会太大
                     HorizontalPager(
                         count = characterList.size,
                         state = rememberPagerState(),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(vertical = Dimen.mediumPadding)
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(horizontal = Dimen.largePadding),
+                        itemSpacing = Dimen.mediumPadding
                     ) { index ->
                         val id = if (characterList.isEmpty()) 0 else characterList[index].id
                         Card(
                             modifier = Modifier
-                                .padding(
-                                    top = Dimen.mediumPadding,
-                                    bottom = Dimen.mediumPadding,
-                                    start = Dimen.largePadding,
-                                    end = Dimen.largePadding
-                                )
                                 .heightIn(
                                     min = Dimen.characterCardMinHeight
                                 ),
@@ -139,7 +138,11 @@ fun Overview(
                             elevation = 0.dp,
                             shape = Shape.medium
                         ) {
-                            ImageCompose(CharacterIdUtil.getMaxCardUrl(id), ratio = RATIO)
+                            ImageCompose(
+                                CharacterIdUtil.getMaxCardUrl(id),
+                                ratio = RATIO,
+                                modifier = Modifier
+                            )
                         }
                     }
                 }
@@ -270,7 +273,7 @@ fun Overview(
     }
 }
 
-//数据切换选择弹窗
+//数据切换选择弹窗 fixme 数据进度状态更新时，导致图片重新加载
 @Composable
 private fun ChangeDbCompose(
     openDialog: Boolean,
@@ -466,9 +469,10 @@ private fun Section(
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
-    val today = getToday(settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2))
-    val sd = calendar.startTime.formatTime
-    val ed = calendar.endTime.formatTime
+    val regionType = settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2)
+    val today = getToday()
+    val sd = fixJpTime(calendar.startTime.formatTime, regionType)
+    val ed = fixJpTime(calendar.endTime.formatTime, regionType)
     val inProgress = today.second(sd) > 0 && ed.second(today) > 0
     val comingSoon = today.second(sd) < 0
 

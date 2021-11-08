@@ -3,6 +3,8 @@
     <color name="colorPrimary">#5690EF</color>
     <color name="colorPrimaryDark">#3F6BB3</color>
     <color name="black">#FF000000</color>
+    <color name="statusBarColor">#FFFBFE</color>
+    <color name="statusBarColorDark">#1C1B1F</color>
     <color name="alpha_black">#80000000</color>
     <color name="alpha_white">#80FFFFFF</color>
     <color name="alpha_primary">#A65690EF</color>
