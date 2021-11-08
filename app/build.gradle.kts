@@ -6,8 +6,8 @@ plugins {
 }
 
 val composeVersion = "1.1.0-beta02"
-val appVersionCode = 230
-val appVersionName = "2.3.0"
+val appVersionCode = 231
+val appVersionName = "2.3.1"
 val sql = 215
 
 android {
@@ -109,7 +109,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.21.1-beta"
+    val accompanistVersion = "0.21.2-beta"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
