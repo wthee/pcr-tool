@@ -8,6 +8,7 @@ import cn.wthee.pcrtool.utils.UMengLogUtil
 /**
  * 角色技能信息
  */
+@Suppress("RegExpRedundantEscape")
 data class SkillDetail(
     val skillId: Int = 1,
     val name: String = "?",

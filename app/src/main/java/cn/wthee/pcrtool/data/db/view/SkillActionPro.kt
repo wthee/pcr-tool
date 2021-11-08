@@ -15,6 +15,7 @@ import kotlin.math.abs
 /**
  * 技能效果
  */
+@Suppress("RegExpRedundantEscape")
 data class SkillActionPro(
     @PrimaryKey
     @ColumnInfo(name = "lv") var level: Int = 0,
@@ -452,7 +453,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}不是单独时，使用 [${action_detail_3 % 100}]"
                         } else if (action_detail_1 in 901..999) {
-                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以上时，使用动作(${action_detail_3 % 100})"
+                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 及以上时，使用动作(${action_detail_3 % 100})"
                         } else if (action_detail_1 == 1300) {
                             "${getTarget()}不是使用魔法攻击对象时，使用动作(${action_detail_2 % 10})"
                         } else {
@@ -497,7 +498,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 599) {
                             "${getTarget()}身上有持续伤害时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 in 600..699) {
-                            "${getTarget()}的标记层数在 [${action_value_3.toInt()}] 以上时，使用动作(${action_detail_2 % 10})"
+                            "${getTarget()}的标记层数在 [${action_value_3.toInt()}] 及以上时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}是单独时，使用 [${action_detail_2 % 10}]"
                         } else if (action_detail_1 in 701..709) {
@@ -511,7 +512,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 1001) {
                             "本技能触发暴击时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 in 1200..1299) {
-                            "[计数器 ${action_detail_1 % 100 / 10}] 的数量在 [${action_detail_1 % 10}] 以上时，使用动作(${action_detail_2 % 10})"
+                            "[计数器 ${action_detail_1 % 100 / 10}] 的数量在 [${action_detail_1 % 10}] 及以上时，使用动作(${action_detail_2 % 10})"
                         } else {
                             UNKNOWN
                         }
@@ -537,7 +538,7 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 720) {
                             "排除潜伏状态的单位，${getTarget()}中不存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 in 901..999) {
-                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以上时，使用动作(${action_detail_3 % 10})"
+                            "${getTarget()}的HP在 [${action_detail_1 - 900}%] 及以上时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 == 1000) {
                             "上一个动作未击杀单位时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 == 1001) {
