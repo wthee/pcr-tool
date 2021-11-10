@@ -154,7 +154,6 @@ fun RankEquipCount(
                         .fillMaxSize(),
                     backgroundColor = MaterialTheme.colorScheme.surface
                 ) {
-                    val spanCount = 5
                     filter.value?.let { filterValue ->
                         filterValue.starIds =
                             GsonUtil.fromJson(mainSP().getString(Constants.SP_STAR_EQUIP, ""))
@@ -162,13 +161,13 @@ fun RankEquipCount(
                         if (rankEquipMaterials.isNotEmpty()) {
                             navViewModel.loading.postValue(false)
                             LazyVerticalGrid(
-                                cells = GridCells.Fixed(spanCount),
+                                cells = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 2),
                                 contentPadding = PaddingValues(Dimen.mediumPadding)
                             ) {
                                 items(items = rankEquipMaterials) { item ->
                                     EquipCountItem(item, filterValue, toEquipMaterial)
                                 }
-                                items(spanCount) {
+                                items(5) {
                                     CommonSpacer()
                                 }
                             }

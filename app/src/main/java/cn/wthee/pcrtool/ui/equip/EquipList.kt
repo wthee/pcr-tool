@@ -90,17 +90,16 @@ fun EquipList(
             sheetBackgroundColor = MaterialTheme.colorScheme.surface
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                val spanCount = 4
                 FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyVerticalGrid(
-                        cells = GridCells.Fixed(spanCount),
+                        cells = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 3),
                         state = scrollState,
                         contentPadding = PaddingValues(Dimen.mediumPadding)
                     ) {
                         items(equips) { equip ->
                             EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
                         }
-                        items(spanCount) {
+                        items(5) {
                             CommonSpacer()
                         }
                     }

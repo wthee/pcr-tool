@@ -28,8 +28,6 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.service.PvpService
-import cn.wthee.pcrtool.service.getFloatWindowHeight
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
@@ -67,7 +65,7 @@ fun PvpSearchCompose(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
-    val serviceIntent = Intent(context, PvpService::class.java)
+    val serviceIntent = Intent(context, PvpFloatService::class.java)
     val tip = stringResource(id = R.string.tip_select_5)
 
 
@@ -104,6 +102,18 @@ fun PvpSearchCompose(
         pvpViewModel.requesting = false
     }
 
+    //计算每行显示数量
+    //设置高度
+    val normalSize = (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
+    val itemSize = if (!floatWindow) {
+        normalSize
+    } else {
+        (Dimen.starIconSize + Dimen.mediumPadding * 2).value.dp2px
+    }
+    //动态调整 spanCount，悬浮窗以正常大小页面为标准
+    val spanCount = ScreenUtil.getWidth() / normalSize
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -124,12 +134,7 @@ fun PvpSearchCompose(
             //已选择列表
             Row(
                 modifier = Modifier
-                    .padding(
-                        top = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
-                        start = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
-                        end = if (floatWindow) Dimen.smallPadding else Dimen.largePadding,
-                        bottom = Dimen.smallPadding
-                    )
+                    .padding(mediumPadding)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -176,6 +181,7 @@ fun PvpSearchCompose(
                         }
                     }
                 }
+
                 HorizontalPager(
                     count = 3,
                     state = pagerState,
@@ -183,6 +189,8 @@ fun PvpSearchCompose(
                 ) { pageIndex ->
                     when (pageIndex) {
                         0 -> PvpCharacterSelectPage(
+                            spanCount = spanCount,
+                            itemSize = itemSize,
                             selectListState = selectListState,
                             selectedIds = selectedIds,
                             floatWindow = floatWindow,
@@ -227,6 +235,8 @@ fun PvpSearchCompose(
                     if (Settings.canDrawOverlays(context)) {
                         //启动悬浮服务
                         navViewModel.floatServiceRun.postValue(true)
+                        serviceIntent.putExtra("spanCount", spanCount)
+                        context.stopService(serviceIntent)
                         context.startService(serviceIntent)
                         context.startActivity(homeIntent)
                     } else {
@@ -289,6 +299,8 @@ fun PvpSearchCompose(
 @ExperimentalMaterialApi
 @Composable
 private fun PvpCharacterSelectPage(
+    spanCount: Int,
+    itemSize: Int,
     selectListState: ScrollState,
     selectedIds: ArrayList<PvpCharacterData>,
     floatWindow: Boolean,
@@ -306,42 +318,35 @@ private fun PvpCharacterSelectPage(
     val character2 = data.filter {
         it.position in 600..9999
     }
-    val spanCount = 5
+
     //站位图标在列表中的位置
     val positions = arrayListOf(0, 0, 0)
-    val padding = (Dimen.smallPadding * 2).value.dp2px
-    val itemHeight = if (!floatWindow) {
-        ScreenUtil.getWidth() / 5
-    } else {
-        ((getFloatWindowHeight() * 0.618f / 5 - padding) / 0.618f + padding).toInt()
-    }
     val lines = arrayListOf(0, 0, 0)
     lines[0] = getLine(character0, spanCount) + 1
     lines[1] = getLine(character1, spanCount) + 1
     lines[2] = getLine(character2, spanCount) + 1
     //中卫以上填充数
-    positions[1] = lines[0] * itemHeight
+    positions[1] = lines[0] * itemSize
     //后卫以上填充数
-    positions[0] = (lines[0] + lines[1]) * itemHeight
+    positions[0] = (lines[0] + lines[1]) * itemSize
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(modifier = Modifier.verticalScroll(selectListState)) {
-            PvpPositionIcon(R.drawable.ic_position_0, itemHeight)
+            PvpPositionIcon(R.drawable.ic_position_0, itemSize)
             VerticalGrid(spanCount = spanCount) {
                 character0.forEach {
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            PvpPositionIcon(R.drawable.ic_position_1, itemHeight)
+            PvpPositionIcon(R.drawable.ic_position_1, itemSize)
             VerticalGrid(spanCount = spanCount) {
                 character1.forEach {
                     PvpIconItem(selectedIds, it, floatWindow)
                 }
             }
-            PvpPositionIcon(R.drawable.ic_position_2, itemHeight)
+            PvpPositionIcon(R.drawable.ic_position_2, itemSize)
             VerticalGrid(spanCount = spanCount) {
                 character2.forEach {
                     PvpIconItem(selectedIds, it, floatWindow)
@@ -451,10 +456,9 @@ fun PvpIconItem(
         modifier = Modifier
             .padding(Dimen.smallPadding)
             .fillMaxWidth()
-            .aspectRatio(if (floatWindow) 0.618f else 1f)
     ) {
         //图标
-        IconCompose(data = icon, wrapSize = floatWindow) {
+        IconCompose(data = icon, size = if (floatWindow) Dimen.starIconSize else Dimen.iconSize) {
             //点击选择或取消选择
             if (selected) {
                 var cancelSelectIndex = 0

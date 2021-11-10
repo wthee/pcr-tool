@@ -222,6 +222,11 @@ enum class MainIconType(val icon: ImageVector) {
     FLOAT_CLOSE(Icons.Rounded.ExitToApp),
 
     /**
+     * 悬浮窗最小化
+     */
+    FLOAT_MIN(Icons.Rounded.Remove),
+
+    /**
      * 静流笔记
      */
     NOTE(Icons.Rounded.Stream),

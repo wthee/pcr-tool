@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,6 +19,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.FabMain
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.MainCard
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -45,11 +45,17 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     PCRToolComposeTheme {
         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
             Column {
+                //最大/小化
                 FabCompose(
-                    iconType = R.mipmap.ic_launcher_foreground
+                    iconType = if (min) {
+                        R.mipmap.ic_launcher_foreground
+                    } else {
+                        MainIconType.FLOAT_MIN
+                    }
                 ) {
                     MainActivity.navViewModel.floatSearchMin.postValue(!min)
                 }
+                //退出
                 if (!min) {
                     FabCompose(
                         iconType = MainIconType.FLOAT_CLOSE
@@ -57,6 +63,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                         MainActivity.navViewModel.floatServiceRun.postValue(false)
                     }
                 }
+                //查询
                 if (!min && !showResult) {
                     FabCompose(
                         iconType = MainIconType.PVP_SEARCH
@@ -72,6 +79,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                         MainActivity.navViewModel.showResult.postValue(true)
                     }
                 }
+                //返回
                 if (!min && showResult) {
                     FabMain()
                 }
@@ -82,7 +90,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                 Modifier
             }
 
-            Card(modifier = modifier) {
+            MainCard(modifier = modifier) {
                 PvpSearchCompose(
                     floatWindow = true,
                     pagerState = pagerState,

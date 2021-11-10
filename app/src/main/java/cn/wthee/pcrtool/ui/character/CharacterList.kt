@@ -40,9 +40,7 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.CharacterIdUtil
-import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -83,6 +81,7 @@ fun CharacterList(
                 ?: arrayListOf()
     }
     val list = viewModel.getCharacters(filter.value).collectAsState(initial = arrayListOf()).value
+    val spanCount = ScreenUtil.getWidth() / (120.dp + Dimen.mediumPadding * 2).value.dp2px
 
     ModalBottomSheetLayout(
         sheetState = state,
@@ -104,7 +103,7 @@ fun CharacterList(
         ) {
             if (list.isNotEmpty()) {
                 LazyVerticalGrid(
-                    cells = GridCells.Fixed(2),
+                    cells = GridCells.Adaptive(Dimen.characterListCardMinWidth),
                     state = scrollState,
                     contentPadding = PaddingValues(Dimen.mediumPadding)
                 ) {

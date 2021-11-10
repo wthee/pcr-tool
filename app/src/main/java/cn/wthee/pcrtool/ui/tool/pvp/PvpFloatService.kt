@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.app.NotificationManager
+import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.view.Gravity
@@ -27,9 +28,17 @@ class PvpFloatService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private val activity = ActivityHelper.instance.currentActivity
     private var floatRootView: View? = null
+    private var spanCount = 5
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        //数据
+        spanCount = intent?.getIntExtra("spanCount", 5) ?: 5
+        return super.onStartCommand(intent, flags, startId)
+    }
 
     override fun onCreate() {
         super.onCreate()
+
         //前台通知
         val notificationManager: NotificationManager =
             MyApplication.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -99,7 +108,7 @@ class PvpFloatService : LifecycleService() {
             if (min) {
                 minSize
             } else {
-                (getFloatWindowHeight() * 0.618f).toInt() + minSize
+                (spanCount * (Dimen.starIconSize + Dimen.mediumPadding).value.dp2px) + minSize
             }
         height =
             if (min) {
