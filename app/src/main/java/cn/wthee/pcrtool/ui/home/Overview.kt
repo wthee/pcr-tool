@@ -328,7 +328,7 @@ private fun ChangeDbCompose(
                                 MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                                 if (region != i + 2) {
                                     coroutineScope.launch {
-                                        DatabaseUpdater.changeRegion(i + 2)
+                                        DatabaseUpdater.changeDatabase(i + 2)
                                     }
                                 }
                             }
