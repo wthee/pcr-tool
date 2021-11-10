@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -33,7 +32,6 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false

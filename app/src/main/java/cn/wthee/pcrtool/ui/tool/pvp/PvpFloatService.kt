@@ -1,5 +1,6 @@
-package cn.wthee.pcrtool.service
+package cn.wthee.pcrtool.ui.tool.pvp
 
+import android.app.NotificationManager
 import android.graphics.PixelFormat
 import android.os.Build
 import android.view.Gravity
@@ -12,37 +13,54 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.savedstate.ViewTreeSavedStateRegistryOwner
+import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.mFloatingWindowHeight
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.tool.pvp.PvpFloatSearch
 import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
-class PvpService : LifecycleService() {
+class PvpFloatService : LifecycleService() {
     private lateinit var windowManager: WindowManager
     private val activity = ActivityHelper.instance.currentActivity
     private var floatRootView: View? = null
 
     override fun onCreate() {
         super.onCreate()
+        //前台通知
+        val notificationManager: NotificationManager =
+            MyApplication.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notice = NotificationUtil.createNotice(
+            MyApplication.context,
+            "2",
+            "竞技场查询服务",
+            Constants.PVPSEARCH_NOTICE_TITLE,
+            notificationManager
+        ).build()
+        startForeground(1, notice)
+        //初始化加载
         initWindow()
         initObserve()
+    }
+
+    override fun onDestroy() {
+        stopForeground(true)
+        super.onDestroy()
     }
 
     private fun initObserve() {
         try {
             MainActivity.navViewModel.apply {
-                floatServiceRun.observe(this@PvpService) {
+                floatServiceRun.observe(this@PvpFloatService) {
                     if (it == false) {
                         windowManager.removeView(floatRootView)
-                        this@PvpService.stopSelf()
+                        this@PvpFloatService.stopSelf()
                     }
                 }
-                floatSearchMin.observe(this@PvpService) {
+                floatSearchMin.observe(this@PvpFloatService) {
                     windowManager.updateViewLayout(floatRootView, getParam(it ?: false))
                 }
             }
@@ -54,7 +72,7 @@ class PvpService : LifecycleService() {
     private fun initWindow() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         floatRootView = ComposeView(this).apply {
-            ViewTreeLifecycleOwner.set(this, this@PvpService)
+            ViewTreeLifecycleOwner.set(this, this@PvpFloatService)
             ViewTreeSavedStateRegistryOwner.set(this, activity)
             ViewTreeViewModelStoreOwner.set(this, activity)
             setContent {
