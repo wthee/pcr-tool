@@ -7,7 +7,8 @@ import androidx.room.ColumnInfo
  */
 data class PvpCharacterData(
     @ColumnInfo(name = "unit_id") val unitId: Int = 0,
-    @ColumnInfo(name = "position") val position: Int = 999
+    @ColumnInfo(name = "position") val position: Int = 999,
+    @ColumnInfo(name = "type") val type: Int = -1
 )
 
 /**

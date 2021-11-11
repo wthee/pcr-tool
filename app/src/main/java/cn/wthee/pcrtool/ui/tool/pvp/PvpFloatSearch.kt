@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -31,12 +30,12 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
-fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
+fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
     val pagerState = rememberPagerState()
-    val selectListState = rememberScrollState()
+    val selectListState = rememberLazyListState()
     val resultListState = rememberLazyListState()
     val favoritesListState = rememberLazyListState()
     val historyListState = rememberLazyListState()
@@ -93,6 +92,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
             MainCard(modifier = modifier) {
                 PvpSearchCompose(
                     floatWindow = true,
+                    initSpanCount = spanCount,
                     pagerState = pagerState,
                     selectListState = selectListState,
                     resultListState = resultListState,

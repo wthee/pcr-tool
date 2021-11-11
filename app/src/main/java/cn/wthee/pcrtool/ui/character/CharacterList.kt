@@ -483,9 +483,9 @@ private fun FilterCharacterSheet(
         )
         val positionChipData = arrayListOf(
             ChipData(0, stringResource(id = R.string.all)),
-            ChipData(1, stringResource(id = R.string.position_1)),
-            ChipData(2, stringResource(id = R.string.position_2)),
-            ChipData(3, stringResource(id = R.string.position_3)),
+            ChipData(1, stringResource(id = R.string.position_0)),
+            ChipData(2, stringResource(id = R.string.position_1)),
+            ChipData(3, stringResource(id = R.string.position_2)),
         )
         ChipGroup(
             positionChipData,

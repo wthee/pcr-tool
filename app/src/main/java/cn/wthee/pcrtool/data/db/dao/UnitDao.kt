@@ -180,14 +180,14 @@ interface UnitDao {
      * @param start 开始位置
      * @param end 结束位置
      */
-    @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
+    @Query("SELECT unit_id, search_area_width as position, -1 as type FROM unit_data WHERE search_area_width >= :start AND search_area_width <= :end AND comment <> \"\" ORDER BY search_area_width")
     suspend fun getCharacterByPosition(start: Int, end: Int): List<PvpCharacterData>
 
     /**
      * 获取角色列表
      * @param unitIds 角色编号
      */
-    @Query("SELECT unit_id, search_area_width as position FROM unit_data WHERE unit_id IN (:unitIds)  AND comment <> \"\" ORDER BY search_area_width")
+    @Query("SELECT unit_id, search_area_width as position, -1 as type FROM unit_data WHERE unit_id IN (:unitIds)  AND comment <> \"\" ORDER BY search_area_width")
     suspend fun getCharacterByIds(unitIds: List<Int>): List<PvpCharacterData>
 
     /**

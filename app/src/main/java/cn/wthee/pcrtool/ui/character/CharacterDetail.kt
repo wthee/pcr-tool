@@ -608,7 +608,7 @@ private fun CharacterEquip(
                         MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
-                        .size(Dimen.starIconSize)
+                        .size(Dimen.mediumIconSize)
                         .clip(Shape.medium)
                         .clickable(enabled = rank < maxRank) {
                             VibrateUtil(context).single()
@@ -635,7 +635,7 @@ private fun CharacterEquip(
                         MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
-                        .size(Dimen.starIconSize)
+                        .size(Dimen.mediumIconSize)
                         .clip(Shape.medium)
                         .clickable(enabled = rank > 1) {
                             VibrateUtil(context).single()
@@ -842,7 +842,7 @@ private fun StarSelect(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(Dimen.divLineHeight)
-                    .size(Dimen.starIconSize)
+                    .size(Dimen.mediumIconSize)
                     .clip(CircleShape)
                     .clickable {
                         VibrateUtil(context).single()

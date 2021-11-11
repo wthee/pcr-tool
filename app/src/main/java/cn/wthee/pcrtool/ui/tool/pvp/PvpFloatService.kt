@@ -85,7 +85,7 @@ class PvpFloatService : LifecycleService() {
             ViewTreeSavedStateRegistryOwner.set(this, activity)
             ViewTreeViewModelStoreOwner.set(this, activity)
             setContent {
-                PvpFloatSearch()
+                PvpFloatSearch(spanCount = spanCount)
             }
         }
         windowManager.addView(floatRootView, getParam(false))
@@ -108,7 +108,7 @@ class PvpFloatService : LifecycleService() {
             if (min) {
                 minSize
             } else {
-                (spanCount * (Dimen.starIconSize + Dimen.mediumPadding).value.dp2px) + minSize
+                (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding).value.dp2px) + minSize
             }
         height =
             if (min) {
