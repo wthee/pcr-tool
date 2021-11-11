@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +47,7 @@ import kotlin.math.round
 /**
  * 查询结果页面
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun PvpSearchResult(
@@ -88,6 +91,8 @@ fun PvpSearchResult(
         mutableStateOf(false)
     }
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
+    //宽度
+    val itemWidth = getItemWidth(floatWindow)
 
     if (favorites.value != null) {
         SideEffect {
@@ -117,12 +122,9 @@ fun PvpSearchResult(
                                     .fillMaxSize()
                             ) {
                                 //展示查询结果
-                                LazyColumn(
-                                    contentPadding = PaddingValues(
-                                        start = mediumPadding,
-                                        end = mediumPadding
-                                    ),
-                                    state = resultListState
+                                LazyVerticalGrid(
+                                    state = resultListState,
+                                    cells = GridCells.Adaptive(itemWidth)
                                 ) {
                                     itemsIndexed(items = list) { index, item ->
                                         PvpResultItem(
@@ -174,11 +176,9 @@ fun PvpSearchResult(
                         .fillMaxSize()
                 ) {
                     //展示查询结果
-                    LazyColumn(
-                        contentPadding = PaddingValues(
-                            start = mediumPadding,
-                            end = mediumPadding
-                        )
+                    LazyVerticalGrid(
+                        state = resultListState,
+                        cells = GridCells.Adaptive(itemWidth)
                     ) {
                         items(10) {
                             PvpResultItem(
@@ -221,12 +221,14 @@ private fun PvpResultItem(
         mutableStateOf(favoritesList.contains(item.atk))
     }
 
+    val largerPadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(mediumPadding)
+        modifier = Modifier.padding(
+            horizontal = largerPadding,
+            vertical = mediumPadding
+        )
     ) {
         Row {
             MainTitleText(
@@ -315,31 +317,18 @@ private fun PvpResultItem(
                 Row(
                     modifier = Modifier
                         .padding(bottom = mediumPadding)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    val modifier = if (!floatWindow) {
-                        Modifier
-                            .weight(1f)
-                            .padding(Dimen.smallPadding)
-                    } else {
-                        Modifier
-                            .weight(1f)
-                            .padding(
-                                start = Dimen.smallPadding,
-                                end = Dimen.smallPadding,
-                            )
-                    }
                     item.getIdList(0).forEachIndexed { _, it ->
                         Box(
-                            modifier = modifier,
+                            modifier = Modifier.padding(mediumPadding),
                             contentAlignment = Alignment.Center
                         ) {
                             IconCompose(
                                 data = CharacterIdUtil.getMaxIconUrl(
                                     it,
                                     MainActivity.r6Ids.contains(it)
-                                )
+                                ),
+                                size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                             )
                         }
                     }
@@ -349,3 +338,4 @@ private fun PvpResultItem(
 
     }
 }
+

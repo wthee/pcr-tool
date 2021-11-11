@@ -102,9 +102,8 @@ fun PvpSearchCompose(
         pvpViewModel.requesting = false
     }
 
-    //设置高度
-    val normalSize = (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
     //动态调整 spanCount
+    val normalSize = (Dimen.iconSize + Dimen.largePadding * 2).value.dp2px
     val spanCount = if (initSpanCount == 0) ScreenUtil.getWidth() / normalSize else initSpanCount
 
 

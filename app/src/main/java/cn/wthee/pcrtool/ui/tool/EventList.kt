@@ -2,8 +2,9 @@ package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
@@ -49,9 +50,9 @@ fun EventList(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (events.isNotEmpty()) {
-            LazyColumn(
+            LazyVerticalGrid(
                 state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
+                cells = GridCells.Adaptive(getItemWidth())
             ) {
                 items(events) {
                     EventItem(it, toCharacterDetail)
@@ -128,88 +129,97 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.second(sd) < 0 && (!preEvent)
 
-    //标题
-    FlowRow(
-        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-        crossAxisAlignment = FlowCrossAxisAlignment.Center
-    ) {
-        MainTitleText(
-            text = type,
-            backgroundColor = typeColor
+    Column(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
         )
-        if (!preEvent) {
-            MainTitleText(
-                text = sd.substring(0, 10),
-                modifier = Modifier.padding(start = Dimen.smallPadding),
-            )
-        }
-        if (showDays) {
-            MainTitleText(
-                text = days,
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-        }
-        //计时
-        Row(
-            modifier = Modifier.padding(start = Dimen.smallPadding),
-            verticalAlignment = Alignment.CenterVertically
+    ) {
+        //标题
+        FlowRow(
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+            crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
-            if (inProgress) {
-                IconCompose(
-                    data = MainIconType.TIME_LEFT.icon,
-                    size = Dimen.smallIconSize,
-                )
-                MainContentText(
-                    text = stringResource(R.string.progressing, ed.dates(today)),
+            MainTitleText(
+                text = type,
+                backgroundColor = typeColor
+            )
+            if (!preEvent) {
+                MainTitleText(
+                    text = sd.substring(0, 10),
                     modifier = Modifier.padding(start = Dimen.smallPadding),
-                    textAlign = TextAlign.Start,
-                    color = MaterialTheme.colorScheme.primary
                 )
             }
-            if (comingSoon) {
-                IconCompose(
-                    data = MainIconType.COUNTDOWN.icon,
-                    size = Dimen.smallIconSize,
-                    tint = colorResource(id = R.color.news_system)
+            if (showDays) {
+                MainTitleText(
+                    text = days,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
-                MainContentText(
-                    text = stringResource(R.string.coming_soon, sd.dates(today)),
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    textAlign = TextAlign.Start,
-                    color = colorResource(id = R.color.news_system)
-                )
+            }
+            //计时
+            Row(
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (inProgress) {
+                    IconCompose(
+                        data = MainIconType.TIME_LEFT.icon,
+                        size = Dimen.smallIconSize,
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.progressing, ed.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                if (comingSoon) {
+                    IconCompose(
+                        data = MainIconType.COUNTDOWN.icon,
+                        size = Dimen.smallIconSize,
+                        tint = colorResource(id = R.color.news_system)
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.coming_soon, sd.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = colorResource(id = R.color.news_system)
+                    )
+                }
             }
         }
-    }
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-            //内容
-            MainContentText(
-                text = event.getEventTitle(),
-                modifier = Modifier.padding(
-                    top = Dimen.mediumPadding,
-                    start = Dimen.mediumPadding,
-                    end = Dimen.mediumPadding
-                ),
-                textAlign = TextAlign.Start
-            )
-            //图标
-            IconListCompose(
-                icons = event.getUnitIdList(),
-                toCharacterDetail = toCharacterDetail
-            )
-            //结束日期
-            if (event.eventId / 10000 != 2) {
+        MainCard(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+                //内容
+                MainContentText(
+                    text = event.getEventTitle(),
+                    modifier = Modifier.padding(
+                        top = Dimen.mediumPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding
+                    ),
+                    textAlign = TextAlign.Start
+                )
+                //图标
+                IconListCompose(
+                    icons = event.getUnitIdList(),
+                    toCharacterDetail = toCharacterDetail
+                )
+                //结束日期
                 CaptionText(
-                    text = ed,
+                    text = if (event.eventId / 10000 != 2) {
+                        ed
+                    } else {
+                        "无期限"
+                    },
                     modifier = Modifier
                         .align(Alignment.End)
                         .padding(end = Dimen.mediumPadding)
                 )
             }
-
         }
     }
+
 }
 
 @Preview

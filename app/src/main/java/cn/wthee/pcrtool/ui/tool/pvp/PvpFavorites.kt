@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.TextButton
@@ -34,6 +36,7 @@ import java.util.*
  * 已收藏数据
  *
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun PvpFavorites(
@@ -45,12 +48,13 @@ fun PvpFavorites(
     val region = getRegion()
     pvpViewModel.getAllFavorites(region)
     val list = pvpViewModel.allFavorites.observeAsState()
+    val itemWidth = getItemWidth(floatWindow)
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value != null && list.value!!.isNotEmpty()) {
-            LazyColumn(
+            LazyVerticalGrid(
                 state = favoritesListState,
-                contentPadding = PaddingValues(Dimen.mediumPadding)
+                cells = GridCells.Adaptive(itemWidth)
             ) {
                 items(list.value!!) { data ->
                     PvpFavoriteItem(
@@ -86,84 +90,74 @@ private fun PvpFavoriteItem(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val largerPadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
-    Row(
-        modifier = Modifier
-            .padding(start = mediumPadding, end = mediumPadding)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        //搜索
-        TextButton(
-            onClick = {
-                //重置页面
-                scope.launch {
-                    pvpViewModel.pvpResult.postValue(null)
-                    val selectedData =
-                        characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
-                    val selectedIds = selectedData as ArrayList<PvpCharacterData>?
-                    selectedIds?.sortByDescending { it.position }
-                    MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
-                    MainActivity.navViewModel.showResult.postValue(true)
-                }
-                VibrateUtil(context).single()
-            }) {
-            IconCompose(
-                data = MainIconType.PVP_SEARCH.icon,
-                size = Dimen.fabIconSize
-            )
-            if (!floatWindow) {
-                MainContentText(text = stringResource(id = R.string.pvp_research))
-            }
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        //取消收藏
-        IconCompose(
-            data = MainIconType.LOVE_FILL.icon,
-            Dimen.fabIconSize
-        ) {
-            //点击取消收藏
-            scope.launch {
-                pvpViewModel.delete(itemData.atks, itemData.defs, region)
-            }
-        }
-    }
 
-    MainCard(modifier = Modifier.padding((mediumPadding))) {
+    MainCard(
+        modifier = Modifier.padding(
+            horizontal = largerPadding,
+            vertical = mediumPadding
+        )
+    ) {
         //队伍角色图标
         Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(top = mediumPadding, bottom = mediumPadding)
         ) {
-            //进攻
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .padding(start = mediumPadding, end = mediumPadding),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                val modifier = if (!floatWindow) {
-                    Modifier
-                        .weight(1f)
-                        .padding(Dimen.smallPadding)
-                } else {
-                    Modifier
-                        .weight(1f)
-                        .padding(
-                            start = Dimen.smallPadding,
-                            end = Dimen.smallPadding,
-                        )
+                //搜索
+                TextButton(
+                    onClick = {
+                        //重置页面
+                        scope.launch {
+                            pvpViewModel.pvpResult.postValue(null)
+                            val selectedData =
+                                characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
+                            val selectedIds = selectedData as ArrayList<PvpCharacterData>?
+                            selectedIds?.sortByDescending { it.position }
+                            MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
+                            MainActivity.navViewModel.showResult.postValue(true)
+                        }
+                        VibrateUtil(context).single()
+                    }) {
+                    IconCompose(
+                        data = MainIconType.PVP_SEARCH.icon,
+                        size = Dimen.fabIconSize
+                    )
+                    if (!floatWindow) {
+                        MainContentText(text = stringResource(id = R.string.pvp_research))
+                    }
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                //取消收藏
+                IconCompose(
+                    data = MainIconType.LOVE_FILL.icon,
+                    Dimen.fabIconSize
+                ) {
+                    //点击取消收藏
+                    scope.launch {
+                        pvpViewModel.delete(itemData.atks, itemData.defs, region)
+                    }
+                }
+            }
+            //进攻
+            Row {
                 itemData.getAtkIds().forEachIndexed { _, it ->
                     Box(
-                        modifier = modifier,
+                        modifier = Modifier.padding(mediumPadding),
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
                             data = CharacterIdUtil.getMaxIconUrl(
                                 it,
                                 MainActivity.r6Ids.contains(it)
-                            )
+                            ),
+                            size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                         ) {
                             if (!floatWindow) {
                                 toCharacter(it)
@@ -173,31 +167,22 @@ private fun PvpFavoriteItem(
                 }
             }
             //防守
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                val modifier = if (!floatWindow) {
-                    Modifier
-                        .weight(1f)
-                        .padding(Dimen.smallPadding)
-                } else {
-                    Modifier
-                        .weight(1f)
-                        .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
-                }
+            Row(horizontalArrangement = Arrangement.SpaceBetween) {
                 itemData.getDefIds().forEachIndexed { _, it ->
                     Box(
-                        modifier = modifier,
+                        modifier = Modifier.padding(mediumPadding),
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
                             data = CharacterIdUtil.getMaxIconUrl(
                                 it,
                                 MainActivity.r6Ids.contains(it)
-                            )
+                            ),
+                            size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                         ) {
-                            toCharacter(it)
+                            if (!floatWindow) {
+                                toCharacter(it)
+                            }
                         }
                     }
                 }

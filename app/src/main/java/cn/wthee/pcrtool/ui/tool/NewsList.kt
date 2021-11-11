@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
@@ -31,7 +33,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemsIndexed
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.region
@@ -58,6 +59,7 @@ import kotlinx.coroutines.launch
 /**
  * 公告列表
  */
+@ExperimentalFoundationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalPagingApi
@@ -91,11 +93,9 @@ fun NewsList(
                 1 -> scrollState1
                 else -> scrollState2
             }
-            LazyColumn(
+            LazyVerticalGrid(
                 state = scrollState,
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(Dimen.largePadding)
+                cells = GridCells.Adaptive(getItemWidth())
             ) {
                 val news = when (pagerIndex) {
                     0 -> news0
@@ -103,7 +103,7 @@ fun NewsList(
                     else -> news2
                 }
                 news?.let { list ->
-                    itemsIndexed(list) { _, it ->
+                    items(list) {
                         if (it != null) {
                             if (navViewModel.loading.value == true) {
                                 navViewModel.loading.postValue(false)
@@ -120,7 +120,6 @@ fun NewsList(
                         CommonSpacer()
                     }
                 }
-
             }
         }
 
@@ -188,43 +187,48 @@ fun NewsItem(
         "系統" -> R.color.news_system
         else -> R.color.colorPrimary
     }
-    //标题
-    Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-        MainTitleText(
-            text = tag,
-            backgroundColor = colorResource(id = colorId),
-            modifier = Modifier.placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
-        )
-        MainTitleText(
-            text = news.date.formatTime,
-            modifier = Modifier
-                .padding(start = Dimen.smallPadding)
-                .placeholder(
+    Column(
+        modifier = Modifier.padding(Dimen.mediumPadding)
+    ) {
+        //标题
+        Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+            MainTitleText(
+                text = tag,
+                backgroundColor = colorResource(id = colorId),
+                modifier = Modifier.placeholder(
                     visible = placeholder,
                     highlight = PlaceholderHighlight.shimmer()
-                ),
-        )
-    }
-    MainCard(modifier = Modifier
-        .padding(bottom = Dimen.largePadding)
-        .placeholder(
-            visible = placeholder,
-            highlight = PlaceholderHighlight.shimmer()
-        ),
-        onClick = {
-            toDetail(news.id)
+                )
+            )
+            MainTitleText(
+                text = news.date.formatTime,
+                modifier = Modifier
+                    .padding(start = Dimen.smallPadding)
+                    .placeholder(
+                        visible = placeholder,
+                        highlight = PlaceholderHighlight.shimmer()
+                    ),
+            )
         }
-    ) {
-        //内容
-        Subtitle1(
-            text = news.title,
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            selectable = true
-        )
+        MainCard(modifier = Modifier
+            .padding(bottom = Dimen.mediumPadding)
+            .placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            ),
+            onClick = {
+                toDetail(news.id)
+            }
+        ) {
+            //内容
+            Subtitle1(
+                text = news.title,
+                modifier = Modifier.padding(Dimen.mediumPadding),
+                selectable = true
+            )
+        }
     }
+
 }
 
 /**

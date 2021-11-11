@@ -46,8 +46,6 @@ object Dimen {
 
     val characterCardMinHeight = 128.dp
 
-    val characterListCardMinWidth = 150.dp
-
     val settingIconSize = 30.dp
 
     val toolMenuWidth = 100.dp
@@ -61,5 +59,4 @@ object Dimen {
     val lineWidth = 32.dp
 
     val lineHeight = 3.dp
-
 }

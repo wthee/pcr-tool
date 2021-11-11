@@ -108,7 +108,7 @@ class PvpFloatService : LifecycleService() {
             if (min) {
                 minSize
             } else {
-                (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding).value.dp2px) + minSize
+                (spanCount * (Dimen.mediumIconSize + Dimen.mediumPadding * 2).value.dp2px) + minSize
             }
         height =
             if (min) {

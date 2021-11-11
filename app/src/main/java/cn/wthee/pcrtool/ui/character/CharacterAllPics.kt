@@ -2,11 +2,11 @@ package cn.wthee.pcrtool.ui.character
 
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.AlertDialog
@@ -24,8 +24,6 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.*
-import coil.Coil
-import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
@@ -53,36 +51,41 @@ fun CharacterAllPics(unitId: Int) {
         mutableStateOf(-1)
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        itemsIndexed(picUrls) { index, _ ->
-            val request = ImageRequest.Builder(context)
-                .data(picUrls[index])
-                .build()
-            coroutineScope.launch {
-                val image = Coil.imageLoader(context).execute(request).drawable
-                drawables[index] = image
-            }
-            Card(
-                modifier = Modifier
-                    .padding(Dimen.largePadding)
-                    .fillMaxWidth(),
-                onClick = {
-                    VibrateUtil(context).single()
-                    //下载
-                    if (loaded[index]) {
-                        //权限校验
-                        checkPermissions(context) {
-                            clickedIndex.value = index
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
+            picUrls.forEachIndexed { index, s ->
+                val request = coil.request.ImageRequest.Builder(context)
+                    .data(picUrls[index])
+                    .build()
+                coroutineScope.launch {
+                    val image = coil.Coil.imageLoader(context).execute(request).drawable
+                    drawables[index] = image
+                }
+                Card(
+                    modifier = Modifier
+                        .padding(Dimen.largePadding)
+                        .fillMaxWidth(),
+                    onClick = {
+                        cn.wthee.pcrtool.utils.VibrateUtil(context).single()
+                        //下载
+                        if (loaded[index]) {
+                            //权限校验
+                            cn.wthee.pcrtool.utils.checkPermissions(context) {
+                                clickedIndex.value = index
+                            }
+                        } else {
+                            cn.wthee.pcrtool.utils.ToastUtil.short(unLoadToast)
                         }
-                    } else {
-                        ToastUtil.short(unLoadToast)
+                    },
+                    shape = Shape.medium,
+                ) {
+                    //图片
+                    ImageCompose(
+                        data = picUrls[index],
+                        ratio = RATIO
+                    ) {
+                        loaded[index] = true
                     }
-                },
-                shape = Shape.medium,
-            ) {
-                //图片
-                ImageCompose(data = picUrls[index], ratio = RATIO) {
-                    loaded[index] = true
                 }
             }
         }

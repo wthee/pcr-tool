@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.tool.pvp
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.TextButton
@@ -35,6 +37,7 @@ import java.util.*
 /**
  * 搜索历史
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun PvpSearchHistory(
@@ -46,12 +49,14 @@ fun PvpSearchHistory(
     val region = getRegion()
     pvpViewModel.getHistory(region)
     val list = pvpViewModel.history.observeAsState()
+    val itemWidth = getItemWidth(floatWindow)
+    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value != null && list.value!!.isNotEmpty()) {
-            LazyColumn(
+            LazyVerticalGrid(
                 state = historyListState,
-                contentPadding = PaddingValues(Dimen.mediumPadding)
+                cells = GridCells.Adaptive(itemWidth)
             ) {
                 items(list.value!!) { data ->
                     PvpHistoryItem(
@@ -88,19 +93,24 @@ private fun PvpHistoryItem(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val largerPadding = if (floatWindow) Dimen.mediumPadding else Dimen.largePadding
     val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
-    MainCard(modifier = Modifier.padding((mediumPadding))) {
+
+    MainCard(
+        modifier = Modifier.padding(
+            horizontal = largerPadding,
+            vertical = mediumPadding
+        )
+    ) {
         //队伍角色图标
         Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(top = mediumPadding, bottom = mediumPadding)
         ) {
             Row(
                 modifier = Modifier
-                    .padding(start = mediumPadding, end = mediumPadding)
-                    .fillMaxWidth(),
+                    .padding(start = mediumPadding, end = mediumPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //搜索
@@ -143,31 +153,22 @@ private fun PvpHistoryItem(
             }
 
             //防守
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                val modifier = if (!floatWindow) {
-                    Modifier
-                        .weight(1f)
-                        .padding(Dimen.smallPadding)
-                } else {
-                    Modifier
-                        .weight(1f)
-                        .padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
-                }
+            Row {
                 itemData.getDefIds().forEachIndexed { _, it ->
                     Box(
-                        modifier = modifier,
+                        modifier = Modifier.padding(mediumPadding),
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
                             data = CharacterIdUtil.getMaxIconUrl(
                                 it,
                                 MainActivity.r6Ids.contains(it)
-                            )
+                            ),
+                            size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                         ) {
-                            toCharacter(it)
+                            if (!floatWindow) {
+                                toCharacter(it)
+                            }
                         }
                     }
                 }
