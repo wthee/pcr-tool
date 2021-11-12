@@ -130,10 +130,7 @@ fun Overview(
                     ) { index ->
                         val id = if (characterList.isEmpty()) 0 else characterList[index].id
                         Card(
-                            modifier = Modifier
-                                .heightIn(
-                                    min = Dimen.characterCardMinHeight
-                                ),
+                            modifier = Modifier.width(getItemWidth()),
                             onClick = {
                                 VibrateUtil(context).single()
                                 actions.toCharacterDetail(id)
@@ -161,9 +158,9 @@ fun Overview(
                     actions.toEquipList()
                 }
             ) {
-                VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+                VerticalGrid(spanCount = spanCount * 5) {
                     if (equipList.isNotEmpty()) {
-                        equipList.subList(0, 10).forEach {
+                        equipList.subList(0, spanCount * 10).forEach {
                             Box(
                                 modifier = Modifier
                                     .padding(Dimen.mediumPadding)

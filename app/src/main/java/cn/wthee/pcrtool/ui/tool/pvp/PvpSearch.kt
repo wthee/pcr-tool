@@ -125,19 +125,22 @@ fun PvpSearchCompose(
                 )
             }
             //已选择列表
-            Row(
-                modifier = Modifier
-                    .padding(mediumPadding)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                selectedIds.forEach {
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        PvpIconItem(
-                            selectedIds = selectedIds,
-                            it = it,
-                            floatWindow = floatWindow
-                        )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .padding(mediumPadding)
+                        .width(getItemWidth())
+                        .align(Alignment.Center),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    selectedIds.forEach {
+                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            PvpIconItem(
+                                selectedIds = selectedIds,
+                                it = it,
+                                floatWindow = floatWindow
+                            )
+                        }
                     }
                 }
             }

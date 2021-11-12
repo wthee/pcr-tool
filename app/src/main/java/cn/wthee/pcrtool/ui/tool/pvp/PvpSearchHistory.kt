@@ -50,7 +50,6 @@ fun PvpSearchHistory(
     pvpViewModel.getHistory(region)
     val list = pvpViewModel.history.observeAsState()
     val itemWidth = getItemWidth(floatWindow)
-    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (list.value != null && list.value!!.isNotEmpty()) {

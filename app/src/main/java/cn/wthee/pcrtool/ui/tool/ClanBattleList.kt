@@ -268,7 +268,7 @@ fun ClanBossInfoPager(
                 TabRow(
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
-                        .fillMaxWidth(0.95f),
+                        .width(getItemWidth()),
                     selectedTabIndex = pagerState.currentPage,
                     backgroundColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,
