@@ -90,7 +90,6 @@ fun PvpSearchResult(
     val vibrated = remember {
         mutableStateOf(false)
     }
-    val mediumPadding = if (floatWindow) Dimen.smallPadding else Dimen.mediumPadding
     //宽度
     val itemWidth = getItemWidth(floatWindow)
 

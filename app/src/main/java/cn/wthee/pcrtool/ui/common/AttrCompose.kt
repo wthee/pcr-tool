@@ -21,8 +21,8 @@ fun AttrList(attrs: List<AttrValue>, toInt: Boolean = true) {
         modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
         spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
     ) {
-        attrs.forEachIndexed { index, it ->
-            AttrItem(index, it.title, it.value, toInt)
+        attrs.forEach {
+            AttrItem(it.title, it.value, toInt)
         }
     }
 }
@@ -31,7 +31,7 @@ fun AttrList(attrs: List<AttrValue>, toInt: Boolean = true) {
  * 属性
  */
 @Composable
-fun AttrItem(index: Int, text: String, value: Double, toInt: Boolean) {
+fun AttrItem(text: String, value: Double, toInt: Boolean) {
     val valueText = when (value.int) {
         in 100000000..Int.MAX_VALUE -> "${value.toInt() / 100000000f}亿"
         in 100000 until 100000000 -> "${value.toInt() / 10000}万"

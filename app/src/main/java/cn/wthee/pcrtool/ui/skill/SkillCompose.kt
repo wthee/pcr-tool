@@ -34,7 +34,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  * 角色技能列表
  *
  * @param unitId 角色编号
- * @param unitId 角色特殊编号
+ * @param cutinId 角色特殊编号
  * @param level 等级
  * @param atk 攻击力
  */

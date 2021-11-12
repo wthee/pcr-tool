@@ -268,7 +268,7 @@ private fun AreaEquipList(
                 )
         ) {
             FlowRow(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-                odds.forEachIndexed { index, oddData ->
+                odds.forEach { oddData ->
                     Column(
                         modifier = Modifier.padding(
                             horizontal = Dimen.mediumPadding,

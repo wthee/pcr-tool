@@ -77,7 +77,6 @@ object Constants {
     //装备图标接口
     const val UNKNOWN_EQUIP_ID = 999999
     const val EQUIPMENT_URL = RESOURCE_URL + "icon/equipment/"
-    const val UNKNOWN_EQUIPMENT_ICON = EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP
 
     //图标接口
     const val UNIT_ICON_URL = RESOURCE_URL + "icon/unit/"
@@ -156,5 +155,4 @@ object Constants {
     const val EXCEPTION_DATA_EXPORT = "数据导出$EXCEPTION"
     const val EXCEPTION_DATA_IMPORT = "数据导入$EXCEPTION"
     const val EXCEPTION_DATA_CHANGE = "数据切换$EXCEPTION"
-    const val INIT_FLOATWINDOW = "悬浮窗初始化$EXCEPTION"
 }

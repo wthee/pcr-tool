@@ -178,7 +178,11 @@ private fun ComicItem(data: ComicData) {
             MainActivity.navViewModel.loading.postValue(true)
         } else {
             MainActivity.navViewModel.loading.postValue(false)
-            ImageCompose(data = data.url, ratio = RATIO_COMIC)
+            ImageCompose(
+                data = data.url,
+                ratio = RATIO_COMIC,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
         CommonSpacer()
     }

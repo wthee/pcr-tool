@@ -36,7 +36,7 @@ class DatabaseDownloadWorker(
 
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
-    lateinit var service: Call<ResponseBody>
+    private lateinit var service: Call<ResponseBody>
 
     companion object {
         const val KEY_FILE = "KEY_FILE"

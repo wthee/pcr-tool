@@ -140,8 +140,7 @@ fun Overview(
                         ) {
                             ImageCompose(
                                 CharacterIdUtil.getMaxCardUrl(id),
-                                ratio = RATIO,
-                                modifier = Modifier
+                                ratio = RATIO
                             )
                         }
                     }

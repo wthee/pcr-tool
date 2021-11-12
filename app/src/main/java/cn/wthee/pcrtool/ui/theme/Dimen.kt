@@ -44,8 +44,6 @@ object Dimen {
 
     val cardHeight = 52.dp
 
-    val characterCardMinHeight = 128.dp
-
     val settingIconSize = 30.dp
 
     val toolMenuWidth = 100.dp

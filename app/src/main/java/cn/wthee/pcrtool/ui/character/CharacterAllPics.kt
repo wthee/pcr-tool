@@ -53,7 +53,7 @@ fun CharacterAllPics(unitId: Int) {
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
-            picUrls.forEachIndexed { index, s ->
+            picUrls.forEachIndexed { index, _ ->
                 val request = coil.request.ImageRequest.Builder(context)
                     .data(picUrls[index])
                     .build()
@@ -66,15 +66,15 @@ fun CharacterAllPics(unitId: Int) {
                         .padding(Dimen.largePadding)
                         .fillMaxWidth(),
                     onClick = {
-                        cn.wthee.pcrtool.utils.VibrateUtil(context).single()
+                        VibrateUtil(context).single()
                         //下载
                         if (loaded[index]) {
                             //权限校验
-                            cn.wthee.pcrtool.utils.checkPermissions(context) {
+                            checkPermissions(context) {
                                 clickedIndex.value = index
                             }
                         } else {
-                            cn.wthee.pcrtool.utils.ToastUtil.short(unLoadToast)
+                            ToastUtil.short(unLoadToast)
                         }
                     },
                     shape = Shape.medium,
@@ -82,7 +82,8 @@ fun CharacterAllPics(unitId: Int) {
                     //图片
                     ImageCompose(
                         data = picUrls[index],
-                        ratio = RATIO
+                        ratio = RATIO,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         loaded[index] = true
                     }

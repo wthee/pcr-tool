@@ -188,7 +188,11 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
                     if (!isComic) {
                         url = it
                     }
-                    ImageCompose(url, ratio = if (isComic) RATIO_COMIC else RATIO_COMMON)
+                    ImageCompose(
+                        url,
+                        ratio = if (isComic) RATIO_COMIC else RATIO_COMMON,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
