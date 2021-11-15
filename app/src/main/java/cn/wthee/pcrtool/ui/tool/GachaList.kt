@@ -48,8 +48,7 @@ fun GachaList(
     Box(modifier = Modifier.fillMaxSize()) {
         if (gachas.isNotEmpty()) {
             LazyColumn(
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
+                state = scrollState
             ) {
                 items(gachas) {
                     GachaItem(it, toCharacterDetail)
@@ -104,69 +103,77 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
         else -> MaterialTheme.colorScheme.primary
     }
 
-    //标题
-    FlowRow(
-        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-        crossAxisAlignment = FlowCrossAxisAlignment.Center
-    ) {
-        MainTitleText(
-            text = type,
-            backgroundColor = color
-        )
-        MainTitleText(
-            text = sd.substring(0, 10),
-            modifier = Modifier.padding(start = Dimen.smallPadding),
-        )
-        MainTitleText(
-            text = ed.days(sd),
-            modifier = Modifier.padding(start = Dimen.smallPadding)
-        )
 
-        //计时
-        if (inProgress) {
-            Row(
+    Column(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        )
+    ) {
+        //标题
+        FlowRow(
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+            crossAxisAlignment = FlowCrossAxisAlignment.Center
+        ) {
+            MainTitleText(
+                text = type,
+                backgroundColor = color
+            )
+            MainTitleText(
+                text = sd.substring(0, 10),
                 modifier = Modifier.padding(start = Dimen.smallPadding),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconCompose(
-                    data = MainIconType.TIME_LEFT.icon,
-                    size = Dimen.smallIconSize,
-                )
-                MainContentText(
-                    text = stringResource(R.string.progressing, ed.dates(today)),
+            )
+            MainTitleText(
+                text = ed.days(sd),
+                modifier = Modifier.padding(start = Dimen.smallPadding)
+            )
+
+            //计时
+            if (inProgress) {
+                Row(
                     modifier = Modifier.padding(start = Dimen.smallPadding),
-                    textAlign = TextAlign.Start,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconCompose(
+                        data = MainIconType.TIME_LEFT.icon,
+                        size = Dimen.smallIconSize,
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.progressing, ed.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
-    }
 
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-            //图标/描述
-            if (icons.isEmpty()) {
-                MainContentText(
-                    text = gachaInfo.getDesc(),
-                    modifier = Modifier.padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding
-                    ),
-                    textAlign = TextAlign.Start
+        MainCard {
+            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+                //图标/描述
+                if (icons.isEmpty()) {
+                    MainContentText(
+                        text = gachaInfo.getDesc(),
+                        modifier = Modifier.padding(
+                            top = Dimen.mediumPadding,
+                            start = Dimen.mediumPadding,
+                            end = Dimen.mediumPadding
+                        ),
+                        textAlign = TextAlign.Start
+                    )
+                } else {
+                    IconListCompose(icons = icons, toCharacterDetail = toCharacterDetail)
+                }
+
+                //结束日期
+                CaptionText(
+                    text = ed,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = Dimen.mediumPadding)
+
                 )
-            } else {
-                IconListCompose(icons = icons, toCharacterDetail = toCharacterDetail)
             }
-
-            //结束日期
-            CaptionText(
-                text = ed,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = Dimen.mediumPadding)
-
-            )
         }
     }
 

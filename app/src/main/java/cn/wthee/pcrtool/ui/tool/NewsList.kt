@@ -188,7 +188,7 @@ fun NewsItem(
         else -> R.color.colorPrimary
     }
     Column(
-        modifier = Modifier.padding(Dimen.mediumPadding)
+        modifier = Modifier.padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
     ) {
         //标题
         Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
@@ -211,7 +211,6 @@ fun NewsItem(
             )
         }
         MainCard(modifier = Modifier
-            .padding(bottom = Dimen.mediumPadding)
             .placeholder(
                 visible = placeholder,
                 highlight = PlaceholderHighlight.shimmer()

@@ -1,7 +1,10 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -41,8 +44,7 @@ fun GuildList(
     Box(modifier = Modifier.fillMaxSize()) {
         if (guilds.isNotEmpty()) {
             LazyColumn(
-                state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
+                state = scrollState
             ) {
                 items(guilds) {
                     GuildItem(it, toCharacterDetail = toCharacterDetail)
@@ -82,46 +84,53 @@ private fun GuildItem(
     guild: GuildAllMember,
     toCharacterDetail: (Int) -> Unit
 ) {
-
-    MainTitleText(
-        text = guild.guildName,
-        modifier = Modifier.padding(bottom = Dimen.mediumPadding)
-    )
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
-            //内容
-            MainContentText(
-                text = guild.desc,
-                modifier = Modifier.padding(
-                    top = Dimen.mediumPadding,
-                    start = Dimen.mediumPadding,
-                    end = Dimen.mediumPadding
-                ),
-                textAlign = TextAlign.Start
-            )
-            //图标/描述
-            IconListCompose(
-                icons = guild.memberIds,
-                toCharacterDetail = toCharacterDetail
-            )
-            // 新加入的成员
-            if (guild.newMemberIds.isNotEmpty()) {
+    Column(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        )
+    ) {
+        MainTitleText(
+            text = guild.guildName,
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding)
+        )
+        MainCard {
+            Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+                //内容
                 MainContentText(
-                    text = stringResource(R.string.new_member),
+                    text = guild.desc,
                     modifier = Modifier.padding(
-                        top = Dimen.largePadding,
+                        top = Dimen.mediumPadding,
                         start = Dimen.mediumPadding,
                         end = Dimen.mediumPadding
                     ),
                     textAlign = TextAlign.Start
                 )
+                //图标/描述
                 IconListCompose(
-                    icons = guild.newMemberIds,
+                    icons = guild.memberIds,
                     toCharacterDetail = toCharacterDetail
                 )
+                // 新加入的成员
+                if (guild.newMemberIds.isNotEmpty()) {
+                    MainContentText(
+                        text = stringResource(R.string.new_member),
+                        modifier = Modifier.padding(
+                            top = Dimen.largePadding,
+                            start = Dimen.mediumPadding,
+                            end = Dimen.mediumPadding
+                        ),
+                        textAlign = TextAlign.Start
+                    )
+                    IconListCompose(
+                        icons = guild.newMemberIds,
+                        toCharacterDetail = toCharacterDetail
+                    )
+                }
             }
         }
     }
+
 }
 
 @Preview

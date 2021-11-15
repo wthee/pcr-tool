@@ -188,7 +188,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                 }
             }
         }
-        MainCard(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+        MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
                 //内容
                 MainContentText(

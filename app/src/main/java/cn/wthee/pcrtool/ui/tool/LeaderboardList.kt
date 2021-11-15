@@ -74,15 +74,14 @@ fun LeaderboardList(
             }
             if (list.isEmpty()) {
                 //显示占位图
-                LazyColumn(contentPadding = PaddingValues(Dimen.largePadding)) {
+                LazyColumn {
                     items(20) {
                         LeaderboardItem(LeaderboardData())
                     }
                 }
             } else {
                 LazyColumn(
-                    state = scrollState,
-                    contentPadding = PaddingValues(Dimen.largePadding)
+                    state = scrollState
                 ) {
                     items(list) {
                         LeaderboardItem(it)
@@ -133,34 +132,40 @@ private fun LeaderboardItem(info: LeaderboardData) {
     val placeholder = info.icon == ""
     val context = LocalContext.current
     val title = stringResource(id = R.string.visit_detail)
-
-    //标题
-    MainTitleText(
-        text = info.name,
-        modifier = Modifier
-            .padding(bottom = Dimen.mediumPadding)
-            .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
-    )
-    MainCard(modifier = Modifier
-        .padding(bottom = Dimen.largePadding)
-        .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer()),
-        onClick = {
-            //打开浏览器
-            if (!placeholder) {
-                openWebView(context, info.url, title)
+    Column(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        )
+    ) {
+        //标题
+        MainTitleText(
+            text = info.name,
+            modifier = Modifier
+                .padding(bottom = Dimen.mediumPadding)
+                .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer())
+        )
+        MainCard(modifier = Modifier
+            .placeholder(visible = placeholder, highlight = PlaceholderHighlight.shimmer()),
+            onClick = {
+                //打开浏览器
+                if (!placeholder) {
+                    openWebView(context, info.url, title)
+                }
+            }) {
+            Row(
+                modifier = Modifier.padding(Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconCompose(data = info.icon, size = Dimen.iconSize)
+                GradeText(info.all, modifier = Modifier.weight(0.25f))
+                GradeText(info.pvp, modifier = Modifier.weight(0.25f))
+                GradeText(info.clan, modifier = Modifier.weight(0.25f))
+                GradeText(info.tower, modifier = Modifier.weight(0.25f))
             }
-        }) {
-        Row(
-            modifier = Modifier.padding(Dimen.smallPadding),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconCompose(data = info.icon, size = Dimen.iconSize)
-            GradeText(info.all, modifier = Modifier.weight(0.25f))
-            GradeText(info.pvp, modifier = Modifier.weight(0.25f))
-            GradeText(info.clan, modifier = Modifier.weight(0.25f))
-            GradeText(info.tower, modifier = Modifier.weight(0.25f))
         }
     }
+
 }
 
 /**

@@ -164,7 +164,6 @@ private fun NoticeItem(data: AppNotice) {
         }
 
         MainCard(modifier = Modifier
-            .padding(bottom = Dimen.mediumPadding)
             .placeholder(
                 visible = placeholder,
                 highlight = PlaceholderHighlight.shimmer()

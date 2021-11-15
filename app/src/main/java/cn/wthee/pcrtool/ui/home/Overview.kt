@@ -390,7 +390,7 @@ private fun Section(
         } else {
             Modifier
                 .padding(top = Dimen.largePadding)
-        }.padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
+        }
     ) {
         Row(
             modifier = modifier.padding(Dimen.mediumPadding),
@@ -527,7 +527,7 @@ private fun CalendarItem(calendar: CalendarEvent) {
             }
         }
 
-        MainCard(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+        MainCard {
             Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
                 //内容
                 getTypeData(calendar).forEach {
