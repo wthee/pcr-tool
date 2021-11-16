@@ -43,15 +43,14 @@ fun RankEquipList(
     val selectedRank = remember {
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
-    val spanCount = 3
     LazyVerticalGrid(
-        cells = GridCells.Fixed(spanCount),
+        cells = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 3),
         contentPadding = PaddingValues(Dimen.mediumPadding)
     ) {
         items(allRankEquip) {
             RankEquipListItem(it, selectedRank, toEquipDetail)
         }
-        items(spanCount) {
+        items(2) {
             CommonSpacer()
         }
     }

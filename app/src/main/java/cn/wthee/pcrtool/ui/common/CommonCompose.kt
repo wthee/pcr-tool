@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -273,6 +274,7 @@ fun SubButton(
     OutlinedButton(
         shape = Shape.medium,
         modifier = modifier.padding(Dimen.smallPadding),
+        border = BorderStroke(Dimen.divLineHeight, color = color),
         onClick = {
             VibrateUtil(context).single()
             onClick.invoke()

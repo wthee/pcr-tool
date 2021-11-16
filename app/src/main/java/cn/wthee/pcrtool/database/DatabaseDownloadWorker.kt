@@ -1,16 +1,12 @@
 package cn.wthee.pcrtool.database
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
-import android.os.Build
 import androidx.annotation.NonNull
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.network.DatabaseService
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
@@ -40,13 +36,12 @@ class DatabaseDownloadWorker(
 
     //适配低版本数据库路径
     private val folderPath = FileUtil.getDatabaseDir()
-    lateinit var service: Call<ResponseBody>
+    private lateinit var service: Call<ResponseBody>
 
     companion object {
         const val KEY_FILE = "KEY_FILE"
         const val KEY_VERSION = "KEY_VERSION"
         const val KEY_REGION = "KEY_REGION"
-        const val KEY_FROM = "KEY_FROM"
     }
 
     override suspend fun doWork(): Result = coroutineScope {
@@ -55,12 +50,11 @@ class DatabaseDownloadWorker(
         val version = inputData.getString(KEY_VERSION) ?: return@coroutineScope Result.failure()
         val region = inputData.getInt(KEY_REGION, 2)
         val fileName = inputData.getString(KEY_FILE)
-        val from = inputData.getInt(KEY_FROM, -1)
         setForegroundAsync(createForegroundInfo())
         val result = download(version, region, fileName ?: "")
         if (result == Result.success()) {
             //通知更新数据
-            handler.sendEmptyMessage(from)
+            handler.sendEmptyMessage(region)
         } else if (result == Result.failure()) {
             ToastUtil.short(DOWNLOAD_ERROR)
             WorkManager.getInstance(MyApplication.context).cancelAllWork()
@@ -83,7 +77,7 @@ class DatabaseDownloadWorker(
                         //更新下载进度
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
-                                "${Constants.NOTICE_TITLE} ${currSize / 1024}  / ${totalSize / 1024}"
+                                "${Constants.DOWNLOAD_NOTICE_TITLE} ${currSize / 1024}  / ${totalSize / 1024}"
                             )
                         notificationManager.notify(noticeId, notification.build())
                     }
@@ -144,23 +138,16 @@ class DatabaseDownloadWorker(
     private fun createForegroundInfo(): ForegroundInfo {
         val context: Context = applicationContext
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel()
-        }
-        notification = NotificationCompat.Builder(context, channelId)
-            .setContentTitle(Constants.NOTICE_TITLE)
-            .setTicker(Constants.NOTICE_TITLE)
-            .setSmallIcon(R.mipmap.ic_logo)
-            .setOngoing(true)
+        notification = NotificationUtil.createNotice(
+            context = context,
+            channelId = channelId,
+            channelName = "数据更新",
+            noticeTitle = Constants.DOWNLOAD_NOTICE_TITLE,
+            notificationManager = notificationManager
+        )
+        notification.setOngoing(true)
             .setProgress(100, 0, true)
         return ForegroundInfo(noticeId, notification.build())
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createChannel() {
-        val channel = NotificationChannel(channelId, "数据更新", NotificationManager.IMPORTANCE_LOW)
-        notificationManager.createNotificationChannel(channel)
-    }
-
 
 }

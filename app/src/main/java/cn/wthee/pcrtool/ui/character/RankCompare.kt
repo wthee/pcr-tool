@@ -263,7 +263,7 @@ private fun StarCompose(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(Dimen.divLineHeight)
-                    .size(Dimen.starIconSize)
+                    .size(Dimen.mediumIconSize)
                     .clip(CircleShape)
                     .padding(Dimen.smallPadding)
             )

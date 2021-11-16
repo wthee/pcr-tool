@@ -1,10 +1,12 @@
 package cn.wthee.pcrtool.ui.tool
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -58,6 +60,7 @@ import kotlinx.coroutines.launch
 /**
  * 每月 BOSS 信息列表
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
@@ -74,9 +77,9 @@ fun ClanBattleList(
     Box(modifier = Modifier.fillMaxSize()) {
         val visible = clanList.isNotEmpty()
         FadeAnimation(visible = visible) {
-            LazyColumn(
+            LazyVerticalGrid(
                 state = scrollState,
-                contentPadding = PaddingValues(Dimen.largePadding)
+                cells = GridCells.Adaptive(getItemWidth())
             ) {
                 items(clanList) {
                     ClanBattleItem(it, toClanBossInfo)
@@ -87,7 +90,9 @@ fun ClanBattleList(
             }
         }
         FadeAnimation(visible = !visible) {
-            LazyColumn(contentPadding = PaddingValues(Dimen.largePadding)) {
+            LazyVerticalGrid(
+                cells = GridCells.Adaptive(getItemWidth())
+            ) {
                 items(20) {
                     ClanBattleItem(ClanBattleInfo(), toClanBossInfo)
                 }
@@ -127,64 +132,71 @@ private fun ClanBattleItem(
     val section = clanInfo.getAllBossIds().size
     val list = clanInfo.getUnitIdList(0)
 
-    //标题
-    Row(
-        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        MainTitleText(
-            text = clanInfo.getDate(),
-            modifier = Modifier.placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
+    Column(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
         )
-        MainTitleText(
-            text = stringResource(
-                id = R.string.section,
-                getZhNumberText(section)
-            ),
-            backgroundColor = getSectionTextColor(section),
+    ) {
+        //标题
+        Row(
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainTitleText(
+                text = clanInfo.getDate(),
+                modifier = Modifier.placeholder(
+                    visible = placeholder,
+                    highlight = PlaceholderHighlight.shimmer()
+                )
+            )
+            MainTitleText(
+                text = stringResource(
+                    id = R.string.section,
+                    getZhNumberText(section)
+                ),
+                backgroundColor = getSectionTextColor(section),
+                modifier = Modifier
+                    .padding(start = Dimen.smallPadding)
+                    .placeholder(
+                        visible = placeholder,
+                        highlight = PlaceholderHighlight.shimmer()
+                    ),
+            )
+        }
+
+        MainCard(
             modifier = Modifier
-                .padding(start = Dimen.smallPadding)
                 .placeholder(
                     visible = placeholder,
                     highlight = PlaceholderHighlight.shimmer()
-                ),
-        )
-    }
-
-    MainCard(
-        modifier = Modifier
-            .padding(bottom = Dimen.largePadding)
-            .placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
-    ) {
-        //图标
-        Row(
-            modifier = Modifier.padding(Dimen.mediumPadding),
-            horizontalArrangement = Arrangement.SpaceBetween
+                )
         ) {
-            list.forEachIndexed { index, it ->
-                Box {
-                    IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
-                        if (!placeholder) {
-                            toClanBossInfo(clanInfo.clan_battle_id, index)
+            //图标
+            Row {
+                list.forEachIndexed { index, it ->
+                    Box(
+                        modifier = Modifier.padding(Dimen.mediumPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
+                            if (!placeholder) {
+                                toClanBossInfo(clanInfo.clan_battle_id, index)
+                            }
                         }
-                    }
-                    //多目标提示
-                    if (it.partEnemyIds.isNotEmpty()) {
-                        MainTitleText(
-                            text = it.partEnemyIds.size.toString(),
-                            modifier = Modifier.align(Alignment.BottomEnd)
-                        )
+                        //多目标提示
+                        if (it.partEnemyIds.isNotEmpty()) {
+                            MainTitleText(
+                                text = it.partEnemyIds.size.toString(),
+                                modifier = Modifier.align(Alignment.BottomEnd)
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
 }
 
 /**
@@ -255,7 +267,7 @@ fun ClanBossInfoPager(
                 TabRow(
                     modifier = Modifier
                         .padding(top = Dimen.largePadding)
-                        .fillMaxWidth(0.95f),
+                        .width(getItemWidth()),
                     selectedTabIndex = pagerState.currentPage,
                     backgroundColor = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.primary,

@@ -62,8 +62,6 @@ object Constants {
     const val DATABASE_WAL_BACKUP_JP = BuildConfig.VERSION_CODE.toString() + DATABASE_WAL_JP
 
 
-
-
     //其它数据库
     const val DATABASE_NEWS = "news.db"
     const val DATABASE_TWEET = "tweet.db"
@@ -79,7 +77,6 @@ object Constants {
     //装备图标接口
     const val UNKNOWN_EQUIP_ID = 999999
     const val EQUIPMENT_URL = RESOURCE_URL + "icon/equipment/"
-    const val UNKNOWN_EQUIPMENT_ICON = EQUIPMENT_URL + UNKNOWN_EQUIP_ID + WEBP
 
     //图标接口
     const val UNIT_ICON_URL = RESOURCE_URL + "icon/unit/"
@@ -100,8 +97,8 @@ object Constants {
     const val SP_VIBRATE_STATE = "vibrate_state"
     const val SP_ANIM_STATE = "animation_state"
 
-    //默认值
-    const val NOTICE_TITLE = "正在下载数据"
+    const val DOWNLOAD_NOTICE_TITLE = "正在下载数据"
+    const val PVPSEARCH_NOTICE_TITLE = "竞技场查询服务正在运行"
     const val DOWNLOAD_ERROR = "下载数据出现未知错误~"
     const val RANK_UPPER = "RANK"
 

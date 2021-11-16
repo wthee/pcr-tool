@@ -34,9 +34,6 @@ import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.openWebView
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
@@ -117,7 +114,6 @@ fun TweetList(
 private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int) -> Unit) {
     val placeholder = data.id == ""
     val photos = data.getImageList()
-    val pagerState = rememberPagerState()
     var comicId = ""
     var url = if (data.tweet.startsWith("【ぷりこねっ！りだいぶ】")) {
         // 四格漫画
@@ -186,19 +182,18 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
         }
         //图片
         if (photos.isNotEmpty()) {
-            HorizontalPager(
-                count = photos.size,
-                state = pagerState,
-                modifier = Modifier.padding(top = Dimen.mediumPadding, bottom = Dimen.mediumPadding)
-            ) { pageIndex ->
-                val isComic = url != ""
-                if (!isComic) {
-                    url = photos[pageIndex]
+            VerticalGrid(maxColumnWidth = getItemWidth()) {
+                photos.forEach {
+                    val isComic = url != ""
+                    if (!isComic) {
+                        url = it
+                    }
+                    ImageCompose(
+                        url,
+                        ratio = if (isComic) RATIO_COMIC else RATIO_COMMON,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
-                ImageCompose(url, ratio = if (isComic) RATIO_COMIC else RATIO_COMMON)
-            }
-            if (pagerState.pageCount > 1) {
-                HorizontalPagerIndicator(pagerState = pagerState)
             }
         }
     }

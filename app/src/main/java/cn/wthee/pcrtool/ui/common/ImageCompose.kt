@@ -4,7 +4,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +34,7 @@ const val RATIO_COMMON = 371 / 208f
 fun ImageCompose(
     data: Any,
     ratio: Float,
-    modifier: Modifier = Modifier.fillMaxWidth(),
+    modifier: Modifier = Modifier,
     onSuccess: () -> Unit = {}
 ) {
     val context = LocalContext.current

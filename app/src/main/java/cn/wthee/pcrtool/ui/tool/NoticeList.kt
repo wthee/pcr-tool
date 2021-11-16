@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.tool
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -35,6 +37,7 @@ import kotlinx.coroutines.launch
 /**
  * 通知列表
  */
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun NoticeList(
@@ -50,7 +53,7 @@ fun NoticeList(
 
     Box(modifier = Modifier.fillMaxSize()) {
         val visible = noticeList.isNotEmpty()
-        LazyColumn(state = scrollState, contentPadding = PaddingValues(Dimen.largePadding)) {
+        LazyVerticalGrid(state = scrollState, cells = GridCells.Adaptive(getItemWidth())) {
             if (visible) {
                 items(noticeList) {
                     NoticeItem(it)
@@ -128,62 +131,68 @@ private fun NoticeItem(data: AppNotice) {
 
     val context = LocalContext.current
 
-    Row(
-        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        MainTitleText(
-            text = data.title,
-            modifier = Modifier.placeholder(
-                visible = placeholder,
-                highlight = PlaceholderHighlight.shimmer()
-            )
+    Column(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
         )
-        if (data.date != "") {
-            MainTitleText(
-                text = data.date.formatTime.substring(0, 10),
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-        }
-        if (exTitle != "") {
-            MainTitleText(
-                text = exTitle,
-                backgroundColor = exTitleColor,
-                modifier = Modifier.padding(start = Dimen.smallPadding)
-            )
-        }
-    }
-
-    MainCard(modifier = Modifier
-        .padding(bottom = Dimen.largePadding)
-        .placeholder(
-            visible = placeholder,
-            highlight = PlaceholderHighlight.shimmer()
-        ),
-        onClick = {
-            if (data.type == 0 || data.type == -1) {
-                if (!placeholder) {
-                    openWebView(context, data.url)
-                }
-            }
-        }
     ) {
-        Column(modifier = Modifier.padding(Dimen.largePadding)) {
-            //内容
-            MainContentText(
-                text = data.message,
-                textAlign = TextAlign.Start
+        Row(
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MainTitleText(
+                text = data.title,
+                modifier = Modifier.placeholder(
+                    visible = placeholder,
+                    highlight = PlaceholderHighlight.shimmer()
+                )
             )
-            if (data.type == 0 && newVersion) {
-                MainContentText(
-                    text = stringResource(id = R.string.to_update),
-                    color = colorResource(id = R.color.color_rank_21),
-                    modifier = Modifier.padding(top = Dimen.mediumPadding)
+            if (data.date != "") {
+                MainTitleText(
+                    text = data.date.formatTime.substring(0, 10),
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
+                )
+            }
+            if (exTitle != "") {
+                MainTitleText(
+                    text = exTitle,
+                    backgroundColor = exTitleColor,
+                    modifier = Modifier.padding(start = Dimen.smallPadding)
                 )
             }
         }
 
+        MainCard(modifier = Modifier
+            .placeholder(
+                visible = placeholder,
+                highlight = PlaceholderHighlight.shimmer()
+            ),
+            onClick = {
+                if (data.type == 0 || data.type == -1) {
+                    if (!placeholder) {
+                        openWebView(context, data.url)
+                    }
+                }
+            }
+        ) {
+            Column(modifier = Modifier.padding(Dimen.largePadding)) {
+                //内容
+                MainContentText(
+                    text = data.message,
+                    textAlign = TextAlign.Start
+                )
+                if (data.type == 0 && newVersion) {
+                    MainContentText(
+                        text = stringResource(id = R.string.to_update),
+                        color = colorResource(id = R.color.color_rank_21),
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
+                    )
+                }
+            }
+        }
     }
+
 }
 
 @Preview

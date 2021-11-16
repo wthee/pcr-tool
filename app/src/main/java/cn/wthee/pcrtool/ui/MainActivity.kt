@@ -32,6 +32,9 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.database.AppDatabaseCN
+import cn.wthee.pcrtool.database.AppDatabaseJP
+import cn.wthee.pcrtool.database.AppDatabaseTW
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.actions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
@@ -163,6 +166,21 @@ class MainActivity : ComponentActivity() {
     private fun setHandler() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
+            //关闭其他数据库连接
+            when (it.what) {
+                2 -> {
+                    AppDatabaseTW.close()
+                    AppDatabaseJP.close()
+                }
+                3 -> {
+                    AppDatabaseCN.close()
+                    AppDatabaseJP.close()
+                }
+                4 -> {
+                    AppDatabaseCN.close()
+                    AppDatabaseTW.close()
+                }
+            }
             try {
                 navController.popBackStack()
                 viewModelStore.clear()

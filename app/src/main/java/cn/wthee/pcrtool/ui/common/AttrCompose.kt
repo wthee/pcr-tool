@@ -1,16 +1,15 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.data.model.AttrValue
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.ScreenUtil
+import cn.wthee.pcrtool.utils.dp2px
 import cn.wthee.pcrtool.utils.int
 
 /**
@@ -18,24 +17,12 @@ import cn.wthee.pcrtool.utils.int
  */
 @Composable
 fun AttrList(attrs: List<AttrValue>, toInt: Boolean = true) {
-    Column {
-        attrs.forEachIndexed { index, it ->
-            if (index % 2 == 0) {
-                Row {
-                    AttrItem(index, it.title, it.value, toInt, Modifier.weight(0.5f))
-                    if (index + 1 < attrs.size) {
-                        AttrItem(
-                            index + 1,
-                            attrs[index + 1].title,
-                            attrs[index + 1].value,
-                            toInt,
-                            Modifier.weight(0.5f)
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.weight(0.5f))
-                    }
-                }
-            }
+    VerticalGrid(
+        modifier = Modifier.padding(horizontal = Dimen.mediumPadding),
+        spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
+    ) {
+        attrs.forEach {
+            AttrItem(it.title, it.value, toInt)
         }
     }
 }
@@ -44,24 +31,26 @@ fun AttrList(attrs: List<AttrValue>, toInt: Boolean = true) {
  * 属性
  */
 @Composable
-fun AttrItem(index: Int, text: String, value: Double, toInt: Boolean, modifier: Modifier) {
+fun AttrItem(text: String, value: Double, toInt: Boolean) {
     val valueText = when (value.int) {
         in 100000000..Int.MAX_VALUE -> "${value.toInt() / 100000000f}亿"
         in 100000 until 100000000 -> "${value.toInt() / 10000}万"
         else -> if (toInt) value.int.toString() else value.toString()
     }
     Row(
-        modifier = modifier.padding(top = Dimen.smallPadding)
+        modifier = Modifier.padding(
+            top = Dimen.smallPadding,
+            start = Dimen.mediumPadding,
+            end = Dimen.mediumPadding
+        )
     ) {
         MainTitleText(
             text = text, modifier = Modifier
-                .padding(start = Dimen.largePadding)
                 .weight(0.3f)
         )
         MainContentText(
             text = valueText,
             modifier = Modifier
-                .padding(end = if (index % 2 == 1) Dimen.largePadding else 0.dp)
                 .weight(0.2f)
         )
     }

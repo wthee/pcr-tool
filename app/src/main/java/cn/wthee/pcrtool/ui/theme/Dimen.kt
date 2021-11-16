@@ -32,20 +32,17 @@ object Dimen {
 
     val smallIconSize = 18.dp
 
+    val mediumIconSize = 32.dp
+
     val iconSize = 48.dp
 
     val largeIconSize = 56.dp
 
     val sheetMarginBottom = 60.dp
 
-
     val divLineHeight = 1.dp
 
-    val starIconSize = 32.dp
-
     val cardHeight = 52.dp
-
-    val characterCardMinHeight = 128.dp
 
     val settingIconSize = 30.dp
 
@@ -60,5 +57,4 @@ object Dimen {
     val lineWidth = 32.dp
 
     val lineHeight = 3.dp
-
 }

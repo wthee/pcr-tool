@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
@@ -21,6 +18,7 @@ import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.FabMain
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.MainCard
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -32,13 +30,12 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
-fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
-    val context = LocalContext.current
+fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
     val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
     val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
     val pagerState = rememberPagerState()
-    val selectListState = rememberScrollState()
+    val selectListState = rememberLazyListState()
     val resultListState = rememberLazyListState()
     val favoritesListState = rememberLazyListState()
     val historyListState = rememberLazyListState()
@@ -47,11 +44,17 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
     PCRToolComposeTheme {
         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {
             Column {
+                //最大/小化
                 FabCompose(
-                    iconType = R.mipmap.ic_launcher_foreground
+                    iconType = if (min) {
+                        R.mipmap.ic_launcher_foreground
+                    } else {
+                        MainIconType.FLOAT_MIN
+                    }
                 ) {
                     MainActivity.navViewModel.floatSearchMin.postValue(!min)
                 }
+                //退出
                 if (!min) {
                     FabCompose(
                         iconType = MainIconType.FLOAT_CLOSE
@@ -59,6 +62,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                         MainActivity.navViewModel.floatServiceRun.postValue(false)
                     }
                 }
+                //查询
                 if (!min && !showResult) {
                     FabCompose(
                         iconType = MainIconType.PVP_SEARCH
@@ -74,6 +78,7 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                         MainActivity.navViewModel.showResult.postValue(true)
                     }
                 }
+                //返回
                 if (!min && showResult) {
                     FabMain()
                 }
@@ -84,9 +89,10 @@ fun PvpFloatSearch(pvpViewModel: PvpViewModel = hiltViewModel()) {
                 Modifier
             }
 
-            Card(modifier = modifier) {
+            MainCard(modifier = modifier) {
                 PvpSearchCompose(
                     floatWindow = true,
+                    initSpanCount = spanCount,
                     pagerState = pagerState,
                     selectListState = selectListState,
                     resultListState = resultListState,

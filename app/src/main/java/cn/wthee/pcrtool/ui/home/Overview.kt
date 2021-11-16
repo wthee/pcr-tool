@@ -101,6 +101,9 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
+    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
+
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             TopBarCompose(actions)
@@ -127,10 +130,7 @@ fun Overview(
                     ) { index ->
                         val id = if (characterList.isEmpty()) 0 else characterList[index].id
                         Card(
-                            modifier = Modifier
-                                .heightIn(
-                                    min = Dimen.characterCardMinHeight
-                                ),
+                            modifier = Modifier.width(getItemWidth()),
                             onClick = {
                                 VibrateUtil(context).single()
                                 actions.toCharacterDetail(id)
@@ -140,8 +140,7 @@ fun Overview(
                         ) {
                             ImageCompose(
                                 CharacterIdUtil.getMaxCardUrl(id),
-                                ratio = RATIO,
-                                modifier = Modifier
+                                ratio = RATIO
                             )
                         }
                     }
@@ -158,9 +157,9 @@ fun Overview(
                     actions.toEquipList()
                 }
             ) {
-                VerticalGrid(maxColumnWidth = Dimen.iconSize * 2) {
+                VerticalGrid(spanCount = spanCount * 5) {
                     if (equipList.isNotEmpty()) {
-                        equipList.subList(0, 10).forEach {
+                        equipList.subList(0, spanCount * 10).forEach {
                             Box(
                                 modifier = Modifier
                                     .padding(Dimen.mediumPadding)
@@ -192,13 +191,9 @@ fun Overview(
                     actions.toNews()
                 }
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(
-                            top = Dimen.mediumPadding,
-                            start = Dimen.largePadding,
-                            end = Dimen.largePadding
-                        )
+                VerticalGrid(
+                    spanCount = spanCount,
+                    modifier = Modifier.padding(top = Dimen.mediumPadding)
                 ) {
                     if (newsList.isNotEmpty()) {
                         newsList.forEach {
@@ -223,14 +218,9 @@ fun Overview(
                     titleId = R.string.tool_calendar,
                     iconType = MainIconType.CALENDAR_TODAY
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                top = Dimen.mediumPadding,
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding
-                            )
-                            .fillMaxWidth()
+                    VerticalGrid(
+                        spanCount = spanCount,
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
                     ) {
                         inProgressEventList.forEach {
                             CalendarItem(it)
@@ -243,14 +233,9 @@ fun Overview(
                     titleId = R.string.tool_calendar_comming,
                     iconType = MainIconType.CALENDAR
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                top = Dimen.mediumPadding,
-                                start = Dimen.largePadding,
-                                end = Dimen.largePadding
-                            )
-                            .fillMaxWidth()
+                    VerticalGrid(
+                        spanCount = spanCount,
+                        modifier = Modifier.padding(top = Dimen.mediumPadding)
                     ) {
                         comingSoonEventList.forEach {
                             CalendarItem(it)
@@ -328,7 +313,7 @@ private fun ChangeDbCompose(
                                 MainActivity.navViewModel.openChangeDataDialog.postValue(false)
                                 if (region != i + 2) {
                                     coroutineScope.launch {
-                                        DatabaseUpdater.changeRegion(i + 2)
+                                        DatabaseUpdater.changeDatabase(i + 2)
                                     }
                                 }
                             }
@@ -405,7 +390,7 @@ private fun Section(
         } else {
             Modifier
                 .padding(top = Dimen.largePadding)
-        }.padding(start = Dimen.smallPadding, end = Dimen.smallPadding)
+        }
     ) {
         Row(
             modifier = modifier.padding(Dimen.mediumPadding),
@@ -488,64 +473,72 @@ private fun CalendarItem(calendar: CalendarEvent) {
         }
     }
 
-    FlowRow(
-        modifier = Modifier.padding(bottom = Dimen.mediumPadding),
-        crossAxisAlignment = FlowCrossAxisAlignment.Center
+    Column(
+        modifier = Modifier.padding(
+            horizontal = Dimen.largePadding,
+            vertical = Dimen.mediumPadding
+        )
     ) {
-        //开始日期
-        MainTitleText(
-            text = sd.substring(0, 10),
-            backgroundColor = color
-        )
-        //天数
-        MainTitleText(
-            text = ed.days(sd),
-            modifier = Modifier.padding(start = Dimen.smallPadding), backgroundColor = color
-        )
-        //计时
-        Row(
-            modifier = Modifier.padding(start = Dimen.smallPadding),
-            verticalAlignment = Alignment.CenterVertically
+        FlowRow(
+            modifier = Modifier.padding(bottom = Dimen.mediumPadding),
+            crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
-            if (inProgress) {
-                IconCompose(
-                    data = MainIconType.TIME_LEFT.icon,
-                    size = Dimen.smallIconSize,
-                    tint = color
-                )
-                MainContentText(
-                    text = stringResource(R.string.progressing, ed.dates(today)),
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    textAlign = TextAlign.Start,
-                    color = color
-                )
+            //开始日期
+            MainTitleText(
+                text = sd.substring(0, 10),
+                backgroundColor = color
+            )
+            //天数
+            MainTitleText(
+                text = ed.days(sd),
+                modifier = Modifier.padding(start = Dimen.smallPadding), backgroundColor = color
+            )
+            //计时
+            Row(
+                modifier = Modifier.padding(start = Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (inProgress) {
+                    IconCompose(
+                        data = MainIconType.TIME_LEFT.icon,
+                        size = Dimen.smallIconSize,
+                        tint = color
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.progressing, ed.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = color
+                    )
+                }
+                if (comingSoon) {
+                    IconCompose(
+                        data = MainIconType.COUNTDOWN.icon,
+                        size = Dimen.smallIconSize,
+                        tint = color
+                    )
+                    MainContentText(
+                        text = stringResource(R.string.coming_soon, sd.dates(today)),
+                        modifier = Modifier.padding(start = Dimen.smallPadding),
+                        textAlign = TextAlign.Start,
+                        color = color
+                    )
+                }
             }
-            if (comingSoon) {
-                IconCompose(
-                    data = MainIconType.COUNTDOWN.icon,
-                    size = Dimen.smallIconSize,
-                    tint = color
-                )
-                MainContentText(
-                    text = stringResource(R.string.coming_soon, sd.dates(today)),
-                    modifier = Modifier.padding(start = Dimen.smallPadding),
-                    textAlign = TextAlign.Start,
-                    color = color
-                )
+        }
+
+        MainCard {
+            Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
+                //内容
+                getTypeData(calendar).forEach {
+                    Subtitle1(text = it.title + it.info)
+                }
+                //结束日期
+                CaptionText(text = ed, modifier = Modifier.fillMaxWidth())
             }
         }
     }
 
-    MainCard(modifier = Modifier.padding(bottom = Dimen.largePadding)) {
-        Column(modifier = Modifier.padding(Dimen.mediumPadding)) {
-            //内容
-            getTypeData(calendar).forEach {
-                Subtitle1(text = it.title + it.info)
-            }
-            //结束日期
-            CaptionText(text = ed, modifier = Modifier.fillMaxWidth())
-        }
-    }
 }
 
 

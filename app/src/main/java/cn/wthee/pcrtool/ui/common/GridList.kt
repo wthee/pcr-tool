@@ -1,9 +1,14 @@
 package cn.wthee.pcrtool.ui.common
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.LazyGridScope
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
+import androidx.paging.compose.LazyPagingItems
+import cn.wthee.pcrtool.ui.theme.Dimen
 import kotlin.math.ceil
 
 /**
@@ -107,4 +112,24 @@ private fun shortestColumn(colHeights: IntArray): Int {
         }
     }
     return column
+}
+
+
+/**
+ * 获取宽度
+ */
+fun getItemWidth(floatWindow: Boolean = false) = if (floatWindow) {
+    Dimen.mediumIconSize + Dimen.mediumPadding * 2
+} else {
+    Dimen.iconSize + Dimen.largePadding * 2
+} * 5
+
+@ExperimentalFoundationApi
+fun <T : Any> LazyGridScope.items(
+    lazyPagingItems: LazyPagingItems<T>,
+    itemContent: @Composable LazyItemScope.(value: T?) -> Unit
+) {
+    items(lazyPagingItems.itemCount) { index ->
+        itemContent(lazyPagingItems[index])
+    }
 }

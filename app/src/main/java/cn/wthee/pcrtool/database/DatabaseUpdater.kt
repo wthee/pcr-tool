@@ -32,7 +32,7 @@ object DatabaseUpdater {
     /**
      * 切换版本
      */
-    suspend fun changeRegion(region: Int) {
+    suspend fun changeDatabase(region: Int) {
         sp.edit {
             putInt(Constants.SP_DATABASE_TYPE, region)
         }
@@ -42,7 +42,7 @@ object DatabaseUpdater {
     /**
      * 检查是否需要更新
      *
-     * @param from  -1:正常调用  0：点击版本号  1：切换版本调用
+     * @param from  -1:正常调用  0：强制更新  1：切换版本调用
      */
     suspend fun checkDBVersion(from: Int = -1) {
         //获取数据库最新版本
@@ -70,12 +70,11 @@ object DatabaseUpdater {
 
     /**
      * 下载数据库文件
+     * @param versionData 版本信息
+     * @param from 调用来源
      */
     @SuppressLint("UnsafeOptInUsageError")
-    private fun downloadDB(
-        ver: DatabaseVersion,
-        from: Int = -1,
-    ) {
+    private fun downloadDB(versionData: DatabaseVersion, from: Int) {
         val region = getRegion()
         val localVersionKey = when (region) {
             2 -> Constants.SP_DATABASE_VERSION_CN
@@ -86,7 +85,7 @@ object DatabaseUpdater {
         //数据库文件不存在或有新版本更新时，下载最新数据库文件,切换版本，若文件不存在就更新
         val remoteBackupMode = MyApplication.backupMode
         //正常下载
-        val toDownload = localVersion != ver.toString()  //版本号hash远程不一致
+        val toDownload = localVersion != versionData.toString()  //版本号hash远程不一致
                 || from == 0
                 || (from == -1 && (FileUtil.needUpdate(region) || localVersion == "0"))  //打开应用，数据库wal被清空
                 || (from == 1 && !File(FileUtil.getDatabasePath(region)).exists()) //切换数据库时，数据库文件不存在时更新
@@ -129,10 +128,9 @@ object DatabaseUpdater {
             //开始下载
             try {
                 val data = Data.Builder()
-                    .putString(DatabaseDownloadWorker.KEY_VERSION, ver.toString())
+                    .putString(DatabaseDownloadWorker.KEY_VERSION, versionData.toString())
                     .putString(DatabaseDownloadWorker.KEY_FILE, fileName)
                     .putInt(DatabaseDownloadWorker.KEY_REGION, region)
-                    .putInt(DatabaseDownloadWorker.KEY_FROM, from)
                     .build()
                 val uploadWorkRequest =
                     OneTimeWorkRequestBuilder<DatabaseDownloadWorker>()
@@ -150,11 +148,11 @@ object DatabaseUpdater {
         } else {
             //强制更新/切换成功
             if (from != -1) {
-                handler.sendEmptyMessage(1)
+                handler.sendEmptyMessage(region)
             }
             //更新数据库版本号
             try {
-                updateLocalDataBaseVersion(ver.toString())
+                updateLocalDataBaseVersion(versionData.toString())
             } catch (e: Exception) {
             }
             MainActivity.navViewModel.downloadProgress.postValue(-2)
@@ -207,7 +205,7 @@ fun tryOpenDatabase(): Int {
     val region = getRegion()
     val msg: String
     val open: () -> Unit
-    when (getRegion()) {
+    when (region) {
         2 -> {
             msg = "更新国服数据结构！！！"
             open = {
