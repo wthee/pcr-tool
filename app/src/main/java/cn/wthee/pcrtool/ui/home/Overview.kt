@@ -59,6 +59,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 /**
  * 首页纵览
@@ -157,9 +158,9 @@ fun Overview(
                     actions.toEquipList()
                 }
             ) {
-                VerticalGrid(spanCount = spanCount * 5) {
+                VerticalGrid(spanCount = max(1, spanCount) * 5) {
                     if (equipList.isNotEmpty()) {
-                        equipList.subList(0, spanCount * 10).forEach {
+                        equipList.subList(0, max(1, spanCount) * 10).forEach {
                             Box(
                                 modifier = Modifier
                                     .padding(Dimen.mediumPadding)
