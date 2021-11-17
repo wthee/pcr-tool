@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.paging.compose.LazyPagingItems
 import cn.wthee.pcrtool.ui.theme.Dimen
 import kotlin.math.ceil
+import kotlin.math.max
 
 /**
  * 网格布局
@@ -27,7 +28,7 @@ fun VerticalGrid(
         check(constraints.hasBoundedWidth) {
             "Unbounded width not supported"
         }
-        val columns = ceil(constraints.maxWidth / maxColumnWidth.toPx()).toInt()
+        val columns = max(1, ceil(constraints.maxWidth / maxColumnWidth.toPx()).toInt())
         val columnWidth = constraints.maxWidth / columns
         val itemConstraints = constraints.copy(maxWidth = columnWidth)
         val colHeights = IntArray(columns) { 0 } // track each column's height
@@ -73,9 +74,9 @@ fun VerticalGrid(
         check(constraints.hasBoundedWidth) {
             "Unbounded width not supported"
         }
-        val columnWidth = (constraints.maxWidth / spanCount.toFloat()).toInt()
+        val columnWidth = (constraints.maxWidth / max(1, spanCount).toFloat()).toInt()
         val itemConstraints = constraints.copy(maxWidth = columnWidth)
-        val colHeights = IntArray(spanCount) { 0 } // track each column's height
+        val colHeights = IntArray(max(1, spanCount)) { 0 } // track each column's height
         val placeables = measurables.map { measurable ->
             val column = shortestColumn(colHeights)
             val placeable = measurable.measure(itemConstraints)
@@ -89,7 +90,7 @@ fun VerticalGrid(
             width = constraints.maxWidth,
             height = height
         ) {
-            val colY = IntArray(spanCount) { 0 }
+            val colY = IntArray(max(1, spanCount)) { 0 }
             placeables.forEach { placeable ->
                 val column = shortestColumn(colY)
                 placeable.place(
