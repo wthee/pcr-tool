@@ -282,14 +282,10 @@ private fun PvpResultItem(
             val upRatio = if (item.up == 0) 0 else {
                 round(item.up * 1.0 / (item.up + item.down) * 100).toInt()
             }
-            Column(
-                modifier = Modifier.padding(
-                    start = mediumPadding,
-                    end = mediumPadding
-                )
-            ) {
+            Column {
                 //点赞信息
                 Row(
+                    modifier = Modifier.padding(horizontal = mediumPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     MainContentText(
