@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.data.model.ChipData
+import cn.wthee.pcrtool.ui.common.ChipGroup
 import cn.wthee.pcrtool.ui.skill.SkillItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
@@ -51,15 +53,29 @@ fun AllSkillList(
     val loading = remember {
         mutableStateOf(true)
     }
+    val type = remember {
+        mutableStateOf(0)
+    }
+    val typeChips = arrayListOf(
+        ChipData(0, "角色"),
+        ChipData(1, "Boss")
+    )
 
 
     if (allCharacter.isNotEmpty() && bossIds.isNotEmpty()) {
         val ids = arrayListOf<Int>()
-        allCharacter.forEach {
-            ids.add(it.unitId)
+        if (type.value == 0) {
+            ids.clear()
+            allCharacter.forEach {
+                ids.add(it.unitId)
+            }
+            skillViewModel.getCharacterSkills(201, 1000, ids)
+        } else {
+            ids.clear()
+            ids.addAll(bossIds)
+            skillViewModel.getCharacterSkills(201, 1000, ids)
         }
-//            ids.addAll(bossIds)
-        skillViewModel.getCharacterSkills(201, 1000, ids)
+
     }
 
     Column(
@@ -85,6 +101,8 @@ fun AllSkillList(
                 }
             ),
         )
+
+        ChipGroup(items = typeChips, selectIndex = type)
         FadeAnimation(visible = loading.value) {
             CircularProgressIndicator(
                 modifier = Modifier

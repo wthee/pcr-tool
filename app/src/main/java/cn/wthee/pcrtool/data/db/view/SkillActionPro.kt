@@ -284,6 +284,8 @@ data class SkillActionPro(
                     9 -> "拘留"
                     10 -> "晕倒"
                     11 -> "时停"
+                    13 -> "结晶"
+                    14 -> "眩晕（额外）"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
@@ -1019,7 +1021,7 @@ data class SkillActionPro(
         val action = if (v == 1) {
             "HP最大值"
         } else {
-            when (v / 10) {
+            when (v % 1000 / 10) {
                 1 -> "物理攻击力"
                 2 -> "物理防御力"
                 3 -> "魔法攻击力"
@@ -1042,6 +1044,11 @@ data class SkillActionPro(
         if (v / 10 == 14 || v / 10 == 17) {
             type = (if (v % 10 == 0) "减少" else "提升") + " " + valueText
         }
+        //固定buff，不受其他效果影响
+        if (v > 1000) {
+            type += "（固定数值，无法被其他技能效果改变）"
+        }
+
         return action + type
     }
 
