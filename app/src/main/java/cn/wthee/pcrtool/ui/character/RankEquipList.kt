@@ -44,7 +44,7 @@ fun RankEquipList(
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
     LazyVerticalGrid(
-        cells = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 3),
+        cells = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 2 + Dimen.smallPadding * 3),
         contentPadding = PaddingValues(Dimen.mediumPadding)
     ) {
         items(allRankEquip) {
@@ -92,7 +92,7 @@ fun RankEquipListItem(
             //RANK
             RankText(
                 rank = unitPromotion.promotionLevel,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(Dimen.mediumPadding)
             )
             val allIds = unitPromotion.getAllOrderIds()
