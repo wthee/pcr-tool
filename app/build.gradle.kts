@@ -5,7 +5,7 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.1.0-beta02"
+val composeVersion = "1.1.0-beta03"
 val appVersionCode = 241
 val appVersionName = "2.4.1"
 val sql = 215
@@ -126,7 +126,7 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-beta01")
 
     //Lifecycle
     val lifecycleVersion = "2.4.0"
@@ -140,7 +140,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime:3.1.0-rc01")
+    implementation("androidx.paging:paging-runtime:3.1.0")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
     //Retrofit
@@ -149,7 +149,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0-beta01"
+    val roomVersion = "2.4.0-beta02"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
@@ -164,7 +164,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.5.2")
 
     //Work
-    val workVersion = "2.7.0"
+    val workVersion = "2.7.1"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 
