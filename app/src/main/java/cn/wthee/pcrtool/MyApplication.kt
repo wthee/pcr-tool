@@ -7,10 +7,12 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import cn.wthee.pcrtool.database.tryOpenDatabase
 import cn.wthee.pcrtool.utils.ApiUtil
+import coil.ComponentRegistry
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import dagger.hilt.android.HiltAndroidApp
 
@@ -36,18 +38,22 @@ class MyApplication : Application(), ImageLoaderFactory {
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(context)
-            .componentRegistry {
-                if (SDK_INT >= Build.VERSION_CODES.P) {
-                    add(ImageDecoderDecoder(context))
-                } else {
-                    add(GifDecoder())
-                }
-            }
+            .components(
+                ComponentRegistry().newBuilder()
+                    .add(
+                        if (SDK_INT >= Build.VERSION_CODES.P) {
+                            ImageDecoderDecoder.Factory()
+                        } else {
+                            GifDecoder.Factory()
+                        }
+                    )
+                    .build()
+            )
             .allowHardware(false)
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .networkCachePolicy(CachePolicy.ENABLED)
-            .availableMemoryPercentage(0.5)
+            .memoryCache(MemoryCache.Builder(context).maxSizePercent(0.5).build())
             .okHttpClient {
                 ApiUtil.getClient(60)
             }

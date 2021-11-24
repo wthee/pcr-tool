@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,7 +30,6 @@ import cn.wthee.pcrtool.ui.theme.switchColors
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.exportUserFile
 import cn.wthee.pcrtool.utils.FileUtil.importUserFile
-import coil.compose.rememberImagePainter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -44,7 +42,6 @@ fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
     val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
-    val painter = rememberImagePainter(data = R.mipmap.ic_launcher_round)
     val coroutineScope = rememberCoroutineScope()
     val reloadImportDataTip = stringResource(R.string.reload_import_data)
 
@@ -100,9 +97,8 @@ fun MainSettings() {
                 modifier = Modifier.clickable {
                     openWebView(context, projectUrl, project)
                 })
-            Image(
-                painter = painter,
-                contentDescription = null,
+            ImageCompose(
+                data = R.mipmap.ic_launcher_round,
                 modifier = Modifier
                     .size(100.dp)
                     .padding(Dimen.largePadding)

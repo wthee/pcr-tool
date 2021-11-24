@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui.character
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -48,7 +47,6 @@ import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -804,7 +802,7 @@ private fun UniqueEquip(
                     )
                     .fillMaxWidth()
             ) {
-                IconCompose(getEquipIconUrl(it.equipmentId))
+                IconCompose(data = getEquipIconUrl(it.equipmentId))
                 Subtitle2(
                     text = it.getDesc(),
                     modifier = Modifier.padding(start = Dimen.mediumPadding),
@@ -829,7 +827,6 @@ private fun StarSelect(
     modifier: Modifier = Modifier,
     attrViewModel: CharacterAttrViewModel
 ) {
-    val context = LocalContext.current
 
     Row(modifier) {
         for (i in 1..max) {
@@ -838,19 +835,14 @@ private fun StarSelect(
                 i == 6 -> R.drawable.ic_star_pink
                 else -> R.drawable.ic_star
             }
-            Image(
-                painter = rememberImagePainter(data = iconId),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(Dimen.divLineHeight)
-                    .size(Dimen.mediumIconSize)
-                    .clip(CircleShape)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        attrViewModel.currentValue.postValue(currentValue.update(rarity = i))
-                    }
-                    .padding(Dimen.smallPadding)
-            )
+            IconCompose(
+                data = iconId,
+                size = Dimen.mediumIconSize,
+                modifier = Modifier.padding(Dimen.smallPadding)
+            ) {
+                attrViewModel.currentValue.postValue(currentValue.update(rarity = i))
+            }
+
         }
     }
 }

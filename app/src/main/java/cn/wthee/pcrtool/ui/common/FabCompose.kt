@@ -62,7 +62,7 @@ fun FabCompose(
             }
         ) {
             IconCompose(
-                if (iconType is MainIconType) iconType.icon else iconType,
+                data = if (iconType is MainIconType) iconType.icon else iconType,
                 size = Dimen.fabIconSize,
             )
             Text(

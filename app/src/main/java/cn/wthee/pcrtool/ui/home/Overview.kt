@@ -140,8 +140,10 @@ fun Overview(
                             shape = Shape.medium
                         ) {
                             ImageCompose(
-                                CharacterIdUtil.getMaxCardUrl(id),
-                                ratio = RATIO
+                                data = CharacterIdUtil.getMaxCardUrl(id),
+                                ratio = RATIO,
+                                loadingId = R.drawable.load,
+                                errorId = R.drawable.error
                             )
                         }
                     }

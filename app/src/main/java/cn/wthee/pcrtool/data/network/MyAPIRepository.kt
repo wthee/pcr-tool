@@ -12,8 +12,8 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.RequestBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 /**
@@ -22,6 +22,8 @@ import javax.inject.Inject
  * @param service 接口服务
  */
 class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
+
+    val MediaType = "application/json; charset=utf-8"
 
     /**
      * 查询竞技场对战信息
@@ -33,10 +35,8 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         val json = JsonObject()
         json.addProperty("region", region)
         json.add("ids", ids)
-        val body = RequestBody.create(
-            MediaType.parse("application/json; charset=utf-8"),
-            json.toString()
-        )
+        val body =
+            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
         //发送请求
         try {
             val response = service.getPVPData(body)
@@ -67,10 +67,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         val json = JsonObject()
         json.addProperty("region", region)
         json.addProperty("page", page)
-        val body = RequestBody.create(
-            MediaType.parse("application/json; charset=utf-8"),
-            json.toString()
-        )
+        val body =
+            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+
         //请求
         try {
             val response = service.getNewsData(body)
@@ -96,10 +95,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         //接口参数
         val json = JsonObject()
         json.addProperty("id", id)
-        val body = RequestBody.create(
-            MediaType.parse("application/json; charset=utf-8"),
-            json.toString()
-        )
+        val body =
+            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+
         //请求
         try {
             val response = service.getNewsDetail(body)
@@ -147,10 +145,8 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         try {
             val json = JsonObject()
             json.addProperty("region", region)
-            val body = RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"),
-                    json.toString()
-            )
+            val body =
+                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
             val response = service.getNewsOverviewByRegion(body)
             if (response.message == "failure" || response.data == null || response.data!!.isEmpty()) {
                 return error()
@@ -174,10 +170,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
         //接口参数
         val json = JsonObject()
         json.addProperty("page", page)
-        val body = RequestBody.create(
-            MediaType.parse("application/json; charset=utf-8"),
-            json.toString()
-        )
+        val body =
+            json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+
         //请求
         try {
             val response = service.getTweetData(body)
@@ -267,10 +262,9 @@ class MyAPIRepository @Inject constructor(private val service: MyAPIService) {
             //接口参数
             val json = JsonObject()
             json.addProperty("version", BuildConfig.VERSION_CODE)
-            val body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                json.toString()
-            )
+            val body =
+                json.toString().toRequestBody(MediaType.toMediaTypeOrNull())
+
             val response = service.toUpdate(body)
             if (response.message == "failure" || response.data == null) {
                 return error()

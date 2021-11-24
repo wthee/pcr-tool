@@ -137,7 +137,7 @@ private fun PvpFavoriteItem(
                 //取消收藏
                 IconCompose(
                     data = MainIconType.LOVE_FILL.icon,
-                    Dimen.fabIconSize
+                    size = Dimen.fabIconSize
                 ) {
                     //点击取消收藏
                     scope.launch {

@@ -83,6 +83,8 @@ fun CharacterAllPics(unitId: Int) {
                     ImageCompose(
                         data = picUrls[index],
                         ratio = RATIO,
+                        loadingId = R.drawable.load,
+                        errorId = R.drawable.error,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         loaded[index] = true

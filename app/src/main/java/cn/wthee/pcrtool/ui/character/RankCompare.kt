@@ -1,8 +1,10 @@
 package cn.wthee.pcrtool.ui.character
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -32,7 +33,6 @@ import cn.wthee.pcrtool.ui.theme.noShape
 import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
-import coil.compose.rememberImagePainter
 import kotlinx.coroutines.launch
 
 
@@ -258,14 +258,10 @@ private fun StarCompose(
                 6 -> R.drawable.ic_star_pink
                 else -> R.drawable.ic_star
             }
-            Image(
-                painter = rememberImagePainter(data = iconId),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(Dimen.divLineHeight)
-                    .size(Dimen.mediumIconSize)
-                    .clip(CircleShape)
-                    .padding(Dimen.smallPadding)
+            IconCompose(
+                data = iconId,
+                size = Dimen.mediumIconSize,
+                modifier = Modifier.padding(Dimen.smallPadding)
             )
         }
     }

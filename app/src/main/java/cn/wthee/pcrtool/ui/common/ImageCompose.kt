@@ -1,7 +1,6 @@
 package cn.wthee.pcrtool.ui.common
 
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.compose.foundation.Image
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
@@ -20,8 +19,8 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
-import coil.compose.rememberImagePainter
-import coil.drawable.ScaleDrawable
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 const val RATIO = 1.78f
 
@@ -32,33 +31,42 @@ const val RATIO_COMMON = 371 / 208f
 
 @Composable
 fun ImageCompose(
-    data: Any,
-    ratio: Float,
     modifier: Modifier = Modifier,
+    data: Any,
+    ratio: Float = 1.0f,
+    @DrawableRes loadingId: Int? = null,
+    @DrawableRes errorId: Int? = null,
     onSuccess: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
-    val painter = rememberImagePainter(
-        data = data,
-        builder = {
-            placeholder(
-                ScaleDrawable(
-                    AppCompatResources.getDrawable(context, R.drawable.load)!!
-                )
+    AsyncImage(
+        model = ImageRequest.Builder(context)
+            .data(data)
+            .listener(
+                onSuccess = { _, _ ->
+                    onSuccess.invoke()
+                }
             )
-            error(R.drawable.error)
-            listener(onSuccess = { _, _ ->
-                onSuccess.invoke()
-            })
-        })
-
-    Image(
-        painter = painter,
+            .build(),
         contentDescription = null,
         contentScale = ContentScale.FillWidth,
+        loading = {
+            AsyncImage(
+                model = loadingId,
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+            )
+        },
+        error = {
+            AsyncImage(
+                model = errorId,
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+            )
+        },
         modifier = modifier
-            .aspectRatio(ratio),
+            .aspectRatio(ratio)
     )
 }
 
@@ -74,12 +82,10 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
         in 600..9999 -> R.drawable.ic_position_2
         else -> R.drawable.ic_position_2
     }
-    Image(
-        painter = rememberImagePainter(
-            data = positionIconId,
-        ),
-        contentDescription = null,
-        modifier = modifier.size(size)
+    IconCompose(
+        data = positionIconId,
+        size = size,
+        modifier = modifier
     )
 }
 
@@ -88,6 +94,7 @@ fun PositionIcon(modifier: Modifier = Modifier, position: Int, size: Dp = Dimen.
  */
 @Composable
 fun IconCompose(
+    modifier: Modifier = Modifier,
     data: Any,
     size: Dp = Dimen.iconSize,
     tint: Color = MaterialTheme.colorScheme.primary,
@@ -97,14 +104,14 @@ fun IconCompose(
     val context = LocalContext.current
 
     var mModifier = if (onClick != null) {
-        Modifier
+        modifier
             .clip(Shape.small)
             .clickable(onClick = {
                 VibrateUtil(context).single()
                 onClick.invoke()
             })
     } else {
-        Modifier.clip(Shape.small)
+        modifier.clip(Shape.small)
     }
     if (!wrapSize) {
         mModifier = mModifier.size(size)
@@ -119,17 +126,26 @@ fun IconCompose(
             modifier = mModifier
         )
     } else {
-        val painter = rememberImagePainter(
-            data = data,
-            builder = {
-                placeholder(R.drawable.unknown_gray)
-                error(R.drawable.unknown_gray)
-            }
-        )
-        Image(
-            painter = painter,
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(data)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
+            loading = {
+                AsyncImage(
+                    model = R.drawable.unknown_gray,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                )
+            },
+            error = {
+                AsyncImage(
+                    model = R.drawable.unknown_gray,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                )
+            },
             modifier = mModifier
         )
     }

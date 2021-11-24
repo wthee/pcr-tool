@@ -4,12 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -20,11 +18,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.MyApplication
@@ -360,19 +356,15 @@ private fun PvpCharacterSelectPage(
                 R.drawable.ic_position_0,
             )
             icons.forEachIndexed { index, it ->
-                Image(
-                    painter = painterResource(id = it),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(Dimen.smallPadding)
-                        .clip(CircleShape)
-                        .size(Dimen.fabIconSize)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            scope.launch {
-                                selectListState.scrollToItem(positions[index])
-                            }
-                        })
+                IconCompose(
+                    data = it,
+                    size = Dimen.fabIconSize,
+                    modifier = Modifier.padding(Dimen.smallPadding)
+                ) {
+                    scope.launch {
+                        selectListState.scrollToItem(positions[index])
+                    }
+                }
             }
         }
     }

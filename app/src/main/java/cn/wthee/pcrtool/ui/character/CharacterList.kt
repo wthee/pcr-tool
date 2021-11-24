@@ -194,8 +194,10 @@ fun CharacterItem(
             //图片
             Box(contentAlignment = Alignment.BottomEnd) {
                 ImageCompose(
-                    CharacterIdUtil.getMaxCardUrl(character.id),
-                    RATIO,
+                    data = CharacterIdUtil.getMaxCardUrl(character.id),
+                    ratio = RATIO,
+                    loadingId = R.drawable.load,
+                    errorId = R.drawable.error,
                     modifier = Modifier.fillMaxWidth()
                 )
                 //位置

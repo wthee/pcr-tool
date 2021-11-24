@@ -1,7 +1,5 @@
 package cn.wthee.pcrtool.utils
 
-import cn.wthee.pcrtool.MyApplication
-import coil.util.CoilUtils
 import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -58,7 +56,7 @@ object ApiUtil {
             .addInterceptor(Interceptor {
                 val originalResponse: Response = it.proceed(it.request())
                 return@Interceptor originalResponse.newBuilder()
-                    .body(DownloadResponseBody(originalResponse.body()!!, listener))
+                    .body(DownloadResponseBody(originalResponse.body!!, listener))
                     .build()
             })
             .retryOnConnectionFailure(true)
@@ -75,7 +73,7 @@ object ApiUtil {
     fun getClient(second: Long): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
-            .cache(CoilUtils.createDefaultCache(MyApplication.context))
+//            .cache(CoilUtils.createDefaultCache(MyApplication.context))
             .connectTimeout(second, TimeUnit.SECONDS)
             .writeTimeout(second, TimeUnit.SECONDS)
             .readTimeout(second, TimeUnit.SECONDS)
