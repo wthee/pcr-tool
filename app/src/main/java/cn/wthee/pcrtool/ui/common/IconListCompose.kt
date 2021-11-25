@@ -26,42 +26,52 @@ fun IconListCompose(
     toCharacterDetail: (Int) -> Unit
 ) {
     VerticalGrid(maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2) {
-        icons.forEachIndexed { index, it ->
-            val unitId: Int
-            val iconId: Int
-            if (it / 10000 == 3) {
-                //item 转 unit
-                iconId = it % 10000 * 100 + 11
-                unitId = it % 10000 * 100 + 1
-            } else {
-                iconId = it + 30
-                unitId = it
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding,
-                        top = Dimen.mediumPadding
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally
+        UnitIconList(icons, texts, toCharacterDetail)
+    }
+}
+
+@Composable
+fun UnitIconList(
+    icons: List<Int>,
+    texts: List<String>? = null,
+    toCharacterDetail: (Int) -> Unit
+) {
+    icons.forEachIndexed { index, it ->
+        val unitId: Int
+        val iconId: Int
+        if (it / 10000 == 3) {
+            //item 转 unit
+            iconId = it % 10000 * 100 + 11
+            unitId = it % 10000 * 100 + 1
+        } else {
+
+            iconId = it + 30
+            unitId = it
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = Dimen.mediumPadding,
+                    end = Dimen.mediumPadding,
+                    top = Dimen.mediumPadding
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            IconCompose(
+                data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP
             ) {
-                IconCompose(
-                    data = Constants.UNIT_ICON_URL + iconId + Constants.WEBP
-                ) {
-                    toCharacterDetail(unitId)
-                }
-                texts?.let { text ->
-                    SelectionContainer {
-                        Text(
-                            text = text[index],
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
-                    }
+                toCharacterDetail(unitId)
+            }
+            texts?.let { text ->
+                SelectionContainer {
+                    Text(
+                        text = text[index],
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
                 }
             }
         }

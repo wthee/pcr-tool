@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.database.DatabaseUpdater.sp
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
@@ -46,6 +47,11 @@ fun EventList(
 ) {
     val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
+    val prefix = when (sp.getInt(Constants.SP_DATABASE_TYPE, 2)) {
+        2 -> "cn"
+        3 -> "tw"
+        else -> "jp"
+    }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -55,7 +61,7 @@ fun EventList(
                 cells = GridCells.Adaptive(getItemWidth())
             ) {
                 items(events) {
-                    EventItem(it, toCharacterDetail)
+                    EventItem(it, prefix, toCharacterDetail)
                 }
                 item {
                     CommonSpacer()
@@ -88,7 +94,7 @@ fun EventList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
+private fun EventItem(event: EventData, prefix: String, toCharacterDetail: (Int) -> Unit) {
     val type: String
     val typeColor: Color
     var showDays = true
@@ -101,6 +107,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     if (days == "0" || days == "0天") {
         showDays = false
     }
+
 
     when {
         //支线
@@ -190,6 +197,28 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    //fixme 图片
+                    ImageCompose(
+                        data = "https://wthee.xyz/redive/${prefix}/resource/event/banner/${10000 + event.storyId % 1000}${Constants.WEBP}",
+                        ratio = RATIO_BANNER,
+                        loadingId = R.drawable.load,
+                        errorId = R.drawable.error,
+                        modifier = Modifier.weight(3f)
+                    )
+                    //图标
+                    if (event.getUnitIdList().isNotEmpty()) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            UnitIconList(
+                                icons = event.getUnitIdList(),
+                                toCharacterDetail = toCharacterDetail
+                            )
+                        }
+                    }
+                }
                 //内容
                 MainContentText(
                     text = event.getEventTitle(),
@@ -199,11 +228,6 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
                         end = Dimen.mediumPadding
                     ),
                     textAlign = TextAlign.Start
-                )
-                //图标
-                IconListCompose(
-                    icons = event.getUnitIdList(),
-                    toCharacterDetail = toCharacterDetail
                 )
                 //结束日期
                 CaptionText(
@@ -229,7 +253,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
 private fun EventItemPreview() {
     PreviewBox {
         Column {
-            EventItem(event = EventData(), toCharacterDetail = {})
+            EventItem(event = EventData(), "jp", toCharacterDetail = {})
         }
     }
 }

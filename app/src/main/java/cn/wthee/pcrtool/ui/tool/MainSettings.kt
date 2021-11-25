@@ -99,6 +99,7 @@ fun MainSettings() {
                 })
             ImageCompose(
                 data = R.mipmap.ic_launcher_round,
+                ratio = 1f,
                 modifier = Modifier
                     .size(100.dp)
                     .padding(Dimen.largePadding)

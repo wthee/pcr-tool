@@ -27,15 +27,17 @@ const val RATIO = 1.78f
 // 741 * 1200
 const val RATIO_COMIC = 0.6175f
 const val RATIO_COMMON = 371 / 208f
+const val RATIO_BANNER = 1024 / 682f
 
 
 @Composable
 fun ImageCompose(
     modifier: Modifier = Modifier,
     data: Any,
-    ratio: Float = 1.0f,
+    ratio: Float,
     @DrawableRes loadingId: Int? = null,
     @DrawableRes errorId: Int? = null,
+    contentScale: ContentScale = ContentScale.FillWidth,
     onSuccess: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -50,19 +52,23 @@ fun ImageCompose(
             )
             .build(),
         contentDescription = null,
-        contentScale = ContentScale.FillWidth,
+        contentScale = contentScale,
         loading = {
             AsyncImage(
                 model = loadingId,
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth,
+                contentScale = contentScale,
+                modifier = modifier
+                    .aspectRatio(ratio)
             )
         },
         error = {
             AsyncImage(
                 model = errorId,
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth,
+                contentScale = contentScale,
+                modifier = modifier
+                    .aspectRatio(ratio)
             )
         },
         modifier = modifier
@@ -137,6 +143,7 @@ fun IconCompose(
                     model = R.drawable.unknown_gray,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
+                    modifier = mModifier
                 )
             },
             error = {
@@ -144,6 +151,7 @@ fun IconCompose(
                     model = R.drawable.unknown_gray,
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
+                    modifier = mModifier
                 )
             },
             modifier = mModifier

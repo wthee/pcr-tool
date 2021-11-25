@@ -42,10 +42,10 @@ class FileSaveHelper(private val context: Context) {
                 folder.mkdir()
             }
             val file = File("$path/$displayName")
-            if (file.exists()) {
-                ToastUtil.short("图片已存在")
-                return true
-            }
+//            if (file.exists()) {
+//                ToastUtil.short("图片已存在")
+//                return true
+//            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 var uri: Uri? = null
                 val resolver = context.contentResolver

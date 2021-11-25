@@ -105,7 +105,7 @@ fun CharacterAllPics(unitId: Int) {
             onDismissRequest = {
                 clickedIndex.value = -1
             },
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.background,
             shape = Shape.medium,
             confirmButton = {
                 //确认下载
