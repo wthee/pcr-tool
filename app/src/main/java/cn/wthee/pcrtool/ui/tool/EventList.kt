@@ -23,12 +23,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.database.DatabaseUpdater.sp
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_BANNER
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -47,11 +47,6 @@ fun EventList(
 ) {
     val events = eventViewModel.getEventHistory().collectAsState(initial = arrayListOf()).value
     val coroutineScope = rememberCoroutineScope()
-    val prefix = when (sp.getInt(Constants.SP_DATABASE_TYPE, 2)) {
-        2 -> "cn"
-        3 -> "tw"
-        else -> "jp"
-    }
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -61,7 +56,7 @@ fun EventList(
                 cells = GridCells.Adaptive(getItemWidth())
             ) {
                 items(events) {
-                    EventItem(it, prefix, toCharacterDetail)
+                    EventItem(it, toCharacterDetail)
                 }
                 item {
                     CommonSpacer()
@@ -94,7 +89,7 @@ fun EventList(
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-private fun EventItem(event: EventData, prefix: String, toCharacterDetail: (Int) -> Unit) {
+private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val type: String
     val typeColor: Color
     var showDays = true
@@ -135,6 +130,8 @@ private fun EventItem(event: EventData, prefix: String, toCharacterDetail: (Int)
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.second(sd) < 0 && (!preEvent)
+    val id = 10000 + event.storyId % 1000
+
 
     Column(
         modifier = Modifier.padding(
@@ -201,33 +198,39 @@ private fun EventItem(event: EventData, prefix: String, toCharacterDetail: (Int)
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    //fixme 图片
-                    ImageCompose(
-                        data = "https://wthee.xyz/redive/${prefix}/resource/event/banner/${10000 + event.storyId % 1000}${Constants.WEBP}",
-                        ratio = RATIO_BANNER,
-                        loadingId = R.drawable.load,
-                        errorId = R.drawable.error,
-                        modifier = Modifier.weight(3f)
-                    )
+                    //banner 图片
+                    Box(modifier = Modifier.weight(3f)) {
+                        ImageCompose(
+                            data = ImageResourceHelper.getInstance().getUrl(EVENT_BANNER, id),
+                            ratio = RATIO_BANNER,
+                            loadingId = R.drawable.load,
+                            errorId = R.drawable.error,
+                        )
+                    }
                     //图标
                     if (event.getUnitIdList().isNotEmpty()) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            UnitIconList(
-                                icons = event.getUnitIdList(),
-                                toCharacterDetail = toCharacterDetail
-                            )
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight(),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            event.getUnitIdList().forEach {
+                                UnitIcon(
+                                    id = it,
+                                    toCharacterDetail = toCharacterDetail
+                                )
+                            }
                         }
                     }
                 }
                 //内容
                 MainContentText(
                     text = event.getEventTitle(),
-                    modifier = Modifier.padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding
-                    ),
-                    textAlign = TextAlign.Start
+                    modifier = Modifier.padding(Dimen.mediumPadding),
+                    textAlign = TextAlign.Start,
+                    selectable = true
                 )
                 //结束日期
                 CaptionText(
@@ -253,7 +256,7 @@ private fun EventItem(event: EventData, prefix: String, toCharacterDetail: (Int)
 private fun EventItemPreview() {
     PreviewBox {
         Column {
-            EventItem(event = EventData(), "jp", toCharacterDetail = {})
+            EventItem(event = EventData(), toCharacterDetail = {})
         }
     }
 }
