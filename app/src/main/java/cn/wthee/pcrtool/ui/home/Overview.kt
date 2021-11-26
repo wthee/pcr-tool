@@ -10,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
@@ -291,6 +292,7 @@ private fun ChangeDbCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
@@ -318,6 +320,7 @@ private fun ChangeDbCompose(
                             .clickable {
                                 VibrateUtil(context).single()
                                 MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+                                MainActivity.navViewModel.fabCloseClick.postValue(true)
                                 if (region != i + 2) {
                                     coroutineScope.launch {
                                         DatabaseUpdater.changeDatabase(i + 2)

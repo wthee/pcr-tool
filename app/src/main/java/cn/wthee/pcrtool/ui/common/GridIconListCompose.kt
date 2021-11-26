@@ -24,7 +24,7 @@ fun GridIconListCompose(
         modifier = Modifier.padding(top = Dimen.mediumPadding),
         maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
     ) {
-        icons.forEachIndexed { index, it ->
+        icons.forEach {
             UnitIcon(
                 it,
                 toCharacterDetail

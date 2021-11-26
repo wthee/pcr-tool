@@ -4,43 +4,46 @@ import android.annotation.SuppressLint
 import android.net.http.SslError
 import android.view.ViewGroup
 import android.webkit.*
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.NewsTable
 import cn.wthee.pcrtool.data.db.entity.region
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.ShareIntentUtil
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.formatTime
@@ -48,12 +51,10 @@ import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.NewsViewModel
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -65,111 +66,171 @@ import kotlinx.coroutines.launch
 @ExperimentalPagingApi
 @Composable
 fun NewsList(
-    pagerState: PagerState,
-    scrollState0: LazyListState,
-    scrollState1: LazyListState,
-    scrollState2: LazyListState,
-    news0: LazyPagingItems<NewsTable>?,
-    news1: LazyPagingItems<NewsTable>?,
-    news2: LazyPagingItems<NewsTable>?,
+    scrollState: LazyListState,
     toDetail: (String) -> Unit,
+    newsViewModel: NewsViewModel = hiltViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
+    //切换关闭监听
+    if (close) {
+        navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabCloseClick.postValue(false)
+    }
+    if (mainIcon == MainIconType.BACK) {
+        navViewModel.openChangeDataDialog.postValue(false)
+    }
+
+    val region = remember {
+        mutableStateOf(getRegion())
+    }
+
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    newsViewModel.getNews(region.value)
+    val flow = when (region.value) {
+        2 -> newsViewModel.newsPageList0
+        3 -> newsViewModel.newsPageList1
+        else -> newsViewModel.newsPageList2
+    }
+    val news = remember(flow, lifecycle) {
+        flow?.flowWithLifecycle(lifecycle = lifecycle)
+    }?.collectAsLazyPagingItems()
+
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(state = scrollState) {
+            if (news != null && news.itemCount > 0) {
+                items(news) {
+                    if (it != null) {
+                        if (navViewModel.loading.value == true) {
+                            navViewModel.loading.postValue(false)
+                        }
+                        NewsItem(news = it, toDetail)
+                    }
+                }
+                if (news.loadState.append is LoadState.Loading) {
+                    item {
+                        NewsItem(news = NewsTable(), toDetail)
+                    }
+                }
+                item {
+                    CommonSpacer()
+                }
+            }
+        }
+
+        //公告区服选择
+        SelectNewsTypeCompose(
+            region = region,
+            openDialog = openDialog,
+            coroutineScope = coroutineScope,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+        )
+    }
+}
+
+//公告区服选择
+@Composable
+private fun SelectNewsTypeCompose(
+    region: MutableState<Int>,
+    openDialog: Boolean,
+    coroutineScope: CoroutineScope,
+    modifier: Modifier
+) {
     val context = LocalContext.current
-    val tab = arrayListOf(
+    //区服
+    val tabs = arrayListOf(
         stringResource(id = R.string.db_cn),
         stringResource(id = R.string.db_tw),
         stringResource(id = R.string.db_jp)
     )
+    val sectionColor = MaterialTheme.colorScheme.primary
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        HorizontalPager(
-            count = 3,
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { pagerIndex ->
-            val scrollState = when (pagerIndex) {
-                0 -> scrollState0
-                1 -> scrollState1
-                else -> scrollState2
+    //数据切换
+    SmallFloatingActionButton(
+        modifier = modifier
+            .animateContentSize(defaultSpring())
+            .padding(
+                end = Dimen.fabMarginEnd,
+                start = Dimen.fabMargin,
+                top = Dimen.fabMargin,
+                bottom = Dimen.fabMargin,
+            ),
+        shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
+        onClick = {
+            VibrateUtil(context).single()
+            if (!openDialog) {
+                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                navViewModel.openChangeDataDialog.postValue(true)
+            } else {
+                navViewModel.fabCloseClick.postValue(true)
             }
-            LazyVerticalGrid(
-                state = scrollState,
-                cells = GridCells.Adaptive(getItemWidth())
+        },
+        contentColor = MaterialTheme.colorScheme.primary,
+    ) {
+        if (openDialog) {
+            Column(
+                modifier = Modifier.width(Dimen.dataChangeWidth),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val news = when (pagerIndex) {
-                    0 -> news0
-                    1 -> news1
-                    else -> news2
-                }
-                news?.let { list ->
-                    items(list) {
-                        if (it != null) {
-                            if (navViewModel.loading.value == true) {
-                                navViewModel.loading.postValue(false)
-                            }
-                            NewsItem(news = it, toDetail)
-                        }
-                    }
-                    if (list.loadState.append is LoadState.Loading) {
-                        item {
-                            NewsItem(news = NewsTable(), toDetail)
-                        }
-                    }
-                    item {
-                        CommonSpacer()
-                    }
-                }
-            }
-        }
-
-        SmallFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(0.618f)
-                .padding(bottom = Dimen.fabMargin)
-                .navigationBarsPadding(),
-            shape = CircleShape,
-            onClick = {}
-        ) {
-            TabRow(
-                selectedTabIndex = pagerState.currentPage,
-                backgroundColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary,
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-                    )
-                },
-            ) {
-                tab.forEachIndexed { index, s ->
-                    Tab(
-                        modifier = Modifier
-                            .width(Dimen.fabSize)
-                            .height(Dimen.fabSize),
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            VibrateUtil(context).single()
-                            coroutineScope.launch {
-                                if (pagerState.currentPage == index) {
-                                    when (pagerState.currentPage) {
-                                        0 -> scrollState0
-                                        1 -> scrollState1
-                                        else -> scrollState2
-                                    }.scrollToItem(0)
-                                } else {
-                                    pagerState.scrollToPage(index)
+                //区服选择
+                tabs.forEachIndexed { index, tab ->
+                    val mModifier = if (region.value == index + 2) {
+                        Modifier.fillMaxWidth()
+                    } else {
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                VibrateUtil(context).single()
+                                navViewModel.openChangeDataDialog.postValue(false)
+                                navViewModel.fabCloseClick.postValue(true)
+                                if (region.value != index + 2) {
+                                    coroutineScope.launch {
+                                        region.value = index + 2
+                                    }
                                 }
                             }
-                        }) {
-                        Subtitle2(text = s)
                     }
+                    SelectText(
+                        selected = region.value == index + 2,
+                        text = tab,
+                        textStyle = MaterialTheme.typography.titleLarge,
+                        selectedColor = sectionColor,
+                        modifier = mModifier.padding(Dimen.mediumPadding)
+                    )
                 }
             }
+        } else {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = Dimen.largePadding)
+            ) {
+                IconCompose(
+                    data = MainIconType.NEWS.icon,
+                    tint = sectionColor,
+                    size = Dimen.menuIconSize
+                )
+                Text(
+                    text = tabs[region.value - 2],
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = sectionColor,
+                    modifier = Modifier.padding(
+                        start = Dimen.mediumPadding,
+                        end = Dimen.largePadding
+                    )
+                )
+            }
+
         }
     }
 }
-
 
 /**
  * 新闻公告

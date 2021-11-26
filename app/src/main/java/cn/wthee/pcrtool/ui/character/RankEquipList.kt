@@ -49,6 +49,7 @@ fun RankEquipList(
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
     LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
         cells = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 2 + Dimen.smallPadding * 3),
         contentPadding = PaddingValues(Dimen.mediumPadding)
     ) {

@@ -110,6 +110,7 @@
     <string name="tool_gacha">卡池</string>
     <string name="tool_event">剧情活动</string>
     <string name="tool_news">公告</string>
+    <string name="read_news">查看公告</string>
     <string name="rank_select">RANK选择</string>
     <string name="grade">综合</string>
     <string name="jjc">竞技场</string>
@@ -135,6 +136,7 @@
     <string name="twitter">查看原文</string>
     <string name="tweet">推文</string>
     <string name="comic">漫画</string>
+    <string name="read_comic">查看漫画</string>
     <string name="comic_nav">目录</string>
     <string name="comic_order">第%s话</string>
     <string name="youtube">YouTube</string>

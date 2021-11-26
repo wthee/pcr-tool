@@ -163,13 +163,23 @@ fun PvpSearchCompose(
                         .align(Alignment.CenterHorizontally)
                 ) {
                     tabs.forEachIndexed { index, s ->
-                        Tab(selected = pagerState.currentPage == index, onClick = {
-                            scope.launch {
-                                VibrateUtil(context).single()
-                                pagerState.scrollToPage(index)
-                            }
-                        }) {
-                            Subtitle1(text = s, modifier = Modifier.padding(Dimen.smallPadding))
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                scope.launch {
+                                    VibrateUtil(context).single()
+                                    pagerState.scrollToPage(index)
+                                }
+                            }) {
+                            Subtitle1(
+                                text = s,
+                                modifier = Modifier.padding(Dimen.smallPadding),
+                                color = if (pagerState.currentPage == index) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    Color.Unspecified
+                                }
+                            )
                         }
                     }
                 }

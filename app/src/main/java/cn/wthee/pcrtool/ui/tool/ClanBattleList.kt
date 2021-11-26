@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
@@ -339,7 +340,7 @@ fun ClanBossInfoPager(
 }
 
 
-//阶段&Boss选择弹窗
+//阶段Boss选择弹窗
 @Composable
 private fun SelectSectionCompose(
     section: MutableState<Int>,
@@ -366,6 +367,7 @@ private fun SelectSectionCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
@@ -393,6 +395,7 @@ private fun SelectSectionCompose(
                             .clickable {
                                 VibrateUtil(context).single()
                                 MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+                                MainActivity.navViewModel.fabCloseClick.postValue(true)
                                 if (section.value != index) {
                                     coroutineScope.launch {
                                         section.value = index
@@ -403,7 +406,7 @@ private fun SelectSectionCompose(
                     SelectText(
                         selected = section.value == index,
                         text = tab,
-                        textStyle = MaterialTheme.typography.titleMedium,
+                        textStyle = MaterialTheme.typography.titleLarge,
                         selectedColor = sectionColor,
                         modifier = mModifier.padding(Dimen.mediumPadding)
                     )

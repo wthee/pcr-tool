@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.character
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -51,7 +52,11 @@ fun CharacterAllPics(unitId: Int) {
         mutableStateOf(-1)
     }
 
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
         VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
             picUrls.forEachIndexed { index, _ ->
                 val request = coil.request.ImageRequest.Builder(context)
