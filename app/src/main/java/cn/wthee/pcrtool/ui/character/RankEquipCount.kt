@@ -29,9 +29,10 @@ import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.noShape
-import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import kotlinx.coroutines.launch
 
@@ -120,7 +121,7 @@ fun RankEquipCount(
                     ) {
                         //头像
                         IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
+                            data = ImageResourceHelper.getInstance().getMaxIconUrl(
                                 unitId,
                                 MainActivity.r6Ids.contains(unitId)
                             ),
@@ -210,7 +211,7 @@ private fun EquipCountItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(Dimen.mediumPadding),
     ) {
-        IconCompose(data = getEquipIconUrl(item.id)) {
+        IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, item.id)) {
             toEquipMaterial(item.id)
         }
         SelectText(

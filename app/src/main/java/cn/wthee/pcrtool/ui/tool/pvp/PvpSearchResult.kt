@@ -29,7 +29,7 @@ import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.utils.CharacterIdUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.fillZero
 import cn.wthee.pcrtool.utils.getToday
@@ -319,7 +319,7 @@ private fun PvpResultItem(
                             contentAlignment = Alignment.Center
                         ) {
                             IconCompose(
-                                data = CharacterIdUtil.getMaxIconUrl(
+                                data = ImageResourceHelper.getInstance().getMaxIconUrl(
                                     it,
                                     MainActivity.r6Ids.contains(it)
                                 ),

@@ -13,7 +13,7 @@ import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException

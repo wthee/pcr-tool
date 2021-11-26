@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.Dp
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
-import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.VibrateUtil
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -137,12 +136,12 @@ fun IconCompose(
                 .data(data)
                 .build(),
             contentDescription = null,
-            contentScale = ContentScale.FillWidth,
+            contentScale = ContentScale.Crop,
             loading = {
                 AsyncImage(
                     model = R.drawable.unknown_gray,
                     contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.Crop,
                     modifier = mModifier
                 )
             },
@@ -150,7 +149,7 @@ fun IconCompose(
                 AsyncImage(
                     model = R.drawable.unknown_gray,
                     contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.Crop,
                     modifier = mModifier
                 )
             },
@@ -158,8 +157,3 @@ fun IconCompose(
         )
     }
 }
-
-/**
- * 获取装备图标链接
- */
-fun getEquipIconUrl(id: Int) = Constants.EQUIPMENT_URL + id + Constants.WEBP

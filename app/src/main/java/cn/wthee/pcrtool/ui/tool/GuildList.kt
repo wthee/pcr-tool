@@ -107,7 +107,7 @@ private fun GuildItem(
                     textAlign = TextAlign.Start
                 )
                 //图标/描述
-                IconListCompose(
+                GridIconListCompose(
                     icons = guild.memberIds,
                     toCharacterDetail = toCharacterDetail
                 )
@@ -122,7 +122,7 @@ private fun GuildItem(
                         ),
                         textAlign = TextAlign.Start
                     )
-                    IconListCompose(
+                    GridIconListCompose(
                         icons = guild.newMemberIds,
                         toCharacterDetail = toCharacterDetail
                     )

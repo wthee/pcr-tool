@@ -50,6 +50,7 @@ import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -140,7 +141,7 @@ fun Overview(
                             shape = Shape.medium
                         ) {
                             ImageCompose(
-                                data = CharacterIdUtil.getMaxCardUrl(id),
+                                data = ImageResourceHelper.getInstance().getMaxCardUrl(id),
                                 ratio = RATIO,
                                 loadingId = R.drawable.load,
                                 errorId = R.drawable.error
@@ -169,7 +170,10 @@ fun Overview(
                                     .fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                IconCompose(data = getEquipIconUrl(it.equipmentId)) {
+                                IconCompose(
+                                    data = ImageResourceHelper.getInstance()
+                                        .getUrl(ICON_EQUIPMENT, it.equipmentId)
+                                ) {
                                     actions.toEquipDetail(it.equipmentId)
                                 }
                             }

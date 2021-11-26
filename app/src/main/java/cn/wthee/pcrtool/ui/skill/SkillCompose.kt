@@ -27,7 +27,10 @@ import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 
 /**
@@ -146,7 +149,7 @@ fun SkillItem(
                 .fillMaxWidth()
                 .padding(top = Dimen.smallPadding)
         ) {
-            val url = Constants.SKILL_ICON_URL + skillDetail.iconType + Constants.WEBP
+            val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
             //技能图标
             IconCompose(data = url)
             Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
@@ -347,7 +350,7 @@ private fun SkillLoopIconList(
                 val url: String
                 if (it == 1) {
                     type = "普攻"
-                    url = Constants.EQUIPMENT_URL + Constants.UNKNOWN_EQUIP_ID + Constants.WEBP
+                    url = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, UNKNOWN_EQUIP_ID)
                 } else {
                     type = when (it / 1000) {
                         1 -> "技能 ${it % 10}"
@@ -363,7 +366,7 @@ private fun SkillLoopIconList(
                         2003 -> iconTypes[103]
                         else -> null
                     }
-                    url = Constants.SKILL_ICON_URL + (iconType ?: 1001) + Constants.WEBP
+                    url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, iconType ?: 1001)
                 }
                 IconCompose(data = url)
                 Text(

@@ -24,6 +24,9 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -71,7 +74,7 @@ private fun EquipDetail(
     ) {
 
         Column {
-            if (equipMaxData.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+            if (equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
                 MainText(
                     text = equipMaxData.equipmentName,
                     color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
@@ -83,7 +86,9 @@ private fun EquipDetail(
                         .fillMaxWidth()
                         .padding(Dimen.largePadding)
                 ) {
-                    IconCompose(data = getEquipIconUrl(equipId))
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, equipId)
+                    )
                     Subtitle2(
                         text = equipMaxData.getDesc(),
                         modifier = Modifier.padding(start = Dimen.mediumPadding),
@@ -94,7 +99,7 @@ private fun EquipDetail(
                 AttrList(attrs = equipMaxData.attr.allNotZero())
 
             }
-            SlideAnimation(visible = equipMaxData.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+            SlideAnimation(visible = equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
                 //合成素材
                 if (filter.value != null) {
                     EquipMaterialList(equipMaxData, filter.value!!, toEquipMaterial)
@@ -152,7 +157,9 @@ private fun EquipMaterialList(
                             bottom = Dimen.largePadding
                         ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconCompose(data = getEquipIconUrl(material.id)) {
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, material.id)
+                    ) {
                         toEquipMaterial(material.id)
                     }
                     SelectText(

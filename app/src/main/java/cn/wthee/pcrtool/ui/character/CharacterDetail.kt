@@ -40,7 +40,9 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
@@ -213,7 +215,7 @@ fun CharacterDetail(
                                     //技能2：默认加上技能2
                                     var skill = currentValue.level * coe.skill_lv_coefficient
                                     //技能1：解锁专武，技能1系数提升
-                                    if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                                    if (allData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
                                         skill += coe.skill1_evolution_coefficient
                                         skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
                                     } else {
@@ -363,7 +365,7 @@ fun CharacterDetail(
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                         //显示专武
-                        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                        if (allData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
                             UniqueEquip(
                                 currentValue = currentValue,
                                 uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
@@ -576,12 +578,12 @@ private fun CharacterEquip(
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
-            IconCompose(data = getEquipIconUrl(id6)) {
-                if (id6 != Constants.UNKNOWN_EQUIP_ID) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id6)) {
+                if (id6 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id6)
                 }
             }
-            IconCompose(data = getEquipIconUrl(id3)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id3)) {
                 toEquipDetail(id3)
             }
         }
@@ -594,7 +596,7 @@ private fun CharacterEquip(
                 .padding(top = Dimen.mediumPadding)
         ) {
             val id5 = equips[2].equipmentId
-            IconCompose(data = getEquipIconUrl(id5)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id5)) {
                 toEquipDetail(id5)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -643,7 +645,7 @@ private fun CharacterEquip(
                 )
             }
             val id2 = equips[3].equipmentId
-            IconCompose(data = getEquipIconUrl(id2)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id2)) {
                 toEquipDetail(id2)
             }
 
@@ -658,10 +660,10 @@ private fun CharacterEquip(
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
-            IconCompose(data = getEquipIconUrl(id4)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id4)) {
                 toEquipDetail(id4)
             }
-            IconCompose(data = getEquipIconUrl(id1)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id1)) {
                 toEquipDetail(id1)
             }
         }
@@ -802,7 +804,9 @@ private fun UniqueEquip(
                     )
                     .fillMaxWidth()
             ) {
-                IconCompose(data = getEquipIconUrl(it.equipmentId))
+                IconCompose(
+                    data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, it.equipmentId)
+                )
                 Subtitle2(
                     text = it.getDesc(),
                     modifier = Modifier.padding(start = Dimen.mediumPadding),

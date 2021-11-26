@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
         var vibrateOn = true
         var animOn = true
         var r6Ids = listOf<Int>()
+
     }
 
 

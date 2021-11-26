@@ -41,7 +41,8 @@ import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
@@ -179,7 +180,9 @@ private fun ClanBattleItem(
                         modifier = Modifier.padding(Dimen.mediumPadding),
                         contentAlignment = Alignment.Center
                     ) {
-                        IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, it.unitId)
+                        ) {
                             if (!placeholder) {
                                 toClanBossInfo(clanInfo.clan_battle_id, index)
                             }
@@ -286,7 +289,10 @@ fun ClanBossInfoPager(
                             icon = {
                                 val it = list[tabIndex]
                                 Box {
-                                    IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP)
+                                    IconCompose(
+                                        data = ImageResourceHelper.getInstance()
+                                            .getUrl(ICON_UNIT, it.unitId)
+                                    )
                                     //多目标提示
                                     if (it.partEnemyIds.isNotEmpty()) {
                                         MainTitleText(

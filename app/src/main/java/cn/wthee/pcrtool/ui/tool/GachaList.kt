@@ -162,7 +162,7 @@ private fun GachaItem(gachaInfo: GachaInfo, toCharacterDetail: (Int) -> Unit) {
                         textAlign = TextAlign.Start
                     )
                 } else {
-                    IconListCompose(icons = icons, toCharacterDetail = toCharacterDetail)
+                    GridIconListCompose(icons = icons, toCharacterDetail = toCharacterDetail)
                 }
 
                 //结束日期

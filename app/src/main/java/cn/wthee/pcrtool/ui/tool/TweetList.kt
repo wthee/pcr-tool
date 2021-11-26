@@ -31,7 +31,8 @@ import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.COMIC4
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.PNG
 import cn.wthee.pcrtool.utils.openWebView
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -118,7 +119,7 @@ private fun TweetItem(data: TweetData, toDetail: (String) -> Unit, toComic: (Int
     var url = if (data.tweet.startsWith("【ぷりこねっ！りだいぶ】")) {
         // 四格漫画
         comicId = getComicId(data.tweet)
-        Constants.COMIC_URL + comicId + Constants.PNG
+        COMIC4 + comicId + PNG
     } else {
         ""
     }

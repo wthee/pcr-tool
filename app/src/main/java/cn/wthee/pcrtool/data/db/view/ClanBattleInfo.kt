@@ -39,7 +39,7 @@ data class ClanBattleInfo(
         } else {
             list.add(ClanBossTargetInfo())
         }
-        return list
+        return if (list.size > 5) list.subList(0, 5) else list
     }
 
 

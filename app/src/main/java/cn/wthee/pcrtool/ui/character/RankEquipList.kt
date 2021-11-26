@@ -19,10 +19,15 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.RankText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -104,11 +109,17 @@ fun RankEquipListItem(
                             .padding(Dimen.smallPadding)
                             .fillMaxWidth()
                     ) {
-                        IconCompose(data = getEquipIconUrl(allIds[index])) {
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance()
+                                .getUrl(ICON_EQUIPMENT, allIds[index])
+                        ) {
                             toEquipDetail(allIds[index])
                         }
                         Spacer(modifier = Modifier.width(Dimen.smallPadding))
-                        IconCompose(data = getEquipIconUrl(allIds[index + 1])) {
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance()
+                                .getUrl(ICON_EQUIPMENT, allIds[index + 1])
+                        ) {
                             toEquipDetail(allIds[index + 1])
                         }
                     }

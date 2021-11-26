@@ -6,7 +6,7 @@ import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentMaterial
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -180,7 +180,7 @@ class EquipmentViewModel @Inject constructor(
      * @param equipId 装备编号
      */
     fun getDropInfos(equipId: Int) = flow {
-        if (equipId != Constants.UNKNOWN_EQUIP_ID) {
+        if (equipId != UNKNOWN_EQUIP_ID) {
             val equip = equipmentRepository.getEquipmentData(equipId)
             val fixedId = if (equip.craftFlg == 1) {
                 equipmentRepository.getEquipmentCraft(equipId).cid1

@@ -37,7 +37,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CharacterAllPics(unitId: Int) {
     val context = LocalContext.current
-    val picUrls = CharacterIdUtil.getAllPicUrl(unitId, MainActivity.r6Ids.contains(unitId))
+    val picUrls =
+        ImageResourceHelper.getInstance().getAllPicUrl(unitId, MainActivity.r6Ids.contains(unitId))
     val loaded = arrayListOf<Boolean>()
     val drawables = arrayListOf<Drawable?>()
     picUrls.forEach { _ ->

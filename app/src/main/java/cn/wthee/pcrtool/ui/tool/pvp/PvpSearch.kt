@@ -298,7 +298,6 @@ private fun PvpCharacterSelectPage(
     data: List<PvpCharacterData>
 ) {
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     //选择页面
     val character0 = arrayListOf(PvpCharacterData(type = 0))
     character0.addAll(data.filter {
@@ -451,7 +450,7 @@ fun PvpIconItem(
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {
-            CharacterIdUtil.getMaxIconUrl(
+            ImageResourceHelper.getInstance().getMaxIconUrl(
                 it.unitId,
                 MainActivity.r6Ids.contains(it.unitId)
             )

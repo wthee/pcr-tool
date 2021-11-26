@@ -26,7 +26,7 @@ import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.CharacterIdUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -159,7 +159,7 @@ private fun PvpHistoryItem(
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
+                            data = ImageResourceHelper.getInstance().getMaxIconUrl(
                                 it,
                                 MainActivity.r6Ids.contains(it)
                             ),

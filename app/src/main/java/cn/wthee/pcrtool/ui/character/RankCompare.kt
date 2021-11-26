@@ -30,7 +30,7 @@ import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.noShape
-import cn.wthee.pcrtool.utils.CharacterIdUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import kotlinx.coroutines.launch
@@ -126,7 +126,7 @@ fun RankCompare(
                 ) {
                     //头像
                     IconCompose(
-                        data = CharacterIdUtil.getMaxIconUrl(
+                        data = ImageResourceHelper.getInstance().getMaxIconUrl(
                             unitId,
                             MainActivity.r6Ids.contains(unitId)
                         ),
