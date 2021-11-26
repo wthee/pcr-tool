@@ -29,8 +29,7 @@ import kotlinx.coroutines.launch
 
 
 /**
- * 角色卡面图片
- * fixme 优化图片下载方法
+ * 角色所有卡面图片
  */
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -117,7 +116,6 @@ fun CharacterAllPics(unitId: Int) {
                             displayName = "${unitId}_${index}.jpg"
                         )
                         clickedIndex.value = -1
-                        VibrateUtil(context).done()
                     }
                 }
             },
