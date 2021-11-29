@@ -161,6 +161,7 @@ private fun SelectNewsTypeCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
+        containerColor = MaterialTheme.colorScheme.background,
         shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         onClick = {
@@ -172,7 +173,6 @@ private fun SelectNewsTypeCompose(
                 navViewModel.fabCloseClick.postValue(true)
             }
         },
-        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         if (openDialog) {
             Column(
@@ -243,10 +243,10 @@ fun NewsItem(
 ) {
     val placeholder = news.title == ""
     val tag = news.getTag()
-    val colorId = when (tag) {
-        "公告", "更新" -> R.color.news_update
-        "系統" -> R.color.news_system
-        else -> R.color.colorPrimary
+    val color = when (tag) {
+        "公告", "更新" -> colorResource(R.color.news_update)
+        "系統" -> colorResource(R.color.news_system)
+        else -> MaterialTheme.colorScheme.primary
     }
     Column(
         modifier = Modifier.padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding)
@@ -255,7 +255,7 @@ fun NewsItem(
         Row(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
             MainTitleText(
                 text = tag,
-                backgroundColor = colorResource(id = colorId),
+                backgroundColor = color,
                 modifier = Modifier.placeholder(
                     visible = placeholder,
                     highlight = PlaceholderHighlight.shimmer()

@@ -292,6 +292,7 @@ private fun ChangeDbCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
+        containerColor = MaterialTheme.colorScheme.background,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         onClick = {
@@ -303,7 +304,6 @@ private fun ChangeDbCompose(
                 MainActivity.navViewModel.fabCloseClick.postValue(true)
             }
         },
-        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         if (openDialog) {
             Column(

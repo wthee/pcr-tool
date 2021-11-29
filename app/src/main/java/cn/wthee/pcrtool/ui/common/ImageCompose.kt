@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -103,6 +104,7 @@ fun IconCompose(
     data: Any,
     size: Dp = Dimen.iconSize,
     tint: Color = MaterialTheme.colorScheme.primary,
+    colorFilter: ColorFilter? = null,
     wrapSize: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
@@ -135,6 +137,7 @@ fun IconCompose(
             model = ImageRequest.Builder(context)
                 .data(data)
                 .build(),
+            colorFilter = colorFilter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             loading = {
