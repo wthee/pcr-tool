@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
@@ -117,7 +118,7 @@ fun SkillItem(
         val name = if (isClanBoss) type else skillDetail.name
         MainText(
             text = name,
-            color = colorResource(color),
+            color = color,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(top = Dimen.largePadding),
@@ -127,7 +128,7 @@ fun SkillItem(
         if (!isClanBoss) {
             CaptionText(
                 text = type + if (skillDetail.isCutin) "(六星)" else "",
-                color = colorResource(color),
+                color = color,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = Dimen.smallPadding)
@@ -215,10 +216,10 @@ fun SkillActionItem(
     val mark3 = arrayListOf<SkillIndex>()
     val colors =
         arrayListOf(
-            R.color.color_rank_21,
-            if (isSystemInDarkTheme()) R.color.alpha_white else R.color.black,
-            R.color.color_rank_11_17,
-            R.color.colorPrimary
+            colorResource(R.color.color_rank_21),
+            colorResource(if (isSystemInDarkTheme()) R.color.alpha_white else R.color.black),
+            colorResource(R.color.color_rank_11_17),
+            MaterialTheme.colorScheme.primary
         )
     skillAction.action.forEachIndexed { index, c ->
         if (c == '[') {
@@ -273,7 +274,7 @@ fun SkillActionItem(
                         map[i]?.forEach {
                             if (index >= it.start && index <= it.end) {
                                 added = true
-                                withStyle(style = SpanStyle(color = colorResource(id = colors[i]))) {
+                                withStyle(style = SpanStyle(color = colors[i])) {
                                     append(c)
                                 }
                                 return@forEachIndexed
@@ -391,7 +392,7 @@ private fun SkillLoopIconList(
                 IconCompose(data = url)
                 Text(
                     text = type,
-                    color = colorResource(getSkillColor(type = type)),
+                    color = getSkillColor(type = type),
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -442,13 +443,13 @@ private fun getSkillType(skillId: Int) = when (skillId % 1000) {
  * 获取技能名称颜色
  */
 @Composable
-private fun getSkillColor(type: String): Int {
+private fun getSkillColor(type: String): Color {
     return when {
-        type.contains("连结") -> R.color.color_rank_7_10
-        type.contains("EX") -> R.color.color_rank_2_3
-        type.contains("1") -> R.color.color_rank_11_17
-        type.contains("2") -> R.color.color_rank_18_20
-        else -> R.color.colorPrimary
+        type.contains("连结") -> colorResource(R.color.color_rank_7_10)
+        type.contains("EX") -> colorResource(R.color.color_rank_2_3)
+        type.contains("1") -> colorResource(R.color.color_rank_11_17)
+        type.contains("2") -> colorResource(R.color.color_rank_18_20)
+        else -> MaterialTheme.colorScheme.primary
     }
 }
 
