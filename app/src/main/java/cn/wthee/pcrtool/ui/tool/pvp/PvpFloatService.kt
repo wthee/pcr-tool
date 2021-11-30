@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -31,35 +32,44 @@ class PvpFloatService : LifecycleService() {
     private var spanCount = 5
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         //数据
         spanCount = intent?.getIntExtra("spanCount", 5) ?: 5
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     override fun onCreate() {
         super.onCreate()
-
-        //前台通知
-        val notificationManager: NotificationManager =
-            MyApplication.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val notice = NotificationUtil.createNotice(
-            MyApplication.context,
-            "2",
-            "竞技场查询服务",
-            Constants.PVPSEARCH_NOTICE_TITLE,
-            notificationManager
-        ).build()
-        startForeground(1, notice)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //前台通知
+            val notificationManager: NotificationManager =
+                MyApplication.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val notice = NotificationUtil.createNotice(
+                MyApplication.context,
+                "2",
+                "竞技场查询服务",
+                Constants.PVPSEARCH_NOTICE_TITLE,
+                notificationManager
+            ).build()
+            startForeground(1, notice)
+        }
         //初始化加载
         initWindow()
         initObserve()
     }
 
     override fun onDestroy() {
+        try {
+            MainActivity.navViewModel.floatServiceRun.postValue(false)
+            windowManager.removeView(floatRootView)
+        } catch (e: Exception) {
+
+        }
         stopForeground(true)
         super.onDestroy()
     }
 
+    //数据监听
     private fun initObserve() {
         try {
             MainActivity.navViewModel.apply {
@@ -74,6 +84,7 @@ class PvpFloatService : LifecycleService() {
                 }
             }
         } catch (e: Exception) {
+            Log.e("DEBUG", e.message ?: "")
             UMengLogUtil.upload(e, Constants.EXCEPTION_PVP_SERVICE)
         }
     }

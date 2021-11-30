@@ -2,6 +2,7 @@ package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -239,7 +240,11 @@ fun PvpSearchCompose(
                         navViewModel.floatServiceRun.postValue(true)
                         serviceIntent.putExtra("spanCount", spanCount)
                         context.stopService(serviceIntent)
-                        context.startService(serviceIntent)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            context.startForegroundService(serviceIntent)
+                        } else {
+                            context.startService(serviceIntent)
+                        }
                         context.startActivity(homeIntent)
                     } else {
                         val intent = Intent(

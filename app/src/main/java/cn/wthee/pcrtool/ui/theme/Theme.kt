@@ -10,20 +10,24 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorPalette = darkColorScheme(
     primary = colorPrimaryDark,
+    onPrimary = Color.Black,
     primaryContainer = Color.Black,
     onPrimaryContainer = colorPrimaryDark,
     secondary = colorPrimaryDark,
     surfaceVariant = colorAccentDark,
-    background = Color.Black
+    background = Color.Black,
+    onBackground = colorPrimaryDark
 )
 
 private val LightColorPalette = lightColorScheme(
     primary = colorPrimary,
+    onPrimary = Color.White,
     primaryContainer = Color.White,
     onPrimaryContainer = colorPrimary,
     secondary = colorPrimary,
     surfaceVariant = colorAccent,
-    background = Color.White
+    background = Color.White,
+    onBackground = colorPrimary
 )
 
 @SuppressLint("NewApi")
