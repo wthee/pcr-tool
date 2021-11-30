@@ -212,6 +212,7 @@ private fun ClanBattleItem(
 fun ClanBossInfoPager(
     clanId: Int,
     index: Int,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
     val clanInfo =
@@ -320,7 +321,13 @@ fun ClanBossInfoPager(
                     state = pagerState,
                 ) { pagerIndex ->
                     if (visible) {
-                        ClanBossInfoPagerItem(bossDataList, pagerIndex, list, partEnemyMap)
+                        ClanBossInfoPagerItem(
+                            bossDataList,
+                            pagerIndex,
+                            list,
+                            partEnemyMap,
+                            toSummonDetail
+                        )
                     }
                 }
             }
@@ -447,7 +454,8 @@ private fun ClanBossInfoPagerItem(
     bossDataList: List<EnemyParameterPro>,
     pagerIndex: Int,
     list: List<ClanBossTargetInfo>,
-    partEnemyMap: HashMap<Int, List<EnemyParameterPro>>
+    partEnemyMap: HashMap<Int, List<EnemyParameterPro>>,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
 ) {
     val bossDataValue = bossDataList[pagerIndex]
     val expanded = remember {
@@ -516,7 +524,7 @@ private fun ClanBossInfoPagerItem(
             }
             DivCompose(Modifier.align(Alignment.CenterHorizontally))
             //技能
-            BossSkillList(pagerIndex, bossDataList)
+            BossSkillList(pagerIndex, bossDataList, toSummonDetail)
             CommonSpacer()
         }
     }
@@ -528,6 +536,7 @@ private fun ClanBossInfoPagerItem(
 private fun BossSkillList(
     index: Int,
     bossList: List<EnemyParameterPro>,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getAllEnemySkill(bossList)
@@ -551,7 +560,12 @@ private fun BossSkillList(
                 )
             }
             list[index].forEach {
-                SkillItem(level = it.level, skillDetail = it, isClanBoss = true)
+                SkillItem(
+                    level = it.level,
+                    skillDetail = it,
+                    isClanBoss = true,
+                    toSummonDetail = toSummonDetail
+                )
             }
         }
     }

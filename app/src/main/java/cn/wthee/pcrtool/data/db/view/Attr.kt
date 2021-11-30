@@ -191,6 +191,19 @@ data class Attr(
     }
 
     /**
+     * 非零属性
+     */
+    fun summonAttr(): List<AttrValue> {
+        val attrs = all()
+        val newList = arrayListOf<AttrValue>()
+        val toShowIndex = arrayListOf(0, 2, 3, 4, 5)
+        toShowIndex.forEach { showIndex ->
+            newList.add(attrs[showIndex])
+        }
+        return newList
+    }
+
+    /**
      * 属性对比差值
      */
     fun compare(attr1: Attr): List<AttrValue> {

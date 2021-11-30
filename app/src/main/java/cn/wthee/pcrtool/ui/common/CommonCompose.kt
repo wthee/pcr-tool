@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -239,6 +236,7 @@ fun MainButton(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = MaterialTheme.colorScheme.onPrimary,
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -254,7 +252,7 @@ fun MainButton(
         Text(
             text = text,
             color = color,
-            style = MaterialTheme.typography.labelLarge
+            style = textStyle
         )
     }
 }
@@ -267,6 +265,7 @@ fun SubButton(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Unspecified,
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
     onClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -280,7 +279,33 @@ fun SubButton(
             onClick.invoke()
         }
     ) {
-        Text(text = text, color = color, style = MaterialTheme.typography.labelLarge)
+        Text(text = text, color = color, style = textStyle)
+    }
+}
+
+
+/**
+ * 文本操作按钮
+ */
+@Composable
+fun MainTexButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Unspecified,
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
+    onClick: () -> Unit
+) {
+    val context = LocalContext.current
+
+    TextButton(
+        shape = Shape.medium,
+        modifier = modifier.padding(Dimen.smallPadding),
+        onClick = {
+            VibrateUtil(context).single()
+            onClick.invoke()
+        }
+    ) {
+        Text(text = text, color = color, style = textStyle)
     }
 }
 

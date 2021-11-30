@@ -14,17 +14,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.AttackPattern
-import cn.wthee.pcrtool.data.db.view.SkillActionPro
 import cn.wthee.pcrtool.data.db.view.SkillActionText
 import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -47,6 +44,7 @@ fun SkillCompose(
     cutinId: Int,
     level: Int = 0,
     atk: Int,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getCharacterSkills(level, atk, unitId, cutinId)
@@ -58,7 +56,7 @@ fun SkillCompose(
             .padding(Dimen.largePadding)
     ) {
         skillList.forEach {
-            SkillItem(level = level, skillDetail = it)
+            SkillItem(level = level, skillDetail = it, toSummonDetail = toSummonDetail)
         }
     }
 }
@@ -71,6 +69,7 @@ fun SkillCompose(
 fun SkillItem(
     level: Int,
     skillDetail: SkillDetail,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     isClanBoss: Boolean = false
 ) {
     //是否显示参数判断
@@ -151,7 +150,12 @@ fun SkillItem(
         ) {
             val url = ImageResourceHelper.getInstance().getUrl(ICON_SKILL, skillDetail.iconType)
             //技能图标
-            IconCompose(data = url)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                IconCompose(data = url)
+                if (skillDetail.castTime > 0) {
+                    CaptionText(text = "${skillDetail.castTime}秒")
+                }
+            }
             Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
                 //等级
                 if (isClanBoss) {
@@ -179,7 +183,7 @@ fun SkillItem(
             if (BuildConfig.DEBUG) {
                 Text(it.actionId.toString())
             }
-            SkillActionItem(skillAction = it)
+            SkillActionItem(skillAction = it, toSummonDetail = toSummonDetail)
         }
     }
 }
@@ -200,7 +204,10 @@ fun SkillActionTag(skillTag: String) {
  * 技能动作
  */
 @Composable
-fun SkillActionItem(skillAction: SkillActionText) {
+fun SkillActionItem(
+    skillAction: SkillActionText,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
+) {
     //详细描述
     val mark0 = arrayListOf<SkillIndex>()
     val mark1 = arrayListOf<SkillIndex>()
@@ -244,40 +251,53 @@ fun SkillActionItem(skillAction: SkillActionText) {
     map[1] = mark1
     map[2] = mark2
     map[3] = mark3
-    //设置字体
-    Text(
-        style = TextStyle(
-            fontWeight = FontWeight.Bold,
-            fontSize = 13.sp,
-            letterSpacing = 0.5.sp
-        ),
-        color = colorResource(id = R.color.gray),
-        modifier = Modifier.padding(
-            top = Dimen.mediumPadding,
-            start = Dimen.mediumPadding,
-            end = Dimen.mediumPadding
-        ),
-        text = buildAnnotatedString {
-            skillAction.action.forEachIndexed { index, c ->
-                var added = false
-                for (i in 0..3) {
-                    map[i]?.forEach {
-                        if (index >= it.start && index <= it.end) {
-                            added = true
-                            withStyle(style = SpanStyle(color = colorResource(id = colors[i]))) {
-                                append(c)
+    Column {
+
+        //设置字体
+        Text(
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 13.sp,
+                letterSpacing = 0.5.sp
+            ),
+            color = colorResource(id = R.color.gray),
+            modifier = Modifier.padding(
+                top = Dimen.mediumPadding,
+                start = Dimen.mediumPadding,
+                end = Dimen.mediumPadding
+            ),
+            text = buildAnnotatedString {
+                skillAction.action.forEachIndexed { index, c ->
+                    var added = false
+                    for (i in 0..3) {
+                        map[i]?.forEach {
+                            if (index >= it.start && index <= it.end) {
+                                added = true
+                                withStyle(style = SpanStyle(color = colorResource(id = colors[i]))) {
+                                    append(c)
+                                }
+                                return@forEachIndexed
                             }
-                            return@forEachIndexed
                         }
                     }
+                    if (!added) {
+                        append(c)
+                    }
                 }
-                if (!added) {
-                    append(c)
-                }
+
             }
-
-        })
-
+        )
+        if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
+            //查看召唤物
+            MainTexButton(
+                text = stringResource(R.string.to_summon),
+                color = MaterialTheme.colorScheme.primary,
+                textStyle = MaterialTheme.typography.bodySmall
+            ) {
+                toSummonDetail(skillAction.summonUnitId, skillAction.level)
+            }
+        }
+    }
 }
 
 /**
@@ -436,15 +456,3 @@ private data class SkillIndex(
     var start: Int = 0,
     var end: Int = 0
 )
-
-
-@Preview
-@Suppress("RegExpRedundantEscape")
-@Composable
-fun SkillItemPreview() {
-    val mockData = SkillDetail()
-    mockData.actions = arrayListOf(SkillActionPro())
-    PreviewBox {
-        SkillItem(level = 1, skillDetail = mockData)
-    }
-}

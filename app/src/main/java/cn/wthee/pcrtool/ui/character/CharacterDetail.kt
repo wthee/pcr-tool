@@ -381,7 +381,8 @@ fun CharacterDetail(
                             atk = max(
                                 allData.sumAttr.atk.int,
                                 allData.sumAttr.magicStr.int
-                            )
+                            ),
+                            toSummonDetail = actions.toSummonDetail
                         )
                         CommonSpacer()
                         Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))

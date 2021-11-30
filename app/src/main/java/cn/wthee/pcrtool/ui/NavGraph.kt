@@ -23,6 +23,7 @@ import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.Overview
+import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.theme.fadeOut
 import cn.wthee.pcrtool.ui.theme.myFadeIn
 import cn.wthee.pcrtool.ui.tool.*
@@ -70,7 +71,8 @@ object Navigation {
     const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_NEWS_KEY = "toolNewsKey"
-
+    const val SUMMON_DETAIL = "summonDetail"
+    const val SUMMON_LEVEL = "summonLevel"
 }
 
 
@@ -366,7 +368,8 @@ fun NavGraph(
             val arguments = requireNotNull(it.arguments)
             ClanBossInfoPager(
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
-                arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX),
+                actions.toSummonDetail
             )
         }
 
@@ -493,7 +496,7 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            AllSkillList()
+            AllSkillList(actions.toSummonDetail)
         }
 
         //战力系数
@@ -506,6 +509,29 @@ fun NavGraph(
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             CharacterStatusCoeCompose()
+        }
+
+        //召唤物信息
+        composable(
+            route = "${Navigation.SUMMON_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.SUMMON_LEVEL}}",
+            arguments = listOf(
+                navArgument(Navigation.UNIT_ID) {
+                    type = NavType.IntType
+                },
+                navArgument(Navigation.SUMMON_LEVEL) {
+                    type = NavType.IntType
+                }),
+            enterTransition = { null },
+            exitTransition = { fadeOut },
+            popEnterTransition = { null },
+            popExitTransition = { fadeOut }
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            SummonDetail(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                level = arguments.getInt(Navigation.SUMMON_LEVEL)
+            )
         }
     }
 }
@@ -698,6 +724,13 @@ class NavActions(navController: NavHostController) {
      */
     val toCoe = {
         navController.navigate(Navigation.ATTR_COE)
+    }
+
+    /**
+     * 召唤物信息
+     */
+    val toSummonDetail: (Int, Int) -> Unit = { unitId, level ->
+        navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${level}")
     }
 }
 

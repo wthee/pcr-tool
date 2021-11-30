@@ -162,6 +162,9 @@ class CharacterAttrViewModel @Inject constructor(
         return storyAttr
     }
 
+    /**
+     * 获取被动技能数据
+     */
     private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionPro {
         //100101
         val skillActionId = if (rarity >= 5) {
@@ -169,7 +172,12 @@ class CharacterAttrViewModel @Inject constructor(
         } else {
             unitId / 100 * 1000 + 501
         } * 100 + 1
-        return skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))[0]
+        val list = skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))
+        if (list.isNotEmpty()) {
+            return list[0]
+        } else {
+            return SkillActionPro()
+        }
     }
 
     /**

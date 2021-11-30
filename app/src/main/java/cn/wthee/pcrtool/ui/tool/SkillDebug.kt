@@ -36,6 +36,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 @Composable
 fun AllSkillList(
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel(),
     characterViewModel: CharacterViewModel = hiltViewModel(),
     clanViewModel: ClanViewModel = hiltViewModel()
@@ -123,7 +124,7 @@ fun AllSkillList(
                         }
                     }
                     if (error) {
-                        SkillItem(level = 201, skillDetail = it)
+                        SkillItem(level = 201, skillDetail = it, toSummonDetail = toSummonDetail)
                     }
                 }
             }

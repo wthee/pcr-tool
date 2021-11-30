@@ -62,4 +62,6 @@ class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
     suspend fun getCutinId(unitId: Int) = unitDao.getCutinId(unitId)
 
+    suspend fun getSummonData(unitId: Int) = unitDao.getSummonData(unitId)
+
 }
