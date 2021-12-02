@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.ui.character.*
@@ -66,13 +67,14 @@ object Navigation {
     const val MAX_RANK = "maxRank"
     const val LEVEL = "level"
     const val RARITY = "rarity"
+    const val RANK = "rank"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     const val COMIC_ID = "comicId"
     const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_NEWS_KEY = "toolNewsKey"
     const val SUMMON_DETAIL = "summonDetail"
-    const val SUMMON_LEVEL = "summonLevel"
+    const val IS_ENEMY_SUMMON = "isEnemy"
 }
 
 
@@ -132,8 +134,7 @@ fun NavGraph(
             CharacterDetail(
                 scrollState,
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                actions,
-                viewModel
+                actions
             )
         }
 
@@ -513,14 +514,15 @@ fun NavGraph(
 
         //召唤物信息
         composable(
-            route = "${Navigation.SUMMON_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.SUMMON_LEVEL}}",
+            route = "${Navigation.SUMMON_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.IS_ENEMY_SUMMON}}",
             arguments = listOf(
                 navArgument(Navigation.UNIT_ID) {
                     type = NavType.IntType
                 },
-                navArgument(Navigation.SUMMON_LEVEL) {
-                    type = NavType.IntType
-                }),
+                navArgument(Navigation.IS_ENEMY_SUMMON) {
+                    type = NavType.BoolType
+                }
+            ),
             enterTransition = { null },
             exitTransition = { fadeOut },
             popEnterTransition = { null },
@@ -530,7 +532,7 @@ fun NavGraph(
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             SummonDetail(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                level = arguments.getInt(Navigation.SUMMON_LEVEL)
+                isEnemy = arguments.getBoolean(Navigation.IS_ENEMY_SUMMON),
             )
         }
     }
@@ -729,8 +731,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 召唤物信息
      */
-    val toSummonDetail: (Int, Int) -> Unit = { unitId, level ->
-        navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${level}")
+    val toSummonDetail: (Int, Boolean) -> Unit = { unitId, isEnemy ->
+        navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${isEnemy}")
     }
 }
 
@@ -759,7 +761,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 选择的 RANK
      */
     val selectRank = MutableLiveData(0)
-
 
     /**
      * 下载状态
@@ -842,9 +843,14 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val showResult = MutableLiveData(false)
 
-
     /**
      * 数据切换弹窗显示
      */
     val openChangeDataDialog = MutableLiveData(false)
+
+    /**
+     * 当前选择属性
+     */
+    val currentValue = MutableLiveData<CharacterProperty>()
+
 }

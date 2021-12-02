@@ -35,7 +35,6 @@ import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
@@ -68,7 +67,6 @@ fun CharacterDetail(
     scrollState: ScrollState,
     unitId: Int,
     actions: NavActions,
-    navViewModel: NavViewModel,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
@@ -76,12 +74,12 @@ fun CharacterDetail(
     //最大值
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
         .collectAsState(initial = CharacterProperty()).value
-    val currentValueState = attrViewModel.currentValue.observeAsState()
+    val currentValueState = navViewModel.currentValue.observeAsState()
     //选择的 RANK
     val selectRank = navViewModel.selectRank.observeAsState().value ?: 0
     //数值信息
     if (currentValueState.value == null && maxValue.isInit()) {
-        attrViewModel.currentValue.postValue(maxValue)
+        navViewModel.currentValue.postValue(maxValue)
         if (selectRank == 0) {
             navViewModel.selectRank.postValue(maxValue.rank)
         }
@@ -157,7 +155,7 @@ fun CharacterDetail(
             }
             //Rank 选择
             if (selectRank != 0 && selectRank != currentValue.rank) {
-                attrViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
+                navViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
             }
 
             //关闭
@@ -257,8 +255,7 @@ fun CharacterDetail(
                             StarSelect(
                                 currentValue = currentValue,
                                 max = maxValue.rarity,
-                                modifier = Modifier.padding(top = Dimen.mediumPadding),
-                                attrViewModel = attrViewModel
+                                modifier = Modifier.padding(top = Dimen.mediumPadding)
                             )
 
                             //等级
@@ -315,7 +312,7 @@ fun CharacterDetail(
                                         if (inputLevel.value != "") {
                                             characterLevel.value = inputLevel.value.toInt()
                                         }
-                                        attrViewModel.currentValue.postValue(
+                                        navViewModel.currentValue.postValue(
                                             currentValue.update(
                                                 level = characterLevel.value
                                             )
@@ -333,7 +330,7 @@ fun CharacterDetail(
                                         if (inputLevel.value != "") {
                                             characterLevel.value = inputLevel.value.toInt()
                                         }
-                                        attrViewModel.currentValue.postValue(
+                                        navViewModel.currentValue.postValue(
                                             currentValue.update(
                                                 level = characterLevel.value
                                             )
@@ -382,6 +379,7 @@ fun CharacterDetail(
                                 allData.sumAttr.atk.int,
                                 allData.sumAttr.magicStr.int
                             ),
+                            isEnemy = false,
                             toSummonDetail = actions.toSummonDetail
                         )
                         CommonSpacer()
@@ -685,7 +683,6 @@ private fun UniqueEquip(
     uniqueEquipLevel: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
-    val attrViewModel: CharacterAttrViewModel = hiltViewModel()
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -758,7 +755,7 @@ private fun UniqueEquip(
                         if (inputLevel.value != "") {
                             uniqueEquipLevel.value = inputLevel.value.toInt()
                         }
-                        attrViewModel.currentValue.postValue(
+                        navViewModel.currentValue.postValue(
                             currentValue.update(
                                 uniqueEquipmentLevel = uniqueEquipLevel.value
                             )
@@ -776,7 +773,7 @@ private fun UniqueEquip(
                         if (inputLevel.value != "") {
                             uniqueEquipLevel.value = inputLevel.value.toInt()
                         }
-                        attrViewModel.currentValue.postValue(
+                        navViewModel.currentValue.postValue(
                             currentValue.update(
                                 uniqueEquipmentLevel = uniqueEquipLevel.value
                             )
@@ -829,8 +826,7 @@ private fun UniqueEquip(
 private fun StarSelect(
     currentValue: CharacterProperty,
     max: Int,
-    modifier: Modifier = Modifier,
-    attrViewModel: CharacterAttrViewModel
+    modifier: Modifier = Modifier
 ) {
 
     Row(modifier) {
@@ -845,7 +841,7 @@ private fun StarSelect(
                 size = Dimen.mediumIconSize,
                 modifier = Modifier.padding(Dimen.smallPadding)
             ) {
-                attrViewModel.currentValue.postValue(currentValue.update(rarity = i))
+                navViewModel.currentValue.postValue(currentValue.update(rarity = i))
             }
 
         }

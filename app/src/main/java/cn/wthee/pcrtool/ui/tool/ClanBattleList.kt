@@ -212,7 +212,7 @@ private fun ClanBattleItem(
 fun ClanBossInfoPager(
     clanId: Int,
     index: Int,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    toSummonDetail: ((Int, Boolean) -> Unit)? = null,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
     val clanInfo =
@@ -455,7 +455,7 @@ private fun ClanBossInfoPagerItem(
     pagerIndex: Int,
     list: List<ClanBossTargetInfo>,
     partEnemyMap: HashMap<Int, List<EnemyParameterPro>>,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    toSummonDetail: ((Int, Boolean) -> Unit)? = null,
 ) {
     val bossDataValue = bossDataList[pagerIndex]
     val expanded = remember {
@@ -533,10 +533,10 @@ private fun ClanBossInfoPagerItem(
 
 
 @Composable
-private fun BossSkillList(
+fun BossSkillList(
     index: Int,
     bossList: List<EnemyParameterPro>,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    toSummonDetail: ((Int, Boolean) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getAllEnemySkill(bossList)
@@ -556,14 +556,14 @@ private fun BossSkillList(
                 SkillLoopList(
                     allLoopData.value!![index],
                     allIcon.value!![index],
-                    isClanBoss = true
+                    isEnemy = true
                 )
             }
             list[index].forEach {
                 SkillItem(
                     level = it.level,
                     skillDetail = it,
-                    isClanBoss = true,
+                    isEnemy = true,
                     toSummonDetail = toSummonDetail
                 )
             }

@@ -35,6 +35,16 @@ class ClanViewModel @Inject constructor(
     }
 
     /**
+     * 获取敌人属性
+     *
+     * @param enemyId 敌人编号
+     */
+    fun getEnemyAttr(enemyId: Int) = flow {
+        val data = clanRepository.getBossAttr(enemyId)
+        emit(data)
+    }
+
+    /**
      * 获取 BOSS 属性
      *
      * @param enemyIds boss编号列表

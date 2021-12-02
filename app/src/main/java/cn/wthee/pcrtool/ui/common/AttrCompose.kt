@@ -22,7 +22,7 @@ fun AttrList(attrs: List<AttrValue>, toInt: Boolean = true) {
         spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px * 2
     ) {
         attrs.forEach {
-            AttrItem(it.title, it.value, toInt)
+            AttrItem(it, toInt)
         }
     }
 }
@@ -31,21 +31,21 @@ fun AttrList(attrs: List<AttrValue>, toInt: Boolean = true) {
  * 属性
  */
 @Composable
-fun AttrItem(text: String, value: Double, toInt: Boolean) {
-    val valueText = when (value.int) {
-        in 100000000..Int.MAX_VALUE -> "${value.toInt() / 100000000f}亿"
-        in 100000 until 100000000 -> "${value.toInt() / 10000}万"
-        else -> if (toInt) value.int.toString() else value.toString()
+fun AttrItem(attrValue: AttrValue, toInt: Boolean) {
+    val valueText = when (attrValue.value.int) {
+        in 100000000..Int.MAX_VALUE -> "${attrValue.value.toInt() / 100000000f}亿"
+        in 100000 until 100000000 -> "${attrValue.value.toInt() / 10000}万"
+        else -> if (toInt) attrValue.value.int.toString() else attrValue.value.toString()
     }
     Row(
         modifier = Modifier.padding(
             top = Dimen.smallPadding,
-            start = Dimen.mediumPadding,
-            end = Dimen.mediumPadding
+            start = Dimen.attrItemPadding,
+            end = Dimen.attrItemPadding
         )
     ) {
         MainTitleText(
-            text = text, modifier = Modifier
+            text = attrValue.title, modifier = Modifier
                 .weight(0.3f)
         )
         MainContentText(

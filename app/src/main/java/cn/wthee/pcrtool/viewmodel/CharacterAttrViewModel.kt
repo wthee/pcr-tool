@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
@@ -34,7 +33,6 @@ class CharacterAttrViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    val currentValue = MutableLiveData<CharacterProperty>()
 
     /**
      * 根据角色 id  星级 等级 专武等级

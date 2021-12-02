@@ -43,9 +43,10 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
 fun SkillCompose(
     unitId: Int,
     cutinId: Int,
-    level: Int = 0,
+    level: Int,
     atk: Int,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    isEnemy: Boolean,
+    toSummonDetail: ((Int, Boolean) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getCharacterSkills(level, atk, unitId, cutinId)
@@ -57,7 +58,12 @@ fun SkillCompose(
             .padding(Dimen.largePadding)
     ) {
         skillList.forEach {
-            SkillItem(level = level, skillDetail = it, toSummonDetail = toSummonDetail)
+            SkillItem(
+                level = level,
+                skillDetail = it,
+                isEnemy = isEnemy,
+                toSummonDetail = toSummonDetail
+            )
         }
     }
 }
@@ -70,8 +76,8 @@ fun SkillCompose(
 fun SkillItem(
     level: Int,
     skillDetail: SkillDetail,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
-    isClanBoss: Boolean = false
+    isEnemy: Boolean,
+    toSummonDetail: ((Int, Boolean) -> Unit)? = null
 ) {
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
@@ -115,7 +121,7 @@ fun SkillItem(
         //技能名
         val type = getSkillType(skillDetail.skillId)
         val color = getSkillColor(type)
-        val name = if (isClanBoss) type else skillDetail.name
+        val name = if (isEnemy) type else skillDetail.name
         MainText(
             text = name,
             color = color,
@@ -125,7 +131,7 @@ fun SkillItem(
             selectable = true
         )
         //技能类型
-        if (!isClanBoss) {
+        if (!isEnemy) {
             CaptionText(
                 text = type + if (skillDetail.isCutin) "(六星)" else "",
                 color = color,
@@ -135,7 +141,7 @@ fun SkillItem(
             )
         }
         //冷却时间
-        if (isClanBoss && skillDetail.bossUbCooltime > 0.0) {
+        if (isEnemy && skillDetail.bossUbCooltime > 0.0) {
             CaptionText(
                 text = skillDetail.bossUbCooltime.toString(),
                 modifier = Modifier
@@ -159,7 +165,7 @@ fun SkillItem(
             }
             Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
                 //等级
-                if (isClanBoss) {
+                if (isEnemy) {
                     Text(
                         text = stringResource(id = R.string.skill_level, level),
                         color = MaterialTheme.colorScheme.primary,
@@ -184,7 +190,11 @@ fun SkillItem(
             if (BuildConfig.DEBUG) {
                 Text(it.actionId.toString())
             }
-            SkillActionItem(skillAction = it, toSummonDetail = toSummonDetail)
+            SkillActionItem(
+                skillAction = it,
+                isEnemy = isEnemy,
+                toSummonDetail = toSummonDetail
+            )
         }
     }
 }
@@ -207,7 +217,8 @@ fun SkillActionTag(skillTag: String) {
 @Composable
 fun SkillActionItem(
     skillAction: SkillActionText,
-    toSummonDetail: ((Int, Int) -> Unit)? = null,
+    isEnemy: Boolean,
+    toSummonDetail: ((Int, Boolean) -> Unit)? = null,
 ) {
     //详细描述
     val mark0 = arrayListOf<SkillIndex>()
@@ -295,7 +306,7 @@ fun SkillActionItem(
                 color = MaterialTheme.colorScheme.primary,
                 textStyle = MaterialTheme.typography.bodySmall
             ) {
-                toSummonDetail(skillAction.summonUnitId, skillAction.level)
+                toSummonDetail(skillAction.summonUnitId, isEnemy)
             }
         }
     }
@@ -309,7 +320,7 @@ fun SkillLoopList(
     loopData: List<AttackPattern>,
     iconTypes: HashMap<Int, Int>,
     modifier: Modifier = Modifier,
-    isClanBoss: Boolean = false
+    isEnemy: Boolean = false
 ) {
     val loops = arrayListOf<SkillLoop>()
     loopData.forEach { ap ->
@@ -321,14 +332,14 @@ fun SkillLoopList(
         }
     }
     Column(
-        modifier = if (!isClanBoss) modifier.verticalScroll(rememberScrollState()) else modifier
+        modifier = if (!isEnemy) modifier.verticalScroll(rememberScrollState()) else modifier
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
                 SkillLoopItem(loop = it, iconTypes)
             }
         }
-        if (!isClanBoss) {
+        if (!isEnemy) {
             CommonSpacer()
         }
     }
