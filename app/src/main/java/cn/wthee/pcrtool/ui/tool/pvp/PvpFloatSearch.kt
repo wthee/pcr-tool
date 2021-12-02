@@ -16,7 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.FabMain
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.actions
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.MainCard
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -32,8 +33,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel()) {
     val coroutineScope = rememberCoroutineScope()
-    val min = MainActivity.navViewModel.floatSearchMin.observeAsState().value ?: false
-    val showResult = MainActivity.navViewModel.showResult.observeAsState().value ?: false
+    val min = navViewModel.floatSearchMin.observeAsState().value ?: false
+    val showResult = navViewModel.showResult.observeAsState().value ?: false
     val pagerState = rememberPagerState()
     val selectListState = rememberLazyListState()
     val resultListState = rememberLazyListState()
@@ -52,14 +53,14 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                         MainIconType.FLOAT_MIN
                     }
                 ) {
-                    MainActivity.navViewModel.floatSearchMin.postValue(!min)
+                    navViewModel.floatSearchMin.postValue(!min)
                 }
                 //退出
                 if (!min) {
                     FabCompose(
                         iconType = MainIconType.FLOAT_CLOSE
                     ) {
-                        MainActivity.navViewModel.floatServiceRun.postValue(false)
+                        navViewModel.floatServiceRun.postValue(false)
                     }
                 }
                 //查询
@@ -75,7 +76,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                             }
                         }
                         pvpViewModel.pvpResult.postValue(null)
-                        MainActivity.navViewModel.showResult.postValue(true)
+                        navViewModel.showResult.postValue(true)
                     }
                 }
                 //返回
@@ -98,7 +99,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
                     resultListState = resultListState,
                     favoritesListState = favoritesListState,
                     historyListState = historyListState,
-                    toCharacter = MainActivity.actions.toCharacterDetail
+                    toCharacter = actions.toCharacterDetail
                 )
             }
         }

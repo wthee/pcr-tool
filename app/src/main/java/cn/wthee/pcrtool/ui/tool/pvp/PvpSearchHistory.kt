@@ -23,7 +23,8 @@ import cn.wthee.pcrtool.data.db.entity.PvpHistoryData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -128,8 +129,8 @@ private fun PvpHistoryItem(
                                 characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
                             val selectedIds = selectedData as ArrayList<PvpCharacterData>?
                             selectedIds?.sortByDescending { it.position }
-                            MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
-                            MainActivity.navViewModel.showResult.postValue(true)
+                            navViewModel.selectedPvpData.postValue(selectedIds)
+                            navViewModel.showResult.postValue(true)
                         }
                         VibrateUtil(context).single()
                     }) {
@@ -161,7 +162,7 @@ private fun PvpHistoryItem(
                         IconCompose(
                             data = ImageResourceHelper.getInstance().getMaxIconUrl(
                                 it,
-                                MainActivity.r6Ids.contains(it)
+                                r6Ids.contains(it)
                             ),
                             size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                         ) {

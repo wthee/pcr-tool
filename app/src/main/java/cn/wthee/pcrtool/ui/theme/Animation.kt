@@ -4,7 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import cn.wthee.pcrtool.ui.MainActivity.Companion.animOn
+import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 
 /**
  * 动画弹性
@@ -32,7 +32,7 @@ fun <T> fastTween(): TweenSpec<T> {
 val fadeOut = fadeOut(animationSpec = fastTween())
 
 //页面进入动画：从下向上滚动
-val mySlideIn = if (animOn) {
+val mySlideIn = if (animOnFlag) {
     slideInVertically(
         initialOffsetY = { 30 },
         animationSpec = defaultTween()
@@ -42,7 +42,7 @@ val mySlideIn = if (animOn) {
 }
 
 //页面进入动画：渐入
-val myFadeIn = if (animOn) {
+val myFadeIn = if (animOnFlag) {
     fadeIn(animationSpec = defaultTween())
 } else {
     fadeIn(animationSpec = fastTween())

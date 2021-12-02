@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 fun CharacterAllPics(unitId: Int) {
     val context = LocalContext.current
     val picUrls =
-        ImageResourceHelper.getInstance().getAllPicUrl(unitId, MainActivity.r6Ids.contains(unitId))
+        ImageResourceHelper.getInstance().getAllPicUrl(unitId, r6Ids.contains(unitId))
     val loaded = arrayListOf<Boolean>()
     val drawables = arrayListOf<Drawable?>()
     picUrls.forEach { _ ->

@@ -1,10 +1,13 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -49,7 +52,6 @@ import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
 import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -58,10 +60,8 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
-@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
+@ExperimentalComposeUiApi
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,

@@ -33,7 +33,7 @@ import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.ClanBossTargetInfo
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
@@ -221,17 +221,17 @@ fun ClanBossInfoPager(
         rememberPagerState(initialPage = index)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
-    val close = MainActivity.navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
     //切换关闭监听
     if (close) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
-        MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        MainActivity.navViewModel.fabCloseClick.postValue(false)
+        navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabCloseClick.postValue(false)
     }
     if (mainIcon == MainIconType.BACK) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.openChangeDataDialog.postValue(false)
     }
     //页面
     Box(modifier = Modifier.fillMaxSize()) {
@@ -380,10 +380,10 @@ private fun SelectSectionCompose(
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
-                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                MainActivity.navViewModel.openChangeDataDialog.postValue(true)
+                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                navViewModel.openChangeDataDialog.postValue(true)
             } else {
-                MainActivity.navViewModel.fabCloseClick.postValue(true)
+                navViewModel.fabCloseClick.postValue(true)
             }
         },
     ) {
@@ -401,8 +401,8 @@ private fun SelectSectionCompose(
                             .fillMaxWidth()
                             .clickable {
                                 VibrateUtil(context).single()
-                                MainActivity.navViewModel.openChangeDataDialog.postValue(false)
-                                MainActivity.navViewModel.fabCloseClick.postValue(true)
+                                navViewModel.openChangeDataDialog.postValue(false)
+                                navViewModel.fabCloseClick.postValue(true)
                                 if (section.value != index) {
                                     coroutineScope.launch {
                                         section.value = index

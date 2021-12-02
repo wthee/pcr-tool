@@ -25,7 +25,7 @@ import cn.wthee.pcrtool.data.db.view.getIdStr
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.PvpResultData
 import cn.wthee.pcrtool.database.getRegion
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
@@ -321,7 +321,7 @@ private fun PvpResultItem(
                             IconCompose(
                                 data = ImageResourceHelper.getInstance().getMaxIconUrl(
                                     it,
-                                    MainActivity.r6Ids.contains(it)
+                                    r6Ids.contains(it)
                                 ),
                                 size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                             )

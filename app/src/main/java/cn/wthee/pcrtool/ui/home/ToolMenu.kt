@@ -18,7 +18,7 @@ import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
@@ -45,7 +45,7 @@ data class ToolMenuData(
 fun ToolMenu(actions: NavActions) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val downloadState = MainActivity.navViewModel.downloadProgress.observeAsState().value ?: -1
+    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
 
     val list = arrayListOf(
         ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
@@ -144,7 +144,7 @@ private fun getAction(
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
             MainIconType.CHANGE_DATA -> {
-                MainActivity.navViewModel.openChangeDataDialog.postValue(true)
+                navViewModel.openChangeDataDialog.postValue(true)
             }
             MainIconType.COMIC -> actions.toComicList()
             MainIconType.DB_DOWNLOAD -> {

@@ -5,7 +5,16 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.1.0-beta03"
+
+kapt {
+    correctErrorTypes = true
+}
+
+hilt {
+    enableAggregatingTask = true
+}
+
+val composeVersion = "1.1.0-beta04"
 val appVersionCode = 241
 val appVersionName = "2.4.1"
 val sql = 215
@@ -79,21 +88,26 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
         freeCompilerArgs += "-Xjvm-default=all"
+        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = composeVersion
     }
+
 }
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("androidx.fragment:fragment:1.3.6")
+    implementation("androidx.fragment:fragment:1.4.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation("androidx.preference:preference-ktx:1.1.1")
@@ -150,7 +164,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0-beta02"
+    val roomVersion = "2.4.0-rc01"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")

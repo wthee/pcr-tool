@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -35,7 +34,6 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
  *
  * @param equipId 装备编号
  */
-@ExperimentalFoundationApi
 @Composable
 fun EquipMainInfo(
     equipId: Int,
@@ -49,7 +47,6 @@ fun EquipMainInfo(
     EquipDetail(filter, equipId, equipMaxData, toEquipMaterial)
 }
 
-@ExperimentalFoundationApi
 @Composable
 private fun EquipDetail(
     filter: State<FilterEquipment?>,
@@ -131,7 +128,6 @@ private fun EquipDetail(
  * @param equip 装备信息
  * @param filter 装备过滤
  */
-@ExperimentalFoundationApi
 @Composable
 private fun EquipMaterialList(
     equip: EquipmentMaxData,
@@ -173,7 +169,6 @@ private fun EquipMaterialList(
 }
 
 @Preview
-@ExperimentalFoundationApi
 @Composable
 private fun EquipDetailPreview() {
     val filter = remember {

@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.IconCompose
@@ -27,7 +27,7 @@ import cn.wthee.pcrtool.ui.theme.Dimen
  */
 @Composable
 fun TopBarCompose(actions: NavActions) {
-    val updateApp = MainActivity.noticeViewModel.updateApp.observeAsState().value ?: -1
+    val updateApp = noticeViewModel.updateApp.observeAsState().value ?: -1
 
     Row(
         horizontalArrangement = Arrangement.Center,

@@ -73,6 +73,12 @@ fun settingSP(context: Context): SharedPreferences =
     context.getSharedPreferences("setting", Context.MODE_PRIVATE)!!
 
 
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@ExperimentalPagerApi
+@ExperimentalComposeUiApi
+@ExperimentalPagingApi
+@ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -85,19 +91,13 @@ class MainActivity : ComponentActivity() {
 
         @SuppressLint("StaticFieldLeak")
         lateinit var navController: NavHostController
-        var vibrateOn = true
-        var animOn = true
+        var vibrateOnFlag = true
+        var animOnFlag = true
         var r6Ids = listOf<Int>()
 
     }
 
 
-    @ExperimentalFoundationApi
-    @ExperimentalPagerApi
-    @ExperimentalMaterialApi
-    @ExperimentalPagingApi
-    @ExperimentalComposeUiApi
-    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -123,8 +123,8 @@ class MainActivity : ComponentActivity() {
         setHandler()
         UMengInitializer().create(this)
         val sp = settingSP()
-        vibrateOn = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
-        animOn = sp.getBoolean(Constants.SP_ANIM_STATE, true)
+        vibrateOnFlag = sp.getBoolean(Constants.SP_VIBRATE_STATE, true)
+        animOnFlag = sp.getBoolean(Constants.SP_ANIM_STATE, true)
         MainScope().launch {
             DatabaseUpdater.checkDBVersion()
         }
@@ -195,12 +195,12 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@ExperimentalPagerApi
 @ExperimentalComposeUiApi
 @ExperimentalPagingApi
-@ExperimentalMaterialApi
-@ExperimentalPagerApi
-@ExperimentalFoundationApi
+@ExperimentalAnimationApi
 @Composable
 fun Home(
     mNavViewModel: NavViewModel = hiltViewModel(),

@@ -78,12 +78,12 @@ object Navigation {
 }
 
 
-@ExperimentalAnimationApi
-@ExperimentalComposeUiApi
 @ExperimentalPagingApi
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
-@ExperimentalMaterialApi
 @ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
 @Composable
 fun NavGraph(
     navController: NavHostController,

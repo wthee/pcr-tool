@@ -16,8 +16,8 @@ import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.savedstate.ViewTreeSavedStateRegistryOwner
 import cn.wthee.pcrtool.MyApplication
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.mFloatingWindowHeight
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -60,7 +60,7 @@ class PvpFloatService : LifecycleService() {
 
     override fun onDestroy() {
         try {
-            MainActivity.navViewModel.floatServiceRun.postValue(false)
+            navViewModel.floatServiceRun.postValue(false)
             windowManager.removeView(floatRootView)
         } catch (e: Exception) {
 
@@ -72,7 +72,7 @@ class PvpFloatService : LifecycleService() {
     //数据监听
     private fun initObserve() {
         try {
-            MainActivity.navViewModel.apply {
+            navViewModel.apply {
                 floatServiceRun.observe(this@PvpFloatService) {
                     if (it == false) {
                         windowManager.removeView(floatRootView)

@@ -10,7 +10,7 @@ import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -84,7 +84,7 @@ class OverviewViewModel @Inject constructor(
      */
     fun getR6Ids() {
         viewModelScope.launch {
-            MainActivity.navViewModel.r6Ids.postValue(unitRepository.getR6Ids())
+            navViewModel.r6Ids.postValue(unitRepository.getR6Ids())
         }
     }
 }

@@ -21,7 +21,8 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
+import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
@@ -120,7 +121,7 @@ fun MainSettings() {
         val vibrateState = remember {
             mutableStateOf(vibrateOn)
         }
-        MainActivity.vibrateOn = vibrateState.value
+        vibrateOnFlag = vibrateState.value
         val vibrateSummary =
             stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
         Row(
@@ -160,7 +161,7 @@ fun MainSettings() {
         val animState = remember {
             mutableStateOf(animOn)
         }
-        MainActivity.animOn = animState.value
+        animOnFlag = animState.value
         val animSummary =
             stringResource(id = if (animState.value) R.string.animation_on else R.string.animation_off)
         Row(

@@ -1,6 +1,6 @@
 package cn.wthee.pcrtool.utils
 
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.Constants.SP_DATABASE_TYPE
 
@@ -104,7 +104,7 @@ class ImageResourceHelper() {
      * @param unitId 角色编号
      */
     fun getMaxCardUrl(unitId: Int): String {
-        if (MainActivity.r6Ids.contains(unitId)) {
+        if (r6Ids.contains(unitId)) {
             return getUrl(CARD_FULL, getStarId(unitId, 6))
         }
         return getUrl(CARD_FULL, getStarId(unitId, 3))

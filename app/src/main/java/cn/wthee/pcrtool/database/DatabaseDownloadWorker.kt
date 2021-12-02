@@ -8,8 +8,8 @@ import androidx.core.app.NotificationCompat
 import androidx.work.*
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.network.DatabaseService
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.DOWNLOAD_ERROR
 import kotlinx.coroutines.*
@@ -73,7 +73,7 @@ class DatabaseDownloadWorker(
                     //下载进度
                     override fun onProgress(progress: Int, currSize: Long, totalSize: Long) {
                         //更新下载进度
-                        MainActivity.navViewModel.downloadProgress.postValue(progress)
+                        navViewModel.downloadProgress.postValue(progress)
                         //更新下载进度
                         notification.setProgress(100, progress, false)
                             .setContentTitle(
@@ -84,7 +84,7 @@ class DatabaseDownloadWorker(
 
                     override fun onFinish() {
                         //下载完成
-                        MainActivity.navViewModel.downloadProgress.postValue(100)
+                        navViewModel.downloadProgress.postValue(100)
                         notificationManager.cancelAll()
                     }
                 })
