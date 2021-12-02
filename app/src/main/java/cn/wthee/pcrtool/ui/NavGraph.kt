@@ -74,7 +74,7 @@ object Navigation {
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_NEWS_KEY = "toolNewsKey"
     const val SUMMON_DETAIL = "summonDetail"
-    const val IS_ENEMY_SUMMON = "isEnemy"
+    const val UNIT_TYPE = "unitType"
 }
 
 
@@ -514,13 +514,13 @@ fun NavGraph(
 
         //召唤物信息
         composable(
-            route = "${Navigation.SUMMON_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.IS_ENEMY_SUMMON}}",
+            route = "${Navigation.SUMMON_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.UNIT_TYPE}}",
             arguments = listOf(
                 navArgument(Navigation.UNIT_ID) {
                     type = NavType.IntType
                 },
-                navArgument(Navigation.IS_ENEMY_SUMMON) {
-                    type = NavType.BoolType
+                navArgument(Navigation.UNIT_TYPE) {
+                    type = NavType.IntType
                 }
             ),
             enterTransition = { null },
@@ -532,7 +532,7 @@ fun NavGraph(
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             SummonDetail(
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                isEnemy = arguments.getBoolean(Navigation.IS_ENEMY_SUMMON),
+                unitType = arguments.getInt(Navigation.UNIT_TYPE),
             )
         }
     }
@@ -731,8 +731,8 @@ class NavActions(navController: NavHostController) {
     /**
      * 召唤物信息
      */
-    val toSummonDetail: (Int, Boolean) -> Unit = { unitId, isEnemy ->
-        navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${isEnemy}")
+    val toSummonDetail: (Int, Int) -> Unit = { unitId, unitType ->
+        navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${unitType}")
     }
 }
 

@@ -25,6 +25,7 @@ import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_SKILL
@@ -38,6 +39,7 @@ import cn.wthee.pcrtool.viewmodel.SkillViewModel
  * @param cutinId 角色特殊编号
  * @param level 等级
  * @param atk 攻击力
+ * @param unitType 0：角色、1：角色召唤五、2：敌人、3：敌人召唤物
  */
 @Composable
 fun SkillCompose(
@@ -45,8 +47,8 @@ fun SkillCompose(
     cutinId: Int,
     level: Int,
     atk: Int,
-    isEnemy: Boolean,
-    toSummonDetail: ((Int, Boolean) -> Unit)? = null,
+    unitType: Int,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getCharacterSkills(level, atk, unitId, cutinId)
@@ -61,7 +63,7 @@ fun SkillCompose(
             SkillItem(
                 level = level,
                 skillDetail = it,
-                isEnemy = isEnemy,
+                unitType = unitType,
                 toSummonDetail = toSummonDetail
             )
         }
@@ -76,8 +78,8 @@ fun SkillCompose(
 fun SkillItem(
     level: Int,
     skillDetail: SkillDetail,
-    isEnemy: Boolean,
-    toSummonDetail: ((Int, Boolean) -> Unit)? = null
+    unitType: Int,
+    toSummonDetail: ((Int, Int) -> Unit)? = null
 ) {
     //是否显示参数判断
     val actionData = skillDetail.getActionInfo()
@@ -119,9 +121,9 @@ fun SkillItem(
             .padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
     ) {
         //技能名
-        val type = getSkillType(skillDetail.skillId)
+        val type = getSkillType(skillDetail.skillId, unitType)
         val color = getSkillColor(type)
-        val name = if (isEnemy) type else skillDetail.name
+        val name = if (unitType > 1) type else skillDetail.name
         MainText(
             text = name,
             color = color,
@@ -131,17 +133,15 @@ fun SkillItem(
             selectable = true
         )
         //技能类型
-        if (!isEnemy) {
-            CaptionText(
-                text = type + if (skillDetail.isCutin) "(六星)" else "",
-                color = color,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = Dimen.smallPadding)
-            )
-        }
+        CaptionText(
+            text = type + if (skillDetail.isCutin) "(六星)" else "",
+            color = color,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = Dimen.smallPadding)
+        )
         //冷却时间
-        if (isEnemy && skillDetail.bossUbCooltime > 0.0) {
+        if (unitType > 1 && skillDetail.bossUbCooltime > 0.0) {
             CaptionText(
                 text = skillDetail.bossUbCooltime.toString(),
                 modifier = Modifier
@@ -165,7 +165,7 @@ fun SkillItem(
             }
             Column(modifier = Modifier.padding(start = Dimen.mediumPadding)) {
                 //等级
-                if (isEnemy) {
+                if (unitType > 1) {
                     Text(
                         text = stringResource(id = R.string.skill_level, level),
                         color = MaterialTheme.colorScheme.primary,
@@ -192,7 +192,7 @@ fun SkillItem(
             }
             SkillActionItem(
                 skillAction = it,
-                isEnemy = isEnemy,
+                unitType = unitType,
                 toSummonDetail = toSummonDetail
             )
         }
@@ -217,8 +217,8 @@ fun SkillActionTag(skillTag: String) {
 @Composable
 fun SkillActionItem(
     skillAction: SkillActionText,
-    isEnemy: Boolean,
-    toSummonDetail: ((Int, Boolean) -> Unit)? = null,
+    unitType: Int,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
 ) {
     //详细描述
     val mark0 = arrayListOf<SkillIndex>()
@@ -306,7 +306,7 @@ fun SkillActionItem(
                 color = MaterialTheme.colorScheme.primary,
                 textStyle = MaterialTheme.typography.bodySmall
             ) {
-                toSummonDetail(skillAction.summonUnitId, isEnemy)
+                toSummonDetail(skillAction.summonUnitId, unitType)
             }
         }
     }
@@ -320,7 +320,7 @@ fun SkillLoopList(
     loopData: List<AttackPattern>,
     iconTypes: HashMap<Int, Int>,
     modifier: Modifier = Modifier,
-    isEnemy: Boolean = false
+    unitType: Int
 ) {
     val loops = arrayListOf<SkillLoop>()
     loopData.forEach { ap ->
@@ -332,14 +332,14 @@ fun SkillLoopList(
         }
     }
     Column(
-        modifier = if (!isEnemy) modifier.verticalScroll(rememberScrollState()) else modifier
+        modifier = if (unitType == 0) modifier.verticalScroll(rememberScrollState()) else modifier
     ) {
         if (loops.isNotEmpty()) {
             loops.forEach {
                 SkillLoopItem(loop = it, iconTypes)
             }
         }
-        if (!isEnemy) {
+        if (unitType == 0) {
             CommonSpacer()
         }
     }
@@ -371,12 +371,13 @@ private fun SkillLoopIconList(
         iconList.forEach {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(
                         start = Dimen.mediumPadding,
                         end = Dimen.mediumPadding,
                         bottom = Dimen.mediumPadding
-                    ), horizontalAlignment = Alignment.CenterHorizontally
+                    )
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val type: String
                 val url: String
@@ -430,22 +431,41 @@ private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
 /**
  * 获取技能
  */
-private fun getSkillType(skillId: Int) = when (skillId % 1000) {
-    501 -> "EX技能"
-    511 -> "EX技能+"
-    100 -> "SP连结爆发"
-    101 -> "SP技能 1"
-    102 -> "SP技能 2"
-    103 -> "SP技能 3"
-    1, 21 -> "连结爆发"
-    11 -> "连结爆发+"
-    else -> {
-        val skillIndex = skillId % 10 - 1
-        if (skillId % 1000 / 10 == 1) {
-            "技能 ${skillIndex}+"
-        } else {
+private fun getSkillType(skillId: Int, unitType: Int): String {
+    return when (unitType) {
+        0, 1 -> {
+            when (skillId % 1000) {
+                501 -> "EX技能"
+                511 -> "EX技能+"
+                100 -> "SP连结爆发"
+                101 -> "SP技能 1"
+                102 -> "SP技能 2"
+                103 -> "SP技能 3"
+                1, 21 -> "连结爆发"
+                11 -> "连结爆发+"
+                else -> {
+                    val skillIndex = skillId % 10 - 1
+                    if (skillId % 1000 / 10 == 1) {
+                        "技能 ${skillIndex}+"
+                    } else {
+                        "技能 $skillIndex"
+                    }
+                }
+            }
+        }
+        2 -> {
+            if (skillId % 10 == 1) {
+                "连结爆发"
+            } else {
+                val skillIndex = skillId % 10 - 1
+                "技能 $skillIndex"
+            }
+        }
+        3 -> {
+            val skillIndex = skillId % 10
             "技能 $skillIndex"
         }
+        else -> Constants.UNKNOWN
     }
 }
 

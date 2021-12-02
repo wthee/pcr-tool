@@ -26,14 +26,14 @@ import kotlin.math.max
 @Composable
 fun SummonDetail(
     unitId: Int,
-    isEnemy: Boolean
+    unitType: Int
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        if (isEnemy) {
+        if (unitType > 1) {
             EnemySummonDetail(unitId)
         } else {
             CharacterSummonDetail(unitId)
@@ -103,8 +103,12 @@ private fun CharacterSummonDetail(
                 SkillLoopList(
                     loopData,
                     iconTypes,
-                    isEnemy = true,
-                    modifier = Modifier.padding(Dimen.mediumPadding * 2)
+                    unitType = 1,
+                    modifier = Modifier.padding(
+                        top = Dimen.largePadding,
+                        start = Dimen.mediumPadding * 2,
+                        end = Dimen.mediumPadding * 2
+                    )
                 )
                 //技能信息
                 SkillCompose(
@@ -112,7 +116,7 @@ private fun CharacterSummonDetail(
                     cutinId = 0,
                     level = currValue?.level ?: 0,
                     atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
-                    isEnemy = false
+                    unitType = 1
                 )
                 CommonSpacer()
             }
@@ -159,7 +163,7 @@ private fun EnemySummonDetail(
             //属性
             val attr = enemyData.attr.enemy()
             AttrList(attrs = attr)
-            BossSkillList(0, arrayListOf(enemyData))
+            BossSkillList(0, arrayListOf(enemyData), 3)
             CommonSpacer()
         }
     }

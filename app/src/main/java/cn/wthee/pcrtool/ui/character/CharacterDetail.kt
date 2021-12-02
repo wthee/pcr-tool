@@ -138,7 +138,8 @@ fun CharacterDetail(
                     top = Dimen.largePadding,
                     start = Dimen.mediumPadding,
                     end = Dimen.mediumPadding,
-                )
+                ),
+                unitType = 0
             )
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
@@ -379,7 +380,7 @@ fun CharacterDetail(
                                 allData.sumAttr.atk.int,
                                 allData.sumAttr.magicStr.int
                             ),
-                            isEnemy = false,
+                            unitType = 0,
                             toSummonDetail = actions.toSummonDetail
                         )
                         CommonSpacer()
