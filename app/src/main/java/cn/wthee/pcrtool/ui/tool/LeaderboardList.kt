@@ -5,10 +5,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +24,7 @@ import cn.wthee.pcrtool.data.model.LeaderboardData
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.openWebView
 import cn.wthee.pcrtool.viewmodel.LeaderViewModel
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -40,18 +41,23 @@ fun LeaderboardList(
     scrollState: LazyListState,
     leaderViewModel: LeaderViewModel = hiltViewModel()
 ) {
-    val list = leaderViewModel.getLeader().collectAsState(initial = arrayListOf()).value
+    val leaderData = leaderViewModel.getLeader().collectAsState(initial = null).value
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val openDialog = remember {
+        mutableStateOf(false)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = Dimen.largePadding)
+                .fillMaxSize()
+        ) {
             Row(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.padding(
-                    top = Dimen.largePadding,
-                    start = Dimen.mediumPadding,
-                    end = Dimen.mediumPadding
+                    top = Dimen.largePadding
                 )
             ) {
                 Spacer(modifier = Modifier.width(Dimen.iconSize + Dimen.smallPadding))
@@ -72,7 +78,7 @@ fun LeaderboardList(
                     modifier = Modifier.weight(0.25f)
                 )
             }
-            if (list.isEmpty()) {
+            if (leaderData == null) {
                 //显示占位图
                 LazyColumn {
                     items(20) {
@@ -83,7 +89,7 @@ fun LeaderboardList(
                 LazyColumn(
                     state = scrollState
                 ) {
-                    items(list) {
+                    items(leaderData.leader) {
                         LeaderboardItem(it)
                     }
                     item {
@@ -107,6 +113,14 @@ fun LeaderboardList(
                 //打开网页
                 openWebView(context, url, tip)
             }
+
+            //更新说明
+            FabCompose(
+                iconType = MainIconType.UPDATE_INFO
+            ) {
+                openDialog.value = true
+            }
+
             //回到顶部
             FabCompose(
                 iconType = MainIconType.LEADER,
@@ -121,6 +135,33 @@ fun LeaderboardList(
             }
         }
     }
+
+    //更新说明弹窗
+    if (openDialog.value) {
+        AlertDialog(
+            title = {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    leaderData?.let {
+                        MainText(text = it.desc, selectable = true)
+                    }
+                }
+            },
+            modifier = Modifier.padding(start = Dimen.mediumPadding, end = Dimen.mediumPadding),
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            containerColor = MaterialTheme.colorScheme.background,
+            shape = Shape.medium,
+            confirmButton = {
+                //关闭
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    MainButton(text = stringResource(R.string.confirm)) {
+                        openDialog.value = false
+                    }
+                }
+            }
+        )
+    }
 }
 
 /**
@@ -134,7 +175,6 @@ private fun LeaderboardItem(info: LeaderboardData) {
     val title = stringResource(id = R.string.visit_detail)
     Column(
         modifier = Modifier.padding(
-            horizontal = Dimen.largePadding,
             vertical = Dimen.mediumPadding
         )
     ) {
@@ -152,7 +192,8 @@ private fun LeaderboardItem(info: LeaderboardData) {
                 if (!placeholder) {
                     openWebView(context, info.url, title)
                 }
-            }) {
+            }
+        ) {
             Row(
                 modifier = Modifier.padding(Dimen.smallPadding),
                 verticalAlignment = Alignment.CenterVertically

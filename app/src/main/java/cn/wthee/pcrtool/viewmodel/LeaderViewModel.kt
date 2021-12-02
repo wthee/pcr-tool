@@ -22,7 +22,7 @@ class LeaderViewModel @Inject constructor(
     fun getLeader() = flow {
         val data = apiRepository.getLeader().data
         data?.let {
-            emit(it.leader)
+            emit(it)
         }
     }
 

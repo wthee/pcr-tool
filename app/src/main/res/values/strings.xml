@@ -143,6 +143,7 @@
     <string name="hibiki">HiBiKi</string>
     <string name="other">其它</string>
     <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
 
     <!--  活动相关-->
     <string name="normal">普通关卡</string>
