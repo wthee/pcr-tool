@@ -19,10 +19,15 @@ import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.entity.UnitPromotion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
-import cn.wthee.pcrtool.ui.common.*
+import cn.wthee.pcrtool.ui.common.CommonSpacer
+import cn.wthee.pcrtool.ui.common.IconCompose
+import cn.wthee.pcrtool.ui.common.MainCard
+import cn.wthee.pcrtool.ui.common.RankText
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 /**
@@ -44,7 +49,8 @@ fun RankEquipList(
         mutableStateOf(navViewModel.selectRank.value ?: 2)
     }
     LazyVerticalGrid(
-        cells = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 3),
+        modifier = Modifier.fillMaxSize(),
+        cells = GridCells.Adaptive(Dimen.iconSize * 2 + Dimen.mediumPadding * 2 + Dimen.smallPadding * 3),
         contentPadding = PaddingValues(Dimen.mediumPadding)
     ) {
         items(allRankEquip) {
@@ -92,7 +98,7 @@ fun RankEquipListItem(
             //RANK
             RankText(
                 rank = unitPromotion.promotionLevel,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(Dimen.mediumPadding)
             )
             val allIds = unitPromotion.getAllOrderIds()
@@ -104,11 +110,17 @@ fun RankEquipListItem(
                             .padding(Dimen.smallPadding)
                             .fillMaxWidth()
                     ) {
-                        IconCompose(data = getEquipIconUrl(allIds[index])) {
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance()
+                                .getUrl(ICON_EQUIPMENT, allIds[index])
+                        ) {
                             toEquipDetail(allIds[index])
                         }
                         Spacer(modifier = Modifier.width(Dimen.smallPadding))
-                        IconCompose(data = getEquipIconUrl(allIds[index + 1])) {
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance()
+                                .getUrl(ICON_EQUIPMENT, allIds[index + 1])
+                        ) {
                             toEquipDetail(allIds[index + 1])
                         }
                     }

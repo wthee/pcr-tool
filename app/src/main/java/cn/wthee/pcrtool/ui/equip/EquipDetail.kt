@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.equip
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -24,6 +23,9 @@ import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 
 
@@ -32,7 +34,6 @@ import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
  *
  * @param equipId 装备编号
  */
-@ExperimentalFoundationApi
 @Composable
 fun EquipMainInfo(
     equipId: Int,
@@ -46,7 +47,6 @@ fun EquipMainInfo(
     EquipDetail(filter, equipId, equipMaxData, toEquipMaterial)
 }
 
-@ExperimentalFoundationApi
 @Composable
 private fun EquipDetail(
     filter: State<FilterEquipment?>,
@@ -71,7 +71,7 @@ private fun EquipDetail(
     ) {
 
         Column {
-            if (equipMaxData.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+            if (equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
                 MainText(
                     text = equipMaxData.equipmentName,
                     color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
@@ -83,7 +83,9 @@ private fun EquipDetail(
                         .fillMaxWidth()
                         .padding(Dimen.largePadding)
                 ) {
-                    IconCompose(data = getEquipIconUrl(equipId))
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, equipId)
+                    )
                     Subtitle2(
                         text = equipMaxData.getDesc(),
                         modifier = Modifier.padding(start = Dimen.mediumPadding),
@@ -94,7 +96,7 @@ private fun EquipDetail(
                 AttrList(attrs = equipMaxData.attr.allNotZero())
 
             }
-            SlideAnimation(visible = equipMaxData.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+            SlideAnimation(visible = equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
                 //合成素材
                 if (filter.value != null) {
                     EquipMaterialList(equipMaxData, filter.value!!, toEquipMaterial)
@@ -126,7 +128,6 @@ private fun EquipDetail(
  * @param equip 装备信息
  * @param filter 装备过滤
  */
-@ExperimentalFoundationApi
 @Composable
 private fun EquipMaterialList(
     equip: EquipmentMaxData,
@@ -152,7 +153,9 @@ private fun EquipMaterialList(
                             bottom = Dimen.largePadding
                         ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconCompose(data = getEquipIconUrl(material.id)) {
+                    IconCompose(
+                        data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, material.id)
+                    ) {
                         toEquipMaterial(material.id)
                     }
                     SelectText(
@@ -166,7 +169,6 @@ private fun EquipMaterialList(
 }
 
 @Preview
-@ExperimentalFoundationApi
 @Composable
 private fun EquipDetailPreview() {
     val filter = remember {

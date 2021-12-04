@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +51,7 @@ fun FabCompose(
         },
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
-        contentColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.background,
         modifier = mModifier,
     ) {
         Row(
@@ -62,8 +63,9 @@ fun FabCompose(
             }
         ) {
             IconCompose(
-                if (iconType is MainIconType) iconType.icon else iconType,
+                data = if (iconType is MainIconType) iconType.icon else iconType,
                 size = Dimen.fabIconSize,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
             Text(
                 text = text,
@@ -73,7 +75,8 @@ fun FabCompose(
                     Modifier.padding(start = Dimen.mediumPadding, end = Dimen.largePadding)
                 } else {
                     Modifier
-                }.animateContentSize(defaultTween())
+                }.animateContentSize(defaultTween()),
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

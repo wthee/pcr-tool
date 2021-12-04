@@ -28,6 +28,7 @@ import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_BANNER
 import cn.wthee.pcrtool.viewmodel.EventViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -102,6 +103,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         showDays = false
     }
 
+
     when {
         //支线
         event.eventId / 10000 == 2 -> {
@@ -128,6 +130,8 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val inProgress =
         today.second(sd) > 0 && ed.second(today) > 0 && event.eventId / 10000 != 2
     val comingSoon = today.second(sd) < 0 && (!preEvent)
+    val id = 10000 + event.storyId % 1000
+
 
     Column(
         modifier = Modifier.padding(
@@ -190,20 +194,43 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
         }
         MainCard {
             Column(modifier = Modifier.padding(bottom = Dimen.mediumPadding)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    //banner 图片
+                    Box(modifier = Modifier.weight(3f)) {
+                        ImageCompose(
+                            data = ImageResourceHelper.getInstance().getUrl(EVENT_BANNER, id),
+                            ratio = RATIO_BANNER,
+                            loadingId = R.drawable.load,
+                            errorId = R.drawable.error,
+                        )
+                    }
+                    //图标
+                    if (event.getUnitIdList().isNotEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight(),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            event.getUnitIdList().forEach {
+                                UnitIcon(
+                                    id = it,
+                                    toCharacterDetail = toCharacterDetail
+                                )
+                            }
+                        }
+                    }
+                }
                 //内容
                 MainContentText(
                     text = event.getEventTitle(),
-                    modifier = Modifier.padding(
-                        top = Dimen.mediumPadding,
-                        start = Dimen.mediumPadding,
-                        end = Dimen.mediumPadding
-                    ),
-                    textAlign = TextAlign.Start
-                )
-                //图标
-                IconListCompose(
-                    icons = event.getUnitIdList(),
-                    toCharacterDetail = toCharacterDetail
+                    modifier = Modifier.padding(Dimen.mediumPadding),
+                    textAlign = TextAlign.Start,
+                    selectable = true
                 )
                 //结束日期
                 CaptionText(

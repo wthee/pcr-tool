@@ -7,38 +7,31 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.compose.collectAsLazyPagingItems
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
-import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.character.*
 import cn.wthee.pcrtool.ui.equip.EquipList
 import cn.wthee.pcrtool.ui.equip.EquipMainInfo
 import cn.wthee.pcrtool.ui.equip.EquipMaterialDeatil
 import cn.wthee.pcrtool.ui.home.Overview
+import cn.wthee.pcrtool.ui.skill.SummonDetail
 import cn.wthee.pcrtool.ui.theme.fadeOut
 import cn.wthee.pcrtool.ui.theme.myFadeIn
 import cn.wthee.pcrtool.ui.tool.*
 import cn.wthee.pcrtool.ui.tool.pvp.PvpSearchCompose
-import cn.wthee.pcrtool.viewmodel.NewsViewModel
-import cn.wthee.pcrtool.viewmodel.TweetViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -74,65 +67,29 @@ object Navigation {
     const val MAX_RANK = "maxRank"
     const val LEVEL = "level"
     const val RARITY = "rarity"
+    const val RANK = "rank"
     const val UNIQUE_EQUIP_LEVEL = "uniqueEquipLevel"
     const val COMIC_ID = "comicId"
     const val TOOL_CLAN_BOSS_ID = "toolClanBattleID"
     const val TOOL_CLAN_BOSS_INDEX = "toolClanBattleIndex"
     const val TOOL_NEWS_KEY = "toolNewsKey"
-
+    const val SUMMON_DETAIL = "summonDetail"
+    const val UNIT_TYPE = "unitType"
 }
 
 
-@ExperimentalAnimationApi
-@ExperimentalComposeUiApi
 @ExperimentalPagingApi
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
-@ExperimentalMaterialApi
 @ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@ExperimentalAnimationApi
 @Composable
 fun NavGraph(
     navController: NavHostController,
     viewModel: NavViewModel,
     actions: NavActions,
-    newsViewModel: NewsViewModel = hiltViewModel(),
-    tweetViewModel: TweetViewModel = hiltViewModel(),
 ) {
-    //fixme 公告页面、推文分页数据在此处加载，跳转后不会返回顶部
-    val scrollState0 = rememberLazyListState()
-    val scrollState1 = rememberLazyListState()
-    val scrollState2 = rememberLazyListState()
-    //公告默认显示页
-    var initialPage = 0
-    if (getRegion() - 2 == 0) {
-        initialPage = getRegion() - 2
-    }
-    val pagerState =
-        rememberPagerState(initialPage = initialPage)
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    newsViewModel.getNews(2)
-    newsViewModel.getNews(3)
-    newsViewModel.getNews(4)
-    val flow0 = newsViewModel.newsPageList0
-    val flow1 = newsViewModel.newsPageList1
-    val flow2 = newsViewModel.newsPageList2
-    val news0 = remember(flow0, lifecycle) {
-        flow0?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-    val news1 = remember(flow1, lifecycle) {
-        flow1?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-    val news2 = remember(flow2, lifecycle) {
-        flow2?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-
-    //推文
-    val tweetScrollState = rememberLazyListState()
-    tweetViewModel.getTweet()
-    val flow = tweetViewModel.tweetPageList
-    val tweet = remember(flow, lifecycle) {
-        flow?.flowWithLifecycle(lifecycle = lifecycle)
-    }?.collectAsLazyPagingItems()
-
 
     AnimatedNavHost(navController, startDestination = Navigation.HOME) {
 
@@ -166,9 +123,9 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { null },
+            enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
-            popEnterTransition = { null },
+            popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
@@ -177,8 +134,7 @@ fun NavGraph(
             CharacterDetail(
                 scrollState,
                 unitId = arguments.getInt(Navigation.UNIT_ID),
-                actions,
-                viewModel
+                actions
             )
         }
 
@@ -413,7 +369,8 @@ fun NavGraph(
             val arguments = requireNotNull(it.arguments)
             ClanBossInfoPager(
                 arguments.getInt(Navigation.TOOL_CLAN_BOSS_ID),
-                arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX)
+                arguments.getInt(Navigation.TOOL_CLAN_BOSS_INDEX),
+                actions.toSummonDetail
             )
         }
 
@@ -464,14 +421,10 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val scrollState = rememberLazyListState()
+
             NewsList(
-                pagerState,
-                scrollState0,
-                scrollState1,
-                scrollState2,
-                news0,
-                news1,
-                news2,
+                scrollState,
                 actions.toNewsDetail
             )
         }
@@ -503,7 +456,9 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            TweetList(tweet, tweetScrollState, actions.toNewsDetail, actions.toComicListIndex)
+            val tweetScrollState = rememberLazyListState()
+
+            TweetList(tweetScrollState, actions.toNewsDetail, actions.toComicListIndex)
         }
 
         //漫画信息
@@ -542,7 +497,7 @@ fun NavGraph(
             popExitTransition = { fadeOut }
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
-            AllSkillList()
+            AllSkillList(actions.toSummonDetail)
         }
 
         //战力系数
@@ -555,6 +510,30 @@ fun NavGraph(
         ) {
             viewModel.fabMainIcon.postValue(MainIconType.BACK)
             CharacterStatusCoeCompose()
+        }
+
+        //召唤物信息
+        composable(
+            route = "${Navigation.SUMMON_DETAIL}/{${Navigation.UNIT_ID}}/{${Navigation.UNIT_TYPE}}",
+            arguments = listOf(
+                navArgument(Navigation.UNIT_ID) {
+                    type = NavType.IntType
+                },
+                navArgument(Navigation.UNIT_TYPE) {
+                    type = NavType.IntType
+                }
+            ),
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            SummonDetail(
+                unitId = arguments.getInt(Navigation.UNIT_ID),
+                unitType = arguments.getInt(Navigation.UNIT_TYPE),
+            )
         }
     }
 }
@@ -748,6 +727,13 @@ class NavActions(navController: NavHostController) {
     val toCoe = {
         navController.navigate(Navigation.ATTR_COE)
     }
+
+    /**
+     * 召唤物信息
+     */
+    val toSummonDetail: (Int, Int) -> Unit = { unitId, unitType ->
+        navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${unitType}")
+    }
 }
 
 /**
@@ -775,7 +761,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
      * 选择的 RANK
      */
     val selectRank = MutableLiveData(0)
-
 
     /**
      * 下载状态
@@ -858,9 +843,14 @@ class NavViewModel @Inject constructor() : ViewModel() {
      */
     val showResult = MutableLiveData(false)
 
-
     /**
      * 数据切换弹窗显示
      */
     val openChangeDataDialog = MutableLiveData(false)
+
+    /**
+     * 当前选择属性
+     */
+    val currentValue = MutableLiveData<CharacterProperty>()
+
 }

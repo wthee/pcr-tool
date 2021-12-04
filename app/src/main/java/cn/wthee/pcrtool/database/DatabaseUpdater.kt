@@ -11,8 +11,8 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.model.DatabaseVersion
 import cn.wthee.pcrtool.data.network.MyAPIService
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.handler
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.Constants.API_URL
@@ -47,7 +47,7 @@ object DatabaseUpdater {
     suspend fun checkDBVersion(from: Int = -1) {
         //获取数据库最新版本
         try {
-            MainActivity.navViewModel.downloadProgress.postValue(-1)
+            navViewModel.downloadProgress.postValue(-1)
         } catch (e: Exception) {
         }
         try {
@@ -64,7 +64,7 @@ object DatabaseUpdater {
             if (e !is CancellationException) {
                 ToastUtil.short(ResourcesUtil.getString(R.string.check_db_error))
             }
-            MainActivity.navViewModel.downloadProgress.postValue(-2)
+            navViewModel.downloadProgress.postValue(-2)
         }
     }
 
@@ -155,7 +155,7 @@ object DatabaseUpdater {
                 updateLocalDataBaseVersion(versionData.toString())
             } catch (e: Exception) {
             }
-            MainActivity.navViewModel.downloadProgress.postValue(-2)
+            navViewModel.downloadProgress.postValue(-2)
         }
     }
 

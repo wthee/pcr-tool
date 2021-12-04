@@ -2,14 +2,13 @@ package cn.wthee.pcrtool.ui.tool.pvp
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -20,19 +19,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
@@ -167,13 +164,23 @@ fun PvpSearchCompose(
                         .align(Alignment.CenterHorizontally)
                 ) {
                     tabs.forEachIndexed { index, s ->
-                        Tab(selected = pagerState.currentPage == index, onClick = {
-                            scope.launch {
-                                VibrateUtil(context).single()
-                                pagerState.scrollToPage(index)
-                            }
-                        }) {
-                            Subtitle1(text = s, modifier = Modifier.padding(Dimen.smallPadding))
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                scope.launch {
+                                    VibrateUtil(context).single()
+                                    pagerState.scrollToPage(index)
+                                }
+                            }) {
+                            Subtitle1(
+                                text = s,
+                                modifier = Modifier.padding(Dimen.smallPadding),
+                                color = if (pagerState.currentPage == index) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    Color.Unspecified
+                                }
+                            )
                         }
                     }
                 }
@@ -233,7 +240,11 @@ fun PvpSearchCompose(
                         navViewModel.floatServiceRun.postValue(true)
                         serviceIntent.putExtra("spanCount", spanCount)
                         context.stopService(serviceIntent)
-                        context.startService(serviceIntent)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            context.startForegroundService(serviceIntent)
+                        } else {
+                            context.startService(serviceIntent)
+                        }
                         context.startActivity(homeIntent)
                     } else {
                         val intent = Intent(
@@ -302,7 +313,6 @@ private fun PvpCharacterSelectPage(
     data: List<PvpCharacterData>
 ) {
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     //选择页面
     val character0 = arrayListOf(PvpCharacterData(type = 0))
     character0.addAll(data.filter {
@@ -360,19 +370,15 @@ private fun PvpCharacterSelectPage(
                 R.drawable.ic_position_0,
             )
             icons.forEachIndexed { index, it ->
-                Image(
-                    painter = painterResource(id = it),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(Dimen.smallPadding)
-                        .clip(CircleShape)
-                        .size(Dimen.fabIconSize)
-                        .clickable {
-                            VibrateUtil(context).single()
-                            scope.launch {
-                                selectListState.scrollToItem(positions[index])
-                            }
-                        })
+                IconCompose(
+                    data = it,
+                    size = Dimen.fabIconSize,
+                    modifier = Modifier.padding(Dimen.smallPadding)
+                ) {
+                    scope.launch {
+                        selectListState.scrollToItem(positions[index])
+                    }
+                }
             }
         }
     }
@@ -459,9 +465,9 @@ fun PvpIconItem(
         val icon = if (it.unitId == 0) {
             R.drawable.unknown_gray
         } else {
-            CharacterIdUtil.getMaxIconUrl(
+            ImageResourceHelper.getInstance().getMaxIconUrl(
                 it.unitId,
-                MainActivity.r6Ids.contains(it.unitId)
+                r6Ids.contains(it.unitId)
             )
         }
 

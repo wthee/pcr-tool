@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.SkillRepository
@@ -13,7 +12,7 @@ import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.data.model.getRankCompareList
 import cn.wthee.pcrtool.utils.Constants
-import cn.wthee.pcrtool.utils.Constants.UNKNOWN_EQUIP_ID
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.UMengLogUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -34,7 +33,6 @@ class CharacterAttrViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-    val currentValue = MutableLiveData<CharacterProperty>()
 
     /**
      * 根据角色 id  星级 等级 专武等级
@@ -162,6 +160,9 @@ class CharacterAttrViewModel @Inject constructor(
         return storyAttr
     }
 
+    /**
+     * 获取被动技能数据
+     */
     private suspend fun getExSkillAttr(unitId: Int, rarity: Int, level: Int): SkillActionPro {
         //100101
         val skillActionId = if (rarity >= 5) {
@@ -169,7 +170,12 @@ class CharacterAttrViewModel @Inject constructor(
         } else {
             unitId / 100 * 1000 + 501
         } * 100 + 1
-        return skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))[0]
+        val list = skillRepository.getSkillActions(level, 0, arrayListOf(skillActionId))
+        if (list.isNotEmpty()) {
+            return list[0]
+        } else {
+            return SkillActionPro()
+        }
     }
 
     /**

@@ -28,7 +28,7 @@ import androidx.paging.ExperimentalPagingApi
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.data.model.ComicData
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
@@ -61,12 +61,12 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
         ModalBottomSheetValue.Hidden
     )
     if (!state.isVisible && !state.isAnimationRunning) {
-        MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        MainActivity.navViewModel.fabOKCilck.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabOKCilck.postValue(false)
     }
 
     //关闭监听
-    val ok = MainActivity.navViewModel.fabOKCilck.observeAsState().value ?: false
+    val ok = navViewModel.fabOKCilck.observeAsState().value ?: false
 
     Box(modifier = Modifier.fillMaxSize()) {
         FadeAnimation(visible = visible) {
@@ -92,7 +92,7 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
                     coroutineScope.launch {
                         state.hide()
                     }
-                    MainActivity.navViewModel.fabOKCilck.postValue(false)
+                    navViewModel.fabOKCilck.postValue(false)
                 }
 
                 if (state.isAnimationRunning) {
@@ -121,10 +121,10 @@ fun ComicList(comicId: Int = -1, comicViewModel: ComicViewModel = hiltViewModel(
                     ) {
                         coroutineScope.launch {
                             if (state.isVisible) {
-                                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+                                navViewModel.fabMainIcon.postValue(MainIconType.BACK)
                                 state.hide()
                             } else {
-                                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.OK)
+                                navViewModel.fabMainIcon.postValue(MainIconType.OK)
                                 selectIndex.value = pagerState.currentPage
                                 scrollState.scrollToItem(selectIndex.value)
                                 state.show()
@@ -175,12 +175,14 @@ private fun ComicItem(data: ComicData) {
         }
 
         if (placeholder) {
-            MainActivity.navViewModel.loading.postValue(true)
+            navViewModel.loading.postValue(true)
         } else {
-            MainActivity.navViewModel.loading.postValue(false)
+            navViewModel.loading.postValue(false)
             ImageCompose(
                 data = data.url,
                 ratio = RATIO_COMIC,
+                loadingId = R.drawable.load,
+                errorId = R.drawable.error,
                 modifier = Modifier.fillMaxWidth()
             )
         }

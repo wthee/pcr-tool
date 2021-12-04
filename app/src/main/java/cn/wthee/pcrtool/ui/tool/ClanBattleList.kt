@@ -10,8 +10,10 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
@@ -32,7 +34,7 @@ import cn.wthee.pcrtool.data.db.view.ClanBattleInfo
 import cn.wthee.pcrtool.data.db.view.ClanBossTargetInfo
 import cn.wthee.pcrtool.data.db.view.EnemyParameterPro
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillItem
@@ -41,7 +43,8 @@ import cn.wthee.pcrtool.ui.theme.CardTopShape
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.defaultSpring
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_UNIT
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getZhNumberText
 import cn.wthee.pcrtool.viewmodel.ClanViewModel
@@ -179,7 +182,9 @@ private fun ClanBattleItem(
                         modifier = Modifier.padding(Dimen.mediumPadding),
                         contentAlignment = Alignment.Center
                     ) {
-                        IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP) {
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance().getUrl(ICON_UNIT, it.unitId)
+                        ) {
                             if (!placeholder) {
                                 toClanBossInfo(clanInfo.clan_battle_id, index)
                             }
@@ -208,6 +213,7 @@ private fun ClanBattleItem(
 fun ClanBossInfoPager(
     clanId: Int,
     index: Int,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     clanViewModel: ClanViewModel = hiltViewModel()
 ) {
     val clanInfo =
@@ -216,17 +222,17 @@ fun ClanBossInfoPager(
         rememberPagerState(initialPage = index)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val openDialog = MainActivity.navViewModel.openChangeDataDialog.observeAsState().value ?: false
-    val close = MainActivity.navViewModel.fabCloseClick.observeAsState().value ?: false
-    val mainIcon = MainActivity.navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
+    val openDialog = navViewModel.openChangeDataDialog.observeAsState().value ?: false
+    val close = navViewModel.fabCloseClick.observeAsState().value ?: false
+    val mainIcon = navViewModel.fabMainIcon.observeAsState().value ?: MainIconType.BACK
     //切换关闭监听
     if (close) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
-        MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.BACK)
-        MainActivity.navViewModel.fabCloseClick.postValue(false)
+        navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.fabMainIcon.postValue(MainIconType.BACK)
+        navViewModel.fabCloseClick.postValue(false)
     }
     if (mainIcon == MainIconType.BACK) {
-        MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+        navViewModel.openChangeDataDialog.postValue(false)
     }
     //页面
     Box(modifier = Modifier.fillMaxSize()) {
@@ -286,7 +292,10 @@ fun ClanBossInfoPager(
                             icon = {
                                 val it = list[tabIndex]
                                 Box {
-                                    IconCompose(data = Constants.UNIT_ICON_URL + it.unitId + Constants.WEBP)
+                                    IconCompose(
+                                        data = ImageResourceHelper.getInstance()
+                                            .getUrl(ICON_UNIT, it.unitId)
+                                    )
                                     //多目标提示
                                     if (it.partEnemyIds.isNotEmpty()) {
                                         MainTitleText(
@@ -313,7 +322,13 @@ fun ClanBossInfoPager(
                     state = pagerState,
                 ) { pagerIndex ->
                     if (visible) {
-                        ClanBossInfoPagerItem(bossDataList, pagerIndex, list, partEnemyMap)
+                        ClanBossInfoPagerItem(
+                            bossDataList,
+                            pagerIndex,
+                            list,
+                            partEnemyMap,
+                            toSummonDetail
+                        )
                     }
                 }
             }
@@ -333,7 +348,7 @@ fun ClanBossInfoPager(
 }
 
 
-//阶段&Boss选择弹窗
+//阶段Boss选择弹窗
 @Composable
 private fun SelectSectionCompose(
     section: MutableState<Int>,
@@ -360,17 +375,18 @@ private fun SelectSectionCompose(
                 top = Dimen.fabMargin,
                 bottom = Dimen.fabMargin,
             ),
+        containerColor = MaterialTheme.colorScheme.background,
+        elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Dimen.fabElevation),
         shape = if (openDialog) androidx.compose.material.MaterialTheme.shapes.medium else CircleShape,
         onClick = {
             VibrateUtil(context).single()
             if (!openDialog) {
-                MainActivity.navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
-                MainActivity.navViewModel.openChangeDataDialog.postValue(true)
+                navViewModel.fabMainIcon.postValue(MainIconType.CLOSE)
+                navViewModel.openChangeDataDialog.postValue(true)
             } else {
-                MainActivity.navViewModel.fabCloseClick.postValue(true)
+                navViewModel.fabCloseClick.postValue(true)
             }
         },
-        contentColor = MaterialTheme.colorScheme.primary,
     ) {
         if (openDialog) {
             Column(
@@ -386,7 +402,8 @@ private fun SelectSectionCompose(
                             .fillMaxWidth()
                             .clickable {
                                 VibrateUtil(context).single()
-                                MainActivity.navViewModel.openChangeDataDialog.postValue(false)
+                                navViewModel.openChangeDataDialog.postValue(false)
+                                navViewModel.fabCloseClick.postValue(true)
                                 if (section.value != index) {
                                     coroutineScope.launch {
                                         section.value = index
@@ -397,7 +414,7 @@ private fun SelectSectionCompose(
                     SelectText(
                         selected = section.value == index,
                         text = tab,
-                        textStyle = MaterialTheme.typography.titleMedium,
+                        textStyle = MaterialTheme.typography.titleLarge,
                         selectedColor = sectionColor,
                         modifier = mModifier.padding(Dimen.mediumPadding)
                     )
@@ -438,7 +455,8 @@ private fun ClanBossInfoPagerItem(
     bossDataList: List<EnemyParameterPro>,
     pagerIndex: Int,
     list: List<ClanBossTargetInfo>,
-    partEnemyMap: HashMap<Int, List<EnemyParameterPro>>
+    partEnemyMap: HashMap<Int, List<EnemyParameterPro>>,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
 ) {
     val bossDataValue = bossDataList[pagerIndex]
     val expanded = remember {
@@ -460,18 +478,20 @@ private fun ClanBossInfoPagerItem(
         ) {
             //描述
             val desc = bossDataValue.getDesc()
-            Text(
-                text = desc,
-                maxLines = if (expanded.value) Int.MAX_VALUE else 2,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier
-                    .animateContentSize()
-                    .padding(Dimen.mediumPadding)
-                    .clickable {
-                        expanded.value = !expanded.value
-                    }
-            )
+            SelectionContainer {
+                Text(
+                    text = desc,
+                    maxLines = if (expanded.value) Int.MAX_VALUE else 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .animateContentSize()
+                        .padding(Dimen.mediumPadding)
+                        .clickable {
+                            expanded.value = !expanded.value
+                        }
+                )
+            }
             //名称
             MainText(
                 text = bossDataValue.name,
@@ -507,7 +527,7 @@ private fun ClanBossInfoPagerItem(
             }
             DivCompose(Modifier.align(Alignment.CenterHorizontally))
             //技能
-            BossSkillList(pagerIndex, bossDataList)
+            BossSkillList(pagerIndex, bossDataList, 2, toSummonDetail)
             CommonSpacer()
         }
     }
@@ -516,9 +536,11 @@ private fun ClanBossInfoPagerItem(
 
 
 @Composable
-private fun BossSkillList(
+fun BossSkillList(
     index: Int,
     bossList: List<EnemyParameterPro>,
+    unitType: Int,
+    toSummonDetail: ((Int, Int) -> Unit)? = null,
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
     skillViewModel.getAllEnemySkill(bossList)
@@ -538,11 +560,17 @@ private fun BossSkillList(
                 SkillLoopList(
                     allLoopData.value!![index],
                     allIcon.value!![index],
-                    isClanBoss = true
+                    unitType = unitType
                 )
             }
-            list[index].forEach {
-                SkillItem(level = it.level, skillDetail = it, isClanBoss = true)
+            Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
+            list[index].forEachIndexed { index, skillDetail ->
+                SkillItem(
+                    skillIndex = index,
+                    skillDetail = skillDetail,
+                    unitType = unitType,
+                    toSummonDetail = toSummonDetail
+                )
             }
         }
     }

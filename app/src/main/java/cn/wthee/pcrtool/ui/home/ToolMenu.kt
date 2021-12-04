@@ -14,11 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.CaptionText
 import cn.wthee.pcrtool.ui.common.IconCompose
@@ -45,7 +46,7 @@ data class ToolMenuData(
 fun ToolMenu(actions: NavActions) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val downloadState = MainActivity.navViewModel.downloadProgress.observeAsState().value ?: -1
+    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
 
     val list = arrayListOf(
         ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
@@ -119,7 +120,8 @@ private fun MenuItem(
         IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)
         CaptionText(
             text = stringResource(id = it.titleId),
-            modifier = Modifier.padding(top = Dimen.mediumPadding)
+            modifier = Modifier.padding(top = Dimen.mediumPadding),
+            textAlign = TextAlign.Start
         )
     }
 }
@@ -144,7 +146,7 @@ private fun getAction(
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
             MainIconType.CHANGE_DATA -> {
-                MainActivity.navViewModel.openChangeDataDialog.postValue(true)
+                navViewModel.openChangeDataDialog.postValue(true)
             }
             MainIconType.COMIC -> actions.toComicList()
             MainIconType.DB_DOWNLOAD -> {

@@ -3,6 +3,7 @@ package cn.wthee.pcrtool.ui.character
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -19,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cn.wthee.pcrtool.R
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
@@ -29,15 +30,15 @@ import kotlinx.coroutines.launch
 
 
 /**
- * 角色卡面图片
- * fixme 优化图片下载方法
+ * 角色所有卡面图片
  */
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
 fun CharacterAllPics(unitId: Int) {
     val context = LocalContext.current
-    val picUrls = CharacterIdUtil.getAllPicUrl(unitId, MainActivity.r6Ids.contains(unitId))
+    val picUrls =
+        ImageResourceHelper.getInstance().getAllPicUrl(unitId, r6Ids.contains(unitId))
     val loaded = arrayListOf<Boolean>()
     val drawables = arrayListOf<Drawable?>()
     picUrls.forEach { _ ->
@@ -51,7 +52,11 @@ fun CharacterAllPics(unitId: Int) {
         mutableStateOf(-1)
     }
 
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
         VerticalGrid(spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px) {
             picUrls.forEachIndexed { index, _ ->
                 val request = coil.request.ImageRequest.Builder(context)
@@ -83,6 +88,8 @@ fun CharacterAllPics(unitId: Int) {
                     ImageCompose(
                         data = picUrls[index],
                         ratio = RATIO,
+                        loadingId = R.drawable.load,
+                        errorId = R.drawable.error,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         loaded[index] = true
@@ -103,7 +110,7 @@ fun CharacterAllPics(unitId: Int) {
             onDismissRequest = {
                 clickedIndex.value = -1
             },
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.background,
             shape = Shape.medium,
             confirmButton = {
                 //确认下载
@@ -114,7 +121,6 @@ fun CharacterAllPics(unitId: Int) {
                             displayName = "${unitId}_${index}.jpg"
                         )
                         clickedIndex.value = -1
-                        VibrateUtil(context).done()
                     }
                 }
             },

@@ -31,6 +31,8 @@ import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -277,7 +279,10 @@ private fun AreaEquipList(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         val selected = selectedId == oddData.eid
-                        IconCompose(data = getEquipIconUrl(oddData.eid))
+                        IconCompose(
+                            data = ImageResourceHelper.getInstance()
+                                .getUrl(ICON_EQUIPMENT, oddData.eid)
+                        )
                         SelectText(
                             selected = selected,
                             text = "${oddData.odd}%"

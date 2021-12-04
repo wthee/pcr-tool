@@ -296,4 +296,8 @@ enum class MainIconType(val icon: ImageVector) {
      */
     EXPORT(Icons.Rounded.Upload),
 
+    /**
+     * 导出
+     */
+    UPDATE_INFO(Icons.Rounded.Info),
 }

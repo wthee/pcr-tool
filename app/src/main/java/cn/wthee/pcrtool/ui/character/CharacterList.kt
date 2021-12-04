@@ -40,9 +40,9 @@ import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.CharacterIdUtil
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -194,8 +194,10 @@ fun CharacterItem(
             //图片
             Box(contentAlignment = Alignment.BottomEnd) {
                 ImageCompose(
-                    CharacterIdUtil.getMaxCardUrl(character.id),
-                    RATIO,
+                    data = ImageResourceHelper.getInstance().getMaxCardUrl(character.id),
+                    ratio = RATIO,
+                    loadingId = R.drawable.load,
+                    errorId = R.drawable.error,
                     modifier = Modifier.fillMaxWidth()
                 )
                 //位置

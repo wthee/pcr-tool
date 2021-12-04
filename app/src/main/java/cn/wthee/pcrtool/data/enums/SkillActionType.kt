@@ -27,12 +27,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANGE_ENEMY_POSITION(3, ""),
 
     /**
-     * 4：回复HP
+     * 4：回复 HP
      */
     HEAL(4, "治疗"),
 
     /**
-     * 5：回复HP
+     * 5：回复 HP
      */
     CURE(5, "治疗"),
 
@@ -47,7 +47,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHOOSE_ENEMY(7, ""),
 
     /**
-     * 8：行动速度变更：行动速度提升/降低；无法行动
+     * 8：行动速度变更
      */
     CHANGE_ACTION_SPEED(8, ""),
 
@@ -67,7 +67,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHARM(11, ""),
 
     /**
-     * 12：黑暗，失明
+     * 12：黑暗
      */
     BLIND(12, "黑暗"),
 
@@ -87,7 +87,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     SUMMON(15, "召唤"),
 
     /**
-     * 16：TP相关
+     * 16：TP 相关
      */
     CHANGE_TP(16, "TP"),
 
@@ -112,7 +112,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     TAUNT(20, "挑衅"),
 
     /**
-     * 21：无敌
+     * 21：回避
      */
     INVINCIBLE(21, "回避"),
 
@@ -137,25 +137,24 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CONTINUOUS_ATTACK(25, ""),
 
     /**
-     * 26：增伤
+     * 26：系数提升
      */
-    ADDITIVE(26, "增伤"),
+    ADDITIVE(26, ""),
 
     /**
      * 27：倍率
      */
-    MULTIPLE(27, "倍率"),
+    MULTIPLE(27, ""),
 
     /**
      * 28：特殊条件
-     *
      */
     IF_SP_STATUS(28, ""),
 
     /**
-     * 29：变更攻击区域？
+     * 29：无法使用 UB
      */
-    CHANGE_SEARCH_AREA(29, ""),
+    NO_UB(29, ""),
 
     /**
      * 30：立即死亡
@@ -168,12 +167,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CONTINUOUS_ATTACK_NEARBY(31, ""),
 
     /**
-     * 32：吸血效果
+     * 32：HP吸收
      */
     LIFE_STEAL(32, "HP吸收"),
 
     /**
-     * 33：消失时造成伤害
+     * 33：反伤
      */
     STRIKE_BACK(33, "反伤"),
 
@@ -188,22 +187,22 @@ enum class SkillActionType(val type: Int, val desc: String) {
     SEAL(35, "刻印"),
 
     /**
-     * 36：范围攻击
+     * 36：攻击领域展开
      */
     ATTACK_FIELD(36, "领域"),
 
     /**
-     * 37：范围治疗
+     * 37：治疗领域展开
      */
     HEAL_FIELD(37, "领域"),
 
     /**
-     * 38：范围减益
+     * 38：buff/debuff领域展开
      */
     AURA_FIELD(38, "领域"),
 
     /**
-     * 39：范围持续伤害
+     * 39：持续伤害领域展开
      */
     DOT_FIELD(39, "领域"),
 
@@ -218,9 +217,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     CHANGE_UB_TIME(41, ""),
 
     /**
-     * 42：循环触发：哈哈剑大笑时...等状态触发
+     * 42：触发
      */
-    LOOP_TRIGGER(42, "条件"),
+    LOOP_TRIGGER(42, "触发"),
 
     /**
      * 43：拥有标记时触发
@@ -240,7 +239,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 46：比例伤害
      */
-    RATE_DAMAGE(46, ""),
+    RATE_DAMAGE(46, "比例伤害"),
 
     /**
      * 47：上限伤害
@@ -258,7 +257,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     DISPEL(49, "移除"),
 
     /**
-     * 50：特殊状态：铃声响起时
+     * 50：持续动作
      */
     CHANNEL(50, "持续动作"),
 
@@ -278,9 +277,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     IF_HAS_FIELD(53, ""),
 
     /**
-     * 54：隐身
+     * 54：潜伏
      */
-    STEALTH(54, "隐身"),
+    STEALTH(54, "潜伏"),
 
     /**
      * 55：部位移动
@@ -288,9 +287,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     MOVE_PART(55, ""),
 
     /**
-     * 56：闪避
+     * 56：千里眼
      */
-    COUNT_BLIND(56, "闪避"),
+    COUNT_BLIND(56, "千里眼"),
 
     /**
      * 57：延迟攻击 如：万圣炸弹人的 UB
@@ -303,35 +302,39 @@ enum class SkillActionType(val type: Int, val desc: String) {
     STOP_FIELD(58, "解除领域"),
 
     /**
-     * 59：降低治疗效果
+     * 59：回复妨碍
      */
-    INHIBIT_HEAL_ACTION(59, "减疗"),
+    INHIBIT_HEAL_ACTION(59, "回复妨碍"),
 
     /**
-     * 60：攻击刻印 华哥
+     * 60：刻印赋予
      */
-    ATTACK_SEAL(60, "刻印"),
+    ATTACK_SEAL(60, "刻印赋予"),
 
     /**
-     * 61：恐惧
+     * 61：恐慌
      */
-    FEAR(61, "恐惧"),
+    FEAR(61, "恐慌"),
 
     /**
-     * 62：敬畏
+     * 62：畏惧
      */
-    AWE(62, "敬畏"),
-
-
-    /**
-     * 63: 循环
-     */
-    LOOP(63, ""),
+    AWE(62, "畏惧"),
 
     /**
-     * 蛤？
+     * 63: 循环动作
      */
-    TOAD(69, ""),
+    LOOP(63, "持续效果"),
+
+    /**
+     * 69：驯鹿化
+     */
+    REINDEER(69, "驯鹿化"),
+
+    /**
+     * 70：HP 变化
+     */
+    HP_CHANGE(70, "HP变化"),
 
     /**
      * 71：特殊状态：公主佩可 UB 后不死BUFF
@@ -339,31 +342,34 @@ enum class SkillActionType(val type: Int, val desc: String) {
     KNIGHT_GUARD(71, "骑士"),
 
     /**
-     * 伤害护盾
+     * 73：伤害护盾
      */
     LOG_GUARD(73, "伤害护盾"),
 
     /**
-     * 划分？
+     * 74：系数除以
      */
     DIVIDE(74, ""),
 
     /**
-     * 75：依据攻击次数增伤：水流夏
+     * 75：依据攻击次数增伤
      */
     HIT_COUNT(75, "次数增伤"),
 
-
     /**
-     * 76：减疗
+     * 76：HP 回复量减少
      */
-    HEAL_DOWN(76, "减疗"),
-
+    HEAL_DOWN(76, "HP回复量减少"),
 
     /**
-     * 77：特殊刻印：增益时叠加 圣诞哈哈剑
+     * 77：被动叠加刻印
      */
     IF_BUFF_SEAL(77, "被动刻印"),
+
+    /**
+     * 78：被击伤上升
+     */
+    DMG_TAKEN_UP(78, "被击伤上升"),
 
     /**
      * 79：行动时，造成伤害
@@ -371,7 +377,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     ACTION_DOT(79, "行动伤害"),
 
     /**
-     * 83：可叠加加/减速
+     * 81：无效目标
+     */
+    NO_TARGET(81, "无效目标"),
+
+    /**
+     * 83：可叠加行动速度变更
      */
     SUPERIMPOSE_CHANGE_ACTION_SPEED(83, ""),
 
@@ -386,9 +397,9 @@ enum class SkillActionType(val type: Int, val desc: String) {
     EX_PLUS(91, "被动"),
 
     /**
-     * 92：EX+被动
+     * 92：改变 TP 获取倍率
      */
-    CHANGE_TP_RATIO(92, ""),
+    CHANGE_TP_RATIO(92, "TP"),
 
     /**
      * 93：无视挑衅

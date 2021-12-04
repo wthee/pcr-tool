@@ -7,12 +7,16 @@ import cn.wthee.pcrtool.BuildConfig
  */
 object Constants {
 
-    //图片格式
-    const val WEBP = ".webp"
-    const val PNG = ".png"
+    //本地储存
+    const val SP_DATABASE_TYPE = "database_type"
+    const val SP_DATABASE_VERSION_CN = "database_version_cn"
+    const val SP_DATABASE_VERSION_TW = "database_version_tw"
+    const val SP_DATABASE_VERSION_JP = "database_version_jp"
+    const val SP_STAR_CHARACTER = "star_character"
+    const val SP_STAR_EQUIP = "star_equip"
+    const val SP_VIBRATE_STATE = "vibrate_state"
+    const val SP_ANIM_STATE = "animation_state"
 
-    //图片资源地址
-    private const val RESOURCE_URL = "https://wthee.xyz/resource/"
 
     //数据库资源地址
     const val DATABASE_URL = "https://wthee.xyz/db/"
@@ -67,35 +71,7 @@ object Constants {
     const val DATABASE_TWEET = "tweet.db"
     const val DATABASE_PVP = "pvp.db"
 
-    //角色卡片接口
-    const val CHARACTER_URL = RESOURCE_URL + "card/profile/"
-    const val CHARACTER_FULL_URL = RESOURCE_URL + "card/full/"
 
-    //现实角色卡片接口
-    const val Reality_CHARACTER_URL = RESOURCE_URL + "card/actual_profile/"
-
-    //装备图标接口
-    const val UNKNOWN_EQUIP_ID = 999999
-    const val EQUIPMENT_URL = RESOURCE_URL + "icon/equipment/"
-
-    //图标接口
-    const val UNIT_ICON_URL = RESOURCE_URL + "icon/unit/"
-
-    //技能图标接口
-    const val SKILL_ICON_URL = RESOURCE_URL + "icon/skill/"
-
-    //漫画地址
-    const val COMIC_URL = RESOURCE_URL + "comic/"
-
-    //本地储存
-    const val SP_DATABASE_TYPE = "database_type"
-    const val SP_DATABASE_VERSION_CN = "database_version_cn"
-    const val SP_DATABASE_VERSION_TW = "database_version_tw"
-    const val SP_DATABASE_VERSION_JP = "database_version_jp"
-    const val SP_STAR_CHARACTER = "star_character"
-    const val SP_STAR_EQUIP = "star_equip"
-    const val SP_VIBRATE_STATE = "vibrate_state"
-    const val SP_ANIM_STATE = "animation_state"
 
     const val DOWNLOAD_NOTICE_TITLE = "正在下载数据"
     const val PVPSEARCH_NOTICE_TITLE = "竞技场查询服务正在运行"
@@ -124,24 +100,6 @@ object Constants {
 
     const val UNKNOWN = "?"
 
-
-    //现实图片有误的角色编号
-    val errorIDs = arrayListOf(
-        101001,
-        101301,
-        101501,
-        102201,
-        102801,
-        103801,
-        104501,
-        104601,
-        105401,
-    )
-
-    //无现实图片角色
-    val notExistsIDs = arrayListOf(
-        109731, 109831, 109931, 109231, 109331, 109431
-    )
 
     // 异常
     private const val EXCEPTION = "异常"

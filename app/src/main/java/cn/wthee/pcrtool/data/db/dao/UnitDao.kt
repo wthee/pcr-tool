@@ -4,10 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import cn.wthee.pcrtool.data.db.entity.*
-import cn.wthee.pcrtool.data.db.view.CharacterInfo
-import cn.wthee.pcrtool.data.db.view.CharacterInfoPro
-import cn.wthee.pcrtool.data.db.view.CharacterStoryAttr
-import cn.wthee.pcrtool.data.db.view.PvpCharacterData
+import cn.wthee.pcrtool.data.db.view.*
 
 /**
  * 角色数据 DAO
@@ -129,7 +126,7 @@ interface UnitDao {
             unit_data.unit_id = :unitId
         """
     )
-    suspend fun getInfoAndData(unitId:Int): CharacterInfo
+    suspend fun getInfoAndData(unitId: Int): CharacterInfo
 
     /**
      * 获取角色详情基本资料
@@ -312,4 +309,10 @@ interface UnitDao {
      */
     @Query("SELECT cutin1_star6 FROM unit_data WHERE cutin_1 = :unitId AND cutin1_star6 <> :unitId")
     suspend fun getCutinId(unitId: Int): Int?
+
+    /**
+     * 获取召唤物基本信息
+     */
+    @Query("SELECT unit_id, unit_name, search_area_width, normal_atk_cast_time, atk_type  FROM unit_data WHERE unit_id = :unitId ")
+    suspend fun getSummonData(unitId: Int): SummonData
 }

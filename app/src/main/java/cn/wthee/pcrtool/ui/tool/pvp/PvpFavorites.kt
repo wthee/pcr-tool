@@ -21,10 +21,11 @@ import cn.wthee.pcrtool.data.db.entity.PvpFavoriteData
 import cn.wthee.pcrtool.data.db.view.PvpCharacterData
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.getRegion
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.utils.CharacterIdUtil
+import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.PvpViewModel
@@ -120,8 +121,8 @@ private fun PvpFavoriteItem(
                                 characterViewModel.getPvpCharacterByIds(itemData.getDefIds())
                             val selectedIds = selectedData as ArrayList<PvpCharacterData>?
                             selectedIds?.sortByDescending { it.position }
-                            MainActivity.navViewModel.selectedPvpData.postValue(selectedIds)
-                            MainActivity.navViewModel.showResult.postValue(true)
+                            navViewModel.selectedPvpData.postValue(selectedIds)
+                            navViewModel.showResult.postValue(true)
                         }
                         VibrateUtil(context).single()
                     }) {
@@ -137,7 +138,7 @@ private fun PvpFavoriteItem(
                 //取消收藏
                 IconCompose(
                     data = MainIconType.LOVE_FILL.icon,
-                    Dimen.fabIconSize
+                    size = Dimen.fabIconSize
                 ) {
                     //点击取消收藏
                     scope.launch {
@@ -153,9 +154,9 @@ private fun PvpFavoriteItem(
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
+                            data = ImageResourceHelper.getInstance().getMaxIconUrl(
                                 it,
-                                MainActivity.r6Ids.contains(it)
+                                r6Ids.contains(it)
                             ),
                             size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                         ) {
@@ -174,9 +175,9 @@ private fun PvpFavoriteItem(
                         contentAlignment = Alignment.Center
                     ) {
                         IconCompose(
-                            data = CharacterIdUtil.getMaxIconUrl(
+                            data = ImageResourceHelper.getInstance().getMaxIconUrl(
                                 it,
-                                MainActivity.r6Ids.contains(it)
+                                r6Ids.contains(it)
                             ),
                             size = if (floatWindow) Dimen.mediumIconSize else Dimen.iconSize
                         ) {

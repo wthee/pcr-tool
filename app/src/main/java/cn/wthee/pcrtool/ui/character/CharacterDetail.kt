@@ -1,11 +1,13 @@
 package cn.wthee.pcrtool.ui.character
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,21 +38,20 @@ import cn.wthee.pcrtool.data.model.AllAttrData
 import cn.wthee.pcrtool.data.model.CharacterProperty
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.NavViewModel
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.skill.SkillCompose
 import cn.wthee.pcrtool.ui.skill.SkillLoopList
 import cn.wthee.pcrtool.ui.theme.*
-import cn.wthee.pcrtool.utils.Constants
+import cn.wthee.pcrtool.utils.ImageResourceHelper
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
+import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.UNKNOWN_EQUIP_ID
 import cn.wthee.pcrtool.utils.VibrateUtil
 import cn.wthee.pcrtool.utils.getFormatText
 import cn.wthee.pcrtool.utils.int
 import cn.wthee.pcrtool.viewmodel.CharacterAttrViewModel
 import cn.wthee.pcrtool.viewmodel.CharacterViewModel
 import cn.wthee.pcrtool.viewmodel.SkillViewModel
-import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -59,16 +60,13 @@ import kotlin.math.max
  *
  * @param unitId 角色编号
  */
-@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
+@ExperimentalComposeUiApi
 @Composable
 fun CharacterDetail(
     scrollState: ScrollState,
     unitId: Int,
     actions: NavActions,
-    navViewModel: NavViewModel,
     attrViewModel: CharacterAttrViewModel = hiltViewModel(),
     skillViewModel: SkillViewModel = hiltViewModel()
 ) {
@@ -76,12 +74,12 @@ fun CharacterDetail(
     //最大值
     val maxValue = attrViewModel.getMaxRankAndRarity(unitId)
         .collectAsState(initial = CharacterProperty()).value
-    val currentValueState = attrViewModel.currentValue.observeAsState()
+    val currentValueState = navViewModel.currentValue.observeAsState()
     //选择的 RANK
     val selectRank = navViewModel.selectRank.observeAsState().value ?: 0
     //数值信息
     if (currentValueState.value == null && maxValue.isInit()) {
-        attrViewModel.currentValue.postValue(maxValue)
+        navViewModel.currentValue.postValue(maxValue)
         if (selectRank == 0) {
             navViewModel.selectRank.postValue(maxValue.rank)
         }
@@ -140,7 +138,8 @@ fun CharacterDetail(
                     top = Dimen.largePadding,
                     start = Dimen.mediumPadding,
                     end = Dimen.mediumPadding,
-                )
+                ),
+                unitType = 0
             )
         },
         sheetBackgroundColor = MaterialTheme.colorScheme.surface
@@ -157,7 +156,7 @@ fun CharacterDetail(
             }
             //Rank 选择
             if (selectRank != 0 && selectRank != currentValue.rank) {
-                attrViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
+                navViewModel.currentValue.postValue(currentValue.update(rank = selectRank))
             }
 
             //关闭
@@ -172,8 +171,8 @@ fun CharacterDetail(
             Box(modifier = Modifier.fillMaxSize()) {
                 //数据加载后，展示页面
                 val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
+                //页面
                 FadeAnimation(visible) {
-                    //页面
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -215,7 +214,7 @@ fun CharacterDetail(
                                     //技能2：默认加上技能2
                                     var skill = currentValue.level * coe.skill_lv_coefficient
                                     //技能1：解锁专武，技能1系数提升
-                                    if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                                    if (allData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
                                         skill += coe.skill1_evolution_coefficient
                                         skill += currentValue.level * coe.skill_lv_coefficient * coe.skill1_evolution_slv_coefficient
                                     } else {
@@ -257,8 +256,7 @@ fun CharacterDetail(
                             StarSelect(
                                 currentValue = currentValue,
                                 max = maxValue.rarity,
-                                modifier = Modifier.padding(top = Dimen.mediumPadding),
-                                attrViewModel = attrViewModel
+                                modifier = Modifier.padding(top = Dimen.mediumPadding)
                             )
 
                             //等级
@@ -315,7 +313,7 @@ fun CharacterDetail(
                                         if (inputLevel.value != "") {
                                             characterLevel.value = inputLevel.value.toInt()
                                         }
-                                        attrViewModel.currentValue.postValue(
+                                        navViewModel.currentValue.postValue(
                                             currentValue.update(
                                                 level = characterLevel.value
                                             )
@@ -333,7 +331,7 @@ fun CharacterDetail(
                                         if (inputLevel.value != "") {
                                             characterLevel.value = inputLevel.value.toInt()
                                         }
-                                        attrViewModel.currentValue.postValue(
+                                        navViewModel.currentValue.postValue(
                                             currentValue.update(
                                                 level = characterLevel.value
                                             )
@@ -365,7 +363,7 @@ fun CharacterDetail(
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                         //显示专武
-                        if (allData.uniqueEquip.equipmentId != Constants.UNKNOWN_EQUIP_ID) {
+                        if (allData.uniqueEquip.equipmentId != UNKNOWN_EQUIP_ID) {
                             UniqueEquip(
                                 currentValue = currentValue,
                                 uniqueEquipLevelMax = maxValue.uniqueEquipmentLevel,
@@ -381,12 +379,15 @@ fun CharacterDetail(
                             atk = max(
                                 allData.sumAttr.atk.int,
                                 allData.sumAttr.magicStr.int
-                            )
+                            ),
+                            unitType = 0,
+                            toSummonDetail = actions.toSummonDetail
                         )
                         CommonSpacer()
                         Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
                     }
                 }
+
                 if (unknown) {
                     Column(
                         modifier = Modifier
@@ -567,7 +568,7 @@ private fun CharacterEquip(
 ) {
     val context = LocalContext.current
 
-    Column(modifier = modifier.fillMaxWidth(0.8f)) {
+    Column(modifier = modifier.fillMaxWidth()) {
         //装备 6、 3
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -578,25 +579,25 @@ private fun CharacterEquip(
         ) {
             val id6 = equips[0].equipmentId
             val id3 = equips[1].equipmentId
-            IconCompose(data = getEquipIconUrl(id6)) {
-                if (id6 != Constants.UNKNOWN_EQUIP_ID) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id6)) {
+                if (id6 != UNKNOWN_EQUIP_ID) {
                     toEquipDetail(id6)
                 }
             }
-            IconCompose(data = getEquipIconUrl(id3)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id3)) {
                 toEquipDetail(id3)
             }
         }
         //装备 5、 2
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Dimen.mediumPadding)
         ) {
             val id5 = equips[2].equipmentId
-            IconCompose(data = getEquipIconUrl(id5)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id5)) {
                 toEquipDetail(id5)
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -609,6 +610,7 @@ private fun CharacterEquip(
                         MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
+                        .padding(start = Dimen.mediumPadding)
                         .size(Dimen.mediumIconSize)
                         .clip(Shape.medium)
                         .clickable(enabled = rank < maxRank) {
@@ -621,8 +623,7 @@ private fun CharacterEquip(
                     text = getFormatText(rank),
                     color = getRankColor(rank),
                     modifier = Modifier.padding(
-                        top = Dimen.largePadding * 2,
-                        bottom = Dimen.largePadding * 2,
+                        vertical = Dimen.largePadding * 2
                     )
                 ) {
                     toRankEquip(unitId)
@@ -636,6 +637,7 @@ private fun CharacterEquip(
                         MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
+                        .padding(end = Dimen.mediumPadding)
                         .size(Dimen.mediumIconSize)
                         .clip(Shape.medium)
                         .clickable(enabled = rank > 1) {
@@ -645,7 +647,7 @@ private fun CharacterEquip(
                 )
             }
             val id2 = equips[3].equipmentId
-            IconCompose(data = getEquipIconUrl(id2)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id2)) {
                 toEquipDetail(id2)
             }
 
@@ -660,10 +662,10 @@ private fun CharacterEquip(
         ) {
             val id4 = equips[4].equipmentId
             val id1 = equips[5].equipmentId
-            IconCompose(data = getEquipIconUrl(id4)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id4)) {
                 toEquipDetail(id4)
             }
-            IconCompose(data = getEquipIconUrl(id1)) {
+            IconCompose(data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, id1)) {
                 toEquipDetail(id1)
             }
         }
@@ -684,7 +686,6 @@ private fun UniqueEquip(
     uniqueEquipLevel: MutableState<Int>,
     uniqueEquipmentMaxData: UniqueEquipmentMaxData?,
 ) {
-    val attrViewModel: CharacterAttrViewModel = hiltViewModel()
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -757,7 +758,7 @@ private fun UniqueEquip(
                         if (inputLevel.value != "") {
                             uniqueEquipLevel.value = inputLevel.value.toInt()
                         }
-                        attrViewModel.currentValue.postValue(
+                        navViewModel.currentValue.postValue(
                             currentValue.update(
                                 uniqueEquipmentLevel = uniqueEquipLevel.value
                             )
@@ -775,7 +776,7 @@ private fun UniqueEquip(
                         if (inputLevel.value != "") {
                             uniqueEquipLevel.value = inputLevel.value.toInt()
                         }
-                        attrViewModel.currentValue.postValue(
+                        navViewModel.currentValue.postValue(
                             currentValue.update(
                                 uniqueEquipmentLevel = uniqueEquipLevel.value
                             )
@@ -804,7 +805,9 @@ private fun UniqueEquip(
                     )
                     .fillMaxWidth()
             ) {
-                IconCompose(getEquipIconUrl(it.equipmentId))
+                IconCompose(
+                    data = ImageResourceHelper.getInstance().getUrl(ICON_EQUIPMENT, it.equipmentId)
+                )
                 Subtitle2(
                     text = it.getDesc(),
                     modifier = Modifier.padding(start = Dimen.mediumPadding),
@@ -826,10 +829,8 @@ private fun UniqueEquip(
 private fun StarSelect(
     currentValue: CharacterProperty,
     max: Int,
-    modifier: Modifier = Modifier,
-    attrViewModel: CharacterAttrViewModel
+    modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
 
     Row(modifier) {
         for (i in 1..max) {
@@ -838,19 +839,14 @@ private fun StarSelect(
                 i == 6 -> R.drawable.ic_star_pink
                 else -> R.drawable.ic_star
             }
-            Image(
-                painter = rememberImagePainter(data = iconId),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(Dimen.divLineHeight)
-                    .size(Dimen.mediumIconSize)
-                    .clip(CircleShape)
-                    .clickable {
-                        VibrateUtil(context).single()
-                        attrViewModel.currentValue.postValue(currentValue.update(rarity = i))
-                    }
-                    .padding(Dimen.smallPadding)
-            )
+            IconCompose(
+                data = iconId,
+                size = Dimen.mediumIconSize,
+                modifier = Modifier.padding(Dimen.smallPadding)
+            ) {
+                navViewModel.currentValue.postValue(currentValue.update(rarity = i))
+            }
+
         }
     }
 }

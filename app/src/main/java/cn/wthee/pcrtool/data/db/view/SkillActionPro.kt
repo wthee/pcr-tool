@@ -192,6 +192,7 @@ data class SkillActionPro(
         }
 
         val formatDesc = when (toSkillActionType(action_type)) {
+            // 1：造成伤害
             SkillActionType.DAMAGE -> {
                 val atkType = when (action_detail_1) {
                     1 -> "物理"
@@ -213,6 +214,7 @@ data class SkillActionPro(
                     ""
                 }
             }
+            // 2：冲锋
             SkillActionType.MOVE -> {
                 val directionText = if (action_value_1 > 0) "向前" else "向后"
                 val positionText = if (action_value_1 > 0) "前方" else "后方"
@@ -235,9 +237,10 @@ data class SkillActionPro(
                 }
 
             }
+            // 3：改变对方位置
             SkillActionType.CHANGE_ENEMY_POSITION -> {
                 when (action_detail_1) {
-                    1 -> {
+                    1, 9 -> {
                         tag = "击飞"
                         "${tag}${getTarget()}，高度[${(abs(action_value_1)).int}]"
                     }
@@ -252,11 +255,14 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
             }
+            // 4：回复 HP
             SkillActionType.HEAL -> {
                 val value = getValueText(2, action_value_2, action_value_3, action_value_4)
                 "使${getTarget()}HP回复 $value"
             }
+            // 5：回复 HP
             SkillActionType.CURE -> UNKNOWN
+            // 6：护盾
             SkillActionType.BARRIER -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 val time = getTimeText(3, action_value_3, action_value_4)
@@ -267,23 +273,26 @@ data class SkillActionPro(
                     type
                 }
             }
+            // 7：指定攻击对象
             SkillActionType.CHOOSE_ENEMY -> {
                 "锁定${getTarget()}"
             }
+            // 8：行动速度变更、83：可叠加行动速度变更
             SkillActionType.CHANGE_ACTION_SPEED, SkillActionType.SUPERIMPOSE_CHANGE_ACTION_SPEED -> {
                 //判断异常状态
                 tag = when (action_detail_1) {
                     1 -> "减速"
                     2 -> "加速"
                     3 -> "麻痹"
-                    4 -> "冰冻"
+                    4 -> "冻结"
                     5 -> "束缚"
                     6 -> "睡眠"
-                    7 -> "眩晕"
+                    7, 14 -> "眩晕"
                     8 -> "石化"
                     9 -> "拘留"
-                    10 -> "晕倒"
-                    11 -> "时停"
+                    10 -> "昏迷"
+                    11 -> "时间停止"
+                    13 -> "结晶"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
@@ -303,12 +312,13 @@ data class SkillActionPro(
                     main
                 }
             }
+            // 9：持续伤害
             SkillActionType.DOT -> {
                 tag = when (action_detail_1) {
                     0 -> "拘留（造成伤害）"
-                    1 -> "中毒"
+                    1, 7 -> "中毒"
                     2 -> "烧伤"
-                    3, 5 -> "诅咒"
+                    3, 5, 8 -> "诅咒"
                     4 -> "猛毒"
                     else -> UNKNOWN
                 }
@@ -316,6 +326,7 @@ data class SkillActionPro(
                 val time = getTimeText(3, action_value_3, action_value_4)
                 "使${getTarget()}进入${tag}状态，每秒造成伤害 $value $time"
             }
+            // 10：buff/debuff
             SkillActionType.AURA -> {
                 tag = if (action_detail_1 % 10 == 0) "BUFF" else "DEBUFF"
                 val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
@@ -328,6 +339,7 @@ data class SkillActionPro(
                 }
 
             }
+            // 11：魅惑/混乱
             SkillActionType.CHARM -> {
                 tag = when (action_detail_1) {
                     0 -> "魅惑"
@@ -339,17 +351,20 @@ data class SkillActionPro(
                     if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
                 "${tag}${getTarget()}${time}，$chance"
             }
+            // 12：黑暗
             SkillActionType.BLIND -> {
                 val chance = getValueText(3, action_value_3, action_value_4, 0.0, "%")
                 val time = getTimeText(1, action_value_1, action_value_2)
                 "以 $chance 的概率使${getTarget()}进入${toSkillActionType(action_type).desc}状态${time}；对象进行物理攻击时有 [${100 - action_detail_1}%] 的概率被回避"
             }
+            // 13：沉默
             SkillActionType.SILENCE -> {
                 val chance = getValueText(3, action_value_3, action_value_4, 0.0, "%")
                 val time = getTimeText(1, action_value_1, action_value_2)
                 "以 $chance 的概率使${getTarget()}进入${toSkillActionType(action_type).desc}状态$time"
 
             }
+            // 14：行动模式变更
             SkillActionType.CHANGE_MODE -> {
                 when (action_detail_1) {
                     1 -> "技能循环改变${getTimeText(1, action_value_1)}"
@@ -358,6 +373,7 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
             }
+            // 15：召唤
             SkillActionType.SUMMON -> {
                 summonUnitId = action_detail_2
                 when {
@@ -372,6 +388,7 @@ data class SkillActionPro(
                     }
                 }
             }
+            // 16：TP 相关
             SkillActionType.CHANGE_TP -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 tag = when (action_detail_1) {
@@ -380,6 +397,7 @@ data class SkillActionPro(
                 }
                 "${getTarget()}${tag} $value"
             }
+            // 17：触发条件
             SkillActionType.TRIGGER -> {
                 val expr = when (action_detail_1) {
                     2 -> "受到伤害时 [${action_value_1.toInt()}%] 概率"
@@ -387,7 +405,7 @@ data class SkillActionPro(
                     4 -> "死亡时 [${action_value_1.toInt()}%] 概率"
                     5 -> "暴击时 [${action_value_1.toInt()}%] 概率"
                     7 -> "战斗剩余时间 [${action_value_3.toInt()}] 秒以下"
-                    8 -> "潜伏时 [${action_value_1.toInt()}%] 概率"
+                    8 -> "隐身时 [${action_value_1.toInt()}%] 概率"
                     9 -> "BREAK 时 [${action_value_1.toInt()}%] 的概率${getTimeText(3, action_value_3)}"
                     10 -> "受到持续伤害时 [${action_value_1.toInt()}%] 概率"
                     11 -> "所有部位 BREAK"
@@ -395,15 +413,18 @@ data class SkillActionPro(
                 }
                 "条件：$expr"
             }
+            // 18：蓄力、19：伤害充能
             SkillActionType.CHARGE, SkillActionType.DAMAGE_CHARGE -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 "蓄力 [${action_value_3}] 秒，动作(${action_detail_2 % 10})效果增加 $value * 蓄力中受到的伤害"
             }
+            // 20：挑衅
             SkillActionType.TAUNT -> {
                 "使${getTarget()}进入${toSkillActionType(action_type).desc}状态${
                     getTimeText(1, action_value_1, action_value_2)
                 }"
             }
+            // 21：回避
             SkillActionType.INVINCIBLE -> {
                 tag = when (action_detail_1) {
                     1 -> "无敌"
@@ -413,6 +434,7 @@ data class SkillActionPro(
                 }
                 "${tag}${getTimeText(1, action_value_1, action_value_2)}"
             }
+            // 22：改变模式
             SkillActionType.CHANGE_PATTERN -> {
                 when (action_detail_1) {
                     1 -> if (action_value_1 > 0) {
@@ -424,6 +446,7 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
             }
+            // 23：判定对象状态
             SkillActionType.IF_STATUS -> {
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
@@ -483,6 +506,69 @@ data class SkillActionPro(
                         UNKNOWN
                 }
             }
+            // 24：复活
+            SkillActionType.REVIVAL -> {
+                "复活${getTarget()}，并回复其 [${(action_value_2 * 100).int}]HP"
+            }
+            // 25：连续攻击
+            SkillActionType.CONTINUOUS_ATTACK -> UNKNOWN
+            // 26：系数提升
+            SkillActionType.ADDITIVE, SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
+                val type = when (action_value_1.toInt()) {
+                    7 -> "物理攻击力"
+                    8 -> "魔法攻击力"
+                    9 -> "物理防御力"
+                    10 -> "魔法防御力"
+                    else -> UNKNOWN
+                }
+                val changeType = when (toSkillActionType(action_type)) {
+                    SkillActionType.ADDITIVE -> "增加"
+                    SkillActionType.MULTIPLE -> "乘以"
+                    SkillActionType.DIVIDE -> "除以"
+                    else -> UNKNOWN
+                }
+                val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
+                val commonDesc =
+                    "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType $commonExpr"
+
+                val additive = when (action_value_1.toInt()) {
+                    2 -> {
+                        val expr = when {
+                            action_detail_3 == 0 -> {
+                                "[${action_value_2}]"
+                            }
+                            action_detail_2 == 0 -> {
+                                "[${action_value_3}]"
+                            }
+                            else -> {
+                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
+                            }
+                        }
+                        "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType$expr * [击杀数量]"
+                    }
+                    0 -> "$commonDesc * [剩余的HP]"
+                    1 -> "$commonDesc * [损失的HP]"
+                    4 -> "$commonDesc * [目标数量]"
+                    5 -> "$commonDesc * [受到伤害的目标数量]"
+                    6 -> "$commonDesc * [造成的伤害]"
+                    12 -> "$commonDesc * [后方${getTarget()}数量]"
+                    13 -> "$commonDesc * [${getTarget()}剩余的HP比例]"
+                    102 -> "$commonDesc * [小眼球数量]"
+                    in 200 until 300 -> "$commonDesc * [标记层数]"
+                    in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
+                    in 20 until 30 -> "$commonDesc * [计数器${action_value_1.toInt() % 10}数量]"
+                    else -> UNKNOWN
+                }
+                //上限判断
+                if (action_value_4.toInt() != 0 && action_value_5.toInt() != 0) {
+                    val limitValue = getValueText(4, action_value_4, action_value_5)
+                    val limit = "；叠加上限 $limitValue"
+                    additive + limit
+                } else {
+                    additive
+                }
+            }
+            // 28：特殊条件
             SkillActionType.IF_SP_STATUS -> {
                 var trueClause = UNKNOWN
                 var falseClause = UNKNOWN
@@ -502,9 +588,9 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}是单独时，使用 [${action_detail_2 % 10}]"
                         } else if (action_detail_1 in 701..709) {
-                            "排除潜伏状态的单位，${getTarget()}的数量是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_2 % 10})"
+                            "隐身状态的单位除外，${getTarget()}的数量是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 720) {
-                            "排除潜伏状态的单位，${getTarget()}中存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_2 % 10})"
+                            "隐身状态的单位除外，${getTarget()}中存在单位时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 in 901..999) {
                             "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 1000) {
@@ -534,9 +620,9 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}是不是单独时，使用 [${action_detail_3 % 10}]"
                         } else if (action_detail_1 in 701..709) {
-                            "排除潜伏状态的单位，${getTarget()}的数量不是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_3 % 10})"
+                            "隐身状态的单位除外，${getTarget()}的数量不是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 == 720) {
-                            "排除潜伏状态的单位，${getTarget()}中不存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_3 % 10})"
+                            "隐身状态的单位除外，${getTarget()}中不存在单位时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 in 901..999) {
                             "${getTarget()}的HP在 [${action_detail_1 - 900}%] 及以上时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 == 1000) {
@@ -560,111 +646,38 @@ data class SkillActionPro(
                 else
                     UNKNOWN
             }
-            SkillActionType.REVIVAL -> {
-                "复活${getTarget()}，并回复其 [${(action_value_2 * 100).int}]HP"
-            }
-            SkillActionType.CONTINUOUS_ATTACK -> UNKNOWN
-            SkillActionType.ADDITIVE -> {
-                val type = when (action_value_1.toInt()) {
-                    7 -> "物理攻击力"
-                    8 -> "魔法攻击力"
-                    9 -> "物理防御力"
-                    10 -> "魔法防御力"
-                    else -> UNKNOWN
-                }
-                val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
-                val commonDesc =
-                    "动作(${action_detail_1 % 10})的{${action_detail_2}}增加 $commonExpr"
-
-                val additive = when (action_value_1.toInt()) {
-                    2 -> {
-                        val expr = when {
-                            action_detail_3 == 0 -> {
-                                "[${action_value_2}]"
-                            }
-                            action_detail_2 == 0 -> {
-                                "[${action_value_3}]"
-                            }
-                            else -> {
-                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
-                            }
-                        }
-                        "动作(${action_detail_1 % 10})的{${action_detail_2}}增加$expr * [击杀数量]"
-                    }
-                    0 -> "$commonDesc * [剩余的HP]"
-                    1 -> "$commonDesc * [损失的HP]"
-                    4 -> "$commonDesc * [目标数量]"
-                    5 -> "$commonDesc * [受到伤害的目标数量]"
-                    6 -> "$commonDesc * [造成的伤害]"
-                    12 -> "$commonDesc * [后方${getTarget()}数量]"
-                    13 -> "$commonDesc * [${getTarget()}剩余的HP比例]"
-                    102 -> "$commonDesc * [小眼球数量]"
-                    in 200 until 300 -> "$commonDesc * [标记层数]"
-                    in 7..10 -> "$commonDesc * [${getTarget()}的$type]"
-                    in 20 until 30 -> "$commonDesc * [计数器${action_value_1.toInt() % 10}数量]"
-                    else -> UNKNOWN
-                }
-                //上限判断
-                if (action_value_4.toInt() != 0 && action_value_5.toInt() != 0) {
-                    val limitValue = getValueText(4, action_value_4, action_value_5)
-                    val limit = "；叠加上限 $limitValue"
-                    additive + limit
-                } else {
-                    additive
-                }
-            }
-            SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
-                val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
-                val commonDesc =
-                    "动作(${action_detail_1 % 10}的{${action_detail_2}}增加$commonExpr"
-
-                when (action_value_1.toInt()) {
-                    2 -> {
-                        val expr = when {
-                            action_detail_3 == 0 -> {
-                                "[${action_value_2}]"
-                            }
-                            action_detail_2 == 0 -> {
-                                "[${action_value_3}]"
-                            }
-                            else -> {
-                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
-                            }
-                        }
-                        "动作(${action_detail_1 % 10})的{${action_detail_2}}增加$expr * [击杀数量]"
-                    }
-                    0 -> "$commonDesc * [HP]"
-                    1 -> "$commonDesc * [损失的HP]"
-                    in 200 until 300 -> "$commonDesc * [标记的层数]"
-                    else -> UNKNOWN
-                }
-            }
-            SkillActionType.CHANGE_SEARCH_AREA -> UNKNOWN
+            // 29：无法使用 UB
+            SkillActionType.NO_UB -> "无 UB 技能"
+            // 30：立即死亡
             SkillActionType.KILL_ME -> "${getTarget()}死亡"
             SkillActionType.CONTINUOUS_ATTACK_NEARBY -> UNKNOWN
+            // 32：HP吸收
             SkillActionType.LIFE_STEAL -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 "为${getTarget()}的下 [${action_value_3.toInt()}] 次攻击附加 ${toSkillActionType(action_type).desc}$value 的效果"
             }
+            // 33：反伤
             SkillActionType.STRIKE_BACK -> {
                 val value = getValueText(1, action_value_1, action_value_2)
                 val type = getBarrierTtpe(action_detail_1)
                 val shieldText = "对${getTarget()}展开${type}${value}"
 
                 when (action_detail_1) {
-                    1 -> "${shieldText}，受到物理伤害时反射 [${action_value_3}] 倍伤害"
-                    2 -> "${shieldText}，受到魔法伤害时反射 [${action_value_3}] 倍伤害"
-                    3 -> "${shieldText}，受到物理伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
-                    4 -> "${shieldText}，受到魔法伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
-                    5 -> "${shieldText}，受到伤害时反射 [${action_value_3}] 倍伤害"
-                    6 -> "${shieldText}，受到伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
+                    1 -> "${shieldText}，受到物理伤害时反弹 [${action_value_3}] 倍伤害"
+                    2 -> "${shieldText}，受到魔法伤害时反弹 [${action_value_3}] 倍伤害"
+                    3 -> "${shieldText}，受到物理伤害时反弹 [${action_value_3}] 倍伤害，并回复HP"
+                    4 -> "${shieldText}，受到魔法伤害时反弹 [${action_value_3}] 倍伤害，并回复HP"
+                    5 -> "${shieldText}，受到伤害时反弹 [${action_value_3}] 倍伤害"
+                    6 -> "${shieldText}，受到伤害时反弹 [${action_value_3}] 倍伤害，并回复HP"
                     else -> UNKNOWN
                 }
             }
+            // 34：伤害递增
             SkillActionType.ACCUMULATIVE_DAMAGE -> {
                 val value = getValueText(2, action_value_2, action_value_3)
                 "每次攻击当前的目标，将会追加伤害 $value , 叠加上限 [${(action_value_4).int}]"
             }
+            // 35：特殊刻印
             SkillActionType.SEAL -> {
                 if (action_value_4.toInt() > 0) {
                     val time = getTimeText(3, action_value_3)
@@ -673,6 +686,7 @@ data class SkillActionPro(
                     "${getTarget()}的标记层数减少 [${abs(action_value_4).toInt()}] 层"
                 }
             }
+            // 36：攻击领域展开
             SkillActionType.ATTACK_FIELD -> {
                 val atkType = if (action_detail_1 % 2 == 0) "魔法" else "物理"
                 val value = "，每秒造成 ${
@@ -687,6 +701,7 @@ data class SkillActionPro(
                     getTimeText(5, action_value_5, action_value_6)
                 }"
             }
+            // 37：治疗领域展开
             SkillActionType.HEAL_FIELD -> {
                 val value =
                     "，每秒回复 ${getValueText(1, action_value_1, action_value_2, action_value_3)}HP"
@@ -694,6 +709,7 @@ data class SkillActionPro(
                     getTimeText(5, action_value_5, action_value_6)
                 }"
             }
+            // 38：buff/debuff领域展开
             SkillActionType.AURA_FIELD -> {
                 val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
                 val time = getTimeText(3, action_value_3, action_value_4)
@@ -701,15 +717,17 @@ data class SkillActionPro(
                     getAura(action_detail_1, value)
                 }$time"
             }
+            // 39：持续伤害领域展开
             SkillActionType.DOT_FIELD -> {
                 val time = getTimeText(1, action_value_1, action_value_2)
                 "${getTarget()}展开半径为 [${action_value_3.toInt()}] 的领域，，持续施放动作(${action_detail_1 % 10})$time"
             }
             SkillActionType.CHANGE_ACTION_SPEED_FIELD -> UNKNOWN
             SkillActionType.CHANGE_UB_TIME -> UNKNOWN
+            // 42：触发
             SkillActionType.LOOP_TRIGGER -> {
                 when (action_detail_1) {
-                    2 -> "条件：[${action_value_4.toInt()}] 秒内受到伤害时，以 ${
+                    2 -> "[${action_value_4.toInt()}] 秒内受到伤害时，以 ${
                         getValueText(
                             1,
                             action_value_1,
@@ -719,15 +737,17 @@ data class SkillActionPro(
                     } 的概率使用动作(${action_detail_2 % 10})"
                     else -> UNKNOWN
                 }
-
             }
             SkillActionType.IF_TARGETED -> UNKNOWN
+            // 44：进场等待
             SkillActionType.WAVE_START -> {
                 "战斗开始 [${action_value_1}] 秒后入场"
             }
+            // 45：已使用技能数相关
             SkillActionType.SKILL_COUNT -> {
                 "[计数器 ${action_detail_1}] 增加 [${action_value_1.toInt()}]"
             }
+            // 46：比例伤害
             SkillActionType.RATE_DAMAGE -> {
                 val value = getValueText(1, action_value_1, action_value_2, percent = "%")
                 when (action_detail_1) {
@@ -740,6 +760,7 @@ data class SkillActionPro(
             SkillActionType.UPPER_LIMIT_ATTACK -> {
                 "对低等级的玩家造成的伤害将被减轻"
             }
+            // 48：持续治疗
             SkillActionType.HOT -> {
                 val type = when (action_detail_2) {
                     1 -> "HP"
@@ -754,6 +775,7 @@ data class SkillActionPro(
                     UNKNOWN
                 }
             }
+            // 49：移除增益
             SkillActionType.DISPEL -> {
                 val value = getValueText(1, action_value_1, action_value_2, 0.0, "%")
                 val type = when (action_detail_1) {
@@ -763,20 +785,23 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
                 if (type != UNKNOWN) {
-                    "以 $value 的概率使${getTarget()}的${type}全部解除"
+                    " $value 概率使${getTarget()}的${type}全部移除"
                 } else {
                     UNKNOWN
                 }
             }
+            // 50：持续动作
             SkillActionType.CHANNEL -> {
                 val time = getTimeText(4, action_value_4, action_value_5)
                 val value = getValueText(2, action_value_2, action_value_3, percent = getPercent())
                 val aura = getAura(action_detail_1, value)
                 "${getTarget()}${aura}${time}，受到 [${action_detail_3}] 次伤害时中断"
             }
+            // 52：改变单位距离
             SkillActionType.CHANGE_WIDTH -> {
                 "将模型的宽度变为[${action_value_1}]"
             }
+            // 53：特殊状态：领域存在时；如：情姐
             SkillActionType.IF_HAS_FIELD -> {
                 if (action_detail_2 != 0 && action_detail_3 != 0) {
                     "条件：特定的领域效果存在时使用动作(${action_detail_2 % 10})，否则使用动作(${action_detail_3 % 10})"
@@ -786,12 +811,15 @@ data class SkillActionPro(
                     UNKNOWN
                 }
             }
+            // 54：隐身
             SkillActionType.STEALTH -> {
-                "进入潜伏状态${getTimeText(1, action_value_1)}"
+                "进入隐身状态${getTimeText(1, action_value_1)}"
             }
+            // 55：部位移动
             SkillActionType.MOVE_PART -> {
                 "使部位${action_value_4.toInt()}向前移动 [${-action_value_1.toInt()}] ，随后使其返回原位置"
             }
+            // 56：千里眼
             SkillActionType.COUNT_BLIND -> {
                 val value = getValueText(2, action_value_2, action_value_3)
                 val time = getTimeText(2, action_value_2, action_value_3)
@@ -801,21 +829,25 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
             }
+            // 57：延迟攻击 如：万圣炸弹人的 UB
             SkillActionType.COUNT_DOWN -> {
                 "对${getTarget()}设置倒计时，[${action_value_1}] 秒后触发动作(${action_detail_1 % 10})"
             }
+            // 58：解除领域 如：晶姐 UB
             SkillActionType.STOP_FIELD -> {
-                "解除中第${action_detail_1 / 100 % 10}个技能的动作(${action_detail_1 % 10})展开的领域"
+                "解除第${action_detail_1 / 100 % 10}个技能的动作(${action_detail_1 % 10})展开的领域"
             }
+            // 59：回复妨碍
             SkillActionType.INHIBIT_HEAL_ACTION -> {
                 "${getTarget()}受到回复效果时，使回复无效并给予其 [${action_value_1} * 回复量] 伤害"
             }
+            // 60：刻印赋予
             SkillActionType.ATTACK_SEAL -> {
                 val limit = "，叠加上限 [${action_value_1.toInt()}]"
                 val time = getTimeText(3, action_value_3, action_value_4)
                 val target = getTarget()
                 if (action_detail_1 == 3) {
-                    "自身每次攻击${target}，对其增加1层标记${time}$limit"
+                    "自身每次攻击${target}，增加1层标记${time}$limit"
                 } else if (action_detail_1 == 1 && action_detail_3 == 1) {
                     "${target}每次造成伤害时，增加1层标记${time}$limit"
                 } else if (action_detail_1 == 4 && action_detail_3 == 1) {
@@ -824,11 +856,13 @@ data class SkillActionPro(
                     UNKNOWN
                 }
             }
+            // 61：恐慌
             SkillActionType.FEAR -> {
                 val value = getValueText(3, action_value_3, action_value_4, 0.0, "%")
                 val time = getTimeText(1, action_value_1, action_value_2)
                 "以 $value 的概率使${getTarget()}进入${toSkillActionType(action_type).desc}状态$time"
             }
+            // 62：畏惧
             SkillActionType.AWE -> {
                 val value = getValueText(1, action_value_1, action_value_2, 0.0, "%")
                 val time = getTimeText(3, action_value_3, action_value_4)
@@ -837,8 +871,8 @@ data class SkillActionPro(
                     1 -> "${getTarget()}的UB或技能对任意目标造成伤害或直接回复时，使其效果值降低 [$value]$time"
                     else -> UNKNOWN
                 }
-
             }
+            // 63: 循环动作
             SkillActionType.LOOP -> {
                 val successClause = if (action_detail_2 != 0)
                     "持续时间结束后，使用动作(${action_detail_2 % 10})；"
@@ -859,22 +893,26 @@ data class SkillActionPro(
                 else
                     UNKNOWN
             }
-            SkillActionType.TOAD -> {
+            // 69：驯鹿化
+            SkillActionType.REINDEER -> {
                 val time = getTimeText(1, action_value_1, action_value_2)
                 "使${getTarget()}变身$time"
             }
+            // 71：特殊状态：公主佩可 UB 后不死BUFF
             SkillActionType.KNIGHT_GUARD -> {
                 val value = getValueText(2, action_value_2, action_value_3, action_value_4)
                 val time = getTimeText(6, action_value_6, action_value_7)
                 "对${getTarget()}赋予「受到致死伤害时，回复 $value HP」的效果$time"
             }
+            // 73：伤害护盾
             SkillActionType.LOG_GUARD -> {
                 val time = getTimeText(3, action_value_3, action_value_4)
                 "为${getTarget()}展开护盾，在一次行动中受到的伤害超过 [${action_value_5.toInt()}] 时，伤害值将衰减$time"
             }
+            // 75：依据攻击次数增伤
             SkillActionType.HIT_COUNT -> {
                 val limit = if (action_value_5 > 0) {
-                    "（上限为 [${action_value_5.toInt()}] 次）"
+                    "，叠加上限 [${action_value_5.toInt()}]"
                 } else {
                     ""
                 }
@@ -884,11 +922,13 @@ data class SkillActionPro(
                     else -> UNKNOWN
                 }
             }
+            // 76：HP 回复量减少
             SkillActionType.HEAL_DOWN -> {
                 val value = getValueText(1, action_value_1, action_value_2, percent = getPercent())
                 val time = getTimeText(3, action_value_3, action_value_4)
                 "${getTarget()}治疗量变为原来的$value 倍$time"
             }
+            // 77：被动叠加刻印
             SkillActionType.IF_BUFF_SEAL -> {
                 val time = getTimeText(3, action_value_3, action_value_4)
                 val lifeTime = getTimeText(5, action_value_5, action_value_6)
@@ -897,8 +937,9 @@ data class SkillActionPro(
                     2 -> "伤害"
                     else -> UNKNOWN
                 }
-                "被动效果：每当${getTarget()}受到${effect}时，为自身增加 [${action_detail_2}] 层标记，$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
+                "被动效果：每当${getTarget()}受到${effect}时，为自身增加 [${action_detail_2}] 层标记$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
             }
+            // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {
                 "${getTarget()}行动时，受到${
                     getValueText(
@@ -908,6 +949,11 @@ data class SkillActionPro(
                     )
                 }伤害${getTimeText(3, action_value_3, action_value_4)}"
             }
+            // 81：无效目标
+            SkillActionType.NO_TARGET -> {
+                "${getTarget()}变更为无法被攻击的目标"
+            }
+            // 90：EX被动
             SkillActionType.EX -> {
                 val name = when (action_detail_1) {
                     1 -> "HP"
@@ -917,14 +963,15 @@ data class SkillActionPro(
                     5 -> "魔法防御力"
                     else -> UNKNOWN
                 }
-
                 "自身的${name}提升 ${getValueText(2, action_value_2, action_value_3)}"
             }
+            // 92：改变 TP 获取倍率
             SkillActionType.CHANGE_TP_RATIO -> {
                 "包括通过受伤获得的TP奖励值在内，使${getTarget()}获得的所有TP回复效果值变为 [原值 * ${action_value_1}]"
             }
+            // 93：无视挑衅
             SkillActionType.IGNOR_TAUNT -> {
-                "攻击${getTarget()}时，无视其他目标的挑衅效果"
+                "攻击${getTarget()}时，无视挑衅效果"
             }
             else -> UNKNOWN
         }
@@ -1019,7 +1066,7 @@ data class SkillActionPro(
         val action = if (v == 1) {
             "HP最大值"
         } else {
-            when (v / 10) {
+            when (v % 1000 / 10) {
                 1 -> "物理攻击力"
                 2 -> "物理防御力"
                 3 -> "魔法攻击力"
@@ -1042,6 +1089,11 @@ data class SkillActionPro(
         if (v / 10 == 14 || v / 10 == 17) {
             type = (if (v % 10 == 0) "减少" else "提升") + " " + valueText
         }
+        //固定buff，不受其他效果影响
+        if (v > 1000) {
+            type += "（固定数值，无法被其他技能效果改变）"
+        }
+
         return action + type
     }
 

@@ -5,9 +5,18 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.1.0-beta02"
-val appVersionCode = 241
-val appVersionName = "2.4.1"
+
+kapt {
+    correctErrorTypes = true
+}
+
+hilt {
+    enableAggregatingTask = true
+}
+
+val composeVersion = "1.1.0-beta04"
+val appVersionCode = 300
+val appVersionName = "3.0.0"
 val sql = 215
 
 android {
@@ -79,20 +88,26 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += "-Xjvm-default=all"
+        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = composeVersion
     }
+
 }
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("androidx.fragment:fragment:1.3.6")
+    implementation("androidx.fragment:fragment:1.4.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${rootProject.extra["kotlinVersion"]}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation("androidx.preference:preference-ktx:1.1.1")
@@ -109,7 +124,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.21.2-beta"
+    val accompanistVersion = "0.21.4-beta"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -119,14 +134,14 @@ dependencies {
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     //Coil
-    val coilVersion = "1.4.0"
+    val coilVersion = "2.0.0-alpha05"
     implementation("io.coil-kt:coil-gif:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-beta01")
 
     //Lifecycle
     val lifecycleVersion = "2.4.0"
@@ -140,7 +155,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
 
     //Paging3
-    implementation("androidx.paging:paging-runtime:3.1.0-rc01")
+    implementation("androidx.paging:paging-runtime:3.1.0")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
     //Retrofit
@@ -149,7 +164,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0-beta01"
+    val roomVersion = "2.4.0-rc01"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
@@ -164,7 +179,7 @@ dependencies {
     implementation("com.umeng.umsdk:apm:1.5.2")
 
     //Work
-    val workVersion = "2.7.0"
+    val workVersion = "2.7.1"
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
 

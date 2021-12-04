@@ -1,6 +1,5 @@
 package cn.wthee.pcrtool.ui.tool
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,7 +21,8 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity
+import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
+import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.settingSP
@@ -31,7 +31,6 @@ import cn.wthee.pcrtool.ui.theme.switchColors
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.FileUtil.exportUserFile
 import cn.wthee.pcrtool.utils.FileUtil.importUserFile
-import coil.compose.rememberImagePainter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -44,7 +43,6 @@ fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
     val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
-    val painter = rememberImagePainter(data = R.mipmap.ic_launcher_round)
     val coroutineScope = rememberCoroutineScope()
     val reloadImportDataTip = stringResource(R.string.reload_import_data)
 
@@ -100,9 +98,9 @@ fun MainSettings() {
                 modifier = Modifier.clickable {
                     openWebView(context, projectUrl, project)
                 })
-            Image(
-                painter = painter,
-                contentDescription = null,
+            ImageCompose(
+                data = R.mipmap.ic_launcher_round,
+                ratio = 1f,
                 modifier = Modifier
                     .size(100.dp)
                     .padding(Dimen.largePadding)
@@ -123,7 +121,7 @@ fun MainSettings() {
         val vibrateState = remember {
             mutableStateOf(vibrateOn)
         }
-        MainActivity.vibrateOn = vibrateState.value
+        vibrateOnFlag = vibrateState.value
         val vibrateSummary =
             stringResource(id = if (vibrateState.value) R.string.vibrate_on else R.string.vibrate_off)
         Row(
@@ -163,7 +161,7 @@ fun MainSettings() {
         val animState = remember {
             mutableStateOf(animOn)
         }
-        MainActivity.animOn = animState.value
+        animOnFlag = animState.value
         val animSummary =
             stringResource(id = if (animState.value) R.string.animation_on else R.string.animation_off)
         Row(

@@ -75,7 +75,7 @@ val String.intArrayList: List<Int>
  */
 val String.deleteSpace: String
     get() {
-        return this.replace("\\s".toRegex(), "")
+        return this.replace("\\s".toRegex(), "").replace("\\n", "").replace("\n", "")
     }
 
 /**
