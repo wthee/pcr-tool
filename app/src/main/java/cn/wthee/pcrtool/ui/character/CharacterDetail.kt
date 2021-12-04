@@ -171,8 +171,8 @@ fun CharacterDetail(
             Box(modifier = Modifier.fillMaxSize()) {
                 //数据加载后，展示页面
                 val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
-                FadeAnimation(visible) {
-                    //页面
+                //页面
+                if (visible) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -387,6 +387,7 @@ fun CharacterDetail(
                         Spacer(modifier = Modifier.height(Dimen.fabSize + Dimen.fabMargin))
                     }
                 }
+
                 if (unknown) {
                     Column(
                         modifier = Modifier
@@ -567,7 +568,7 @@ private fun CharacterEquip(
 ) {
     val context = LocalContext.current
 
-    Column(modifier = modifier.fillMaxWidth(0.8f)) {
+    Column(modifier = modifier.fillMaxWidth()) {
         //装备 6、 3
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -589,7 +590,7 @@ private fun CharacterEquip(
         }
         //装备 5、 2
         Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
@@ -609,6 +610,7 @@ private fun CharacterEquip(
                         MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
+                        .padding(start = Dimen.mediumPadding)
                         .size(Dimen.mediumIconSize)
                         .clip(Shape.medium)
                         .clickable(enabled = rank < maxRank) {
@@ -621,8 +623,7 @@ private fun CharacterEquip(
                     text = getFormatText(rank),
                     color = getRankColor(rank),
                     modifier = Modifier.padding(
-                        top = Dimen.largePadding * 2,
-                        bottom = Dimen.largePadding * 2,
+                        vertical = Dimen.largePadding * 2
                     )
                 ) {
                     toRankEquip(unitId)
@@ -636,6 +637,7 @@ private fun CharacterEquip(
                         MaterialTheme.colorScheme.surface
                     },
                     modifier = Modifier
+                        .padding(end = Dimen.mediumPadding)
                         .size(Dimen.mediumIconSize)
                         .clip(Shape.medium)
                         .clickable(enabled = rank > 1) {

@@ -153,8 +153,6 @@ fun Overview(
                 }
             }
 
-            val equipSpanCount =
-                ScreenUtil.getWidth() / (Dimen.iconSize + Dimen.mediumPadding * 2).value.dp2px
             //装备
             item {
                 Section(
@@ -166,9 +164,12 @@ fun Overview(
                         actions.toEquipList()
                     }
                 ) {
-                    VerticalGrid(spanCount = equipSpanCount) {
+                    VerticalGrid(
+                        spanCount = maxOf(1, spanCount) * 5,
+                        modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
+                    ) {
                         if (equipList.isNotEmpty()) {
-                            equipList.subList(0, equipSpanCount * 2).forEach {
+                            equipList.subList(0, maxOf(1, spanCount) * 5 * 2).forEach {
                                 Box(
                                     modifier = Modifier
                                         .padding(Dimen.mediumPadding)

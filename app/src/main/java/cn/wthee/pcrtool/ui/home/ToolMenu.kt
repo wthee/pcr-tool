@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
@@ -119,7 +120,8 @@ private fun MenuItem(
         IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)
         CaptionText(
             text = stringResource(id = it.titleId),
-            modifier = Modifier.padding(top = Dimen.mediumPadding)
+            modifier = Modifier.padding(top = Dimen.mediumPadding),
+            textAlign = TextAlign.Start
         )
     }
 }

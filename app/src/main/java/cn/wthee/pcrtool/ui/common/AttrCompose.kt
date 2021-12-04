@@ -40,8 +40,8 @@ fun AttrItem(attrValue: AttrValue, toInt: Boolean) {
     Row(
         modifier = Modifier.padding(
             top = Dimen.smallPadding,
-            start = Dimen.attrItemPadding,
-            end = Dimen.attrItemPadding
+            start = Dimen.commonItemPadding,
+            end = Dimen.commonItemPadding
         )
     ) {
         MainTitleText(

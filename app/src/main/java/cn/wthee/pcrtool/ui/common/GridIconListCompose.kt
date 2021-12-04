@@ -21,8 +21,12 @@ fun GridIconListCompose(
     toCharacterDetail: (Int) -> Unit
 ) {
     VerticalGrid(
-        modifier = Modifier.padding(top = Dimen.mediumPadding),
-        maxColumnWidth = Dimen.iconSize + Dimen.largePadding * 2
+        modifier = Modifier.padding(
+            top = Dimen.mediumPadding,
+            start = Dimen.mediumPadding,
+            end = Dimen.mediumPadding
+        ),
+        maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
     ) {
         icons.forEach {
             UnitIcon(
@@ -50,12 +54,10 @@ fun UnitIcon(id: Int, toCharacterDetail: (Int) -> Unit) {
     }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(
-                start = Dimen.mediumPadding,
-                end = Dimen.mediumPadding,
                 bottom = Dimen.mediumPadding
-            ),
+            )
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(

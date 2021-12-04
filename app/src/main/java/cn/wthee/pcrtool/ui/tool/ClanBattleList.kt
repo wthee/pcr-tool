@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -477,18 +478,20 @@ private fun ClanBossInfoPagerItem(
         ) {
             //描述
             val desc = bossDataValue.getDesc()
-            Text(
-                text = desc,
-                maxLines = if (expanded.value) Int.MAX_VALUE else 2,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier
-                    .animateContentSize()
-                    .padding(Dimen.mediumPadding)
-                    .clickable {
-                        expanded.value = !expanded.value
-                    }
-            )
+            SelectionContainer {
+                Text(
+                    text = desc,
+                    maxLines = if (expanded.value) Int.MAX_VALUE else 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .animateContentSize()
+                        .padding(Dimen.mediumPadding)
+                        .clickable {
+                            expanded.value = !expanded.value
+                        }
+                )
+            }
             //名称
             MainText(
                 text = bossDataValue.name,
@@ -561,10 +564,10 @@ fun BossSkillList(
                 )
             }
             Spacer(modifier = Modifier.padding(top = Dimen.largePadding))
-            list[index].forEach {
+            list[index].forEachIndexed { index, skillDetail ->
                 SkillItem(
-                    level = it.level,
-                    skillDetail = it,
+                    skillIndex = index,
+                    skillDetail = skillDetail,
                     unitType = unitType,
                     toSummonDetail = toSummonDetail
                 )

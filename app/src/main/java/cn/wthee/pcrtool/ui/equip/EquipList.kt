@@ -94,9 +94,9 @@ fun EquipList(
             Box(modifier = Modifier.fillMaxSize()) {
                 FadeAnimation(visible = equips.isNotEmpty()) {
                     LazyVerticalGrid(
-                        cells = GridCells.Adaptive(Dimen.iconSize + Dimen.mediumPadding * 3),
+                        cells = GridCells.Adaptive(Dimen.iconSize + Dimen.largePadding * 2),
                         state = scrollState,
-                        contentPadding = PaddingValues(Dimen.mediumPadding)
+                        contentPadding = PaddingValues(Dimen.commonItemPadding)
                     ) {
                         items(equips) { equip ->
                             EquipItem(filterValue, equip, toEquipDetail, toEquipMaterial)
@@ -173,7 +173,7 @@ private fun EquipItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(Dimen.mediumPadding),
+            .padding(horizontal = Dimen.largePadding, vertical = Dimen.mediumPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         IconCompose(

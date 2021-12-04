@@ -49,7 +49,7 @@ fun MainTitleText(
 }
 
 /**
- * 蓝底白字
+ * 内容文本
  */
 @Composable
 fun MainContentText(
@@ -91,12 +91,7 @@ fun MainText(
     selectable: Boolean = false
 ) {
     if (selectable) {
-        SelectionContainer(
-            modifier = modifier.padding(
-                start = Dimen.mediumPadding,
-                end = Dimen.mediumPadding
-            )
-        ) {
+        SelectionContainer(modifier = modifier) {
             Text(
                 text = text,
                 color = color,

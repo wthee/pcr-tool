@@ -123,9 +123,9 @@ fun NavGraph(
             arguments = listOf(navArgument(Navigation.UNIT_ID) {
                 type = NavType.IntType
             }),
-            enterTransition = { null },
+            enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
-            popEnterTransition = { null },
+            popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
@@ -523,9 +523,9 @@ fun NavGraph(
                     type = NavType.IntType
                 }
             ),
-            enterTransition = { null },
+            enterTransition = { myFadeIn },
             exitTransition = { fadeOut },
-            popEnterTransition = { null },
+            popEnterTransition = { myFadeIn },
             popExitTransition = { fadeOut }
         ) {
             val arguments = requireNotNull(it.arguments)
