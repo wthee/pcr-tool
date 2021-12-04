@@ -15,8 +15,8 @@ hilt {
 }
 
 val composeVersion = "1.1.0-beta04"
-val appVersionCode = 241
-val appVersionName = "2.4.1"
+val appVersionCode = 300
+val appVersionName = "3.0.0"
 val sql = 215
 
 android {
@@ -124,7 +124,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     //Accompanist
-    val accompanistVersion = "0.21.3-beta"
+    val accompanistVersion = "0.21.4-beta"
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")

@@ -172,7 +172,7 @@ fun CharacterDetail(
                 //数据加载后，展示页面
                 val visible = allData.sumAttr.hp > 1 && allData.equips.isNotEmpty()
                 //页面
-                if (visible) {
+                FadeAnimation(visible) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
