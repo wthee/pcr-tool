@@ -240,7 +240,7 @@ data class SkillActionPro(
             // 3：改变对方位置
             SkillActionType.CHANGE_ENEMY_POSITION -> {
                 when (action_detail_1) {
-                    1 -> {
+                    1, 9 -> {
                         tag = "击飞"
                         "${tag}${getTarget()}，高度[${(abs(action_value_1)).int}]"
                     }
@@ -287,13 +287,12 @@ data class SkillActionPro(
                     4 -> "冻结"
                     5 -> "束缚"
                     6 -> "睡眠"
-                    7 -> "眩晕"
+                    7, 14 -> "眩晕"
                     8 -> "石化"
                     9 -> "拘留"
                     10 -> "昏迷"
                     11 -> "时间停止"
                     13 -> "结晶"
-                    14 -> "眩晕（额外）"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
@@ -317,9 +316,9 @@ data class SkillActionPro(
             SkillActionType.DOT -> {
                 tag = when (action_detail_1) {
                     0 -> "拘留（造成伤害）"
-                    1 -> "中毒"
+                    1, 7 -> "中毒"
                     2 -> "烧伤"
-                    3, 5 -> "诅咒"
+                    3, 5, 8 -> "诅咒"
                     4 -> "猛毒"
                     else -> UNKNOWN
                 }
@@ -406,7 +405,7 @@ data class SkillActionPro(
                     4 -> "死亡时 [${action_value_1.toInt()}%] 概率"
                     5 -> "暴击时 [${action_value_1.toInt()}%] 概率"
                     7 -> "战斗剩余时间 [${action_value_3.toInt()}] 秒以下"
-                    8 -> "潜伏时 [${action_value_1.toInt()}%] 概率"
+                    8 -> "隐身时 [${action_value_1.toInt()}%] 概率"
                     9 -> "BREAK 时 [${action_value_1.toInt()}%] 的概率${getTimeText(3, action_value_3)}"
                     10 -> "受到持续伤害时 [${action_value_1.toInt()}%] 概率"
                     11 -> "所有部位 BREAK"
@@ -514,7 +513,7 @@ data class SkillActionPro(
             // 25：连续攻击
             SkillActionType.CONTINUOUS_ATTACK -> UNKNOWN
             // 26：系数提升
-            SkillActionType.ADDITIVE -> {
+            SkillActionType.ADDITIVE, SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
                 val type = when (action_value_1.toInt()) {
                     7 -> "物理攻击力"
                     8 -> "魔法攻击力"
@@ -522,9 +521,15 @@ data class SkillActionPro(
                     10 -> "魔法防御力"
                     else -> UNKNOWN
                 }
+                val changeType = when (toSkillActionType(action_type)) {
+                    SkillActionType.ADDITIVE -> "增加"
+                    SkillActionType.MULTIPLE -> "乘以"
+                    SkillActionType.DIVIDE -> "除以"
+                    else -> UNKNOWN
+                }
                 val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
                 val commonDesc =
-                    "动作(${action_detail_1 % 10})的{${action_detail_2}}增加 $commonExpr"
+                    "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType $commonExpr"
 
                 val additive = when (action_value_1.toInt()) {
                     2 -> {
@@ -539,7 +544,7 @@ data class SkillActionPro(
                                 "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
                             }
                         }
-                        "动作(${action_detail_1 % 10})的{${action_detail_2}}增加$expr * [击杀数量]"
+                        "动作(${action_detail_1 % 10})的值{${action_detail_2}}$changeType$expr * [击杀数量]"
                     }
                     0 -> "$commonDesc * [剩余的HP]"
                     1 -> "$commonDesc * [损失的HP]"
@@ -563,33 +568,6 @@ data class SkillActionPro(
                     additive
                 }
             }
-            // 27：倍率提升
-            SkillActionType.MULTIPLE, SkillActionType.DIVIDE -> {
-                val commonExpr = getValueText(2, action_value_2, action_value_3, hideIndex = true)
-                val commonDesc =
-                    "动作(${action_detail_1 % 10}的{${action_detail_2}}增加 $commonExpr"
-
-                when (action_value_1.toInt()) {
-                    2 -> {
-                        val expr = when {
-                            action_detail_3 == 0 -> {
-                                "[${action_value_2}]"
-                            }
-                            action_detail_2 == 0 -> {
-                                "[${action_value_3}]"
-                            }
-                            else -> {
-                                "[${(action_value_2 + 2 * action_value_3 * level)}] <$action_value_2 + ${2 * action_value_3} * 技能等级> "
-                            }
-                        }
-                        "动作(${action_detail_1 % 10})的{${action_detail_2}}增加 $expr * [击杀数量]"
-                    }
-                    0 -> "$commonDesc * [HP]"
-                    1 -> "$commonDesc * [损失的HP]"
-                    in 200 until 300 -> "$commonDesc * [标记的层数]"
-                    else -> UNKNOWN
-                }
-            }
             // 28：特殊条件
             SkillActionType.IF_SP_STATUS -> {
                 var trueClause = UNKNOWN
@@ -610,9 +588,9 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}是单独时，使用 [${action_detail_2 % 10}]"
                         } else if (action_detail_1 in 701..709) {
-                            "潜伏状态的单位除外，${getTarget()}的数量是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_2 % 10})"
+                            "隐身状态的单位除外，${getTarget()}的数量是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 720) {
-                            "潜伏状态的单位除外，${getTarget()}中存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_2 % 10})"
+                            "隐身状态的单位除外，${getTarget()}中存在单位时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 in 901..999) {
                             "${getTarget()}的HP在 [${action_detail_1 - 900}%] 以下时，使用动作(${action_detail_2 % 10})"
                         } else if (action_detail_1 == 1000) {
@@ -642,9 +620,9 @@ data class SkillActionPro(
                         } else if (action_detail_1 == 700) {
                             "${getTarget()}是不是单独时，使用 [${action_detail_3 % 10}]"
                         } else if (action_detail_1 in 701..709) {
-                            "潜伏状态的单位除外，${getTarget()}的数量不是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_3 % 10})"
+                            "隐身状态的单位除外，${getTarget()}的数量不是 [${action_detail_1 - 700}] 时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 == 720) {
-                            "潜伏状态的单位除外，${getTarget()}中不存在 [ID: ${action_value_3.toInt()}] 的单位时，使用动作(${action_detail_3 % 10})"
+                            "隐身状态的单位除外，${getTarget()}中不存在单位时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 in 901..999) {
                             "${getTarget()}的HP在 [${action_detail_1 - 900}%] 及以上时，使用动作(${action_detail_3 % 10})"
                         } else if (action_detail_1 == 1000) {
@@ -685,12 +663,12 @@ data class SkillActionPro(
                 val shieldText = "对${getTarget()}展开${type}${value}"
 
                 when (action_detail_1) {
-                    1 -> "${shieldText}，受到物理伤害时反射 [${action_value_3}] 倍伤害"
-                    2 -> "${shieldText}，受到魔法伤害时反射 [${action_value_3}] 倍伤害"
-                    3 -> "${shieldText}，受到物理伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
-                    4 -> "${shieldText}，受到魔法伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
-                    5 -> "${shieldText}，受到伤害时反射 [${action_value_3}] 倍伤害"
-                    6 -> "${shieldText}，受到伤害时反射 [${action_value_3}] 倍伤害，并回复HP"
+                    1 -> "${shieldText}，受到物理伤害时反弹 [${action_value_3}] 倍伤害"
+                    2 -> "${shieldText}，受到魔法伤害时反弹 [${action_value_3}] 倍伤害"
+                    3 -> "${shieldText}，受到物理伤害时反弹 [${action_value_3}] 倍伤害，并回复HP"
+                    4 -> "${shieldText}，受到魔法伤害时反弹 [${action_value_3}] 倍伤害，并回复HP"
+                    5 -> "${shieldText}，受到伤害时反弹 [${action_value_3}] 倍伤害"
+                    6 -> "${shieldText}，受到伤害时反弹 [${action_value_3}] 倍伤害，并回复HP"
                     else -> UNKNOWN
                 }
             }
@@ -833,9 +811,9 @@ data class SkillActionPro(
                     UNKNOWN
                 }
             }
-            // 54：潜伏
+            // 54：隐身
             SkillActionType.STEALTH -> {
-                "进入潜伏状态${getTimeText(1, action_value_1)}"
+                "进入隐身状态${getTimeText(1, action_value_1)}"
             }
             // 55：部位移动
             SkillActionType.MOVE_PART -> {
@@ -959,7 +937,7 @@ data class SkillActionPro(
                     2 -> "伤害"
                     else -> UNKNOWN
                 }
-                "被动效果：每当${getTarget()}受到${effect}时，为自身增加 [${action_detail_2}] 层标记，$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
+                "被动效果：每当${getTarget()}受到${effect}时，为自身增加 [${action_detail_2}] 层标记$time，最大叠 [${action_value_1.int}] 层。被动效果$lifeTime"
             }
             // 79：行动时，造成伤害
             SkillActionType.ACTION_DOT -> {

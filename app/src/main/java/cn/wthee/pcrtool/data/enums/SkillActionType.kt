@@ -139,12 +139,12 @@ enum class SkillActionType(val type: Int, val desc: String) {
     /**
      * 26：系数提升
      */
-    ADDITIVE(26, "系数提升"),
+    ADDITIVE(26, ""),
 
     /**
      * 27：倍率
      */
-    MULTIPLE(27, "倍率提升"),
+    MULTIPLE(27, ""),
 
     /**
      * 28：特殊条件
@@ -347,7 +347,7 @@ enum class SkillActionType(val type: Int, val desc: String) {
     LOG_GUARD(73, "伤害护盾"),
 
     /**
-     * 74：划分？
+     * 74：系数除以
      */
     DIVIDE(74, ""),
 

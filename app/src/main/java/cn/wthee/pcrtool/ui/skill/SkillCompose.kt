@@ -1,5 +1,6 @@
 package cn.wthee.pcrtool.ui.skill
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -25,6 +27,7 @@ import cn.wthee.pcrtool.data.model.SkillDetail
 import cn.wthee.pcrtool.data.model.SkillLoop
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.ImageResourceHelper
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
@@ -59,10 +62,10 @@ fun SkillCompose(
             .fillMaxSize()
             .padding(Dimen.largePadding)
     ) {
-        skillList.forEach {
+        skillList.forEachIndexed { index, skillDetail ->
             SkillItem(
-                level = level,
-                skillDetail = it,
+                skillIndex = index,
+                skillDetail = skillDetail,
                 unitType = unitType,
                 toSummonDetail = toSummonDetail
             )
@@ -76,7 +79,7 @@ fun SkillCompose(
 @Suppress("RegExpRedundantEscape")
 @Composable
 fun SkillItem(
-    level: Int,
+    skillIndex: Int,
     skillDetail: SkillDetail,
     unitType: Int,
     toSummonDetail: ((Int, Int) -> Unit)? = null
@@ -121,7 +124,12 @@ fun SkillItem(
             .padding(top = Dimen.mediumPadding, bottom = Dimen.largePadding)
     ) {
         //技能名
-        val type = getSkillType(skillDetail.skillId, unitType)
+        val type = when (unitType) {
+            0, 1 -> getSkillType(skillDetail.skillId)
+            2 -> if (skillIndex == 0) "连结爆发" else "技能${skillIndex}"
+            3 -> "技能${skillIndex + 1}"
+            else -> "技能${Constants.UNKNOWN}"
+        }
         val color = getSkillColor(type)
         val name = if (unitType > 1) type else skillDetail.name
         MainText(
@@ -167,7 +175,7 @@ fun SkillItem(
                 //等级
                 if (unitType > 1) {
                     Text(
-                        text = stringResource(id = R.string.skill_level, level),
+                        text = stringResource(id = R.string.skill_level, skillDetail.level),
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleSmall
@@ -301,13 +309,19 @@ fun SkillActionItem(
         )
         if (skillAction.summonUnitId != 0 && toSummonDetail != null) {
             //查看召唤物
-            MainTexButton(
+            Text(
                 text = stringResource(R.string.to_summon),
                 color = MaterialTheme.colorScheme.primary,
-                textStyle = MaterialTheme.typography.bodySmall
-            ) {
-                toSummonDetail(skillAction.summonUnitId, unitType)
-            }
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(start = Dimen.mediumPadding)
+                    .clip(Shape.medium)
+                    .clickable {
+                        toSummonDetail(skillAction.summonUnitId, unitType)
+                    }
+                    .padding(Dimen.smallPadding)
+
+            )
         }
     }
 }
@@ -431,41 +445,24 @@ private fun getTags(data: ArrayList<SkillActionText>): ArrayList<String> {
 /**
  * 获取技能
  */
-private fun getSkillType(skillId: Int, unitType: Int): String {
-    return when (unitType) {
-        0, 1 -> {
-            when (skillId % 1000) {
-                501 -> "EX技能"
-                511 -> "EX技能+"
-                100 -> "SP连结爆发"
-                101 -> "SP技能 1"
-                102 -> "SP技能 2"
-                103 -> "SP技能 3"
-                1, 21 -> "连结爆发"
-                11 -> "连结爆发+"
-                else -> {
-                    val skillIndex = skillId % 10 - 1
-                    if (skillId % 1000 / 10 == 1) {
-                        "技能 ${skillIndex}+"
-                    } else {
-                        "技能 $skillIndex"
-                    }
-                }
-            }
-        }
-        2 -> {
-            if (skillId % 10 == 1) {
-                "连结爆发"
+private fun getSkillType(skillId: Int): String {
+    return when (skillId % 1000) {
+        501 -> "EX技能"
+        511 -> "EX技能+"
+        100 -> "SP连结爆发"
+        101 -> "SP技能 1"
+        102 -> "SP技能 2"
+        103 -> "SP技能 3"
+        1, 21 -> "连结爆发"
+        11 -> "连结爆发+"
+        else -> {
+            val skillIndex = skillId % 10 - 1
+            if (skillId % 1000 / 10 == 1) {
+                "技能 ${skillIndex}+"
             } else {
-                val skillIndex = skillId % 10 - 1
                 "技能 $skillIndex"
             }
         }
-        3 -> {
-            val skillIndex = skillId % 10
-            "技能 $skillIndex"
-        }
-        else -> Constants.UNKNOWN
     }
 }
 
