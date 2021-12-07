@@ -184,8 +184,8 @@ data class SkillActionPro(
             501 -> "诅咒状态"
             502 -> "中毒状态"
             503 -> "猛毒状态"
-            504 -> "诅咒'状态"
-            511 -> "诅咒或诅咒状态"
+            504 -> "恶咒状态"
+            511 -> "诅咒或恶咒状态"
             512 -> "中毒或猛毒状态"
             710 -> "BREAK 状态"
             1400 -> "变身状态"
@@ -322,7 +322,7 @@ data class SkillActionPro(
                     2 -> "烧伤"
                     3, 8 -> "诅咒"
                     4 -> "猛毒"
-                    5 -> "诅咒'"
+                    5 -> "恶咒"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
