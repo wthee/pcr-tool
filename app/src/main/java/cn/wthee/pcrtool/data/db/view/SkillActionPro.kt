@@ -184,6 +184,8 @@ data class SkillActionPro(
             501 -> "诅咒状态"
             502 -> "中毒状态"
             503 -> "猛毒状态"
+            504 -> "诅咒'状态"
+            511 -> "诅咒或诅咒状态"
             512 -> "中毒或猛毒状态"
             710 -> "BREAK 状态"
             1400 -> "变身状态"
@@ -318,8 +320,9 @@ data class SkillActionPro(
                     0 -> "拘留（造成伤害）"
                     1, 7 -> "中毒"
                     2 -> "烧伤"
-                    3, 5, 8 -> "诅咒"
+                    3, 8 -> "诅咒"
                     4 -> "猛毒"
+                    5 -> "诅咒'"
                     else -> UNKNOWN
                 }
                 val value = getValueText(1, action_value_1, action_value_2)
@@ -348,7 +351,7 @@ data class SkillActionPro(
                 }
                 val time = getTimeText(1, action_value_1, action_value_2)
                 val chance =
-                    if (action_value_3 == 100.toDouble()) "成功率 [100] " else "成功率 [${(1 + action_value_3 * level).int}] <1 + $action_value_3 * 技能等级> "
+                    if (action_value_3 == 100.toDouble()) "成功率 [100%] " else "成功率 [${(1 + action_value_3 * level).int}%] <1 + $action_value_3 * 技能等级> "
                 "${tag}${getTarget()}${time}，$chance"
             }
             // 12：黑暗
@@ -384,7 +387,7 @@ data class SkillActionPro(
                         "在${getTarget()}后方 [${abs(action_value_7).int}] 的位置，召唤友方单位"
                     }
                     else -> {
-                        "在${getTarget()}，召唤 [${action_detail_2}] 的召唤物"
+                        "在${getTarget()}，召唤友方单位"
                     }
                 }
             }
