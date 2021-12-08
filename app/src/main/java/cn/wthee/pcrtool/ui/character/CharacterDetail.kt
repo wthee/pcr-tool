@@ -78,8 +78,15 @@ fun CharacterDetail(
     //选择的 RANK
     val selectRank = navViewModel.selectRank.observeAsState().value ?: 0
     //数值信息
-    if (currentValueState.value == null && maxValue.isInit()) {
-        navViewModel.currentValue.postValue(maxValue)
+    if (maxValue.isInit()) {
+        if (currentValueState.value == null) {
+            navViewModel.currentValue.postValue(maxValue)
+        } else {
+            //更新星级
+            val temp = currentValueState.value!!
+            temp.rarity = maxValue.rarity
+            navViewModel.currentValue.postValue(temp)
+        }
         if (selectRank == 0) {
             navViewModel.selectRank.postValue(maxValue.rank)
         }

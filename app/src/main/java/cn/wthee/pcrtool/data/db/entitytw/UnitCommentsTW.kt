@@ -1,4 +1,4 @@
-package cn.wthee.pcrtool.data.db.entityjp
+package cn.wthee.pcrtool.data.db.entitytw
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -20,7 +20,7 @@ import androidx.room.PrimaryKey
         name = "unit_comments_0_unit_id_1_use_type"
     )]
 )
-data class UnitCommentsJP(
+data class UnitCommentsTW(
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Int,
@@ -48,10 +48,4 @@ data class UnitCommentsJP(
     val changeTime2: Double,
     @ColumnInfo(name = "change_face_2")
     val changeFace2: Int,
-    @ColumnInfo(name = "face_id_3")
-    val faceId3: Int,
-    @ColumnInfo(name = "change_time_3")
-    val changeTime3: Double,
-    @ColumnInfo(name = "change_face_3")
-    val changeFace3: Int,
 )

@@ -9,6 +9,7 @@ import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.dao.*
 import cn.wthee.pcrtool.data.db.entity.*
 import cn.wthee.pcrtool.data.db.entityjp.*
+import cn.wthee.pcrtool.data.db.entitytw.UnitCommentsTW
 import cn.wthee.pcrtool.utils.Constants
 
 
@@ -37,7 +38,7 @@ import cn.wthee.pcrtool.utils.Constants
         WaveGroupDataJP::class,
         AttackPattern::class,
         GuildData::class,
-        UnitCommentsJP::class,
+        UnitCommentsTW::class,
         GachaDataJP::class,
         GachaExchangeJP::class,
         CharaStoryStatus::class,

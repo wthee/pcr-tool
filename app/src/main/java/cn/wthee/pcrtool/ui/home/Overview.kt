@@ -217,7 +217,7 @@ fun Overview(
                                 )
                             }
                         } else {
-                            newsList.forEach() {
+                            for (i in 0 until 3) {
                                 NewsItem(
                                     news = NewsTable(),
                                     toDetail = actions.toNewsDetail
