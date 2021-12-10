@@ -14,7 +14,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -23,9 +22,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EventData
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.EVENT_BANNER
@@ -93,7 +92,7 @@ private fun EventItem(event: EventData, toCharacterDetail: (Int) -> Unit) {
     val type: String
     val typeColor: Color
     var showDays = true
-    val regionType = settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2)
+    val regionType = getRegion()
     val today = getToday()
     val sd = fixJpTime(event.startTime.formatTime, regionType)
     val ed = fixJpTime(event.endTime.formatTime, regionType)

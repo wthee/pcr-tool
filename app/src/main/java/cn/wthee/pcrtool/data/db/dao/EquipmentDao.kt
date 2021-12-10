@@ -61,6 +61,7 @@ const val equipWhere = """
             WHEN  a.craft_flg = :craft  THEN 1 
         END
         ORDER BY  a.require_level DESC
+        LIMIT :limit
     """
 
 /**
@@ -90,8 +91,26 @@ interface EquipmentDao {
         type: String,
         name: String,
         showAll: Int,
-        starIds: List<Int>
+        starIds: List<Int>,
+        limit: Int
     ): List<EquipmentMaxData>
+
+    /**
+     * 获取数量
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT
+            COUNT(*)
+        FROM
+            equipment_data AS a
+        LEFT OUTER JOIN equipment_enhance_rate AS b ON a.equipment_id = b.equipment_id
+        LEFT OUTER JOIN (SELECT e.promotion_level, MAX( e.equipment_enhance_level ) AS equipment_enhance_level FROM equipment_enhance_data AS e GROUP BY promotion_level) AS d ON a.promotion_level = d.promotion_level
+        WHERE a.equipment_id < 140000 AND a.craft_flg = 1
+    """
+    )
+    suspend fun getCount(): Int
 
     /**
      * 获取装备提升属性

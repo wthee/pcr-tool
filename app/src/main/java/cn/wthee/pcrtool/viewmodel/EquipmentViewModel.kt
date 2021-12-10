@@ -29,7 +29,7 @@ class EquipmentViewModel @Inject constructor(
     fun getEquips(params: FilterEquipment) = flow {
         val typeName =
             if (params.type > 0) equipmentRepository.getEquipTypes()[params.type - 1] else "全部"
-        val data = equipmentRepository.getEquipments(params, typeName)
+        val data = equipmentRepository.getEquipments(params, typeName, Int.MAX_VALUE)
         emit(data)
     }
 

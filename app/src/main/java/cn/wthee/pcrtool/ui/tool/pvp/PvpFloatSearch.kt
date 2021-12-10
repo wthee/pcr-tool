@@ -16,8 +16,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.FabMain
-import cn.wthee.pcrtool.ui.MainActivity.Companion.actions
+import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
+import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.common.MainCard
 import cn.wthee.pcrtool.ui.theme.Dimen
@@ -40,7 +41,7 @@ fun PvpFloatSearch(spanCount: Int, pvpViewModel: PvpViewModel = hiltViewModel())
     val resultListState = rememberLazyListState()
     val favoritesListState = rememberLazyListState()
     val historyListState = rememberLazyListState()
-
+    val actions = NavActions(navController)
 
     PCRToolComposeTheme {
         Row(modifier = Modifier.padding(Dimen.mediumPadding)) {

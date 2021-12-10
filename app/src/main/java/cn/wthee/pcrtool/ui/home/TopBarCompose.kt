@@ -5,6 +5,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
-import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.IconCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 
 
 /**
@@ -26,8 +27,12 @@ import cn.wthee.pcrtool.ui.theme.Dimen
  *
  */
 @Composable
-fun TopBarCompose(actions: NavActions) {
+fun TopBarCompose(actions: NavActions, noticeViewModel: NoticeViewModel) {
     val updateApp = noticeViewModel.updateApp.observeAsState().value ?: -1
+
+    LaunchedEffect(null) {
+        noticeViewModel.check()
+    }
 
     Row(
         horizontalArrangement = Arrangement.Center,

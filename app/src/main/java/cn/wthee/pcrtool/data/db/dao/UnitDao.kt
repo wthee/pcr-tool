@@ -91,14 +91,39 @@ interface UnitDao {
         CASE WHEN :sortType = 4 AND :asc = 'asc'  THEN unit_data.search_area_width END ASC,
         CASE WHEN :sortType = 4 AND :asc = 'desc'  THEN unit_data.search_area_width END DESC,
         gacha.exchange_id DESC, gacha.id
+        LIMIT :limit
             """
     )
     suspend fun getInfoAndData(
         sortType: Int, asc: String, unitName: String, pos1: Int, pos2: Int,
         atkType: Int, guild: String, showAll: Int, r6: Int, starIds: List<Int>,
-        type: Int
+        type: Int,
+        limit: Int
     ): List<CharacterInfo>
 
+    /**
+     * 角色数量
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT
+            COUNT(*)
+        FROM
+            unit_profile
+            LEFT JOIN unit_data ON unit_data.unit_id = unit_profile.unit_id
+            LEFT JOIN rarity_6_quest_data ON unit_data.unit_id = rarity_6_quest_data.unit_id
+            LEFT JOIN (SELECT id,exchange_id,unit_id FROM gacha_exchange_lineup GROUP BY unit_id) AS gacha ON gacha.unit_id = unit_data.unit_id
+        WHERE
+            unit_profile.unit_id in (SELECT MAX(unit_promotion.unit_id) FROM unit_promotion WHERE unit_id = unit_profile.unit_id)
+            AND unit_profile.unit_id < 200000
+            """
+    )
+    suspend fun getCount(): Int
+
+    /**
+     * 角色信息
+     */
     @Transaction
     @Query(
         """

@@ -33,7 +33,6 @@ class CharacterAttrViewModel @Inject constructor(
     private val equipmentRepository: EquipmentRepository
 ) : ViewModel() {
 
-
     /**
      * 根据角色 id  星级 等级 专武等级
      * 获取角色属性信息 [Attr]

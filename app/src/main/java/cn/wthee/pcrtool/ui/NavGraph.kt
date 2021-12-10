@@ -758,11 +758,6 @@ class NavViewModel @Inject constructor() : ViewModel() {
     val fabCloseClick = MutableLiveData(false)
 
     /**
-     * 选择的 RANK
-     */
-    val selectRank = MutableLiveData(0)
-
-    /**
      * 下载状态
      * -2: 隐藏
      * -1: 显示加载中

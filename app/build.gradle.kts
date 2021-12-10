@@ -17,7 +17,6 @@ hilt {
 val composeVersion = "1.1.0-beta04"
 val appVersionCode = 301
 val appVersionName = "3.0.1"
-val sql = 301
 
 android {
 
@@ -32,8 +31,6 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
-
-        buildConfigField("int", "SQLITE_VERSION", sql.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

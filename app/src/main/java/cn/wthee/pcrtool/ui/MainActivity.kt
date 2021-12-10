@@ -3,7 +3,6 @@ package cn.wthee.pcrtool.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,7 +18,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,17 +34,14 @@ import cn.wthee.pcrtool.database.AppDatabaseCN
 import cn.wthee.pcrtool.database.AppDatabaseJP
 import cn.wthee.pcrtool.database.AppDatabaseTW
 import cn.wthee.pcrtool.database.DatabaseUpdater
-import cn.wthee.pcrtool.ui.MainActivity.Companion.actions
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navController
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.MainActivity.Companion.noticeViewModel
 import cn.wthee.pcrtool.ui.MainActivity.Companion.r6Ids
 import cn.wthee.pcrtool.ui.common.FabCompose
 import cn.wthee.pcrtool.ui.home.MoreFabCompose
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.PCRToolComposeTheme
 import cn.wthee.pcrtool.utils.*
-import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -85,16 +80,12 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var handler: Handler
         lateinit var navViewModel: NavViewModel
-        lateinit var noticeViewModel: NoticeViewModel
-        lateinit var actions: NavActions
-        var mFloatingWindowHeight = 0
 
         @SuppressLint("StaticFieldLeak")
         lateinit var navController: NavHostController
         var vibrateOnFlag = true
         var animOnFlag = true
         var r6Ids = listOf<Int>()
-
     }
 
 
@@ -135,13 +126,6 @@ class MainActivity : ComponentActivity() {
         WorkManager.getInstance(MyApplication.context).cancelAllWork()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        val width = ScreenUtil.getWidth()
-        val height = ScreenUtil.getHeight()
-        mFloatingWindowHeight = if (width > height) height else width
-        super.onConfigurationChanged(newConfig)
-    }
-
     //返回拦截
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -168,20 +152,9 @@ class MainActivity : ComponentActivity() {
         //接收消息
         handler = Handler(Looper.getMainLooper(), Handler.Callback {
             //关闭其他数据库连接
-            when (it.what) {
-                2 -> {
-                    AppDatabaseTW.close()
-                    AppDatabaseJP.close()
-                }
-                3 -> {
-                    AppDatabaseCN.close()
-                    AppDatabaseJP.close()
-                }
-                4 -> {
-                    AppDatabaseCN.close()
-                    AppDatabaseTW.close()
-                }
-            }
+            AppDatabaseCN.close()
+            AppDatabaseTW.close()
+            AppDatabaseJP.close()
             try {
                 navController.popBackStack()
                 viewModelStore.clear()
@@ -203,17 +176,12 @@ class MainActivity : ComponentActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun Home(
-    mNavViewModel: NavViewModel = hiltViewModel(),
-    mNoticeViewModel: NoticeViewModel = hiltViewModel()
+    mNavViewModel: NavViewModel = hiltViewModel()
 ) {
     navController = rememberAnimatedNavController()
-    actions = remember(navController) { NavActions(navController) }
+    val actions = remember(navController) { NavActions(navController) }
     navViewModel = mNavViewModel
-    noticeViewModel = mNoticeViewModel
 
-    LaunchedEffect({}) {
-        noticeViewModel.check()
-    }
     val loading = navViewModel.loading.observeAsState().value ?: false
     val r6IdList = navViewModel.r6Ids.observeAsState()
 

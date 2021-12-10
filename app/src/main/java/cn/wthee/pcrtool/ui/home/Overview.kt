@@ -44,7 +44,6 @@ import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
 import cn.wthee.pcrtool.ui.common.*
-import cn.wthee.pcrtool.ui.settingSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.SlideAnimation
@@ -52,6 +51,7 @@ import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.ui.tool.NewsItem
 import cn.wthee.pcrtool.utils.*
 import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
+import cn.wthee.pcrtool.viewmodel.NoticeViewModel
 import cn.wthee.pcrtool.viewmodel.OverviewViewModel
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
@@ -70,7 +70,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun Overview(
     actions: NavActions,
-    overviewViewModel: OverviewViewModel = hiltViewModel()
+    overviewViewModel: OverviewViewModel = hiltViewModel(),
+    noticeViewModel: NoticeViewModel = hiltViewModel()
 ) {
     SideEffect {
         overviewViewModel.getR6Ids()
@@ -91,10 +92,16 @@ fun Overview(
     if (mainIcon == MainIconType.MAIN) {
         navViewModel.openChangeDataDialog.postValue(false)
     }
+    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
 
+
+    val characterCount =
+        overviewViewModel.getCharacterCount().collectAsState(initial = 0).value
     val characterList =
         overviewViewModel.getCharacterList().collectAsState(initial = arrayListOf()).value
-    val equipList = overviewViewModel.getEquipList().collectAsState(initial = arrayListOf()).value
+    val equipCount = overviewViewModel.getEquipCount().collectAsState(initial = 0).value
+    val equipList = overviewViewModel.getEquipList(maxOf(1, spanCount) * 10)
+        .collectAsState(initial = arrayListOf()).value
     val inProgressEventList =
         overviewViewModel.getCalendarEventList(0).collectAsState(initial = arrayListOf()).value
     val comingSoonEventList =
@@ -102,20 +109,18 @@ fun Overview(
     val newsList =
         overviewViewModel.getNewsOverview(region).collectAsState(initial = arrayListOf()).value
 
-    val spanCount = ScreenUtil.getWidth() / getItemWidth().value.dp2px
-
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn {
             item {
-                TopBarCompose(actions)
+                TopBarCompose(actions, noticeViewModel)
             }
             //角色
             item {
                 Section(
                     titleId = R.string.character,
                     iconType = MainIconType.CHARACTER,
-                    hintText = characterList.size.toString(),
+                    hintText = characterCount.toString(),
                     visible = characterList.isNotEmpty(),
                     onClick = {
                         actions.toCharacterList()
@@ -158,7 +163,7 @@ fun Overview(
                 Section(
                     titleId = R.string.tool_equip,
                     iconType = MainIconType.EQUIP,
-                    hintText = equipList.size.toString(),
+                    hintText = equipCount.toString(),
                     visible = equipList.isNotEmpty(),
                     onClick = {
                         actions.toEquipList()
@@ -169,7 +174,7 @@ fun Overview(
                         modifier = Modifier.padding(horizontal = Dimen.commonItemPadding)
                     ) {
                         if (equipList.isNotEmpty()) {
-                            equipList.subList(0, maxOf(1, spanCount) * 5 * 2).forEach {
+                            equipList.forEach {
                                 Box(
                                     modifier = Modifier
                                         .padding(Dimen.mediumPadding)
@@ -476,7 +481,7 @@ private fun Section(
 @ExperimentalMaterialApi
 @Composable
 private fun CalendarItem(calendar: CalendarEvent) {
-    val regionType = settingSP(LocalContext.current).getInt(Constants.SP_DATABASE_TYPE, 2)
+    val regionType = getRegion()
     val today = getToday()
     val sd = fixJpTime(calendar.startTime.formatTime, regionType)
     val ed = fixJpTime(calendar.endTime.formatTime, regionType)

@@ -11,19 +11,23 @@ import javax.inject.Inject
  */
 class UnitRepository @Inject constructor(private val unitDao: UnitDao) {
 
-    suspend fun getInfoAndData(filter: FilterCharacter, guildName: String) = unitDao.getInfoAndData(
-        filter.sortType.type,
-        if (filter.asc) "asc" else "desc",
-        filter.name,
-        filter.position()[0],
-        filter.position()[1],
-        filter.atk,
-        guildName,
-        if (filter.all) 1 else 0,
-        if (filter.r6) 1 else 0,
-        filter.starIds,
-        filter.type
-    )
+    suspend fun getInfoAndData(filter: FilterCharacter, guildName: String, limit: Int) =
+        unitDao.getInfoAndData(
+            filter.sortType.type,
+            if (filter.asc) "asc" else "desc",
+            filter.name,
+            filter.position()[0],
+            filter.position()[1],
+            filter.atk,
+            guildName,
+            if (filter.all) 1 else 0,
+            if (filter.r6) 1 else 0,
+            filter.starIds,
+            filter.type,
+            limit
+        )
+
+    suspend fun getCount() = unitDao.getCount()
 
     suspend fun getInfoAndData(unitId: Int) = unitDao.getInfoAndData(unitId)
 

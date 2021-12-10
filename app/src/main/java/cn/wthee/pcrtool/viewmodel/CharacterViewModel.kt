@@ -30,7 +30,7 @@ class CharacterViewModel @Inject constructor(
                 unitRepository.getGuilds()[params.guild - 1].guildName
             else
                 "全部"
-            emit(unitRepository.getInfoAndData(params, guildName))
+            emit(unitRepository.getInfoAndData(params, guildName, Int.MAX_VALUE))
         }
     }
 

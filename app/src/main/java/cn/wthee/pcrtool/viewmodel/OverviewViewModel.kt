@@ -2,7 +2,6 @@ package cn.wthee.pcrtool.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.wthee.pcrtool.MyApplication
 import cn.wthee.pcrtool.data.db.repository.EquipmentRepository
 import cn.wthee.pcrtool.data.db.repository.EventRepository
 import cn.wthee.pcrtool.data.db.repository.UnitRepository
@@ -10,9 +9,12 @@ import cn.wthee.pcrtool.data.db.view.compare
 import cn.wthee.pcrtool.data.model.FilterCharacter
 import cn.wthee.pcrtool.data.model.FilterEquipment
 import cn.wthee.pcrtool.data.network.MyAPIRepository
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.settingSP
-import cn.wthee.pcrtool.utils.*
+import cn.wthee.pcrtool.utils.fixJpTime
+import cn.wthee.pcrtool.utils.formatTime
+import cn.wthee.pcrtool.utils.getToday
+import cn.wthee.pcrtool.utils.second
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -30,17 +32,31 @@ class OverviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     /**
+     * 获取角色数量
+     */
+    fun getCharacterCount() = flow {
+        emit(unitRepository.getCount())
+    }
+
+    /**
      * 获取角色列表
      */
     fun getCharacterList() = flow {
-        emit(unitRepository.getInfoAndData(FilterCharacter(), "全部"))
+        emit(unitRepository.getInfoAndData(FilterCharacter(), "全部", 10))
+    }
+
+    /**
+     * 获取装备数量
+     */
+    fun getEquipCount() = flow {
+        emit(equipmentRepository.getCount())
     }
 
     /**
      * 获取装备列表
      */
-    fun getEquipList() = flow {
-        emit(equipmentRepository.getEquipments(FilterEquipment(), "全部"))
+    fun getEquipList(limit: Int) = flow {
+        emit(equipmentRepository.getEquipments(FilterEquipment(), "全部", limit))
     }
 
     /**
@@ -49,7 +65,7 @@ class OverviewViewModel @Inject constructor(
      * @param type 0：进行中 1：预告
      */
     fun getCalendarEventList(type: Int) = flow {
-        val regionType = settingSP(MyApplication.context).getInt(Constants.SP_DATABASE_TYPE, 2)
+        val regionType = getRegion()
         val today = getToday()
         val data = eventRepository.getDropEvent() + eventRepository.getTowerEvent(1)
 

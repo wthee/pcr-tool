@@ -21,6 +21,7 @@ import androidx.core.content.edit
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.database.getRegion
 import cn.wthee.pcrtool.ui.MainActivity.Companion.animOnFlag
 import cn.wthee.pcrtool.ui.MainActivity.Companion.vibrateOnFlag
 import cn.wthee.pcrtool.ui.PreviewBox
@@ -42,7 +43,7 @@ import kotlin.system.exitProcess
 fun MainSettings() {
     val context = LocalContext.current
     val sp = settingSP(context)
-    val region = sp.getInt(Constants.SP_DATABASE_TYPE, 2)
+    val region = getRegion()
     val coroutineScope = rememberCoroutineScope()
     val reloadImportDataTip = stringResource(R.string.reload_import_data)
 
