@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     val kotlinVersion by extra("1.6.0")
-    val hiltVersion by extra("2.40.3")
+    val hiltVersion by extra("2.40.5")
 
     repositories {
         google()
@@ -9,7 +9,7 @@ buildscript {
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.android.tools.build:gradle:7.0.3")
+        classpath("com.android.tools.build:gradle:7.0.4")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
 
         // NOTE: Do not place your application dependencies here; they belong

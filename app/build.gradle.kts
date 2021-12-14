@@ -69,7 +69,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@mipmap/ic_launcher"
             resValue("string", "app_name", "PCR Tool")
-            buildConfigField("boolean", "debug", "false")
+            buildConfigField("boolean", "DEBUG", "false")
         }
 
         create("beta") {
@@ -77,7 +77,7 @@ android {
             dimension = "version"
             manifestPlaceholders["icon"] = "@drawable/ic_star"
             resValue("string", "app_name", "PCR Tool βeta")
-            buildConfigField("boolean", "debug", "true")
+            buildConfigField("boolean", "DEBUG", "true")
         }
     }
 
