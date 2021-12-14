@@ -236,7 +236,7 @@ fun EquipMaterialDeatil(
 @Composable
 private fun AreaEquipList(
     selectedId: Int,
-    odds: ArrayList<EquipmentIdWithOdd>,
+    odds: List<EquipmentIdWithOdd>,
     num: String,
     color: Color
 ) {

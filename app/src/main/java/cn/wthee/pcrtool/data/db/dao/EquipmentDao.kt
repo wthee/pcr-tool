@@ -60,8 +60,8 @@ const val equipWhere = """
         AND 1 = CASE
             WHEN  a.craft_flg = :craft  THEN 1 
         END
-        ORDER BY  a.require_level DESC
-        LIMIT :limit
+    ORDER BY  a.require_level DESC
+    LIMIT :limit
     """
 
 /**
@@ -249,6 +249,30 @@ interface EquipmentDao {
     """
     )
     suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int): CharacterPromotionEquip
+
+    /**
+     * 获取所有角色  Rank 范围所需的装备
+     * @param unitId 角色编号
+     */
+    @Query(
+        """
+        SELECT
+            GROUP_CONCAT( equip_slot_1, '-' ) AS equip_1,
+            GROUP_CONCAT( equip_slot_2, '-' ) AS equip_2,
+            GROUP_CONCAT( equip_slot_3, '-' ) AS equip_3,
+            GROUP_CONCAT( equip_slot_4, '-' ) AS equip_4,
+            GROUP_CONCAT( equip_slot_5, '-' ) AS equip_5,
+            GROUP_CONCAT( equip_slot_6, '-' ) AS equip_6 
+        FROM
+            unit_promotion 
+        WHERE
+            promotion_level >= 1 AND equip_slot_1 != 0
+        GROUP BY
+            unit_id
+    """
+    )
+    suspend fun getAllEquip(): List<CharacterPromotionEquip>
+
 
     /**
      * 获取角色各 RANK 装备信息

@@ -36,6 +36,8 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
 
     suspend fun getUniqueEquipMaxLv() = equipmentDao.getUniqueEquipMaxLv()
 
+    suspend fun getAllEquip() = equipmentDao.getAllEquip()
+
     suspend fun getEquipByRank(unitId: Int, startRank: Int, endRank: Int) =
         equipmentDao.getEquipByRank(unitId, startRank, endRank)
 

@@ -61,6 +61,7 @@ object Navigation {
     const val TWEET = "tweet"
     const val COMIC = "comic"
     const val ALL_SKILL = "allSkill"
+    const val ALL_EQUIP = "allEquip"
     const val ATTR_COE = "attrCoe"
     const val UNIT_ID = "unitId"
     const val EQUIP_ID = "equipId"
@@ -535,6 +536,18 @@ fun NavGraph(
                 unitType = arguments.getInt(Navigation.UNIT_TYPE),
             )
         }
+
+        //所有角色所需装备统计
+        composable(
+            route = Navigation.ALL_EQUIP,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            AllCharacterRankEquipCount(actions.toEquipMaterial)
+        }
     }
 }
 
@@ -733,6 +746,13 @@ class NavActions(navController: NavHostController) {
      */
     val toSummonDetail: (Int, Int) -> Unit = { unitId, unitType ->
         navController.navigate("${Navigation.SUMMON_DETAIL}/${unitId}/${unitType}")
+    }
+
+    /**
+     * 装备统计
+     */
+    val toAllEquipList = {
+        navController.navigate(Navigation.ALL_EQUIP)
     }
 }
 

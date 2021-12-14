@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.Attr
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
@@ -72,6 +73,12 @@ private fun EquipDetail(
 
         Column {
             if (equipMaxData.equipmentId != UNKNOWN_EQUIP_ID) {
+                if (BuildConfig.DEBUG) {
+                    Subtitle1(
+                        text = equipMaxData.equipmentId.toString(),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+                }
                 MainText(
                     text = equipMaxData.equipmentName,
                     color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,

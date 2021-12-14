@@ -58,9 +58,10 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tweet, MainIconType.TWEET),
         ToolMenuData(R.string.comic, MainIconType.COMIC),
     )
-    if (BuildConfig.debug) {
+    if (BuildConfig.DEBUG) {
         list.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
         list.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
+        list.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
     }
 
     VerticalGrid(
@@ -154,9 +155,8 @@ private fun getAction(
                     DatabaseUpdater.checkDBVersion(0)
                 }
             }
-            MainIconType.SKILL_LOOP -> {
-                actions.toAllSkillList()
-            }
+            MainIconType.SKILL_LOOP -> actions.toAllSkillList()
+            MainIconType.EQUIP_CALC -> actions.toAllEquipList()
             else -> {
             }
         }
