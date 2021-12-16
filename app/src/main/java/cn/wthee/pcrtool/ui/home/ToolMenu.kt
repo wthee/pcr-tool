@@ -59,6 +59,7 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.comic, MainIconType.COMIC),
     )
     if (BuildConfig.DEBUG) {
+        list.add(ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA))
         list.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
         list.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
         list.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
@@ -157,6 +158,7 @@ private fun getAction(
             }
             MainIconType.SKILL_LOOP -> actions.toAllSkillList()
             MainIconType.EQUIP_CALC -> actions.toAllEquipList()
+            MainIconType.RANDOM_AREA -> actions.toRandomEquipArea(0)
             else -> {
             }
         }

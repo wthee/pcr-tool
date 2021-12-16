@@ -37,20 +37,20 @@ data class EquipmentDropInfo(
                 )
             }
         }
-        return result.sortedWith(compare())
+        return result.sortedWith(equipCompare())
     }
+}
 
-    /**
-     * 排序
-     */
-    private fun compare() = Comparator<EquipmentIdWithOdd> { o1, o2 ->
-        if (o1.odd > o2.odd) {
-            -1
-        } else if (o1.odd < o2.odd) {
-            1
-        } else {
-            if (o1.eid / 100 % 100 < o2.eid / 100 % 100) 1 else -1
-        }
+/**
+ * 排序
+ */
+fun equipCompare() = Comparator<EquipmentIdWithOdd> { o1, o2 ->
+    if (o1.odd > o2.odd) {
+        -1
+    } else if (o1.odd < o2.odd) {
+        1
+    } else {
+        if (o1.eid / 100 % 100 < o2.eid / 100 % 100) 1 else -1
     }
 }
 

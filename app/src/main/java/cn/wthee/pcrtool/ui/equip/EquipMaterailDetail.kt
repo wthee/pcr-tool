@@ -2,8 +2,7 @@ package cn.wthee.pcrtool.ui.equip
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Tab
@@ -18,23 +17,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
+import cn.wthee.pcrtool.data.db.view.EquipmentDropInfo
 import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
 import cn.wthee.pcrtool.data.db.view.EquipmentMaxData
+import cn.wthee.pcrtool.data.db.view.equipCompare
 import cn.wthee.pcrtool.data.enums.MainIconType
+import cn.wthee.pcrtool.data.model.RandomEquipDropArea
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
-import cn.wthee.pcrtool.ui.PreviewBox
 import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.mainSP
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.Constants
 import cn.wthee.pcrtool.utils.GsonUtil
 import cn.wthee.pcrtool.utils.ImageResourceHelper
-import cn.wthee.pcrtool.utils.ImageResourceHelper.Companion.ICON_EQUIPMENT
+import cn.wthee.pcrtool.utils.intArrayList
 import cn.wthee.pcrtool.viewmodel.EquipmentViewModel
-import com.google.accompanist.flowlayout.FlowRow
+import cn.wthee.pcrtool.viewmodel.RandomEquipAreaViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -56,19 +56,23 @@ import kotlinx.coroutines.launch
 @Composable
 fun EquipMaterialDeatil(
     equipId: Int,
-    equipmentViewModel: EquipmentViewModel = hiltViewModel()
+    equipmentViewModel: EquipmentViewModel = hiltViewModel(),
+    randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel(),
 ) {
 
     val dropInfoList =
         equipmentViewModel.getDropInfos(equipId).collectAsState(initial = null).value
     val basicInfo =
         equipmentViewModel.getEquip(equipId).collectAsState(initial = EquipmentMaxData()).value
+    val areaList =
+        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = null).value
     val filter = navViewModel.filterEquip.observeAsState()
     val loved = remember {
         mutableStateOf(false)
     }
     val text = if (loved.value) "" else stringResource(id = R.string.love_equip_material)
     val scope = rememberCoroutineScope()
+    val randomDrop = stringResource(id = R.string.random_area)
 
     filter.value?.let { filterValue ->
         filterValue.starIds =
@@ -88,18 +92,19 @@ fun EquipMaterialDeatil(
                 color = if (loved.value) MaterialTheme.colorScheme.primary else Color.Unspecified,
                 selectable = true
             )
-            if (dropInfoList != null) {
+            if (dropInfoList != null && areaList != null) {
                 if (dropInfoList.isNotEmpty()) {
                     var pagerCount = 0
                     val lists = arrayListOf(
                         dropInfoList.filter { it.questId / 1000000 == 11 },
                         dropInfoList.filter { it.questId / 1000000 == 12 },
                         dropInfoList.filter { it.questId / 1000000 == 13 },
+                        areaList,
                     )
                     val tabs = arrayListOf<String>()
                     //颜色
-                    val color =
-                        listOf(R.color.color_map_n, R.color.color_map_h, R.color.color_map_vh)
+                    val colorList = arrayListOf<Int>()
+
                     lists.forEachIndexed { index, data ->
                         if (data.isNotEmpty()) {
                             pagerCount++
@@ -108,7 +113,17 @@ fun EquipMaterialDeatil(
                                     0 -> "Normal"
                                     1 -> "Hard"
                                     2 -> "Very Hard"
+                                    3 -> randomDrop
                                     else -> "？"
+                                }
+                            )
+                            colorList.add(
+                                when (index) {
+                                    0 -> R.color.color_map_n
+                                    1 -> R.color.color_map_h
+                                    2 -> R.color.color_map_vh
+                                    3 -> R.color.color_rank_21
+                                    else -> R.color.black
                                 }
                             )
                         }
@@ -148,7 +163,7 @@ fun EquipMaterialDeatil(
                                 ) {
                                     Text(
                                         text = s,
-                                        color = colorResource(id = color[index]),
+                                        color = colorResource(id = colorList[index]),
                                         modifier = Modifier.padding(bottom = Dimen.smallPadding)
                                     )
                                 }
@@ -160,23 +175,37 @@ fun EquipMaterialDeatil(
                             state = pagerState,
                             modifier = Modifier.fillMaxSize()
                         ) { pagerIndex ->
-                            LazyVerticalGrid(
-                                modifier = Modifier.fillMaxSize(),
-                                cells = GridCells.Adaptive(getItemWidth())
-                            ) {
+                            LazyColumn(modifier = Modifier.fillMaxSize()) {
                                 items(
                                     when (tabs[pagerIndex]) {
                                         "Normal" -> lists[0]
                                         "Hard" -> lists[1]
-                                        else -> lists[2]
+                                        "Very Hard" -> lists[2]
+                                        else -> lists[3]
                                     }
                                 ) {
-                                    AreaEquipList(
-                                        equipId,
-                                        it.getAllOdd(),
-                                        it.getNum(),
-                                        colorResource(id = color[pagerIndex])
-                                    )
+                                    if (tabs[pagerIndex] != randomDrop) {
+                                        AreaItem(
+                                            equipId,
+                                            (it as EquipmentDropInfo).getAllOdd(),
+                                            it.getNum(),
+                                            colorResource(id = colorList[pagerIndex])
+                                        )
+                                    } else {
+                                        it as RandomEquipDropArea
+                                        val odds = arrayListOf<EquipmentIdWithOdd>()
+                                        it.equipIds.intArrayList.forEach { id ->
+                                            odds.add(EquipmentIdWithOdd(id, 0))
+                                        }
+                                        odds.sortWith(equipCompare())
+                                        AreaItem(
+                                            equipId,
+                                            odds,
+                                            "区域 ${it.area}",
+                                            colorResource(id = colorList[pagerIndex])
+                                        )
+                                    }
+
                                 }
                                 item {
                                     CommonSpacer()
@@ -190,9 +219,9 @@ fun EquipMaterialDeatil(
                 for (i in 0..9) {
                     odds.add(EquipmentIdWithOdd())
                 }
-                LazyVerticalGrid(cells = GridCells.Adaptive(getItemWidth())) {
+                LazyColumn {
                     items(10) {
-                        AreaEquipList(
+                        AreaItem(
                             -1,
                             odds,
                             "30-15",
@@ -205,6 +234,7 @@ fun EquipMaterialDeatil(
                 }
             }
         }
+
 
         //装备收藏
         FabCompose(
@@ -226,15 +256,14 @@ fun EquipMaterialDeatil(
 
 }
 
+
 /**
- *  地区的装备掉落列表
- *
- *  @param selectedId 选择的装备
+ * 掉落区域信息
  */
-@ExperimentalMaterialApi
 @ExperimentalFoundationApi
+@ExperimentalMaterialApi
 @Composable
-private fun AreaEquipList(
+fun AreaItem(
     selectedId: Int,
     odds: List<EquipmentIdWithOdd>,
     num: String,
@@ -246,65 +275,62 @@ private fun AreaEquipList(
         modifier = Modifier.padding(
             horizontal = Dimen.largePadding,
             vertical = Dimen.mediumPadding
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = num,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-                .padding(bottom = Dimen.mediumPadding)
-                .placeholder(
-                    visible = placeholder,
-                    highlight = PlaceholderHighlight.shimmer()
-                ),
-            color = color
         )
-
-        MainCard(
+    ) {
+        //标题
+        MainTitleText(
+            text = num,
+            backgroundColor = color,
             modifier = Modifier
                 .padding(bottom = Dimen.mediumPadding)
                 .placeholder(
                     visible = placeholder,
                     highlight = PlaceholderHighlight.shimmer()
                 )
+        )
+
+
+        MainCard(
+            modifier = Modifier
+                .placeholder(
+                    visible = placeholder,
+                    highlight = PlaceholderHighlight.shimmer()
+                )
         ) {
-            FlowRow(modifier = Modifier.padding(top = Dimen.mediumPadding)) {
-                odds.forEach { oddData ->
-                    Column(
-                        modifier = Modifier.padding(
-                            horizontal = Dimen.mediumPadding,
-                            vertical = Dimen.smallPadding
-                        ),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        val selected = selectedId == oddData.eid
-                        IconCompose(
-                            data = ImageResourceHelper.getInstance()
-                                .getUrl(ICON_EQUIPMENT, oddData.eid)
-                        )
-                        SelectText(
-                            selected = selected,
-                            text = "${oddData.odd}%"
-                        )
+            Column {
+                VerticalGrid(
+                    modifier = Modifier.padding(
+                        top = Dimen.mediumPadding,
+                        start = Dimen.mediumPadding,
+                        end = Dimen.mediumPadding
+                    ),
+                    maxColumnWidth = Dimen.iconSize + Dimen.mediumPadding * 2
+                ) {
+                    odds.forEach {
+                        Column(
+                            modifier = Modifier
+                                .padding(
+                                    bottom = Dimen.mediumPadding
+                                )
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            val selected = selectedId == it.eid
+                            IconCompose(
+                                data = ImageResourceHelper.getInstance()
+                                    .getUrl(ImageResourceHelper.ICON_EQUIPMENT, it.eid)
+                            )
+                            if (selectedId != ImageResourceHelper.UNKNOWN_EQUIP_ID) {
+                                SelectText(
+                                    selected = selected,
+                                    text = if (it.odd > 0) "${it.odd}%" else "? %"
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-}
-
-@ExperimentalMaterialApi
-@Preview
-@ExperimentalFoundationApi
-@Composable
-private fun AreaEquipListPreview() {
-    val mockData = arrayListOf<EquipmentIdWithOdd>()
-    for (i in 0..7) {
-        mockData.add(EquipmentIdWithOdd())
-    }
-    PreviewBox {
-        AreaEquipList(selectedId = 1, odds = mockData, num = "1", color = Color.Red)
-    }
 }

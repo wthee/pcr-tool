@@ -45,4 +45,7 @@ class EquipmentRepository @Inject constructor(private val equipmentDao: Equipmen
      * 获取角色各 RANK 装备信息
      */
     suspend fun getAllRankEquip(unitId: Int) = equipmentDao.getAllRankEquip(unitId)
+
+    suspend fun getMaxArea() = equipmentDao.getMaxArea()
+
 }

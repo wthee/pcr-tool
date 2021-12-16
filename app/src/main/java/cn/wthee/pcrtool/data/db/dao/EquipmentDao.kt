@@ -280,4 +280,10 @@ interface EquipmentDao {
      */
     @Query("SELECT * FROM unit_promotion WHERE unit_id = :unitId ORDER BY promotion_level DESC")
     suspend fun getAllRankEquip(unitId: Int): List<UnitPromotion>
+
+    /**
+     * 获取已开放的最新区域
+     */
+    @Query("SELECT MAX(area_id) FROM quest_data WHERE area_id < 12000")
+    suspend fun getMaxArea(): Int
 }

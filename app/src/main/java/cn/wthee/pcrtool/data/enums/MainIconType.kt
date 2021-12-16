@@ -297,7 +297,12 @@ enum class MainIconType(val icon: ImageVector) {
     EXPORT(Icons.Rounded.Upload),
 
     /**
-     * 导出
+     * 更新信息
      */
     UPDATE_INFO(Icons.Rounded.Info),
+
+    /**
+     * 随机掉落地区
+     */
+    RANDOM_AREA(Icons.Rounded.TrackChanges),
 }

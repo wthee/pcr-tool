@@ -33,6 +33,7 @@
     <string name="unknown_area">暂无掉落信息</string>
 
     <!-- 设置页面   -->
+    <string name="random_area">额外掉落</string>
     <string name="redownload_db">数据重载</string>
     <string name="app_setting">应用</string>
     <string name="vibrate">振动反馈</string>
