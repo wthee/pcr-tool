@@ -305,4 +305,9 @@ enum class MainIconType(val icon: ImageVector) {
      * 随机掉落地区
      */
     RANDOM_AREA(Icons.Rounded.TrackChanges),
+
+    /**
+     * 更多工具
+     */
+    TOOL_MORE(Icons.Rounded.DashboardCustomize),
 }

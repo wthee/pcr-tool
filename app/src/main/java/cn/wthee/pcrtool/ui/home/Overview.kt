@@ -198,9 +198,12 @@ fun Overview(
             item {
                 Section(
                     titleId = R.string.function,
-                    iconType = MainIconType.FUNCTION
+                    iconType = MainIconType.FUNCTION,
+                    onClick = {
+                        actions.toToolMore()
+                    }
                 ) {
-                    ToolMenu(actions = actions)
+                    ToolMenu(actions = actions, all = false)
                 }
             }
 

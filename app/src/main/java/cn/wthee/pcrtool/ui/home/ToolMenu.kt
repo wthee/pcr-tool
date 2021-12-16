@@ -5,7 +5,9 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -15,17 +17,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import cn.wthee.pcrtool.BuildConfig
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.DatabaseUpdater
 import cn.wthee.pcrtool.ui.MainActivity.Companion.navViewModel
 import cn.wthee.pcrtool.ui.NavActions
-import cn.wthee.pcrtool.ui.common.CaptionText
-import cn.wthee.pcrtool.ui.common.IconCompose
-import cn.wthee.pcrtool.ui.common.VerticalGrid
+import cn.wthee.pcrtool.ui.common.*
 import cn.wthee.pcrtool.ui.theme.Dimen
-import cn.wthee.pcrtool.ui.theme.FadeAnimation
 import cn.wthee.pcrtool.ui.theme.Shape
 import cn.wthee.pcrtool.ui.theme.defaultSpring
 import cn.wthee.pcrtool.utils.VibrateUtil
@@ -43,10 +43,10 @@ data class ToolMenuData(
  */
 @ExperimentalMaterialApi
 @Composable
-fun ToolMenu(actions: NavActions) {
+fun ToolMenu(actions: NavActions, all: Boolean) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -1
+    val downloadState = navViewModel.downloadProgress.observeAsState().value ?: -2
 
     val list = arrayListOf(
         ToolMenuData(R.string.tool_pvp, MainIconType.PVP_SEARCH),
@@ -55,21 +55,30 @@ fun ToolMenu(actions: NavActions) {
         ToolMenuData(R.string.tool_gacha, MainIconType.GACHA),
         ToolMenuData(R.string.tool_event, MainIconType.EVENT),
         ToolMenuData(R.string.tool_guild, MainIconType.GUILD),
-        ToolMenuData(R.string.tweet, MainIconType.TWEET),
-        ToolMenuData(R.string.comic, MainIconType.COMIC),
+        ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA)
     )
-    if (BuildConfig.DEBUG) {
-        list.add(ToolMenuData(R.string.random_area, MainIconType.RANDOM_AREA))
+    if (all) {
+        list.add(ToolMenuData(R.string.tweet, MainIconType.TWEET))
+        list.add(ToolMenuData(R.string.comic, MainIconType.COMIC))
+        if (BuildConfig.DEBUG) {
+            list.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
+            list.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
+        }
         list.add(ToolMenuData(R.string.redownload_db, MainIconType.DB_DOWNLOAD))
-        list.add(ToolMenuData(R.string.skill, MainIconType.SKILL_LOOP))
-        list.add(ToolMenuData(R.string.tool_equip, MainIconType.EQUIP_CALC))
+
+    } else {
+        list.add(ToolMenuData(R.string.tool_more, MainIconType.TOOL_MORE))
     }
 
+
     VerticalGrid(
-        maxColumnWidth = Dimen.toolMenuWidth,
+        maxColumnWidth = if (all) {
+            (getItemWidth() + Dimen.mediumPadding * 2) / 2
+        } else {
+            Dimen.toolMenuWidth
+        },
         modifier = Modifier.animateContentSize(defaultSpring())
     ) {
-
         list.forEach {
             Box(
                 modifier = Modifier
@@ -84,18 +93,50 @@ fun ToolMenu(actions: NavActions) {
             ) {
                 when (it.iconType) {
                     MainIconType.DB_DOWNLOAD -> {
-                        FadeAnimation(downloadState == -2) {
-                            MenuItem(coroutineScope, context, actions, it)
+                        if (downloadState > -2) {
+                            MainCard {
+                                Row(
+                                    modifier = Modifier
+                                        .clip(Shape.medium)
+                                        .clickable(
+                                            onClick = getAction(
+                                                coroutineScope,
+                                                context,
+                                                actions,
+                                                it
+                                            )
+                                        )
+                                        .defaultMinSize(minWidth = Dimen.menuItemSize)
+                                        .padding(Dimen.smallPadding),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier
+                                                .size(Dimen.iconSize)
+                                                .padding(Dimen.smallPadding),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            strokeWidth = 2.dp
+                                        )
+                                        //显示下载进度
+                                        if (downloadState in 1..99) {
+                                            CaptionText(
+                                                text = downloadState.toString(),
+                                                color = MaterialTheme.colorScheme.primary
+                                            )
+                                        }
+                                    }
+                                    Subtitle2(
+                                        text = stringResource(id = if (downloadState == -2) it.titleId else R.string.db_downloading),
+                                        modifier = Modifier.padding(start = Dimen.mediumPadding),
+                                    )
+                                }
+                            }
+                        } else {
+                            MenuItem(coroutineScope, context, actions, it, all)
                         }
                     }
-                    MainIconType.SKILL_LOOP -> {
-                        if (BuildConfig.DEBUG) {
-                            MenuItem(coroutineScope, context, actions, it)
-                        }
-                    }
-                    else -> {
-                        MenuItem(coroutineScope, context, actions, it)
-                    }
+                    else -> MenuItem(coroutineScope, context, actions, it, all)
                 }
 
             }
@@ -104,27 +145,48 @@ fun ToolMenu(actions: NavActions) {
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun MenuItem(
     coroutineScope: CoroutineScope,
     context: Context,
     actions: NavActions,
-    it: ToolMenuData
+    it: ToolMenuData,
+    all: Boolean
 ) {
-    Column(
-        modifier = Modifier
-            .clip(Shape.medium)
-            .clickable(onClick = getAction(coroutineScope, context, actions, it))
-            .defaultMinSize(minWidth = Dimen.menuItemSize)
-            .padding(Dimen.smallPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)
-        CaptionText(
-            text = stringResource(id = it.titleId),
-            modifier = Modifier.padding(top = Dimen.mediumPadding),
-            textAlign = TextAlign.Start
-        )
+    if (all) {
+        MainCard {
+            Row(
+                modifier = Modifier
+                    .clip(Shape.medium)
+                    .clickable(onClick = getAction(coroutineScope, context, actions, it))
+                    .defaultMinSize(minWidth = Dimen.menuItemSize)
+                    .padding(Dimen.smallPadding),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconCompose(data = it.iconType.icon, size = Dimen.iconSize)
+                Subtitle2(
+                    text = stringResource(id = it.titleId),
+                    modifier = Modifier.padding(start = Dimen.mediumPadding),
+                )
+            }
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .clip(Shape.medium)
+                .clickable(onClick = getAction(coroutineScope, context, actions, it))
+                .defaultMinSize(minWidth = Dimen.menuItemSize)
+                .padding(Dimen.smallPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            IconCompose(data = it.iconType.icon, size = Dimen.menuIconSize)
+            CaptionText(
+                text = stringResource(id = it.titleId),
+                modifier = Modifier.padding(top = Dimen.mediumPadding),
+                textAlign = TextAlign.Start
+            )
+        }
     }
 }
 
@@ -147,9 +209,7 @@ private fun getAction(
             MainIconType.LEADER -> actions.toLeader()
             MainIconType.EQUIP -> actions.toEquipList()
             MainIconType.TWEET -> actions.toTweetList()
-            MainIconType.CHANGE_DATA -> {
-                navViewModel.openChangeDataDialog.postValue(true)
-            }
+            MainIconType.CHANGE_DATA -> navViewModel.openChangeDataDialog.postValue(true)
             MainIconType.COMIC -> actions.toComicList()
             MainIconType.DB_DOWNLOAD -> {
                 coroutineScope.launch {
@@ -159,6 +219,7 @@ private fun getAction(
             MainIconType.SKILL_LOOP -> actions.toAllSkillList()
             MainIconType.EQUIP_CALC -> actions.toAllEquipList()
             MainIconType.RANDOM_AREA -> actions.toRandomEquipArea(0)
+            MainIconType.TOOL_MORE -> actions.toToolMore()
             else -> {
             }
         }

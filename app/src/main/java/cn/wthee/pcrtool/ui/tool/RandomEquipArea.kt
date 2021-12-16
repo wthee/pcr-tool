@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import cn.wthee.pcrtool.R
 import cn.wthee.pcrtool.data.db.view.EquipmentIdWithOdd
@@ -22,6 +23,7 @@ import cn.wthee.pcrtool.data.db.view.equipCompare
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.ui.common.CommonSpacer
 import cn.wthee.pcrtool.ui.common.FabCompose
+import cn.wthee.pcrtool.ui.common.MainText
 import cn.wthee.pcrtool.ui.equip.AreaItem
 import cn.wthee.pcrtool.ui.theme.Dimen
 import cn.wthee.pcrtool.utils.ImageResourceHelper
@@ -41,32 +43,39 @@ fun RandomEquipArea(
     randomEquipAreaViewModel: RandomEquipAreaViewModel = hiltViewModel()
 ) {
     val areaList =
-        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = arrayListOf()).value
+        randomEquipAreaViewModel.getEquipArea(equipId).collectAsState(initial = null).value
     val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (areaList.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = scrollState
-            ) {
-                items(areaList) {
-                    val odds = arrayListOf<EquipmentIdWithOdd>()
-                    it.equipIds.intArrayList.forEach { id ->
-                        odds.add(EquipmentIdWithOdd(id, 0))
-                    }
-                    odds.sortWith(equipCompare())
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        if (areaList != null) {
+            if (areaList.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = scrollState
+                ) {
+                    items(areaList) {
+                        val odds = arrayListOf<EquipmentIdWithOdd>()
+                        it.equipIds.intArrayList.forEach { id ->
+                            odds.add(EquipmentIdWithOdd(id, 0))
+                        }
+                        odds.sortWith(equipCompare())
 
-                    AreaItem(
-                        ImageResourceHelper.UNKNOWN_EQUIP_ID,
-                        odds,
-                        "区域 ${it.area}",
-                        colorResource(id = R.color.color_rank_21)
-                    )
+                        AreaItem(
+                            ImageResourceHelper.UNKNOWN_EQUIP_ID,
+                            odds,
+                            "区域 ${it.area}",
+                            colorResource(id = R.color.color_rank_21)
+                        )
+                    }
+                    item {
+                        CommonSpacer()
+                    }
                 }
-                item {
-                    CommonSpacer()
-                }
+            } else {
+                MainText(
+                    text = stringResource(R.string.tip_random_drop),
+                    textAlign = TextAlign.Center
+                )
             }
         } else {
             val odds = arrayListOf<EquipmentIdWithOdd>()

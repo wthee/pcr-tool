@@ -77,6 +77,7 @@ object Navigation {
     const val SUMMON_DETAIL = "summonDetail"
     const val UNIT_TYPE = "unitType"
     const val TOOL_EQUIP_AREA = "toolArea"
+    const val TOOL_MORE = "toolMore"
 }
 
 
@@ -569,6 +570,19 @@ fun NavGraph(
                 scrollState
             )
         }
+
+        //更多工具
+        composable(
+            route = Navigation.TOOL_MORE,
+            enterTransition = { myFadeIn },
+            exitTransition = { fadeOut },
+            popEnterTransition = { myFadeIn },
+            popExitTransition = { fadeOut }
+        ) {
+            viewModel.fabMainIcon.postValue(MainIconType.BACK)
+            val scrollState = rememberLazyListState()
+            AllToolMenu(scrollState, actions)
+        }
     }
 }
 
@@ -781,6 +795,13 @@ class NavActions(navController: NavHostController) {
      */
     val toRandomEquipArea: (Int) -> Unit = { equipId ->
         navController.navigate("${Navigation.TOOL_EQUIP_AREA}/${equipId}")
+    }
+
+    /**
+     * 更多工具
+     */
+    val toToolMore = {
+        navController.navigate(Navigation.TOOL_MORE)
     }
 }
 
