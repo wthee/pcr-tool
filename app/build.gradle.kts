@@ -14,7 +14,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.1.0-beta04"
+val composeVersion = "1.1.0-rc01"
 val appVersionCode = 301
 val appVersionName = "3.0.1"
 
@@ -138,7 +138,7 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:${rootProject.extra["hiltVersion"]}")
     kapt("com.google.dagger:hilt-android-compiler:${rootProject.extra["hiltVersion"]}")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-beta01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-rc01")
 
     //Lifecycle
     val lifecycleVersion = "2.4.0"
@@ -149,7 +149,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
     //Navigation
-    implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
 
     //Paging3
     implementation("androidx.paging:paging-runtime:3.1.0")
@@ -161,7 +161,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Room
-    val roomVersion = "2.4.0-rc01"
+    val roomVersion = "2.4.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
