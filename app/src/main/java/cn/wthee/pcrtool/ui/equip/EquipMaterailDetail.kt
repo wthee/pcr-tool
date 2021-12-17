@@ -138,8 +138,11 @@ fun EquipMaterialDeatil(
                         //Tab
                         TabRow(
                             modifier = Modifier
-                                .padding(top = Dimen.mediumPadding)
-                                .fillMaxWidth(0.8f),
+                                .padding(
+                                    top = Dimen.mediumPadding,
+                                    start = Dimen.largePadding,
+                                    end = Dimen.largePadding
+                                ),
                             selectedTabIndex = pagerState.currentPage,
                             backgroundColor = Color.Transparent,
                             contentColor = MaterialTheme.colorScheme.primary,

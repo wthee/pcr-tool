@@ -203,7 +203,7 @@ fun Overview(
                         actions.toToolMore()
                     }
                 ) {
-                    ToolMenu(actions = actions, all = false)
+                    ToolMenu(actions = actions)
                 }
             }
 

@@ -115,7 +115,7 @@ private fun CharacterSummonDetail(
                 SkillCompose(
                     unitId = unitId,
                     cutinId = 0,
-                    level = currValue?.level ?: 0,
+                    level = currValue.level,
                     atk = max(it.sumAttr.atk, it.sumAttr.magicStr).int,
                     unitType = 1
                 )
