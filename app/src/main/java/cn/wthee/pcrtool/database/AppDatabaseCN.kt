@@ -101,8 +101,8 @@ abstract class AppDatabaseCN : RoomDatabase() {
             instance?.let {
                 if (it.isOpen) {
                     it.close()
-                    instance = null
                 }
+                instance = null
             }
         }
 

@@ -1,6 +1,7 @@
 package cn.wthee.pcrtool.ui
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -29,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.WorkManager
 import cn.wthee.pcrtool.MyApplication
+import cn.wthee.pcrtool.MyApplication.Companion.context
 import cn.wthee.pcrtool.data.enums.MainIconType
 import cn.wthee.pcrtool.database.AppDatabaseCN
 import cn.wthee.pcrtool.database.AppDatabaseJP
@@ -124,6 +126,9 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         WorkManager.getInstance(MyApplication.context).cancelAllWork()
+        val notificationManager: NotificationManager =
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()
     }
 
     //返回拦截

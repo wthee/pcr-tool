@@ -116,7 +116,8 @@ dependencies {
 //    implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material3:material3:1.0.0-alpha01")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.compose.compiler:compiler:$composeVersion")
+//    implementation("androidx.compose.compiler:compiler:$composeVersion")
+    implementation("androidx.compose.compiler:compiler:1.1.0-rc02")
     //icon
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 

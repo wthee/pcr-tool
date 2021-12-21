@@ -49,6 +49,17 @@ object FileUtil {
         }
 
     /**
+     * 数据库压缩包路径
+     */
+    fun getDatabaseBrPath(region: Int) =
+        getDatabaseDir() + "/" + when (region) {
+            2 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_CN
+            3 -> Constants.DATABASE_DOWNLOAD_FILE_NAME_TW
+            else -> Constants.DATABASE_DOWNLOAD_FILE_NAME_JP
+        }
+
+
+    /**
      * 数据库备份路径
      */
     fun getDatabaseBackupPath(region: Int) =
@@ -115,6 +126,16 @@ object FileUtil {
         val shm = File(getDatabaseShmPath(type))
         if (shm.exists()) {
             shm.delete()
+        }
+    }
+
+    /**
+     * 删除数据库文件
+     */
+    fun deleteBr(type: Int) {
+        val db = File(getDatabaseBrPath(type))
+        if (db.exists()) {
+            db.delete()
         }
     }
 
